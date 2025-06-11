@@ -1,0 +1,504 @@
+/* Skill Analysis Page Styles */
+.skill-analysis-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+}
+
+.back-navigation {
+  margin-bottom: 1.5rem;
+}
+
+.back-navigation button {
+  background: none;
+  border: none;
+  color: #1a73e8;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.back-navigation button:hover {
+  text-decoration: underline;
+}
+
+/* Skill Header */
+.skill-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.skill-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 0;
+}
+
+.skill-status {
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.skill-status.weak {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.skill-status.moderate {
+  background-color: #fff8e1;
+  color: #ef6c00;
+}
+
+.skill-status.strong {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.skill-status.unknown {
+  background-color: #f5f5f5;
+  color: #757575;
+}
+
+/* Tabs */
+.skill-tabs {
+  display: flex;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.skill-tabs button {
+  padding: 0.8rem 1.5rem;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.skill-tabs button:hover {
+  color: #1a73e8;
+}
+
+.skill-tabs button.active {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.skill-tabs button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #1a73e8;
+}
+
+/* Content Area */
+.skill-content {
+  min-height: 400px;
+}
+
+/* Overview Tab */
+.performance-stats {
+  margin-bottom: 2.5rem;
+}
+
+.performance-stats h2,
+.skill-description h2,
+.sample-questions h2 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 1.2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a73e8;
+  margin-bottom: 0.8rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #1a73e8;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.skill-description {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2.5rem;
+}
+
+.skill-description p {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.improvement-tips h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.improvement-tips ul {
+  padding-left: 1.2rem;
+}
+
+.improvement-tips li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+.sample-questions {
+  margin-bottom: 2rem;
+}
+
+.question-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.question-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.question-card h3 {
+  font-size: 1.1rem;
+  color: #1a73e8;
+  margin-bottom: 0.8rem;
+}
+
+.question-text {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.question-difficulty {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.view-more {
+  text-align: center;
+}
+
+/* Practice Tab */
+.practice-tab h2,
+.resources-tab h2 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.quiz-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.quiz-card h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.quiz-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.2rem;
+  line-height: 1.4;
+}
+
+.quiz-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.quiz-details span {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.quiz-actions {
+  text-align: right;
+}
+
+.create-custom-practice {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.create-custom-practice h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.create-custom-practice p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.2rem;
+}
+
+/* Resources Tab */
+.resource-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.resource-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.resource-card h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.resource-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.2rem;
+  line-height: 1.4;
+}
+
+.resource-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.resource-type {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.resource-difficulty {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.resource-actions {
+  text-align: right;
+}
+
+.general-resources {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.general-resources h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1.2rem;
+}
+
+.general-resource-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.general-resource-item {
+  padding: 1.2rem;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.general-resource-item h4 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.general-resource-item p {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.general-resource-item a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.general-resource-item a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.primary-button, .secondary-button {
+  padding: 0.7rem 1.2rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.primary-button {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+}
+
+.primary-button:hover {
+  background-color: #0d47a1;
+  transform: translateY(-2px);
+}
+
+.secondary-button {
+  background-color: white;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+}
+
+.secondary-button:hover {
+  background-color: #f0f7ff;
+  transform: translateY(-2px);
+}
+
+/* No Data Message */
+.no-data-message {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.no-data-message p {
+  margin-bottom: 0.8rem;
+  color: #555;
+}
+
+/* Loading indicators */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #1a73e8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-top: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .skill-analysis-container {
+    padding: 1rem;
+  }
+  
+  .skill-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .skill-status {
+    margin-top: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .quiz-list,
+  .resource-list,
+  .general-resource-list {
+    grid-template-columns: 1fr;
+  }
+}

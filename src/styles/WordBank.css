@@ -1,0 +1,192 @@
+.word-bank-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.word-bank-header {
+  margin-bottom: 2rem;
+}
+
+.word-bank-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.word-bank-icon {
+  font-size: 1.75rem;
+  margin-right: 0.75rem;
+  color: #4a6fa5;
+}
+
+.word-bank-description {
+  color: #666;
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.word-bank-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.search-container {
+  position: relative;
+  flex-grow: 1;
+  max-width: 500px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  color: #aaa;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4a6fa5;
+  box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+}
+
+.sort-button {
+  padding: 8px 16px;
+  background-color: #f0f4f8;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s;
+}
+
+.sort-button:hover {
+  background-color: #e6ecf2;
+}
+
+.word-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.word-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.word-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.word-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.word-text {
+  margin: 0;
+  color: #4a6fa5;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.remove-word-button {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 5px;
+  transition: color 0.2s;
+}
+
+.remove-word-button:hover {
+  color: #ff5252;
+}
+
+.word-definition {
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  flex-grow: 1;
+}
+
+.word-source {
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+.word-bank-loading,
+.word-bank-error,
+.word-bank-empty {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #666;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+}
+
+.word-bank-error {
+  color: #d83b01;
+  background-color: #fef0ec;
+}
+
+/* Add save button animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.save-word-button {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .word-bank-container {
+    padding: 1rem;
+  }
+  
+  .word-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .word-bank-controls {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .search-container {
+    max-width: 100%;
+  }
+}

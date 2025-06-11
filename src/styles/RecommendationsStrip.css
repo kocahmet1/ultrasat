@@ -1,0 +1,188 @@
+.recommendations-container {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.recommendations-container h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #444;
+}
+
+.rec-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.rec-card {
+  flex: 0 0 250px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.rec-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.rec-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #fff;
+}
+
+.rec-stat {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rec-label {
+  font-size: 14px;
+  opacity: 0.8;
+  color: #fff;
+}
+
+.rec-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.rec-drill-button {
+  margin-top: auto;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.rec-drill-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Color classes based on student performance */
+.rec-poor {
+  background-color: #c7d2fe; /* Indigo-50, but darker for contrast */
+  background-image: linear-gradient(to bottom right, #818cf8, #6366f1);
+}
+
+.rec-moderate {
+  background-color: #bae6fd; /* Sky-100, but darker for contrast */
+  background-image: linear-gradient(to bottom right, #7dd3fc, #38bdf8);
+}
+
+.rec-good {
+  background-color: #bbf7d0; /* Mint-100, but darker for contrast */
+  background-image: linear-gradient(to bottom right, #86efac, #4ade80);
+}
+
+/* Card badges */
+.rec-card-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-bottom-left-radius: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subcategory-badge {
+  background-color: rgba(0, 0, 0, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.concept-badge {
+  background-color: #0d6efd;
+  color: white;
+}
+
+/* Concept recommendation card */
+.concept-rec-card {
+  background-color: #f0f6ff;
+  background-image: linear-gradient(to bottom right, #d0e1fd, #c2d9fc);
+  border: 1px solid #a3c2fa;
+}
+
+.concept-rec-card h3 {
+  color: #0d3b66;
+}
+
+.rec-concept-info {
+  margin-bottom: 12px;
+}
+
+.concept-rec-card .rec-label {
+  color: #0d3b66;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.concept-drill-button {
+  background-color: #0d6efd;
+}
+
+.concept-drill-button:hover {
+  background-color: #0b5ed7;
+}
+
+/* Loading indicator */
+.rec-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.rec-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #dee2e6;
+  border-top-color: #0d6efd;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .rec-strip {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+
+  .rec-card {
+    flex: 1;
+    width: 100%;
+  }
+}

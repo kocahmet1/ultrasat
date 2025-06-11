@@ -1,0 +1,79 @@
+.practice-hub {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.practice-hub h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #444;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.practice-hub h3 svg {
+  color: #6366f1; /* Indigo-500 */
+}
+
+.practice-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.practice-actions .primary-button {
+  background-color: #6366f1; /* Indigo-500 */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.practice-actions .primary-button:hover {
+  background-color: #4f46e5; /* Indigo-600 */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
+}
+
+.practice-actions .secondary-button {
+  background-color: white;
+  color: #6366f1; /* Indigo-500 */
+  border: 1px solid #c7d2fe; /* Indigo-200 */
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.practice-actions .secondary-button:hover {
+  background-color: #eef2ff; /* Indigo-50 */
+  border-color: #818cf8; /* Indigo-400 */
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .practice-actions {
+    flex-direction: column;
+  }
+  
+  .practice-actions button {
+    width: 100%;
+  }
+}

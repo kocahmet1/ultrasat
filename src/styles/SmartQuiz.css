@@ -1,0 +1,436 @@
+.smart-quiz__container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.quiz-content {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.question-panel {
+  flex: 1;
+  min-width: 0; /* Prevent flex item from overflowing */
+}
+
+.assistant-panel {
+  width: 320px;
+  display: none; /* Hide on mobile by default */
+  position: sticky;
+  top: 20px;
+}
+
+.assistant-panel-mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+  display: block;
+}
+
+.assistant-panel-mobile.expanded {
+  transform: translateY(0);
+}
+
+.assistant-toggle-mobile {
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  width: 100%;
+  justify-content: center;
+}
+
+.assistant-toggle-mobile:hover {
+  background-color: #138496;
+}
+
+/* Desktop Styles */
+@media (min-width: 992px) {
+  .assistant-panel {
+    display: block;
+  }
+  
+  .assistant-panel-mobile {
+    display: none;
+  }
+  
+  .assistant-toggle-mobile {
+    display: none;
+  }
+}
+
+.smart-quiz__container .quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Assistant Action Buttons Styling */
+.assistant-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  z-index: 10;
+  width: 180px;
+}
+
+.assistant-action-button {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.assistant-action-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.assistant-action-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.assistant-action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.assistant-action-button.assistant-button {
+  background: linear-gradient(to right, #8ac794, #a2e0af);
+  color: #2c5e2e;
+  border: 1px solid #8ac794;
+}
+
+.assistant-action-button.tip-button {
+  background: linear-gradient(to right, #f9c296, #fad4b5);
+  color: #7d4827;
+  border: 1px solid #f9c296;
+}
+
+.assistant-action-button.summarise-button {
+  background: linear-gradient(to right, #bdb2ff, #cfc4ff);
+  color: #43349f;
+  border: 1px solid #bdb2ff;
+}
+
+/* Modal response content styling */
+.modal-response-content {
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* Modal assistant container styling */
+.modal-assistant-container {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.modal-assistant-container .smart-quiz-assistant {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 768px) {
+  .assistant-action-buttons {
+    position: static;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .assistant-action-button {
+    flex: 1;
+  }
+  
+  .vocabulary-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .vocabulary-button {
+    margin: 5px;
+  }
+}
+
+.smart-quiz__container .level-indicator {
+  background-color: #f0f7ff;
+  border: 1px solid #cce5ff;
+  color: #0056b3;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.smart-quiz__container .question-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.smart-quiz__container .options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.smart-quiz__container .options-list li {
+  margin-bottom: 12px;
+}
+
+.smart-quiz__container .options-list button {
+  width: 100%;
+  text-align: left;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  font-size: 1rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.smart-quiz__container .options-list button:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.smart-quiz__container .options-list button.selected {
+  background-color: #d6eaff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+.quiz-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.nav-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.nav-button.prev {
+  background-color: #f1f1f1;
+  color: #495057;
+}
+
+.nav-button.next {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.nav-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.nav-button.prev:hover:not(:disabled) {
+  background-color: #e2e2e2;
+}
+
+.nav-button.next:hover:not(:disabled) {
+  background-color: #0b5ed7;
+}
+
+.nav-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quiz-complete {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-complete h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.quiz-complete button {
+  padding: 12px 25px;
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.quiz-complete button:hover {
+  background-color: #0b5ed7;
+}
+
+.quiz-complete button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Vocabulary Assistance Styling */
+.vocabulary-assistance {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vocabulary-heading {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #495057;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vocabulary-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vocabulary-button {
+  background: linear-gradient(to right, #95c6e4, #b8dcee);
+  color: #2e5775;
+  border: 1px solid #95c6e4;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.vocabulary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.vocabulary-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.vocab-definition {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Styles for the new vocabulary column and buttons */
+.vocabulary-buttons-column {
+  /* Styles already defined inline, can be moved here for consistency if preferred */
+  /* Example: */
+  /* width: 200px; */
+  /* background-color: #f0f4f8; */
+  /* border-radius: 12px; */
+  /* padding: 20px; */
+  /* etc. */
+}
+
+.vocabulary-button {
+  /* Styles already defined inline, can be moved here for consistency if preferred */
+  /* Example: */
+  /* width: 100%; */
+  /* text-align: left; */
+  /* background-color: #ffffff; */
+  /* etc. */
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+.vocabulary-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Consistent gap for buttons inside container */
+  /* animation properties are applied inline in the JSX for dynamic conditional rendering */
+}
+
+/* Ensure other styles are not overriding */
+.smart-quiz__container .vocabulary-buttons-column .vocabulary-button:last-child {
+  margin-bottom: 0; /* Remove margin from last button if using direct map when buttons are direct children */
+}
+
+/* AI Tools Column styling (if not already fully inline or elsewhere) */
+.ai-tools-column {
+  /* width: 150px; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* gap: 12px; */
+  /* margin-top: 60px; */
+}
+
+.assistant-action-button {
+  /* Common styles for AI buttons if moved from inline */
+  /* Example: */
+  /* padding: 15px 10px; */
+  /* border: none; */
+  /* border-radius: 8px; */
+  /* font-weight: 500; */
+  /* font-size: 0.9rem; */
+  /* height: 100px; */
+  /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
+}

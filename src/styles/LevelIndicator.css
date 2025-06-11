@@ -1,0 +1,76 @@
+/* LevelIndicator.css */
+.level-indicator-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px; /* Reduced from 16px */
+  margin-top: 0; /* Eliminated top margin */
+  width: 100%;
+}
+
+.level-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* Smaller width */
+  height: 20px; /* Significantly smaller height */
+  border-radius: 3px; /* Slightly smaller radius */
+  font-size: 0.7rem; /* Smaller font */
+  font-weight: 500;
+  color: #a0aec0;
+  background-color: #fbfcfd;
+  border: 1px solid #f0f2f5;
+  position: relative;
+  overflow: hidden;
+  /* Simplified shadow for thinner box */
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 1px 1px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.level-box:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.level-box.active {
+  color: #1e40af;
+  background-color: #dbeafe;
+  border-color: #bfdbfe;
+  font-weight: 700;
+  /* Pop out from the surface */
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 2px rgba(30, 64, 175, 0.2),
+    0 1px 3px rgba(59, 130, 246, 0.2);
+}
+
+/* No hover effect to keep it subtle */
+.level-box:not(.active):hover {
+  cursor: default;
+}
+
+/* Level 1-3 custom colors */
+.level-box:nth-child(1).active {
+  background-color: #dbeafe; /* Light blue */
+  border-color: #93c5fd;
+}
+
+.level-box:nth-child(2).active {
+  background-color: #e0e7ff; /* Light indigo */
+  border-color: #a5b4fc;
+}
+
+.level-box:nth-child(3).active {
+  background-color: #ddd6fe; /* Light purple */
+  border-color: #c4b5fd;
+}

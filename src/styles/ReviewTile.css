@@ -1,0 +1,74 @@
+.review-tile {
+  margin-bottom: 1.5rem;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.review-tile .card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 0.75rem 1rem;
+}
+
+.review-tile .card-header h5 {
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.review-tile .badge {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.review-items-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.review-item {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.review-item-header h6 {
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.review-item-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 3px solid #e9ecef;
+  border-top-color: #007bff;
+  animation: spin 1s infinite linear;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

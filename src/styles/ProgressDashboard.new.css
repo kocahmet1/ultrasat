@@ -1,0 +1,805 @@
+/* ProgressDashboard.new.css */
+
+/* Re-using vars from SkillsPractice.new.css for consistency */
+/* Ensure these are globally available or redefine them here if necessary */
+:root {
+  --primary-color: #4A90E2; /* Friendly Blue */
+  --primary-color-dark: #3a7ac8;
+  --secondary-color: #50E3C2; /* Teal/Mint */
+  --accent-color: #F5A623; /* Orange Accent */
+
+  --text-color-dark: #2d3748; /* Dark Gray for text */
+  --text-color-medium: #4a5568;
+  --text-color-light: #718096;
+  --text-on-primary: #ffffff;
+
+  --background-color-page: #f7f9fc; /* Light Grayish Blue */
+  --background-color-card: #ffffff;
+  --background-color-hover: #f0f4f8;
+  --border-color-soft: #e2e8f0;
+  --border-color-medium: #cbd5e0;
+
+  --accuracy-strong: #48bb78; /* Green */
+  --accuracy-moderate: #ecc94b; /* Yellow */
+  --accuracy-weak: #f56565; /* Red */
+
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+}
+
+.progress-dashboard-page {
+  padding: 25px;
+  background-color: var(--background-color-page);
+  font-family: var(--font-family-sans);
+}
+
+.pd-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color-soft);
+}
+
+.pd-header h1 {
+  font-size: 2.25rem;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.pd-header p.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-color-medium);
+  max-width: 700px;
+}
+
+/* Generic Card Style */
+.pd-card {
+  background-color: var(--background-color-card);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 20px 25px;
+  margin-bottom: 25px;
+}
+
+.pd-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color-soft);
+}
+
+.pd-card-header h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-color-dark);
+  margin: 0;
+}
+
+.pd-section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Stats Cards */
+.pd-stat-card {
+  text-align: center;
+  padding: 25px 15px;
+}
+
+.pd-stat-card .stat-value {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.pd-stat-card .stat-label {
+  font-size: 0.95rem;
+  color: var(--text-color-medium);
+}
+
+/* Recommended Practice & Skills to Review Cards (specifics to be added) */
+.pd-recommendations-strip .recommendation-card {
+    background-color: var(--primary-color);
+    color: var(--text-on-primary);
+    padding: 15px;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+.pd-recommendations-strip .recommendation-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+}
+.pd-recommendations-strip .recommendation-card p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+}
+.pd-recommendations-strip .recommendation-card .drill-button {
+    background-color: var(--text-on-primary);
+    color: var(--primary-color);
+    border: none;
+    padding: 8px 15px;
+    border-radius: var(--border-radius-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.pd-recommendations-strip .recommendation-card .drill-button:hover {
+    background-color: var(--background-color-hover);
+}
+
+/* Subcategory Accordion (Similar to SkillsPractice) */
+.pd-main-category-card {
+  background-color: var(--background-color-card);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  margin-bottom: 20px;
+  display: block;
+  width: 100%;
+}
+
+/* Split-view layout */
+.pd-split-view {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.pd-split-column {
+  flex: 1;
+  border-radius: 8px;
+  padding: 16px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* Left column (Reading & Writing) */
+.pd-split-column:first-child {
+  background-color: var(--blue-light-bg);
+}
+
+/* Right column (Math) */
+.pd-split-column:last-child {
+  background-color: var(--green-light-bg);
+}
+
+.pd-section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+/* New combined row for title and level boxes */
+.pd-title-level-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+/* New styles for the flattened subcategory lists */
+.pd-subcategories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.pd-always-expanded {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.pd-subcategory-item {
+  background-color: white;
+  border-radius: 10px;
+  padding: 8px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, padding 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #f0f4f8;
+  margin-bottom: 8px;
+}
+
+.pd-subcategory-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+  padding: 12px 0;
+}
+
+.level-indicator-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding-left: 8px;
+}
+
+.pd-subcategory-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: none;
+  padding-bottom: 0;
+  flex: 1;
+  margin: 0;
+}
+
+.pd-section-title svg {
+  font-size: 1.5rem;
+}
+
+/* Reading & Writing specific styling */
+.pd-split-column:first-child .pd-section-title {
+  color: #4a6da7; /* Blue shade for Reading & Writing */
+  border-bottom: 3px solid #4a6da7;
+}
+
+/* Math specific styling */
+.pd-split-column:last-child .pd-section-title {
+  color: #5d8b69; /* Green shade for Math */
+  border-bottom: 3px solid #5d8b69;
+}
+
+.pd-main-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color-soft);
+  transition: background-color 0.2s ease;
+}
+
+.pd-main-category-header:hover {
+  background-color: var(--background-color-hover);
+}
+
+.pd-main-category-title-icon {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.pd-main-category-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.pd-main-category-header h3 {
+  font-size: 1.3rem; /* Slightly smaller than SkillsPractice h2 */
+  font-weight: 500;
+  color: var(--text-color-dark);
+  margin: 0;
+}
+
+.pd-main-category-header .chevron-icon {
+  font-size: 1.2rem;
+  color: var(--text-color-light);
+  transition: transform 0.3s ease;
+}
+
+.pd-main-category-card[aria-expanded="true"] .chevron-icon {
+  transform: rotate(180deg);
+}
+
+.pd-subcategory-accordion-content {
+  padding: 0px 25px 10px; /* No top padding, let items define it */
+  background-color: #fdfdfd;
+}
+
+.pd-subcategory-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border-color-soft);
+}
+
+.pd-subcategory-item:last-child {
+  border-bottom: none;
+}
+
+.pd-subcategory-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Minimal view styling */
+.pd-minimal-view {
+  width: 100%;
+}
+
+.pd-title-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.single-level-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.current-level-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #1e40af;
+  background-color: #dbeafe;
+  border: 1px solid #bfdbfe;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+}
+
+/* Expanded view styling */
+.pd-expanded-view {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+  margin-top: 0;
+}
+
+.pd-subcategory-item:hover .pd-expanded-view {
+  max-height: 220px;
+  opacity: 1;
+  margin-top: 6px;
+}
+
+/* Level-up message styling */
+.level-up-message {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 4px 8px;
+  background-color: rgba(249, 250, 251, 0.7);
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+.level-up-message .emphasis {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.pd-subcategory-info h4 {
+  font-size: 1rem; /* Reduced from 1.15rem */
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color-dark);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.pd-subcategory-info .accuracy-display {
+  margin-top: 5px;
+  color: #94a3b8; /* More faded text color to match other elements */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.accuracy-display {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+/* Accuracy display colors - using CSS variables for consistency with progress bar */
+.accuracy-display.weak {
+  color: var(--accuracy-weak);
+}
+
+.accuracy-display.moderate {
+  color: var(--accuracy-moderate);
+}
+
+.accuracy-display.strong,
+.accuracy-display.mastered {
+  color: var(--accuracy-strong);
+}
+
+/* Add styles for subcategory stats */
+.pd-subcategory-stats {
+  font-size: 0.85rem; /* Reduced from 0.9rem */
+  margin-top: 4px; /* Reduced from 8px */
+  text-align: center;
+  background-color: #fafbfe;
+  padding: 4px 12px; /* Reduced vertical padding from 8px to 4px */
+  border-radius: 6px;
+  border: 1px solid #f6f8fc;
+}
+
+.pd-subcategory-stats p {
+  margin: 2px 0; /* Reduced from 4px */
+}
+
+.pd-subcategory-stats .total-answered-display {
+  margin-top: 2px; /* Reduced from 6px */
+  color: #94a3b8;
+  font-size: 0.8rem; /* Reduced from 0.85rem */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.subcategory-progress-container {
+  margin-top: 4px;
+  margin-bottom: 2px;
+  background: transparent;
+  border-radius: 6px;
+  padding: 2px 4px;
+  border: none;
+}
+
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.progress-bar-background {
+  flex: 1;
+  height: 10px;
+  background-color: var(--border-color-soft);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 5px;
+}
+
+.progress-bar-fill.weak {
+  background-color: var(--accuracy-weak);
+}
+
+.progress-bar-fill.moderate {
+  background-color: var(--accuracy-moderate);
+}
+
+.progress-bar-fill.strong,
+.progress-bar-fill.mastered {
+  background-color: var(--accuracy-strong);
+}
+
+.progress-status {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.8rem;
+  color: var(--text-color-medium);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.mastery-badge {
+  background-color: var(--accuracy-strong);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  height: auto;
+  line-height: normal;
+}
+
+.mastery-badge svg {
+  margin-right: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pd-subcategory-actions {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: flex-end; /* Align buttons to the right */
+  justify-content: center;
+  gap: 6px; /* Reduced from 8px */
+  flex-shrink: 0;
+  padding-right: 12px; /* Reduced from 16px */
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Style for buttons in the minimal view */
+.action-button.minimal-action {
+  display: flex;
+}
+
+/* Style for buttons in the expanded view */
+.action-button.expanded-action {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show expanded-only buttons on hover */
+.pd-subcategory-item:hover .action-button.expanded-action {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pd-subcategory-actions .action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* Reduced from 6px */
+  padding: 4px 10px; /* Reduced from 6px 12px */
+  border-radius: 16px; /* Slightly less round */
+  font-weight: 500;
+  font-size: 0.8rem; /* Reduced from 0.85rem */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+  min-width: 90px; /* Reduced from 100px */
+}
+
+.pd-subcategory-actions .action-button.practice {
+  background-color: #A9B2D8; /* Denser pastel blue/lavender */
+  color: white;
+  border: 1px solid #A9B2D8;
+}
+
+.pd-subcategory-actions .action-button.practice:hover {
+  background-color: #939CC2; /* Darker shade for hover */
+  color: white;
+  border-color: #828BAE;
+}
+
+.pd-subcategory-actions .action-button.learn {
+  background-color: #48D1CC; /* Lighter, brighter Teal/Turquoise */
+  color: white;
+  border: 1px solid #48D1CC;
+}
+
+.pd-subcategory-actions .action-button.learn:hover {
+  background-color: #36C4C0; /* Slightly darker shade for hover */
+  color: white;
+  border-color: #2AB8B2;
+}
+
+/* If you want the buttons to be the same width */
+.pd-subcategory-actions .action-button {
+  min-width: 100px; /* Or a specific width like 120px */
+  /* ensure text and icon fit well */
+}
+
+/* Learning Activity Chart Container */
+.pd-learning-activity-chart {
+  height: 300px; /* Or whatever height is appropriate */
+  /* Chart.js or other library will go in here */
+}
+
+/* Practice Hub */
+.pd-practice-hub {
+  text-align: center;
+}
+
+.pd-practice-hub h3 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  color: var(--text-color-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pd-practice-hub .actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+.pd-practice-hub .action-button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  /* Uses shared .action-button styles already defined or define specific ones */
+}
+
+/* Generic Button Styles (if not using .action-button from SkillsPractice) */
+.pd-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--border-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
+}
+
+.pd-button.primary {
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
+  border-color: var(--primary-color);
+}
+.pd-button.primary:hover {
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+}
+
+.pd-button.secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+.pd-button.secondary:hover {
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
+}
+
+/* Toast Notification (from original ProgressDashboard) */
+.toast-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 15px 20px;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toast-notification.success {
+  background-color: var(--accuracy-strong);
+}
+
+.toast-content span {
+  margin-right: 15px;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+/* Modal (from original ProgressDashboard) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal-content {
+  background-color: var(--background-color-card);
+  padding: 30px 35px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 600px; /* Adjust as needed for DynamicQuizGenerator */
+  position: relative;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--text-color-light);
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close-button:hover {
+  color: var(--text-color-dark);
+}
+
+/* Loading placeholder */
+.pd-loading-placeholder {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: var(--text-color-medium);
+}
+
+/* Progress bar styling */
+.subcategory-progress-container {
+    width: 100%;
+    margin: 8px 0;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Ensure mastery badge styling is consistent */
+.mastery-badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    height: auto;
+    line-height: normal;
+}
+
+.mastery-badge svg {
+    margin-right: 4px;
+    display: inline-block;
+    vertical-align: middle;
+}

@@ -1,0 +1,86 @@
+/* Footer.css - Styling for the Footer component */
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #e6ecff;
+  border-top: 1px solid #eaeaea;
+  position: relative;
+}
+
+.navigation-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  background-color: #3a66b7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100px;
+}
+
+.nav-button:hover:not(:disabled) {
+  background-color: #2a4a8a;
+}
+
+.nav-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.user-info {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.tracker-button {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tracker-button:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .nav-button, .tracker-button {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .prev-button, .next-button {
+    margin: 0;
+  }
+}

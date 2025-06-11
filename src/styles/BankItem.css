@@ -1,0 +1,291 @@
+.bank-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.bank-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.bank-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #e0e0e0;
+}
+
+.bank-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 6px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-box input {
+  border: none;
+  background: transparent;
+  margin-left: 8px;
+  flex: 1;
+  font-size: 14px;
+  outline: none;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 15px;
+}
+
+.subcategory-filter, .sort-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.subcategory-filter select, .sort-control select {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.bank-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.bank-item {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-left: 4px solid #4285f4; /* Default color for concept items */
+}
+
+.bank-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.bank-item.mastered {
+  border-left-color: #34a853; /* Green for mastered items */
+}
+
+.bank-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.bank-item-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.bank-item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.bank-item-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.bank-item-actions button:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.mastery-toggle {
+  color: #ccc !important;
+}
+
+.mastery-toggle.mastered {
+  color: #34a853 !important;
+}
+
+.delete-button:hover {
+  color: #ea4335 !important;
+}
+
+.bank-item-subcategory {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 12px;
+  padding: 4px 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.bank-item-definition {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.bank-item-notes {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #666;
+  margin-bottom: 16px;
+  min-height: 80px;
+}
+
+.notes-content {
+  font-style: italic;
+  margin-bottom: 8px;
+  background-color: #f9f9f9;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 2px solid #ccc;
+}
+
+.bank-item-notes-edit {
+  margin-bottom: 16px;
+}
+
+.bank-item-notes-edit textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.9rem;
+  resize: vertical;
+  margin-bottom: 8px;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.edit-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.edit-actions button:first-child {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.edit-actions button:last-child {
+  background-color: #4285f4;
+  color: white;
+}
+
+.edit-notes-button, .add-notes-button {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.edit-notes-button:hover, .add-notes-button:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.bank-item-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.bank-item-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.loading-message, .empty-message {
+  text-align: center;
+  padding: 40px 0;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bank-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .bank-controls {
+    flex-direction: column;
+  }
+  
+  .search-box {
+    max-width: 100%;
+  }
+  
+  .bank-items-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,160 @@
+/* App.css - Main styling for the application */
+
+/* General app layout */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Times New Roman', serif;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 18px;
+}
+
+/* Ensure Times New Roman is applied to all elements */
+*, button, input, select, textarea {
+  font-family: 'Times New Roman', serif;
+}
+
+/* Main content area */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Add borders with wide dashed styling */
+.main-content::before,
+.main-content::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-image: linear-gradient(to right, #000 8px, transparent 8px);
+  background-size: 16px 3px;
+  background-repeat: repeat-x;
+}
+
+/* Remove the top border from main content as it will be above the banner */
+.main-content::before {
+  display: none;
+}
+
+.main-content::after {
+  bottom: 0;
+}
+
+/* Main content without side borders */
+.main-content {
+  margin: 0 20px;
+  padding: 30px 10px 0;
+}
+
+.question-wrapper {
+  display: flex;
+  flex: 1;
+  position: relative;
+  height: 100%;
+}
+
+/* Ensure the question content takes full height */
+.question-content {
+  height: 100%;
+  display: flex;
+  flex: 1;
+}
+
+/* Tools container for ABC cross-out button */
+.tools-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 20px;
+  background-color: #f8f8f8;
+  border-top: 1px solid #eaeaea;
+}
+
+.cross-out-toggle {
+  font-size: 12px;
+  padding: 5px 10px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.cross-out-toggle.active {
+  background-color: #e6ecff;
+  border-color: #0066cc;
+}
+
+/* Loading and error states */
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Results screen */
+.results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.restart-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3a66b7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.restart-button:hover {
+  background-color: #2a4a8a;
+}
+
+/* Add these styles for the sidebar layout */
+.app-container {
+  display: flex; /* Use flexbox for sidebar and main content layout */
+}
+
+.main-content {
+  margin-left: 260px; /* Same as sidebar width defined in Sidebar.css */
+  padding: 20px; /* Add some padding to the main content area */
+  width: calc(100% - 260px); /* Take up remaining width */
+  min-height: 100vh; /* Ensure it takes full viewport height */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Responsive adjustment: for smaller screens, you might want to hide the sidebar 
+   or make it toggleable, and remove the margin from main-content. 
+   This is a basic example. A more robust solution would involve JavaScript 
+   to toggle a class on the body or app-container. */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0; /* Remove margin if sidebar is hidden or overlayed */
+    width: 100%;
+  }
+  /* Add styles here to hide/overlay sidebar on small screens if needed */
+  /* e.g., .sidebar { display: none; } or position: absolute; etc. */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 10px;
+  }
+}

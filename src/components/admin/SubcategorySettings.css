@@ -1,0 +1,159 @@
+.subcategory-settings {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-description {
+  margin-bottom: 20px;
+  color: #6c757d;
+}
+
+.search-container {
+  margin-bottom: 16px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.section-group {
+  margin-bottom: 30px;
+}
+
+.section-group h3 {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e9ecef;
+  color: #495057;
+}
+
+.subcategory-list {
+  max-height: 500px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.subcategory-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.subcategory-list th {
+  text-align: left;
+  padding: 12px 15px;
+  background-color: #e9ecef;
+  font-weight: 600;
+  font-size: 14px;
+  color: #495057;
+}
+
+.subcategory-list td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.subcategory-item:hover {
+  background-color: #f1f3f5;
+}
+
+.subcategory-color {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.subcategory-name {
+  font-weight: 500;
+  color: #212529;
+}
+
+.subcategory-id {
+  margin-left: 8px;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.helper-type-selector {
+  display: flex;
+  gap: 15px;
+}
+
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.radio-label:hover {
+  background-color: #e9ecef;
+}
+
+.radio-label.selected {
+  background-color: #e2f2ff;
+  font-weight: 500;
+}
+
+.radio-label input {
+  margin-right: 6px;
+}
+
+.notification {
+  margin: 10px 0;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.notification.success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.notification.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #6c757d;
+}
+
+.no-results {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

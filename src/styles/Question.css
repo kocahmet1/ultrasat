@@ -1,0 +1,309 @@
+/* Question.css - Styling for the Question component */
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  position: relative;
+  height: 100%;
+  flex: 1;
+}
+
+.question-content {
+  display: flex;
+  height: 100%;
+}
+
+.left-column {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.right-column {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.separator-line-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  width: 15px;
+  z-index: 5;
+  padding: 0;
+}
+
+.separator-line {
+  width: 2px;
+  background-color: #888;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.question-number-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-bottom: none;
+  position: relative;
+}
+
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Create a custom dashed line with wider dashes */
+.question-number-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-image: linear-gradient(to right, #000 8px, transparent 8px);
+  background-size: 16px 3px;
+  background-repeat: repeat-x;
+}
+
+.right-controls {
+  display: flex;
+  align-items: center;
+}
+
+.question-number {
+  background-color: #000000;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 18px;
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.question-text {
+  font-family: 'Times New Roman', serif;
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre-line; /* Preserve line breaks in text */
+}
+
+.question-instructions {
+  font-family: 'Times New Roman', serif;
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-weight: normal;
+}
+
+.mark-review-container, .abc-toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.mark-review-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.cross-out-toggle {
+  font-size: 12px;
+  padding: 5px 10px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden; /* Ensure the line doesn't overflow */
+}
+
+.cross-out-toggle.active {
+  background-color: #e6ecff;
+  border-color: #0066cc;
+}
+
+/* Adding the diagonal line through the ABC button */
+.cross-out-toggle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 1px solid #333;
+  transform: rotate(-25deg);
+}
+
+.bookmark-icon {
+  margin-right: 5px;
+  font-size: 18px;
+  color: #f0ad4e;
+}
+
+.option-letter {
+  font-weight: bold;
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option {
+  padding: 15px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.option:hover {
+  background-color: #f9f9f9;
+}
+
+.option.crossed-out {
+  position: relative;
+}
+
+.option.crossed-out .option-text {
+  color: #999;
+}
+
+.option.crossed-out::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  top: 50%;
+  border-top: 2px solid #333; /* Darker color and thicker line */
+  z-index: 1;
+}
+
+.option-header {
+  display: flex;
+  align-items: center;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.option-label.selected {
+  font-weight: bold;
+}
+
+.option-radio {
+  margin-right: 10px;
+}
+
+.option-text {
+  font-family: 'Times New Roman', serif;
+  font-size: 18px;
+}
+
+.cross-out-btn {
+  background-color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  position: relative;
+}
+
+.cross-out-btn::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 50%;
+  border-top: 1px solid #333;
+  transform: translateY(-50%);
+}
+
+.cross-out-btn.active {
+  background-color: #ffffff;
+  border-color: #333;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .question-container {
+    padding: 10px;
+  }
+  
+  .question-text {
+    font-size: 14px;
+  }
+  
+  .option-text {
+    font-size: 14px;
+  }
+}
+
+/* Add styles for graph description */
+.question-graph-description {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-left: 4px solid #007bff;
+  border-radius: 4px;
+}
+
+.graph-description-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.graph-description-content {
+  color: #6c757d;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+/* Ensure proper spacing between graph description and graph image */
+.question-graph-description + .question-graph-container {
+  margin-top: 1rem;
+}

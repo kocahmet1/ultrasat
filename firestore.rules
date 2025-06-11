@@ -1,0 +1,257 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // Allow users to read their own documents and admin to read all
+    match /users/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      
+      // Unified progress tracking system - allow users to read/write their own subcategory progress
+      match /progress/{subcategoryId} {
+        allow read, write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+      
+      // Allow users to read/write their own exam documents
+      match /exams/{examId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+      
+      // Allow users to read/write their own practice exam documents
+      match /practiceExams/{examId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+        
+        // Allow access to responses subcollection
+        match /responses/{responseId} {
+          allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+          allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+        }
+      }
+      
+      // Allow users to read/write their own word bank collection
+      match /wordBank/{wordId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+      
+      // Allow users to read/write their own concept bank items
+      match /bankItems/{itemId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+    }
+    
+    // User specific collections - allow users to read/write their own data
+    // Legacy collection - kept for backwards compatibility, now deprecated
+    match /userAdaptiveProgress/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if false; // Deprecating write access
+    }
+    
+    // User needs review collection
+    match /userNeedsReview/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      
+      match /skills/{skillId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+    }
+    
+    match /userProgress/{docId} {
+      allow read: if isSignedIn() && (
+        isOwner(resource.data.userId) || isAdmin()
+      );
+      allow write: if isSignedIn() && (
+        isOwner(request.resource.data.userId) || isAdmin()
+      );
+    }
+    
+    match /userStats/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+    }
+    
+    match /userRecommendations/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+    }
+    
+    // User stats cache collection - for efficient ranking calculations
+    match /userStatsCache/{userId} {
+      allow read: if isSignedIn(); // Anyone can read stats for ranking purposes
+      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+    }
+    
+    match /userSkillStats/{docId} {
+      allow read: if isSignedIn() && (
+        docId.matches(request.auth.uid + "_.*") || isAdmin()
+      );
+      allow write: if isSignedIn() && (
+        docId.matches(request.auth.uid + "_.*") || isAdmin()
+      );
+    }
+    
+    match /userSubcategoryStats/{docId} {
+      allow read: if isSignedIn() && (
+        docId.matches(request.auth.uid + "_.*") || 
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      allow write: if isSignedIn() && (
+        docId.matches(request.auth.uid + "_.*") || 
+        request.resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+    
+    match /userEngagement/{docId} {
+      allow read: if isSignedIn() && (
+        isOwner(resource.data.userId) || isAdmin()
+      );
+      allow write: if isSignedIn() && (
+        isOwner(request.resource.data.userId) || isAdmin()
+      );
+    }
+
+    // Notification Events
+    match /notificationEvents/{eventId} {
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow read: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+      allow update, delete: if false;
+    }
+
+    // Quiz and question attempts - allow users to read/write their own
+    match /adaptive-quizzes/{quizId} {
+      allow read: if isSignedIn() && (
+        isOwner(resource.data.userId) || isAdmin()
+      );
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (
+        isOwner(resource.data.userId) || isAdmin()
+      );
+    }
+    
+    match /adaptiveQuizzes/{quizId} {
+      allow read: if isSignedIn() && (
+        isOwner(resource.data.userId) || isAdmin()
+      );
+      // Creator owns the document, but must be authenticated
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (
+        isOwner(resource.data.userId) || isAdmin()
+      );
+    }
+    
+    match /questionAttempts/{attemptId} {
+      // Allow users to read their own attempts, admins can read all
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      
+      // Only allow creation if the userId matches the authenticated user
+      allow create: if isSignedIn();
+      
+      // Disallow updates and deletes to maintain data integrity
+      allow update, delete: if false;
+    }
+
+    // === SmartQuiz (new) ===
+    match /smartQuizzes/{quizId} {
+      allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isSignedIn() && (
+        request.resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow update, delete: if isSignedIn() && (
+        isOwner(resource.data.userId) || isAdmin()
+      );
+    }
+
+    // Shared content collections - allow read for authenticated users, write for admins
+    match /questions/{questionId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    match /examModules/{moduleId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    match /practiceExams/{examId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    match /lessons/{lessonId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    match /skillQuizzes/{quizId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    match /skillTags/{tagId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    // Concepts collection - allow read for authenticated users, write for admins
+    match /concepts/{conceptId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    // Concept drills collection
+    match /conceptDrills/{drillId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    // User concept mastery collection
+    match /userConceptMastery/{docId} {
+      allow read: if isSignedIn() && (
+        docId.matches(request.auth.uid + '_.*') || isAdmin()
+      );
+      allow write: if isSignedIn() && (
+        docId.matches(request.auth.uid + '_.*') || isAdmin()
+      );
+    }
+    
+    // Config collection - allow reading feature flags
+    match /config/featureFlags {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    // Global config collection - allow admins to read/write global settings
+    match /globalConfig/{configId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
+    // Catch-all rule - deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

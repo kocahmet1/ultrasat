@@ -1,0 +1,141 @@
+.lesson-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.lesson-header h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+}
+
+.lesson-content {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Styling for HTML content */
+.lesson-content h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.lesson-content h3 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  color: #3498db;
+}
+
+.lesson-content p {
+  margin-bottom: 1.2rem;
+}
+
+.lesson-content ul,
+.lesson-content ol {
+  margin-bottom: 1.2rem;
+  padding-left: 1.5rem;
+}
+
+.lesson-content li {
+  margin-bottom: 0.5rem;
+}
+
+.lesson-content code {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.lesson-content pre {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 1.2rem;
+}
+
+.lesson-content blockquote {
+  padding: 1rem;
+  border-left: 4px solid #3498db;
+  background-color: #f8f9fa;
+  margin: 1.2rem 0;
+}
+
+/* Example Styles */
+.lesson-content .example {
+  background-color: #f8f9fa;
+  border-left: 4px solid #17a2b8;
+  padding: 1rem;
+  margin: 1.2rem 0;
+  border-radius: 0.25rem;
+}
+
+.lesson-content .warning {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 1rem;
+  margin: 1.2rem 0;
+  border-radius: 0.25rem;
+}
+
+.lesson-content .tip {
+  background-color: #d4edda;
+  border-left: 4px solid #28a745;
+  padding: 1rem;
+  margin: 1.2rem 0;
+  border-radius: 0.25rem;
+}
+
+.lesson-content .correct {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.lesson-content .incorrect {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+/* Loading state */
+.lesson-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.lesson-loading p {
+  margin-top: 1rem;
+  color: #6c757d;
+}
+
+/* Action buttons */
+.lesson-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.practice-button {
+  min-width: 200px;
+}

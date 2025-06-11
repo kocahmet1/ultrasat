@@ -1,0 +1,127 @@
+.graph-upload-container {
+  margin-top: 10px;
+  border: 1px dashed #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.graph-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.graph-preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.preview-graph-btn {
+  background-color: #673ab7;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.preview-graph-btn:hover {
+  background-color: #512da8;
+}
+
+.remove-graph-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-graph-btn:hover {
+  background-color: #d32f2f;
+}
+
+.graph-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.graph-upload-actions {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.graph-file-input {
+  display: none;
+}
+
+.select-graph-btn {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.select-graph-btn:hover {
+  background-color: #1976d2;
+}
+
+.upload-graph-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.upload-graph-btn:hover {
+  background-color: #388e3c;
+}
+
+.graph-upload-help {
+  font-size: 12px;
+  color: #666;
+  margin: 5px 0;
+}
+
+.graph-upload-error {
+  color: #f44336;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.upload-progress {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #2196f3;
+}
+
+/* Add this to the Question component for graph display */
+.question-graph-container {
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.question-graph {
+  max-width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

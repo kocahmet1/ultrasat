@@ -1,0 +1,124 @@
+/* Sidebar.css */
+
+/* Re-using some vars from SkillsPractice.new.css for consistency */
+/* Ideally, these would be in a global :root definition */
+:root {
+  --primary-color: #4A90E2; /* Friendly Blue */
+  --primary-color-dark: #3a7ac8;
+  --text-color-on-primary: #ffffff;
+  --text-color-sidebar-link: #c5cee0; /* Lighter text for links */
+  --text-color-sidebar-link-hover: #ffffff;
+  --background-color-sidebar: #2c3e50; /* Dark Slate Blue/Gray */
+  --background-color-sidebar-hover: #34495e; /* Slightly lighter for hover */
+  --background-color-sidebar-active: var(--primary-color); /* Active link background */
+  --border-color-sidebar: #4a5568;
+
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --border-radius-sm: 0.25rem;
+}
+
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: var(--background-color-sidebar);
+  color: var(--text-color-on-primary);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: var(--shadow-sm); /* Subtle shadow to lift it off the page */
+  transition: width 0.3s ease;
+  z-index: 100; /* Ensure it's above other content if not using grid/flex correctly */
+}
+
+.sidebar-header {
+  padding: 20px 25px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color-sidebar);
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color-on-primary);
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  overflow-y: auto; /* For many nav items */
+  padding-top: 15px;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  padding: 14px 25px;
+  text-decoration: none;
+  color: var(--text-color-sidebar-link);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-left: 3px solid transparent; /* For active indicator */
+}
+
+.sidebar-nav li a:hover {
+  background-color: var(--background-color-sidebar-hover);
+  color: var(--text-color-sidebar-link-hover);
+}
+
+.sidebar-nav li.active a {
+  background-color: var(--background-color-sidebar-active);
+  color: var(--text-color-on-primary);
+  font-weight: 500;
+  border-left-color: var(--secondary-color, #50E3C2); /* Use accent from root or a fallback */
+}
+
+.sidebar-icon {
+  font-size: 1.2rem;
+  margin-right: 15px;
+  width: 20px; /* Ensure icons align */
+  display: inline-block;
+  text-align: center;
+}
+
+.sidebar-label {
+  font-size: 0.95rem;
+}
+
+.sidebar-footer {
+  padding: 20px 25px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-color-sidebar-link);
+  border-top: 1px solid var(--border-color-sidebar);
+}
+
+/* Optional: Collapsed state for sidebar */
+/* You would need JS to toggle a class like '.sidebar-collapsed' on the .sidebar div */
+/*
+.sidebar.sidebar-collapsed {
+  width: 80px;
+}
+
+.sidebar.sidebar-collapsed .sidebar-label,
+.sidebar.sidebar-collapsed .sidebar-header h3,
+.sidebar.sidebar-collapsed .sidebar-footer p {
+  display: none;
+}
+
+.sidebar.sidebar-collapsed .sidebar-nav li a {
+  justify-content: center;
+}
+
+.sidebar.sidebar-collapsed .sidebar-icon {
+  margin-right: 0;
+  font-size: 1.5rem; 
+}
+*/

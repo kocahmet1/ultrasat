@@ -1,0 +1,119 @@
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 600;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.loading,
+.error,
+.noResults {
+    text-align: center;
+    font-size: 1.2em;
+    color: #555;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.error {
+    color: #d9534f;
+    background-color: #fdd;
+    border: 1px solid #d9534f;
+    border-radius: 8px;
+}
+
+.examList {
+    list-style: none;
+    padding: 0;
+}
+
+.examItem {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.examItem:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.examLink {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    text-decoration: none;
+    color: #333;
+}
+
+.examInfo {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.examName {
+    font-size: 1.3em;
+    font-weight: 500;
+    color: #007bff; 
+    margin-bottom: 5px;
+}
+
+.examDate {
+    font-size: 0.95em;
+    color: #777;
+}
+
+.examScore {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #28a745; 
+    background-color: #e9f5ea;
+    padding: 8px 15px;
+    border-radius: 20px;
+    white-space: nowrap;
+    margin-left: 15px;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 1.8em;
+    }
+
+    .examLink {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .examScore {
+        margin-top: 10px;
+        margin-left: 0;
+        align-self: flex-start;
+    }
+
+    .examName {
+        font-size: 1.1em;
+    }
+}

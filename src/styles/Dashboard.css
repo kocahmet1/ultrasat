@@ -1,0 +1,621 @@
+/* === Dashboard General Styles === */
+:root {
+  --primary-color: #4a69bd; /* A calm, professional blue */
+  --primary-color-dark: #3b5998;
+  --secondary-color: #6c757d; /* Neutral gray for secondary actions */
+  --accent-color: #f0ad4e; /* Warm accent for highlights or calls to action */
+  --background-color: #f8f9fa; /* Light gray background for the page */
+  --card-background-color: #ffffff; /* White for cards */
+  --text-color: #343a40; /* Dark gray for primary text */
+  --text-color-light: #6c757d; /* Lighter gray for secondary text */
+  --border-color: #dee2e6; /* Light border color */
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --border-radius: 0.375rem; /* Slightly larger radius for a softer look */
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --box-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Main App Container - Assuming this structure exists from App.js or similar */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: var(--font-family-sans-serif);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.logo-circle {
+  background-color: #ffffff;
+  color: var(--primary-color);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.sidebar-menu li {
+  padding: 15px 20px;
+  margin-bottom: 8px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.sidebar-menu li:hover, 
+.sidebar-menu li.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.sidebar-menu .nav-icon { /* For icons inside menu items */
+  margin-right: 12px;
+  font-size: 1.2rem;
+}
+
+.logout-button {
+  margin-top: auto; /* Pushes to the bottom */
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Main Content Area for Dashboard */
+.main-content.dashboard-main-content {
+  flex-grow: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-header h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: var(--text-color-light);
+}
+
+.user-info .admin-dashboard-button {
+  margin-left: 15px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+/* Dashboard Tabs */
+.dashboard-tabs {
+  display: flex;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tab-button {
+  padding: 12px 25px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-right: 10px;
+  color: var(--text-color-light);
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.tab-button:hover {
+  color: var(--primary-color);
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* === Modern Button Styles (reusable) === */
+.modern-button {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none; /* For Link components styled as buttons */
+}
+
+.modern-button:hover {
+  box-shadow: var(--box-shadow-hover);
+}
+
+.modern-button.primary-button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+.modern-button.primary-button:hover {
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+}
+
+.modern-button.secondary-button {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.modern-button.secondary-button:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.modern-button .nav-icon { /* For icons inside buttons */
+  margin-right: 8px;
+}
+
+/* General Card Style Container */
+.card-style-container {
+  background-color: var(--card-background-color);
+  border-radius: var(--border-radius);
+  padding: 25px;
+  box-shadow: var(--box-shadow);
+  margin-bottom: 25px;
+  transition: box-shadow 0.3s ease;
+}
+
+.card-style-container:hover {
+  box-shadow: var(--box-shadow-hover);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-color-light);
+}
+
+.no-data-message p {
+  margin-bottom: 15px;
+}
+
+/* Loading State */
+.modern-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-color-light);
+}
+
+.modern-loading-container h1 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.loading-spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.modern-loading-spinner {
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid var(--primary-color); /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* === Overview Tab Specifics === */
+.overview-tab {
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Main content takes 2/3, side takes 1/3 */
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.overview-column-main,
+.overview-column-side {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Skills to Review */
+/* Styles for ReviewTile can be in its own CSS or here if needed */
+/* Assuming ReviewTile is already styled nicely */
+
+/* Estimated SAT Score */
+.estimated-score-section {
+  text-align: center;
+}
+
+.estimated-score-value {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 10px 0;
+}
+
+.score-range-text {
+  font-size: 0.9rem;
+  color: var(--text-color-light);
+}
+
+/* Overall Accuracy Section */
+.overall-accuracy-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.accuracy-card {
+  text-align: center;
+}
+
+.accuracy-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.accuracy-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 5px 0;
+}
+
+.reading-writing-accuracy .accuracy-value {
+  color: var(--primary-color);
+}
+
+.math-accuracy .accuracy-value {
+  color: var(--success-color); /* Green for Math */
+}
+
+.accuracy-label {
+  font-size: 0.9rem;
+  color: var(--text-color-light);
+}
+
+/* Subcategory Performance Section */
+.subcategory-performance-section {
+  margin-top: 15px; /* Add some space after the grid */
+}
+
+.performance-level-group {
+  margin-bottom: 30px;
+}
+
+.performance-level-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.needs-improvement .performance-level-title {
+  color: var(--danger-color);
+}
+
+.moderate-performance .performance-level-title {
+  color: var(--warning-color);
+}
+
+.strong-performance .performance-level-title {
+  color: var(--success-color);
+}
+
+.subcategory-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Subcategory Card (Shared with ProgressDashboard.css, consider moving to a global component CSS) */
+.subcategory-card {
+  background-color: var(--card-background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-left: 5px solid var(--border-color); /* Default border */
+}
+
+.subcategory-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow-hover);
+}
+
+/* Performance-specific border colors */
+.subcategory-card.performance-weak {
+  border-left-color: var(--danger-color);
+}
+.subcategory-card.performance-moderate {
+  border-left-color: var(--warning-color);
+}
+.subcategory-card.performance-strong {
+  border-left-color: var(--success-color);
+}
+
+.subcategory-card-content {
+  margin-bottom: 15px;
+}
+
+.subcategory-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.subcategory-card-metric {
+  font-size: 0.95rem;
+  color: var(--text-color-light);
+  margin-bottom: 5px;
+}
+
+.subcategory-card-actions {
+  display: flex;
+  gap: 10px; 
+  margin-top: auto; /* Push actions to the bottom of the card */
+}
+
+.subcategory-card-actions .modern-button {
+  flex-grow: 1; /* Make buttons take equal width if multiple */
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+/* === Skills Breakdown Tab === */
+.skills-breakdown-tab .section-title {
+  margin-bottom: 20px;
+}
+/* Use .subcategory-cards-grid and .subcategory-card from above */
+
+/* === Recommendations Tab === */
+.recommendations-tab .section-title {
+  margin-bottom: 20px;
+}
+
+.feedback-message {
+  font-style: italic;
+  color: var(--text-color-light);
+  margin-bottom: 25px;
+  padding: 15px;
+  border-left: 3px solid var(--accent-color);
+}
+
+.recommendation-section {
+  margin-bottom: 30px;
+}
+
+.recommendation-section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.recommendation-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.recommendation-card {
+  /* Inherits .subcategory-card styles */
+  border-left-color: var(--accent-color); /* Distinct color for recommendation cards */
+}
+
+.recommendation-text {
+  font-size: 0.9rem;
+  color: var(--text-color-light);
+  margin-bottom: 10px;
+}
+
+/* Dashboard Footer */
+.dashboard-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-color-light);
+}
+
+.dashboard-actions .modern-button {
+  margin-left: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .overview-grid {
+    grid-template-columns: 1fr; /* Stack columns */
+  }
+  .overview-column-side {
+    flex-direction: row; /* Accuracy cards side-by-side */
+    gap: 20px;
+  }
+  .accuracy-card {
+    flex: 1;
+  }
+}
+
+@media (max-width: 992px) {
+  .main-content.dashboard-main-content {
+    padding: 20px;
+  }
+  .dashboard-header h1 {
+    font-size: 1.8rem;
+  }
+  .subcategory-cards-grid,
+  .recommendation-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row; /* Horizontal sidebar items on small screens */
+    padding: 10px;
+    overflow-x: auto;
+    align-items: center;
+  }
+  .sidebar-logo {
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
+  .sidebar-menu {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+  }
+  .sidebar-menu li {
+    margin-bottom: 0;
+    margin-right: 5px;
+    padding: 10px 12px;
+    white-space: nowrap;
+  }
+  .logout-button {
+    margin-top: 0;
+    margin-left: auto; /* Pushes to the right */
+  }
+  .dashboard-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .tab-button {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+  }
+  .overview-column-side {
+    flex-direction: column;
+  }
+  .dashboard-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .dashboard-actions {
+    display: flex;
+    width: 100%;
+  }
+  .dashboard-actions .modern-button {
+    flex: 1;
+    margin-left: 0;
+  }
+  .dashboard-actions .modern-button + .modern-button {
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .user-info {
+    width: 100%;
+  }
+  .user-info .admin-dashboard-button {
+    margin-left: auto;
+  }
+  .subcategory-cards-grid,
+  .recommendation-cards-grid {
+    grid-template-columns: 1fr; /* Single column for cards */
+  }
+}
