@@ -2,8 +2,7 @@ services:
   - type: web
     name: veritas-blue-web
     env: node
-    rootDir: .
-    buildCommand: npm install && npm run build
+    buildCommand: chmod +x deploy.sh && ./deploy.sh
     startCommand: npm start
     envVars:
       - key: NODE_ENV
