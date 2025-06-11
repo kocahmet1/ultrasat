@@ -24,5 +24,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Firebase / Google Cloud credentials
+# Allow package.json and package-lock.json, but ignore other JSON files
 *.json
+!package.json
+!package-lock.json
 ultrasat-5e4c4-369f564bdaef.json
