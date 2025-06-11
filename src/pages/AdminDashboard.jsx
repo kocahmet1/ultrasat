@@ -25,12 +25,14 @@ import QuestionGeneratorLive from '../components/QuestionGeneratorLive';
 import SubcategoryMigrationTool from '../components/admin/SubcategoryMigrationTool';
 import SubcategorySettings from '../components/admin/SubcategorySettings';
 import { exportQuestionsAsJSON } from '../utils/exportUtils.js'; // Added import
+import { useGraphGenerationAvailability } from '../utils/graphGenerationHook';
 import '../styles/AdminDashboard.css';
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { allSubcategories, loading: subcategoriesLoading } = useSubcategories(); // Correct hook (plural)
+  const { isAvailable: isGraphGenerationAvailable } = useGraphGenerationAvailability();
   
   // State for admin access control
   const [isAdmin, setIsAdmin] = useState(false);
@@ -1932,12 +1934,14 @@ const migrateExistingQuestions = async () => {
           >
             Import Questions
           </button>
-          <button 
-            className={`tab-button`}
-            onClick={() => navigate('/admin/graph-generation')}
-          >
-            Generate Graphs
-          </button>
+          {isGraphGenerationAvailable && (
+            <button 
+              className={`tab-button`}
+              onClick={() => navigate('/admin/graph-generation')}
+            >
+              Generate Graphs
+            </button>
+          )}
           <button 
             className={`tab-button ${activeTab === 'aiContent' ? 'active' : ''}`}
             onClick={() => navigate('/admin/ai-content')}

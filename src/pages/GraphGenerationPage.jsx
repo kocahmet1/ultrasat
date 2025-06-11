@@ -36,15 +36,26 @@ const GraphGenerationPage = () => {
       setPythonStatus(pythonResult);
       
       // Set preferred method based on availability
-      if (plotlyResult.plotlyReady) {
+      if (plotlyResult.available && plotlyResult.plotlyReady) {
         setPreferredMethod('plotly');
-      } else if (pythonResult.pythonInstalled) {
+      } else if (pythonResult.available && pythonResult.pythonInstalled) {
         setPreferredMethod('python');
       }
     } catch (error) {
       console.error('Error checking environments:', error);
-      setPlotlyStatus({ plotlyReady: false, error: error.message });
-      setPythonStatus({ pythonInstalled: false, error: error.message });
+      const isDisabled = error.message.includes('disabled in this environment');
+      setPlotlyStatus({ 
+        available: false, 
+        plotlyReady: false, 
+        error: error.message,
+        disabled: isDisabled
+      });
+      setPythonStatus({ 
+        available: false, 
+        pythonInstalled: false, 
+        error: error.message,
+        disabled: isDisabled
+      });
     }
   };
 
@@ -174,7 +185,21 @@ const GraphGenerationPage = () => {
   };
 
   const getEnvironmentStatus = () => {
-    if (plotlyStatus?.plotlyReady) {
+    // Check if graph generation is completely disabled
+    if (plotlyStatus?.disabled && pythonStatus?.disabled) {
+      return (
+        <div className="status-card warning">
+          <span className="status-icon">🚫</span>
+          <span>Graph Generation Disabled</span>
+          <small>This feature is disabled in this environment to enable lightweight deployment.</small>
+          <div style={{fontSize: '11px', marginTop: '5px', color: '#666'}}>
+            To enable: Set ENABLE_GRAPH_GENERATION=true and required API keys on the server
+          </div>
+        </div>
+      );
+    }
+
+    if (plotlyStatus?.available && plotlyStatus?.plotlyReady) {
       return (
         <div className="status-card success">
           <span className="status-icon">✅</span>
@@ -182,17 +207,12 @@ const GraphGenerationPage = () => {
           <small>Pure JavaScript - No Python dependencies required!</small>
         </div>
       );
-    } else if (pythonStatus?.pythonInstalled) {
+    } else if (pythonStatus?.available && pythonStatus?.pythonInstalled) {
       return (
         <div className="status-card success">
           <span className="status-icon">⚠️</span>
           <span>Python Environment Ready (Fallback)</span>
           <small>{pythonStatus.version} - Consider switching to Plotly.js for better performance</small>
-          {/* Debug info */}
-          <div style={{fontSize: '11px', marginTop: '5px', color: '#666'}}>
-            Debug: plotlyReady={String(plotlyStatus?.plotlyReady)}, pythonInstalled={String(pythonStatus?.pythonInstalled)}, 
-            isReady={String(isEnvironmentReady())}
-          </div>
         </div>
       );
     } else {
@@ -200,19 +220,22 @@ const GraphGenerationPage = () => {
         <div className="status-card error">
           <span className="status-icon">❌</span>
           <span>No Graph Generation Environment Ready</span>
-          <small>Install Puppeteer: npm install puppeteer</small>
-          {/* Debug info */}
-          <div style={{fontSize: '11px', marginTop: '5px', color: '#666'}}>
-            Debug: plotlyReady={String(plotlyStatus?.plotlyReady)}, pythonInstalled={String(pythonStatus?.pythonInstalled)}, 
-            plotlyError={plotlyStatus?.error}, pythonError={pythonStatus?.error}
-          </div>
+          <small>
+            {plotlyStatus?.error || pythonStatus?.error || 'Install required dependencies'}
+          </small>
+          {!plotlyStatus?.disabled && !pythonStatus?.disabled && (
+            <div style={{fontSize: '11px', marginTop: '5px', color: '#666'}}>
+              Try: npm install puppeteer (for Plotly.js method)
+            </div>
+          )}
         </div>
       );
     }
   };
 
   const isEnvironmentReady = () => {
-    return plotlyStatus?.plotlyReady || pythonStatus?.pythonInstalled;
+    return (plotlyStatus?.available && plotlyStatus?.plotlyReady) || 
+           (pythonStatus?.available && pythonStatus?.pythonInstalled);
   };
 
   const truncateText = (text, maxLength = 100) => {

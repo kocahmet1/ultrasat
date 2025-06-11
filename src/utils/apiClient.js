@@ -141,3 +141,25 @@ export const getConceptDrill = async (conceptId, difficulty = 1) => {
     method: 'GET'
   });
 };
+
+/**
+ * Checks if graph generation features are available in this environment
+ * @returns {Promise<boolean>} - Whether graph generation is enabled
+ */
+export const isGraphGenerationAvailable = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/check-plotly-environment`);
+    const data = await response.json();
+    
+    // If we get a 503 status, the feature is disabled
+    if (response.status === 503) {
+      return false;
+    }
+    
+    // Otherwise, check if either environment is available
+    return data.available || false;
+  } catch (error) {
+    console.error('Error checking graph generation availability:', error);
+    return false;
+  }
+};

@@ -17,26 +17,65 @@ const assistantRouter = require('./assistant');
 const bankRouter = require('./bankRoutes');
 const conceptsRouter = require('./conceptsAPI');
 const questionsRouter = require('./questionsAPI');
-const graphGenerationRouter = require('./graphGeneration');
-const graphGenerationPlotlyRouter = require('./graphGenerationPlotly');
+// Conditionally load graph generation modules only if dependencies are available
+let graphGenerationRouter, graphGenerationPlotlyRouter;
+const hasGraphGeneration = process.env.ENABLE_GRAPH_GENERATION === 'true' && 
+                           (process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY);
+
+if (hasGraphGeneration) {
+  try {
+    graphGenerationRouter = require('./graphGeneration');
+    graphGenerationPlotlyRouter = require('./graphGenerationPlotly');
+    console.log('✅ Graph generation features loaded successfully');
+  } catch (error) {
+    console.warn('⚠️ Graph generation modules failed to load:', error.message);
+    console.log('Graph generation features will be disabled');
+  }
+} else {
+  console.log('📊 Graph generation features disabled - set ENABLE_GRAPH_GENERATION=true to enable');
+}
 
 // Initialize Firebase Admin SDK
 // For local development, use the service account key file
 // For production (Render.com), use environment variables
 let firebaseAdmin;
 try {
-  const serviceAccountPath = path.resolve(__dirname, '../ultrasat-5e4c4-369f564bdaef.json');
+  let credential;
+  
+  if (process.env.NODE_ENV === 'production' && process.env.FIREBASE_PRIVATE_KEY) {
+    // Production: Use environment variables (only if Firebase env vars are available)
+    console.log('Initializing Firebase Admin with environment variables...');
+    const serviceAccount = {
+      type: "service_account",
+      project_id: process.env.FIREBASE_PROJECT_ID || 'ultrasat-5e4c4',
+      private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+      private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      client_email: process.env.FIREBASE_CLIENT_EMAIL,
+      client_id: process.env.FIREBASE_CLIENT_ID,
+      auth_uri: "https://accounts.google.com/o/oauth2/auth",
+      token_uri: "https://oauth2.googleapis.com/token",
+      auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+      universe_domain: "googleapis.com"
+    };
+    credential = admin.credential.cert(serviceAccount);
+  } else {
+    // Development: Use service account key file
+    console.log('Initializing Firebase Admin with service account key file...');
+    const serviceAccountPath = path.resolve(__dirname, '../ultrasat-5e4c4-369f564bdaef.json');
+    credential = admin.credential.cert(serviceAccountPath);
+  }
   
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountPath),
+    credential: credential,
     databaseURL: 'https://ultrasat-5e4c4.firebaseio.com',
     storageBucket: 'ultrasat-5e4c4.firebasestorage.app'
   });
   
   firebaseAdmin = admin;
-  console.log('Firebase Admin SDK initialized successfully');
+  console.log('✅ Firebase Admin SDK initialized successfully');
 } catch (error) {
-  console.warn('Firebase Admin initialization error:', error);
+  console.warn('⚠️ Firebase Admin initialization error:', error);
+  console.log('Some features requiring Firebase Admin may not work properly');
 }
 
 // Middleware to attach Firebase Admin to the request object
@@ -50,8 +89,8 @@ const attachFirebaseAdmin = (req, res, next) => {
 
 // Create Express app
 const app = express();
-// Always use port 3001 for API to avoid conflict with React's default port 3000
-const PORT = 3001;
+// Use Render's PORT environment variable in production, fallback to 3001 for local development
+const PORT = process.env.PORT || 3001;
 
 // Trust proxy for rate limiting (fixes X-Forwarded-For header issue)
 app.set('trust proxy', 1);
@@ -96,6 +135,20 @@ app.get('/health', (req, res) => {
 // Serve static graph files as fallback when Firebase Storage is unavailable
 app.use('/api/static', express.static(path.join(__dirname, 'static')));
 
+// Serve React build files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../build')));
+  
+  // Handle React routing - send all non-API requests to React app
+  app.get('*', (req, res) => {
+    // Don't interfere with API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    res.sendFile(path.join(__dirname, '../build/index.html'));
+  });
+}
+
 // API Routes
 app.use('/api', quizAnalysisRouter);
 app.use('/api', conceptDrillsRouter);
@@ -103,8 +156,50 @@ app.use('/api/assistant', assistantRouter);
 app.use('/api/bank', bankRouter);
 app.use('/api/concepts', conceptsRouter);
 app.use('/api/questions', questionsRouter);
-app.use('/api', graphGenerationRouter);
-app.use('/api', graphGenerationPlotlyRouter);
+
+// Conditionally register graph generation routes
+if (hasGraphGeneration && graphGenerationRouter && graphGenerationPlotlyRouter) {
+  app.use('/api', graphGenerationRouter);
+  app.use('/api', graphGenerationPlotlyRouter);
+  console.log('📊 Graph generation API endpoints registered');
+} else {
+  // Add fallback routes for disabled graph generation features
+  app.post('/api/generate-graph', (req, res) => {
+    res.status(503).json({ 
+      success: false,
+      error: 'Graph generation feature is disabled in this environment',
+      reason: 'Missing required dependencies or environment variables',
+      suggestion: 'Set ENABLE_GRAPH_GENERATION=true and required API keys to enable this feature'
+    });
+  });
+  
+  app.post('/api/generate-graph-plotly', (req, res) => {
+    res.status(503).json({ 
+      success: false,
+      error: 'Graph generation feature is disabled in this environment',
+      reason: 'Missing required dependencies or environment variables',
+      suggestion: 'Set ENABLE_GRAPH_GENERATION=true and required API keys to enable this feature'
+    });
+  });
+  
+  app.get('/api/check-python', (req, res) => {
+    res.status(503).json({ 
+      available: false,
+      error: 'Graph generation feature is disabled',
+      requirements: 'Set ENABLE_GRAPH_GENERATION=true to enable'
+    });
+  });
+  
+  app.get('/api/check-plotly-environment', (req, res) => {
+    res.status(503).json({ 
+      available: false,
+      error: 'Graph generation feature is disabled',
+      requirements: 'Set ENABLE_GRAPH_GENERATION=true to enable'
+    });
+  });
+  
+  console.log('📊 Graph generation API endpoints disabled - fallback routes registered');
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
