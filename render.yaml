@@ -3,7 +3,7 @@ services:
     name: veritas-blue-web
     env: node
     buildCommand: chmod +x deploy.sh && ./deploy.sh
-    startCommand: npm start
+    startCommand: cd .. && npm start
     envVars:
       - key: NODE_ENV
         value: production 
