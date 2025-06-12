@@ -11,7 +11,7 @@ const vocabularyCache = {};
 // Base URL for API requests - configured for both development and production
 const getApiUrl = () => {
   if (process.env.NODE_ENV === 'production') {
-    return process.env.REACT_APP_API_URL || 'https://ultrasat.onrender.com';
+    return process.env.REACT_APP_API_URL || 'https://veritas-blue-web.onrender.com';
   } else {
     return process.env.REACT_APP_API_URL || 'http://localhost:3001';
   }
