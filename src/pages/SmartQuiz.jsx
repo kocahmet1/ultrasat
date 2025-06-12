@@ -388,10 +388,13 @@ export default function SmartQuiz() {
         options: currentQuestion.options
       };
       
+      // Extract the actual message content from the message object
+      const messageContent = typeof message === 'string' ? message : message.content;
+      
       // Add the user message to history first
       const updatedHistoryWithUserMessage = [...assistantHistory, {
         role: 'user',
-        content: message
+        content: messageContent
       }];
       
       // Call askAssistant with the correct parameter object format
