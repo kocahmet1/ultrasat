@@ -9,7 +9,7 @@ const router = express.Router();
 // Simple authentication middleware
 const authenticateUser = async (req, res, next) => {
   // For disabled endpoints, just return early
-  next();
+    next();
 };
 
 /**
@@ -32,7 +32,7 @@ router.post('/generate-graph-plotly', authenticateUser, (req, res) => {
 });
 
 router.get('/check-python', authenticateUser, (req, res) => {
-  res.json({
+    res.json({
     ...disabledResponse,
     pythonInstalled: false,
     available: false
@@ -40,7 +40,7 @@ router.get('/check-python', authenticateUser, (req, res) => {
 });
 
 router.get('/check-plotly-environment', authenticateUser, (req, res) => {
-  res.json({
+        res.json({
     ...disabledResponse,
     plotlyReady: false,
     available: false

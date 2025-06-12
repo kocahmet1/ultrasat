@@ -8,6 +8,15 @@ import { getAuth } from 'firebase/auth';
 // Module-level cache for vocabulary definitions
 const vocabularyCache = {};
 
+// Base URL for API requests - configured for both development and production
+const getApiUrl = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.REACT_APP_API_URL || 'https://veritas-blue-web.onrender.com';
+  } else {
+    return process.env.REACT_APP_API_URL || 'http://localhost:3001';
+  }
+};
+
 /**
  * Get the current user's ID token for authentication
  * @returns {Promise<string>} The ID token
@@ -35,7 +44,7 @@ const getIdToken = async () => {
  */
 export async function askAssistant({ quizId, questionId, question, questionDetails, history = [], tipRequested = false, summariseRequested = false, priming = false }) {
   try {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+    const apiUrl = getApiUrl();
     const endpoint = `${apiUrl}/api/assistant`;
     
     const idToken = await getIdToken();
@@ -94,7 +103,7 @@ export async function askAssistant({ quizId, questionId, question, questionDetai
  */
 export async function getChatHistory(quizId, questionId) {
   try {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+    const apiUrl = getApiUrl();
     const endpoint = `${apiUrl}/api/assistant/history/${quizId}/${questionId}`;
     
     const idToken = await getIdToken();
@@ -129,7 +138,7 @@ export async function getChatHistory(quizId, questionId) {
 export async function getVocabularyDefinitions(quizId, questionId, questionContent) {
   try {
     const startTime = performance.now();
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+    const apiUrl = getApiUrl();
     const endpoint = `${apiUrl}/api/assistant/vocabulary`;
     
     // Generate a unique cache key

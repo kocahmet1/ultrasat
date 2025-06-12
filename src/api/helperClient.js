@@ -4,8 +4,14 @@
  */
 import { getAuth } from 'firebase/auth';
 
-// Base URL for API calls
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// Base URL for API requests - configured for both development and production
+const getApiUrl = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.REACT_APP_API_URL || 'https://veritas-blue-web.onrender.com';
+  } else {
+    return process.env.REACT_APP_API_URL || 'http://localhost:3001';
+  }
+};
 
 // Get the current user's auth token
 const getAuthToken = async () => {
@@ -64,7 +70,7 @@ export const getHelperData = async (quizId, questionId, questionContent, helperT
     console.log(`Making API call for ${helperType} data for question ${questionId}`);
     
     const token = await getAuthToken();
-    const endpoint = `${API_BASE_URL}/api/assistant/helper`;
+    const endpoint = `${getApiUrl()}/api/assistant/helper`;
     
     // Log request information
     console.log('Sending helper request to:', endpoint);
@@ -146,7 +152,7 @@ export const saveBankItem = async (term, definition, type = 'word', source = 'qu
     console.log(`[HelperClient] Making API request to save bank item...`);
 
     // Make API request to save the item
-    const response = await fetch(`${API_BASE_URL}/api/bank/save`, {
+    const response = await fetch(`${getApiUrl()}/api/bank/save`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
