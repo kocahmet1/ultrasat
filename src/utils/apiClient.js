@@ -9,7 +9,7 @@ import { auth } from '../firebase/config';
 
 // Base URL for API requests - configured for both development and production
 const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? process.env.REACT_APP_API_URL || 'https://veritas-blue-web.onrender.com/api'
+  ? process.env.REACT_APP_API_URL || 'https://ultrasat.onrender.com/api'
   : 'http://localhost:3001/api';
 
 /**

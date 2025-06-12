@@ -117,6 +117,18 @@ console.log(`API Server running in ${process.env.NODE_ENV || 'development'} mode
 console.log(`CORS configured for: ${corsOptions.origin}`);
 console.log(`Gemini Model: ${process.env.GEMINI_ASSISTANT_MODEL || 'gemini-2.5-flash-preview-04-17'}`);
 
+// Debug endpoint to check environment configuration
+app.get('/api/debug/env', (req, res) => {
+  res.json({
+    nodeEnv: process.env.NODE_ENV,
+    hasGeminiKey: !!process.env.GEMINI_API_KEY,
+    geminiKeyLength: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 0,
+    geminiModel: process.env.GEMINI_ASSISTANT_MODEL || 'gemini-pro',
+    timestamp: new Date().toISOString(),
+    firebaseInitialized: !!firebaseAdmin
+  });
+});
+
 // Configure rate limiting
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
