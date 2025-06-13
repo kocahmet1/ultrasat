@@ -13,7 +13,7 @@ import {
   faSpinner,
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { getFlashcardDecks } from '../api/helperClient';
+import { getFlashcardDecks, deleteFlashcardDeck } from '../api/helperClient';
 import AddToFlashcardsModal from '../components/AddToFlashcardsModal';
 import FlashcardStudy from '../components/FlashcardStudy';
 import WordQuizzes from '../components/WordQuizzes';
@@ -183,6 +183,27 @@ export default function WordBank() {
   // Handle close quiz
   const handleCloseQuiz = () => {
     setActiveQuiz(null);
+  };
+
+  // Handle delete deck
+  const handleDeleteDeck = async (deck) => {
+    if (deck.name === 'Deck 1') {
+      toast.error('Cannot delete the default deck');
+      return;
+    }
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete "${deck.name}"? This will permanently remove the deck and all its words.`);
+    if (!confirmDelete) return;
+
+    try {
+      await deleteFlashcardDeck(deck.id);
+      toast.success(`Deck "${deck.name}" deleted successfully`);
+      // Refresh the decks list
+      loadFlashcardDecks();
+    } catch (error) {
+      console.error('Error deleting deck:', error);
+      toast.error('Failed to delete deck. Please try again.');
+    }
   };
 
   // Filter and sort words
@@ -384,6 +405,15 @@ export default function WordBank() {
                       <FontAwesomeIcon icon={faPlay} />
                       {deck.wordCount === 0 ? 'No Words' : 'Study'}
                     </button>
+                    {deck.name !== 'Deck 1' && (
+                      <button 
+                        className="delete-deck-button"
+                        onClick={() => handleDeleteDeck(deck)}
+                        title="Delete deck"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -396,6 +426,7 @@ export default function WordBank() {
           flashcardDecks={flashcardDecks}
           loading={decksLoading}
           onStartQuiz={handleStartQuiz}
+          onDeleteDeck={handleDeleteDeck}
         />
       ) : null}
 

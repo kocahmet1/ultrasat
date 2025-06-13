@@ -485,6 +485,59 @@ router.delete('/flashcard-decks/:deckId/words/:wordId', verifyFirebaseToken, asy
 });
 
 /**
+ * DELETE /api/bank/flashcard-decks/:deckId
+ * Delete a flashcard deck and all its words
+ */
+router.delete('/flashcard-decks/:deckId', verifyFirebaseToken, async (req, res) => {
+  try {
+    const { deckId } = req.params;
+    const userId = req.user.uid;
+
+    // Check if deck exists and belongs to user
+    const deckRef = req.db.collection('users').doc(userId).collection('flashcardDecks').doc(deckId);
+    const deckDoc = await deckRef.get();
+    
+    if (!deckDoc.exists) {
+      return res.status(404).json({ error: 'Flashcard deck not found.' });
+    }
+
+    const deckData = deckDoc.data();
+
+    // Prevent deletion of "Deck 1" to maintain at least one deck
+    if (deckData.name === 'Deck 1') {
+      return res.status(400).json({ error: 'Cannot delete the default deck. You can rename it if needed.' });
+    }
+
+    // Delete all words in the deck first
+    const wordsSnapshot = await req.db.collection('users').doc(userId)
+      .collection('flashcardDecks').doc(deckId)
+      .collection('words')
+      .get();
+
+    const batch = req.db.batch();
+    wordsSnapshot.forEach(doc => {
+      batch.delete(doc.ref);
+    });
+
+    // Delete the deck itself
+    batch.delete(deckRef);
+
+    // Commit the batch delete
+    await batch.commit();
+
+    console.log(`[Flashcards API] Successfully deleted deck ${deckId} (${deckData.name}) for user ${userId}`);
+
+    res.json({ 
+      success: true, 
+      message: 'Flashcard deck deleted successfully.' 
+    });
+  } catch (error) {
+    console.error('Error in /api/bank/flashcard-decks/:deckId DELETE:', error);
+    res.status(500).json({ error: 'Failed to delete flashcard deck.' });
+  }
+});
+
+/**
  * POST /api/bank/flashcard-decks/:deckId/study
  * Update study statistics for a word
  */

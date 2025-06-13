@@ -350,6 +350,35 @@ export const removeWordFromFlashcardDeck = async (deckId, wordId) => {
 };
 
 /**
+ * Delete a flashcard deck and all its words
+ * @param {string} deckId - ID of the deck to delete
+ * @returns {Promise<void>}
+ */
+export const deleteFlashcardDeck = async (deckId) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/flashcard-decks/${deckId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to delete flashcard deck: ${errorText}`);
+    }
+  } catch (error) {
+    console.error('Error deleting flashcard deck:', error);
+    throw error;
+  }
+};
+
+/**
  * Update study statistics for a word in a flashcard deck
  * @param {string} deckId - ID of the deck
  * @param {string} wordId - ID of the word in the deck

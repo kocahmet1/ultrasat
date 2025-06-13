@@ -1,12 +1,12 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faLayerGroup, faPlay, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faLayerGroup, faPlay, faTrophy, faTrash } from '@fortawesome/free-solid-svg-icons';
 import '../styles/WordQuizzes.css';
 
 /**
  * WordQuizzes component - displays available quizzes for each flashcard deck
  */
-export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz }) {
+export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDeleteDeck }) {
   if (loading) {
     return (
       <div className="word-quizzes-loading">
@@ -77,6 +77,15 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz }) {
                     <FontAwesomeIcon icon={faPlay} />
                     Start Quiz
                   </button>
+                  {deck.name !== 'Deck 1' && onDeleteDeck && (
+                    <button 
+                      className="delete-quiz-deck-button"
+                      onClick={() => onDeleteDeck(deck)}
+                      title="Delete deck"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
