@@ -183,3 +183,201 @@ export const saveBankItem = async (term, definition, type = 'word', source = 'qu
     throw error; // Rethrow for handling by the caller
   }
 };
+
+/**
+ * Get all flashcard decks for the current user
+ * @returns {Promise<Array>} Array of deck objects
+ */
+export const getFlashcardDecks = async () => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/flashcard-decks`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to get flashcard decks: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.decks;
+  } catch (error) {
+    console.error('Error getting flashcard decks:', error);
+    throw error;
+  }
+};
+
+/**
+ * Create a new flashcard deck
+ * @param {string} name - Name of the deck
+ * @param {string} description - Optional description
+ * @returns {Promise<string>} ID of the created deck
+ */
+export const createFlashcardDeck = async (name, description = '') => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/flashcard-decks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name, description })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to create flashcard deck: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error('Error creating flashcard deck:', error);
+    throw error;
+  }
+};
+
+/**
+ * Add a word to a flashcard deck
+ * @param {string} deckId - ID of the deck
+ * @param {string} wordId - ID of the word in bank items (optional)
+ * @param {string} term - The word term
+ * @param {string} definition - The word definition
+ * @returns {Promise<string>} ID of the added word
+ */
+export const addWordToFlashcardDeck = async (deckId, wordId, term, definition) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/flashcard-decks/${deckId}/words`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ wordId, term, definition })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to add word to flashcard deck: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error('Error adding word to flashcard deck:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get all words in a flashcard deck
+ * @param {string} deckId - ID of the deck
+ * @returns {Promise<Array>} Array of word objects in the deck
+ */
+export const getFlashcardDeckWords = async (deckId) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/flashcard-decks/${deckId}/words`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to get flashcard deck words: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.words;
+  } catch (error) {
+    console.error('Error getting flashcard deck words:', error);
+    throw error;
+  }
+};
+
+/**
+ * Remove a word from a flashcard deck
+ * @param {string} deckId - ID of the deck
+ * @param {string} wordId - ID of the word in the deck
+ * @returns {Promise<void>}
+ */
+export const removeWordFromFlashcardDeck = async (deckId, wordId) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/flashcard-decks/${deckId}/words/${wordId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to remove word from flashcard deck: ${errorText}`);
+    }
+  } catch (error) {
+    console.error('Error removing word from flashcard deck:', error);
+    throw error;
+  }
+};
+
+/**
+ * Update study statistics for a word in a flashcard deck
+ * @param {string} deckId - ID of the deck
+ * @param {string} wordId - ID of the word in the deck
+ * @param {boolean} correct - Whether the answer was correct
+ * @returns {Promise<void>}
+ */
+export const updateFlashcardStudyStats = async (deckId, wordId, correct) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/flashcard-decks/${deckId}/study`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ wordId, correct })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to update study statistics: ${errorText}`);
+    }
+  } catch (error) {
+    console.error('Error updating study statistics:', error);
+    throw error;
+  }
+};

@@ -552,7 +552,15 @@ export default function SmartQuiz() {
     if (!submitting) {
       handleFinish();
     }
-    return null;
+    return (
+      <div className="quiz-completion-loading">
+        <div className="loading-content">
+          <div className="loading-spinner"></div>
+          <h2>Calculating your results...</h2>
+          <p>Please wait while we process your answers</p>
+        </div>
+      </div>
+    );
   }
 
   return (
