@@ -549,14 +549,10 @@ export default function SmartQuiz() {
 
   // Completed?
   if (currentIdx >= quiz.questionCount) {
-    return (
-      <div className="quiz-complete">
-        <h2>Quiz Complete!</h2>
-        <button disabled={submitting} onClick={handleFinish}>
-          {submitting ? 'Submitting…' : 'View Results'}
-        </button>
-      </div>
-    );
+    if (!submitting) {
+      handleFinish();
+    }
+    return null;
   }
 
   return (
