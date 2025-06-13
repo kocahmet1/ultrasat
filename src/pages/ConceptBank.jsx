@@ -232,7 +232,8 @@ const ConceptBank = () => {
           {filteredAndSortedConcepts.map(concept => (
             <div 
               key={concept.id} 
-              className={`bank-item ${concept.mastered ? 'mastered' : ''}`}
+              className={`bank-item ${concept.mastered ? 'mastered' : ''} clickable`}
+              onClick={() => navigate(`/concept-detail/${concept.id}`)}
             >
               <div className="bank-item-header">
                 <h3>{concept.term}</h3>

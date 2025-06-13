@@ -16,6 +16,7 @@ const conceptDrillsRouter = require('./conceptDrills');
 const assistantRouter = require('./assistant');
 const bankRouter = require('./bankRoutes');
 const conceptsRouter = require('./conceptsAPI');
+const conceptDetailRouter = require('./conceptDetailRoutes');
 const questionsRouter = require('./questionsAPI');
 // Conditionally load graph generation modules only if dependencies are available
 let graphGenerationRouter, graphGenerationPlotlyRouter;
@@ -157,6 +158,7 @@ app.use('/api', conceptDrillsRouter);
 app.use('/api/assistant', assistantRouter);
 app.use('/api/bank', bankRouter);
 app.use('/api/concepts', conceptsRouter);
+app.use('/api/concepts', conceptDetailRouter);
 app.use('/api/questions', questionsRouter);
 
 // Serve React build files in production

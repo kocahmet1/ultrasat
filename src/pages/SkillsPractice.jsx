@@ -128,7 +128,7 @@ function SkillsPractice() {
   };
 
   const goToLesson = (subcategoryId) => {
-    alert(`Navigating to lesson for ${getSubcategoryNameById(subcategoryId)} (ID: ${subcategoryId}) - Feature coming soon!`);
+    navigate(`/learn/${subcategoryId}`);
   };
 
   const currentSectionData = categorizedSubcategories[activeSection];

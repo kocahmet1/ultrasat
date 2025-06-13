@@ -108,6 +108,16 @@
   border-left-color: #34a853; /* Green for mastered items */
 }
 
+.bank-item.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bank-item.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
 .bank-item-header {
   display: flex;
   justify-content: space-between;

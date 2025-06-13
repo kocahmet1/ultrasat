@@ -1,0 +1,467 @@
+/* SubcategoryLearnPage.css */
+.subcategory-learn-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Header Styles */
+.learn-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e1e5e9;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  color: #495057;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: #e9ecef;
+  color: #212529;
+  text-decoration: none;
+}
+
+.learn-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.learn-title h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+.learn-icon {
+  font-size: 2rem;
+  color: #4285F4;
+}
+
+/* Section Styles */
+.learn-section {
+  background: white;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.section-header:hover {
+  background: #e9ecef;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.section-content {
+  padding: 24px;
+}
+
+/* Overview Content */
+.overview-content {
+  line-height: 1.6;
+  color: #495057;
+}
+
+.overview-content h3 {
+  color: #212529;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.overview-content p {
+  margin-bottom: 16px;
+}
+
+/* Concepts Grid */
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.concept-card {
+  background: #f8f9fa;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.concept-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.concept-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 12px;
+}
+
+.concept-explanation {
+  line-height: 1.5;
+  color: #495057;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.study-concept-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.study-concept-btn:hover {
+  background: #3367D6;
+}
+
+.no-concepts {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Sample Questions */
+.sample-questions-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.sample-questions-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+
+.sample-questions-empty svg {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.question-navigator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.question-counter {
+  font-weight: 600;
+  color: #495057;
+}
+
+.question-nav-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.question-nav-buttons button {
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.question-nav-buttons button:hover:not(:disabled) {
+  background: #e9ecef;
+}
+
+.question-nav-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.question-display {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.question-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #212529;
+  margin-bottom: 20px;
+}
+
+.question-options {
+  margin-bottom: 20px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.option.correct {
+  background: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.option.incorrect {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+.option-letter {
+  font-weight: 600;
+  min-width: 20px;
+  color: #495057;
+}
+
+.option-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.question-actions {
+  border-top: 1px solid #dee2e6;
+  padding-top: 16px;
+}
+
+.show-answer-btn {
+  padding: 8px 16px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.show-answer-btn:hover {
+  background: #5a6268;
+}
+
+.answer-explanation {
+  margin-top: 16px;
+  padding: 16px;
+  background: #e9ecef;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+
+.practice-prompt {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.practice-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.practice-more-btn:hover {
+  background: #218838;
+}
+
+/* Study Strategies */
+.strategies-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.strategy-group {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.strategy-group h4 {
+  color: #212529;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.strategy-group ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.strategy-group li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+  color: #495057;
+}
+
+/* Action Buttons */
+.learn-actions {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 2px solid #e1e5e9;
+}
+
+.primary-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  background: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(66, 133, 244, 0.3);
+}
+
+.primary-action-btn:hover {
+  background: #3367D6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(66, 133, 244, 0.4);
+}
+
+/* Loading and Error States */
+.subcategory-learn-loading,
+.subcategory-learn-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading-spinner {
+  font-size: 1.2rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.subcategory-learn-error h2 {
+  color: #dc3545;
+  margin-bottom: 16px;
+}
+
+.subcategory-learn-error p {
+  color: #6c757d;
+  margin-bottom: 24px;
+}
+
+.subcategory-learn-error button {
+  padding: 12px 24px;
+  background: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.subcategory-learn-error button:hover {
+  background: #3367D6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .subcategory-learn-container {
+    padding: 16px;
+  }
+  
+  .learn-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .learn-title h1 {
+    font-size: 1.5rem;
+  }
+  
+  .concepts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .strategies-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .question-navigator {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .section-content {
+    padding: 16px;
+  }
+} 

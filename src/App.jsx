@@ -10,6 +10,7 @@ import ExamResults from './pages/ExamResults';
 import Profile from './pages/Profile';
 import WordBank from './pages/WordBank';
 import ConceptBank from './pages/ConceptBank';
+import ConceptDetail from './pages/ConceptDetail';
 
 // Practice Exam Pages
 import PracticeExamList from './pages/PracticeExamList';
@@ -40,6 +41,7 @@ import GraphGenerationPage from './pages/GraphGenerationPage';
 import Lesson from './pages/Lesson';
 import SkillDrillQuiz from './pages/SkillDrillQuiz';
 import ConceptPractice from './pages/ConceptPractice';
+import SubcategoryLearnPage from './pages/SubcategoryLearnPage';
 
 // Auth Components
 import Login from './components/auth/Login';
@@ -103,9 +105,11 @@ function App() {
                   <Route path="/subcategory-progress/:subcategoryId" element={<PrivateRoute><SubcategoryProgressPage /></PrivateRoute>} />
                   <Route path="/word-bank" element={<PrivateRoute><WordBank /></PrivateRoute>} />
                   <Route path="/concept-bank" element={<PrivateRoute><ConceptBank /></PrivateRoute>} />
+                  <Route path="/concept-detail/:conceptId" element={<PrivateRoute><ConceptDetail /></PrivateRoute>} />
                   
                   {/* Unified Learning Track routes */}
                   <Route path="/concept/:conceptId" element={<PrivateRoute><ConceptPractice /></PrivateRoute>} />
+                  <Route path="/learn/:subcategoryId" element={<PrivateRoute><SubcategoryLearnPage /></PrivateRoute>} />
                   
                   {/* Legacy routes - redirect to new unified learning track */}
                   <Route path="/lesson/:skillTag" element={<Navigate to="/progress" replace />} />
