@@ -151,11 +151,20 @@ app.get('/health', (req, res) => {
 // Serve static graph files as fallback when Firebase Storage is unavailable
 app.use('/api/static', express.static(path.join(__dirname, 'static')));
 
+// API Routes - MUST come before React catch-all route
+app.use('/api', quizAnalysisRouter);
+app.use('/api', conceptDrillsRouter);
+app.use('/api/assistant', assistantRouter);
+app.use('/api/bank', bankRouter);
+app.use('/api/concepts', conceptsRouter);
+app.use('/api/questions', questionsRouter);
+
 // Serve React build files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../build')));
   
   // Handle React routing - send all non-API requests to React app
+  // This MUST come after API routes to avoid intercepting API calls
   app.get('*', (req, res) => {
     // Don't interfere with API routes
     if (req.path.startsWith('/api/')) {
@@ -164,14 +173,6 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../build/index.html'));
   });
 }
-
-// API Routes
-app.use('/api', quizAnalysisRouter);
-app.use('/api', conceptDrillsRouter);
-app.use('/api/assistant', assistantRouter);
-app.use('/api/bank', bankRouter);
-app.use('/api/concepts', conceptsRouter);
-app.use('/api/questions', questionsRouter);
 
 // Conditionally register graph generation routes
 if (hasGraphGeneration && graphGenerationRouter && graphGenerationPlotlyRouter) {
