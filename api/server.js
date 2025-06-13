@@ -89,8 +89,12 @@ const attachFirebaseAdmin = (req, res, next) => {
 
 // Create Express app
 const app = express();
+
 // Use Render's PORT environment variable in production, fallback to 3001 for local development
 const PORT = process.env.PORT || 3001;
+console.log('Environment:', process.env.NODE_ENV || 'development');
+console.log('PORT from env:', process.env.PORT);
+console.log('Final PORT value:', PORT);
 
 // Trust proxy for rate limiting (fixes X-Forwarded-For header issue)
 app.set('trust proxy', 1);

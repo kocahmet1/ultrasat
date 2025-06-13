@@ -43,12 +43,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node api/server.js",
+    "start": "cross-env PORT=3001 node api/server.js",
     "start-frontend": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-api": "node api/server.js",
+    "start-api": "cross-env PORT=3001 node api/server.js",
     "dev": "concurrently \"npm run start-frontend\" \"npm run start-api\""
   },
   "eslintConfig": {

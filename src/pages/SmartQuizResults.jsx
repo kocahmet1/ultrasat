@@ -192,27 +192,65 @@ export default function SmartQuizResults() {
             const isCorrect = answer?.isCorrect;
             
             return (
-              <div key={question.id} className={`question-item ${isCorrect ? 'correct' : 'incorrect'}`}>
+              <div key={question.id} className={`question-card ${isCorrect ? 'correct' : 'incorrect'}`}>
+                {/* Question Header */}
                 <div className="question-header">
-                  <div className="question-number-container">
-                    <span className="question-number">Question {index + 1}</span>
+                  <div className="question-number-badge">
+                    <span className="question-number">{index + 1}</span>
                   </div>
-                  <div className="status-icon">
-                    {isCorrect ? <FaCheckCircle className="icon-correct" /> : <FaTimesCircle className="icon-incorrect" />}
+                  <div className="question-status">
+                    {isCorrect ? (
+                      <div className="status-correct">
+                        <FaCheckCircle className="status-icon" />
+                        <span>Correct</span>
+                      </div>
+                    ) : (
+                      <div className="status-incorrect">
+                        <FaTimesCircle className="status-icon" />
+                        <span>Incorrect</span>
+                      </div>
+                    )}
                   </div>
                 </div>
-                <p className="question-text">{question.text}</p>
-                <div className="answer-details">
-                  <p>Your answer: {question.options[answer.selectedOption]}</p>
-                  {!isCorrect && <p>Correct answer: {question.options[question.correctAnswer]}</p>}
-                  {!isCorrect && question.explanation && (
-                    <div className="question-explanation">
-                      <h4>Explanation:</h4>
+
+                {/* Question Content */}
+                <div className="question-content">
+                  <div className="question-text">
+                    <h3>{question.text}</h3>
+                  </div>
+                  
+                  <div className="answer-summary">
+                    <div className="answer-row">
+                      <span className="answer-label">Your answer:</span>
+                      <span className={`answer-value ${isCorrect ? 'correct-answer' : 'incorrect-answer'}`}>
+                        {question.options[answer.selectedOption]}
+                      </span>
+                    </div>
+                    {!isCorrect && (
+                      <div className="answer-row">
+                        <span className="answer-label">Correct answer:</span>
+                        <span className="answer-value correct-answer">
+                          {question.options[question.correctAnswer]}
+                        </span>
+                      </div>
+                    )}
+                    <div className="answer-meta">
+                      <span className="time-spent">⏱️ {answer.timeSpent}s</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Explanation Section */}
+                {!isCorrect && question.explanation && (
+                  <div className="explanation-section">
+                    <div className="explanation-header">
+                      <h4>💡 Explanation</h4>
+                    </div>
+                    <div className="explanation-content">
                       <p>{question.explanation}</p>
                     </div>
-                  )}
-                  <p className="time-spent">Time spent: {answer.timeSpent} seconds</p>
-                </div>
+                  </div>
+                )}
               </div>
             );
           })}
