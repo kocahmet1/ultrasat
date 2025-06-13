@@ -215,14 +215,18 @@ router.patch('/items/:itemId', verifyFirebaseToken, async (req, res) => {
  */
 const ensureDefaultDeck = async (req, userId) => {
   try {
+    console.log(`[Flashcards API] Checking for default deck for user: ${userId}`);
     // Check if user has any decks at all
     const decksQuery = await req.db.collection('users').doc(userId)
       .collection('flashcardDecks')
       .limit(1)
       .get();
 
+    console.log(`[Flashcards API] User ${userId} has ${decksQuery.size} existing decks`);
+
     if (decksQuery.empty) {
       // This is likely a legacy user - create "Deck 1" as fallback
+      console.log(`[Flashcards API] Creating default deck for user ${userId}`);
       const deckRef = req.db.collection('users').doc(userId).collection('flashcardDecks').doc();
       await deckRef.set({
         name: 'Deck 1',
@@ -231,10 +235,10 @@ const ensureDefaultDeck = async (req, userId) => {
         wordCount: 0,
         lastStudiedAt: null
       });
-      console.log(`Created fallback "Deck 1" for legacy user ${userId}`);
+      console.log(`[Flashcards API] Successfully created fallback "Deck 1" for user ${userId}`);
     }
   } catch (error) {
-    console.error('Error ensuring default deck:', error);
+    console.error(`[Flashcards API] Error ensuring default deck for user ${userId}:`, error);
     // Don't throw error, just log it - this is not critical
   }
 };
@@ -246,12 +250,14 @@ const ensureDefaultDeck = async (req, userId) => {
 router.get('/flashcard-decks', verifyFirebaseToken, async (req, res) => {
   try {
     const userId = req.user.uid;
+    console.log(`[Flashcards API] Getting decks for user: ${userId}`);
 
     // Ensure "Deck 1" exists for this user
     await ensureDefaultDeck(req, userId);
 
     // Get all flashcard decks for the user
     const decksSnapshot = await req.db.collection('users').doc(userId).collection('flashcardDecks').get();
+    console.log(`[Flashcards API] Found ${decksSnapshot.size} decks for user ${userId}`);
     
     const decks = [];
     decksSnapshot.forEach(doc => {
