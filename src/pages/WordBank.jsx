@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -9,7 +9,6 @@ import {
   faSort, 
   faBook, 
   faLayerGroup, 
-  faPlus,
   faPlay,
   faSpinner
 } from '@fortawesome/free-solid-svg-icons';
@@ -81,7 +80,7 @@ export default function WordBank() {
   }, [currentUser]);
 
   // Load flashcard decks
-  const loadFlashcardDecks = async () => {
+  const loadFlashcardDecks = useCallback(async () => {
     if (!currentUser) return;
 
     try {
@@ -94,14 +93,21 @@ export default function WordBank() {
     } finally {
       setDecksLoading(false);
     }
-  };
+  }, [currentUser]);
 
-  // Load flashcard decks when tab changes to flashcards
+  // Load flashcard decks on mount (for tab header count)
   useEffect(() => {
-    if (activeTab === 'flashcards') {
+    if (currentUser) {
       loadFlashcardDecks();
     }
-  }, [activeTab, currentUser]);
+  }, [currentUser, loadFlashcardDecks]);
+
+  // Refresh flashcard decks when tab changes to flashcards
+  useEffect(() => {
+    if (activeTab === 'flashcards' && currentUser) {
+      loadFlashcardDecks();
+    }
+  }, [activeTab, currentUser, loadFlashcardDecks]);
 
   // Handle word removal
   const handleRemoveWord = async (wordId) => {
@@ -328,7 +334,7 @@ export default function WordBank() {
                     {deck.lastStudiedAt && (
                       <div className="stat">
                         <span className="stat-text">
-                          Last studied: {new Date(deck.lastStudiedAt.toDate()).toLocaleDateString()}
+                          Last studied: {new Date(deck.lastStudiedAt).toLocaleDateString()}
                         </span>
                       </div>
                     )}

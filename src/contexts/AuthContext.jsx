@@ -61,6 +61,22 @@ export function AuthProvider({ children }) {
         examResults: []
       });
       
+      // Create default "Deck 1" flashcard deck for the new user
+      try {
+        const defaultDeckRef = doc(collection(db, 'users', userCredential.user.uid, 'flashcardDecks'));
+        await setDoc(defaultDeckRef, {
+          name: 'Deck 1',
+          description: 'Default flashcard deck',
+          createdAt: serverTimestamp(),
+          wordCount: 0,
+          lastStudiedAt: null
+        });
+        console.log(`Created default "Deck 1" for new user: ${userCredential.user.uid}`);
+      } catch (deckError) {
+        console.error('Error creating default flashcard deck:', deckError);
+        // Don't fail signup if deck creation fails - it's non-critical
+      }
+      
       return userCredential.user;
     } catch (err) {
       setError(err.message);

@@ -210,18 +210,19 @@ router.patch('/items/:itemId', verifyFirebaseToken, async (req, res) => {
 });
 
 /**
- * Ensure "Deck 1" exists for a user (default deck)
+ * Ensure "Deck 1" exists for a user (default deck) - LEGACY FALLBACK
+ * This is a fallback for users who signed up before automatic deck creation was implemented
  */
 const ensureDefaultDeck = async (req, userId) => {
   try {
-    // Check if "Deck 1" already exists
-    const deck1Query = await req.db.collection('users').doc(userId)
+    // Check if user has any decks at all
+    const decksQuery = await req.db.collection('users').doc(userId)
       .collection('flashcardDecks')
-      .where('name', '==', 'Deck 1')
+      .limit(1)
       .get();
 
-    if (deck1Query.empty) {
-      // Create "Deck 1" as the default deck
+    if (decksQuery.empty) {
+      // This is likely a legacy user - create "Deck 1" as fallback
       const deckRef = req.db.collection('users').doc(userId).collection('flashcardDecks').doc();
       await deckRef.set({
         name: 'Deck 1',
@@ -230,7 +231,7 @@ const ensureDefaultDeck = async (req, userId) => {
         wordCount: 0,
         lastStudiedAt: null
       });
-      console.log(`Created default "Deck 1" for user ${userId}`);
+      console.log(`Created fallback "Deck 1" for legacy user ${userId}`);
     }
   } catch (error) {
     console.error('Error ensuring default deck:', error);
@@ -261,7 +262,7 @@ router.get('/flashcard-decks', verifyFirebaseToken, async (req, res) => {
         description: deckData.description || '',
         createdAt: deckData.createdAt,
         wordCount: deckData.wordCount || 0,
-        lastStudiedAt: deckData.lastStudiedAt || null
+        lastStudiedAt: deckData.lastStudiedAt ? deckData.lastStudiedAt.toDate().toISOString() : null
       });
     });
 
