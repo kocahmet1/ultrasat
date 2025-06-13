@@ -1,0 +1,247 @@
+.word-quizzes-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.word-quizzes-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+}
+
+.word-quizzes-loading svg {
+  font-size: 48px;
+  color: #4f46e5;
+  margin-bottom: 20px;
+}
+
+.word-quizzes-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.word-quizzes-empty .empty-icon {
+  font-size: 64px;
+  color: #d1d5db;
+  margin-bottom: 20px;
+}
+
+.word-quizzes-empty h3 {
+  margin: 0 0 10px 0;
+  color: #374151;
+  font-size: 24px;
+}
+
+.word-quizzes-empty p {
+  margin: 0;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.quiz-section {
+  margin-bottom: 40px;
+}
+
+.quiz-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.quiz-section-title svg {
+  color: #4f46e5;
+}
+
+.quiz-section-title.unavailable {
+  color: #9ca3af;
+}
+
+.quiz-section-title.unavailable svg {
+  color: #9ca3af;
+}
+
+.no-quizzes-message {
+  padding: 30px;
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.quiz-decks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.quiz-deck-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.quiz-deck-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.quiz-deck-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.quiz-deck-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border-radius: 12px;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.quiz-deck-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.quiz-deck-description {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.quiz-deck-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.quiz-stat {
+  text-align: center;
+}
+
+.quiz-stat-number {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: #4f46e5;
+  line-height: 1;
+}
+
+.quiz-stat-label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.quiz-deck-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.start-quiz-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  justify-content: center;
+}
+
+.start-quiz-button:hover {
+  background: linear-gradient(135deg, #4338ca, #6d28d9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.unavailable-decks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.unavailable-deck-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  opacity: 0.7;
+}
+
+.unavailable-deck-info h4 {
+  margin: 0 0 8px 0;
+  color: #374151;
+  font-size: 16px;
+}
+
+.unavailable-deck-info p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .word-quizzes-container {
+    padding: 16px;
+  }
+  
+  .quiz-decks-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .quiz-deck-card {
+    padding: 20px;
+  }
+  
+  .quiz-deck-stats {
+    gap: 16px;
+  }
+  
+  .quiz-stat-number {
+    font-size: 20px;
+  }
+} 

@@ -10,11 +10,14 @@ import {
   faBook, 
   faLayerGroup, 
   faPlay,
-  faSpinner
+  faSpinner,
+  faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { getFlashcardDecks } from '../api/helperClient';
 import AddToFlashcardsModal from '../components/AddToFlashcardsModal';
 import FlashcardStudy from '../components/FlashcardStudy';
+import WordQuizzes from '../components/WordQuizzes';
+import Quiz from '../components/Quiz';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/WordBank.css';
@@ -36,7 +39,10 @@ export default function WordBank() {
   const [showAddToFlashcards, setShowAddToFlashcards] = useState(false);
   const [selectedWord, setSelectedWord] = useState(null);
   const [studyDeck, setStudyDeck] = useState(null);
-  const [activeTab, setActiveTab] = useState('words'); // 'words' or 'flashcards'
+  const [activeTab, setActiveTab] = useState('words'); // 'words', 'flashcards', or 'quizzes'
+  
+  // Quiz states
+  const [activeQuiz, setActiveQuiz] = useState(null);
 
   // Load words on component mount
   useEffect(() => {
@@ -102,9 +108,9 @@ export default function WordBank() {
     }
   }, [currentUser, loadFlashcardDecks]);
 
-  // Refresh flashcard decks when tab changes to flashcards
+  // Refresh flashcard decks when tab changes to flashcards or quizzes
   useEffect(() => {
-    if (activeTab === 'flashcards' && currentUser) {
+    if ((activeTab === 'flashcards' || activeTab === 'quizzes') && currentUser) {
       loadFlashcardDecks();
     }
   }, [activeTab, currentUser, loadFlashcardDecks]);
@@ -149,8 +155,8 @@ export default function WordBank() {
 
   // Handle word added to flashcard deck
   const handleWordAddedToFlashcards = (deckId) => {
-    // Refresh flashcard decks if on flashcards tab
-    if (activeTab === 'flashcards') {
+    // Refresh flashcard decks if on flashcards or quizzes tab
+    if (activeTab === 'flashcards' || activeTab === 'quizzes') {
       loadFlashcardDecks();
     }
   };
@@ -164,9 +170,19 @@ export default function WordBank() {
   const handleCloseStudy = () => {
     setStudyDeck(null);
     // Refresh decks to update last studied time
-    if (activeTab === 'flashcards') {
+    if (activeTab === 'flashcards' || activeTab === 'quizzes') {
       loadFlashcardDecks();
     }
+  };
+
+  // Handle start quiz
+  const handleStartQuiz = (deck) => {
+    setActiveQuiz(deck);
+  };
+
+  // Handle close quiz
+  const handleCloseQuiz = () => {
+    setActiveQuiz(null);
   };
 
   // Filter and sort words
@@ -188,6 +204,18 @@ export default function WordBank() {
         deckId={studyDeck.id}
         deckName={studyDeck.name}
         onClose={handleCloseStudy}
+      />
+    );
+  }
+
+  // If taking a quiz, show the quiz interface
+  if (activeQuiz) {
+    return (
+      <Quiz
+        deckId={activeQuiz.id}
+        deckName={activeQuiz.name}
+        onClose={handleCloseQuiz}
+        allWords={words}
       />
     );
   }
@@ -219,6 +247,13 @@ export default function WordBank() {
         >
           <FontAwesomeIcon icon={faLayerGroup} />
           Flashcard Decks ({flashcardDecks.length})
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'quizzes' ? 'active' : ''}`}
+          onClick={() => setActiveTab('quizzes')}
+        >
+          <FontAwesomeIcon icon={faQuestionCircle} />
+          Word Quizzes ({flashcardDecks.filter(deck => deck.wordCount >= 4).length})
         </button>
       </div>
 
@@ -289,7 +324,7 @@ export default function WordBank() {
             </div>
           )}
         </>
-      ) : (
+      ) : activeTab === 'flashcards' ? (
         /* Flashcard Decks Tab */
         <div className="flashcards-section">
           {decksLoading ? (
@@ -355,7 +390,14 @@ export default function WordBank() {
             </div>
           )}
         </div>
-      )}
+      ) : activeTab === 'quizzes' ? (
+        /* Word Quizzes Tab */
+        <WordQuizzes
+          flashcardDecks={flashcardDecks}
+          loading={decksLoading}
+          onStartQuiz={handleStartQuiz}
+        />
+      ) : null}
 
       {/* Add to Flashcards Modal */}
       {showAddToFlashcards && selectedWord && (
