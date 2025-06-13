@@ -669,39 +669,7 @@ function ProgressDashboard() {
           </p>
         </div>
         <div className="actions">
-          <button 
-            className="pd-button primary"
-            onClick={async () => {
-              const weakestSubcategory = Object.entries(detailedProgress)
-                .filter(([_, stat]) => stat.totalQuestionsAnswered > 0)
-                .sort((a, b) => a[1].accuracyLast10 - b[1].accuracyLast10)[0];
-              if (weakestSubcategory) {
-                handleStartPractice(weakestSubcategory[0]);
-              } else {
-                alert("No prior attempts found. Please select a specific skill to practice first or try a custom practice.");
-              }
-            }}
-          >
-            <FaBolt /> Adaptive Quiz (Weakest Skill)
-          </button>
-          <button 
-            className="pd-button secondary"
-            onClick={() => setShowDynamicQuizGenerator(true)}
-          >
-            <FaThLarge /> Custom Practice
-          </button>
-          <button 
-            className="pd-button secondary"
-            onClick={() => navigate('/practice-exams')}
-          >
-            <FaClipboardList /> Full Practice Exam
-          </button>
-          <button 
-            className="pd-button secondary"
-            onClick={() => navigate('/word-bank')}
-          >
-            <FaBook /> Vocabulary Bank
-          </button>
+          {/* Buttons removed per user request */}
         </div>
       </div>
       

@@ -29,8 +29,34 @@
   top: 0;
   left: 0;
   box-shadow: var(--shadow-sm); /* Subtle shadow to lift it off the page */
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, transform 0.3s ease;
   z-index: 100; /* Ensure it's above other content if not using grid/flex correctly */
+}
+
+/* Toggle button */
+.sidebar-toggle {
+  position: absolute;
+  top: 15px;
+  right: -50px;
+  background-color: var(--background-color-sidebar);
+  color: var(--text-color-on-primary);
+  border: none;
+  padding: 12px;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.2s ease, right 0.3s ease;
+  z-index: 101;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--background-color-sidebar-hover);
+}
+
+/* Move toggle button when sidebar is collapsed */
+.sidebar.sidebar-collapsed .sidebar-toggle {
+  right: -50px;
 }
 
 .sidebar-header {
@@ -100,9 +126,7 @@
   border-top: 1px solid var(--border-color-sidebar);
 }
 
-/* Optional: Collapsed state for sidebar */
-/* You would need JS to toggle a class like '.sidebar-collapsed' on the .sidebar div */
-/*
+/* Collapsed state for sidebar */
 .sidebar.sidebar-collapsed {
   width: 80px;
 }
@@ -115,10 +139,106 @@
 
 .sidebar.sidebar-collapsed .sidebar-nav li a {
   justify-content: center;
+  padding: 14px 10px;
 }
 
 .sidebar.sidebar-collapsed .sidebar-icon {
   margin-right: 0;
-  font-size: 1.5rem; 
+  font-size: 1.4rem; 
 }
-*/
+
+.sidebar.sidebar-collapsed .sidebar-header {
+  padding: 20px 10px;
+}
+
+.sidebar.sidebar-collapsed .sidebar-footer {
+  padding: 20px 10px;
+}
+
+/* Mobile styles */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+.sidebar.sidebar-mobile {
+  z-index: 102;
+}
+
+.sidebar.sidebar-mobile.sidebar-collapsed {
+  transform: translateX(-100%);
+  width: 260px; /* Keep full width on mobile when collapsed (hidden) */
+}
+
+.sidebar.sidebar-mobile:not(.sidebar-collapsed) {
+  transform: translateX(0);
+  width: 260px;
+}
+
+/* Mobile toggle button positioning */
+.sidebar.sidebar-mobile .sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  right: auto;
+  border-radius: 6px;
+  z-index: 103;
+}
+
+.sidebar.sidebar-mobile.sidebar-collapsed .sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  right: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    padding: 10px;
+    font-size: 1.1rem;
+  }
+  
+  /* Hide default toggle button position on mobile, use the mobile-specific one */
+  .sidebar.sidebar-mobile .sidebar-toggle {
+    top: 15px;
+    left: 15px;
+    right: auto;
+  }
+}
+
+/* Desktop responsive - auto-collapse at medium screen sizes */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar {
+    width: 80px;
+  }
+  
+  .sidebar:not(.sidebar-collapsed) .sidebar-label,
+  .sidebar:not(.sidebar-collapsed) .sidebar-header h3,
+  .sidebar:not(.sidebar-collapsed) .sidebar-footer p {
+    display: none;
+  }
+
+  .sidebar:not(.sidebar-collapsed) .sidebar-nav li a {
+    justify-content: center;
+    padding: 14px 10px;
+  }
+
+  .sidebar:not(.sidebar-collapsed) .sidebar-icon {
+    margin-right: 0;
+    font-size: 1.4rem; 
+  }
+
+  .sidebar:not(.sidebar-collapsed) .sidebar-header {
+    padding: 20px 10px;
+  }
+
+  .sidebar:not(.sidebar-collapsed) .sidebar-footer {
+    padding: 20px 10px;
+  }
+}

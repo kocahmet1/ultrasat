@@ -15,21 +15,22 @@
 
 .intro-card h1 {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   color: #2c3e50;
   font-size: 2rem;
 }
 
-.quiz-info {
+/* Compact quiz info layout */
+.quiz-info-compact {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   background-color: #f8f9fa;
-  padding: 20px;
+  padding: 18px;
   border-radius: 8px;
 }
 
-.subcategory-info, .level-info {
+.subcategory-info, .level-info-combined {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -42,9 +43,50 @@
   border-right: 1px solid #e9ecef;
 }
 
-.level-info {
+.level-info-combined {
   padding-left: 15px;
   text-align: center;
+}
+
+.level-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.current-level-mini, .quiz-level-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.badge-mini {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.badge-mini.current {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+.badge-mini.quiz {
+  background-color: #4c6ef5;
+  color: white;
+  text-transform: capitalize;
 }
 
 .current-level-display {
@@ -97,8 +139,8 @@
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.quiz-info h2 {
-  font-size: 1.2rem;
+.quiz-info h2, .quiz-info-compact h2 {
+  font-size: 1.1rem;
   color: #6c757d;
   margin-bottom: 10px;
   text-align: center;
@@ -134,16 +176,16 @@
   background-color: #f0f7ff;
   border: 1px solid #cce5ff;
   border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 30px;
+  padding: 18px;
+  margin-bottom: 25px;
 }
 
 .quiz-description h2 {
   display: flex;
   align-items: center;
   color: #0056b3;
-  margin-bottom: 15px;
-  font-size: 1.3rem;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
 }
 
 .quiz-description h2 svg {
@@ -152,11 +194,12 @@
 
 .quiz-description ul {
   padding-left: 20px;
-  line-height: 1.6;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .quiz-description li {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .highlight {
@@ -168,7 +211,7 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  margin-top: 30px;
+  margin-top: 25px;
 }
 
 .actions button {

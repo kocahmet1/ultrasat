@@ -1,9 +1,92 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { getWordBank, removeWordFromBank } from '../utils/wordBankUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faSearch, faSort, faBook } from '@fortawesome/free-solid-svg-icons';
 import '../styles/WordBank.css';
+
+// Get the current user's auth token
+const getAuthToken = async () => {
+  const { getAuth } = await import('firebase/auth');
+  const auth = getAuth();
+  if (auth.currentUser) {
+    return auth.currentUser.getIdToken();
+  }
+  return null;
+};
+
+// Get API URL
+const getApiUrl = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.REACT_APP_API_URL || 'https://veritas-blue-web.onrender.com';
+  } else {
+    return process.env.REACT_APP_API_URL || 'http://localhost:3001';
+  }
+};
+
+// Function to get words from the new bankItems system
+const getWordsFromBank = async (userId) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/items?type=word`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch words: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    
+    // Transform the data to match the expected format for the WordBank component
+    return data.items.map(item => ({
+      id: item.id,
+      word: item.term, // Map 'term' to 'word' for compatibility
+      definition: item.definition,
+      quizId: item.metadata?.quizId || null,
+      savedAt: item.createdAt || new Date().toISOString()
+    }));
+  } catch (error) {
+    console.error('Error getting word bank:', error);
+    throw new Error('Failed to retrieve your word bank');
+  }
+};
+
+// Function to remove word from the new bankItems system
+const removeWordFromBank = async (userId, wordId) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/items/${wordId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to remove word: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log(`Word with ID ${wordId} removed from word bank for user ${userId}`);
+    return data;
+  } catch (error) {
+    console.error('Error removing word from bank:', error);
+    throw new Error('Failed to remove word from your word bank');
+  }
+};
 
 /**
  * WordBank component - displays all saved vocabulary words
@@ -23,7 +106,7 @@ export default function WordBank() {
 
       try {
         setLoading(true);
-        const wordBank = await getWordBank(currentUser.uid);
+        const wordBank = await getWordsFromBank(currentUser.uid);
         setWords(wordBank);
         setError(null);
       } catch (error) {

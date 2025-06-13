@@ -72,37 +72,33 @@ export default function SmartQuizIntro() {
       <div className="intro-card">
         <h1>Ready for Your SmartQuiz?</h1>
         
-        <div className="quiz-info">
+        <div className="quiz-info-compact">
           <div className="subcategory-info">
             <h2>Subcategory</h2>
             <div className="subcategory-badge">{subcategoryName}</div>
           </div>
           
-          <div className="level-info">
-            <h2>Difficulty Level</h2>
-            <div className="level-badge">
-              Level {difficultyLevel} - {difficultyName}
+          <div className="level-info-combined">
+            <h2>Level Progress</h2>
+            <div className="level-badges">
+              <div className="current-level-mini">
+                <span className="label">Current:</span>
+                <span className="badge-mini current">Level {previousLevel || 1}</span>
+              </div>
+              <div className="quiz-level-mini">
+                <span className="label">This Quiz:</span>
+                <span className="badge-mini quiz">Level {difficultyLevel} - {difficultyName}</span>
+              </div>
             </div>
-          </div>
-        </div>
-        
-        <div className="current-level-display">
-          <div className="level-icon"><FaHistory /></div>
-          <div className="level-content">
-            <h3>Your Current Level</h3>
-            <p>Based on your previous performance in this subcategory</p>
-            <div className="current-level-badge">Level {previousLevel || 1}</div>
           </div>
         </div>
         
         <div className="quiz-description">
           <h2><FaGraduationCap /> About This Quiz</h2>
           <ul>
-            <li>You will answer 5 questions related to this subcategory.</li>
-            <li>Current difficulty level: <span className="highlight">{difficultyName}</span></li>
-            <li>Score 80% or higher to advance to the next level!</li>
-            <li>There are 3 levels of difficulty: easy, medium, and hard.</li>
-            <li>Mastering level 3 (hard) completes this skill.</li>
+            <li>5 questions • Score 80%+ to advance</li>
+            <li>3 difficulty levels: easy → medium → hard</li>
+            <li>Master level 3 to complete this skill</li>
           </ul>
         </div>
         
