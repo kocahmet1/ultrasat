@@ -43,7 +43,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "cross-env PORT=3001 node api/server.js",
+    "start": "node api/server.js",
     "start-frontend": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
