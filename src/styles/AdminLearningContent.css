@@ -107,4 +107,90 @@
 }
 
 .add-item-btn { background: #28a745; color: white; }
-.remove-item-btn { background: #dc3545; color: white; } 
+.remove-item-btn { background: #dc3545; color: white; }
+
+/* Import Tool Styles */
+.import-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.import-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.file-input-btn {
+  position: relative;
+  cursor: pointer;
+}
+
+.file-input-btn:hover {
+  opacity: 0.9;
+}
+
+.file-input-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.import-help {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+}
+
+.import-help p {
+  margin: 0 0 8px 0;
+  color: #495057;
+}
+
+.import-help ol {
+  margin: 0;
+  padding-left: 20px;
+  color: #6c757d;
+}
+
+.import-results {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.import-results.success {
+  background: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.import-results.error {
+  background: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.import-results h3 {
+  margin: 0 0 12px 0;
+  color: #495057;
+}
+
+.import-results h4 {
+  margin: 16px 0 8px 0;
+  color: #495057;
+}
+
+.import-results ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.import-results li {
+  margin: 4px 0;
+}
+
+.import-results button {
+  margin-top: 12px;
+}

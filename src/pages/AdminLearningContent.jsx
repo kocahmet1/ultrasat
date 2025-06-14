@@ -6,13 +6,21 @@ import {
   faEdit, 
   faPlus, 
   faTrash,
-  faEye
+  faEye,
+  faUpload,
+  faDownload,
+  faFileImport
 } from '@fortawesome/free-solid-svg-icons';
 import { 
   getLearningContent, 
   saveLearningContent, 
   updateLearningContentSection 
 } from '../firebase/learningContentServices';
+import { 
+  importLearningContent, 
+  importMultipleLearningContents,
+  validateLearningContent 
+} from '../utils/learningContentImporter';
 import { SUBCATEGORY_NAMES } from '../utils/subcategoryConstants';
 import { toast, ToastContainer } from 'react-toastify';
 import '../styles/AdminLearningContent.css';
@@ -23,6 +31,8 @@ export default function AdminLearningContent() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importResults, setImportResults] = useState(null);
 
   // Form state for editing
   const [formData, setFormData] = useState({
@@ -100,6 +110,214 @@ export default function AdminLearningContent() {
     setFormData({ ...formData, [field]: newArray });
   };
 
+  // Import functionality
+  const handleFileImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.type !== 'application/json') {
+      toast.error('Please select a JSON file');
+      return;
+    }
+
+    try {
+      const text = await file.text();
+      const jsonContent = JSON.parse(text);
+      
+      // Validate content
+      const validation = validateLearningContent(jsonContent);
+      if (!validation.isValid) {
+        toast.error(`Validation failed: ${validation.errors.join(', ')}`);
+        return;
+      }
+
+      setImporting(true);
+      const result = await importLearningContent(jsonContent);
+      
+      if (result.success) {
+        toast.success(`Successfully imported content for ${result.title}`);
+        setImportResults({
+          type: 'single',
+          success: true,
+          data: result
+        });
+        
+        // If the imported content is for the currently selected subcategory, reload it
+        if (result.subcategoryId === selectedSubcategory) {
+          await loadContent();
+        }
+      } else {
+        toast.error(`Import failed: ${result.error}`);
+        setImportResults({
+          type: 'single',
+          success: false,
+          data: result
+        });
+      }
+    } catch (error) {
+      toast.error('Error reading file: ' + error.message);
+      console.error('Import error:', error);
+    } finally {
+      setImporting(false);
+      // Reset file input
+      event.target.value = '';
+    }
+  };
+
+  const handleBatchImport = async (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
+
+    const jsonFiles = files.filter(file => file.type === 'application/json');
+    if (jsonFiles.length === 0) {
+      toast.error('Please select JSON files');
+      return;
+    }
+
+    if (jsonFiles.length !== files.length) {
+      toast.warning(`Only ${jsonFiles.length} of ${files.length} files are JSON files`);
+    }
+
+    try {
+      setImporting(true);
+      const jsonContents = [];
+
+      // Read all files
+      for (const file of jsonFiles) {
+        const text = await file.text();
+        const jsonContent = JSON.parse(text);
+        jsonContents.push(jsonContent);
+      }
+
+      // Import all contents
+      const results = await importMultipleLearningContents(jsonContents);
+      
+      toast.success(`Batch import completed: ${results.successful.length} successful, ${results.failed.length} failed`);
+      setImportResults({
+        type: 'batch',
+        success: true,
+        data: results
+      });
+
+      // Reload current content if it was updated
+      if (selectedSubcategory && results.successful.some(item => item.subcategoryId === selectedSubcategory)) {
+        await loadContent();
+      }
+
+    } catch (error) {
+      toast.error('Batch import failed: ' + error.message);
+      console.error('Batch import error:', error);
+    } finally {
+      setImporting(false);
+      // Reset file input
+      event.target.value = '';
+    }
+  };
+
+  const downloadSampleJson = () => {
+    const sampleJson = {
+      "subcategoryId": "sample-subcategory",
+      "title": "Sample Subcategory",
+      "lastUpdated": new Date().toISOString().split('T')[0],
+      "metadata": {
+        "difficulty": "Varies by specific question",
+        "estimatedStudyTime": "2-3 hours for initial mastery",
+        "questionFrequency": "Approximately 3-5 questions per exam",
+        "testDomain": "Reading and Writing"
+      },
+      "overview": {
+        "title": "Overview",
+        "sections": {
+          "definition": {
+            "title": "Definition",
+            "content": "Brief explanation of what this question type assesses and what students need to do."
+          },
+          "digitalSatContext": {
+            "title": "Digital SAT Context",
+            "content": "How this question type appears on the digital SAT, including format, frequency, and interface details."
+          }
+        }
+      },
+      "questionAnalysis": {
+        "title": "Question Analysis",
+        "sections": {
+          "commonQuestionStems": {
+            "title": "Common Question Stems",
+            "content": "Typical question formats and phrasing patterns students will encounter."
+          },
+          "answerChoicePatterns": {
+            "title": "Answer Choice Patterns",
+            "content": "How correct and incorrect answers are typically structured and what to look for."
+          }
+        }
+      },
+      "strategicApproaches": {
+        "title": "Strategic Approaches",
+        "sections": {
+          "primaryStrategy": {
+            "title": "Primary Strategy",
+            "content": "The main approach students should use for this question type."
+          },
+          "timeManagement": {
+            "title": "Time Management",
+            "content": "How to pace yourself and allocate time effectively for these questions."
+          }
+        }
+      },
+      "commonMistakesAnalysis": {
+        "title": "Common Mistakes Analysis",
+        "sections": {
+          "frequentStudentErrors": {
+            "title": "Frequent Student Errors",
+            "content": "Most common mistakes students make and why they make them."
+          },
+          "trapAnswers": {
+            "title": "Trap Answers",
+            "content": "How test makers create attractive wrong answers and how to avoid them."
+          }
+        }
+      },
+      "studyStrategies": {
+        "title": "Study Strategies",
+        "sections": {
+          "practiceRecommendations": {
+            "title": "Practice Recommendations",
+            "content": "Specific ways to practice and improve on this question type."
+          },
+          "skillBuilding": {
+            "title": "Skill Building",
+            "content": "Fundamental skills to develop that support success on these questions."
+          }
+        }
+      },
+      "keyStrategies": [
+        "Main strategy point 1",
+        "Main strategy point 2",
+        "Main strategy point 3"
+      ],
+      "commonMistakes": [
+        "Common mistake 1",
+        "Common mistake 2",
+        "Common mistake 3"
+      ],
+      "studyTips": [
+        "Study tip 1",
+        "Study tip 2",
+        "Study tip 3"
+      ]
+    };
+
+    const blob = new Blob([JSON.stringify(sampleJson, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample-learning-content.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const ArrayFieldEditor = ({ label, field, placeholder }) => (
     <div className="array-field">
       <label className="field-label">
@@ -143,6 +361,127 @@ export default function AdminLearningContent() {
           <FontAwesomeIcon icon={faBook} /> Learning Content Manager
         </h1>
         <p>Create and manage comprehensive learning content for each subcategory</p>
+      </div>
+
+      {/* Import Section */}
+      <div className="content-section">
+        <h2>Import Learning Content</h2>
+        <div className="import-tools">
+          <div className="import-buttons">
+            <button 
+              className="btn btn-success"
+              onClick={downloadSampleJson}
+            >
+              <FontAwesomeIcon icon={faDownload} /> Download Sample JSON
+            </button>
+            
+            <label className="btn btn-primary file-input-btn">
+              <FontAwesomeIcon icon={faFileImport} /> 
+              {importing ? 'Importing...' : 'Import Single File'}
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleFileImport}
+                disabled={importing}
+                style={{ display: 'none' }}
+              />
+            </label>
+            
+            <label className="btn btn-secondary file-input-btn">
+              <FontAwesomeIcon icon={faUpload} /> 
+              {importing ? 'Importing...' : 'Batch Import'}
+              <input
+                type="file"
+                accept=".json"
+                multiple
+                onChange={handleBatchImport}
+                disabled={importing}
+                style={{ display: 'none' }}
+              />
+            </label>
+          </div>
+          
+          <div className="import-help">
+            <p><strong>How to use:</strong></p>
+            <ol>
+              <li>Download the sample JSON to see the expected format</li>
+              <li>Create your JSON files following the sample structure</li>
+              <li>Use "Import Single File" for one subcategory or "Batch Import" for multiple</li>
+            </ol>
+          </div>
+        </div>
+        
+        {/* Import Results */}
+        {importResults && (
+          <div className={`import-results ${importResults.success ? 'success' : 'error'}`}>
+            <h3>Import Results</h3>
+            {importResults.type === 'single' ? (
+              <div>
+                {importResults.success ? (
+                  <p>✅ Successfully imported: <strong>{importResults.data.title}</strong></p>
+                ) : (
+                  <div>
+                    <p>❌ Import failed: {importResults.data.error}</p>
+                    {importResults.data.details && Array.isArray(importResults.data.details) && (
+                      <ul>
+                        {importResults.data.details.map((detail, index) => (
+                          <li key={index}>{detail}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <p>📊 Batch Import Summary:</p>
+                <ul>
+                  <li>✅ Successful: {importResults.data.successful.length}</li>
+                  <li>❌ Failed: {importResults.data.failed.length}</li>
+                  <li>📁 Total: {importResults.data.total}</li>
+                </ul>
+                
+                {importResults.data.successful.length > 0 && (
+                  <div>
+                    <h4>Successfully Imported:</h4>
+                    <ul>
+                      {importResults.data.successful.map((item, index) => (
+                        <li key={index}>{item.title} ({item.subcategoryId})</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {importResults.data.failed.length > 0 && (
+                  <div>
+                    <h4>Failed Imports:</h4>
+                    <ul>
+                      {importResults.data.failed.map((item, index) => (
+                        <li key={index}>
+                          {item.subcategoryId}: {item.error}
+                          {item.details && Array.isArray(item.details) && (
+                            <ul>
+                              {item.details.map((detail, detailIndex) => (
+                                <li key={detailIndex}>{detail}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            <button 
+              className="btn btn-secondary"
+              onClick={() => setImportResults(null)}
+            >
+              Clear Results
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Subcategory Selection */}

@@ -36,6 +36,7 @@ import SubcategorySettings from './components/admin/SubcategorySettings';
 import ConceptImport from './pages/ConceptImport';
 import QuestionImport from './pages/QuestionImport';
 import GraphGenerationPage from './pages/GraphGenerationPage';
+import AdminLearningContent from './pages/AdminLearningContent';
 
 // Repair Engine Pages
 import Lesson from './pages/Lesson';
@@ -130,6 +131,7 @@ function App() {
                   <Route path="/admin/concept-import" element={<PrivateRoute><ConceptImport /></PrivateRoute>} />
                   <Route path="/admin/question-import" element={<PrivateRoute><QuestionImport /></PrivateRoute>} />
                   <Route path="/admin/graph-generation" element={<PrivateRoute><GraphGenerationPage /></PrivateRoute>} />
+                  <Route path="/admin/learning-content" element={<PrivateRoute><AdminLearningContent /></PrivateRoute>} />
                   
                   {/* Redirect for invalid routes */}
                   <Route path="*" element={<Navigate to="/" />} />

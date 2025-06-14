@@ -227,6 +227,12 @@ service cloud.firestore {
       allow write: if isSignedIn() && isAdmin();
     }
     
+    // Learning content collection - allow read for authenticated users, write for admins
+    match /learningContent/{subcategoryId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+    
     // User concept mastery collection
     match /userConceptMastery/{docId} {
       allow read: if isSignedIn() && (

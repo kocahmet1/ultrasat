@@ -10,7 +10,9 @@ import {
   faPlayCircle,
   faBrain,
   faChevronDown,
-  faChevronUp
+  faChevronUp,
+  faCheckCircle,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 import { getConceptsBySubcategory } from '../firebase/conceptServices';
 import { getLearningContent } from '../firebase/learningContentServices';
@@ -19,12 +21,46 @@ import { getSubcategoryName } from '../utils/subcategoryConstants';
 import { toast, ToastContainer } from 'react-toastify';
 import '../styles/SubcategoryLearnPage.css';
 
-// Sample questions component
+// Sample placeholder questions for demo
+const SAMPLE_PLACEHOLDER_QUESTIONS = [
+  {
+    id: 'demo-1',
+    text: 'The following text is adapted from a 2019 article about urban planning. Which choice best describes the main purpose of the passage?',
+    options: [
+      'To analyze the economic benefits of green infrastructure in cities',
+      'To compare traditional urban planning with modern sustainable approaches',
+      'To argue for increased funding for environmental urban projects', 
+      'To explain how cities can integrate nature-based solutions into development'
+    ],
+    correctAnswer: 'To explain how cities can integrate nature-based solutions into development',
+    explanation: 'The passage focuses on describing methods and benefits of incorporating natural elements into urban planning, making option D the best summary of the main purpose.',
+    difficulty: 2
+  },
+  {
+    id: 'demo-2', 
+    text: 'Based on the research mentioned in the passage, what can be concluded about green roofs in urban environments?',
+    options: [
+      'They are too expensive for most cities to implement effectively',
+      'They provide multiple environmental and economic benefits',
+      'They work better in smaller cities than in major metropolitan areas',
+      'They require more maintenance than traditional roofing systems'
+    ],
+    correctAnswer: 'They provide multiple environmental and economic benefits',
+    explanation: 'The passage cites research showing green roofs reduce energy costs, manage stormwater, and improve air quality, supporting the conclusion about multiple benefits.',
+    difficulty: 3
+  }
+];
+
+// Sample Questions Component
 const SampleQuestionsSection = ({ subcategoryId, questions, onPracticeClick }) => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
 
-  if (!questions || questions.length === 0) {
+  // Use placeholder questions if none provided
+  const displayQuestions = questions.length > 0 ? questions : SAMPLE_PLACEHOLDER_QUESTIONS;
+
+  if (displayQuestions.length === 0) {
     return (
       <div className="sample-questions-empty">
         <FontAwesomeIcon icon={faQuestion} />
@@ -33,25 +69,40 @@ const SampleQuestionsSection = ({ subcategoryId, questions, onPracticeClick }) =
     );
   }
 
-  const currentQuestion = questions[selectedQuestionIndex];
+  const currentQuestion = displayQuestions[selectedQuestionIndex];
+
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    setShowAnswer(true);
+  };
+
+  const resetQuestion = () => {
+    setShowAnswer(false);
+    setSelectedOption(null);
+  };
+
+  const nextQuestion = () => {
+    setSelectedQuestionIndex(Math.min(displayQuestions.length - 1, selectedQuestionIndex + 1));
+    resetQuestion();
+  };
+
+  const prevQuestion = () => {
+    setSelectedQuestionIndex(Math.max(0, selectedQuestionIndex - 1));
+    resetQuestion();
+  };
 
   return (
     <div className="sample-questions-section">
       <div className="question-navigator">
         <span className="question-counter">
-          Question {selectedQuestionIndex + 1} of {questions.length}
+          Question {selectedQuestionIndex + 1} of {displayQuestions.length}
+          {questions.length === 0 && <span className="demo-badge">DEMO</span>}
         </span>
         <div className="question-nav-buttons">
-          <button 
-            onClick={() => setSelectedQuestionIndex(Math.max(0, selectedQuestionIndex - 1))}
-            disabled={selectedQuestionIndex === 0}
-          >
+          <button onClick={prevQuestion} disabled={selectedQuestionIndex === 0}>
             Previous
           </button>
-          <button 
-            onClick={() => setSelectedQuestionIndex(Math.min(questions.length - 1, selectedQuestionIndex + 1))}
-            disabled={selectedQuestionIndex === questions.length - 1}
-          >
+          <button onClick={nextQuestion} disabled={selectedQuestionIndex === displayQuestions.length - 1}>
             Next
           </button>
         </div>
@@ -64,30 +115,33 @@ const SampleQuestionsSection = ({ subcategoryId, questions, onPracticeClick }) =
           {currentQuestion.options?.map((option, index) => (
             <div 
               key={index} 
-              className={`option ${showAnswer ? (
+              className={`option ${selectedOption ? (
                 option === currentQuestion.correctAnswer ? 'correct' : 
-                option !== currentQuestion.correctAnswer ? 'incorrect' : ''
-              ) : ''}`}
+                option === selectedOption && option !== currentQuestion.correctAnswer ? 'incorrect' : ''
+              ) : ''} ${!showAnswer ? 'clickable' : ''}`}
+              onClick={() => !showAnswer && handleOptionSelect(option)}
             >
               <span className="option-letter">{String.fromCharCode(65 + index)}</span>
               <span className="option-text">{option}</span>
+              {showAnswer && option === currentQuestion.correctAnswer && (
+                <FontAwesomeIcon icon={faCheckCircle} className="correct-icon" />
+              )}
             </div>
           ))}
         </div>
 
         <div className="question-actions">
-          <button 
-            className="show-answer-btn"
-            onClick={() => setShowAnswer(!showAnswer)}
-          >
-            {showAnswer ? 'Hide Answer' : 'Show Answer'}
-          </button>
-          {showAnswer && (
+          {!showAnswer ? (
+            <p className="instruction-text">Click on an answer choice to see the explanation</p>
+          ) : (
             <div className="answer-explanation">
               <p><strong>Correct Answer:</strong> {currentQuestion.correctAnswer}</p>
               {currentQuestion.explanation && (
                 <p><strong>Explanation:</strong> {currentQuestion.explanation}</p>
               )}
+              <button className="try-again-btn" onClick={resetQuestion}>
+                Try Again
+              </button>
             </div>
           )}
         </div>
@@ -103,7 +157,7 @@ const SampleQuestionsSection = ({ subcategoryId, questions, onPracticeClick }) =
   );
 };
 
-// Concept card component
+// Concept Card Component
 const ConceptCard = ({ concept, onStudyConcept }) => (
   <div className="concept-card">
     <h4 className="concept-name">{concept.name}</h4>
@@ -121,7 +175,7 @@ const ConceptCard = ({ concept, onStudyConcept }) => (
   </div>
 );
 
-// Main component
+// Main Component
 export default function SubcategoryLearnPage() {
   const { subcategoryId } = useParams();
   const { currentUser } = useAuth();
@@ -139,7 +193,7 @@ export default function SubcategoryLearnPage() {
     strategies: false
   });
 
-  const subcategoryName = getSubcategoryName(subcategoryId) || subcategoryId;
+  const subcategoryName = getSubcategoryName(subcategoryId) || subcategoryId?.replace(/-/g, ' ');
 
   useEffect(() => {
     if (!currentUser) {
@@ -155,16 +209,31 @@ export default function SubcategoryLearnPage() {
       setLoading(true);
       
       // Load concepts for this subcategory
-      const conceptsData = await getConceptsBySubcategory(subcategoryId);
-      setConcepts(conceptsData);
+      try {
+        const conceptsData = await getConceptsBySubcategory(subcategoryId);
+        setConcepts(conceptsData);
+      } catch (conceptError) {
+        console.log('No concepts found, using placeholder');
+        setConcepts([]);
+      }
 
-      // Load learning content (you'll populate this with your research)
-      const content = await loadLearningContent(subcategoryId);
-      setLearningContent(content);
+      // Load learning content
+      try {
+        const content = await getLearningContent(subcategoryId);  
+        setLearningContent(content);
+      } catch (contentError) {
+        console.log('No learning content found, using placeholder');
+        setLearningContent(getPlaceholderContent(subcategoryName));
+      }
 
-      // Load sample questions (you'll implement this)
-      const questions = await loadSampleQuestions(subcategoryId);
-      setSampleQuestions(questions);
+      // Load sample questions
+      try {
+        const questions = await getDiverseSampleQuestions(subcategoryId);
+        setSampleQuestions(questions);
+      } catch (questionError) {
+        console.log('No questions found, will use placeholder');
+        setSampleQuestions([]);
+      }
 
     } catch (error) {
       console.error('Error loading learning data:', error);
@@ -174,26 +243,52 @@ export default function SubcategoryLearnPage() {
     }
   };
 
-  // Load learning content from the database
-  const loadLearningContent = async (subcategoryId) => {
-    try {
-      return await getLearningContent(subcategoryId);
-    } catch (error) {
-      console.error('Error loading learning content:', error);
-      throw error;
-    }
-  };
-
-  // Load sample questions from the database
-  const loadSampleQuestions = async (subcategoryId) => {
-    try {
-      return await getDiverseSampleQuestions(subcategoryId);
-    } catch (error) {
-      console.error('Error loading sample questions:', error);
-      // Return empty array if no questions found
-      return [];
-    }
-  };
+  // Placeholder content generator
+  const getPlaceholderContent = (categoryName) => ({
+    overview: `
+      <h3>Understanding ${categoryName} Questions</h3>
+      <p>This comprehensive guide will help you master <strong>${categoryName}</strong> questions on the Digital SAT.</p>
+      
+      <h4>What You'll Learn</h4>
+      <ul>
+        <li>How to identify ${categoryName} question patterns</li>
+        <li>Step-by-step solving strategies</li>
+        <li>Common mistakes and how to avoid them</li>
+        <li>Time-saving techniques for test day</li>
+      </ul>
+      
+      <h4>On the Digital SAT</h4>
+      <p>These questions typically appear 2-4 times per section and test your ability to analyze, interpret, and apply knowledge effectively. Mastering this question type can significantly boost your overall score.</p>
+      
+      <div class="highlight-box">
+        <strong>💡 Pro Tip:</strong> The digital format allows you to flag questions and return to them, making strategic time management even more important.
+      </div>
+    `,
+    keyStrategies: [
+      "Read the question stem carefully before examining the passage or problem - this helps you focus on what's being asked",
+      "Look for signal words and phrases that indicate the question type and required approach",
+      "Use the process of elimination to narrow down answer choices systematically", 
+      "Double-check your work by ensuring your answer directly addresses what the question is asking",
+      "Practice time management - spend no more than 60-90 seconds per question in this category"
+    ],
+    commonMistakes: [
+      "Rushing through the question without fully understanding what's being asked",
+      "Choosing answers that are factually correct but don't address the specific question",
+      "Getting distracted by irrelevant details in passages or complex problem setups",
+      "Second-guessing correct answers due to overthinking",
+      "Not managing time effectively and spending too long on difficult questions"
+    ],
+    studyTips: [
+      "Practice with official SAT questions daily, focusing on accuracy before speed",
+      "Review both correct and incorrect answers to understand the reasoning behind each choice",
+      "Create a systematic approach you can apply consistently to all questions of this type",
+      "Time yourself regularly to build comfort with the pacing required on test day",
+      "Study related question types to build comprehensive understanding of the broader skills being tested",
+      "Use active reading strategies like annotation and summarization to improve comprehension"
+    ],
+    difficulty: 'Varies by specific question',
+    estimatedStudyTime: '2-3 hours for initial mastery, ongoing practice recommended'
+  });
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -218,7 +313,8 @@ export default function SubcategoryLearnPage() {
   if (loading) {
     return (
       <div className="subcategory-learn-loading">
-        <div className="loading-spinner">Loading learning content...</div>
+        <FontAwesomeIcon icon={faSpinner} spin className="loading-icon" />
+        <div className="loading-text">Loading learning content...</div>
       </div>
     );
   }
@@ -297,7 +393,9 @@ export default function SubcategoryLearnPage() {
               </div>
             ) : (
               <div className="no-concepts">
-                <p>Concepts for this subcategory will be available soon.</p>
+                <FontAwesomeIcon icon={faLightbulb} className="empty-icon" />
+                <h3>Concepts Coming Soon</h3>
+                <p>Detailed concept breakdowns for this subcategory will be available soon. In the meantime, you can practice with sample questions below.</p>
               </div>
             )}
           </div>
@@ -342,7 +440,7 @@ export default function SubcategoryLearnPage() {
             {learningContent && (
               <div className="strategies-content">
                 <div className="strategy-group">
-                  <h4>Key Strategies</h4>
+                  <h4>🚀 Key Strategies</h4>
                   <ul>
                     {learningContent.keyStrategies?.map((strategy, index) => (
                       <li key={index}>{strategy}</li>
@@ -351,7 +449,7 @@ export default function SubcategoryLearnPage() {
                 </div>
 
                 <div className="strategy-group">
-                  <h4>Common Mistakes to Avoid</h4>
+                  <h4>⚠️ Common Mistakes to Avoid</h4>
                   <ul>
                     {learningContent.commonMistakes?.map((mistake, index) => (
                       <li key={index}>{mistake}</li>
@@ -360,12 +458,21 @@ export default function SubcategoryLearnPage() {
                 </div>
 
                 <div className="strategy-group">
-                  <h4>Study Tips</h4>
+                  <h4>💪 Study Tips</h4>
                   <ul>
                     {learningContent.studyTips?.map((tip, index) => (
                       <li key={index}>{tip}</li>
                     ))}
                   </ul>
+                </div>
+
+                <div className="study-metadata">
+                  <div className="meta-item">
+                    <strong>📊 Difficulty Level:</strong> {learningContent.difficulty}
+                  </div>
+                  <div className="meta-item">
+                    <strong>⏱️ Estimated Study Time:</strong> {learningContent.estimatedStudyTime}
+                  </div>
                 </div>
               </div>
             )}
