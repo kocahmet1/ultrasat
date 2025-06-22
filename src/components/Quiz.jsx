@@ -24,6 +24,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [] }) {
   const [error, setError] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [answerChecked, setAnswerChecked] = useState(false);
 
   useEffect(() => {
     generateQuiz();
@@ -132,27 +133,23 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [] }) {
   };
 
   const handleNextQuestion = () => {
-    if (selectedAnswer === null) return;
+    if (selectedAnswer === null || !answerChecked) return;
 
     // Save the answer
     const newAnswers = [...userAnswers];
     newAnswers[currentQuestionIndex] = selectedAnswer;
     setUserAnswers(newAnswers);
 
-    // Show result for current question
-    setShowResult(true);
-
-    // Move to next question after a delay
-    setTimeout(() => {
-      if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedAnswer(null);
-        setShowResult(false);
-      } else {
-        // Quiz complete
-        setQuizComplete(true);
-      }
-    }, 1500);
+    // Move to next question or complete quiz
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setAnswerChecked(false);
+    } else {
+      // Quiz complete
+      setQuizComplete(true);
+    }
   };
 
   const handlePreviousQuestion = () => {
@@ -160,6 +157,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [] }) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedAnswer(userAnswers[currentQuestionIndex - 1]);
       setShowResult(false);
+      setAnswerChecked(false);
     }
   };
 
@@ -270,39 +268,41 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [] }) {
       </div>
 
       <div className="quiz-content">
-        <div className="question-container">
-          <div className="question-number">
-            Question {currentQuestionIndex + 1}
+        <div className="quiz-question-container">
+          <div className="question-container">
+            <div className="question-number">
+              Question {currentQuestionIndex + 1}
+            </div>
+            <div className="question-text">
+              What does "<strong>{currentQuestion.word}</strong>" mean?
+            </div>
           </div>
-          <div className="question-text">
-            What does "<strong>{currentQuestion.word}</strong>" mean?
-          </div>
-        </div>
 
-        <div className="answers-container">
-          {currentQuestion.options.map((option, index) => (
-            <button
-              key={index}
-              className={`answer-option ${
-                selectedAnswer === index ? 'selected' : ''
-              } ${
-                showResult && index === currentQuestion.correctIndex ? 'correct' : ''
-              } ${
-                showResult && selectedAnswer === index && index !== currentQuestion.correctIndex ? 'incorrect' : ''
-              }`}
-              onClick={() => !showResult && handleAnswerSelect(index)}
-              disabled={showResult}
-            >
-              <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-              <span className="option-text">{option}</span>
-              {showResult && index === currentQuestion.correctIndex && (
-                <FontAwesomeIcon icon={faCheck} className="correct-icon" />
-              )}
-              {showResult && selectedAnswer === index && index !== currentQuestion.correctIndex && (
-                <FontAwesomeIcon icon={faXmark} className="incorrect-icon" />
-              )}
-            </button>
-          ))}
+          <div className="answers-container">
+            {currentQuestion.options.map((option, index) => (
+              <button
+                key={index}
+                className={`answer-option ${
+                  selectedAnswer === index ? 'selected' : ''
+                } ${
+                  showResult && index === currentQuestion.correctIndex ? 'correct' : ''
+                } ${
+                  showResult && selectedAnswer === index && index !== currentQuestion.correctIndex ? 'incorrect' : ''
+                }`}
+                onClick={() => !showResult && handleAnswerSelect(index)}
+                disabled={showResult}
+              >
+                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                <span className="option-text">{option}</span>
+                {showResult && index === currentQuestion.correctIndex && (
+                  <FontAwesomeIcon icon={faCheck} className="correct-icon" />
+                )}
+                {showResult && selectedAnswer === index && index !== currentQuestion.correctIndex && (
+                  <FontAwesomeIcon icon={faXmark} className="incorrect-icon" />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {showResult && (
@@ -331,14 +331,28 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [] }) {
             Previous
           </button>
           
-          <button 
-            className="nav-button next"
-            onClick={handleNextQuestion}
-            disabled={selectedAnswer === null || showResult}
-          >
-            {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next'}
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
+          {answerChecked ? (
+            <button 
+              className="nav-button next"
+              onClick={handleNextQuestion}
+              disabled={selectedAnswer === null || !answerChecked}
+            >
+              {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next'}
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          ) : (
+            <button 
+              className="nav-button check"
+              onClick={() => {
+                setShowResult(true);
+                setAnswerChecked(true);
+              }}
+              disabled={selectedAnswer === null}
+            >
+              Check
+              <FontAwesomeIcon icon={faCheck} />
+            </button>
+          )}
         </div>
       </div>
     </div>

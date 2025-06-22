@@ -180,9 +180,13 @@ const AddToFlashcardsModal = ({
                           )}
                         </div>
                       </div>
-                      {adding && (
-                        <FontAwesomeIcon icon={faSpinner} spin />
-                      )}
+                      <div className="deck-action">
+                        {adding ? (
+                          <FontAwesomeIcon icon={faSpinner} spin className="loading-icon" />
+                        ) : (
+                          <FontAwesomeIcon icon={faPlus} className="add-to-deck-button" />
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

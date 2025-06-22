@@ -11,13 +11,15 @@ import {
   faLayerGroup, 
   faPlay,
   faSpinner,
-  faQuestionCircle
+  faQuestionCircle,
+  faEdit
 } from '@fortawesome/free-solid-svg-icons';
-import { getFlashcardDecks, deleteFlashcardDeck } from '../api/helperClient';
+import { getFlashcardDecks, deleteFlashcardDeck, removeWordFromFlashcardDeck, getFlashcardDeckWords } from '../api/helperClient';
 import AddToFlashcardsModal from '../components/AddToFlashcardsModal';
 import FlashcardStudy from '../components/FlashcardStudy';
 import WordQuizzes from '../components/WordQuizzes';
 import Quiz from '../components/Quiz';
+import EditDeckModal from '../components/EditDeckModal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/WordBank.css';
@@ -40,7 +42,9 @@ export default function WordBank() {
   const [selectedWord, setSelectedWord] = useState(null);
   const [studyDeck, setStudyDeck] = useState(null);
   const [activeTab, setActiveTab] = useState('words'); // 'words', 'flashcards', or 'quizzes'
-  
+  const [showEditDeckModal, setShowEditDeckModal] = useState(false);
+  const [deckToEdit, setDeckToEdit] = useState(null);
+
   // Quiz states
   const [activeQuiz, setActiveQuiz] = useState(null);
 
@@ -119,12 +123,96 @@ export default function WordBank() {
   const handleRemoveWord = async (wordId) => {
     if (!currentUser) return;
 
+    // Find the word to get its name for the confirmation dialog
+    const wordToDelete = words.find(word => word.id === wordId);
+    const wordName = wordToDelete ? wordToDelete.word : 'this word';
+
+    // Show confirmation dialog with warning about flashcard removal
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${wordName}"?`
+    );
+    
+    if (!confirmDelete) return;
+
     try {
-      // Delete directly from Firebase (same as ConceptBank)
+      console.log(`Starting cascading delete for word ID: ${wordId}, word: ${wordName}`);
+      
+      // First, get all flashcard decks to check if this word exists in any of them
+      const allDecks = await getFlashcardDecks();
+      console.log(`Found ${allDecks.length} flashcard decks to check:`, allDecks);
+      
+      // Debug: Log the full structure of the first deck to understand the schema
+      if (allDecks.length > 0) {
+        console.log('Full structure of first deck:', JSON.stringify(allDecks[0], null, 2));
+        console.log('Available properties:', Object.keys(allDecks[0]));
+      }
+      
+      // Optimize: Only check decks that have words (wordCount > 0)
+      const decksWithWords = allDecks.filter(deck => deck.wordCount > 0);
+      console.log(`Checking ${decksWithWords.length} decks with words`);
+      
+      // Fetch words for all decks in parallel for better performance
+      const deckWordsPromises = decksWithWords.map(async (deck) => {
+        try {
+          const deckWords = await getFlashcardDeckWords(deck.id);
+          return { deck, words: deckWords };
+        } catch (error) {
+          console.warn(`Failed to fetch words for deck "${deck.name}":`, error);
+          return { deck, words: [] };
+        }
+      });
+      
+      const deckWordsResults = await Promise.allSettled(deckWordsPromises);
+      
+      // Find decks that contain this word and remove it from them
+      const removalPromises = [];
+      
+      for (const result of deckWordsResults) {
+        if (result.status === 'fulfilled') {
+          const { deck, words: deckWords } = result.value;
+          console.log(`Checking deck "${deck.name}" (ID: ${deck.id}):`, deckWords);
+          
+          if (deckWords && deckWords.length > 0) {
+            // Check if this word exists in the deck
+            const wordInDeck = deckWords.find(word => word.id === wordId);
+            console.log(`Word ${wordId} in deck ${deck.name}:`, wordInDeck);
+            
+            if (wordInDeck) {
+              console.log(`Word found in deck "${deck.name}", removing...`);
+              // This deck contains the word, so remove it
+              removalPromises.push(
+                removeWordFromFlashcardDeck(deck.id, wordId).then(() => {
+                  console.log(`Successfully removed word from deck ${deck.name}`);
+                }).catch(error => {
+                  console.warn(`Failed to remove word from deck ${deck.name}:`, error);
+                  // Don't throw here - we want to continue with the main deletion
+                })
+              );
+            }
+          }
+        }
+      }
+      
+      console.log(`Found ${removalPromises.length} decks containing the word`);
+      
+      // Wait for all flashcard removals to complete (or fail)
+      if (removalPromises.length > 0) {
+        await Promise.allSettled(removalPromises);
+        console.log(`Word removed from ${removalPromises.length} flashcard deck(s)`);
+      }
+
+      // Delete from Firebase Word Bank (same as ConceptBank)
       await deleteDoc(doc(db, 'users', currentUser.uid, 'bankItems', wordId));
+      
       // Update local state by removing the word
       setWords(prevWords => prevWords.filter(word => word.id !== wordId));
-      toast.success('Word removed from your bank');
+      
+      // Refresh flashcard decks if we're on those tabs to reflect the changes
+      if (activeTab === 'flashcards' || activeTab === 'quizzes') {
+        loadFlashcardDecks();
+      }
+      
+      toast.success('Word removed from your bank and all flashcard decks');
     } catch (error) {
       console.error('Error removing word:', error);
       toast.error('Failed to remove word. Please try again.');
@@ -203,6 +291,29 @@ export default function WordBank() {
     } catch (error) {
       console.error('Error deleting deck:', error);
       toast.error('Failed to delete deck. Please try again.');
+    }
+  };
+
+  // Handle edit deck
+  const handleEditDeck = (deck) => {
+    setDeckToEdit(deck);
+    setShowEditDeckModal(true);
+  };
+
+  // Handle edit deck modal close
+  const handleEditDeckModalClose = () => {
+    setShowEditDeckModal(false);
+    setDeckToEdit(null);
+  };
+
+  // Handle deck update
+  const handleDeckUpdate = async () => {
+    try {
+      // Simply refresh the decks list to get updated data
+      await loadFlashcardDecks();
+    } catch (error) {
+      console.error('Error updating deck:', error);
+      toast.error('Failed to update deck. Please try again.');
     }
   };
 
@@ -368,7 +479,9 @@ export default function WordBank() {
             </div>
           ) : (
             <div className="flashcard-decks-grid">
-              {flashcardDecks.map((deck) => (
+              {flashcardDecks
+                .filter(deck => deck && deck.id) // Filter out undefined/invalid decks
+                .map((deck) => (
                 <div key={deck.id} className="flashcard-deck-card">
                   <div className="deck-header">
                     <div className="deck-icon">
@@ -407,6 +520,16 @@ export default function WordBank() {
                     </button>
                     {deck.name !== 'Deck 1' && (
                       <button 
+                        className="edit-deck-button"
+                        onClick={() => handleEditDeck(deck)}
+                        title="Edit deck"
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                        Edit
+                      </button>
+                    )}
+                    {deck.name !== 'Deck 1' && (
+                      <button 
                         className="delete-deck-button"
                         onClick={() => handleDeleteDeck(deck)}
                         title="Delete deck"
@@ -437,6 +560,16 @@ export default function WordBank() {
           onClose={handleFlashcardModalClose}
           word={selectedWord}
           onWordAdded={handleWordAddedToFlashcards}
+        />
+      )}
+
+      {/* Edit Deck Modal */}
+      {showEditDeckModal && deckToEdit && (
+        <EditDeckModal
+          isOpen={showEditDeckModal}
+          onClose={handleEditDeckModalClose}
+          deck={deckToEdit}
+          onDeckUpdated={handleDeckUpdate}
         />
       )}
 
