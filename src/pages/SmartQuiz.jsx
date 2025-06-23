@@ -58,6 +58,7 @@ export default function SmartQuiz() {
   const [selectedVocabularyItem, setSelectedVocabularyItem] = useState(null);
   const [savingVocabularyItem, setSavingVocabularyItem] = useState(false);
   const [savedVocabularyItems, setSavedVocabularyItems] = useState([]);
+  const [showMobileVocab, setShowMobileVocab] = useState(false);
   
   // Load quiz document
   useEffect(() => {
@@ -619,6 +620,54 @@ export default function SmartQuiz() {
           </div>
         </div>
       </div>
+
+      {aiEnabled && (
+        <>
+          <div className="mobile-ai-bar">
+            <button onClick={() => setIsAssistantModalOpen(true)}>
+              <FontAwesomeIcon icon={faComment} />
+              <span>AI</span>
+            </button>
+            <button onClick={handleDirectTipRequest} disabled={assistantLoading}>
+              <FontAwesomeIcon icon={faLightbulb} />
+              <span>Tip</span>
+            </button>
+            <button onClick={handleDirectSummariseText} disabled={assistantLoading}>
+              <FontAwesomeIcon icon={faFileAlt} />
+              <span>Summary</span>
+            </button>
+            <button onClick={() => setShowMobileVocab(!showMobileVocab)}>
+              <FontAwesomeIcon icon={faBook} />
+              <span>Words</span>
+            </button>
+          </div>
+          {showMobileVocab && (
+            <div className="mobile-vocab-dropdown">
+              {helperLoading ? (
+                <p>Loading vocabulary...</p>
+              ) : helperItems.length === 0 ? (
+                <p>No vocabulary terms found.</p>
+              ) : (
+                <div className="vocabulary-items" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {helperItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className="vocabulary-item"
+                      onClick={() => handleVocabularyItemClick(item)}
+                    >
+                      <span>{item.term}</span>
+                      {savedVocabularyItems.includes(item.term) && (
+                        <FontAwesomeIcon icon={faCheck} style={{ color: '#28a745', fontSize: '12px' }} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+
       {/* Modal for displaying tip or summary */}
       <Modal 
         isOpen={isModalOpen} 
