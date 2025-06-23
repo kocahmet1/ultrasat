@@ -58,9 +58,6 @@ export default function SmartQuiz() {
   const [selectedVocabularyItem, setSelectedVocabularyItem] = useState(null);
   const [savingVocabularyItem, setSavingVocabularyItem] = useState(false);
   const [savedVocabularyItems, setSavedVocabularyItems] = useState([]);
-
-  // Mobile state for vocabulary panel visibility
-  const [mobileVocabOpen, setMobileVocabOpen] = useState(false);
   
   // Load quiz document
   useEffect(() => {
@@ -766,82 +763,6 @@ export default function SmartQuiz() {
                 <span>Level: {quiz.level} ({DIFFICULTY_FOR_LEVEL[quiz.level] || 'Unknown'})</span>
               </div>
             </div>
-
-            {aiEnabled && (
-              <>
-                <div className="mobile-ai-bar">
-                  <button
-                    className="ai-bar-button"
-                    onClick={() => setIsAssistantModalOpen(true)}
-                  >
-                    <FontAwesomeIcon icon={faComment} />
-                  </button>
-                  <button
-                    className="ai-bar-button"
-                    onClick={handleDirectTipRequest}
-                    disabled={assistantLoading}
-                  >
-                    <FontAwesomeIcon icon={faLightbulb} />
-                  </button>
-                  <button
-                    className="ai-bar-button"
-                    onClick={handleDirectSummariseText}
-                    disabled={assistantLoading}
-                  >
-                    <FontAwesomeIcon icon={faFileAlt} />
-                  </button>
-                  <button
-                    className="ai-bar-button"
-                    onClick={() => setMobileVocabOpen(!mobileVocabOpen)}
-                  >
-                    <FontAwesomeIcon icon={faBook} />
-                  </button>
-                </div>
-
-                <div className={`mobile-vocabulary-panel ${mobileVocabOpen ? 'open' : ''}`}>
-                  {helperLoading ? (
-                    <div style={{ textAlign: 'center', padding: '10px 0' }}>
-                      <p>Loading...</p>
-                    </div>
-                  ) : helperItems.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '10px 0' }}>
-                      <p>No terms found.</p>
-                    </div>
-                  ) : (
-                    <div className="vocabulary-items" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {helperItems.map((item, index) => (
-                        <div
-                          key={index}
-                          className="vocabulary-item"
-                          onClick={() => handleVocabularyItemClick(item)}
-                          style={{
-                            padding: '8px 12px',
-                            backgroundColor: savedVocabularyItems.includes(item.term) ? '#e2f0d9' : '#ffffff',
-                            borderRadius: '6px',
-                            borderLeft: '3px solid #4e73df',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                            fontSize: '14px',
-                            fontWeight: '500',
-                            color: '#495057',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between'
-                          }}
-                        >
-                          <span>{item.term}</span>
-                          {savedVocabularyItems.includes(item.term) && (
-                            <FontAwesomeIcon icon={faCheck} style={{ color: '#28a745', fontSize: '12px' }} />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-
             <p className="question-text" style={{ lineHeight: '1.6', marginBottom: '8px' }}>{currentQuestion.text}</p>
             <ul className="options-list" style={{ listStyleType: 'none', paddingLeft: '0', margin: 0 }}>
               {currentQuestion.options.map((opt, idx) => {
