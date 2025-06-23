@@ -58,7 +58,7 @@
 .sidebar-collapse {
   position: absolute;
   left: -40px;
-  top: 10px;
+  top: -10px;
   background-color: var(--background-color-sidebar);
   color: var(--text-color-on-primary);
   border-radius: 6px 0 0 6px;
