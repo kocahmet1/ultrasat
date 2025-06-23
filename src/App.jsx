@@ -55,12 +55,15 @@ import { getFeatureFlags } from './firebase/config.featureFlags';
 
 // Components
 import Sidebar from './components/Sidebar';
+import TopNavBar from './components/TopNavBar';
+import useIsMobile from './hooks/useIsMobile';
 
 // Styles
 import './styles/App.css';
 
 function App() {
   const [flags, setFlags] = React.useState({});
+  const isMobile = useIsMobile();
   React.useEffect(() => {
     getFeatureFlags().then(setFlags);
   }, []);
@@ -70,9 +73,9 @@ function App() {
       <SubcategoryProvider>
         <ReviewProvider>
           <Router>
-            <div className="app-container"> 
-              <Sidebar /> 
-              <div className="main-content"> 
+            <div className="app-container">
+              {isMobile ? <TopNavBar /> : <Sidebar />}
+              <div className="main-content">
                 <Routes>
                   {/* Authentication routes */}
                   <Route path="/login" element={<Login />} />
