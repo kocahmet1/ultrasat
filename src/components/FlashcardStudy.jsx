@@ -37,6 +37,8 @@ const FlashcardStudy = ({
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
   const [isSwiping, setIsSwiping] = useState(false);
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [isSwipeAnimating, setIsSwipeAnimating] = useState(false);
   const minSwipeDistance = 50;
 
   useEffect(() => {
@@ -152,24 +154,44 @@ const FlashcardStudy = ({
     if (e.target.closest('.answer-button')) return;
     setTouchEndX(null);
     setTouchStartX(e.changedTouches[0].clientX);
+    setSwipeOffset(0);
+    setIsSwipeAnimating(false);
     setIsSwiping(false);
   };
 
   const handleTouchMove = (e) => {
     setTouchEndX(e.changedTouches[0].clientX);
+    if (touchStartX !== null) {
+      setSwipeOffset(e.changedTouches[0].clientX - touchStartX);
+    }
   };
 
   const handleTouchEnd = () => {
-    if (touchStartX === null || touchEndX === null) return;
+    if (touchStartX === null || touchEndX === null) {
+      setSwipeOffset(0);
+      return;
+    }
     const distance = touchStartX - touchEndX;
     if (Math.abs(distance) > minSwipeDistance) {
       setIsSwiping(true);
-      if (distance > 0) {
-        handleNext();
-      } else {
-        handlePrevious();
-      }
+      setIsSwipeAnimating(true);
+      const direction = distance > 0 ? -1 : 1;
+      setSwipeOffset(direction * window.innerWidth);
+      setTimeout(() => {
+        if (direction === -1) {
+          handleNext();
+        } else {
+          handlePrevious();
+        }
+        setIsSwipeAnimating(false);
+        setSwipeOffset(0);
+        setIsSwiping(false);
+      }, 300);
+    } else {
+      setSwipeOffset(0);
     }
+    setTouchStartX(null);
+    setTouchEndX(null);
   };
 
   const handleCardClick = () => {
@@ -290,7 +312,15 @@ const FlashcardStudy = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className={`flashcard ${isFlipped ? 'flipped' : ''}`} onClick={handleCardClick}>
+        <div
+          className={`flashcard ${isFlipped ? 'flipped' : ''}`}
+          onClick={handleCardClick}
+          style={{
+            transform: `${isFlipped ? 'rotateY(180deg) ' : ''}translateX(${swipeOffset}px)`,
+            opacity: isSwipeAnimating ? 0 : 1,
+            transition: isSwipeAnimating ? 'transform 0.3s ease-out, opacity 0.3s ease-out' : 'transform 0.2s ease-out'
+          }}
+        >
           <div className="flashcard-inner">
             <div className="flashcard-front">
               <div className="card-content">
