@@ -803,3 +803,42 @@
     display: inline-block;
     vertical-align: middle;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .progress-dashboard-page {
+    padding: 20px;
+  }
+  .pd-header h1 {
+    font-size: 1.8rem;
+  }
+  .pd-split-view {
+    flex-direction: column;
+  }
+  .pd-subcategory-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pd-subcategory-actions {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    padding-right: 0;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pd-header h1 {
+    font-size: 1.6rem;
+  }
+  .pd-stat-card .stat-value {
+    font-size: 2rem;
+  }
+  .pd-section-title {
+    font-size: 1.3rem;
+  }
+  .pd-practice-hub h3 {
+    font-size: 1.2rem;
+  }
+}
