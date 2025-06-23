@@ -9,8 +9,8 @@ import {
   FaGraduationCap,     // SAT Prep
   FaBook,              // Word Bank
   FaPuzzlePiece,       // Concept Bank
-  FaBars,              // Menu toggle icon
-  FaTimes              // Close icon
+  FaChevronLeft,       // Collapse icon
+  FaChevronRight       // Expand icon
 } from 'react-icons/fa';
 
 const navItems = [
@@ -86,16 +86,15 @@ const Sidebar = () => {
       )}
       
       <div className={`sidebar ${isCollapsed ? 'sidebar-collapsed' : ''} ${isMobile ? 'sidebar-mobile' : ''}`}>
-        {/* Toggle button */}
-        <button className="sidebar-toggle" onClick={toggleSidebar}>
-          {isCollapsed ? <FaBars /> : <FaTimes />}
-        </button>
 
         <div className="sidebar-header">
           {/* You can put a logo or app name here */}
           <h3>BlueBook Prep</h3>
         </div>
         <nav className="sidebar-nav">
+          <div className="sidebar-collapse" onClick={toggleSidebar}>
+            {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+          </div>
           <ul>
             {navItems.map((item) => (
               <li key={item.path} className={location.pathname.startsWith(item.path) ? 'active' : ''}>

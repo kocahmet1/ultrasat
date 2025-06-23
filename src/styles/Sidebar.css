@@ -33,31 +33,6 @@
   z-index: 100; /* Ensure it's above other content if not using grid/flex correctly */
 }
 
-/* Toggle button */
-.sidebar-toggle {
-  position: absolute;
-  top: 15px;
-  right: -50px;
-  background-color: var(--background-color-sidebar);
-  color: var(--text-color-on-primary);
-  border: none;
-  padding: 12px;
-  border-radius: 0 6px 6px 0;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: background-color 0.2s ease, right 0.3s ease;
-  z-index: 101;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar-toggle:hover {
-  background-color: var(--background-color-sidebar-hover);
-}
-
-/* Move toggle button when sidebar is collapsed */
-.sidebar.sidebar-collapsed .sidebar-toggle {
-  right: -50px;
-}
 
 .sidebar-header {
   padding: 20px 25px;
@@ -76,6 +51,28 @@
   flex-grow: 1;
   overflow-y: auto; /* For many nav items */
   padding-top: 15px;
+  position: relative;
+}
+
+/* Collapse/expand icon inside navigation */
+.sidebar-collapse {
+  position: absolute;
+  left: -40px;
+  top: -10px;
+  background-color: var(--background-color-sidebar);
+  color: var(--text-color-on-primary);
+  border-radius: 6px 0 0 6px;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.sidebar.sidebar-collapsed .sidebar-collapse {
+  left: 0;
+}
+
+.sidebar-collapse:hover {
+  background-color: var(--background-color-sidebar-hover);
 }
 
 .sidebar-nav ul {
@@ -181,35 +178,11 @@
 }
 
 /* Mobile toggle button positioning */
-.sidebar.sidebar-mobile .sidebar-toggle {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  right: auto;
-  border-radius: 6px;
-  z-index: 103;
-}
-
-.sidebar.sidebar-mobile.sidebar-collapsed .sidebar-toggle {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  right: auto;
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .sidebar-toggle {
-    padding: 10px;
-    font-size: 1.1rem;
-  }
   
   /* Hide default toggle button position on mobile, use the mobile-specific one */
-  .sidebar.sidebar-mobile .sidebar-toggle {
-    top: 15px;
-    left: 15px;
-    right: auto;
-  }
 }
 
 /* Desktop responsive - auto-collapse at medium screen sizes */
