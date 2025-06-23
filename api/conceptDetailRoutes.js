@@ -181,6 +181,8 @@ Please provide a detailed explanation that includes:
 
 Format your response in clean HTML with appropriate headings (h3, h4), paragraphs, lists, and emphasis. Make it engaging and educational for high school students preparing for the SAT.
 
+Avoid personal statements or greetings and do not address the reader directly. Present the explanation in a lecture style aimed at a general audience.
+
 Do not include any markdown formatting - use HTML only. Start directly with the content without any introductory text.`;
 
   try {
