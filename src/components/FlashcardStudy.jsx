@@ -33,6 +33,12 @@ const FlashcardStudy = ({
   const [showResults, setShowResults] = useState(false);
   const [sessionWords, setSessionWords] = useState([]);
 
+  // Swipe gesture state
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const minSwipeDistance = 50;
+
   useEffect(() => {
     loadDeckWords();
   }, [deckId]);
@@ -142,6 +148,38 @@ const FlashcardStudy = ({
     }
   };
 
+  const handleTouchStart = (e) => {
+    if (e.target.closest('.answer-button')) return;
+    setTouchEndX(null);
+    setTouchStartX(e.changedTouches[0].clientX);
+    setIsSwiping(false);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.changedTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX === null || touchEndX === null) return;
+    const distance = touchStartX - touchEndX;
+    if (Math.abs(distance) > minSwipeDistance) {
+      setIsSwiping(true);
+      if (distance > 0) {
+        handleNext();
+      } else {
+        handlePrevious();
+      }
+    }
+  };
+
+  const handleCardClick = () => {
+    if (isSwiping) {
+      setIsSwiping(false);
+      return;
+    }
+    handleFlip();
+  };
+
   if (loading) {
     return (
       <div className="flashcard-study-container">
@@ -246,8 +284,13 @@ const FlashcardStudy = ({
         </div>
       </div>
 
-      <div className="flashcard-container">
-        <div className={`flashcard ${isFlipped ? 'flipped' : ''}`} onClick={handleFlip}>
+      <div
+        className="flashcard-container"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className={`flashcard ${isFlipped ? 'flipped' : ''}`} onClick={handleCardClick}>
           <div className="flashcard-inner">
             <div className="flashcard-front">
               <div className="card-content">
