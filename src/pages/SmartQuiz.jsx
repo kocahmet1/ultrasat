@@ -35,6 +35,18 @@ export default function SmartQuiz() {
   
   // AI features toggle state
   const [aiEnabled, setAiEnabled] = useState(true);
+
+  // Track if we are on a mobile viewport to hide desktop-only elements
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // Assistant state
   const [assistantHistory, setAssistantHistory] = useState([]);
@@ -691,8 +703,8 @@ export default function SmartQuiz() {
         margin: '20px auto'
       }}>
         
-        {/* Left Column: Key Vocabulary (only when AI is enabled) */}
-        {aiEnabled && (
+        {/* Left Column: Key Vocabulary (only when AI is enabled and not mobile) */}
+        {aiEnabled && !isMobile && (
           <div className="vocabulary-column" style={{
             width: '200px',
             flexShrink: 0,
@@ -862,8 +874,8 @@ export default function SmartQuiz() {
           </div>
         </div>
 
-        {/* Right Column: AI Buttons */}
-        {aiEnabled && (
+        {/* Right Column: AI Buttons - hidden on mobile */}
+        {aiEnabled && !isMobile && (
           <div className="ai-tools-column" style={{
             width: '150px',
             flexShrink: 0,
