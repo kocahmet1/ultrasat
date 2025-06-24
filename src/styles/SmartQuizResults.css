@@ -341,55 +341,6 @@
   margin: 0;
 }
 
-.answer-summary {
-  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid #e2e8f0;
-}
-
-.answer-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.answer-row:last-of-type {
-  margin-bottom: 0;
-}
-
-.answer-label {
-  font-weight: 600;
-  color: #4a5568;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.answer-value {
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  flex: 1;
-  text-align: right;
-  max-width: 60%;
-}
-
-.correct-answer {
-  background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
-  color: #38a169;
-  border: 1px solid #9ae6b4;
-}
-
-.incorrect-answer {
-  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
-  color: #e53e3e;
-  border: 1px solid #fc8181;
-}
 
 .answer-meta {
   margin-top: 20px;
@@ -397,6 +348,52 @@
   border-top: 1px solid #e2e8f0;
   display: flex;
   justify-content: flex-end;
+}
+
+/* Options display on results */
+.results-options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+}
+
+.results-options-list li {
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #f7fafc;
+  position: relative;
+}
+
+.results-options-list li.correct {
+  background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+  border-color: #9ae6b4;
+}
+
+.results-options-list li.selected:not(.correct) {
+  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+  border-color: #fc8181;
+}
+
+.results-options-list .badge {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.results-options-list .badge.correct-answer {
+  background: #38a169;
+}
+
+.results-options-list .badge.your-answer {
+  background: #e53e3e;
 }
 
 .time-spent {
@@ -521,15 +518,6 @@
     padding: 16px 24px 24px;
   }
   
-  .answer-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .answer-value {
-    max-width: 100%;
-    text-align: left;
-  }
   
   .actions {
     flex-direction: column;
