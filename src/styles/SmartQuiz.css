@@ -480,11 +480,12 @@
 
 /* AI Tools Column styling (if not already fully inline or elsewhere) */
 .ai-tools-column {
-  /* width: 150px; */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* gap: 12px; */
-  /* margin-top: 60px; */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 60px;
+  width: 150px;
+  flex-shrink: 0;
 }
 
 .assistant-action-button {
