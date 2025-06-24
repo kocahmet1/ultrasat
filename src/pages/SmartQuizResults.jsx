@@ -219,24 +219,23 @@ export default function SmartQuizResults() {
                     <h3>{question.text}</h3>
                   </div>
                   
-                  <div className="answer-summary">
-                    <div className="answer-row">
-                      <span className="answer-label">Your answer:</span>
-                      <span className={`answer-value ${isCorrect ? 'correct-answer' : 'incorrect-answer'}`}>
-                        {question.options[answer.selectedOption]}
-                      </span>
-                    </div>
-                    {!isCorrect && (
-                      <div className="answer-row">
-                        <span className="answer-label">Correct answer:</span>
-                        <span className="answer-value correct-answer">
-                          {question.options[question.correctAnswer]}
-                        </span>
-                      </div>
-                    )}
-                    <div className="answer-meta">
-                      <span className="time-spent">⏱️ {answer.timeSpent}s</span>
-                    </div>
+                  <div className="options-list">
+                    {question.options.map((opt, idx) => {
+                      const isSelected = answer?.selectedOption === idx;
+                      const isCorrectOption = idx === question.correctAnswer;
+                      return (
+                        <div
+                          key={idx}
+                          className={`option-item ${isCorrectOption ? 'correct' : ''} ${isSelected ? 'selected' : ''}`}
+                        >
+                          <span className="option-letter">{String.fromCharCode(65 + idx)}.</span>
+                          <span className="option-text">{opt}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="answer-meta">
+                    <span className="time-spent">⏱️ {answer.timeSpent}s</span>
                   </div>
                 </div>
 
