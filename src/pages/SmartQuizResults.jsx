@@ -219,33 +219,29 @@ export default function SmartQuizResults() {
                     <h3>{question.text}</h3>
                   </div>
                   
-                  <ul className="results-options-list">
-                    {question.options.map((opt, optIdx) => {
-                      const isSelected = answer.selectedOption === optIdx;
-                      const isCorrectOption = question.correctAnswer === optIdx;
-                      return (
-                        <li
-                          key={optIdx}
-                          className={`${isSelected ? 'selected' : ''} ${isCorrectOption ? 'correct' : ''}`}
-                        >
-                          {opt}
-                          {isSelected && (
-                            <span className="badge your-answer">Your answer</span>
-                          )}
-                          {isCorrectOption && (
-                            <span className="badge correct-answer">Correct</span>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <div className="answer-meta">
-                    <span className="time-spent">⏱️ {answer.timeSpent}s</span>
+                  <div className="answer-summary">
+                    <div className="answer-row">
+                      <span className="answer-label">Your answer:</span>
+                      <span className={`answer-value ${isCorrect ? 'correct-answer' : 'incorrect-answer'}`}>
+                        {question.options[answer.selectedOption]}
+                      </span>
+                    </div>
+                    {!isCorrect && (
+                      <div className="answer-row">
+                        <span className="answer-label">Correct answer:</span>
+                        <span className="answer-value correct-answer">
+                          {question.options[question.correctAnswer]}
+                        </span>
+                      </div>
+                    )}
+                    <div className="answer-meta">
+                      <span className="time-spent">⏱️ {answer.timeSpent}s</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Explanation Section */}
-                {question.explanation && (
+                {!isCorrect && question.explanation && (
                   <div className="explanation-section">
                     <div className="explanation-header">
                       <h4>💡 Explanation</h4>
