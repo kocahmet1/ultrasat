@@ -864,16 +864,14 @@ export default function SmartQuiz() {
 
         {/* Right Column: AI Buttons */}
         {aiEnabled && (
-          <div
-            className="ai-tools-column"
-            style={{
-              width: '150px',
-              flexShrink: 0,
-              flexDirection: 'column',
-              gap: '12px',
-              marginTop: '60px' // Align with question content
-            }}
-          >
+          <div className="ai-tools-column" style={{
+            width: '150px',
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            marginTop: '60px' // Align with question content
+          }}>
             <button 
               className="assistant-action-button assistant-button"
               onClick={() => setIsAssistantModalOpen(true)}
