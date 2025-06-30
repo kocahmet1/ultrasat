@@ -19,15 +19,20 @@ const conceptsRouter = require('./conceptsAPI');
 const conceptDetailRouter = require('./conceptDetailRoutes');
 const questionsRouter = require('./questionsAPI');
 // Conditionally load graph generation modules only if dependencies are available
-let graphGenerationRouter, graphGenerationPlotlyRouter;
+let graphGenerationPlotlyRouter;
+console.log('--- ENV VARS FOR GRAPH GENERATION ---');
+console.log(`ENABLE_GRAPH_GENERATION: ${process.env.ENABLE_GRAPH_GENERATION}`);
+console.log(`GEMINI_API_KEY set: ${!!process.env.GEMINI_API_KEY}`);
+console.log(`OPENAI_API_KEY set: ${!!process.env.OPENAI_API_KEY}`);
 const hasGraphGeneration = process.env.ENABLE_GRAPH_GENERATION === 'true' && 
                            (process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY);
 
 if (hasGraphGeneration) {
   try {
-    graphGenerationRouter = require('./graphGeneration');
+    // Only load the working Plotly-based graph generation module
+    // Skip the disabled graphGeneration.js module
     graphGenerationPlotlyRouter = require('./graphGenerationPlotly');
-    console.log('✅ Graph generation features loaded successfully');
+    console.log('✅ Graph generation features loaded successfully (Plotly + Puppeteer)');
   } catch (error) {
     console.warn('⚠️ Graph generation modules failed to load:', error.message);
     console.log('Graph generation features will be disabled');
@@ -177,10 +182,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Conditionally register graph generation routes
-if (hasGraphGeneration && graphGenerationRouter && graphGenerationPlotlyRouter) {
-  app.use('/api', graphGenerationRouter);
+if (hasGraphGeneration && graphGenerationPlotlyRouter) {
   app.use('/api', graphGenerationPlotlyRouter);
-  console.log('📊 Graph generation API endpoints registered');
+  console.log('📊 Graph generation API endpoints registered (Plotly + Puppeteer)');
 } else {
   // Add fallback routes for disabled graph generation features
   app.post('/api/generate-graph', (req, res) => {

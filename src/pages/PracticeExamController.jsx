@@ -139,21 +139,63 @@ const PracticeExamController = () => {
             };
           }
 
-          // Determine correctness (simplified, assumes question.options and question.correctAnswer are well-formed)
+          // Determine correctness based on question type
           let isCorrect = false;
-          if (question.options && question.correctAnswer !== undefined) {
-            // Check if correctAnswer is an index or direct value match if options are simple values
-            if (typeof question.correctAnswer === 'number' || !isNaN(parseInt(question.correctAnswer))) {
-                 isCorrect = userAnswer === question.options[parseInt(question.correctAnswer)];
-            } else if (typeof question.correctAnswer === 'string' && question.correctAnswer.length === 1 && /[A-D]/i.test(question.correctAnswer)){
-                 const letterIndex = question.correctAnswer.toUpperCase().charCodeAt(0) - 65;
-                 isCorrect = userAnswer === question.options[letterIndex];
+          let questionType = question.questionType;
+          
+          // Smart detection if questionType not specified
+          if (!questionType) {
+            if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+              questionType = 'user-input';
             } else {
-                // Fallback for direct value match if correctAnswer isn't a typical index/letter
-                isCorrect = userAnswer === question.correctAnswer;
+              questionType = 'multiple-choice';
             }
-          } else if (question.answer !== undefined) { // Fallback if structure is different, e.g., direct answer field
-            isCorrect = userAnswer === question.answer;
+          }
+          
+          if (questionType === 'multiple-choice') {
+            // Multiple choice question handling
+            if (question.options && question.correctAnswer !== undefined) {
+              // Check if correctAnswer is an index or direct value match if options are simple values
+              if (typeof question.correctAnswer === 'number' || !isNaN(parseInt(question.correctAnswer))) {
+                   isCorrect = userAnswer === question.options[parseInt(question.correctAnswer)];
+              } else if (typeof question.correctAnswer === 'string' && question.correctAnswer.length === 1 && /[A-D]/i.test(question.correctAnswer)){
+                   const letterIndex = question.correctAnswer.toUpperCase().charCodeAt(0) - 65;
+                   isCorrect = userAnswer === question.options[letterIndex];
+              } else {
+                  // Fallback for direct value match if correctAnswer isn't a typical index/letter
+                  isCorrect = userAnswer === question.correctAnswer;
+              }
+            } else if (question.answer !== undefined) { // Fallback if structure is different, e.g., direct answer field
+              isCorrect = userAnswer === question.answer;
+            }
+          } else if (questionType === 'user-input') {
+            // User input question handling
+            if (question.correctAnswer !== undefined) {
+              // Direct comparison with correct answer
+              isCorrect = userAnswer === question.correctAnswer;
+              
+              // Also check against accepted answers if available
+              if (!isCorrect && question.acceptedAnswers && Array.isArray(question.acceptedAnswers)) {
+                isCorrect = question.acceptedAnswers.includes(userAnswer);
+              }
+              
+              // For number inputs, handle different formats
+              if (!isCorrect && question.inputType === 'number') {
+                const userNum = parseFloat(userAnswer);
+                const correctNum = parseFloat(question.correctAnswer);
+                if (!isNaN(userNum) && !isNaN(correctNum)) {
+                  isCorrect = Math.abs(userNum - correctNum) < 0.0001;
+                }
+                
+                // Check accepted answers as numbers too
+                if (!isCorrect && question.acceptedAnswers) {
+                  isCorrect = question.acceptedAnswers.some(accepted => {
+                    const acceptedNum = parseFloat(accepted);
+                    return !isNaN(acceptedNum) && Math.abs(userNum - acceptedNum) < 0.0001;
+                  });
+                }
+              }
+            }
           }
           
           console.log(`PracticeExamController: Question ${index}, SubID: ${subId}, Correct: ${isCorrect}`);
@@ -254,26 +296,64 @@ const PracticeExamController = () => {
         const userAnswer = moduleData.answers[index];
         if (userAnswer === undefined || userAnswer === null) return; // Skip unanswered questions
         
-        // Check if answer is correct - handle different correct answer formats
+        // Check if answer is correct based on question type
         const correctAnswer = question.correctAnswer !== undefined ? question.correctAnswer : question.answer;
+        let questionType = question.questionType;
+        
+        // Smart detection if questionType not specified
+        if (!questionType) {
+          if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+            questionType = 'user-input';
+          } else {
+            questionType = 'multiple-choice';
+          }
+        }
+        
         let isCorrect = false;
         
-        // Convert correctAnswer to actual option text when needed
-        if (correctAnswer !== undefined && question.options) {
-          // If correctAnswer is a letter (A, B, C, D)
-          if (typeof correctAnswer === 'string' && correctAnswer.length === 1 && /[A-D]/i.test(correctAnswer)) {
-            // Convert letter to index (A=0, B=1, etc.)
-            const letterIndex = correctAnswer.toUpperCase().charCodeAt(0) - 65;
-            isCorrect = userAnswer === question.options[letterIndex];
+        if (questionType === 'multiple-choice') {
+          // Multiple choice question handling
+          if (question.options && question.correctAnswer !== undefined) {
+            // Check if correctAnswer is an index or direct value match if options are simple values
+            if (typeof question.correctAnswer === 'number' || !isNaN(parseInt(question.correctAnswer))) {
+                 isCorrect = userAnswer === question.options[parseInt(question.correctAnswer)];
+            } else if (typeof question.correctAnswer === 'string' && question.correctAnswer.length === 1 && /[A-D]/i.test(question.correctAnswer)){
+                 const letterIndex = question.correctAnswer.toUpperCase().charCodeAt(0) - 65;
+                 isCorrect = userAnswer === question.options[letterIndex];
+            } else {
+                // Fallback for direct value match if correctAnswer isn't a typical index/letter
+                isCorrect = userAnswer === question.correctAnswer;
+            }
+          } else if (question.answer !== undefined) { // Fallback if structure is different, e.g., direct answer field
+            isCorrect = userAnswer === question.answer;
           }
-          // If correctAnswer is a number or stringified number (index)
-          else if (!isNaN(correctAnswer)) {
-            const numericIndex = parseInt(correctAnswer, 10);
-            isCorrect = userAnswer === question.options[numericIndex];
-          }
-          // Direct comparison as fallback
-          else {
-            isCorrect = userAnswer === correctAnswer;
+        } else if (questionType === 'user-input') {
+          // User input question handling
+          if (question.correctAnswer !== undefined) {
+            // Direct comparison with correct answer
+            isCorrect = userAnswer === question.correctAnswer;
+            
+            // Also check against accepted answers if available
+            if (!isCorrect && question.acceptedAnswers && Array.isArray(question.acceptedAnswers)) {
+              isCorrect = question.acceptedAnswers.includes(userAnswer);
+            }
+            
+            // For number inputs, handle different formats
+            if (!isCorrect && question.inputType === 'number') {
+              const userNum = parseFloat(userAnswer);
+              const correctNum = parseFloat(question.correctAnswer);
+              if (!isNaN(userNum) && !isNaN(correctNum)) {
+                isCorrect = Math.abs(userNum - correctNum) < 0.0001;
+              }
+              
+              // Check accepted answers as numbers too
+              if (!isCorrect && question.acceptedAnswers) {
+                isCorrect = question.acceptedAnswers.some(accepted => {
+                  const acceptedNum = parseFloat(accepted);
+                  return !isNaN(acceptedNum) && Math.abs(userNum - acceptedNum) < 0.0001;
+                });
+              }
+            }
           }
         }
         

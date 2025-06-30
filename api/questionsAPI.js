@@ -224,43 +224,83 @@ function validateQuestion(question, index) {
     }
   }
   
-  if (!question.options || !Array.isArray(question.options)) {
-    if (!question.options) {
-      errors.push('Missing options field');
+  // Determine question type - be smarter about detection
+  let questionType = question.questionType;
+  
+  // If questionType not specified, try to infer from structure
+  if (!questionType) {
+    if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+      // No options array suggests user-input question
+      questionType = 'user-input';
     } else {
-      errors.push(`Options must be an array, got ${typeof question.options}`);
+      // Has options array suggests multiple-choice question
+      questionType = 'multiple-choice';
     }
-  } else if (question.options.length < 2) {
-    errors.push(`Must have at least 2 options, found ${question.options.length}`);
-  } else if (question.options.length > 6) {
-    warnings.push(`Has ${question.options.length} options (unusual for SAT questions, typically 4)`);
   }
   
-  // Validate individual options
-  if (question.options && Array.isArray(question.options)) {
-    question.options.forEach((option, optIndex) => {
-      if (!option || typeof option !== 'string' || option.trim() === '') {
-        errors.push(`Option ${optIndex + 1} is missing or invalid (must be a non-empty string)`);
+  // Validate based on question type
+  if (questionType === 'multiple-choice') {
+    // Multiple choice questions need options
+    if (!question.options || !Array.isArray(question.options)) {
+      if (!question.options) {
+        errors.push('Missing options field for multiple-choice question');
+      } else {
+        errors.push(`Options must be an array, got ${typeof question.options}`);
       }
-    });
-  }
-  
-  if (question.correctAnswer == null) {
-    errors.push('Missing correctAnswer field');
+    } else if (question.options.length < 2) {
+      errors.push(`Must have at least 2 options, found ${question.options.length}`);
+    } else if (question.options.length > 6) {
+      warnings.push(`Has ${question.options.length} options (unusual for SAT questions, typically 4)`);
+    }
+    
+    // Validate individual options for multiple choice
+    if (question.options && Array.isArray(question.options)) {
+      question.options.forEach((option, optIndex) => {
+        if (!option || typeof option !== 'string' || option.trim() === '') {
+          errors.push(`Option ${optIndex + 1} is missing or invalid (must be a non-empty string)`);
+        }
+      });
+    }
+    
+    // Validate correct answer for multiple choice
+    if (question.correctAnswer == null) {
+      errors.push('Missing correctAnswer field');
+    } else {
+      const correctAnswer = question.correctAnswer;
+      if (typeof correctAnswer === 'number') {
+        if (correctAnswer < 0 || correctAnswer >= (question.options?.length || 0)) {
+          errors.push(`Correct answer index ${correctAnswer} is out of range (must be 0-${(question.options?.length || 1) - 1})`);
+        }
+      } else if (typeof correctAnswer === 'string') {
+        if (question.options && !question.options.includes(correctAnswer)) {
+          errors.push(`Correct answer text "${correctAnswer}" does not match any option. Available options: [${question.options.map(opt => `"${opt}"`).join(', ')}]`);
+        }
+      } else {
+        errors.push(`Correct answer must be a number (index) or string (text), got ${typeof correctAnswer}`);
+      }
+    }
+  } else if (questionType === 'user-input') {
+    // User input questions validation
+    if (question.correctAnswer == null) {
+      errors.push('Missing correctAnswer field for user-input question');
+    }
+    
+    // Validate inputType if present
+    if (question.inputType && !['number', 'text', 'fraction'].includes(question.inputType)) {
+      errors.push('Invalid inputType (must be number, text, or fraction)');
+    }
+    
+    // Validate acceptedAnswers if present
+    if (question.acceptedAnswers && !Array.isArray(question.acceptedAnswers)) {
+      errors.push('acceptedAnswers must be an array if provided');
+    }
+    
+    // Options are optional for user-input questions but warn if present
+    if (question.options) {
+      warnings.push('User-input questions typically do not need options array');
+    }
   } else {
-    // Validate correct answer format
-    const correctAnswer = question.correctAnswer;
-    if (typeof correctAnswer === 'number') {
-      if (correctAnswer < 0 || correctAnswer >= (question.options?.length || 0)) {
-        errors.push(`Correct answer index ${correctAnswer} is out of range (must be 0-${(question.options?.length || 1) - 1})`);
-      }
-    } else if (typeof correctAnswer === 'string') {
-      if (question.options && !question.options.includes(correctAnswer)) {
-        errors.push(`Correct answer text "${correctAnswer}" does not match any option. Available options: [${question.options.map(opt => `"${opt}"`).join(', ')}]`);
-      }
-    } else {
-      errors.push(`Correct answer must be a number (index) or string (text), got ${typeof correctAnswer}`);
-    }
+    errors.push('Invalid questionType (must be multiple-choice or user-input)');
   }
   
   // Subcategory validation
@@ -328,8 +368,12 @@ function validateQuestion(question, index) {
   // Normalize question data
   const normalizedQuestion = {
     text: question.text?.trim(),
+    questionType: questionType,
     options: question.options || [],
     correctAnswer: question.correctAnswer,
+    acceptedAnswers: question.acceptedAnswers || null,
+    inputType: question.inputType || 'number',
+    answerFormat: question.answerFormat || null,
     explanation: normalizeExplanation(question.explanation),
     difficulty: question.difficulty || 'medium',
     subcategory: normalizedSubcategory,
@@ -343,7 +387,7 @@ function validateQuestion(question, index) {
     passage: question.passage?.trim() || null,
     // Add any other fields that should be preserved
     ...Object.keys(question).reduce((acc, key) => {
-      if (!['text', 'options', 'correctAnswer', 'explanation', 'difficulty', 'subcategory', 'subCategory', 'subcategoryId', 'source', 'usageContext', 'skillTags', 'graphUrl', 'graphDescription', 'passage'].includes(key)) {
+      if (!['text', 'questionType', 'options', 'correctAnswer', 'acceptedAnswers', 'inputType', 'answerFormat', 'explanation', 'difficulty', 'subcategory', 'subCategory', 'subcategoryId', 'source', 'usageContext', 'skillTags', 'graphUrl', 'graphDescription', 'passage'].includes(key)) {
         acc[key] = question[key];
       }
       return acc;

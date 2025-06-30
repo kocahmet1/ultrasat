@@ -25,18 +25,20 @@ import QuestionGeneratorLive from '../components/QuestionGeneratorLive';
 import SubcategoryMigrationTool from '../components/admin/SubcategoryMigrationTool';
 import SubcategorySettings from '../components/admin/SubcategorySettings';
 import { exportQuestionsAsJSON } from '../utils/exportUtils.js'; // Added import
-import { useGraphGenerationAvailability } from '../utils/graphGenerationHook';
+import { checkPlotlyEnvironment } from '../utils/apiClient';
+
 import '../styles/AdminDashboard.css';
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { allSubcategories, loading: subcategoriesLoading } = useSubcategories(); // Correct hook (plural)
-  const { isAvailable: isGraphGenerationAvailable } = useGraphGenerationAvailability();
+  
   
   // State for admin access control
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGraphGenerationAvailable, setIsGraphGenerationAvailable] = useState(false);
   
   // States for different tabs
   const [activeTab, setActiveTab] = useState('questions');
@@ -103,6 +105,22 @@ function AdminDashboard() {
     
     checkAdminAccess();
   }, [currentUser]);
+
+  useEffect(() => {
+    const checkGraphGenAvailability = async () => {
+      try {
+        const envCheck = await checkPlotlyEnvironment();
+        setIsGraphGenerationAvailable(envCheck.plotlyReady);
+      } catch (error) {
+        console.error('Error checking graph generation availability:', error);
+        setIsGraphGenerationAvailable(false);
+      }
+    };
+
+    if (isAdmin) {
+      checkGraphGenAvailability();
+    }
+  }, [isAdmin]);
   
   // Load feature flags
   useEffect(() => {
@@ -1942,6 +1960,12 @@ const migrateExistingQuestions = async () => {
               Generate Graphs
             </button>
           )}
+          <button 
+            className={`tab-button`}
+            onClick={() => navigate('/admin/graph-descriptions')}
+          >
+            Graph Descriptions
+          </button>
           <button 
             className={`tab-button ${activeTab === 'aiContent' ? 'active' : ''}`}
             onClick={() => navigate('/admin/ai-content')}

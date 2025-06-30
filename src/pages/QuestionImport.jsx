@@ -18,7 +18,7 @@ import {
   faEye,
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { getSubcategoriesArray } from '../utils/subcategoryConstants';
+import { getSubcategoriesArray, getKebabCaseFromAnyFormat, getSubcategoryIdFromString } from '../utils/subcategoryConstants';
 import '../styles/QuestionImport.css';
 
 export default function QuestionImport() {
@@ -255,18 +255,91 @@ export default function QuestionImport() {
         questionIssues.push('Missing or invalid question text');
       }
       
-      if (!question.options || !Array.isArray(question.options) || question.options.length < 2) {
-        questionIssues.push('Missing or invalid options (need at least 2)');
+      // Determine question type - be smarter about detection
+      let questionType = question.questionType;
+      
+      // If questionType not specified, try to infer from structure
+      if (!questionType) {
+        if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+          // No options array suggests user-input question
+          questionType = 'user-input';
+        } else {
+          // Has options array suggests multiple-choice question
+          questionType = 'multiple-choice';
+        }
       }
       
+      // Validate based on question type
+      if (questionType === 'multiple-choice') {
+        // Multiple choice questions need options
+        if (!question.options || !Array.isArray(question.options)) {
+          questionIssues.push('Missing or invalid options array');
+        } else if (question.options.length < 2) {
+          questionIssues.push('Must have at least 2 options');
+        } else {
+          // Validate individual options
+          question.options.forEach((option, optIndex) => {
+            if (!option || typeof option !== 'string' || option.trim() === '') {
+              questionIssues.push(`Option ${optIndex + 1} is missing or invalid (must be a non-empty string)`);
+            }
+          });
+          
+          // Validate correct answer for multiple choice
+          if (question.correctAnswer != null) {
+            const correctAnswer = question.correctAnswer;
+            if (typeof correctAnswer === 'number') {
+              if (correctAnswer < 0 || correctAnswer >= question.options.length) {
+                questionIssues.push(`Correct answer index ${correctAnswer} is out of range`);
+              }
+            } else if (typeof correctAnswer === 'string') {
+              if (!question.options.includes(correctAnswer)) {
+                questionIssues.push(`Correct answer "${correctAnswer}" does not match any option`);
+              }
+            } else {
+              questionIssues.push(`Correct answer must be a number (index) or string (text)`);
+            }
+          }
+        }
+      } else if (questionType === 'user-input') {
+        // User input questions validation
+        if (question.inputType && !['number', 'text', 'fraction'].includes(question.inputType)) {
+          questionIssues.push('Invalid inputType (must be number, text, or fraction)');
+        }
+        
+        // Validate acceptedAnswers if present
+        if (question.acceptedAnswers && !Array.isArray(question.acceptedAnswers)) {
+          questionIssues.push('acceptedAnswers must be an array if provided');
+        }
+      } else {
+        questionIssues.push('Invalid questionType (must be multiple-choice or user-input)');
+      }
+      
+      // All questions need a correct answer
       if (question.correctAnswer == null) {
         questionIssues.push('Missing correct answer');
+      }
+      
+      // Validate difficulty if present
+      if (question.difficulty && !['easy', 'medium', 'hard'].includes(question.difficulty)) {
+        if (typeof question.difficulty !== 'number') {
+          questionIssues.push('Invalid difficulty (must be easy, medium, or hard)');
+        }
       }
 
       // Check subcategory
       const subcategorySource = question.subcategory || question.subCategory || question.subcategoryId;
       if (!subcategorySource) {
         questionIssues.push('Missing subcategory');
+      } else {
+        // Validate subcategory normalization (like server-side does)
+        try {
+          const normalizedSubcategory = getKebabCaseFromAnyFormat(subcategorySource);
+          if (!normalizedSubcategory) {
+            questionIssues.push(`Could not normalize subcategory '${subcategorySource}'`);
+          }
+        } catch (error) {
+          questionIssues.push(`Invalid subcategory '${subcategorySource}': ${error.message}`);
+        }
       }
 
       if (questionIssues.length === 0) {

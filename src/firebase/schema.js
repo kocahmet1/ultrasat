@@ -22,13 +22,17 @@
 {
   id: string,                // Auto-generated Firestore ID
   text: string,              // The actual question text
-  options: array,            // Answer choices
-  correctAnswer: string,     // The correct answer
+  questionType: string,      // "multiple-choice" or "user-input" (default: "multiple-choice")
+  options: array,            // Answer choices (only for multiple-choice questions)
+  correctAnswer: string,     // The correct answer (for multiple-choice: option text; for user-input: actual answer)
+  acceptedAnswers: array,    // Array of acceptable answer variations (for user-input questions)
   skillTags: array,          // Array of skill tag IDs this question relates to
   difficulty: number,        // 1-5 scale of difficulty
   module: string,            // Which exam module this belongs to (e.g., "Module 1", "Algebra Quiz 1")
   moduleType: string,        // "full-exam" or "targeted-quiz"
   explanation: string,       // Explanation of the answer (shown after completion)
+  inputType: string,         // For user-input questions: "number", "text", "fraction" (default: "number")
+  answerFormat: string,      // For user-input questions: format hint like "Enter as decimal" or "Simplify fraction"
   createdAt: timestamp,      // When this question was added
   updatedAt: timestamp       // When this question was last modified
 }

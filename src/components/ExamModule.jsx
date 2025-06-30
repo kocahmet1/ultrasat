@@ -300,6 +300,21 @@ function ExamModule({
             <Question
               questionNumber={currentQuestion}
               questionText={enrichedQuestions[currentQuestion].text}
+              questionType={(() => {
+                const question = enrichedQuestions[currentQuestion];
+                let questionType = question.questionType;
+                
+                // Smart detection if questionType not specified
+                if (!questionType) {
+                  if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+                    questionType = 'user-input';
+                  } else {
+                    questionType = 'multiple-choice';
+                  }
+                }
+                
+                return questionType;
+              })()}
               options={enrichedQuestions[currentQuestion].options}
               selectedAnswer={selectedAnswer}
               setSelectedAnswer={handleSelectAnswer}
@@ -315,6 +330,9 @@ function ExamModule({
               graphDescription={enrichedQuestions[currentQuestion].graphDescription}
               // Pass subcategory instead of skill tags
               subcategory={enrichedQuestions[currentQuestion].subcategory}
+              // Pass user input question properties
+              inputType={enrichedQuestions[currentQuestion].inputType || 'number'}
+              answerFormat={enrichedQuestions[currentQuestion].answerFormat}
             />
           )}
         </div>

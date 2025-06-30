@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules for Ultrasat
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions - matching your Firestore patterns
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      // Note: Storage rules can't directly query Firestore like your Firestore rules
+      // You'd need to include admin status in custom claims or use a different approach
+      return request.auth.token.admin == true;
+    }
+    
+    function isValidImageFile() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isReasonableFileSize() {
+      return request.resource.size < 10 * 1024 * 1024; // 10MB limit
+    }
+    
+    // Static content (graphs, images, etc.) - Read access for authenticated users
+    match /static/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin() && isValidImageFile() && isReasonableFileSize();
+    }
+    
+    // User-specific file uploads (profile pictures, etc.)
+    match /users/{userId}/{allPaths=**} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if isSignedIn() && isOwner(userId) && isReasonableFileSize();
+    }
+    
+    // Graph files (generated charts, etc.)
+    match /graphs/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidImageFile() && isReasonableFileSize();
+    }
+    
+    // Public assets (if any) - accessible to authenticated users only
+    match /public/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin() && isReasonableFileSize();
+    }
+    
+    // Exam-related files
+    match /exams/{userId}/{examId}/{allPaths=**} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if isSignedIn() && isOwner(userId) && isReasonableFileSize();
+    }
+    
+    // Default deny - secure by default (matching your Firestore pattern)
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+} 

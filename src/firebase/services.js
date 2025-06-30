@@ -945,48 +945,63 @@ export const getRecentQuestions = async (maxResults = 100) => {
   try {
     console.log('Fetching recent questions, limit:', maxResults);
     
-    // Try a simpler approach first - just get all questions
-    const allQuestionsQuery = query(
+    // Query questions ordered by creation date (newest first)
+    const recentQuestionsQuery = query(
       collection(db, 'questions'),
+      orderBy('createdAt', 'desc'),
       limit(maxResults)
     );
     
-    console.log('Executing query for all questions');
-    const snapshot = await getDocs(allQuestionsQuery);
+    console.log('Executing query for recent questions ordered by date');
+    const snapshot = await getDocs(recentQuestionsQuery);
     
     // Log the results
-    console.log(`Found ${snapshot.docs.length} questions total`);
+    console.log(`Found ${snapshot.docs.length} questions ordered by date`);
     
-    // Process all questions
+    // Process questions - they're already in correct order from Firestore
     let questions = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
     
-    // Sort questions by createdAt date if available, otherwise keep the original order
-    questions.sort((a, b) => {
-      // If both have createdAt, compare them
-      if (a.createdAt && b.createdAt) {
-        // Convert to milliseconds if they are Firestore timestamps
-        const aTime = a.createdAt.toMillis ? a.createdAt.toMillis() : a.createdAt;
-        const bTime = b.createdAt.toMillis ? b.createdAt.toMillis() : b.createdAt;
-        return bTime - aTime; // Descending (newest first)
-      }
-      // If only a has createdAt, it comes first
-      else if (a.createdAt) return -1;
-      // If only b has createdAt, it comes first
-      else if (b.createdAt) return 1;
-      // If neither has createdAt, maintain the order they came in
-      return 0;
-    });
-    
-    console.log('Successfully sorted questions by date');
+    console.log('Successfully fetched questions ordered by date');
     return questions;
     
   } catch (error) {
     console.error('Error getting recent questions:', error);
-    // Return an empty array instead of throwing to avoid breaking the UI
-    return [];
+    
+    // Fallback: if the orderBy query fails (e.g., missing index), fall back to the old method
+    console.log('Falling back to unordered query with client-side sorting');
+    try {
+      const fallbackQuery = query(
+        collection(db, 'questions'),
+        limit(maxResults)
+      );
+      
+      const snapshot = await getDocs(fallbackQuery);
+      
+      let questions = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      // Sort questions by createdAt date if available
+      questions.sort((a, b) => {
+        if (a.createdAt && b.createdAt) {
+          const aTime = a.createdAt.toMillis ? a.createdAt.toMillis() : a.createdAt;
+          const bTime = b.createdAt.toMillis ? b.createdAt.toMillis() : b.createdAt;
+          return bTime - aTime; // Descending (newest first)
+        }
+        else if (a.createdAt) return -1;
+        else if (b.createdAt) return 1;
+        return 0;
+      });
+      
+      return questions;
+    } catch (fallbackError) {
+      console.error('Fallback query also failed:', fallbackError);
+      return [];
+    }
   }
 };
 
@@ -1676,8 +1691,6 @@ export const getAllPracticeExams = async (onlyPublic = false) => {
     throw error;
   }
 };
-
-
 
 /**
  * Get a practice exam by ID

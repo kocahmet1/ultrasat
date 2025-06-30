@@ -282,7 +282,7 @@ const generateGraphImage = async (plotlyConfig, tempDir) => {
     }
     
     // Additional wait to ensure complete rendering
-    await page.waitForTimeout(1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Take screenshot of the graph
     const graphElement = await page.$('#graph');
@@ -414,7 +414,7 @@ router.post('/generate-graph-plotly', authenticateUser, async (req, res) => {
     const db = admin.firestore();
     await db.collection('questions').doc(questionId).update({
       graphUrl: graphUrl,
-      plotlyConfig: plotlyConfig, // Store config for future editing
+      plotlyConfig: JSON.stringify(plotlyConfig), // Store config as JSON string for future editing
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       generatedGraph: true,
       graphGenerationType: 'plotly'
@@ -484,6 +484,7 @@ router.get('/check-plotly-environment', authenticateUser, async (req, res) => {
       launchOptions.executablePath = chromePath;
     }
     
+    try {
     // Test Puppeteer availability
     const browser = await puppeteer.launch(launchOptions);
     await browser.close();
@@ -495,6 +496,14 @@ router.get('/check-plotly-environment', authenticateUser, async (req, res) => {
       chromeFound: !!chromePath,
       chromePath: chromePath || 'Using Puppeteer bundled Chrome'
     });
+  } catch (error) {
+    res.json({
+      plotlyReady: false,
+      error: error.message,
+      requirements: 'Puppeteer needs to be installed: npm install puppeteer',
+      suggestion: 'Try installing Chrome browsers: npx puppeteer browsers install chrome'
+    });
+  }
   } catch (error) {
     res.json({
       plotlyReady: false,

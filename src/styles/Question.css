@@ -305,5 +305,63 @@
 
 /* Ensure proper spacing between graph description and graph image */
 .question-graph-description + .question-graph-container {
-  margin-top: 1rem;
+  margin-top: 15px;
+}
+
+/* User Input Question Styles */
+.user-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.user-answer-input {
+  width: 120px;
+  height: 40px;
+  font-size: 18px;
+  font-family: 'Times New Roman', serif;
+  text-align: center;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 8px;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.user-answer-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+}
+
+.user-answer-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.input-hint {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* Responsive adjustments for user input */
+@media (max-width: 768px) {
+  .user-answer-input {
+    width: 100px;
+    height: 35px;
+    font-size: 16px;
+  }
+  
+  .input-hint {
+    font-size: 12px;
+  }
 }

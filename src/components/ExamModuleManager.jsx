@@ -153,11 +153,9 @@ const ExamModuleManager = () => {
     title: '',
     moduleNumber: 1,
     description: '',
-    calculatorAllowed: false,
     timeLimit: 1920, // 32 minutes in seconds
     questionCount: 27, // Default question count
     categoryPaths: [],
-    difficultyRange: { min: 1, max: 5 },
     questionIds: []
   });
 
@@ -165,10 +163,8 @@ const ExamModuleManager = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationCriteria, setGenerationCriteria] = useState({
     moduleNumber: 1,
-    calculatorAllowed: false,
     categoryPaths: [],
     questionCount: 27,
-    difficultyRange: { min: 1, max: 5 },
     timeLimit: 1920
   });
 
@@ -422,26 +418,17 @@ const ExamModuleManager = () => {
     const { name, value, type, checked } = e.target;
     
     if (type === 'checkbox') {
-      setNewModule((prev) => ({
+      setNewModule(prev => ({
         ...prev,
         [name]: checked
       }));
-    } else if (name.startsWith('difficultyRange.')) {
-      const key = name.split('.')[1];
-      setNewModule((prev) => ({
-        ...prev,
-        difficultyRange: {
-          ...prev.difficultyRange,
-          [key]: parseInt(value, 10)
-        }
-      }));
     } else if (name === 'moduleNumber' || name === 'questionCount' || name === 'timeLimit') {
-      setNewModule((prev) => ({
+      setNewModule(prev => ({
         ...prev,
         [name]: parseInt(value, 10)
       }));
     } else {
-      setNewModule((prev) => ({
+      setNewModule(prev => ({
         ...prev,
         [name]: value
       }));
@@ -642,11 +629,9 @@ const ExamModuleManager = () => {
         title: '',
         moduleNumber: 1,
         description: '',
-        calculatorAllowed: false,
         timeLimit: 1920,
         questionCount: 27,
         categoryPaths: [],
-        difficultyRange: { min: 1, max: 5 },
         questionIds: []
       });
       
@@ -664,32 +649,23 @@ const ExamModuleManager = () => {
     const { name, value, type, checked } = e.target;
     
     if (type === 'checkbox') {
-      setGenerationCriteria((prev) => ({
+      setGenerationCriteria(prev => ({
         ...prev,
         [name]: checked
       }));
-    } else if (name.startsWith('difficultyRange.')) {
-      const key = name.split('.')[1];
-      setGenerationCriteria((prev) => ({
-        ...prev,
-        difficultyRange: {
-          ...prev.difficultyRange,
-          [key]: parseInt(value, 10)
-        }
-      }));
-    } else if (name === 'moduleNumber' || name === 'questionCount' || name === 'timeLimit') {
-      setGenerationCriteria((prev) => ({
-        ...prev,
-        [name]: parseInt(value, 10)
-      }));
     } else if (name === 'categoryPaths') {
       const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
-      setGenerationCriteria((prev) => ({
+      setGenerationCriteria(prev => ({
         ...prev,
         categoryPaths: selectedOptions
       }));
+    } else if (name === 'moduleNumber' || name === 'questionCount' || name === 'timeLimit') {
+      setGenerationCriteria(prev => ({
+        ...prev,
+        [name]: parseInt(value, 10)
+      }));
     } else {
-      setGenerationCriteria((prev) => ({
+      setGenerationCriteria(prev => ({
         ...prev,
         [name]: value
       }));
@@ -847,11 +823,6 @@ const ExamModuleManager = () => {
                     <div className="module-meta-item">
                       <span>{Math.floor(module.timeLimit / 60)} min</span>
                     </div>
-                    {module.calculatorAllowed !== undefined && (
-                      <div className="module-meta-item">
-                        <span>{module.calculatorAllowed ? 'Calculator' : 'No calculator'}</span>
-                      </div>
-                    )}
                   </div>
                 </div>
               ))
@@ -913,14 +884,6 @@ const ExamModuleManager = () => {
               <div className="metadata-item">
                 <strong>Time Limit:</strong> {Math.floor(selectedModule.timeLimit / 60)} minutes
               </div>
-              <div className="metadata-item">
-                <strong>Calculator:</strong> {selectedModule.calculatorAllowed ? 'Allowed' : 'Not allowed'}
-              </div>
-              {selectedModule.difficultyRange && (
-                <div className="metadata-item">
-                  <strong>Difficulty Range:</strong> {selectedModule.difficultyRange.min} - {selectedModule.difficultyRange.max}
-                </div>
-              )}
             </div>
           </div>
           
@@ -1159,52 +1122,6 @@ const ExamModuleManager = () => {
             </div>
             
             <div className="form-section">
-              <h3 className="form-section-title">Difficulty Settings</h3>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="difficultyRange.min">Minimum Difficulty (1-5)</label>
-                  <input
-                    type="number"
-                    id="difficultyRange.min"
-                    name="difficultyRange.min"
-                    min="1"
-                    max="5"
-                    value={newModule.difficultyRange.min}
-                    onChange={handleNewModuleChange}
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="difficultyRange.max">Maximum Difficulty (1-5)</label>
-                  <input
-                    type="number"
-                    id="difficultyRange.max"
-                    name="difficultyRange.max"
-                    min="1"
-                    max="5"
-                    value={newModule.difficultyRange.max}
-                    onChange={handleNewModuleChange}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="form-group">
-                <div className="checkbox-wrapper">
-                  <input
-                    type="checkbox"
-                    id="calculatorAllowed"
-                    name="calculatorAllowed"
-                    checked={newModule.calculatorAllowed}
-                    onChange={handleNewModuleChange}
-                  />
-                  <label htmlFor="calculatorAllowed">Calculator Allowed</label>
-                </div>
-              </div>
-            </div>
-            
-            <div className="form-section">
               <h3 className="form-section-title">Questions</h3>
               <div className="selected-questions-summary">
                 <p><strong>{newModule.questionIds.length}</strong> questions selected</p>
@@ -1317,19 +1234,6 @@ const ExamModuleManager = () => {
                     required
                   />
                 </div>
-                
-                <div className="form-group">
-                  <div className="checkbox-wrapper">
-                    <input
-                      type="checkbox"
-                      id="gen-calculatorAllowed"
-                      name="calculatorAllowed"
-                      checked={generationCriteria.calculatorAllowed}
-                      onChange={handleGenerationCriteriaChange}
-                    />
-                    <label htmlFor="gen-calculatorAllowed">Calculator Allowed</label>
-                  </div>
-                </div>
               </div>
             </div>
             
@@ -1357,36 +1261,6 @@ const ExamModuleManager = () => {
                   ))}
                 </select>
                 <small className="form-help-text">Hold Ctrl (or Cmd) to select multiple categories</small>
-              </div>
-              
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="gen-difficultyRange.min">Minimum Difficulty (1-5)</label>
-                  <input
-                    type="number"
-                    id="gen-difficultyRange.min"
-                    name="difficultyRange.min"
-                    min="1"
-                    max="5"
-                    value={generationCriteria.difficultyRange.min}
-                    onChange={handleGenerationCriteriaChange}
-                    required
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="gen-difficultyRange.max">Maximum Difficulty (1-5)</label>
-                  <input
-                    type="number"
-                    id="gen-difficultyRange.max"
-                    name="difficultyRange.max"
-                    min="1"
-                    max="5"
-                    value={generationCriteria.difficultyRange.max}
-                    onChange={handleGenerationCriteriaChange}
-                    required
-                  />
-                </div>
               </div>
             </div>
             

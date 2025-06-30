@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Question.css';
 
 const Question = ({ 
   questionNumber, 
   questionText, 
+  questionType = 'multiple-choice',
   options, 
   selectedAnswer, 
   setSelectedAnswer,
@@ -14,21 +15,34 @@ const Question = ({
   markedForReview = false,
   toggleMarkedForReview = () => {},
   graphUrl = null,
-  graphDescription = null
+  graphDescription = null,
+  inputType = 'number',
+  answerFormat = null
 }) => {
-  // Handle radio button change
+  const [userInput, setUserInput] = useState('');
+
+  useEffect(() => {
+    if (questionType === 'user-input' && selectedAnswer) {
+      setUserInput(selectedAnswer);
+    }
+  }, [questionType, selectedAnswer]);
+
   const handleOptionChange = (e) => {
     setSelectedAnswer(e.target.value);
   };
 
-  // Check if an option is crossed out
+  const handleUserInputChange = (e) => {
+    const value = e.target.value;
+    setUserInput(value);
+    setSelectedAnswer(value);
+  };
+
   const isOptionCrossedOut = (optionLetter) => {
     return crossedOut[optionLetter];
   };
 
-  // Get the option letter (A, B, C, D) based on index
   const getOptionLetter = (index) => {
-    return String.fromCharCode(65 + index); // 65 is ASCII for 'A'
+    return String.fromCharCode(65 + index);
   };
 
   return (
@@ -38,7 +52,6 @@ const Question = ({
           <div className="question-text">
             {questionText}
             
-            {/* Display graph description if available */}
             {graphDescription && (
               <div className="question-graph-description">
                 <div className="graph-description-label">Graph Description:</div>
@@ -48,7 +61,6 @@ const Question = ({
               </div>
             )}
             
-            {/* Display graph if available */}
             {graphUrl && (
               <div className="question-graph-container">
                 <img 
@@ -78,53 +90,81 @@ const Question = ({
               </div>
             </div>
             <div className="right-controls">
-              <div className="abc-toggle-container">
-                <button 
-                  className={`cross-out-toggle ${showCrossOut ? 'active' : ''}`}
-                  onClick={toggleCrossOut}
-                >
-                  ABC
-                </button>
-              </div>
+              {questionType === 'multiple-choice' && (
+                <div className="abc-toggle-container">
+                  <button 
+                    className={`cross-out-toggle ${showCrossOut ? 'active' : ''}`}
+                    onClick={toggleCrossOut}
+                  >
+                    ABC
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-          <div className="question-instructions">
-            Which choice completes the text with the most logical and precise word or phrase?
-          </div>
-          <div className="options-container">
-            {options.map((option, index) => {
-              const optionLetter = getOptionLetter(index);
-              return (
-                <div 
-                  key={index} 
-                  className={`option ${isOptionCrossedOut(optionLetter) ? 'crossed-out' : ''}`}
-                >
-                  <div className="option-header">
-                    <div className="option-letter">{optionLetter}</div>
-                    <label className={`option-label ${selectedAnswer === option ? 'selected' : ''}`}>
-                      <input
-                        type="radio"
-                        name="option"
-                        value={option}
-                        checked={selectedAnswer === option}
-                        onChange={handleOptionChange}
-                        className="option-radio"
-                      />
-                      <span className="option-text">{option}</span>
-                    </label>
-                    {showCrossOut && (
-                      <button 
-                        className={`cross-out-btn ${isOptionCrossedOut(optionLetter) ? 'active' : ''}`}
-                        onClick={() => toggleCrossOutOption(questionNumber, optionLetter)}
-                      >
-                        {isOptionCrossedOut(optionLetter) ? 'undo' : optionLetter}
-                      </button>
-                    )}
-                  </div>
+          
+          {questionType === 'multiple-choice' ? (
+            <>
+              <div className="question-instructions">
+                Which choice completes the text with the most logical and precise word or phrase?
+              </div>
+              <div className="options-container">
+                {options && options.map((option, index) => {
+                  const optionLetter = getOptionLetter(index);
+                  return (
+                    <div 
+                      key={index} 
+                      className={`option ${isOptionCrossedOut(optionLetter) ? 'crossed-out' : ''}`}
+                    >
+                      <div className="option-header">
+                        <div className="option-letter">{optionLetter}</div>
+                        <label className={`option-label ${selectedAnswer === option ? 'selected' : ''}`}>
+                          <input
+                            type="radio"
+                            name={`question-${questionNumber}`}
+                            value={option}
+                            checked={selectedAnswer === option}
+                            onChange={handleOptionChange}
+                            className="option-radio"
+                          />
+                          <span className="option-text">{option}</span>
+                        </label>
+                        {showCrossOut && (
+                          <button 
+                            className={`cross-out-btn ${isOptionCrossedOut(optionLetter) ? 'active' : ''}`}
+                            onClick={() => toggleCrossOutOption(questionNumber, optionLetter)}
+                          >
+                            {isOptionCrossedOut(optionLetter) ? 'undo' : optionLetter}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div className="user-input-container">
+              <div className="question-instructions">
+                {answerFormat ? answerFormat : 'Enter your answer in the box below.'}
+              </div>
+              <div className="input-container">
+                <input
+                  type={inputType === 'number' ? 'text' : 'text'}
+                  value={userInput}
+                  onChange={handleUserInputChange}
+                  className="user-answer-input"
+                  placeholder={inputType === 'number' ? 'Enter a number' : 'Enter your answer'}
+                  pattern={inputType === 'number' ? '[0-9]*[.]?[0-9]*' : undefined}
+                />
+              </div>
+              {inputType === 'number' && (
+                <div className="input-hint">
+                  You may enter integers, decimals, or fractions. Do not enter spaces or commas.
                 </div>
-              );
-            })}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

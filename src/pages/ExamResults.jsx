@@ -605,14 +605,24 @@ function ExamResults() {
                     const isAnswered = !!response;
                     const isCorrect = response?.isCorrect || false;
 
-                    // Guard against undefined question or options
-                    if (!question || !question.options) {
-                      console.error(`[ExamResults] Invalid question object or missing options at index ${questionIndex}:`, question);
+                    // Guard against undefined question (but allow questions without options)
+                    if (!question || !question.text) {
+                      console.error(`[ExamResults] Invalid question object or missing text at index ${questionIndex}:`, question);
                       return (
                         <div key={`error-q-${questionIndex}`} className="question-container-review error">
                           <p>Error: Question data is incomplete for this item.</p>
                         </div>
                       );
+                    }
+                    
+                    // Determine question type using smart detection
+                    let questionType = question.questionType;
+                    if (!questionType) {
+                      if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+                        questionType = 'user-input';
+                      } else {
+                        questionType = 'multiple-choice';
+                      }
                     }
                     
                     return (
@@ -641,67 +651,103 @@ function ExamResults() {
                           </div>
                         )}
                         
-                        <div className="question-options">
-                          {question.options.map((optionText, optionIndex) => {
-                            const userAnswer = response?.userAnswer;
-                            // Check if the current option was the user's answer.
-                            // This assumes userAnswer stores the text of the option or its index. Adjust if necessary.
-                            // For this example, let's assume userAnswer is the option *text* if answered, or could be option *index*.
-                            // We need to be careful here. The 'response' object has 'userAnswer' (string) and 'question.correctAnswer' (number/index).
-                            // 'question.options' is an array of strings.
-
-                            let isUserSelectedOption = false;
-                            if (isAnswered) {
-                                // If userAnswer is stored as the option text itself:
-                                isUserSelectedOption = userAnswer === optionText;
-                                // If userAnswer is stored as an index, it would be:
-                                // isUserSelectedOption = parseInt(userAnswer) === optionIndex; 
-                                // Or if it's the char 'A', 'B', etc.
-                                // isUserSelectedOption = userAnswer === String.fromCharCode(65 + optionIndex);
-                            }
-
-                            const isCorrectOption = optionIndex === parseInt(question.correctAnswer);
-                            
-                            let backgroundColor = '#f9f9f9'; // Default for unselected options
-
-                            if (isCorrectOption) {
-                              // Highlight the correct answer regardless of user selection
-                              backgroundColor = '#e0ffe0'; // Light green for correct option
-                            }
-                            
-                            if (isUserSelectedOption) {
-                              if (isCorrectOption) {
-                                // User selected the correct answer (already light green)
-                              } else {
-                                // User selected an incorrect answer
-                                backgroundColor = '#ffdddd'; // Light red for user's incorrect selection
+                        {/* Conditional rendering based on question type */}
+                        {questionType === 'multiple-choice' ? (
+                          // Multiple choice questions display
+                          <div className="question-options">
+                            {question.options.map((optionText, optionIndex) => {
+                              const userAnswer = response?.userAnswer;
+                              
+                              let isUserSelectedOption = false;
+                              if (isAnswered) {
+                                  // If userAnswer is stored as the option text itself:
+                                  isUserSelectedOption = userAnswer === optionText;
                               }
-                            } else if (!isCorrectOption && isAnswered) {
-                                // If this option is not the correct one, and the user answered (meaning they picked *something* else)
-                                // keep it default or slightly muted, unless it was picked by user (handled above).
-                                // Default #f9f9f9 is fine.
-                            }
-                            
-                            const optionStyle = {
-                              padding: '10px 15px',
-                              borderRadius: '4px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              marginBottom: '8px',
-                              backgroundColor: backgroundColor,
-                              border: '1px solid #ddd'
-                            };
-                            
-                            return (
-                              <div key={optionIndex} style={optionStyle}>
-                                <span style={{fontWeight: 'bold', marginRight: '10px', width: '20px'}}>
-                                  {String.fromCharCode(65 + optionIndex)}.
-                                </span>
-                                <span style={{flex: 1}}>{optionText}</span>
+
+                              const isCorrectOption = optionIndex === parseInt(question.correctAnswer);
+                              
+                              let backgroundColor = '#f9f9f9'; // Default for unselected options
+
+                              if (isCorrectOption) {
+                                // Highlight the correct answer regardless of user selection
+                                backgroundColor = '#e0ffe0'; // Light green for correct option
+                              }
+                              
+                              if (isUserSelectedOption) {
+                                if (isCorrectOption) {
+                                  // User selected the correct answer (already light green)
+                                } else {
+                                  // User selected an incorrect answer
+                                  backgroundColor = '#ffdddd'; // Light red for user's incorrect selection
+                                }
+                              }
+                              
+                              const optionStyle = {
+                                padding: '10px 15px',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: '8px',
+                                backgroundColor: backgroundColor,
+                                border: '1px solid #ddd'
+                              };
+                              
+                              return (
+                                <div key={optionIndex} style={optionStyle}>
+                                  <span style={{fontWeight: 'bold', marginRight: '10px', width: '20px'}}>
+                                    {String.fromCharCode(65 + optionIndex)}.
+                                  </span>
+                                  <span style={{flex: 1}}>{optionText}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          // User input questions display
+                          <div className="user-input-review">
+                            <div style={{marginBottom: '15px'}}>
+                              <div style={{
+                                padding: '10px 15px',
+                                borderRadius: '4px',
+                                backgroundColor: isAnswered ? (isCorrect ? '#e0ffe0' : '#ffdddd') : '#f9f9f9',
+                                border: '1px solid #ddd',
+                                marginBottom: '8px'
+                              }}>
+                                <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Your Answer:</div>
+                                <div style={{fontSize: '16px'}}>
+                                  {isAnswered ? response.userAnswer : 'Not answered'}
+                                </div>
                               </div>
-                            );
-                          })}
-                        </div>
+                              
+                              <div style={{
+                                padding: '10px 15px',
+                                borderRadius: '4px',
+                                backgroundColor: '#e0ffe0', // Always green for correct answer
+                                border: '1px solid #ddd'
+                              }}>
+                                <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Correct Answer:</div>
+                                <div style={{fontSize: '16px'}}>
+                                  {question.correctAnswer}
+                                </div>
+                              </div>
+                              
+                              {question.acceptedAnswers && question.acceptedAnswers.length > 0 && (
+                                <div style={{
+                                  padding: '10px 15px',
+                                  borderRadius: '4px',
+                                  backgroundColor: '#f0f8ff',
+                                  border: '1px solid #ddd',
+                                  marginTop: '8px'
+                                }}>
+                                  <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Also Accepted:</div>
+                                  <div style={{fontSize: '14px', color: '#666'}}>
+                                    {question.acceptedAnswers.join(', ')}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                         
                         {isAnswered && (
                           <div className="question-footer">
