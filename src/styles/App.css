@@ -4,11 +4,12 @@
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   font-family: 'Times New Roman', serif;
   background-color: #ffffff;
   color: #333333;
   font-size: 18px;
+  overflow: hidden;
 }
 
 /* Ensure Times New Roman is applied to all elements */
@@ -47,24 +48,31 @@
   bottom: 0;
 }
 
-/* Main content without side borders */
+/* Main content - full width for exam pages */
 .main-content {
-  margin: 0 20px;
-  padding: 30px 10px 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  flex: 1;
 }
 
 .question-wrapper {
   display: flex;
   flex: 1;
   position: relative;
-  height: 100%;
+  width: 100%;
+  justify-content: center;
+  overflow: hidden;
 }
 
-/* Ensure the question content takes full height */
+/* Ensure the question content takes full height and is centered */
 .question-content {
   height: 100%;
   display: flex;
   flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* Tools container for ABC cross-out button */
@@ -144,6 +152,12 @@
 .app-container.sidebar-collapsed .main-content {
   margin-left: 80px;
   width: calc(100% - 80px);
+}
+
+/* Hidden sidebar state - for full screen exam mode */
+.app-container.sidebar-hidden .main-content {
+  margin-left: 0;
+  width: 100%;
 }
 
 /* Mobile responsive */

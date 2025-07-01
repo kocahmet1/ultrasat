@@ -59,6 +59,7 @@ import { getFeatureFlags } from './firebase/config.featureFlags';
 import Sidebar from './components/Sidebar';
 import TopNavBar from './components/TopNavBar';
 import useIsMobile from './hooks/useIsMobile';
+import { SidebarProvider } from './contexts/SidebarContext';
 
 // Styles
 import './styles/App.css';
@@ -74,10 +75,11 @@ function App() {
     <AuthProvider>
       <SubcategoryProvider>
         <ReviewProvider>
-          <Router>
-            <div className="app-container">
-              {isMobile ? <TopNavBar /> : <Sidebar />}
-              <div className="main-content">
+          <SidebarProvider>
+            <Router>
+              <div className="app-container">
+                {isMobile ? <TopNavBar /> : <Sidebar />}
+                <div className="main-content">
                 <Routes>
                   {/* Authentication routes */}
                   <Route path="/login" element={<Login />} />
@@ -145,6 +147,7 @@ function App() {
               </div> 
             </div> 
           </Router>
+        </SidebarProvider>
         </ReviewProvider>
       </SubcategoryProvider>
     </AuthProvider>

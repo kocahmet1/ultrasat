@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../styles/Sidebar.css';
+import { useSidebar } from '../contexts/SidebarContext';
 import {
   FaChartBar,          // Progress Dashboard
   FaClipboardList,     // Practice Exams
@@ -24,59 +25,12 @@ const navItems = [
 
 const Sidebar = () => {
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const { isCollapsed, isMobile, isHidden, toggleSidebar } = useSidebar();
 
-  // Check if screen is mobile size
-  useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth <= 768;
-      const tablet = window.innerWidth > 768 && window.innerWidth <= 1024;
-      
-      setIsMobile(mobile);
-      
-      if (mobile) {
-        setIsCollapsed(true); // Auto-collapse on mobile
-      } else if (tablet) {
-        setIsCollapsed(true); // Auto-collapse on tablet
-      } else {
-        // On desktop, maintain user preference or default to expanded
-        // Only auto-expand if user hasn't manually collapsed it
-      }
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Update body class for responsive layout
-  useEffect(() => {
-    const appContainer = document.querySelector('.app-container');
-    if (appContainer) {
-      if (isCollapsed) {
-        appContainer.classList.add('sidebar-collapsed');
-      } else {
-        appContainer.classList.remove('sidebar-collapsed');
-      }
-      
-      if (isMobile) {
-        appContainer.classList.add('sidebar-mobile');
-      } else {
-        appContainer.classList.remove('sidebar-mobile');
-      }
-    }
-    
-    return () => {
-      if (appContainer) {
-        appContainer.classList.remove('sidebar-collapsed', 'sidebar-mobile');
-      }
-    };
-  }, [isCollapsed, isMobile]);
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
+  // Don't render sidebar at all when hidden (exam mode)
+  if (isHidden) {
+    return null;
+  }
 
   return (
     <>

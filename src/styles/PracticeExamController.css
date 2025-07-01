@@ -2,6 +2,9 @@
   min-height: 100vh;
   background-color: #f5f7fa;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* Loading State */
@@ -234,16 +237,21 @@
 
 /* Module State */
 .module-state {
-  padding: 20px;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .module-header {
-  max-width: 1000px;
-  margin: 0 auto 20px;
-  padding: 20px;
+  width: 100%;
+  margin: 0;
+  padding: 15px 20px;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .module-header h1 {

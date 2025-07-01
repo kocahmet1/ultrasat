@@ -5,6 +5,7 @@ import {
   getPracticeExamModules 
 } from '../firebase/services';
 import { useAuth } from '../contexts/AuthContext';
+import { useSidebar } from '../contexts/SidebarContext';
 import ExamModule from '../components/ExamModule';
 import '../styles/PracticeExamController.css';
 import { getSubcategoryProgress, updateSubcategoryProgress } from '../utils/progressUtils';
@@ -14,6 +15,7 @@ const PracticeExamController = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
   const { currentUser, saveComprehensiveExamResult } = useAuth();
+  const { setForceSidebarCollapsed, setSidebarHidden } = useSidebar();
   
   const [exam, setExam] = useState(null);
   const [modules, setModules] = useState([]);
@@ -85,9 +87,23 @@ const PracticeExamController = () => {
     loadExam();
   }, [examId]);
   
-  // Start the exam
+  // Force sidebar to collapse when practice exam loads
+  useEffect(() => {
+    // Force sidebar to collapse when entering practice exam
+    setForceSidebarCollapsed(true);
+    
+    // Restore sidebar state when leaving practice exam
+    return () => {
+      setForceSidebarCollapsed(false);
+    };
+  }, [setForceSidebarCollapsed]);
+  
+  // Handle starting the exam
   const handleStartExam = () => {
     setExamStatus('in-progress');
+    setCurrentModuleIndex(0);
+    // Hide sidebar completely during exam
+    setSidebarHidden(true);
   };
   
   // Handle module completion
@@ -472,8 +488,10 @@ const PracticeExamController = () => {
     navigate('/exam/results');
   };
   
-  // Go back to exam list
+  // Handle going back to exam list
   const handleBackToList = () => {
+    // Restore sidebar when leaving exam
+    setSidebarHidden(false);
     navigate('/practice-exams');
   };
   
@@ -607,19 +625,6 @@ const PracticeExamController = () => {
     
     return (
       <div className="practice-exam-controller module-state">
-        <div className="module-header">
-          <div className="module-progress">
-            <span>Module {currentModuleIndex + 1} of {modules.length}</span>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${((currentModuleIndex) / modules.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-          <h1>{currentModule.title}</h1>
-        </div>
-        
         <ExamModule
           moduleNumber={currentModule.moduleNumber}
           moduleTitle={currentModule.title}
