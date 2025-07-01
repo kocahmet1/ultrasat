@@ -18,6 +18,7 @@ import {
   runTransaction
 } from 'firebase/firestore';
 import { normalizeSubcategoryName } from './subcategoryUtils';
+import { SUBCATEGORY_SUBJECTS, getSubcategoryIdFromString } from './subcategoryConstants';
 
 /**
  * Maximum number of questions to keep in the askedQuestions array
@@ -439,6 +440,188 @@ export const updateConceptProgress = async (userId, subcategoryId, conceptId, ma
   } catch (error) {
     console.error('Error updating concept progress:', error);
     throw error;
+  }
+};
+
+/**
+ * Calculates estimated SAT score based on user's subcategory accuracies
+ * 
+ * @param {string} userId - User ID
+ * @returns {Promise<Object>} - Object containing estimatedScore, confidence, and breakdown
+ */
+export const calculateEstimatedSATScore = async (userId) => {
+  try {
+    if (!userId) {
+      console.error('Missing userId for calculateEstimatedSATScore');
+      return { estimatedScore: 0, confidence: 0, breakdown: {} };
+    }
+
+    const progressRef = collection(db, 'users', userId, 'progress');
+    const progressSnapshot = await getDocs(progressRef);
+    
+    console.log('SAT Calculation - Progress snapshot size:', progressSnapshot.size);
+    
+    if (progressSnapshot.empty) {
+      console.log('SAT Calculation - No progress documents found');
+      return { estimatedScore: 0, confidence: 0, breakdown: {} };
+    }
+
+    // SAT score weights by subcategory (based on actual SAT test composition)
+    const subcategoryWeights = {
+      // Reading & Writing (400-800 points) - 10 subcategories
+      1: 4.0,  // Central Ideas & Details
+      2: 4.0,  // Inferences  
+      3: 4.0,  // Command of Evidence
+      4: 4.0,  // Words in Context
+      5: 4.0,  // Text Structure & Purpose
+      6: 4.0,  // Cross-text Connections
+      7: 4.0,  // Rhetorical Synthesis
+      8: 4.0,  // Transitions
+      9: 4.0,  // Boundaries
+      10: 4.0, // Form, Structure & Sense
+      
+      // Math (400-800 points) - 19 subcategories  
+      11: 2.1, // Linear Equations One Variable
+      12: 2.1, // Linear Functions
+      13: 2.1, // Linear Equations Two Variables
+      14: 2.1, // Systems Linear Equations
+      15: 2.1, // Linear Inequalities
+      16: 2.1, // Nonlinear Functions
+      17: 2.1, // Nonlinear Equations
+      18: 2.1, // Equivalent Expressions
+      19: 2.1, // Ratios, Rates & Proportions
+      20: 2.1, // Percentages
+      21: 2.1, // One Variable Data
+      22: 2.1, // Two Variable Data
+      23: 2.1, // Probability
+      24: 2.1, // Inference from Statistics
+      25: 2.1, // Evaluating Statistical Claims
+      26: 2.1, // Area & Volume
+      27: 2.1, // Lines, Angles & Triangles
+      28: 2.1, // Right Triangles & Trigonometry
+      29: 2.1  // Circles
+    };
+
+    let totalWeightedScore = 0;
+    let totalWeight = 0;
+    let readingWritingScore = 0;
+    let mathScore = 0;
+    let readingWritingWeight = 0;
+    let mathWeight = 0;
+    let subcategoriesWithData = 0;
+    
+    const breakdown = {
+      readingWriting: { score: 0, subcategories: 0 },
+      math: { score: 0, subcategories: 0 }
+    };
+
+    let isFirstSubcategory = true;
+    progressSnapshot.forEach((doc) => {
+      const data = doc.data();
+      const subcategoryName = doc.id;
+      
+      if (isFirstSubcategory) {
+        console.log('=== FIRST SUBCATEGORY FULL DATA STRUCTURE ===');
+        console.log('Subcategory:', subcategoryName);
+        console.log('Full data object:', data);
+        console.log('All field names:', Object.keys(data));
+        console.log('=== END FIRST SUBCATEGORY DATA ===');
+        isFirstSubcategory = false;
+      }
+      
+      // Calculate accuracy from last10QuestionResults array
+      const last10Results = data.last10QuestionResults || [];
+      const last10Count = last10Results.length;
+      const last10Correct = last10Results.filter(result => result === true).length;
+      const accuracyLast10 = last10Count > 0 ? (last10Correct / last10Count) * 100 : 0;
+      
+      // Check for total questions from attempts or other indicators
+      const totalAttempts = data.attempts || 0;
+      const hasAttempts = last10Count > 0 || totalAttempts > 0 || data.lastScore !== undefined;
+      
+      console.log('Processing subcategory:', subcategoryName, {
+        last10QuestionResults: last10Results,
+        last10Count: last10Count,
+        accuracyLast10: accuracyLast10,
+        totalAttempts: totalAttempts,
+        hasAttempts: hasAttempts,
+        lastScore: data.lastScore,
+        allFields: Object.keys(data)
+      });
+      
+      // Only include subcategories with attempted questions
+      if (hasAttempts) {
+        console.log('Found subcategory with attempts:', subcategoryName);
+        const subcategoryId = getSubcategoryIdFromString(subcategoryName);
+        console.log('Subcategory ID lookup result:', { subcategoryName, subcategoryId });
+        
+        if (subcategoryId && subcategoryWeights[subcategoryId]) {
+          console.log('Including subcategory in calculation:', { subcategoryId, weight: subcategoryWeights[subcategoryId], accuracy: accuracyLast10 });
+          const accuracy = accuracyLast10;
+          const weight = subcategoryWeights[subcategoryId];
+          const subject = SUBCATEGORY_SUBJECTS[subcategoryId]; // 1 = R&W, 2 = Math
+          
+          // Convert accuracy (0-100) to score contribution (0-weight)
+          const scoreContribution = (accuracy / 100) * weight;
+          
+          totalWeightedScore += scoreContribution;
+          totalWeight += weight;
+          subcategoriesWithData++;
+          console.log('Added to calculation - Total subcategories with data now:', subcategoriesWithData);
+          
+          if (subject === 1) { // Reading & Writing
+            readingWritingScore += scoreContribution;
+            readingWritingWeight += weight;
+            breakdown.readingWriting.subcategories++;
+          } else if (subject === 2) { // Math
+            mathScore += scoreContribution;
+            mathWeight += weight;
+            breakdown.math.subcategories++;
+          }
+        }
+      }
+    });
+
+    if (totalWeight === 0) {
+      return { estimatedScore: 0, confidence: 0, breakdown };
+    }
+
+    // Calculate section scores (200-800 each, based on weighted accuracy)
+    const readingWritingEstimate = readingWritingWeight > 0 
+      ? Math.round(200 + (readingWritingScore / readingWritingWeight) * 600) // 200 + (0-100% accuracy * 600) = 200-800
+      : 200; // Minimum if no data
+    
+    const mathEstimate = mathWeight > 0 
+      ? Math.round(200 + (mathScore / mathWeight) * 600) // 200 + (0-100% accuracy * 600) = 200-800
+      : 200; // Minimum if no data
+    
+    // Total SAT score (400-1600)
+    const estimatedScore = readingWritingEstimate + mathEstimate;
+    
+    // Calculate confidence based on data coverage
+    // Full confidence requires data from both sections and reasonable coverage
+    const totalSubcategories = 29; // Total subcategories in the system
+    const dataCoverage = subcategoriesWithData / totalSubcategories;
+    const sectionBalance = Math.min(breakdown.readingWriting.subcategories, breakdown.math.subcategories) / 
+                          Math.max(breakdown.readingWriting.subcategories, breakdown.math.subcategories || 1);
+    
+    const confidence = Math.min(100, Math.round(
+      (dataCoverage * 70) + (sectionBalance * 30)
+    ));
+    
+    breakdown.readingWriting.score = readingWritingEstimate;
+    breakdown.math.score = mathEstimate;
+    
+    return {
+      estimatedScore: Math.max(400, Math.min(1600, estimatedScore)),
+      confidence,
+      breakdown,
+      subcategoriesWithData
+    };
+    
+  } catch (error) {
+    console.error('Error calculating estimated SAT score:', error);
+    return { estimatedScore: 0, confidence: 0, breakdown: {} };
   }
 };
 

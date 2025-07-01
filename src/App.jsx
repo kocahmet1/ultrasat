@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 // Pages
 import HomePage from './pages/HomePage';
+import LandingPage from './pages/LandingPage';
 import ExamLandingPage from './pages/ExamLandingPage';
 import ExamController from './pages/ExamController';
 import IntermissionController from './pages/IntermissionController';
@@ -84,8 +85,8 @@ function App() {
                   <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                   
                   {/* Main site routes */}
-                  {/* Redirect root to Progress Dashboard */}
-                  <Route path="/" element={<Navigate to="/progress" replace />} />
+                  {/* Landing page for non-authenticated users */}
+                  <Route path="/" element={<LandingPage />} />
                   
                   {/* Exam routes */}
                   <Route path="/exam/landing" element={<PrivateRoute><ExamLandingPage /></PrivateRoute>} />

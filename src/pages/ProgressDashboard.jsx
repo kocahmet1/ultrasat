@@ -18,7 +18,7 @@ import {
   SUBCATEGORY_KEBAB_CASE
 } from '../utils/subcategoryConstants';
 import { normalizeSubcategoryName } from '../utils/subcategoryUtils';
-import { getSubcategoryProgress } from '../utils/progressUtils';
+import { getSubcategoryProgress, calculateEstimatedSATScore } from '../utils/progressUtils';
 import '../styles/ProgressDashboard.new.css';
 import '../styles/ConceptMastery.css';
 import '../styles/LevelIndicator.css';
@@ -45,6 +45,7 @@ function ProgressDashboard() {
   const [unmasteredCount, setUnmasteredCount] = useState(0);
   const [featureFlags, setFeatureFlags] = useState(null);
   const [detailedProgress, setDetailedProgress] = useState({});
+  const [satScoreEstimate, setSatScoreEstimate] = useState(null);
 
   const toggleCategory = (categoryKey) => {
     setExpandedCategories(prev => ({
@@ -58,6 +59,128 @@ function ProgressDashboard() {
       ...prev,
       [subcategoryId]: !prev[subcategoryId]
     }));
+  };
+
+  // Fallback SAT calculation using detailed progress data
+  const calculateSATScoreFromDetailedProgress = (detailedProgressData) => {
+    console.log('Calculating SAT score from detailed progress data:', Object.keys(detailedProgressData).length, 'subcategories');
+    
+    // Show first subcategory's data structure
+    const firstKey = Object.keys(detailedProgressData)[0];
+    if (firstKey) {
+      console.log('=== DETAILED PROGRESS FIRST SUBCATEGORY ===');
+      console.log('Subcategory:', firstKey);
+      console.log('Data structure:', detailedProgressData[firstKey]);
+      console.log('Fields:', Object.keys(detailedProgressData[firstKey]));
+      console.log('=== END DETAILED PROGRESS DATA ===');
+    }
+    
+    // SAT score weights by subcategory (same as in progressUtils.js)
+    const subcategoryWeights = {
+      // Reading & Writing (400-800 points) - 10 subcategories
+      1: 4.0, 2: 4.0, 3: 4.0, 4: 4.0, 5: 4.0, 6: 4.0, 7: 4.0, 8: 4.0, 9: 4.0, 10: 4.0,
+      // Math (400-800 points) - 19 subcategories  
+      11: 2.1, 12: 2.1, 13: 2.1, 14: 2.1, 15: 2.1, 16: 2.1, 17: 2.1, 18: 2.1, 19: 2.1,
+      20: 2.1, 21: 2.1, 22: 2.1, 23: 2.1, 24: 2.1, 25: 2.1, 26: 2.1, 27: 2.1, 28: 2.1, 29: 2.1
+    };
+
+    const subjectMapping = {
+      1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1, // R&W
+      11: 2, 12: 2, 13: 2, 14: 2, 15: 2, 16: 2, 17: 2, 18: 2, 19: 2, 20: 2, // Math
+      21: 2, 22: 2, 23: 2, 24: 2, 25: 2, 26: 2, 27: 2, 28: 2, 29: 2
+    };
+
+    let totalWeightedScore = 0;
+    let totalWeight = 0;
+    let readingWritingScore = 0;
+    let mathScore = 0;
+    let readingWritingWeight = 0;
+    let mathWeight = 0;
+    let subcategoriesWithData = 0;
+    
+    const breakdown = {
+      readingWriting: { score: 0, subcategories: 0 },
+      math: { score: 0, subcategories: 0 }
+    };
+
+    Object.entries(detailedProgressData).forEach(([subcategoryName, data]) => {
+      console.log('Processing detailed progress for:', subcategoryName, {
+        totalQuestionsAnswered: data.totalQuestionsAnswered,
+        accuracyLast10: data.accuracyLast10,
+        last10QuestionResultsCount: data.last10QuestionResultsCount
+      });
+      
+      // Only include subcategories with attempted questions
+      if (data.totalQuestionsAnswered > 0 || data.last10QuestionResultsCount > 0) {
+        const subcategoryId = getSubcategoryIdFromString(subcategoryName);
+        console.log('Subcategory ID for', subcategoryName, ':', subcategoryId);
+        
+        if (subcategoryId && subcategoryWeights[subcategoryId]) {
+          const accuracy = data.accuracyLast10 || 0;
+          const weight = subcategoryWeights[subcategoryId];
+          const subject = subjectMapping[subcategoryId];
+          
+          console.log('Including in fallback calculation:', { subcategoryName, subcategoryId, accuracy, weight, subject });
+          
+          const scoreContribution = (accuracy / 100) * weight;
+          
+          totalWeightedScore += scoreContribution;
+          totalWeight += weight;
+          subcategoriesWithData++;
+          
+          if (subject === 1) { // Reading & Writing
+            readingWritingScore += scoreContribution;
+            readingWritingWeight += weight;
+            breakdown.readingWriting.subcategories++;
+          } else if (subject === 2) { // Math
+            mathScore += scoreContribution;
+            mathWeight += weight;
+            breakdown.math.subcategories++;
+          }
+        }
+      }
+    });
+
+    if (totalWeight === 0) {
+      return { estimatedScore: 0, confidence: 0, breakdown, subcategoriesWithData: 0 };
+    }
+
+    // Calculate section scores (200-800 each, based on weighted accuracy)
+    const readingWritingEstimate = readingWritingWeight > 0 
+      ? Math.round(200 + (readingWritingScore / readingWritingWeight) * 600)
+      : 200;
+    const mathEstimate = mathWeight > 0 
+      ? Math.round(200 + (mathScore / mathWeight) * 600)
+      : 200;
+    
+    // Total SAT score (400-1600)
+    const estimatedScore = readingWritingEstimate + mathEstimate;
+    
+    // Calculate confidence
+    const totalSubcategories = 29;
+    const dataCoverage = subcategoriesWithData / totalSubcategories;
+    const sectionBalance = Math.min(breakdown.readingWriting.subcategories, breakdown.math.subcategories) / 
+                          Math.max(breakdown.readingWriting.subcategories, breakdown.math.subcategories || 1);
+    
+    const confidence = Math.min(100, Math.round(
+      (dataCoverage * 70) + (sectionBalance * 30)
+    ));
+    
+    breakdown.readingWriting.score = readingWritingEstimate;
+    breakdown.math.score = mathEstimate;
+    
+    console.log('Fallback calculation result:', {
+      estimatedScore: Math.max(400, Math.min(1600, estimatedScore)),
+      confidence,
+      subcategoriesWithData
+    });
+    
+    return {
+      estimatedScore: Math.max(400, Math.min(1600, estimatedScore)),
+      confidence,
+      breakdown,
+      subcategoriesWithData
+    };
   };
 
   // Load feature flags when component mounts
@@ -159,6 +282,8 @@ function ProgressDashboard() {
         setUserConceptMastery(masteryData);
         setUnmasteredCount(totalUnmastered);
         
+
+        
         // Fetch concepts for all subcategories
         const conceptsData = {};
         
@@ -224,6 +349,27 @@ function ProgressDashboard() {
         });
         setDetailedProgress(newDetailedProgress);
         console.log("ProgressDashboard: Successfully fetched detailed subcategory progress for", Object.keys(newDetailedProgress).length, "items.");
+        
+        // Load SAT score estimate after detailed progress is available
+        try {
+          const scoreEstimate = await calculateEstimatedSATScore(currentUser.uid);
+          console.log('SAT Score Estimate calculated:', scoreEstimate);
+          
+          // Fallback: If no data found, try calculating from detailedProgress directly
+          console.log('Primary SAT calculation result:', scoreEstimate);
+          if (scoreEstimate.subcategoriesWithData === 0) {
+            console.log('No data found in primary SAT calculation, trying fallback with detailedProgress');
+            console.log('DetailedProgress data available:', Object.keys(newDetailedProgress).length, 'subcategories');
+            const fallbackEstimate = calculateSATScoreFromDetailedProgress(newDetailedProgress);
+            console.log('Fallback SAT Score Estimate:', fallbackEstimate);
+            setSatScoreEstimate(fallbackEstimate.subcategoriesWithData > 0 ? fallbackEstimate : scoreEstimate);
+          } else {
+            console.log('Using primary SAT calculation result');
+            setSatScoreEstimate(scoreEstimate);
+          }
+        } catch (error) {
+          console.error('Error calculating SAT score estimate:', error);
+        }
       } catch (error) {
         console.error("ProgressDashboard: Error fetching detailed subcategory progress:", error);
         // Optionally, set an error state here to display a message to the user
@@ -366,24 +512,76 @@ function ProgressDashboard() {
   return (
     <div className="progress-dashboard-page">
       <div className="pd-header">
-        <h1>Performance Progress</h1>
-        <p className="subtitle">Track your development and identify areas for improvement.</p>
+        <h1>Your Performance Progress <span className="subtitle">Track your development and identify areas for improvement.</span></h1>
       </div>
 
-      <div className="pd-section-grid">
-        <div className="pd-card pd-stat-card">
-          <div className="stat-value">{totalQuestionsAnswered}</div>
-          <div className="stat-label">Total Questions Answered</div>
+      {/* SAT Score Estimate Display */}
+      {console.log('Rendering SAT component check:', { satScoreEstimate, hasData: satScoreEstimate?.subcategoriesWithData > 0 })}
+      {satScoreEstimate && (
+        <div className="pd-card sat-score-estimate-card">
+          <div className="sat-score-header">
+            <div className="sat-score-title">
+              <FaGraduationCap className="sat-icon" />
+              <h2>Estimated Digital SAT Score</h2>
+            </div>
+            <div className="confidence-badge">
+              {satScoreEstimate.confidence}% confidence
+            </div>
+          </div>
+          
+          <div className="sat-score-display">
+            <div className="score-value">
+              {satScoreEstimate.subcategoriesWithData > 0 ? satScoreEstimate.estimatedScore : '---'}
+            </div>
+            <div className="score-max">/ 1600</div>
+          </div>
+          
+          <div className="sat-progress-bar">
+            <div 
+              className="sat-progress-fill" 
+              style={{ 
+                width: satScoreEstimate.subcategoriesWithData > 0 ? `${((satScoreEstimate.estimatedScore - 400) / 1200) * 100}%` : '0%',
+                backgroundColor: satScoreEstimate.estimatedScore >= 1200 ? '#34A853' : 
+                               satScoreEstimate.estimatedScore >= 1000 ? '#FBBC05' : '#EA4335'
+              }}
+            ></div>
+          </div>
+          
+          <div className="sat-breakdown">
+            <div className="section-score">
+              <span className="section-name">Reading & Writing:</span>
+              <span className="section-value">{satScoreEstimate.breakdown?.readingWriting?.score || 400}</span>
+            </div>
+            <div className="section-score">
+              <span className="section-name">Math:</span>
+              <span className="section-value">{satScoreEstimate.breakdown?.math?.score || 400}</span>
+            </div>
+          </div>
+          
+          <div className="sat-stats-integrated">
+            <div className="sat-stat-item">
+              <div className="sat-stat-value">{totalQuestionsAnswered}</div>
+              <div className="sat-stat-label">Total Questions Answered</div>
+            </div>
+            <div className="sat-stat-item">
+              <div className="sat-stat-value">{overallAccuracy}%</div>
+              <div className="sat-stat-label">Overall Accuracy</div>
+            </div>
+            <div className="sat-stat-item">
+              <div className="sat-stat-value">{subcategoriesCovered} / {allSubcategories?.length || 0}</div>
+              <div className="sat-stat-label">Subcategories Covered</div>
+            </div>
+          </div>
+          
+          <div className="sat-footer">
+            <small>
+              {satScoreEstimate.subcategoriesWithData > 0 
+                ? `Based on ${satScoreEstimate.subcategoriesWithData} subcategories with practice data`
+                : 'Complete some practice questions to see your estimated SAT score!'}
+            </small>
+          </div>
         </div>
-        <div className="pd-card pd-stat-card">
-          <div className="stat-value">{overallAccuracy}%</div>
-          <div className="stat-label">Overall Accuracy</div>
-        </div>
-        <div className="pd-card pd-stat-card">
-          <div className="stat-value">{subcategoriesCovered} / {allSubcategories?.length || 0}</div>
-          <div className="stat-label">Subcategories Covered</div>
-        </div>
-      </div>
+      )}
 
       <div className="pd-split-view">
         <div className="pd-split-column">
