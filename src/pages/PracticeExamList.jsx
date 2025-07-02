@@ -25,6 +25,14 @@ const PracticeExamList = () => {
       
       // Only fetch exams marked as public for the public listing
       const exams = await getAllPracticeExams(true);
+      
+      // Sort exams numerically by title
+      exams.sort((a, b) => {
+        const numA = parseInt(a.title.match(/\d+/)?.[0] || 0, 10);
+        const numB = parseInt(b.title.match(/\d+/)?.[0] || 0, 10);
+        return numA - numB;
+      });
+      
       setPracticeExams(exams);
       setIsLoading(false);
     } catch (err) {
