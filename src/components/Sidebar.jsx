@@ -11,7 +11,8 @@ import {
   FaBook,              // Word Bank
   FaPuzzlePiece,       // Concept Bank
   FaChevronLeft,       // Collapse icon
-  FaChevronRight       // Expand icon
+  FaChevronRight,      // Expand icon
+  FaTrophy             // All Results
 } from 'react-icons/fa';
 
 const navItems = [
@@ -20,6 +21,7 @@ const navItems = [
   { path: '/study-resources', icon: <FaBookOpen />, label: 'Study Resources' },
   { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
+  { path: '/all-results', icon: <FaTrophy />, label: 'All Results' },
   { path: '/profile', icon: <FaUserCircle />, label: 'Profile' },
 ];
 
