@@ -105,39 +105,38 @@ const Question = ({
           
           {questionType === 'multiple-choice' ? (
             <>
-              <div className="question-instructions">
-                Which choice completes the text with the most logical and precise word or phrase?
-              </div>
+
               <div className="options-container">
                 {options && options.map((option, index) => {
                   const optionLetter = getOptionLetter(index);
                   return (
-                    <div 
-                      key={index} 
-                      className={`option ${isOptionCrossedOut(optionLetter) ? 'crossed-out' : ''}`}
-                    >
-                      <div className="option-header">
-                        <div className="option-letter">{optionLetter}</div>
-                        <label className={`option-label ${selectedAnswer === option ? 'selected' : ''}`}>
-                          <input
-                            type="radio"
-                            name={`question-${questionNumber}`}
-                            value={option}
-                            checked={selectedAnswer === option}
-                            onChange={handleOptionChange}
-                            className="option-radio"
-                          />
-                          <span className="option-text">{option}</span>
-                        </label>
-                        {showCrossOut && (
-                          <button 
-                            className={`cross-out-btn ${isOptionCrossedOut(optionLetter) ? 'active' : ''}`}
-                            onClick={() => toggleCrossOutOption(questionNumber, optionLetter)}
-                          >
-                            {isOptionCrossedOut(optionLetter) ? 'undo' : optionLetter}
-                          </button>
-                        )}
+                    <div key={index} className="option-row">
+                      <div 
+                        className={`option ${isOptionCrossedOut(optionLetter) ? 'crossed-out' : ''}`}
+                      >
+                        <div className="option-header">
+                          <div className="option-letter">{optionLetter}</div>
+                          <label className={`option-label ${selectedAnswer === option ? 'selected' : ''}`}>
+                            <input
+                              type="radio"
+                              name={`question-${questionNumber}`}
+                              value={option}
+                              checked={selectedAnswer === option}
+                              onChange={handleOptionChange}
+                              className="option-radio"
+                            />
+                            <span className="option-text">{option}</span>
+                          </label>
+                        </div>
                       </div>
+                      {showCrossOut && (
+                        <button 
+                          className={`cross-out-btn ${isOptionCrossedOut(optionLetter) ? 'active' : ''}`}
+                          onClick={() => toggleCrossOutOption(questionNumber, optionLetter)}
+                        >
+                          {isOptionCrossedOut(optionLetter) ? 'undo' : optionLetter}
+                        </button>
+                      )}
                     </div>
                   );
                 })}

@@ -4,19 +4,50 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 7px 10px;
   background-color: #e6ecff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
-  height: 85px;
+  height: 48px;
   font-family: Arial, sans-serif;
 }
 
+@media (max-width: 1200px) {
+  .header {
+    height: 38px;
+    padding: 4px 6px;
+  }
+  .section-title {
+    font-size: 15px;
+  }
+  .timer {
+    font-size: 12px;
+  }
+  .timer-toggle-btn {
+    font-size: 10px;
+    padding: 3px 7px;
+  }
+}
+
+
 .section-title {
   font-family: Arial, sans-serif;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: bold;
   color: #333333;
+  margin-top: 0;
+  margin-bottom: 2px;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 20;
+}
+
+@media (max-width: 1200px) {
+  .section-title {
+    font-size: 12px;
+    margin-bottom: 1px;
+  }
 }
 
 .timer-container {
@@ -30,25 +61,41 @@
 
 .timer {
   font-family: Arial, sans-serif;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
-  margin-right: 10px;
+  margin-right: 6px;
   background-color: #ffffff;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 3px 7px;
+  border-radius: 3px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1200px) {
+  .timer {
+    font-size: 10px;
+    padding: 1px 4px;
+    margin-right: 3px;
+  }
 }
 
 .timer-toggle-btn {
   background-color: #ffffff;
   border: 1px solid #cccccc;
-  border-radius: 4px;
-  padding: 5px 10px;
-  font-size: 12px;
+  border-radius: 3px;
+  padding: 3px 7px;
+  font-size: 11px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 5px;
+  margin-top: 2px;
   font-family: Arial, sans-serif;
+}
+
+@media (max-width: 1200px) {
+  .timer-toggle-btn {
+    font-size: 8px;
+    padding: 1px 3px;
+    margin-top: 1px;
+  }
 }
 
 .timer-toggle-btn:hover {
@@ -59,20 +106,29 @@
   background-color: #1a237e;
   color: white;
   text-align: center;
-  padding: 4px 0;
+  padding: 1px 0;
   font-weight: bold;
-  font-size: 14px;
-  width: calc(100% - 40px);
+  font-size: 10px;
+  width: calc(100% - 20px);
   margin: 0 auto;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 8px 8px;
   position: relative;
   z-index: 10;
-  margin-bottom: 20px;
-  height: 25px;
+  margin-bottom: 8px;
+  height: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+@media (max-width: 1200px) {
+  .practice-test-banner {
+    font-size: 8px;
+    height: 10px;
+    margin-bottom: 4px;
+  }
+}
+
 
 /* Add dotted line above banner using wide dashes - making it much more visible */
 .practice-test-banner::before {

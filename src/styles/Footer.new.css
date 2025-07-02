@@ -1,0 +1,97 @@
+/* Footer.new.css - Complete rewrite for perfect alignment */
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 60px; /* A bit more height for comfortable padding */
+  padding: 0 20px; /* Horizontal padding */
+  background-color: #e6ecff;
+  border-top: 1px solid #eaeaea;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.tracker-button {
+  /* Positioning */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* Styling */
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+  cursor: pointer;
+}
+
+.navigation-buttons {
+  /* Positioning */
+  position: absolute;
+  top: 50%;
+  right: 20px; /* Same as footer horizontal padding */
+  transform: translateY(-50%);
+
+  /* Flex layout for inner buttons */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-button {
+  /* Styling */
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.nav-button:disabled {
+  background-color: #f0f0f0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+}
+
+.dropdown-arrow {
+  margin-left: 6px;
+  font-size: 10px;
+}
+
+/* Responsive adjustments if needed */
+@media (max-width: 1200px) {
+  .footer {
+    height: 52px;
+    padding: 0 16px;
+  }
+  .tracker-button, .nav-button {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+  .navigation-buttons {
+    right: 16px;
+  }
+}

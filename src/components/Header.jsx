@@ -19,20 +19,10 @@ const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock }) => {
     <>
       <div className="header">
         <div className="left-section">
-          <div className="section-title">
-            {sectionTitle}
-          </div>
-          <div className="directions-dropdown">
-            <button onClick={toggleDirections} className="directions-btn">
-              Directions {directionsOpen ? '▲' : '▼'}
-            </button>
-            {directionsOpen && (
-              <div className="directions-content">
-                <p>Each question in this section is based on a separate passage or pair of passages. Read the passage(s) and the question carefully and choose the best answer.</p>
-              </div>
-            )}
-          </div>
+        <div className="section-title">
+          {sectionTitle}
         </div>
+      </div>
         <div className="timer-container">
           {clockVisible && (
             <div className="timer">
@@ -52,6 +42,7 @@ const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock }) => {
           </div>
         </div>
       </div>
+
       <div className="practice-test-banner">
         THIS IS A PRACTICE TEST
       </div>
