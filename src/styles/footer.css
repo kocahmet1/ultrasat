@@ -1,4 +1,4 @@
-/* Footer.new.css - Complete rewrite for perfect alignment */
+/* Footer.css - Complete styling for footer component */
 
 .footer {
   position: fixed;
@@ -6,22 +6,36 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: 60px; /* A bit more height for comfortable padding */
-  padding: 0 20px; /* Horizontal padding */
+  height: 60px;
   background-color: #e6ecff;
   border-top: 1px solid #eaeaea;
   box-sizing: border-box;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-center {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .tracker-button {
-  /* Positioning */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  /* Styling */
   height: 36px;
   padding: 0 16px;
   border-radius: 4px;
@@ -39,13 +53,6 @@
 }
 
 .navigation-buttons {
-  /* Positioning */
-  position: absolute;
-  top: 50%;
-  right: 20px; /* Same as footer horizontal padding */
-  transform: translateY(-50%);
-
-  /* Flex layout for inner buttons */
   display: flex;
   align-items: center;
   gap: 10px;
