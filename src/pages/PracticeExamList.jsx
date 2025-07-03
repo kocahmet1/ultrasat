@@ -52,8 +52,8 @@ const PracticeExamList = () => {
       moduleIds: exam.moduleIds
     }));
     
-    // Navigate to the exam page
-    navigate('/practice-exam/' + exam.id);
+    // Navigate to the exam page and signal to start immediately
+    navigate('/practice-exam/' + exam.id, { state: { startExam: true } });
   };
 
   return (

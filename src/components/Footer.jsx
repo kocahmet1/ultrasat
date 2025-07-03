@@ -8,12 +8,17 @@ const Footer = ({
   handleNext, 
   openTrackerPopup,
   isFirstQuestion,
-  isLastQuestion
+  isLastQuestion,
+  onExitExam
 }) => {
   return (
     <div className="footer">
-      {/* Left section - empty spacer for balanced layout */}
-      <div className="footer-left"></div>
+      {/* Left section - Exit Exam button */}
+      <div className="footer-left">
+        <button className="exit-exam-button" onClick={onExitExam}>
+          Exit Exam
+        </button>
+      </div>
       
       {/* Center section - tracker button (black) */}
       <div className="footer-center">

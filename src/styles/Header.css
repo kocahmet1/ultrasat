@@ -191,7 +191,20 @@
   z-index: 10;
 }
 
-.highlights-btn, .more-btn {
+.fullscreen-btn, .more-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+}
+
+.fullscreen-btn:hover {
+  text-decoration: underline;
+}
+
+.more-btn {
   background: none;
   border: none;
   font-size: 14px;

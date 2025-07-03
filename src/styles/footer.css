@@ -28,6 +28,25 @@
   align-items: center;
 }
 
+.exit-exam-button {
+  background-color: #e0f7ff; /* Light blue */
+  border: 1px solid #b3e5fc;
+  color: #01579b;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.exit-exam-button:hover {
+  background-color: #b3e5fc;
+  border-color: #81d4fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .footer-right {
   flex: 1;
   display: flex;

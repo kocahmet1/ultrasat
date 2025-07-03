@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   getPracticeExamById, 
   getPracticeExamModules 
@@ -14,6 +14,7 @@ import { inferLevelFromAccuracy } from '../utils/smartQuizUtils';
 const PracticeExamController = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { currentUser, saveComprehensiveExamResult } = useAuth();
   const { setForceSidebarCollapsed, setSidebarHidden } = useSidebar();
   
@@ -77,7 +78,11 @@ const PracticeExamController = () => {
         setModuleResponses(initialResponses);
         
         setIsLoading(false);
-        setExamStatus('intro');
+        if (location.state?.startExam) {
+          handleStartExam();
+        } else {
+          setExamStatus('intro');
+        }
       } catch (err) {
         setError('Failed to load practice exam: ' + err.message);
         setIsLoading(false);

@@ -40,8 +40,8 @@
 }
 
 .pd-header {
-  margin-bottom: 15px;
-  padding-bottom: 10px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
   border-bottom: 1px solid var(--border-color-soft);
   text-align: center;
 }
@@ -59,10 +59,28 @@
 }
 
 .pd-header h1 .subtitle {
-  font-size: 0.875rem;
-  color: var(--text-color-medium);
-  font-weight: 400;
-  font-style: italic;
+  display: none;
+}
+
+div.progress-dashboard-page .pd-page-subtitle {
+  color: #aa80ff !important;
+  text-decoration: underline;
+  text-decoration-color: #ffff33;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 3px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  margin-top: 12px;
+  margin-bottom: 32px;
+  font-size: 1.13rem;
+  text-align: center;
+  transition: color 0.2s;
+
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--text-color-light);
+  margin-top: -10px;
+  margin-bottom: 25px;
 }
 
 /* Generic Card Style */
@@ -95,6 +113,46 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     margin-bottom: 25px;
+}
+
+.subcategory-name-btn {
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.32em 0.85em;
+  font-size: 0.93rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  box-shadow: 0 2px 12px 0 rgba(155,35,234,0.07);
+  margin-bottom: 0.1em;
+  margin-right: 0.1em;
+  outline: none;
+  display: inline-block;
+}
+
+.math-subcategory-btn {
+  background: #00cccc;
+  color: #fff;
+}
+.math-subcategory-btn:hover,
+.math-subcategory-btn:focus {
+  background: #009999;
+}
+
+.rw-subcategory-btn {
+  background: #ff6699;
+  color: #fff;
+}
+.rw-subcategory-btn:hover,
+.rw-subcategory-btn:focus {
+  background: #d94f78;
+}
+
+.subcategory-name-btn:hover, .subcategory-name-btn:focus {
+  background: linear-gradient(90deg, #7f53ac 0%, #647dee 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 18px 0 rgba(100,125,222,0.13);
 }
 
 /* Stats Cards */
@@ -660,16 +718,106 @@
 
 /* SAT Score Estimate Card Styles */
 .sat-score-estimate-card {
-  background: linear-gradient(135deg, #e8f4f8 0%, #f0e6ff 50%, #fff2e6 100%);
-  color: #4a5568;
-  margin-bottom: 15px;
-  padding: 18px;
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   position: relative;
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
 }
+
+.sat-score-estimate-card.collapsed {
+  max-height: 80px;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+.sat-score-estimate-card.expanded {
+  max-height: 450px;
+  background-color: #b3d9ff !important;
+}
+
+.sat-score-estimate-card.collapsed .sat-score-header,
+.sat-score-estimate-card.collapsed .sat-score-display,
+.sat-score-estimate-card.collapsed .sat-progress-bar,
+.sat-score-estimate-card.collapsed .sat-breakdown,
+.sat-score-estimate-card.collapsed .sat-stats-integrated,
+.sat-score-estimate-card.collapsed .sat-footer {
+  display: none;
+}
+
+.sat-score-estimate-card.expanded .sat-score-collapsed-view {
+  display: none;
+}
+
+.sat-score-collapsed-view {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 80px;
+  padding: 0 15px;
+}
+
+.collapsed-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  z-index: 1;
+}
+
+.collapsed-confidence {
+  font-size: 1rem;
+  background-color: rgba(111, 66, 193, 0.1);
+  color: var(--primary-color-dark);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-weight: 500;
+  margin-left: auto;
+  z-index: 1;
+}
+
+.collapsed-score {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #3b5bdb;
+  letter-spacing: 1px;
+  z-index: 2;
+  background: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.collapsed-notice {
+  display: inline-block;
+  font-size: 0.82rem;
+  color: #8a94a6;
+  margin-left: 10px;
+  font-weight: 400;
+  position: relative;
+  top: 2px;
+  white-space: nowrap;
+}
+
+.collapsed-max {
+  font-size: 1.1rem;
+  color: #7b8db0;
+  font-weight: 500;
+  margin-left: 2px;
+  vertical-align: middle;
+}
+
 
 .sat-score-estimate-card::before {
   content: '';
@@ -798,12 +946,15 @@
   z-index: 1;
 }
 
-.sat-stat-item {
-  text-align: center;
+.sat-stats-integrated > .sat-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 12px 8px;
   background: rgba(255, 255, 255, 0.4);
   border-radius: var(--border-radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 2.5px solid #4A90E2;
+  box-shadow: 0 0 0 2px #b3d9ff33;
   backdrop-filter: blur(5px);
 }
 

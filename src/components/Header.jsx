@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Header.css';
 
-const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock }) => {
+const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock, isFullscreen, toggleFullscreen }) => {
   // Format time as mm:ss
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -34,8 +34,10 @@ const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock }) => {
           </button>
         </div>
         <div className="header-controls">
-          <div className="highlights-notes">
-            <button className="highlights-btn">Highlights & Notes</button>
+          <div className="fullscreen-toggle">
+            <button className="fullscreen-btn" onClick={toggleFullscreen}>
+              {isFullscreen ? 'Exit Fullscreen' : 'Switch to Fullscreen'}
+            </button>
           </div>
           <div className="more-options">
             <button className="more-btn">More</button>

@@ -46,6 +46,7 @@ function ProgressDashboard() {
   const [featureFlags, setFeatureFlags] = useState(null);
   const [detailedProgress, setDetailedProgress] = useState({});
   const [satScoreEstimate, setSatScoreEstimate] = useState(null);
+  const [isSatCardExpanded, setIsSatCardExpanded] = useState(false);
 
   const toggleCategory = (categoryKey) => {
     setExpandedCategories(prev => ({
@@ -512,13 +513,17 @@ function ProgressDashboard() {
   return (
     <div className="progress-dashboard-page">
       <div className="pd-header">
-        <h1>Your Performance Progress <span className="subtitle">Track your development and identify areas for improvement.</span></h1>
+        <h1>Your Performance Progress</h1>
       </div>
 
       {/* SAT Score Estimate Display */}
       {console.log('Rendering SAT component check:', { satScoreEstimate, hasData: satScoreEstimate?.subcategoriesWithData > 0 })}
       {satScoreEstimate && (
-        <div className="pd-card sat-score-estimate-card">
+        <div 
+          className={`pd-card sat-score-estimate-card ${isSatCardExpanded ? 'expanded' : 'collapsed'}`}
+          onMouseEnter={() => setIsSatCardExpanded(true)}
+          onMouseLeave={() => setIsSatCardExpanded(false)}
+        >
           <div className="sat-score-header">
             <div className="sat-score-title">
               <FaGraduationCap className="sat-icon" />
@@ -527,6 +532,14 @@ function ProgressDashboard() {
             <div className="confidence-badge">
               {satScoreEstimate.confidence}% confidence
             </div>
+          </div>
+
+          <div className="sat-score-collapsed-view">
+            <span className="collapsed-title">Estimated Digital SAT Score</span>
+            <span className="collapsed-score">{satScoreEstimate.subcategoriesWithData > 0 ? satScoreEstimate.estimatedScore : '---'}<span className="collapsed-max">/1600</span></span>{satScoreEstimate.subcategoriesWithData > 0 && (
+  <span className="collapsed-notice">(Based on {satScoreEstimate.subcategoriesWithData} subcategories with practice data)</span>
+)}
+            <span className="collapsed-confidence">{satScoreEstimate.confidence}% confidence</span>
           </div>
           
           <div className="sat-score-display">
@@ -580,142 +593,149 @@ function ProgressDashboard() {
                 : 'Complete some practice questions to see your estimated SAT score!'}
             </small>
           </div>
-        </div>
-      )}
+      </div>
+    )}
 
-      <div className="pd-split-view">
-        <div className="pd-split-column">
-          <div className="pd-section-title">
-            <FaBookOpen /> Reading & Writing
-          </div>
-          
-          <div className="pd-subcategories-list">
-            {Object.values(categorizedSubcategories["reading-writing"].categories || {}).flatMap(category => 
-              category.subcategories || []
-            ).map(sub => (
-              <div key={sub.id} className="pd-subcategory-item">
-                <div className="pd-subcategory-info">
-                  {/* Minimal view (always visible) */}
-                  <div className="pd-minimal-view">
-                    <div className="pd-title-row">
-                      <div className="pd-subcategory-header">
-                        <Link to={`/subcategory-progress/${sub.id}`} className="text-lg font-semibold text-gray-700 hover:text-blue-600 transition-colors duration-200">
-                          {sub.name}
-                        </Link>
-                      </div>
-                      <div className="single-level-indicator">
-                        <div className="current-level-box">
-                          Level {detailedProgress[sub.id]?.level || 1}
-                        </div>
-                      </div>
+    <p className="pd-page-subtitle">Track your development and identify areas for improvement.</p>
+
+    {/* Main progress sections */}
+    <div className="pd-split-view">
+      <div className="pd-split-column">
+        <div className="pd-section-title">
+          <FaBookOpen /> Reading & Writing
+        </div>
+        
+        <div className="pd-subcategories-list">
+          {Object.values(categorizedSubcategories["reading-writing"].categories || {}).flatMap(category => 
+            category.subcategories || []
+          ).map(sub => (
+            <div key={sub.id} className="pd-subcategory-item">
+              <div className="pd-subcategory-info">
+                {/* Minimal view (always visible) */}
+                <div className="pd-minimal-view">
+                  <div className="pd-title-row">
+                    <div className="pd-subcategory-header">
+                      <button
+  className={`subcategory-name-btn rw-subcategory-btn`}
+  onClick={() => navigate(`/subcategory-progress/${sub.id}`)}
+  type="button"
+>
+  {sub.name}
+</button>
                     </div>
-                    
-                    {/* Progress bar (always visible) */}
-                    <div className="subcategory-progress-container">
-                      <div className="progress-bar-container">
-                        <div className="progress-bar-background">
-                          <div 
-                            className={`progress-bar-fill ${ 
-                              getPerformanceCategoryForLast10(sub.stats?.accuracyLast10 || 0, sub.stats?.last10QuestionResultsCount || 0)
-                            }`}
-                            style={{ width: `${Math.min(100, ((sub.stats && sub.stats.totalQuestionsAnswered || 0) / 10) * 100)}%` }}
-                          ></div>
-                        </div>
-                        <div className="progress-status">
-                          <span>
-                            {Math.min(10, (sub.stats && sub.stats.totalQuestionsAnswered) || 0)}/10
-                          </span>
-                        </div>
+                    <div className="single-level-indicator">
+                      <div className="current-level-box">
+                        Level {detailedProgress[sub.id]?.level || 1}
                       </div>
                     </div>
                   </div>
                   
-                  {/* Expanded view (visible on hover) */}
-                  <div className="pd-expanded-view">
-                    {/* Level up message */}
-                    <div className="level-up-message">
-                      {10 - Math.min(10, (sub.stats && sub.stats.totalQuestionsAnswered) || 0)} more questions left to cover this topic. Take a <span className="emphasis">Dynamic Quiz</span> to level up and fully master the topic.
-                    </div>
-                    
-                    {/* Complete level indicators */}
-                    <div className="level-indicator-container">
-                      <div className={`level-box ${detailedProgress[sub.id]?.level === 1 ? 'active' : ''}`}>Level 1</div>
-                      <div className={`level-box ${detailedProgress[sub.id]?.level === 2 ? 'active' : ''}`}>Level 2</div>
-                      <div className={`level-box ${detailedProgress[sub.id]?.level === 3 ? 'active' : ''}`}>Level 3</div>
-                    </div>
-                    
-                    {/* Stats information */}
-                    {sub.stats && (sub.stats.totalQuestionsAnswered > 0 || sub.stats.last10QuestionResultsCount > 0) ? (
-                      <div className="pd-subcategory-stats">
-                        <p className={`accuracy-display ${getPerformanceCategoryForLast10(sub.stats.accuracyLast10 || 0, sub.stats.last10QuestionResultsCount || 0)}`}>
-                          <FaBullseye /> 
-                          Accuracy (Last 10 questions): {sub.stats.accuracyLast10 !== undefined ? `${sub.stats.accuracyLast10.toFixed(0)}%` : 'N/A'}
-                        </p>
-                        <p className="total-answered-display">
-                          Total # of questions answered: {sub.stats.totalQuestionsAnswered || 0}
-                        </p>
+                  {/* Progress bar (always visible) */}
+                  <div className="subcategory-progress-container">
+                    <div className="progress-bar-container">
+                      <div className="progress-bar-background">
+                        <div 
+                          className={`progress-bar-fill ${ 
+                            getPerformanceCategoryForLast10(sub.stats?.accuracyLast10 || 0, sub.stats?.last10QuestionResultsCount || 0)
+                          }`}
+                          style={{ width: `${Math.min(100, ((sub.stats && sub.stats.totalQuestionsAnswered || 0) / 10) * 100)}%` }}
+                        ></div>
                       </div>
-                    ) : (
-                      <p className="accuracy-display">No attempts yet</p>
-                    )}
+                      <div className="progress-status">
+                        <span>
+                          {Math.min(10, (sub.stats && sub.stats.totalQuestionsAnswered) || 0)}/10
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Expanded view (visible on hover) */}
+                <div className="pd-expanded-view">
+                  {/* Level up message */}
+                  <div className="level-up-message">
+                    {10 - Math.min(10, (sub.stats && sub.stats.totalQuestionsAnswered) || 0)} more questions left to cover this topic. Take a <span className="emphasis">Dynamic Quiz</span> to level up and fully master the topic.
                   </div>
                   
-                  {conceptsBySubcategory[sub.id] && conceptsBySubcategory[sub.id].length > 0 && (
-                    <div className="concept-mastery-container">
-                      <h5>Concept Mastery</h5>
-                      <div className="concept-list">
-                        {conceptsBySubcategory[sub.id].map(concept => {
-                          const isMastered = userConceptMastery[sub.id] && 
-                            userConceptMastery[sub.id][concept.id] === true;
-                          return (
-                            <div key={concept.id} className="concept-item">
-                              <div className="concept-name">{concept.name}</div>
-                              <div className={`concept-status ${isMastered ? 'mastered' : 'not-mastered'}`}>
-                                {isMastered ? 
-                                  <><FaCheck /> Mastered</> : 
-                                  <><FaExclamationTriangle /> Practice Needed</>
-                                }
-                              </div>
-                              {!isMastered && (
-                                <button 
-                                  className="concept-practice-btn"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    navigate(`/concept/${concept.id}`);
-                                  }}
-                                >
-                                  Practice This Concept
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
+                  {/* Complete level indicators */}
+                  <div className="level-indicator-container">
+                    <div className={`level-box ${detailedProgress[sub.id]?.level === 1 ? 'active' : ''}`}>Level 1</div>
+                    <div className={`level-box ${detailedProgress[sub.id]?.level === 2 ? 'active' : ''}`}>Level 2</div>
+                    <div className={`level-box ${detailedProgress[sub.id]?.level === 3 ? 'active' : ''}`}>Level 3</div>
+                  </div>
+                  
+                  {/* Stats information */}
+                  {sub.stats && (sub.stats.totalQuestionsAnswered > 0 || sub.stats.last10QuestionResultsCount > 0) ? (
+                    <div className="pd-subcategory-stats">
+                      <p className={`accuracy-display ${getPerformanceCategoryForLast10(sub.stats.accuracyLast10 || 0, sub.stats.last10QuestionResultsCount || 0)}`}>
+                        <FaBullseye /> 
+                        Accuracy (Last 10 questions): {sub.stats.accuracyLast10 !== undefined ? `${sub.stats.accuracyLast10.toFixed(0)}%` : 'N/A'}
+                      </p>
+                      <p className="total-answered-display">
+                        Total # of questions answered: {sub.stats.totalQuestionsAnswered || 0}
+                      </p>
                     </div>
+                  ) : (
+                    <p className="accuracy-display">No attempts yet</p>
                   )}
                 </div>
-                <div className="pd-subcategory-actions">
-                  {/* Only Practice button visible in minimal view */}
-                  <button 
-                    className="action-button practice minimal-action" 
-                    onClick={() => handleStartPractice(sub.id)}
-                    disabled={!sub.id} 
-                  >
-                    <FaBolt /> Practice
-                  </button>
-                  
-                  {/* Learn button only visible on hover/expand */}
-                  <button 
-                    className="action-button learn expanded-action" 
-                    onClick={() => navigate(`/lessons/${sub.id}`)}
-                  >
-                    <FaBook /> Learn
-                  </button>
-                </div>
+                
+                {conceptsBySubcategory[sub.id] && conceptsBySubcategory[sub.id].length > 0 && (
+                  <div className="concept-mastery-container">
+                    <h5>Concept Mastery</h5>
+                    <div className="concept-list">
+                      {conceptsBySubcategory[sub.id].map(concept => {
+                        const isMastered = userConceptMastery[sub.id] && 
+                          userConceptMastery[sub.id][concept.id] === true;
+                        return (
+                          <div key={concept.id} className="concept-item">
+                            <div className="concept-name">{concept.name}</div>
+                            <div className={`concept-status ${isMastered ? 'mastered' : 'not-mastered'}`}>
+                              {isMastered ? 
+                                <><FaCheck /> Mastered</> : 
+                                <><FaExclamationTriangle /> Practice Needed</>
+                              }
+                            </div>
+                            {!isMastered && (
+                              <button 
+                                className="concept-practice-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(`/concept/${concept.id}`);
+                                }}
+                              >
+                                Practice This Concept
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+              <div className="pd-subcategory-actions">
+                {/* Only Practice button visible in minimal view */}
+                <button 
+                  className="action-button practice minimal-action" 
+                  onClick={() => handleStartPractice(sub.id)}
+                  disabled={!sub.id} 
+                >
+                  <FaBolt /> Practice
+                </button>
+                
+                {/* Learn button only visible on hover/expand */}
+                <button 
+                  className="action-button learn expanded-action" 
+                  onClick={() => navigate(`/lessons/${sub.id}`)}
+                >
+                  <FaBook /> Learn
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
         
         <div className="pd-split-column">
           <div className="pd-section-title">
@@ -732,9 +752,13 @@ function ProgressDashboard() {
                   <div className="pd-minimal-view">
                     <div className="pd-title-row">
                       <div className="pd-subcategory-header">
-                        <Link to={`/subcategory-progress/${sub.id}`} className="text-lg font-semibold text-gray-700 hover:text-blue-600 transition-colors duration-200">
+                        <button
+                          className={`subcategory-name-btn math-subcategory-btn`}
+                          onClick={() => navigate(`/subcategory-progress/${sub.id}`)}
+                          type="button"
+                        >
                           {sub.name}
-                        </Link>
+                        </button>
                       </div>
                       <div className="single-level-indicator">
                         <div className="current-level-box">

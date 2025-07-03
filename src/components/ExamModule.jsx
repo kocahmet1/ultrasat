@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useBlocker } from 'react-router-dom';
 import Header from './Header';
 import Question from './Question';
 import Footer from './Footer';
@@ -7,6 +7,8 @@ import QuestionTracker from './QuestionTracker';
 import { enrichQuestionsWithNewCategories, ensureQuestionsHaveSubcategoryIds } from '../utils/categoryUtils';
 import '../styles/App.css';
 import '../styles/Transitions.css';
+import FullscreenModal from './FullscreenModal';
+import ConfirmationModal from './ConfirmationModal';
 
 function ExamModule({ 
   moduleNumber, 
@@ -22,7 +24,8 @@ function ExamModule({
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(Array.isArray(userAnswers) ? userAnswers[0] : (userAnswers[0] || ''));
   const [timeRemaining, setTimeRemaining] = useState(32 * 60); // 32 minutes
-  const [timerRunning, setTimerRunning] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [timerRunning, setTimerRunning] = useState(false);
   const [clockVisible, setClockVisible] = useState(true);
   const [showCrossOut, setShowCrossOut] = useState(false);
   const [localCrossedOut, setLocalCrossedOut] = useState(crossedOut || {});
@@ -30,6 +33,17 @@ function ExamModule({
   // Handle both array and object answer formats
   const [updatedAnswers, setUpdatedAnswers] = useState(Array.isArray(userAnswers) ? [...userAnswers] : {});
   const [markedForReview, setMarkedForReview] = useState([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+
+  // Block navigation when exam is in progress
+  const blocker = useBlocker(timerRunning);
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      setIsExitModalOpen(true);
+    }
+  }, [blocker]);
   
   // Animation states
   const [moduleAnimation, setModuleAnimation] = useState('fade-in');
@@ -83,6 +97,52 @@ function ExamModule({
       completeModule();
     }
     return () => clearInterval(timer);
+  }, [timerRunning]);
+
+  // Pause timer when modal is open
+  useEffect(() => {
+    setTimerRunning(!isModalOpen);
+  }, [isModalOpen]);
+
+  // Fullscreen logic
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  // Prevent accidental tab closing
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      // This logic should only run when an exam is in progress.
+      if (timerRunning) {
+        e.preventDefault();
+        // Modern browsers require this to be set.
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [timerRunning]);
 
   // Update selected answer when current question changes
@@ -283,13 +343,57 @@ function ExamModule({
     }
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSwitchFullscreen = () => {
+    setIsModalOpen(false);
+    // Fullscreen is handled inside the modal component
+  };
+
+  const handleExitExamClick = () => {
+    setIsExitModalOpen(true);
+  };
+
+  const handleCloseExitModal = () => {
+    setIsExitModalOpen(false);
+    if (blocker.state === 'blocked') {
+      blocker.reset();
+    }
+  };
+
+  const handleConfirmExit = () => {
+    if (blocker.state === 'blocked') {
+      blocker.proceed();
+    } else {
+      navigate('/practice-exams');
+    }
+    setIsExitModalOpen(false);
+  };
+
   return (
     <div className={`app ${moduleAnimation}`}>
+      <FullscreenModal
+        isOpen={isModalOpen}
+        onSwitch={handleSwitchFullscreen}
+        onClose={handleCloseModal}
+      />
+
+      <ConfirmationModal
+        isOpen={isExitModalOpen}
+        onClose={handleCloseExitModal}
+        onConfirm={handleConfirmExit}
+        title="Exit Exam?"
+        message="Are you sure you want to leave the exam? Your progress in this module will not be saved."
+      />
       <Header
         sectionTitle={moduleTitle}
         timeRemaining={timeRemaining}
         clockVisible={clockVisible}
         toggleClock={toggleClock}
+        isFullscreen={isFullscreen}
+        toggleFullscreen={toggleFullscreen}
       />
       
       <div className="main-content">
@@ -347,6 +451,7 @@ function ExamModule({
           openTrackerPopup={toggleTracker}
           isFirstQuestion={currentQuestion === 0}
           isLastQuestion={currentQuestion === enrichedQuestions.length - 1}
+          onExitExam={handleExitExamClick}
         />
       )}
       
