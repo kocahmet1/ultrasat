@@ -1,0 +1,349 @@
+.membership-upgrade {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+}
+
+.upgrade-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.upgrade-container h1 {
+  text-align: center;
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+/* Current Membership Status */
+.current-membership {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.current-membership h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.subscription-info {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.subscription-info p {
+  margin: 0.5rem 0;
+}
+
+.cancellation-notice {
+  color: #ffd700 !important;
+  font-weight: 600;
+  background: rgba(255, 215, 0, 0.1);
+  padding: 0.5rem;
+  border-radius: 5px;
+  border-left: 3px solid #ffd700;
+}
+
+/* Membership Tiers */
+.membership-tiers {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tier-selector h3,
+.billing-selector h3 {
+  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.tier-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tier-option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tier-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.tier-option.selected {
+  border-color: #4CAF50;
+  background: rgba(76, 175, 80, 0.2);
+}
+
+.tier-option h4 {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.tier-features {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tier-features p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.popular-badge {
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  background: #FF6B6B;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Billing Options */
+.billing-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.billing-option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+}
+
+.billing-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.billing-option.selected {
+  border-color: #4CAF50;
+  background: rgba(76, 175, 80, 0.2);
+}
+
+.billing-option h4 {
+  color: white;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.price {
+  color: #4CAF50;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.savings {
+  color: #ffd700;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.savings-badge {
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  background: #4CAF50;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.action-buttons {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.upgrade-button {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.upgrade-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.upgrade-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.subscription-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cancel-button {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
+
+.cancel-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Feature Comparison */
+.feature-comparison {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feature-comparison h3 {
+  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comparison-table th {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+}
+
+.comparison-table td {
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+.comparison-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .upgrade-container {
+    padding: 0 0.5rem;
+  }
+
+  .upgrade-container h1 {
+    font-size: 2rem;
+  }
+
+  .tier-options {
+    grid-template-columns: 1fr;
+  }
+
+  .billing-options {
+    grid-template-columns: 1fr;
+  }
+
+  .subscription-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .upgrade-button,
+  .cancel-button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .comparison-table {
+    font-size: 0.9rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .membership-tiers {
+    padding: 1rem;
+  }
+
+  .tier-option,
+  .billing-option {
+    padding: 1rem;
+  }
+
+  .comparison-table {
+    font-size: 0.8rem;
+  }
+}

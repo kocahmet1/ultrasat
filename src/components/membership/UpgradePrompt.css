@@ -1,0 +1,34 @@
+.upgrade-prompt-widget {
+  background-color: #f0f7ff;
+  border: 1px solid #b3d7ff;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.upgrade-prompt-widget p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  flex-grow: 1;
+}
+
+.upgrade-prompt-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+}
+
+.upgrade-prompt-button:hover {
+  background-color: #0056b3;
+}

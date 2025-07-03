@@ -1,0 +1,321 @@
+.membership-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.membership-page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.membership-page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.membership-page-header p {
+  font-size: 1.125rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.membership-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.membership-current-plan {
+  margin-bottom: 3rem;
+}
+
+.membership-current-plan h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 1.5rem 0;
+}
+
+.membership-upgrade-section {
+  margin-bottom: 3rem;
+}
+
+.membership-upgrade-section h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.75rem 0;
+}
+
+.membership-upgrade-description {
+  font-size: 1rem;
+  color: #64748b;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.membership-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.membership-plan-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.membership-plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border-color: #3b82f6;
+}
+
+.membership-plan-card.current-plan {
+  border-color: #059669;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+}
+
+.membership-plan-card.current-plan::before {
+  content: 'Current Plan';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #059669;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.membership-plan-card.upgrading {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+}
+
+.membership-plan-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.membership-plan-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 1rem 0 0.5rem 0;
+}
+
+.membership-plan-price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3b82f6;
+  margin: 0 0 0.5rem 0;
+}
+
+.membership-plan-description {
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.membership-plan-features {
+  margin-bottom: 2rem;
+}
+
+.membership-plan-features h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 1rem 0;
+}
+
+.membership-plan-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.membership-plan-features li {
+  padding: 0.5rem 0;
+  color: #4b5563;
+  font-size: 0.875rem;
+  position: relative;
+  padding-left: 1.5rem;
+  line-height: 1.4;
+}
+
+.membership-plan-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #059669;
+  font-weight: 700;
+}
+
+.membership-plan-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.membership-plan-btn {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.membership-plan-btn.upgrade {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.membership-plan-btn.upgrade:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.membership-plan-btn.current {
+  background: #059669;
+  color: white;
+  cursor: not-allowed;
+}
+
+.membership-plan-btn.downgrade {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+.membership-plan-btn.downgrade:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.membership-plan-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.upgrading-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.upgrading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.membership-faq {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.membership-faq h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.membership-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.membership-faq-item {
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.membership-faq-item h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.75rem 0;
+}
+
+.membership-faq-item p {
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .membership-page {
+    padding: 1rem;
+  }
+  
+  .membership-page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .membership-plans-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .membership-plan-card {
+    padding: 1.5rem;
+  }
+  
+  .membership-faq-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

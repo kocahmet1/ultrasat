@@ -44,6 +44,11 @@ import QuestionImport from './pages/QuestionImport';
 import GraphGenerationPage from './pages/GraphGenerationPage';
 import GraphDescriptionTool from './pages/GraphDescriptionTool';
 import AdminLearningContent from './pages/AdminLearningContent';
+import MembershipPage from './pages/MembershipPage';
+import MembershipManagement from './components/admin/MembershipManagement';
+import MembershipUpgrade from './components/MembershipUpgrade';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
 
 // Repair Engine Pages
 import Lesson from './pages/Lesson';
@@ -63,6 +68,7 @@ import { getFeatureFlags } from './firebase/config.featureFlags';
 // Components
 import Sidebar from './components/Sidebar';
 import TopNavBar from './components/TopNavBar';
+import { MembershipGate } from './components/membership';
 import useIsMobile from './hooks/useIsMobile';
 import { SidebarProvider } from './contexts/SidebarContext';
 import SidebarVisibility from './contexts/SidebarVisibility';
@@ -105,7 +111,7 @@ const router = createBrowserRouter([
       { path: '/smart-quiz/:quizId', element: <PrivateRoute><SmartQuiz /></PrivateRoute> },
       { path: '/smart-quiz-results/:quizId', element: <PrivateRoute><SmartQuizResults /></PrivateRoute> },
       { path: '/quiz-results/:quizId', element: <PrivateRoute><QuizResults /></PrivateRoute> },
-      { path: '/study-resources', element: <PrivateRoute><StudyResources /></PrivateRoute> },
+            { path: '/study-resources', element: <PrivateRoute><MembershipGate requiredTier="plus"><StudyResources /></MembershipGate></PrivateRoute> },
       { path: '/dashboard', element: <PrivateRoute><Dashboard /></PrivateRoute> },
       { path: '/progress', element: <PrivateRoute><ProgressDashboard /></PrivateRoute> },
       { path: '/skills', element: <PrivateRoute><SkillsPractice /></PrivateRoute> },
@@ -131,6 +137,11 @@ const router = createBrowserRouter([
       { path: '/admin/graph-generation', element: <PrivateRoute><GraphGenerationPage /></PrivateRoute> },
       { path: '/admin/graph-descriptions', element: <PrivateRoute><GraphDescriptionTool /></PrivateRoute> },
       { path: '/admin/learning-content', element: <PrivateRoute><AdminLearningContent /></PrivateRoute> },
+      { path: '/admin/membership-management', element: <PrivateRoute><MembershipManagement /></PrivateRoute> },
+      { path: '/membership', element: <PrivateRoute><MembershipPage /></PrivateRoute> },
+      { path: '/membership/upgrade', element: <PrivateRoute><MembershipUpgrade /></PrivateRoute> },
+      { path: '/payment/success', element: <PrivateRoute><PaymentSuccess /></PrivateRoute> },
+      { path: '/payment/cancel', element: <PrivateRoute><PaymentCancel /></PrivateRoute> },
       { path: '*', element: <Navigate to="/" /> },
     ],
   },

@@ -18,6 +18,7 @@ const bankRouter = require('./bankRoutes');
 const conceptsRouter = require('./conceptsAPI');
 const conceptDetailRouter = require('./conceptDetailRoutes');
 const questionsRouter = require('./questionsAPI');
+const stripeRouter = require('./stripeRoutes');
 // Conditionally load graph generation modules only if dependencies are available
 let graphGenerationPlotlyRouter;
 console.log('--- ENV VARS FOR GRAPH GENERATION ---');
@@ -165,6 +166,7 @@ app.use('/api/bank', bankRouter);
 app.use('/api/concepts', conceptsRouter);
 app.use('/api/concepts', conceptDetailRouter);
 app.use('/api/questions', questionsRouter);
+app.use('/api/stripe', attachFirebaseAdmin, stripeRouter);
 
 // Serve React build files in production
 if (process.env.NODE_ENV === 'production') {

@@ -38,6 +38,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userMembership, setUserMembership] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [fcmToken, setFcmToken] = useState(null);
@@ -53,12 +54,15 @@ export function AuthProvider({ children }) {
         displayName: name
       });
       
-      // Create a user document in Firestore
+      // Create a user document in Firestore with Free tier membership
       await setDoc(doc(db, "users", userCredential.user.uid), {
         name,
         email,
         createdAt: new Date().toISOString(),
-        examResults: []
+        examResults: [],
+        membershipTier: 'free',
+        membershipStartDate: new Date().toISOString(),
+        membershipEndDate: null // null for free tier, date for paid tiers
       });
       
       // Create default "Deck 1" flashcard deck for the new user
@@ -394,6 +398,107 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Get user's membership information
+  async function getUserMembership(userParam = null) {
+    const user = userParam || currentUser;
+    if (!user) {
+      setUserMembership(null);
+      return null;
+    }
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userRef);
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const membership = {
+          tier: userData.membershipTier || 'free',
+          startDate: userData.membershipStartDate,
+          endDate: userData.membershipEndDate
+        };
+        
+        // Check if paid membership has expired
+        if (membership.tier !== 'free' && membership.endDate) {
+          const endDate = new Date(membership.endDate);
+          const now = new Date();
+          
+          if (now > endDate) {
+            // Membership expired, downgrade to free
+            await updateMembershipTier('free');
+            membership.tier = 'free';
+            membership.endDate = null;
+          }
+        }
+        
+        setUserMembership(membership);
+        return membership;
+      }
+      return { tier: 'free', startDate: null, endDate: null };
+    } catch (err) {
+      console.error("Error getting user membership:", err);
+      return { tier: 'free', startDate: null, endDate: null };
+    }
+  }
+
+  // Update user's membership tier
+  async function updateMembershipTier(newTier, durationMonths = null) {
+    if (!currentUser) return false;
+    
+    try {
+      const userRef = doc(db, "users", currentUser.uid);
+      const updateData = {
+        membershipTier: newTier,
+        membershipStartDate: new Date().toISOString()
+      };
+      
+      // Calculate end date for paid tiers
+      if (newTier !== 'free' && durationMonths) {
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + durationMonths);
+        updateData.membershipEndDate = endDate.toISOString();
+      } else if (newTier === 'free') {
+        updateData.membershipEndDate = null;
+      }
+      
+      await setDoc(userRef, updateData, { merge: true });
+      
+      // Update local state
+      const newMembership = {
+        tier: newTier,
+        startDate: updateData.membershipStartDate,
+        endDate: updateData.membershipEndDate
+      };
+      setUserMembership(newMembership);
+      
+      return true;
+    } catch (err) {
+      console.error("Error updating membership tier:", err);
+      return false;
+    }
+  }
+
+  // Check if user has access to a specific feature based on membership tier
+  function hasFeatureAccess(requiredTier) {
+    if (!userMembership) return false;
+    
+    const tierHierarchy = { 'free': 0, 'plus': 1, 'max': 2 };
+    const userTierLevel = tierHierarchy[userMembership.tier] || 0;
+    const requiredTierLevel = tierHierarchy[requiredTier] || 0;
+    
+    return userTierLevel >= requiredTierLevel;
+  }
+
+  // Get membership tier display name
+  function getMembershipDisplayName(tier) {
+    const displayNames = {
+      'free': 'Free',
+      'plus': 'Plus',
+      'max': 'Max'
+    };
+    return displayNames[tier] || 'Free';
+  }
+
   // Enable or disable notifications
   async function toggleNotifications() {
     if (!currentUser) return false;
@@ -419,14 +524,18 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
-      setLoading(false);
       
-      // If user is logged in, try to initialize notifications
+      // If user is logged in, get their membership info and initialize notifications
       if (user) {
+        await getUserMembership(user);
         initializeNotifications(user.uid);
+      } else {
+        setUserMembership(null);
       }
+      
+      setLoading(false);
     });
     
     // Set up notification listener
@@ -458,6 +567,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
+    userMembership,
     signup,
     login,
     logout,
@@ -466,6 +576,10 @@ export function AuthProvider({ children }) {
     getLatestExamResult,          // Add new function to context
     getExamResultById,            // Add new function to context
     getUserResults,
+    getUserMembership,
+    updateMembershipTier,
+    hasFeatureAccess,
+    getMembershipDisplayName,
     error,
     notificationsEnabled,
     toggleNotifications,

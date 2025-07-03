@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../styles/Sidebar.css';
 import { useSidebar } from '../contexts/SidebarContext';
+import { useAuth } from '../contexts/AuthContext';
+import { MembershipBadge } from './membership';
 import {
   FaChartBar,          // Progress Dashboard
   FaClipboardList,     // Practice Exams
@@ -12,7 +14,8 @@ import {
   FaPuzzlePiece,       // Concept Bank
   FaChevronLeft,       // Collapse icon
   FaChevronRight,      // Expand icon
-  FaTrophy             // All Results
+  FaTrophy,            // All Results
+  FaCrown              // Membership
 } from 'react-icons/fa';
 
 const navItems = [
@@ -22,12 +25,14 @@ const navItems = [
   { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
   { path: '/all-results', icon: <FaTrophy />, label: 'All Results' },
+  { path: '/membership', icon: <FaCrown />, label: 'Membership' },
   { path: '/profile', icon: <FaUserCircle />, label: 'Profile' },
 ];
 
 const Sidebar = () => {
   const location = useLocation();
   const { isCollapsed, isMobile, isHidden, toggleSidebar } = useSidebar();
+  const { userMembership, hasFeatureAccess } = useAuth();
 
   // Don't render sidebar at all when hidden (exam mode)
   if (isHidden) {
@@ -49,17 +54,39 @@ const Sidebar = () => {
         <div className="sidebar-header">
           {/* You can put a logo or app name here */}
           <h3>BlueBook Prep</h3>
+          {userMembership && !isCollapsed && (
+            <div className="sidebar-membership">
+              <MembershipBadge tier={userMembership.tier} size="small" />
+            </div>
+          )}
         </div>
         <nav className="sidebar-nav">
           <ul>
-            {navItems.map((item) => (
-              <li key={item.path} className={location.pathname.startsWith(item.path) ? 'active' : ''}>
-                <Link to={item.path} onClick={isMobile ? toggleSidebar : undefined}>
-                  <span className="sidebar-icon">{item.icon}</span>
-                  <span className="sidebar-label">{item.label}</span>
-                </Link>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isStudyResources = item.path === '/study-resources';
+              const canAccessStudyResources = hasFeatureAccess('plus');
+
+              if (isStudyResources && !canAccessStudyResources) {
+                return (
+                  <li key={item.path} className={location.pathname.startsWith(item.path) ? 'active' : ''}>
+                    <Link to="/membership" onClick={isMobile ? toggleSidebar : undefined}>
+                      <span className="sidebar-icon">{item.icon}</span>
+                      <span className="sidebar-label">{item.label}</span>
+                      <span className="pro-badge">Pro</span>
+                    </Link>
+                  </li>
+                );
+              }
+
+              return (
+                <li key={item.path} className={location.pathname.startsWith(item.path) ? 'active' : ''}>
+                  <Link to={item.path} onClick={isMobile ? toggleSidebar : undefined}>
+                    <span className="sidebar-icon">{item.icon}</span>
+                    <span className="sidebar-label">{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <div className="sidebar-footer">

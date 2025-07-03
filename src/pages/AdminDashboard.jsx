@@ -1935,6 +1935,12 @@ const migrateExistingQuestions = async () => {
             Skills
           </button>
           <button 
+            className={`tab-button`}
+            onClick={() => navigate('/admin/membership-management')}
+          >
+            Membership Management
+          </button>
+          <button 
             className={`tab-button ${activeTab === 'subcategorySettings' ? 'active' : ''}`}
             onClick={() => navigate('/admin/subcategory-settings')}
           >
