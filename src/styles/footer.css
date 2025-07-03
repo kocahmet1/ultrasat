@@ -78,7 +78,7 @@
 }
 
 .nav-button {
-  /* Styling */
+  /* Default styles for nav-buttons, can be overridden */
   height: 36px;
   padding: 0 16px;
   border-radius: 4px;
@@ -94,11 +94,25 @@
   cursor: pointer;
 }
 
-.nav-button:disabled {
-  background-color: #f0f0f0;
-  color: #a0a0a0;
+.footer-nav-button {
+  background-color: #1A4AAB !important; /* Even Darker Blue */
+  color: white !important;
+  border-radius: 999px !important;
+  border: none !important;
+  height: 40px;
+  padding: 0 30px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.footer-nav-button:hover {
+  background-color: #133B8F !important; /* Even Darker Hover */
+}
+
+.footer-nav-button:disabled {
+  background-color: #6B88C4 !important; /* Even Darker Disabled */
+  color: #e0e0e0 !important;
   cursor: not-allowed;
-  border-color: #e0e0e0;
 }
 
 .dropdown-arrow {

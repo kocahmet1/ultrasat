@@ -1,3 +1,53 @@
+.total-score-container {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.total-score-container h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0;
+}
+
+.total-score-container p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.scores-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+.scores-row .score-card {
+  flex: 1;
+  padding: 2px 15px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.scores-row .score-card h2 {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+  color: #495057;
+}
+
+.scores-row .score-card p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #007bff;
+}
+
 /* Modern Results Page Styling */
 .results-container {
   display: flex;
@@ -45,10 +95,90 @@
 }
 
 /* Results card in split view mode */
+/* Action buttons in summary view */
+.results-card.results-summary .action-buttons-container {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.results-card.results-summary .secondary-actions {
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.results-card.results-summary .secondary-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Results card in split view mode - FINAL FIX */
 .results-card.results-summary {
-  flex: 0 0 50%;
-  max-width: 50%;
+  flex: 0 0 45%;
+  max-width: 45%;
   padding: 2rem;
+  align-self: flex-start;
+  display: block; /* Use standard block layout */
+}
+
+.results-card.results-summary .total-score-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.results-card.results-summary .scores-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.results-card.results-summary .scores-row .score-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.results-card.results-summary .scores-row .score-card h2 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #495057;
+  margin: 0;
+}
+
+.results-card.results-summary .scores-row .score-card p {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #007bff;
+  margin: 0;
+}
+
+.results-card.results-summary .review-modules-section {
+  text-align: center;
+}
+
+.results-card.results-summary .review-modules-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.results-card.results-summary .module-review-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.results-card.results-summary .module-review-button {
+  padding: 0.75rem 0.5rem;
+  font-size: 0.8rem;
+  white-space: normal;
+  line-height: 1.2;
+  text-align: center;
 }
 
 /* Header Styling */
@@ -230,8 +360,9 @@
 }
 
 /* Module Review Section */
+
 .review-modules-section {
-  margin: 3rem 0;
+  margin: 1rem 0 0;
   text-align: center;
 }
 
@@ -266,43 +397,28 @@
 }
 
 .module-review-button {
-  padding: 1.25rem 1.5rem;
-  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease-in-out;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-size: 1rem;
+  background-color: #e6e6fa; /* Pastel Lavender */
+  color: #333;
+  font-size: 0.9rem;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-  position: relative;
-  overflow: hidden;
-  min-height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.module-review-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
 
-.module-review-button:hover::before {
-  left: 100%;
-}
+
+
 
 .module-review-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+  background-color: #dcd0ff; /* Darker Pastel Lavender */
+  color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .module-review-button:active {
@@ -311,29 +427,27 @@
 
 /* Active state for selected module button */
 .module-review-button.active {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
-  box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4) !important;
+  background-color: #c1b6f0 !important; /* A darker pastel for active state */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
   transform: translateY(-2px) !important;
+  color: #fff !important;
 }
 
 .module-review-button.active::before {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
-/* Ensure no conflicting styles */
-.module-review-buttons .module-review-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  color: white !important;
-  border: none !important;
-}
+/* Conflicting gradient style removed */
 
 /* Action Buttons Container */
 .action-buttons-container {
-  margin-top: 3rem;
+  margin-top: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid #e9ecef;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 0.5rem;
 }
 
 .primary-actions {
@@ -388,19 +502,17 @@
 }
 
 .secondary-button {
-  padding: 1rem 2rem;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #6c757d;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #adb5bd;
   background: transparent;
-  color: #6c757d;
-  font-size: 1rem;
+  color: #495057;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
-  position: relative;
-  overflow: hidden;
+  letter-spacing: 0.5px;
 }
 
 .secondary-button::before {
@@ -420,10 +532,9 @@
 }
 
 .secondary-button:hover {
-  color: white;
+  color: #fff;
+  background-color: #6c757d;
   border-color: #6c757d;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
 }
 
 /* Focus Areas */
@@ -1114,10 +1225,11 @@
   border-bottom: 2px solid rgba(0, 0, 0, 0.05);
 }
 
-.question-number {
+.module-questions-review .question-container-review .question-review-header .question-number {
   font-weight: 700;
-  color: #495057;
+  color: #253B6E !important; /* Parliament Blue */
   font-size: 1.1rem;
+  background-color: transparent !important;
 }
 
 .question-status {

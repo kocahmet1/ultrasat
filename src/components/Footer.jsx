@@ -41,15 +41,15 @@ const Footer = ({
       <div className="footer-right">
         <div className="navigation-buttons">
           <button 
-            className="nav-button prev-button" 
+            className="nav-button footer-nav-button prev-button" 
             onClick={handlePrevious}
             disabled={isFirstQuestion}
           >
-            Previous
+            Back
           </button>
 
           <button 
-            className="nav-button next-button" 
+            className="nav-button footer-nav-button next-button" 
             onClick={handleNext}
           >
             {isLastQuestion ? 'Finish' : 'Next'}

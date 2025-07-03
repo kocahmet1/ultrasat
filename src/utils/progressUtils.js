@@ -586,14 +586,14 @@ export const calculateEstimatedSATScore = async (userId) => {
       return { estimatedScore: 0, confidence: 0, breakdown };
     }
 
-    // Calculate section scores (200-800 each, based on weighted accuracy)
+    // Calculate section scores (200-800 each, rounded to nearest 10)
     const readingWritingEstimate = readingWritingWeight > 0 
-      ? Math.round(200 + (readingWritingScore / readingWritingWeight) * 600) // 200 + (0-100% accuracy * 600) = 200-800
-      : 200; // Minimum if no data
+      ? Math.round((200 + (readingWritingScore / readingWritingWeight) * 600) / 10) * 10
+      : 200;
     
     const mathEstimate = mathWeight > 0 
-      ? Math.round(200 + (mathScore / mathWeight) * 600) // 200 + (0-100% accuracy * 600) = 200-800
-      : 200; // Minimum if no data
+      ? Math.round((200 + (mathScore / mathWeight) * 600) / 10) * 10
+      : 200;
     
     // Total SAT score (400-1600)
     const estimatedScore = readingWritingEstimate + mathEstimate;

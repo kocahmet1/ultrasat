@@ -43,14 +43,14 @@ const Sidebar = () => {
       
       <div className={`sidebar ${isCollapsed ? 'sidebar-collapsed' : ''} ${isMobile ? 'sidebar-mobile' : ''}`}>
 
+        <div className="sidebar-collapse" onClick={toggleSidebar}>
+          {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+        </div>
         <div className="sidebar-header">
           {/* You can put a logo or app name here */}
           <h3>BlueBook Prep</h3>
         </div>
         <nav className="sidebar-nav">
-          <div className="sidebar-collapse" onClick={toggleSidebar}>
-            {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
-          </div>
           <ul>
             {navItems.map((item) => (
               <li key={item.path} className={location.pathname.startsWith(item.path) ? 'active' : ''}>

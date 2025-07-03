@@ -397,8 +397,8 @@ function ExamController() {
     setScore(percentageScore);
     
     // Calculate scaled section scores (for SAT-like 800 scale per section)
-    const readingWritingScore = Math.round((readingWritingCorrect / (readingWritingTotal || 1)) * 800);
-    const mathScore = Math.round((mathCorrect / (mathTotal || 1)) * 800);
+    const readingWritingScore = Math.round((200 + (readingWritingCorrect / (readingWritingTotal || 1)) * 600) / 10) * 10;
+    const mathScore = Math.round((200 + (mathCorrect / (mathTotal || 1)) * 600) / 10) * 10;
     
     // Save score to local storage for backward compatibility
     localStorage.setItem('examScore', percentageScore);

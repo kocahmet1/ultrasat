@@ -10,6 +10,7 @@ import ExamModule from '../components/ExamModule';
 import '../styles/PracticeExamController.css';
 import { getSubcategoryProgress, updateSubcategoryProgress } from '../utils/progressUtils';
 import { inferLevelFromAccuracy } from '../utils/smartQuizUtils';
+import IntermissionScreen from '../components/IntermissionScreen';
 
 const PracticeExamController = () => {
   const { examId } = useParams();
@@ -26,7 +27,7 @@ const PracticeExamController = () => {
   const [error, setError] = useState(null);
   
   // Track if the exam is in progress or completed
-  const [examStatus, setExamStatus] = useState('loading'); // loading, intro, in-progress, completed
+  const [examStatus, setExamStatus] = useState('loading'); // loading, intro, in-progress, intermission, completed
   
   // Load the practice exam and its modules
   useEffect(() => {
@@ -111,6 +112,16 @@ const PracticeExamController = () => {
     setSidebarHidden(true);
   };
   
+  const handleIntermissionComplete = () => {
+    if (currentModuleIndex < modules.length - 1) {
+      setCurrentModuleIndex(currentModuleIndex + 1);
+      setExamStatus('in-progress');
+    } else {
+      setExamStatus('completed');
+      setSidebarHidden(false);
+    }
+  };
+
   // Handle module completion
   const handleModuleComplete = async (moduleResults) => {
     const currentModule = modules[currentModuleIndex];
@@ -280,11 +291,20 @@ const PracticeExamController = () => {
       }
     }
 
-    // Move to the next module or complete the exam
-    if (currentModuleIndex < modules.length - 1) {
-      setCurrentModuleIndex(prev => prev + 1);
+    // Move to the next module, show intermission, or complete the exam
+    const moduleNumber = currentModule.moduleNumber;
+    if (moduleNumber === 2 && currentModuleIndex < modules.length - 1) {
+      setExamStatus('intermission');
+    } else if (currentModuleIndex < modules.length - 1) {
+      setCurrentModuleIndex(currentModuleIndex + 1);
     } else {
+      // All modules are completed
       setExamStatus('completed');
+      // Show sidebar again when exam is finished
+      setSidebarHidden(false);
+      
+      // Save the comprehensive result
+      handleViewResults();
     }
   };
   
@@ -426,8 +446,8 @@ const PracticeExamController = () => {
     const percentageScore = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
     
     // Calculate scaled section scores (for SAT-like 800 scale per section)
-    const readingWritingScore = Math.round((readingWritingCorrect / (readingWritingTotal || 1)) * 800);
-    const mathScore = Math.round((mathCorrect / (mathTotal || 1)) * 800);
+    const readingWritingScore = Math.round((200 + (readingWritingCorrect / (readingWritingTotal || 1)) * 600) / 10) * 10;
+    const mathScore = Math.round((200 + (mathCorrect / (mathTotal || 1)) * 600) / 10) * 10;
     
     console.log('Calculated scores:', {
       percentageScore, 
@@ -624,6 +644,15 @@ const PracticeExamController = () => {
     );
   }
   
+  // Render intermission screen
+  if (examStatus === 'intermission') {
+    return (
+      <IntermissionScreen 
+        onIntermissionComplete={handleIntermissionComplete} 
+      />
+    );
+  }
+
   // Render exam in progress (current module)
   if (examStatus === 'in-progress' && modules.length > 0) {
     const currentModule = modules[currentModuleIndex];

@@ -92,12 +92,18 @@ export const getUserRankings = async (userId) => {
     const questionsPosition = questionsSorted.findIndex(user => user.userId === userId) + 1;
     const accuracyPosition = accuracySorted.findIndex(user => user.userId === userId) + 1;
     
-    // Calculate percentiles (lower percentile is better, e.g. top 5%)
+    // Calculate percentiles (higher percentile is better, e.g. better than 95% of users)
     const validUsers = validUsersStats.length;
-    const questionsPercentile = Math.round((questionsPosition / validUsers) * 100);
-    const accuracyPercentile = Math.round((accuracyPosition / validUsers) * 100);
-    
-    console.log(`Rankings for user ${userId}: Questions ${questionsPosition}/${validUsers} (${questionsPercentile}%), Accuracy ${accuracyPosition}/${validUsers} (${accuracyPercentile}%)`);
+
+    // Percentile rank: ((N - P) / (N - 1)) * 100 for N > 1
+    const questionsPercentile = validUsers > 1 
+        ? Math.round(((validUsers - questionsPosition) / (validUsers - 1)) * 100)
+        : (validUsers === 1 ? 100 : 0);
+    const accuracyPercentile = validUsers > 1
+        ? Math.round(((validUsers - accuracyPosition) / (validUsers - 1)) * 100)
+        : (validUsers === 1 ? 100 : 0);
+
+    console.log(`Rankings for user ${userId}: Questions ${questionsPosition}/${validUsers} (Percentile: ${questionsPercentile}%), Accuracy ${accuracyPosition}/${validUsers} (Percentile: ${accuracyPercentile}%)`);
     
     return {
       questionsRanking: {

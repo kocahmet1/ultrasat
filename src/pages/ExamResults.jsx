@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getFirestore } from 'firebase/firestore';
 import { FaArrowRight } from 'react-icons/fa';
+import { SUBCATEGORY_SUBJECTS } from '../utils/subcategoryConstants';
 import '../styles/Results.css';
 
 function ExamResults() {
@@ -102,85 +103,95 @@ function ExamResults() {
     return resultModuleData;
   };
 
+    const calculateScoresFromExamData = (modules) => {
+    const subcategoryWeights = {
+      'reading-writing': 4.0,
+      'math': 2.1,
+    };
+
+    let readingWritingScore = 0;
+    let mathScore = 0;
+    let readingWritingWeight = 0;
+    let mathWeight = 0;
+
+    const subcategoryPerformance = {};
+
+    modules.forEach(module => {
+      if (module.responses) {
+        module.responses.forEach(response => {
+          const subcategoryId = response.subcategoryId || (response.question && response.question.subcategoryId);
+          if (subcategoryId) {
+            if (!subcategoryPerformance[subcategoryId]) {
+              subcategoryPerformance[subcategoryId] = { correct: 0, total: 0 };
+            }
+            if (response.isCorrect) {
+              subcategoryPerformance[subcategoryId].correct++;
+            }
+            subcategoryPerformance[subcategoryId].total++;
+          }
+        });
+      }
+    });
+
+    Object.keys(subcategoryPerformance).forEach(subcategoryId => {
+      const performance = subcategoryPerformance[subcategoryId];
+      if (performance.total > 0) {
+        const accuracy = (performance.correct / performance.total) * 100;
+        const subject = SUBCATEGORY_SUBJECTS[subcategoryId] === 1 ? 'reading-writing' : 'math';
+        const weight = subcategoryWeights[subject];
+        const scoreContribution = (accuracy / 100) * weight;
+
+        if (subject === 'reading-writing') {
+          readingWritingScore += scoreContribution;
+          readingWritingWeight += weight;
+        } else {
+          mathScore += scoreContribution;
+          mathWeight += weight;
+        }
+      }
+    });
+
+    const readingWritingEstimate = readingWritingWeight > 0
+      ? Math.round((200 + (readingWritingScore / readingWritingWeight) * 600) / 10) * 10
+      : 200;
+
+    const mathEstimate = mathWeight > 0
+      ? Math.round((200 + (mathScore / mathWeight) * 600) / 10) * 10
+      : 200;
+
+    return {
+      readingWritingScore: readingWritingEstimate,
+      mathScore: mathEstimate,
+      totalScore: readingWritingEstimate + mathEstimate
+    };
+  };
+
   const processAndSetExamData = (data) => {
-    console.log('[ExamResults] processAndSetExamData - Input data (raw):', data);
-    console.log('[ExamResults] processAndSetExamData - Input data.modules (examModules) (raw):', data.modules);
-    const { 
-        overallScore, 
-        scores, 
-        responses: examResponses, 
-        modules: examModules, 
-        totalQuestions, 
-        correctAnswers 
-    } = data;
-
-    const currentTotalCorrect = correctAnswers !== undefined ? correctAnswers : (parseInt(localStorage.getItem('examAnswered') || '0'));
-    const currentTotalQuestions = totalQuestions !== undefined ? totalQuestions : (parseInt(localStorage.getItem('examTotal') || '0'));
-
-    setScore(currentTotalCorrect);
-    setAnswered(currentTotalCorrect);
-    setTotal(currentTotalQuestions);
-
-    let rwScore = 0;
-    let mScore = 0;
-
-    if (scores && scores.readingWriting !== undefined && scores.math !== undefined) {
-        rwScore = scores.readingWriting;
-        mScore = scores.math;
-    } else if (examModules && examResponses) {
-        // Improved module identification for Reading/Writing vs Math
-        const rwModules = examModules.filter(m => {
-            const title = (m.title || '').toLowerCase();
-            return title.includes('reading') || title.includes('writing') || m.moduleNumber <= 2;
-        });
-        const mathModules = examModules.filter(m => {
-            const title = (m.title || '').toLowerCase();
-            return title.includes('math') || m.moduleNumber > 2;
-        });
-
-        const rwCorrect = examResponses
-            .filter(r => rwModules.some(m => m.id === r.moduleId))
-            .reduce((sum, r) => sum + (r.isCorrect ? 1 : 0), 0);
-        
-        const mathCorrect = examResponses
-            .filter(r => mathModules.some(m => m.id === r.moduleId))
-            .reduce((sum, r) => sum + (r.isCorrect ? 1 : 0), 0);
-        
-        // Ensure we don't divide by zero by using a minimum of 1 question per section
-        const rwTotalQuestions = Math.max(examResponses.filter(r => rwModules.some(m => m.id === r.moduleId)).length, 1);
-        const mathTotalQuestions = Math.max(examResponses.filter(r => mathModules.some(m => m.id === r.moduleId)).length, 1);
-        
-        console.log('[ExamResults] Section score calculation:', {
-            rwModules: rwModules.map(m => ({ id: m.id, title: m.title, number: m.moduleNumber })),
-            mathModules: mathModules.map(m => ({ id: m.id, title: m.title, number: m.moduleNumber })),
-            rwCorrect,
-            mathCorrect,
-            rwTotalQuestions,
-            mathTotalQuestions
-        });
-        
-        rwScore = Math.round((rwCorrect / rwTotalQuestions) * 800);
-        mScore = Math.round((mathCorrect / mathTotalQuestions) * 800);
+    if (!data || !data.modules || !data.responses) {
+      setPageError("Failed to process exam data because it was incomplete.");
+      setIsLoading(false);
+      return;
     }
-    setReadingWritingScore(rwScore);
-    setMathScore(mScore);
 
-    if (examModules && examResponses) {
-        console.log('[ExamResults] processAndSetExamData - examModules:', JSON.stringify(examModules, null, 2));
-        console.log('[ExamResults] processAndSetExamData - examResponses:', JSON.stringify(examResponses, null, 2));
-      const processedModules = processModuleData(examModules, examResponses);
-      console.log('[ExamResults] processAndSetExamData - processedModules for review:', JSON.stringify(processedModules, null, 2));
-      setModuleData(processedModules);
-      
-      // Identify weakest subcategories to recommend for adaptive quizzes
-      const weakAreas = getWeakSubcategories(processedModules);
-      console.log('[ExamResults] processAndSetExamData - Identified weak subcategories:', weakAreas);
-      setWeakSubcats(weakAreas);
-    } else {
-        console.warn('[ExamResults] processAndSetExamData - Missing examModules or examResponses. Setting moduleData to empty array.');
-        setModuleData([]);
-    }
-    setIsLoading(false);
+    const { exam, modules: examModules, responses: examResponses } = data;
+
+    setExamDetails(exam);
+
+    const processedModuleData = processModuleData(examModules, examResponses);
+    setModuleData(processedModuleData);
+
+    const { readingWritingScore, mathScore, totalScore } = calculateScoresFromExamData(processedModuleData);
+    setReadingWritingScore(readingWritingScore);
+    setMathScore(mathScore);
+    setScore(totalScore);
+
+    const totalAnswered = examResponses.length;
+    const totalQuestions = examModules.reduce((acc, module) => acc + (module.questions ? module.questions.length : 0), 0);
+    setAnswered(totalAnswered);
+    setTotal(totalQuestions);
+
+    const weakAreas = getWeakSubcategories(processedModuleData);
+    setWeakSubcats(weakAreas);
   };
   
   useEffect(() => {
@@ -191,143 +202,45 @@ function ExamResults() {
       try {
         let examData;
         
-        // Case 1: URL includes an examId parameter - fetch that specific exam
         if (examId) {
-          console.log(`[ExamResults] Fetching specific exam with ID: ${examId}`);
-          examData = await getExamResultById(examId, true);  // true = include responses
-          console.log('[ExamResults] Received exam data by ID:', JSON.stringify({
-            hasData: !!examData,
-            id: examId,
-            overallScore: examData?.overallScore,
-            totalQuestions: examData?.totalQuestions,
-            correctAnswers: examData?.correctAnswers,
-            responseCount: examData?.responses?.length,
-            moduleCount: examData?.modules?.length
-          }, null, 2));
-          
+          examData = await getExamResultById(examId, true);
           if (!examData) {
-            setPageError("Exam result not found. The exam may have been deleted or you may not have permission to view it.");
+            setPageError("Exam result not found.");
             setIsLoading(false);
             return;
           }
-        } 
-        // Case 2: Check location state for an examId (e.g., passed from ExamController)
-        else if (location?.state?.examId) {
-          console.log(`[ExamResults] Fetching exam from location state: ${location.state.examId}`);
+        } else if (location?.state?.examId) {
           examData = await getExamResultById(location.state.examId, true);
-          
-          if (!examData) {
-            setPageError("Could not load the exam you just completed. Trying to load the latest exam instead.");
-            // Fall through to Case 3
-          } else {
-            // Successfully loaded from location state
-            console.log('Successfully loaded exam from location state');
-          }
         }
         
-        // Case 3: No examId specified - try to get latest exam from Firestore
         if (!examData && currentUser) {
-          console.log('Attempting to fetch latest exam from Firestore');
           examData = await getLatestExamResult();
         }
         
-        // Case 4: Fallback to localStorage (for backward compatibility)
         if (!examData) {
-          console.log('No exam found in Firestore, falling back to localStorage');
-          const savedAnswered = localStorage.getItem('examAnswered');
-          const savedTotal = localStorage.getItem('examTotal');
           const responsesFromStorage = JSON.parse(localStorage.getItem('examResponses') || '[]');
           const allModulesFromStorage = JSON.parse(localStorage.getItem('examModules') || '[]');
 
-          if (!savedAnswered || !savedTotal || responsesFromStorage.length === 0) {
-            setPageError("No exam data found. Please complete an exam first.");
-            setIsLoading(false);
-            return;
+          if (responsesFromStorage.length > 0 && allModulesFromStorage.length > 0) {
+            examData = {
+              responses: responsesFromStorage,
+              modules: allModulesFromStorage,
+              completedAt: new Date()
+            };
           }
-          
-          const totalCorrect = parseInt(savedAnswered);
-          const totalQuestions = parseInt(savedTotal);
-          const rwResponses = responsesFromStorage.filter(r => r.moduleId <= 2);
-          const mathResponses = responsesFromStorage.filter(r => r.moduleId > 2);
-          
-          // Calculate reading/writing and math scores
-          const rwCorrect = rwResponses.filter(r => r.isCorrect).length;
-          const mathCorrect = mathResponses.filter(r => r.isCorrect).length;
-          const rwTotal = rwResponses.length || 1;
-          const mathTotal = mathResponses.length || 1;
-          
-          const readingWritingScore = Math.round((rwCorrect / rwTotal) * 800);
-          const mathScore = Math.round((mathCorrect / mathTotal) * 800);
-          
-          examData = {
-            overallScore: Math.round((totalCorrect / totalQuestions) * 100),
-            scores: { readingWriting: readingWritingScore, math: mathScore },
-            correctAnswers: totalCorrect,
-            totalQuestions: totalQuestions,
-            responses: responsesFromStorage,
-            modules: allModulesFromStorage,
-            completedAt: new Date() // Current date as fallback
-          };
         }
         
-        // Process the exam data (from any source) and update state
-        setExamDetails(examData);
-        console.log('[ExamResults] Final examData before processing:', JSON.stringify({
-          source: examId ? 'examId' : location?.state?.examId ? 'locationState' : currentUser ? 'latestFirestore' : 'localStorage',
-          overallScore: examData.overallScore || 0,
-          correctAnswers: examData.correctAnswers || 0,
-          totalQuestions: examData.totalQuestions || 0,
-          readingWritingScore: examData.scores?.readingWriting || 0,
-          mathScore: examData.scores?.math || 0,
-          hasResponses: !!examData.responses,
-          responseCount: examData.responses?.length || 0,
-          hasModules: !!examData.modules,
-          moduleCount: examData.modules?.length || 0,
-          // For brevity, not logging full modules/responses here again if they are large
-          firstModuleTitle: examData.modules && examData.modules.length > 0 ? examData.modules[0].title : 'N/A',
-          firstResponseQuestionId: examData.responses && examData.responses.length > 0 ? examData.responses[0].questionId : 'N/A'
-        }, null, 2));
-        
-        // Set exam data into state variables
-        const overallScore = examData.overallScore || 0;
-        const correctAnswers = examData.correctAnswers || 0;
-        const totalQuestions = examData.totalQuestions || 0;
-        
-        setScore(correctAnswers);
-        setAnswered(correctAnswers);
-        setTotal(totalQuestions);
-        
-        // Set section scores
-        if (examData.scores) {
-          setReadingWritingScore(examData.scores.readingWriting || 0);
-          setMathScore(examData.scores.math || 0);
-        }
-        
-        // Process module data for review
-        if (examData.responses && examData.modules) {
-          const responses = examData.responses;
-          const modules = examData.modules;
-          
-          console.log('[ExamResults] Processing module data - modules:', modules);
-          console.log('[ExamResults] Processing module data - responses:', responses);
-          
-          // Need to reformat the data for review panel
-          const processedModules = processModuleData(modules, responses);
-          console.log('[ExamResults] Processed modules result:', processedModules);
-          setModuleData(processedModules);
+        if (examData) {
+            processAndSetExamData(examData);
+            setSavedToFirebase(true);
         } else {
-          console.warn('[ExamResults] Missing modules or responses data, setting empty moduleData');
-          console.log('[ExamResults] examData.modules:', examData.modules);
-          console.log('[ExamResults] examData.responses:', examData.responses);
-          setModuleData([]);
+            setPageError("No exam data found to display.");
         }
-        
-        // No need to call saveResultToFirebase if we just loaded from Firestore
-        setSavedToFirebase(true);
-        setIsLoading(false);
+
       } catch (error) {
         console.error('Error loading exam data:', error);
-        setPageError('An error occurred while loading exam data. Please try again later.');
+        setPageError('An error occurred while loading exam data.');
+      } finally {
         setIsLoading(false);
       }
     };
@@ -413,43 +326,20 @@ function ExamResults() {
         ) : (
           <>
             <div className={`results-card ${splitView ? 'results-summary' : ''}`}>
-              <h1>Exam Completed!</h1>
-              
-              <div className="score-circle">
-                <div className="score-percentage">
-                  <span className="percentage-value">
-                    {readingWritingScore + mathScore}
-                  </span>
+              <div className="total-score-container">
+                <h2>Total Score</h2>
+                <p>{readingWritingScore + mathScore} / 1600</p>
+              </div>
+              <div className="scores-row">
+                <div className="score-card reading-writing">
+                  <h2>Reading & Writing</h2>
+                  <p>{readingWritingScore}/800</p>
+                </div>
+                <div className="score-card math">
+                  <h2>Math</h2>
+                  <p>{mathScore}/800</p>
                 </div>
               </div>
-              
-              <div className="sat-score-summary">
-                <h2>Your SAT Score: <span className="total-sat-score">{readingWritingScore + mathScore}</span>/1600</h2>
-              </div>
-              
-              {/* Section Breakdown */}
-              <div className="section-breakdown">
-                <h2>Scores by Section</h2>
-                <div className="section-columns">
-                  <div className="section-column">
-                    <h3>Reading & Writing</h3>
-                    <div className="section-score">{readingWritingScore}/800</div>
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: `${(readingWritingScore/800)*100}%` }}></div>
-                    </div>
-                  </div>
-                  
-                  <div className="section-column">
-                    <h3>Math</h3>
-                    <div className="section-score">{mathScore}/800</div>
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: `${(mathScore/800)*100}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Module Review Section - Always show buttons */}
               <div className="review-modules-section">
                 <h2>Review Questions by Module</h2>
                 <div className="module-review-buttons">
@@ -511,11 +401,10 @@ function ExamResults() {
                   </p>
                 )}
               </div>
-              
               {!splitView && (
                 <>
                   {/* Focus Areas section */}
-                  {weakSubcats && weakSubcats.length > 0 && (
+                  {/* {weakSubcats && weakSubcats.length > 0 && (
                     <div className="focus-areas-container">
                       <h2>Your Focus Areas</h2>
                       <p>We've identified these subcategories as needing improvement based on your performance.</p>
@@ -543,37 +432,22 @@ function ExamResults() {
                         ))}
                       </div>
                     </div>
-                  )}
-                  
-                  {/* Consolidated Action Buttons Section */}
-                  <div className="action-buttons-container">
-                    <div className="primary-actions">
-                      <button className="primary-button" onClick={startNewExam}>
-                        START A NEW EXAM
-                      </button>
-                    </div>
-                    <div className="secondary-actions">
-                      <button className="secondary-button" onClick={() => navigate('/all-results')}>
-                        VIEW ALL EXAM RESULTS
-                      </button>
-                      <button className="secondary-button" onClick={returnHome}>
-                        BACK TO HOME
-                      </button>
-                    </div>
-                  </div>
+                  )} */}
                 </>
               )}
+
+              {/* Consolidated Action Buttons Section */}
+              <div className="action-buttons-container">
+                <div className="secondary-actions">
+                  <button className="secondary-button" onClick={() => navigate('/all-results')}>
+                    VIEW ALL EXAM RESULTS
+                  </button>
+                  <button className="secondary-button" onClick={returnHome}>
+                    BACK TO HOME
+                  </button>
+                </div>
+              </div>
             </div>
-            
-            {splitView && activeReviewModule !== null && (
-              <button 
-                className="back-arrow-button inter-panel-back-arrow"
-                onClick={closeReviewPanel} 
-                title="Back to Results Summary"
-              >
-                &lsaquo; 
-              </button>
-            )}
             
             {splitView && activeReviewModule !== null && (
               <div className="module-review-panel">

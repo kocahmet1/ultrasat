@@ -84,19 +84,7 @@
   border-top: 1px solid #eaeaea;
 }
 
-.cross-out-toggle {
-  font-size: 12px;
-  padding: 5px 10px;
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
-  cursor: pointer;
-  margin-left: 10px;
-}
 
-.cross-out-toggle.active {
-  background-color: #e6ecff;
-  border-color: #0066cc;
-}
 
 /* Loading and error states */
 .loading, .error {

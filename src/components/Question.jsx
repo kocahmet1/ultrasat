@@ -95,6 +95,11 @@ const Question = ({
                   <button 
                     className={`cross-out-toggle ${showCrossOut ? 'active' : ''}`}
                     onClick={toggleCrossOut}
+                    style={{
+                      backgroundColor: showCrossOut ? '#133B8F' : '#1A4AAB',
+                      color: 'white',
+                      border: 'none'
+                    }}
                   >
                     ABC
                   </button>

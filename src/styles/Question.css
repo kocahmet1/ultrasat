@@ -124,13 +124,13 @@
 }
 
 .question-number {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #000000 !important; /* Black background */
+  color: #ffffff !important; /* White text */
   font-weight: bold;
   font-size: 18px;
   width: 35px;
   height: 35px;
-  border-radius: 5px;
+  border-radius: 5px !important; /* Rectangular shape */
   display: flex;
   justify-content: center;
   align-items: center;

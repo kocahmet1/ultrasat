@@ -54,25 +54,55 @@
   position: relative;
 }
 
-/* Collapse/expand icon inside navigation */
+/* Styles for the sidebar collapse/expand button */
 .sidebar-collapse {
   position: absolute;
-  left: -40px;
-  top: 10px;
+  top: 20px;
+  right: -20px; /* Positioned to hang off the right edge */
+  width: 40px;
+  height: 40px;
   background-color: var(--background-color-sidebar);
   color: var(--text-color-on-primary);
-  border-radius: 6px 0 0 6px;
-  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 1.2rem;
-}
-
-.sidebar.sidebar-collapsed .sidebar-collapse {
-  left: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 101; /* Ensure it's above other content */
 }
 
 .sidebar-collapse:hover {
   background-color: var(--background-color-sidebar-hover);
+  transform: scale(1.1);
+}
+
+/* When sidebar is expanded, pull the button inwards */
+.sidebar:not(.sidebar-collapsed) .sidebar-collapse {
+  transform: translateX(-45px);
+}
+
+.sidebar:not(.sidebar-collapsed) .sidebar-collapse:hover {
+  transform: translateX(-45px) scale(1.1);
+}
+
+/* Pulsating animation for the button in the collapsed state to draw attention */
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.7); /* --primary-color */
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(74, 144, 226, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0);
+  }
+}
+
+/* Apply animation only when collapsed */
+.sidebar.sidebar-collapsed .sidebar-collapse {
+  animation: pulse-animation 2s infinite;
 }
 
 .sidebar-nav ul {
