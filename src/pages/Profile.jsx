@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FaBell, FaBellSlash, FaBook, FaClipboardCheck, FaTrophy, FaBullseye, FaQuestionCircle, FaMedal, FaChartLine, FaSpinner } from 'react-icons/fa';
-import '../styles/Auth.css';
+import '../styles/Profile.css';
+import { getTierInfo, getAvailableUpgrades, MEMBERSHIP_TIERS } from '../utils/membershipUtils';
+import MembershipCard from '../components/membership/MembershipCard';
+import MembershipBadge from '../components/membership/MembershipBadge';
 import { db } from '../firebase/config';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { getUserRankings } from '../firebase/rankingServices';
 import CountUp from 'react-countup';
 
 function Profile() {
-  const { currentUser, logout, initializeNotifications, getUserResults } = useAuth();
+  const { currentUser, logout, initializeNotifications, getUserResults, userMembership, updateMembershipTier } = useAuth();
   const [error, setError] = useState('');
   const [notificationStatus, setNotificationStatus] = useState('unknown');
   const [notificationLoading, setNotificationLoading] = useState(false);
-  // Start with loading state but with default values of 0 to enable immediate rendering
   const [stats, setStats] = useState({
     totalQuestions: 0,
     practiceExamsCompleted: 0,
@@ -28,20 +30,19 @@ function Profile() {
     loading: true
   });
   
-  // Track data loading separately from animations, with separate states for stats and rankings
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [rankingsLoaded, setRankingsLoaded] = useState(false);
   const navigate = useNavigate();
+  const [isUpgrading, setIsUpgrading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   useEffect(() => {
-    // Check notification permission status
     if ("Notification" in window) {
       setNotificationStatus(Notification.permission);
     } else {
       setNotificationStatus('not-supported');
     }
 
-    // Load user statistics
     if (currentUser) {
       fetchUserStatistics();
       fetchUserRankings();
@@ -50,90 +51,49 @@ function Profile() {
   
   const fetchUserRankings = async () => {
     try {
-      // Keep rankings.loading as true during the fetch process
-      // but the UI will already be showing loading animations
       const rankingData = await getUserRankings(currentUser.uid);
-      
-      // Update rankings data
       setRankings({
         ...rankingData,
         loading: false
       });
-      
-      // Mark rankings as loaded immediately with a small delay
       setTimeout(() => setRankingsLoaded(true), 300);
     } catch (err) {
       console.error('Error fetching user rankings:', err);
       setRankings(prev => ({ ...prev, loading: false }));
-      
-      // Even in case of error, we want to mark rankings as loaded
       setTimeout(() => setRankingsLoaded(true), 300);
     }
   };
   
   const fetchUserStatistics = async () => {
     try {
-      // Start animations immediately by showing the loading UI
-      // We keep stats.loading as true during the fetch process
-      
-      // Initialize counters
       let totalQuestions = 0;
-      
-      // Fetch questions attempted from userProgress collection (mainly practice exam questions)
       const userProgressRef = collection(db, 'userProgress');
       const progressQuery = query(userProgressRef, where('userId', '==', currentUser.uid));
       const progressSnapshot = await getDocs(progressQuery);
       const examQuestionsCount = progressSnapshot.size;
       totalQuestions += examQuestionsCount;
       
-      // Fetch practice exams completed from the user's practiceExams subcollection
       const practiceExamsRef = collection(db, `users/${currentUser.uid}/practiceExams`);
       const examsSnapshot = await getDocs(practiceExamsRef);
       
-      // Get legacy exam results too
       const legacyResults = await getUserResults();
       const practiceExamsCompleted = examsSnapshot.size + legacyResults.length;
 
-      // For quizzes, check the user's progress collection which stores adaptive quiz history
       let quizzesCompleted = 0;
       let quizQuestionsCount = 0;
-      try {
-        // Progress subcollection contains documents for each subcategory
-        const userProgressColRef = collection(db, `users/${currentUser.uid}/progress`);
-        const subcategoriesSnapshot = await getDocs(userProgressColRef);
-        
-        // Each subcategory progress document has an 'attempts' field that counts quiz attempts
-        // and a totalQuestions field that counts the number of questions attempted
-        subcategoriesSnapshot.docs.forEach(doc => {
-          const data = doc.data();
-          if (data.attempts) {
-            quizzesCompleted += data.attempts;
-          }
-          if (data.totalQuestions) {
-            quizQuestionsCount += data.totalQuestions;
-          }
-        });
-        
-        // Add quiz questions to total questions count
-        totalQuestions += quizQuestionsCount;
-        
-        console.log(`Counting questions: ${examQuestionsCount} exam questions + ${quizQuestionsCount} quiz questions = ${totalQuestions} total`);
-      } catch (err) {
-        console.error('Error fetching quiz count:', err);
-      }
-      
-      // Fetch subcategories mastered
       const userProgressColRef = collection(db, `users/${currentUser.uid}/progress`);
-      let subcategoriesSnapshot;
+      const subcategoriesSnapshot = await getDocs(userProgressColRef);
       
-      // We may have already fetched this data for quiz counting
-      if (typeof subcategoriesSnapshot === 'undefined') {
-        subcategoriesSnapshot = await getDocs(userProgressColRef);
-      }
+      subcategoriesSnapshot.docs.forEach(doc => {
+        const data = doc.data();
+        if (data.attempts) quizzesCompleted += data.attempts;
+        if (data.totalQuestions) quizQuestionsCount += data.totalQuestions;
+      });
+      
+      totalQuestions += quizQuestionsCount;
       
       const masteredSubcategories = subcategoriesSnapshot.docs.filter(doc => doc.data().mastered).length;
       
-      // Calculate average accuracy
       let correctTotal = 0;
       let attemptsTotal = 0;
       
@@ -147,8 +107,6 @@ function Profile() {
       
       const averageAccuracy = attemptsTotal > 0 ? Math.round((correctTotal / attemptsTotal) * 100) : 0;
       
-      // Update the stats object with actual values, but don't set dataLoaded yet
-      // We want to ensure both stats and rankings are loaded before triggering animations
       setStats({
         totalQuestions,
         practiceExamsCompleted,
@@ -158,13 +116,10 @@ function Profile() {
         loading: false
       });
       
-      // Mark stats as loaded immediately with a small delay to ensure state update
       setTimeout(() => setStatsLoaded(true), 300);
     } catch (err) {
       console.error('Error fetching user statistics:', err);
       setStats(prev => ({ ...prev, loading: false }));
-      
-      // Even in case of error, we want to mark stats as loaded
       setTimeout(() => setStatsLoaded(true), 300);
     }
   };
@@ -184,20 +139,9 @@ function Profile() {
     
     try {
       setNotificationLoading(true);
-      // Clear any previous denial records to allow a new request
       localStorage.removeItem('notification_permission_denied_at');
-      
-      // Initialize notifications with user's explicit permission
       const result = await initializeNotifications(currentUser.uid);
-      
-      if (result) {
-        setNotificationStatus('granted');
-      } else {
-        // Check what happened with the permission
-        if ("Notification" in window) {
-          setNotificationStatus(Notification.permission);
-        }
-      }
+      setNotificationStatus(result ? 'granted' : Notification.permission);
     } catch (err) {
       console.error('Error enabling notifications:', err);
     } finally {
@@ -205,17 +149,48 @@ function Profile() {
     }
   }
 
+  const handleUpgrade = async (newTier) => {
+    setIsUpgrading(true);
+    setSelectedPlan(newTier);
+    try {
+      console.log(`Upgrading to ${newTier}...`);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const success = await updateMembershipTier(newTier, 12);
+      if (success) {
+        alert(`Successfully upgraded to ${getTierInfo(newTier).displayName}!`);
+      } else {
+        alert('Upgrade failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Upgrade error:', error);
+      alert('Upgrade failed. Please try again.');
+    } finally {
+      setIsUpgrading(false);
+      setSelectedPlan(null);
+    }
+  };
 
+  if (!userMembership) {
+    return (
+      <div className="membership-page">
+        <div className="membership-loading">
+          <div className="loading-spinner"></div>
+          <p>Loading membership information...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const availableUpgrades = getAvailableUpgrades(userMembership.tier);
+  const allTiers = [
+    { tier: MEMBERSHIP_TIERS.FREE, ...getTierInfo(MEMBERSHIP_TIERS.FREE) },
+    { tier: MEMBERSHIP_TIERS.PLUS, ...getTierInfo(MEMBERSHIP_TIERS.PLUS) },
+    { tier: MEMBERSHIP_TIERS.MAX, ...getTierInfo(MEMBERSHIP_TIERS.MAX) }
+  ];
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <h1>My Profile</h1>
-        <div className="profile-actions">
-          <Link to="/" className="auth-button">Home</Link>
-          <button onClick={handleLogout} className="auth-button">Log Out</button>
-        </div>
-      </div>
+
 
       <div className="user-info">
         <div className="user-info-content">
@@ -227,45 +202,19 @@ function Profile() {
       <div className="stats-container">
         <h2>Your Learning Stats</h2>
           <>
-            {/* Top row with ranking stats */}
             <div className="ranking-stats-grid">
               <div className="ranking-stat-card">
-                <div className="ranking-stat-icon">
-                  <FaClipboardCheck size={32} />
-                </div>
+                <div className="ranking-stat-icon"><FaClipboardCheck size={32} /></div>
                 <div className="ranking-stat-content">
                   <h3>Questions Solved</h3>
                   <div className="ranking-value-container">
                     <p className="ranking-stat-value">
-                      {!statsLoaded ? (
-                        <span className="loading-spinner"><FaSpinner /></span>
-                      ) : (
-                        <CountUp 
-                          start={0}
-                          end={stats.totalQuestions} 
-                          duration={2.5} 
-                          separator="," 
-                          delay={0.1}
-                          redraw={true}
-                        />
-                      )}
+                      {!statsLoaded ? <span className="loading-spinner"><FaSpinner /></span> : <CountUp start={0} end={stats.totalQuestions} duration={2.5} separator="," delay={0.1} redraw={true} />}
                     </p>
                     <div className="ranking-percentage">
                       <FaMedal size={20} />
                       <span>
-                        {!rankingsLoaded ? (
-                          <span className="calculating-text">Calculating...</span>
-                        ) : (
-                          rankings.questionsRanking.position === 1
-                            ? "Top 1% of users"
-                            : <>Top <CountUp 
-                                 start={0}
-                                 end={Math.max(1, Math.min(99, 100 - rankings.questionsRanking.percentile))} 
-                                 duration={1.5} 
-                                 delay={0.2}
-                                 redraw={true}
-                               />% of users</>
-                        )}
+                        {!rankingsLoaded ? <span className="calculating-text">Calculating...</span> : (rankings.questionsRanking.position === 1 ? "Top 1% of users" : <>Top <CountUp start={0} end={Math.max(1, Math.min(99, 100 - rankings.questionsRanking.percentile))} duration={1.5} delay={0.2} redraw={true} />% of users</>)}
                       </span>
                     </div>
                   </div>
@@ -273,44 +222,17 @@ function Profile() {
               </div>
               
               <div className="ranking-stat-card">
-                <div className="ranking-stat-icon">
-                  <FaBullseye size={32} />
-                </div>
+                <div className="ranking-stat-icon"><FaBullseye size={32} /></div>
                 <div className="ranking-stat-content">
                   <h3>Average Accuracy</h3>
                   <div className="ranking-value-container">
                     <p className="ranking-stat-value">
-                      {!statsLoaded ? (
-                        <span className="loading-spinner"><FaSpinner /></span>
-                      ) : (
-                        <>
-                          <CountUp 
-                            start={0}
-                            end={stats.averageAccuracy} 
-                            duration={2.5} 
-                            decimals={0} 
-                            delay={0.3}
-                            redraw={true}
-                          />%
-                        </>
-                      )}
+                      {!statsLoaded ? <span className="loading-spinner"><FaSpinner /></span> : <><CountUp start={0} end={stats.averageAccuracy} duration={2.5} decimals={0} delay={0.3} redraw={true} />%</>}
                     </p>
                     <div className="ranking-percentage">
                       <FaChartLine size={20} />
                       <span>
-                        {!rankingsLoaded ? (
-                          <span className="calculating-text">Calculating...</span>
-                        ) : (
-                          rankings.accuracyRanking.position === 1
-                            ? "Top 1% of users"
-                            : <>Top <CountUp 
-                                 start={0}
-                                 end={Math.max(1, Math.min(99, 100 - rankings.accuracyRanking.percentile))} 
-                                 duration={1.5} 
-                                 delay={0.2}
-                                 redraw={true}
-                               />% of users</>
-                        )}
+                        {!rankingsLoaded ? <span className="calculating-text">Calculating...</span> : (rankings.accuracyRanking.position === 1 ? "Top 1% of users" : <>Top <CountUp start={0} end={Math.max(1, Math.min(99, 100 - rankings.accuracyRanking.percentile))} duration={1.5} delay={0.2} redraw={true} />% of users</>)}
                       </span>
                     </div>
                   </div>
@@ -318,70 +240,33 @@ function Profile() {
               </div>
             </div>
             
-            {/* Bottom row with regular stats */}
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon">
-                  <FaBook size={24} />
-                </div>
+                <div className="stat-icon"><FaBook size={24} /></div>
                 <div className="stat-content">
                   <h3>Practice Exams</h3>
                   <p className="stat-value">
-                    {!statsLoaded ? (
-                      <span className="loading-spinner"><FaSpinner /></span>
-                    ) : (
-                      <CountUp 
-                        start={0}
-                        end={stats.practiceExamsCompleted} 
-                        duration={2} 
-                        delay={0.5}
-                        redraw={true}
-                      />
-                    )}
+                    {!statsLoaded ? <span className="loading-spinner"><FaSpinner /></span> : <CountUp start={0} end={stats.practiceExamsCompleted} duration={2} delay={0.5} redraw={true} />}
                   </p>
                 </div>
               </div>
               
               <div className="stat-card">
-                <div className="stat-icon">
-                  <FaQuestionCircle size={24} />
-                </div>
+                <div className="stat-icon"><FaQuestionCircle size={24} /></div>
                 <div className="stat-content">
                   <h3>Quizzes Completed</h3>
                   <p className="stat-value">
-                    {!statsLoaded ? (
-                      <span className="loading-spinner"><FaSpinner /></span>
-                    ) : (
-                      <CountUp 
-                        start={0}
-                        end={stats.quizzesCompleted} 
-                        duration={2} 
-                        delay={0.6}
-                        redraw={true}
-                      />
-                    )}
+                    {!statsLoaded ? <span className="loading-spinner"><FaSpinner /></span> : <CountUp start={0} end={stats.quizzesCompleted} duration={2} delay={0.6} redraw={true} />}
                   </p>
                 </div>
               </div>
               
               <div className="stat-card">
-                <div className="stat-icon">
-                  <FaTrophy size={24} />
-                </div>
+                <div className="stat-icon"><FaTrophy size={24} /></div>
                 <div className="stat-content">
                   <h3>Topics Mastered</h3>
                   <p className="stat-value">
-                    {!statsLoaded ? (
-                      <span className="loading-spinner"><FaSpinner /></span>
-                    ) : (
-                      <CountUp 
-                        start={0}
-                        end={stats.topicsMastered} 
-                        duration={2} 
-                        delay={0.7}
-                        redraw={true}
-                      />
-                    )}
+                    {!statsLoaded ? <span className="loading-spinner"><FaSpinner /></span> : <CountUp start={0} end={stats.topicsMastered} duration={2} delay={0.7} redraw={true} />}
                   </p>
                 </div>
               </div>
@@ -392,40 +277,70 @@ function Profile() {
         </div>
       </div>
 
-      <div className="notification-settings">
-        <h3>Notification Settings</h3>
-        {notificationStatus === 'not-supported' ? (
-          <p>Notifications are not supported in your browser.</p>
-        ) : notificationStatus === 'granted' ? (
-          <div className="notification-status enabled">
-            <FaBell size={20} />
-            <span>Notifications are enabled</span>
-          </div>
-        ) : (
-          <div className="notification-actions">
-            <div className="notification-status">
-              <FaBellSlash size={20} />
-              <span>Notifications are {notificationStatus === 'denied' ? 'blocked' : 'disabled'}</span>
+      {error && <div className="auth-error">{error}</div>}
+
+      <div className="membership-section">
+        <div className="membership-page-header">
+          <h2>Your Membership</h2>
+
+        </div>
+
+        {availableUpgrades.length > 0 && (
+          <div className="membership-upgrade-section">
+
+            <p className="membership-upgrade-description">Unlock more features and get the most out of your SAT preparation</p>
+            <div className="membership-plans-grid">
+              {allTiers.map((tierData) => (
+                <div key={tierData.tier} className={`membership-plan-card ${tierData.tier === userMembership.tier ? 'current-plan' : ''} ${isUpgrading && selectedPlan === tierData.tier ? 'upgrading' : ''}`}>
+                  <div className="membership-plan-header">
+                    <MembershipBadge tier={tierData.tier} size="large" />
+                    <h3>{tierData.displayName}</h3>
+                    <p className="membership-plan-price">{tierData.price}</p>
+                    <p className="membership-plan-description">{tierData.description}</p>
+                  </div>
+                  <div className="membership-plan-features">
+                    <h4>Features included:</h4>
+                    <ul>{tierData.features.map((feature, index) => <li key={index}>{feature}</li>)}</ul>
+                  </div>
+                  <div className="membership-plan-actions">
+                    {tierData.tier === userMembership.tier ? (
+                      <button className="membership-plan-btn current" disabled>Current Plan</button>
+                    ) : tierData.tier === MEMBERSHIP_TIERS.FREE ? (
+                      <button className="membership-plan-btn downgrade" onClick={() => handleUpgrade(tierData.tier)} disabled={isUpgrading}>Downgrade to Free</button>
+                    ) : (
+                      <button className="membership-plan-btn upgrade" onClick={() => handleUpgrade(tierData.tier)} disabled={isUpgrading}>
+                        {isUpgrading && selectedPlan === tierData.tier ? <span className="upgrading-text"><div className="upgrading-spinner"></div>Processing...</span> : `Upgrade to ${tierData.displayName}`}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-            {notificationStatus === 'denied' ? (
-              <p className="notification-help">
-                To enable notifications, you need to allow them in your browser settings.
-                Click the lock/info icon in your browser's address bar and change notification settings.
-              </p>
-            ) : (
-              <button 
-                onClick={handleEnableNotifications} 
-                className="auth-button"
-                disabled={notificationLoading}
-              >
-                {notificationLoading ? 'Enabling...' : 'Enable Notifications'}
-              </button>
-            )}
           </div>
         )}
-      </div>
 
-      {error && <div className="auth-error">{error}</div>}
+        <div className="membership-faq">
+          <h3>Frequently Asked Questions</h3>
+          <div className="membership-faq-grid">
+            <div className="membership-faq-item">
+              <h4>Can I cancel anytime?</h4>
+              <p>Yes, you can cancel your subscription at any time. You'll continue to have access to premium features until the end of your billing period.</p>
+            </div>
+            <div className="membership-faq-item">
+              <h4>What happens if I downgrade?</h4>
+              <p>If you downgrade, you'll lose access to premium features immediately but keep your progress and data.</p>
+            </div>
+            <div className="membership-faq-item">
+              <h4>Is there a free trial?</h4>
+              <p>New users start with a Free account that includes basic features. You can upgrade anytime to unlock premium features.</p>
+            </div>
+            <div className="membership-faq-item">
+              <h4>How do I get support?</h4>
+              <p>Plus members get email support, while Max members get priority support with faster response times.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

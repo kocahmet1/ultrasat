@@ -36,6 +36,7 @@ import AllExamResults from './pages/AllExamResults';
 import SmartQuiz from './pages/SmartQuiz';
 import SmartQuizGenerator from './pages/SmartQuizGenerator';
 import SmartQuizResults from './pages/SmartQuizResults';
+import SubjectQuizzes from './pages/SubjectQuizzes';
 import SmartQuizIntro from './pages/SmartQuizIntro';
 import SubcategoryProgressPage from './pages/SubcategoryProgressPage';
 import SubcategorySettings from './components/admin/SubcategorySettings';
@@ -114,6 +115,7 @@ const router = createBrowserRouter([
       { path: '/smart-quiz-intro', element: <PrivateRoute><SmartQuizIntro /></PrivateRoute> },
       { path: '/smart-quiz/:quizId', element: <PrivateRoute><SmartQuiz /></PrivateRoute> },
       { path: '/smart-quiz-results/:quizId', element: <PrivateRoute><SmartQuizResults /></PrivateRoute> },
+      { path: '/subject-quizzes', element: <PrivateRoute><SubjectQuizzes /></PrivateRoute> },
       { path: '/quiz-results/:quizId', element: <PrivateRoute><QuizResults /></PrivateRoute> },
             { path: '/study-resources', element: <PrivateRoute><MembershipGate requiredTier="plus"><StudyResources /></MembershipGate></PrivateRoute> },
       { path: '/dashboard', element: <PrivateRoute><Dashboard /></PrivateRoute> },
@@ -142,7 +144,6 @@ const router = createBrowserRouter([
       { path: '/admin/graph-descriptions', element: <PrivateRoute><GraphDescriptionTool /></PrivateRoute> },
       { path: '/admin/learning-content', element: <PrivateRoute><AdminLearningContent /></PrivateRoute> },
       { path: '/admin/membership-management', element: <PrivateRoute><MembershipManagement /></PrivateRoute> },
-      { path: '/membership', element: <PrivateRoute><MembershipPage /></PrivateRoute> },
       { path: '/membership/upgrade', element: <PrivateRoute><MembershipUpgrade /></PrivateRoute> },
       { path: '/payment/success', element: <PrivateRoute><PaymentSuccess /></PrivateRoute> },
       { path: '/payment/cancel', element: <PrivateRoute><PaymentCancel /></PrivateRoute> },

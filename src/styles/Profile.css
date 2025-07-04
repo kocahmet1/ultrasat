@@ -1,0 +1,186 @@
+.membership-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f9fafb; /* Lighter gray */
+  min-height: 100vh;
+}
+
+.membership-page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.membership-page-header h2, .membership-upgrade-section h3, .membership-faq h3 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #1f2937; /* Darker gray */
+  margin-bottom: 0.5rem;
+}
+
+.membership-page-header p, .membership-upgrade-description {
+  font-size: 1rem;
+  color: #64748b;
+  margin: 0 0 2rem 0;
+  text-align: center;
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.membership-plans-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.membership-plan-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb; /* Light gray border */
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 320px;
+  max-width: 380px;
+}
+
+.membership-plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: #3b82f6; /* Blue border on hover */
+}
+
+.membership-plan-card.current-plan {
+  border-color: #10b981; /* Emerald green for current plan */
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.membership-plan-header {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.membership-plan-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0.5rem 0;
+}
+
+.membership-plan-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.membership-plan-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  min-height: 40px;
+}
+
+.membership-plan-features {
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.membership-plan-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.membership-plan-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.membership-plan-features li::before {
+  content: '✓';
+  color: #10b981;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.membership-plan-actions {
+  margin-top: auto;
+}
+
+.membership-plan-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.membership-plan-btn.upgrade {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.membership-plan-btn.upgrade:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.membership-plan-btn.current {
+  background-color: #f9fafb;
+  color: #10b981;
+  border: 1px solid #10b981;
+  cursor: default;
+}
+
+.membership-faq {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+}
+
+.membership-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.membership-faq-item h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.membership-faq-item p {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Responsive design */
+
+
+@media (max-width: 768px) {
+  .membership-page {
+    padding: 1.5rem;
+  }
+  .membership-faq-grid {
+    grid-template-columns: 1fr;
+  }
+}
