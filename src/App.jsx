@@ -45,7 +45,7 @@ import QuestionImport from './pages/QuestionImport';
 import GraphGenerationPage from './pages/GraphGenerationPage';
 import GraphDescriptionTool from './pages/GraphDescriptionTool';
 import AdminLearningContent from './pages/AdminLearningContent';
-import MembershipPage from './pages/MembershipPage';
+
 import MembershipManagement from './components/admin/MembershipManagement';
 import MembershipUpgrade from './components/MembershipUpgrade';
 import PaymentSuccess from './pages/PaymentSuccess';

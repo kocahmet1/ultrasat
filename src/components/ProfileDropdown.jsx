@@ -55,10 +55,7 @@ const ProfileDropdown = () => {
             <FaChartBar className="dropdown-icon" />
             Profile
           </Link>
-          <Link to="/membership" className="dropdown-item" onClick={() => setIsOpen(false)}>
-            <FaGem className="dropdown-icon" />
-            Membership
-          </Link>
+
           <Link to="/membership/upgrade" className="dropdown-item upgrade-link" onClick={() => setIsOpen(false)}>
             <FaGem className="dropdown-icon" />
             Upgrade
