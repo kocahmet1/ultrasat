@@ -2,8 +2,27 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 20px 20px; /* Adjusted padding */
   position: relative;
+}
+
+.quiz-title {
+  font-size: 2rem; /* Slightly smaller title */
+  margin-bottom: 10px;
+}
+
+.question-passage {
+  font-size: 1.1rem; /* Larger passage text */
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.question-text-content {
+  font-size: 1.5rem; /* Larger question text */
+  line-height: 1.7;
+  font-weight: 500;
+  margin-bottom: 25px;
 }
 
 .quiz-content {
@@ -242,9 +261,10 @@
 }
 
 .smart-quiz__container .question-text {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  margin-bottom: 25px;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .smart-quiz__container .options-list {
@@ -257,16 +277,19 @@
   margin-bottom: 12px;
 }
 
-.smart-quiz__container .options-list button {
+.smart-quiz__container .option-button {
+  display: flex;
+  align-items: center;
   width: 100%;
-  text-align: left;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #f8f9fa;
-  font-size: 1rem;
-  transition: all 0.2s;
+  background-color: #fff;
+  text-align: left;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.3rem;
+  color: #333;
 }
 
 .smart-quiz__container .options-list button:hover {
@@ -414,25 +437,7 @@
   line-height: 1.6;
 }
 
-/* Styles for the new vocabulary column and buttons */
-.vocabulary-buttons-column {
-  /* Styles already defined inline, can be moved here for consistency if preferred */
-  /* Example: */
-  /* width: 200px; */
-  /* background-color: #f0f4f8; */
-  /* border-radius: 12px; */
-  /* padding: 20px; */
-  /* etc. */
-}
 
-.vocabulary-button {
-  /* Styles already defined inline, can be moved here for consistency if preferred */
-  /* Example: */
-  /* width: 100%; */
-  /* text-align: left; */
-  /* background-color: #ffffff; */
-  /* etc. */
-}
 
 @keyframes fadeIn {
   from { 
@@ -478,26 +483,6 @@
   margin-bottom: 0; /* Remove margin from last button if using direct map when buttons are direct children */
 }
 
-/* AI Tools Column styling (if not already fully inline or elsewhere) */
-.ai-tools-column {
-  /* width: 150px; */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* gap: 12px; */
-  /* margin-top: 60px; */
-}
-
-.assistant-action-button {
-  /* Common styles for AI buttons if moved from inline */
-  /* Example: */
-  /* padding: 15px 10px; */
-  /* border: none; */
-  /* border-radius: 8px; */
-  /* font-weight: 500; */
-  /* font-size: 0.9rem; */
-  /* height: 100px; */
-  /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
-}
 
 /* Quiz Completion Loading Animation */
 .quiz-completion-loading {

@@ -6,7 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { getSubcategoryName } from '../utils/subcategoryConstants';
-import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaMedal, FaGraduationCap, FaChartLine } from 'react-icons/fa';
+import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaMedal, FaGraduationCap } from 'react-icons/fa';
 import '../styles/SmartQuizResults.css';
 
 export default function SmartQuizResults() {
@@ -43,31 +43,19 @@ export default function SmartQuizResults() {
           return;
         }
         
-        // Fetch questions separately by IDs (same logic as SmartQuiz.jsx)
         let questionsData = [];
         if (data.questionIds && data.questionIds.length > 0) {
-          // New format: fetch questions from the questions collection
           const questionPromises = data.questionIds.map(async (questionId) => {
             const questionRef = doc(db, 'questions', questionId);
             const questionSnap = await getDoc(questionRef);
-            if (questionSnap.exists()) {
-              return { id: questionSnap.id, ...questionSnap.data() };
-            }
-            return null;
+            return questionSnap.exists() ? { id: questionSnap.id, ...questionSnap.data() } : null;
           });
-          
-          const fetchedQuestions = await Promise.all(questionPromises);
-          questionsData = fetchedQuestions.filter(q => q !== null);
+          questionsData = (await Promise.all(questionPromises)).filter(q => q !== null);
         } else if (data.questions) {
-          // Legacy format: questions are embedded in the quiz document
-          questionsData = data.questions;
+          questionsData = data.questions; // Legacy support
         }
         
-        setQuiz({ 
-          id: snap.id, 
-          ...data, 
-          questions: questionsData 
-        });
+        setQuiz({ id: snap.id, ...data, questions: questionsData });
         setLoading(false);
       } catch (err) {
         console.error('Error fetching quiz results:', err);
@@ -79,212 +67,136 @@ export default function SmartQuizResults() {
     fetchQuizResults();
   }, [currentUser, quizId]);
 
-  const handleReturnToDashboard = () => {
-    navigate('/progress');
-  };
-  
-  const handleTakeAnotherQuizAtSameLevel = () => {
-    if (quiz) {
-      // Start a new quiz at the same difficulty level
-      navigate('/smart-quiz-generator', {
-        state: {
-          subcategoryId: quiz.subcategoryId,
-          // Force the current level (Level 3 for mastery)
-          forceLevel: quiz.level
-        }
-      });
-    }
+  const handleNavigation = (path, state = {}) => navigate(path, { state });
+
+  const handlePracticeAgain = (level) => {
+    handleNavigation('/smart-quiz-generator', { subcategoryId: quiz.subcategoryId, forceLevel: level });
   };
 
-  const handlePracticeAgain = () => {
-    if (quiz) {
-      // If user was promoted, we want to practice at the new level
-      // If not promoted, practice at the same level
-      navigate('/smart-quiz-generator', {
-        state: {
-          subcategoryId: quiz.subcategoryId,
-          // Force the next level if promoted
-          forceLevel: wasPromoted ? quiz.level + 1 : undefined,
-        }
-      });
-    }
-  };
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading your results...</p>
+      </div>
+    );
+  }
 
-  if (loading) return <div className="smart-quiz-results__container"><p>Loading results...</p></div>;
-  if (error) return <div className="smart-quiz-results__container"><p>Error: {error}</p></div>;
-  if (!quiz) return <div className="smart-quiz-results__container"><p>No quiz data available</p></div>;
-  
-  // Calculate metrics
-  const correctCount = Object.values(quiz.userAnswers || {}).filter(a => a.isCorrect).length;
-  const totalQuestions = quiz.questionCount;
-  const percentCorrect = quiz.score;
-  const levelName = DIFFICULTY_FOR_LEVEL[quiz.level] || 'Unknown';
-  const wasPromoted = quiz.passed && quiz.level < 3;
-  const hasMastered = quiz.passed && quiz.level === 3;
-  const subcategoryName = getSubcategoryName(quiz.subcategoryId) || 'this skill';
-  
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>Error: {error}</p>
+        <button onClick={() => handleNavigation('/progress')}>Return to Dashboard</button>
+      </div>
+    );
+  }
+
+  if (!quiz) return null;
+
+  const { score, level, passed, subcategoryId, questionCount, userAnswers = {}, questions = [] } = quiz;
+  const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+  const levelName = DIFFICULTY_FOR_LEVEL[level] || 'Unknown';
+  const wasPromoted = passed && level < 3;
+  const hasMastered = passed && level === 3;
+  const subcategoryName = getSubcategoryName(subcategoryId) || 'this skill';
+
   return (
-    <div className={`smart-quiz-results__container ${hasMastered ? 'mastery-achieved' : ''}`}>
-      {hasMastered ? (
-        <div className="mastery-banner">
-          <FaTrophy className="mastery-icon" />
-          <h1>Mastery Achieved!</h1>
-        </div>
-      ) : (
-        <h1>Quiz Results</h1>
-      )}
-      
-      <div className="results-summary">
-        <h2>Summary</h2>
-        {hasMastered ? (
-          <div className="mastery-message">
-            <FaMedal className="summary-icon" />
-            <p>You have completed all levels of <strong>{subcategoryName}</strong>!</p>
-          </div>
-        ) : (
-          <div className="level-indicator">
-            <p>Current Level: <span className="level">{quiz.level} ({levelName})</span></p>
-          </div>
-        )}
-        
-        <div className="score-container">
-          <div className="score">
-            <h3>Score</h3>
-            <p className="score-value">{percentCorrect}%</p>
-            <p>{correctCount} of {totalQuestions} correct</p>
+    <div className="results-container">
+      <div className="results-content split-view">
+        {/* Left Column: Summary Card */}
+        <div className="results-card results-summary">
+          <h1>{hasMastered ? 'Skill Mastered!' : 'Quiz Results'}</h1>
+          
+          <div className="score-circle">
+            <div className="score-percentage">{score}%</div>
           </div>
           
-          <div className="pass-indicator">
-            {quiz.passed ? (
-              <div className="passed">
-                <FaCheckCircle />
-                <p>Passed!</p>
-              </div>
-            ) : (
-              <div className="failed">
-                <FaTimesCircle />
-                <p>Try again to advance</p>
-              </div>
-            )}
+          <div className="summary-details">
+            <div className="score-subtitle">{correctCount} of {questionCount} correct</div>
+            <div className="summary-section level-indicator">
+              <h3>{subcategoryName}</h3>
+              <p>Difficulty Level: <strong>{level} ({levelName})</strong></p>
+            </div>
+            <div className="summary-section status-indicator">
+              {passed ? (
+                <div className="status-passed">
+                  <FaCheckCircle />
+                  <span>Passed!</span>
+                </div>
+              ) : (
+                <div className="status-failed">
+                  <FaTimesCircle />
+                  <span>Needs Improvement</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {wasPromoted && (
+            <div className="summary-section promotion-banner">
+              <FaArrowUp />
+              <p>Promoted to Level {level + 1}!</p>
+            </div>
+          )}
+          {hasMastered && (
+            <div className="summary-section mastery-banner">
+              <FaTrophy />
+              <p>You've mastered this skill!</p>
+            </div>
+          )}
+
+          <hr className="card-divider" />
+
+          <div className="action-buttons-container">
+            <button className="primary-button" onClick={() => handlePracticeAgain(wasPromoted ? level + 1 : level)}>
+              {wasPromoted ? <><FaArrowUp /> Go to Level {level + 1}</> : <><FaRedo /> Practice Again</>}
+            </button>
+            <button className="secondary-button" onClick={() => handleNavigation('/progress')}><FaArrowLeft /> Back to Dashboard</button>
           </div>
         </div>
-        
-        {wasPromoted && (
-          <div className="promotion">
-            <FaArrowUp />
-            <p>Congratulations! You've been promoted to Level {quiz.level + 1}!</p>
-          </div>
-        )}
-        
-        {quiz.level === 3 && quiz.passed && (
-          <div className="mastery">
-            <FaCheckCircle />
-            <p>Congratulations! You've achieved mastery of this skill!</p>
-          </div>
-        )}
-      </div>
-      
-      <div className="question-breakdown">
-        <h2>Question Breakdown</h2>
-        <div className="questions-list">
-          {quiz.questions.map((question, index) => {
-            const answer = quiz.userAnswers[question.id];
-            const isCorrect = answer?.isCorrect;
-            
-            return (
-              <div key={question.id} className={`question-card ${isCorrect ? 'correct' : 'incorrect'}`}>
-                {/* Question Header */}
-                <div className="question-header">
-                  <div className="question-number-badge">
-                    <span className="question-number">{index + 1}</span>
-                  </div>
-                  <div className="question-status">
-                    {isCorrect ? (
-                      <div className="status-correct">
-                        <FaCheckCircle className="status-icon" />
-                        <span>Correct</span>
-                      </div>
-                    ) : (
-                      <div className="status-incorrect">
-                        <FaTimesCircle className="status-icon" />
-                        <span>Incorrect</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
 
-                {/* Question Content */}
-                <div className="question-content">
-                  <div className="question-text">
-                    <h3>{question.text}</h3>
+        {/* Right Column: Question Review */}
+        <div className="results-card question-review-panel">
+          <h2>Question Review</h2>
+          <div className="questions-list">
+            {questions.map((q, index) => {
+              const answer = userAnswers[q.id];
+              const isCorrect = answer?.isCorrect;
+              return (
+                <div key={q.id} className={`question-container-review ${isCorrect ? 'correct' : 'incorrect'}`}>
+                  <div className="question-review-header">
+                    <h3>Question {index + 1}</h3>
+                    <span className={`status-tag ${isCorrect ? 'status-correct' : 'status-incorrect'}`}>
+                      {isCorrect ? <FaCheckCircle /> : <FaTimesCircle />}
+                      {isCorrect ? 'Correct' : 'Incorrect'}
+                    </span>
                   </div>
+                  <p className="question-text">{q.text}</p>
                   
-                  <div className="answer-summary">
-                    <div className="answer-row">
-                      <span className="answer-label">Your answer:</span>
-                      <span className={`answer-value ${isCorrect ? 'correct-answer' : 'incorrect-answer'}`}>
-                        {question.options[answer.selectedOption]}
-                      </span>
+                  <div className="answers-review">
+                    <div className="answer-item your-answer">
+                      <strong>Your Answer:</strong>
+                      <span>{q.options[answer.selectedOption] || 'Not Answered'}</span>
                     </div>
                     {!isCorrect && (
-                      <div className="answer-row">
-                        <span className="answer-label">Correct answer:</span>
-                        <span className="answer-value correct-answer">
-                          {question.options[question.correctAnswer]}
-                        </span>
+                      <div className="answer-item correct-answer">
+                        <strong>Correct Answer:</strong>
+                        <span>{q.options[q.correctAnswer]}</span>
                       </div>
                     )}
-                    <div className="answer-meta">
-                      <span className="time-spent">⏱️ {answer.timeSpent}s</span>
-                    </div>
                   </div>
-                </div>
 
-                {/* Explanation Section */}
-                {!isCorrect && question.explanation && (
-                  <div className="explanation-section">
-                    <div className="explanation-header">
-                      <h4>💡 Explanation</h4>
+                  {!isCorrect && q.explanation && (
+                    <div className="question-explanation">
+                      <h4>Explanation</h4>
+                      <p>{q.explanation}</p>
                     </div>
-                    <div className="explanation-content">
-                      <p>{question.explanation}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      
-      <div className="actions">
-        {hasMastered ? (
-          <>
-            <button className="btn-secondary" onClick={handleTakeAnotherQuizAtSameLevel}>
-              <FaRedo /> Take Another Quiz at This Difficulty Level
-            </button>
-            <button className="btn-primary" onClick={handleReturnToDashboard}>
-              <FaChartLine /> Review Your Overall Progress
-            </button>
-          </>
-        ) : (
-          <>
-            <button className="btn-secondary" onClick={handleReturnToDashboard}>
-              <FaArrowLeft /> Return to Dashboard
-            </button>
-            <button className="btn-primary" onClick={handlePracticeAgain}>
-              {wasPromoted ? (
-                <>
-                  <FaArrowUp /> Proceed to Level {quiz.level + 1}
-                </>
-              ) : (
-                <>
-                  <FaRedo /> Practice Again
-                </>
-              )}
-            </button>
-          </>
-        )}
       </div>
     </div>
   );

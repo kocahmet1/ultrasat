@@ -404,3 +404,73 @@
     font-size: 1.2rem; /* 12px */
   }
 }
+
+/*
+================================================================================
+Math Module Layout Styles
+================================================================================
+*/
+
+.question-container.math-layout {
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.question-content-math {
+  background-color: transparent;
+  padding: 0;
+  width: 100%;
+  max-width: 750px; 
+  box-sizing: border-box;
+}
+
+.math-layout .question-number-container {
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 15px;
+}
+
+.math-layout .question-number-container::after {
+  display: none;
+}
+
+
+.math-layout .question-text {
+  margin-bottom: 30px;
+  font-size: 1.9rem;
+  line-height: 1.7;
+}
+
+.math-layout .options-container {
+  gap: 15px;
+}
+
+.math-layout .option {
+  border-width: 2px;
+  border-color: #ccc;
+  background-color: #fafafa;
+}
+
+.math-layout .option:hover {
+  background-color: #f0f0f0;
+}
+
+.math-layout .option-label.selected .option {
+  border-color: #007bff;
+  background-color: #e9f5ff;
+}
+
+.math-layout .user-input-container {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+

@@ -24,7 +24,7 @@ const navItems = [
   { path: '/study-resources', icon: <FaBookOpen />, label: 'Study Resources' },
   { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
-  { path: '/all-results', icon: <FaTrophy />, label: 'All Results' },
+  { path: '/all-results', icon: <FaTrophy />, label: 'Exam Results' },
 
 ];
 
@@ -53,11 +53,7 @@ const Sidebar = () => {
         <div className="sidebar-header">
           {/* You can put a logo or app name here */}
           <h3>BlueBook Prep</h3>
-          {userMembership && !isCollapsed && (
-            <div className="sidebar-membership">
-              <MembershipBadge tier={userMembership.tier} size="small" />
-            </div>
-          )}
+
         </div>
         <nav className="sidebar-nav">
           <ul>

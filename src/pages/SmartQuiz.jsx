@@ -817,60 +817,47 @@ export default function SmartQuiz() {
           padding: '25px',
           boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
         }}>
-          <div className="quiz-content-column">
-            <div className="quiz-header" style={{ paddingTop: '0px', marginTop: '0px' }}>
-              <h2 style={{ marginTop: '0px', marginBottom: '4px' }}>SmartQuiz – Question {currentIdx + 1} / {QUESTIONS_PER_QUIZ}</h2>
-              <div className="level-indicator" style={{ marginBottom: '8px' }}>
-                <span>Level: {quiz.level} ({DIFFICULTY_FOR_LEVEL[quiz.level] || 'Unknown'})</span>
-              </div>
+          <div className="quiz-header">
+            <div className="quiz-title">SmartQuiz – Question {currentIdx + 1} / {quiz.questions.length}</div>
+            <div className="level-indicator">
+              Level: {DIFFICULTY_FOR_LEVEL[quiz.difficulty]} ({quiz.difficulty})
             </div>
-            <p className="question-text" style={{ lineHeight: '1.6', marginBottom: '8px' }}>{currentQuestion.text}</p>
-            <ul className="options-list" style={{ listStyleType: 'none', paddingLeft: '0', margin: 0 }}>
-              {currentQuestion.options.map((opt, idx) => {
-                const isSelected = answers[currentQuestion.id]?.selectedOption === idx;
-                return (
-                  <li key={idx}>
-                    <button 
-                      onClick={() => handleSelect(idx)}
-                      className={isSelected ? 'selected' : ''}
-                      style={{
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '12px 15px', // Slightly more padding for options
-                        marginBottom: '8px'
-                      }}
-                    >
-                      {opt}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-            
-            <div className="quiz-navigation" style={{ marginTop: 'auto' }}> {/* Push nav to bottom of column */}
-              <button 
-                className="nav-button prev" 
-                onClick={() => handleNavigation('prev')} 
-                disabled={currentIdx === 0}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} /> Previous
-              </button>
-              <button 
-                className="nav-button next" 
-                onClick={() => handleNavigation('next')} 
-                disabled={!answers[currentQuestion?.id]}
-              >
-                Next <FontAwesomeIcon icon={faArrowRight} />
-              </button>
-              
-              {/* Mobile toggle assistant button */}
-              <button 
-                className="assistant-toggle-mobile" 
-                onClick={toggleAssistant}
-              >
-                <FontAwesomeIcon icon={faLightbulb} /> {assistantExpanded ? 'Hide Assistant' : 'AI Assistant'}
-              </button>
-            </div>
+          </div>
+
+          {currentQuestion.passage && <div className="question-passage">{currentQuestion.passage}</div>}
+          <div className="question-text-content">{currentQuestion.text}</div>
+
+          <ul className="options-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            {currentQuestion.options.map((opt, idx) => {
+              const isSelected = answers[currentQuestion.id]?.selectedOption === idx;
+              return (
+                <li key={idx} style={{ marginBottom: '12px' }}>
+                  <button
+                    onClick={() => handleSelect(idx)}
+                    className={`option-button ${isSelected ? 'selected' : ''}`}
+                  >
+                    {opt}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="quiz-navigation">
+            <button
+              className="nav-button prev"
+              onClick={() => handleNavigation('prev')}
+              disabled={currentIdx === 0}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} /> Previous
+            </button>
+            <button
+              className="nav-button next"
+              onClick={() => handleNavigation('next')}
+              disabled={!answers[currentQuestion?.id]}
+            >
+              Next <FontAwesomeIcon icon={faArrowRight} />
+            </button>
           </div>
         </div>
 

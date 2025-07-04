@@ -402,6 +402,7 @@ function ExamModule({
         <div className="question-wrapper">
           {enrichedQuestions.length > 0 && currentQuestion < enrichedQuestions.length && (
             <Question
+              moduleNumber={moduleNumber}
               questionNumber={currentQuestion}
               questionText={enrichedQuestions[currentQuestion].text}
               questionType={(() => {
