@@ -47,6 +47,24 @@ function ProgressDashboard() {
   const [detailedProgress, setDetailedProgress] = useState({});
   const [satScoreEstimate, setSatScoreEstimate] = useState(null);
   const [isSatCardExpanded, setIsSatCardExpanded] = useState(false);
+  const [satCardHoverTimeout, setSatCardHoverTimeout] = useState(null);
+
+  const handleSatCardMouseEnter = () => {
+    if (satCardHoverTimeout) {
+      clearTimeout(satCardHoverTimeout);
+    }
+    const timeoutId = setTimeout(() => {
+      setIsSatCardExpanded(true);
+    }, 1000); // 1-second delay
+    setSatCardHoverTimeout(timeoutId);
+  };
+
+  const handleSatCardMouseLeave = () => {
+    if (satCardHoverTimeout) {
+      clearTimeout(satCardHoverTimeout);
+    }
+    setIsSatCardExpanded(false);
+  };
 
   const toggleCategory = (categoryKey) => {
     setExpandedCategories(prev => ({
@@ -521,8 +539,8 @@ function ProgressDashboard() {
       {satScoreEstimate && (
         <div 
           className={`pd-card sat-score-estimate-card ${isSatCardExpanded ? 'expanded' : 'collapsed'}`}
-          onMouseEnter={() => setIsSatCardExpanded(true)}
-          onMouseLeave={() => setIsSatCardExpanded(false)}
+          onMouseEnter={handleSatCardMouseEnter}
+          onMouseLeave={handleSatCardMouseLeave}
         >
           <div className="sat-score-header">
             <div className="sat-score-title">

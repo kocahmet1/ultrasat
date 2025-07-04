@@ -49,7 +49,7 @@ const Question = ({
     <div className="question-container">
       <div className="question-content">
         <div className="left-column">
-          <div className="question-text">
+          <div className="question-text" style={{ fontSize: '1.8rem', lineHeight: '1.6' }}>
             {questionText}
             
             {graphDescription && (

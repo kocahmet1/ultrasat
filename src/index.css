@@ -6,6 +6,52 @@
   padding: 0;
 }
 
+/* 
+  Responsive Font-Size Strategy
+  Set base font-size to 62.5% to make 1rem = 10px for easier calculations.
+  Default font-size is 16px, so 16px * 62.5% = 10px.
+*/
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+}
+
+/* Media queries to adjust root font size based on screen width */
+/* For large desktops */
+@media (min-width: 1800px) {
+  html {
+    font-size: 75%; /* 1rem = 12px */
+  }
+}
+
+/* For standard laptops and desktops */
+@media (max-width: 1440px) {
+  html {
+    font-size: 62.5%; /* 1rem = 10px */
+  }
+}
+
+/* For smaller laptops (like the 14-inch screen described) */
+@media (max-width: 1200px) {
+    html {
+        font-size: 56.25%; /* 1rem = 9px, effectively ~90% zoom */
+    }
+}
+
+/* For tablets */
+@media (max-width: 998px) {
+  html {
+    font-size: 50%; /* 1rem = 8px */
+  }
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+  html {
+    font-size: 43.75%; /* 1rem = 7px */
+  }
+}
+
+
 body {
   margin: 0;
   font-family: 'Times New Roman', serif;
@@ -14,6 +60,7 @@ body {
   background-color: #ffffff;
   color: #333333;
   line-height: 1.5;
+  font-size: 1.6rem; /* Set body font size to 16px equivalent */
 }
 
 code {
@@ -58,16 +105,9 @@ p {
 }
 
 .mt-10 {
-  margin-top: 10px;
+  margin-top: 1rem; /* Was 10px */
 }
 
 .mb-10 {
-  margin-bottom: 10px;
-}
-
-/* Responsive design for mobile devices */
-@media (max-width: 768px) {
-  body {
-    font-size: 14px;
-  }
+  margin-bottom: 1rem; /* Was 10px */
 }
