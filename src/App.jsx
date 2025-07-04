@@ -68,6 +68,7 @@ import { getFeatureFlags } from './firebase/config.featureFlags';
 // Components
 import Sidebar from './components/Sidebar';
 import TopNavBar from './components/TopNavBar';
+import ProfileDropdown from './components/ProfileDropdown';
 import { MembershipGate } from './components/membership';
 import useIsMobile from './hooks/useIsMobile';
 import { SidebarProvider } from './contexts/SidebarContext';
@@ -84,6 +85,9 @@ const RootLayout = () => {
       <div className="app-container">
         {isMobile ? <TopNavBar /> : <Sidebar />}
         <div className="main-content">
+          <div className="top-bar">
+             <ProfileDropdown />
+          </div>
           <Outlet />
         </div>
       </div>

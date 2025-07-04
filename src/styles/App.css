@@ -122,6 +122,18 @@
   background-color: #2a4a8a;
 }
 
+/* Add your global styles here */
+
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+}
+
 /* Add these styles for the sidebar layout */
 .app-container {
   display: flex; /* Use flexbox for sidebar and main content layout */

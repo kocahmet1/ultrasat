@@ -25,8 +25,7 @@ const navItems = [
   { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
   { path: '/all-results', icon: <FaTrophy />, label: 'All Results' },
-  { path: '/membership', icon: <FaCrown />, label: 'Membership' },
-  { path: '/profile', icon: <FaUserCircle />, label: 'Profile' },
+
 ];
 
 const Sidebar = () => {
