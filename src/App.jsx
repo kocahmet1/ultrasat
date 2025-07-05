@@ -15,6 +15,7 @@ import IntermissionController from './pages/IntermissionController';
 import ExamResults from './pages/ExamResults';
 import Profile from './pages/Profile';
 import WordBank from './pages/WordBank';
+import Flashcards from './pages/Flashcards';
 import ConceptBank from './pages/ConceptBank';
 import ConceptDetail from './pages/ConceptDetail';
 
@@ -37,6 +38,7 @@ import SmartQuiz from './pages/SmartQuiz';
 import SmartQuizGenerator from './pages/SmartQuizGenerator';
 import SmartQuizResults from './pages/SmartQuizResults';
 import SubjectQuizzes from './pages/SubjectQuizzes';
+import LecturesPage from './pages/LecturesPage';
 import SmartQuizIntro from './pages/SmartQuizIntro';
 import SubcategoryProgressPage from './pages/SubcategoryProgressPage';
 import SubcategorySettings from './components/admin/SubcategorySettings';
@@ -116,6 +118,7 @@ const router = createBrowserRouter([
       { path: '/smart-quiz/:quizId', element: <PrivateRoute><SmartQuiz /></PrivateRoute> },
       { path: '/smart-quiz-results/:quizId', element: <PrivateRoute><SmartQuizResults /></PrivateRoute> },
       { path: '/subject-quizzes', element: <PrivateRoute><SubjectQuizzes /></PrivateRoute> },
+      { path: '/lectures', element: <PrivateRoute><LecturesPage /></PrivateRoute> },
       { path: '/quiz-results/:quizId', element: <PrivateRoute><QuizResults /></PrivateRoute> },
             { path: '/study-resources', element: <PrivateRoute><MembershipGate requiredTier="plus"><StudyResources /></MembershipGate></PrivateRoute> },
       { path: '/dashboard', element: <PrivateRoute><Dashboard /></PrivateRoute> },
@@ -123,6 +126,7 @@ const router = createBrowserRouter([
       { path: '/skills', element: <PrivateRoute><SkillsPractice /></PrivateRoute> },
       { path: '/subcategory-progress/:subcategoryId', element: <PrivateRoute><SubcategoryProgressPage /></PrivateRoute> },
       { path: '/word-bank', element: <PrivateRoute><WordBank /></PrivateRoute> },
+      { path: '/flashcards', element: <PrivateRoute><Flashcards /></PrivateRoute> },
       { path: '/concept-bank', element: <PrivateRoute><ConceptBank /></PrivateRoute> },
       { path: '/concept-detail/:conceptId', element: <PrivateRoute><ConceptDetail /></PrivateRoute> },
       { path: '/concept/:conceptId', element: <PrivateRoute><ConceptPractice /></PrivateRoute> },

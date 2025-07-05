@@ -1,0 +1,95 @@
+.lectures-page-container {
+  padding: 40px;
+  background-color: #1a1a2e;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+.lectures-page-title {
+  text-align: center;
+  font-size: 2.8rem;
+  color: #e0e0e0;
+  margin-bottom: 50px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.lecture-selection-container {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+.lecture-category-card {
+  background: rgba(27, 27, 50, 0.8);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(45, 255, 196, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 45%;
+  max-width: 600px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lecture-category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 35px rgba(45, 255, 196, 0.2);
+}
+
+.lecture-category-card h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+  border-bottom: 2px solid;
+  padding-bottom: 15px;
+  display: inline-block;
+}
+
+.reading-writing-card-lecture h2 {
+    color: #9d8eee;
+    border-color: #9d8eee;
+}
+
+.math-card-lecture h2 {
+    color: #4dccc6;
+    border-color: #4dccc6;
+}
+
+.lecture-subcategory-list-inline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.lecture-subcategory-list-inline li {
+  background: rgba(255, 255, 255, 0.05);
+  color: #d0d0d0;
+  padding: 15px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1rem;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lecture-subcategory-list-inline li:hover {
+  background-color: #9d8eee;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(157, 142, 238, 0.4);
+}
+
+.math-card-lecture .lecture-subcategory-list-inline li:hover {
+    background-color: #4dccc6;
+    box-shadow: 0 6px 20px rgba(77, 204, 198, 0.4);
+}

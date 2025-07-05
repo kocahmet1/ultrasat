@@ -23,10 +23,12 @@ const Question = ({
   const [userInput, setUserInput] = useState('');
 
   useEffect(() => {
-    if (questionType === 'user-input' && selectedAnswer) {
-      setUserInput(selectedAnswer);
+    if (questionType === 'user-input') {
+      setUserInput(selectedAnswer || '');
+    } else {
+      setUserInput('');
     }
-  }, [questionType, selectedAnswer]);
+  }, [questionNumber, selectedAnswer, questionType]);
 
   const handleOptionChange = (e) => {
     setSelectedAnswer(e.target.value);

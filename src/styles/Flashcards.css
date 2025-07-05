@@ -1,0 +1,388 @@
+/* Flashcards.css - Standalone Flashcards Page Styling */
+
+:root {
+  --primary-color: #6366f1;
+  --primary-color-dark: #4f46e5;
+  --secondary-color: #6c757d;
+  --light-gray: #f8f9fa;
+  --medium-gray: #e9ecef;
+  --dark-gray: #343a40;
+  --white: #ffffff;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #e57373;
+  --danger-color-light: #ffebee;
+  --mint-green: #10d9a5;
+  --mint-green-dark: #0bb894;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --border-radius: 0.5rem;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.1);
+  --primary-hover: #4338ca;
+  --danger-hover: #c62828;
+  --border-color: #e5e7eb;
+}
+
+.flashcards-container {
+  flex: 1;
+  padding: 25px 35px;
+  max-width: 1300px;
+  margin: 20px auto;
+  overflow-y: auto;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  font-family: var(--font-family-sans-serif);
+  color: var(--dark-gray);
+  line-height: 1.6;
+}
+
+.flashcards-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.flashcards-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.flashcards-icon {
+  font-size: 2.5rem;
+  color: var(--mint-green);
+}
+
+.flashcards-description {
+  text-align: center;
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.flashcards-section {
+  margin-top: 30px;
+}
+
+.flashcards-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 60px 20px;
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+}
+
+.flashcards-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--secondary-color);
+}
+
+.flashcards-empty .empty-icon {
+  font-size: 4rem;
+  color: var(--medium-gray);
+  margin-bottom: 1rem;
+}
+
+.flashcards-empty h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--dark-gray);
+}
+
+.flashcards-empty p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.switch-tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.switch-tab-button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.flashcard-decks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.flashcard-deck-card {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.flashcard-deck-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.deck-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.deck-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--mint-green), var(--mint-green-dark));
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.deck-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.deck-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dark-gray);
+  margin: 0 0 8px 0;
+  word-wrap: break-word;
+}
+
+.deck-description {
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.deck-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-text {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+}
+
+.deck-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.study-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.study-button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.study-button:disabled {
+  background-color: var(--medium-gray);
+  color: var(--secondary-color);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.edit-deck-button,
+.delete-deck-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-deck-button {
+  background-color: var(--warning-color);
+  color: var(--white);
+}
+
+.edit-deck-button:hover {
+  background-color: #e0a800;
+  transform: translateY(-1px);
+}
+
+.delete-deck-button {
+  background-color: var(--danger-color);
+  color: var(--white);
+}
+
+.delete-deck-button:hover {
+  background-color: var(--danger-hover);
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .flashcards-container {
+    padding: 20px 15px;
+    margin: 10px;
+  }
+
+  .flashcards-title {
+    font-size: 2rem;
+  }
+
+  .flashcards-icon {
+    font-size: 2rem;
+  }
+
+  .flashcard-decks-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .flashcard-deck-card {
+    padding: 20px;
+  }
+
+  .deck-header {
+    gap: 12px;
+  }
+
+  .deck-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .deck-name {
+    font-size: 1.1rem;
+  }
+
+  .deck-stats {
+    gap: 16px;
+  }
+
+  .deck-actions {
+    gap: 6px;
+  }
+
+  .study-button {
+    font-size: 0.85rem;
+    padding: 10px 14px;
+  }
+
+  .edit-deck-button,
+  .delete-deck-button {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .flashcards-container {
+    padding: 15px 10px;
+  }
+
+  .flashcards-title {
+    font-size: 1.75rem;
+    gap: 0.5rem;
+  }
+
+  .flashcards-description {
+    font-size: 1rem;
+  }
+
+  .deck-stats {
+    justify-content: center;
+  }
+
+  .deck-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .study-button {
+    width: 100%;
+  }
+
+  .edit-deck-button,
+  .delete-deck-button {
+    width: 100%;
+    height: 36px;
+    justify-content: center;
+  }
+}

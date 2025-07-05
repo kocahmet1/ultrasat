@@ -71,11 +71,21 @@ h2 {
   border-left: 4px solid #90caf9;
 }
 
-.exam-card h3 {
+.exam-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.exam-title-text {
   color: #1976d2;
-  margin: 0;
   font-size: 18px;
   font-weight: 600;
+  margin: 0;
+  line-height: 1.2;
+}
+.exam-card h3 {
+  display: none;
 }
 
 .loading-spinner {

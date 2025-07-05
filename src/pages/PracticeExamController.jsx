@@ -11,8 +11,12 @@ import '../styles/PracticeExamController.css';
 import { getSubcategoryProgress, updateSubcategoryProgress } from '../utils/progressUtils';
 import { inferLevelFromAccuracy } from '../utils/smartQuizUtils';
 import IntermissionScreen from '../components/IntermissionScreen';
+import ModuleLoadingScreen from '../components/ModuleLoadingScreen';
 
 const PracticeExamController = () => {
+  // ...existing hooks...
+  const [moduleTransitionLoading, setModuleTransitionLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
   const { examId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -124,6 +128,7 @@ const PracticeExamController = () => {
 
   // Handle module completion
   const handleModuleComplete = async (moduleResults) => {
+    setModuleTransitionLoading(true);
     const currentModule = modules[currentModuleIndex];
     const moduleId = currentModule.id;
     
@@ -295,16 +300,20 @@ const PracticeExamController = () => {
     const moduleNumber = currentModule.moduleNumber;
     if (moduleNumber === 2 && currentModuleIndex < modules.length - 1) {
       setExamStatus('intermission');
+      setModuleTransitionLoading(false);
     } else if (currentModuleIndex < modules.length - 1) {
       setCurrentModuleIndex(currentModuleIndex + 1);
+      setModuleTransitionLoading(false);
     } else {
       // All modules are completed
+      setLoadingMessage('Computing the results...');
       setExamStatus('completed');
       // Show sidebar again when exam is finished
       setSidebarHidden(false);
       
       // Save the comprehensive result
-      handleViewResults();
+      await handleViewResults();
+      setModuleTransitionLoading(false);
     }
   };
   
@@ -651,6 +660,11 @@ const PracticeExamController = () => {
         onIntermissionComplete={handleIntermissionComplete} 
       />
     );
+  }
+
+  // Render loading screen between modules
+  if (moduleTransitionLoading) {
+    return <ModuleLoadingScreen message={loadingMessage} />;
   }
 
   // Render exam in progress (current module)

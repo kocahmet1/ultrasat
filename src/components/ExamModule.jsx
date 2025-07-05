@@ -44,6 +44,18 @@ function ExamModule({
       setIsExitModalOpen(true);
     }
   }, [blocker]);
+
+  // Sync selectedAnswer with the current question's stored answer
+  useEffect(() => {
+    const newAnswer = updatedAnswers[currentQuestion] || '';
+    setSelectedAnswer(newAnswer);
+  }, [currentQuestion, updatedAnswers]);
+
+  // Sync selectedAnswer with the current question's stored answer
+  useEffect(() => {
+    const newAnswer = updatedAnswers[currentQuestion] || '';
+    setSelectedAnswer(newAnswer);
+  }, [currentQuestion]);
   
   // Animation states
   const [moduleAnimation, setModuleAnimation] = useState('fade-in');
@@ -364,6 +376,10 @@ function ExamModule({
   };
 
   const handleConfirmExit = () => {
+    // Exit fullscreen if currently in fullscreen mode
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen();
+    }
     if (blocker.state === 'blocked') {
       blocker.proceed();
     } else {

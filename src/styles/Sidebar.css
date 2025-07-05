@@ -8,8 +8,8 @@
   --text-color-on-primary: #ffffff;
   --text-color-sidebar-link: #c5cee0; /* Lighter text for links */
   --text-color-sidebar-link-hover: #ffffff;
-  --background-color-sidebar: #2c3e50; /* Dark Slate Blue/Gray */
-  --background-color-sidebar-hover: #34495e; /* Slightly lighter for hover */
+  --background-color-sidebar: #23272f; /* Sleek dark blue-gray */
+  --background-color-sidebar-hover: #31343c; /* Gentle hover effect */
   --background-color-sidebar-active: var(--primary-color); /* Active link background */
   --border-color-sidebar: #4a5568;
 
@@ -312,13 +312,13 @@
 }
 
 .pro-badge {
-  background-color: var(--primary-color-dark);
-  color: var(--text-color-on-primary);
+  background-color: rgba(74, 144, 226, 0.18); /* Subtle faded blue */
+  color: #7da5d6; /* Soft blue text */
   padding: 2px 5px;
   border-radius: 4px;
   font-size: 0.6rem;
-  font-weight: 700;
-  margin-left: auto; /* Pushes the badge to the right */
+  font-weight: 500;
+  margin-left: 0.5em; /* Small space from link text */
   text-transform: uppercase;
   line-height: 1;
   flex-shrink: 0; /* Prevents the badge from shrinking */
