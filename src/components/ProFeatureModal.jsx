@@ -47,9 +47,17 @@ const ProFeatureModal = ({ isOpen, onClose, position }) => {
         <div className="pro-feature-modal-body">
           <p>This feature is available exclusively for our Pro members.</p>
           <p>Upgrade now to unlock this and many other premium features!</p>
-          <Link to="/membership/upgrade" className="pro-feature-modal-upgrade-btn">
+          <button
+            className="pro-feature-modal-upgrade-btn"
+            onClick={() => {
+              onClose();
+              setTimeout(() => {
+                window.location.href = '/membership/upgrade';
+              }, 50);
+            }}
+          >
             Upgrade Now
-          </Link>
+          </button>
         </div>
       </div>
     </div>
