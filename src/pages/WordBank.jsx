@@ -12,14 +12,16 @@ import {
   faPlay,
   faSpinner,
   faQuestionCircle,
-  faEdit
+  faEdit,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
-import { getFlashcardDecks, deleteFlashcardDeck, removeWordFromFlashcardDeck, getFlashcardDeckWords } from '../api/helperClient';
+import { getFlashcardDecks, deleteFlashcardDeck, removeWordFromFlashcardDeck, getFlashcardDeckWords, createFlashcardDeck } from '../api/helperClient';
 import AddToFlashcardsModal from '../components/AddToFlashcardsModal';
 import FlashcardStudy from '../components/FlashcardStudy';
 import WordQuizzes from '../components/WordQuizzes';
 import Quiz from '../components/Quiz';
 import EditDeckModal from '../components/EditDeckModal';
+import NewDeckModal from '../components/NewDeckModal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/WordBank.css';
@@ -44,6 +46,7 @@ export default function WordBank() {
   const [activeTab, setActiveTab] = useState('words'); // 'words', 'flashcards', or 'quizzes'
   const [showEditDeckModal, setShowEditDeckModal] = useState(false);
   const [deckToEdit, setDeckToEdit] = useState(null);
+  const [showNewDeckModal, setShowNewDeckModal] = useState(false);
 
   // Quiz states
   const [activeQuiz, setActiveQuiz] = useState(null);
@@ -317,6 +320,18 @@ export default function WordBank() {
     }
   };
 
+  const handleCreateNewDeck = async (deckName, deckDescription) => {
+    try {
+      await createFlashcardDeck(deckName, deckDescription);
+      toast.success(`Deck "${deckName}" created successfully`);
+      setShowNewDeckModal(false);
+      loadFlashcardDecks();
+    } catch (error) {
+      console.error('Error creating deck:', error);
+      toast.error('Failed to create deck. Please try again.');
+    }
+  };
+
   // Filter and sort words
   const filteredWords = words
     .filter(word => 
@@ -379,13 +394,20 @@ export default function WordBank() {
         >
           <FontAwesomeIcon icon={faLayerGroup} />
           Flashcard Decks ({flashcardDecks.length})
+          <span className="pro-badge">PRO</span>
         </button>
+        {activeTab === 'flashcards' && (
+          <button className="new-deck-button" onClick={() => setShowNewDeckModal(true)}>
+            <FontAwesomeIcon icon={faPlus} /> New Deck
+          </button>
+        )}
         <button 
           className={`tab-button ${activeTab === 'quizzes' ? 'active' : ''}`}
           onClick={() => setActiveTab('quizzes')}
         >
           <FontAwesomeIcon icon={faQuestionCircle} />
           Word Quizzes ({flashcardDecks.filter(deck => deck.wordCount >= 4).length})
+          <span className="pro-badge">PRO</span>
         </button>
       </div>
 
@@ -570,6 +592,15 @@ export default function WordBank() {
           onClose={handleEditDeckModalClose}
           deck={deckToEdit}
           onDeckUpdated={handleDeckUpdate}
+        />
+      )}
+
+      {/* New Deck Modal */}
+      {showNewDeckModal && (
+        <NewDeckModal
+          isOpen={showNewDeckModal}
+          onClose={() => setShowNewDeckModal(false)}
+          onCreateDeck={handleCreateNewDeck}
         />
       )}
 

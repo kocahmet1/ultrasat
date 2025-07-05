@@ -328,16 +328,16 @@ router.post('/flashcard-decks', verifyFirebaseToken, async (req, res) => {
 
 /**
  * POST /api/bank/flashcard-decks/:deckId/words
- * Add a word to a flashcard deck
+ * Add a word to a flashcard deck from the user's bank
  */
 router.post('/flashcard-decks/:deckId/words', verifyFirebaseToken, async (req, res) => {
   try {
     const { deckId } = req.params;
-    const { wordId, term, definition } = req.body;
+    const { wordId } = req.body;
     const userId = req.user.uid;
 
-    if (!term || !definition) {
-      return res.status(400).json({ error: 'Term and definition are required.' });
+    if (!wordId) {
+      return res.status(400).json({ error: 'Word ID is required.' });
     }
 
     // Check if deck exists and belongs to user
@@ -348,11 +348,24 @@ router.post('/flashcard-decks/:deckId/words', verifyFirebaseToken, async (req, r
       return res.status(404).json({ error: 'Flashcard deck not found.' });
     }
 
-    // Check if word is already in the deck
+    // Get the word from the user's main bank
+    const wordBankRef = req.db.collection('users').doc(userId).collection('bankItems').doc(wordId);
+    const wordBankDoc = await wordBankRef.get();
+
+    if (!wordBankDoc.exists) {
+      return res.status(404).json({ error: 'Word not found in your word bank.' });
+    }
+    
+    const wordData = wordBankDoc.data();
+    if (wordData.type !== 'word') {
+      return res.status(400).json({ error: 'Item is not a word.' });
+    }
+
+    // Check if word is already in the deck using wordId
     const existingWordQuery = await req.db.collection('users').doc(userId)
       .collection('flashcardDecks').doc(deckId)
       .collection('words')
-      .where('term', '==', term.trim())
+      .where('wordId', '==', wordId)
       .get();
 
     if (!existingWordQuery.empty) {
@@ -365,15 +378,15 @@ router.post('/flashcard-decks/:deckId/words', verifyFirebaseToken, async (req, r
       .collection('words').doc();
 
     await wordRef.set({
-      term: term.trim(),
-      definition: definition.trim(),
-      wordId: wordId || null, // Reference to the original word in bankItems
+      term: wordData.term,
+      definition: wordData.definition,
+      wordId: wordId, // Reference to the original word in bankItems
       addedAt: req.admin.firestore.FieldValue.serverTimestamp(),
       timesStudied: 0,
       correctCount: 0,
       incorrectCount: 0,
       lastStudiedAt: null,
-      difficulty: 'medium' // easy, medium, hard
+      difficulty: 'medium'
     });
 
     // Update deck word count
@@ -389,6 +402,42 @@ router.post('/flashcard-decks/:deckId/words', verifyFirebaseToken, async (req, r
   } catch (error) {
     console.error('Error in /api/bank/flashcard-decks/:deckId/words POST:', error);
     res.status(500).json({ error: 'Failed to add word to flashcard deck.' });
+  }
+});
+
+/**
+ * GET /api/bank/words
+ * Get all words from the user's word bank
+ */
+router.get('/words', verifyFirebaseToken, async (req, res) => {
+  try {
+    const userId = req.user.uid;
+    
+    const wordsQuery = req.db.collection('users').doc(userId).collection('bankItems')
+      .where('type', '==', 'word')
+      .orderBy('createdAt', 'desc');
+      
+    const snapshot = await wordsQuery.get();
+    
+    if (snapshot.empty) {
+      return res.json({ words: [] });
+    }
+    
+    const words = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      words.push({
+        id: doc.id,
+        term: data.term,
+        definition: data.definition,
+        createdAt: data.createdAt ? data.createdAt.toDate() : null,
+      });
+    });
+    
+    res.json({ words });
+  } catch (error) {
+    console.error(`Error in /api/bank/words GET:`, error);
+    res.status(500).json({ error: error.message || 'Failed to retrieve words.' });
   }
 });
 

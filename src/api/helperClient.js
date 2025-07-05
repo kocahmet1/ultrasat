@@ -253,12 +253,10 @@ export const createFlashcardDeck = async (name, description = '') => {
 /**
  * Add a word to a flashcard deck
  * @param {string} deckId - ID of the deck
- * @param {string} wordId - ID of the word in bank items (optional)
- * @param {string} term - The word term
- * @param {string} definition - The word definition
+ * @param {string} wordId - ID of the word in bank items
  * @returns {Promise<string>} ID of the added word
  */
-export const addWordToFlashcardDeck = async (deckId, wordId, term, definition) => {
+export const addWordToFlashcardDeck = async (deckId, wordId) => {
   try {
     const token = await getAuthToken();
     if (!token) {
@@ -271,7 +269,7 @@ export const addWordToFlashcardDeck = async (deckId, wordId, term, definition) =
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ wordId, term, definition })
+      body: JSON.stringify({ wordId })
     });
 
     if (!response.ok) {
@@ -315,6 +313,37 @@ export const getFlashcardDeckWords = async (deckId) => {
     return data.words;
   } catch (error) {
     console.error('Error getting flashcard deck words:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get all words from the user's word bank
+ * @returns {Promise<Array>} Array of word objects
+ */
+export const getAllWords = async () => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const response = await fetch(`${getApiUrl()}/api/bank/words`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to get all words: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.words;
+  } catch (error) {
+    console.error('Error getting all words:', error);
     throw error;
   }
 };

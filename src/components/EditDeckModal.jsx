@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faTimes, 
   faTrash, 
   faLayerGroup, 
   faSpinner,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import { getFlashcardDeckWords, removeWordFromFlashcardDeck } from '../api/helperClient';
 import { toast } from 'react-toastify';
+import AddWordsToDeck from './AddWordsToDeck';
 import '../styles/EditDeckModal.css';
 
-/**
- * EditDeckModal component - allows editing words in a flashcard deck
- */
 const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
   const [words, setWords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [removingWordIds, setRemovingWordIds] = useState(new Set());
+  const [isAddingWords, setIsAddingWords] = useState(false);
 
-  // Load deck words when modal opens
   useEffect(() => {
     if (isOpen && deck) {
       loadDeckWords();
+    } else {
+      // Reset state when modal is closed or deck is not provided
+      setWords([]);
+      setRemovingWordIds(new Set());
+      setIsAddingWords(false);
     }
   }, [isOpen, deck]);
 
@@ -45,35 +49,24 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
     const wordToRemove = words.find(word => word.id === wordId);
     const wordName = wordToRemove ? (wordToRemove.term || wordToRemove.word) : 'this word';
 
-    // Confirmation dialog
     const confirmDelete = window.confirm(
-      `Are you sure you want to remove "${wordName}" from "${deck.name}"?\n\n` +
-      `This will only remove it from this flashcard deck, not from your Word Bank.`
+      `Are you sure you want to remove "${wordName}" from "${deck.name}"? This will not delete it from your Word Bank.`
     );
 
     if (!confirmDelete) return;
 
     try {
-      // Add to removing set to show loading state
       setRemovingWordIds(prev => new Set(prev).add(wordId));
-
-      // Remove from deck via API
       await removeWordFromFlashcardDeck(deck.id, wordId);
-
-      // Update local state
       setWords(prevWords => prevWords.filter(word => word.id !== wordId));
-
-      // Notify parent component to refresh deck data
       if (onDeckUpdated) {
         onDeckUpdated();
       }
-
       toast.success(`"${wordName}" removed from deck`);
     } catch (error) {
       console.error('Error removing word from deck:', error);
       toast.error('Failed to remove word from deck');
     } finally {
-      // Remove from removing set
       setRemovingWordIds(prev => {
         const newSet = new Set(prev);
         newSet.delete(wordId);
@@ -82,11 +75,18 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
     }
   };
 
+  const handleWordAdded = (newWord) => {
+    setWords(prevWords => [...prevWords, newWord]);
+    if (onDeckUpdated) {
+      onDeckUpdated();
+    }
+  };
+
   const handleClose = () => {
-    setWords([]);
-    setRemovingWordIds(new Set());
     onClose();
   };
+
+  const existingWordIds = useMemo(() => new Set(words.map(w => w.id)), [words]);
 
   if (!isOpen) return null;
 
@@ -109,12 +109,6 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
               <FontAwesomeIcon icon={faSpinner} className="spinner" />
               <p>Loading deck words...</p>
             </div>
-          ) : words.length === 0 ? (
-            <div className="empty-deck-message">
-              <FontAwesomeIcon icon={faExclamationTriangle} className="empty-icon" />
-              <h3>This deck is empty</h3>
-              <p>Add some words to this deck to start studying!</p>
-            </div>
           ) : (
             <>
               <div className="deck-info">
@@ -122,31 +116,53 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
                 <p className="deck-description">{deck?.description}</p>
               </div>
 
-              <div className="words-list">
-                {words.map((word) => (
-                  <div key={word.id} className="word-item">
-                    <div className="word-content">
-                      <div className="word-term">
-                        {word.term || word.word}
+              {words.length === 0 && !isAddingWords ? (
+                <div className="empty-deck-message">
+                  <FontAwesomeIcon icon={faExclamationTriangle} className="empty-icon" />
+                  <h3>This deck is empty</h3>
+                  <p>Add some words to this deck to start studying!</p>
+                </div>
+              ) : (
+                <div className="words-list">
+                  {words.map((word) => (
+                    <div key={word.id} className="word-item">
+                      <div className="word-content">
+                        <div className="word-term">{word.term || word.word}</div>
+                        <div className="word-definition">{word.definition}</div>
                       </div>
-                      <div className="word-definition">
-                        {word.definition}
-                      </div>
+                      <button
+                        className={`remove-word-btn ${removingWordIds.has(word.id) ? 'removing' : ''}`}
+                        onClick={() => handleRemoveWord(word.id)}
+                        disabled={removingWordIds.has(word.id)}
+                        title="Remove from deck"
+                      >
+                        {removingWordIds.has(word.id) ? (
+                          <FontAwesomeIcon icon={faSpinner} className="spinner" />
+                        ) : (
+                          <FontAwesomeIcon icon={faTrash} />
+                        )}
+                      </button>
                     </div>
-                    <button
-                      className={`remove-word-btn ${removingWordIds.has(word.id) ? 'removing' : ''}`}
-                      onClick={() => handleRemoveWord(word.id)}
-                      disabled={removingWordIds.has(word.id)}
-                      title="Remove from deck"
-                    >
-                      {removingWordIds.has(word.id) ? (
-                        <FontAwesomeIcon icon={faSpinner} className="spinner" />
-                      ) : (
-                        <FontAwesomeIcon icon={faTrash} />
-                      )}
-                    </button>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              )}
+
+              <div className="add-words-section">
+                <button 
+                  className="toggle-add-words-btn"
+                  onClick={() => setIsAddingWords(!isAddingWords)}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                  {isAddingWords ? 'Cancel Adding' : 'Add Words to Deck'}
+                </button>
+
+                {isAddingWords && (
+                  <AddWordsToDeck 
+                    deck={deck}
+                    existingWordIds={existingWordIds}
+                    onWordAdded={handleWordAdded}
+                  />
+                )}
               </div>
             </>
           )}
