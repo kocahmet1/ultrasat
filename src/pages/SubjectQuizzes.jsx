@@ -11,7 +11,7 @@ const SubjectQuizzes = () => {
   const mathSubcategories = allSubcategories.filter(sc => sc.section === 'math');
 
   const handleSubcategoryClick = (subcategory) => {
-    navigate('/smart-quiz-intro', { state: { subcategory: subcategory.name } });
+    navigate('/smart-quiz-generator', { state: { subcategoryId: subcategory.id } });
   };
 
   return (
