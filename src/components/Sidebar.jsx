@@ -27,7 +27,6 @@ const navItems = [
   { path: '/practice-exams', icon: <FaClipboardList />, label: 'Practice Exams' },
   { path: '/subject-quizzes', icon: <FaGraduationCap />, label: 'Quizzes' },
   { path: '/lectures', icon: <FaBookReader />, label: 'Lectures' },
-  { path: '/study-resources', icon: <FaBookOpen />, label: 'Study Resources' },
   { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },
   { path: '/flashcards', icon: <FaLayerGroup />, label: 'Flashcards' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
@@ -80,21 +79,6 @@ const Sidebar = () => {
         <nav className="sidebar-nav">
           <ul>
             {navItems.map((item) => {
-              const isStudyResources = item.path === '/study-resources';
-              const canAccessStudyResources = hasFeatureAccess('plus');
-
-              if (isStudyResources && !canAccessStudyResources) {
-                return (
-                  <li key={item.path} className={location.pathname.startsWith(item.path) ? 'active' : ''}>
-                    <Link to="/membership" onClick={isMobile ? toggleSidebar : undefined}>
-                      <span className="sidebar-icon">{item.icon}</span>
-                      <span className="sidebar-label">{item.label}</span>
-                      <span className="pro-badge">Pro</span>
-                    </Link>
-                  </li>
-                );
-              }
-
               return (
                 <li key={item.path} className={location.pathname.startsWith(item.path) ? 'active' : ''}>
                   <Link
