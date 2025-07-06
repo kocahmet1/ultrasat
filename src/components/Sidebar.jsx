@@ -31,7 +31,6 @@ const navItems = [
   { path: '/flashcards', icon: <FaLayerGroup />, label: 'Flashcards' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
   { path: '/all-results', icon: <FaTrophy />, label: 'Exam Results' },
-  { path: '/help', icon: <FaQuestionCircle />, label: 'Help' },
 ];
 
 const Sidebar = () => {

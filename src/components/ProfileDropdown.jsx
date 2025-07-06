@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './ProfileDropdown.css';
-import { FaUserCircle, FaCog, FaSignOutAlt, FaGem, FaUser, FaChartBar } from 'react-icons/fa';
+import { FaUserCircle, FaCog, FaSignOutAlt, FaGem, FaUser, FaChartBar, FaQuestionCircle } from 'react-icons/fa';
 import { MembershipBadge } from './membership';
 
 const ProfileDropdown = () => {
@@ -59,6 +59,10 @@ const ProfileDropdown = () => {
           <Link to="/membership/upgrade" className="dropdown-item upgrade-link" onClick={() => setIsOpen(false)}>
             <FaGem className="dropdown-icon" />
             Upgrade
+          </Link>
+          <Link to="/help" className="dropdown-item" onClick={() => setIsOpen(false)}>
+            <FaQuestionCircle className="dropdown-icon" />
+            Help
           </Link>
           <div className="dropdown-divider"></div>
           <button onClick={logout} className="dropdown-item-logout">
