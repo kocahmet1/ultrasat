@@ -18,7 +18,8 @@ import {
   FaChevronRight,      // Expand icon
   FaTrophy,            // All Results
   FaCrown,             // Membership
-  FaBookReader         // Lectures
+  FaBookReader,        // Lectures
+  FaQuestionCircle     // Help
 } from 'react-icons/fa';
 
 const navItems = [
@@ -31,6 +32,7 @@ const navItems = [
   { path: '/flashcards', icon: <FaLayerGroup />, label: 'Flashcards' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
   { path: '/all-results', icon: <FaTrophy />, label: 'Exam Results' },
+  { path: '/help', icon: <FaQuestionCircle />, label: 'Help' },
 ];
 
 const Sidebar = () => {
@@ -72,7 +74,7 @@ const Sidebar = () => {
         </div>
         <div className="sidebar-header">
           {/* You can put a logo or app name here */}
-          <h3>BlueBook Prep</h3>
+          <h3>UltraSatPrep</h3>
 
         </div>
         <nav className="sidebar-nav">
@@ -117,7 +119,7 @@ const Sidebar = () => {
         </nav>
         <div className="sidebar-footer">
           {/* Optional: Footer content like logout, help, etc. */}
-          <p>&copy; {new Date().getFullYear()} Veritas Blue</p>
+          <p>&copy; {new Date().getFullYear()} UltraSatPrep</p>
         </div>
       </div>
       <ProFeatureModal

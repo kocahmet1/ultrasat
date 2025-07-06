@@ -168,6 +168,38 @@ app.use('/api/concepts', conceptDetailRouter);
 app.use('/api/questions', questionsRouter);
 app.use('/api/stripe', attachFirebaseAdmin, stripeRouter);
 
+// Help/FAQ endpoint
+app.get('/api/help', (req, res) => {
+  res.json({
+    sections: [
+      {
+        section: 'General',
+        faqs: [
+          { question: 'What is this app?', answer: 'Placeholder answer for what this app is.' },
+          { question: 'How do I use the app?', answer: 'Placeholder answer for how to use the app.' },
+        ],
+      },
+      {
+        section: 'Account',
+        faqs: [
+          {
+            question: 'What features are unlocked with a Pro membership?',
+            answer: 'Upgrading to Pro unlocks a variety of premium features, including: unlimited practice exams, detailed progress analytics, full access to our suite of study tools, and priority email support. The specific features depend on the selected Pro tier (Plus or Max).'
+          },
+          {
+            question: 'How do I upgrade my account to Pro?',
+            answer: 'You can upgrade to a Pro membership at any time from your profile page. Navigate to your profile, and you will see the available membership tiers. From there, you can select the plan that best fits your needs and proceed with the upgrade.'
+          },
+          {
+            question: 'Where can I manage my profile and account settings?',
+            answer: 'Your profile and account settings can be managed from the profile page. You can access this by clicking on your profile icon in the top navigation bar. From there, you can view your stats, manage your membership, and log out.'
+          }
+        ],
+      },
+    ],
+  });
+});
+
 // Serve React build files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../build')));

@@ -8,7 +8,7 @@ const LandingPage = () => {
       {/* Hero Section - Practice Exam Promotion */}
       <section className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Master the SAT with BlueBook Prep</h1>
+          <h1 className="hero-title">Master the SAT with UltraSatPrep</h1>
           <p className="hero-subtitle">
             Take comprehensive practice exams and track your progress with our advanced analytics
           </p>
@@ -92,7 +92,7 @@ const LandingPage = () => {
       {/* Features Overview */}
       <section className="features-section">
         <div className="section-content">
-          <h2>Why Choose BlueBook Prep?</h2>
+          <h2>Why Choose UltraSatPrep?</h2>
           <div className="features-grid">
             <div className="feature-item">
               <h3>📊 Advanced Analytics</h3>
@@ -118,7 +118,7 @@ const LandingPage = () => {
       <section className="footer-cta">
         <div className="section-content">
           <h2>Ready to Boost Your SAT Score?</h2>
-          <p>Join thousands of students who have improved their scores with BlueBook Prep</p>
+          <p>Join thousands of students who have improved their scores with UltraSatPrep</p>
           <div className="final-cta">
             <Link to="/signup" className="cta-button primary large">
               Get Started Free

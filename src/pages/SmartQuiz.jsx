@@ -20,10 +20,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../styles/SmartQuiz.css';
 import '../styles/SmartQuizAssistant.css';
 import '../styles/Modal.css';
+import './SmartQuizProBadge.css';
 
 export default function SmartQuiz() {
   const { quizId } = useParams();
-  const { currentUser } = useAuth();
+  const { currentUser, userMembership } = useAuth();
   const navigate = useNavigate();
 
   // Local state
@@ -38,6 +39,8 @@ export default function SmartQuiz() {
 
   // Track if we are on a mobile viewport to hide desktop-only elements
   const [isMobile, setIsMobile] = useState(false);
+
+  const isFreeOrGuest = !currentUser || !userMembership || userMembership.tier === 'free';
 
   useEffect(() => {
     const handleResize = () => {
@@ -888,9 +891,13 @@ export default function SmartQuiz() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                position: 'relative'
               }}
             >
+              {isFreeOrGuest && (
+                <span className="sq-pro-badge">PRO</span>
+              )}
               <FontAwesomeIcon icon={faComment} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
               <span>AI Assistant</span>
             </button>
@@ -914,9 +921,13 @@ export default function SmartQuiz() {
                 justifyContent: 'center',
                 height: '100px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                opacity: assistantLoading ? 0.7 : 1
+                opacity: assistantLoading ? 0.7 : 1,
+                position: 'relative'
               }}
             >
+              {isFreeOrGuest && (
+                <span className="sq-pro-badge">PRO</span>
+              )}
               <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
               <span>Get a Tip</span>
             </button>
@@ -940,9 +951,13 @@ export default function SmartQuiz() {
                 justifyContent: 'center',
                 height: '100px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                opacity: assistantLoading ? 0.7 : 1
+                opacity: assistantLoading ? 0.7 : 1,
+                position: 'relative'
               }}
             >
+              {isFreeOrGuest && (
+                <span className="sq-pro-badge">PRO</span>
+              )}
               <FontAwesomeIcon icon={faFileAlt} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
               <span>Summarize</span>
             </button>

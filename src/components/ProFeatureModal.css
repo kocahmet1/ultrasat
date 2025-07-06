@@ -1,0 +1,113 @@
+.pro-feature-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+  }
+  
+  .pro-feature-modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .pro-feature-modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #aaa;
+  }
+  
+  .pro-feature-modal-close-btn:hover {
+    color: #333;
+  }
+  
+  .pro-feature-modal-header {
+    margin-bottom: 20px;
+  }
+  
+  .pro-feature-modal-icon {
+    font-size: 3rem;
+    color: #f39c12;
+    margin-bottom: 10px;
+  }
+  
+  .pro-feature-modal-header h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+  }
+  
+  .pro-feature-modal-body p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .pro-feature-modal-footer {
+    margin-top: 20px;
+  }
+  
+  .pro-feature-modal-upgrade-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+  }
+  
+  .pro-feature-modal-upgrade-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .pro-feature-modal-upgrade-btn .fa-rocket {
+    margin-right: 10px;
+  }
+  
+  .pro-badge-quiz {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #f39c12;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+  
+  .assistant-action-button {
+    position: relative;
+  }
+  

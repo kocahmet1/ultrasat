@@ -35,8 +35,8 @@
 
 
 .sidebar-header {
-  padding: 20px 20px;
-  text-align: center;
+  padding: 20px 0 20px 0;
+  text-align: left;
   border-bottom: 1px solid var(--border-color-sidebar);
 }
 
@@ -45,6 +45,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--text-color-on-primary);
+  padding-left: 35px;
 }
 
 .sidebar-membership {
@@ -212,11 +213,15 @@
 }
 
 .sidebar-footer {
-  padding: 20px 20px;
-  text-align: center;
+  padding: 20px 0 20px 0;
+  text-align: left;
   font-size: 0.8rem;
   color: var(--text-color-sidebar-link);
   border-top: 1px solid var(--border-color-sidebar);
+}
+
+.sidebar-footer p {
+  padding-left: 35px;
 }
 
 /* Collapsed state for sidebar */
