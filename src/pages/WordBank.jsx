@@ -25,12 +25,14 @@ import NewDeckModal from '../components/NewDeckModal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/WordBank.css';
+import WordBankUpgradeModal from '../components/WordBankUpgradeModal';
+import '../components/WordBankUpgradeModal.css';
 
 /**
  * WordBank component - displays all saved vocabulary words with flashcard functionality
  */
 export default function WordBank() {
-  const { currentUser } = useAuth();
+  const { currentUser, isProMember } = useAuth();
   const [words, setWords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,6 +49,8 @@ export default function WordBank() {
   const [showEditDeckModal, setShowEditDeckModal] = useState(false);
   const [deckToEdit, setDeckToEdit] = useState(null);
   const [showNewDeckModal, setShowNewDeckModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [featureName, setFeatureName] = useState('');
 
   // Quiz states
   const [activeQuiz, setActiveQuiz] = useState(null);
@@ -344,6 +348,15 @@ export default function WordBank() {
         : b.word.localeCompare(a.word);
     });
 
+  const handleTabClick = (tab, feature) => {
+    if (!isProMember && (tab === 'flashcards' || tab === 'quizzes')) {
+      setFeatureName(feature);
+      setShowUpgradeModal(true);
+    } else {
+      setActiveTab(tab);
+    }
+  };
+
   // If studying a deck, show the study interface
   if (studyDeck) {
     return (
@@ -383,14 +396,14 @@ export default function WordBank() {
       <div className="tab-navigation">
         <button 
           className={`tab-button ${activeTab === 'words' ? 'active' : ''}`}
-          onClick={() => setActiveTab('words')}
+          onClick={() => handleTabClick('words')}
         >
           <FontAwesomeIcon icon={faBook} />
           Word Bank ({words.length})
         </button>
         <button 
           className={`tab-button ${activeTab === 'flashcards' ? 'active' : ''}`}
-          onClick={() => setActiveTab('flashcards')}
+          onClick={() => handleTabClick('flashcards', 'Flashcard Decks')}
         >
           <FontAwesomeIcon icon={faLayerGroup} />
           Flashcard Decks ({flashcardDecks.length})
@@ -403,7 +416,7 @@ export default function WordBank() {
         )}
         <button 
           className={`tab-button ${activeTab === 'quizzes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('quizzes')}
+          onClick={() => handleTabClick('quizzes', 'Word Quizzes')}
         >
           <FontAwesomeIcon icon={faQuestionCircle} />
           Word Quizzes ({flashcardDecks.filter(deck => deck.wordCount >= 4).length})
@@ -606,6 +619,13 @@ export default function WordBank() {
 
       {/* Toast Container for notifications */}
       <ToastContainer position="bottom-right" autoClose={3000} />
+
+      {/* Upgrade Modal */}
+      <WordBankUpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        featureName={featureName}
+      />
     </div>
   );
 }
