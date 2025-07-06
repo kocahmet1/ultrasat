@@ -143,9 +143,10 @@ export const createSmartQuiz = async (
   userId,
   subcategoryId,
   level,
+  userCurrentLevel = null,
 ) => {
   return quizQueue.add(async () => {
-    return monitoredOperation(createSmartQuizInternal, 'createSmartQuiz')(userId, subcategoryId, level);
+    return monitoredOperation(createSmartQuizInternal, 'createSmartQuiz')(userId, subcategoryId, level, userCurrentLevel);
   });
 };
 
@@ -153,6 +154,7 @@ const createSmartQuizInternal = async (
   userId,
   subcategoryId,
   level,
+  userCurrentLevel = null,
 ) => {
   const normalized = getKebabCaseFromAnyFormat(subcategoryId);
   if (!normalized) throw new Error('Invalid subcategory identifier');
@@ -263,6 +265,7 @@ const createSmartQuizInternal = async (
     score: 0,
     status: 'created',
     createdAt: serverTimestamp(),
+    userCurrentLevel: userCurrentLevel, // Store user's current level for progression logic
   };
 
   const ref = await addDoc(collection(db, SMARTQUIZ_COLLECTION), quizData);
@@ -319,13 +322,45 @@ export const recordSmartQuizResult = async (quizId, answers) => {
     status: 'completed',
   });
 
+  // Implement special progression logic for level selection from SubjectQuizzes page
+  let progressionLevel = quiz.level;
+  let progressionPassed = passed;
+  
+  if (quiz.userCurrentLevel !== null && quiz.userCurrentLevel !== undefined) {
+    // This quiz was taken from SubjectQuizzes page with level selection
+    const userCurrentLevel = quiz.userCurrentLevel;
+    const quizLevel = quiz.level;
+    
+    console.log(`[recordSmartQuizResult] Special progression logic: User current level: ${userCurrentLevel}, Quiz level: ${quizLevel}, Passed: ${passed}`);
+    
+    if (quizLevel < userCurrentLevel && passed) {
+      // Case 1: User took a quiz below their current level and passed
+      // No level change - they stay at their current level
+      progressionLevel = userCurrentLevel;
+      progressionPassed = false; // Don't promote them since they took a lower level quiz
+      console.log(`[recordSmartQuizResult] User took lower level quiz (${quizLevel} < ${userCurrentLevel}). No promotion.`);
+    } else if (quizLevel >= userCurrentLevel && passed) {
+      // Case 2: User took a quiz at or above their current level and passed
+      // Promote to the level they just completed (or higher if they skip levels)
+      progressionLevel = Math.max(quizLevel, userCurrentLevel);
+      progressionPassed = true; // Allow promotion
+      console.log(`[recordSmartQuizResult] User took higher/equal level quiz (${quizLevel} >= ${userCurrentLevel}). Promoting to level ${progressionLevel + 1}.`);
+    } else {
+      // Case 3: User failed the quiz
+      // Use the user's current level, no promotion
+      progressionLevel = userCurrentLevel;
+      progressionPassed = false;
+      console.log(`[recordSmartQuizResult] User failed quiz. Staying at current level ${userCurrentLevel}.`);
+    }
+  }
+
   // Persist progress update with question results for tracking missed questions
   await updateSubcategoryProgress(
     quiz.userId,
     quiz.subcategoryId,
-    quiz.level,
+    progressionLevel,
     scorePct,
-    passed,
+    progressionPassed,
     questionIds,
     { correct, total: questionIds.length },
     questionResults  // Add the question results to track missed questions

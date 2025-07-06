@@ -121,12 +121,11 @@
 }
 
 .subcategory-list-inline li {
-  padding: 15px 17px;
   margin-bottom: 15px;
   background-color: rgba(255, 255, 255, 0.15);
   border-radius: var(--border-radius-lg);
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
   font-size: 1.15rem;
   font-weight: 500;
   text-align: left;
@@ -134,10 +133,137 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   break-inside: avoid;
   page-break-inside: avoid;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 16px 48px rgba(0,0,0,0.28);
 }
 
 .subcategory-list-inline li:hover {
   background-color: rgba(255, 255, 255, 0.3);
   transform: scale(1.02);
+  box-shadow: 0 16px 64px rgba(0,0,0,0.44), 0 24px 80px rgba(0,0,0,0.36);
+}
+
+.subcategory-list-inline li.expanded {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+  box-shadow: 0 16px 64px rgba(0,0,0,0.44), 0 24px 80px rgba(0,0,0,0.36);
+}
+
+.subcategory-header {
+  padding: 15px 17px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.subcategory-name {
+  flex: 1;
+  color: #fff;
+}
+
+.subcategory-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.current-level {
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.level-selection-menu {
+  padding: 0 17px 15px 17px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 5px;
+  padding-top: 15px;
+}
+
+.level-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.level-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  text-align: center;
+  position: relative;
+}
+
+.level-btn.available {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.level-btn.available:hover {
+  background-color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.level-btn.preview {
+  background-color: rgba(255, 255, 255, 0.6);
+  color: var(--primary-color-dark);
+  border: 2px dashed rgba(255, 255, 255, 0.8);
+}
+
+.level-btn.preview:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+.level-btn.preview::after {
+  content: '(Preview Mode)';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.level-btn.locked {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
+}
+
+.level-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.reading-writing-card .subcategory-list-inline li {
+  background-color: #2952a3;
+}
+
+.reading-writing-card .subcategory-list-inline li:hover,
+.reading-writing-card .subcategory-list-inline li.expanded {
+  background-color: #3a66b7;
+}
+
+.math-card .subcategory-list-inline li {
+  background-color: #009973;
+}
+
+.math-card .subcategory-list-inline li:hover,
+.math-card .subcategory-list-inline li.expanded {
+  background-color: #33b98c;
 }
 

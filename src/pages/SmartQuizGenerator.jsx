@@ -18,7 +18,8 @@ function SmartQuizGenerator() {
   // `subcategoryId` is mandatory. Optionally we may receive `accuracyRate`
   // from ProgressDashboard to seed the initial level for brand-new users,
   // or forceLevel from SmartQuizResults for promoted users.
-  const { subcategoryId, accuracyRate = 0, forceLevel } = location.state || {};
+  // userCurrentLevel is passed from SubjectQuizzes to track progression logic
+  const { subcategoryId, accuracyRate = 0, forceLevel, userCurrentLevel } = location.state || {};
 
   const [status, setStatus] = useState({
     message: 'Preparing your quiz…',
@@ -51,6 +52,7 @@ function SmartQuizGenerator() {
           currentUser.uid,
           subcategoryId,
           level,
+          userCurrentLevel,
         );
 
         // Instead of navigating directly to the quiz, navigate to the intro screen
@@ -61,6 +63,7 @@ function SmartQuizGenerator() {
             subcategoryId,
             level,
             forceLevel,
+            userCurrentLevel, // Pass user's current level for progression logic
           },
           replace: true,
         });
