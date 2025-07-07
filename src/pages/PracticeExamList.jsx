@@ -69,7 +69,7 @@ const PracticeExamList = () => {
           {error && <div className="error-message">{error}</div>}
           <div className="exam-selection-container">
             <div className="exam-list-section">
-              <h2>Available Practice Exams</h2>
+              <h2>Choose a Full-Length Practice</h2>
               {isLoading && !practiceExams.length ? (
                 <div className="loading-spinner">
                   <div className="spinner"></div>
@@ -88,7 +88,7 @@ const PracticeExamList = () => {
                         onClick={() => handleStartExam(exam, idx, isProExam)}
                       >
                         <div className="exam-title-row">
-                          <span className="exam-title-text">{exam.title}</span>
+                          <span className="exam-title-text">{`SAT Practice ${idx + 1}`}</span>
                           {showPro && (
                             <span className="pro-badge" style={{marginLeft: 8}}>Pro</span>
                           )}

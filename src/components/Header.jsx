@@ -39,9 +39,7 @@ const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock, isFull
               {isFullscreen ? 'Exit Fullscreen' : 'Switch to Fullscreen'}
             </button>
           </div>
-          <div className="more-options">
-            <button className="more-btn">More</button>
-          </div>
+          
         </div>
       </div>
 

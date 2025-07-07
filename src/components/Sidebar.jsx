@@ -26,10 +26,10 @@ const navItems = [
   { path: '/progress', icon: <FaChartBar />, label: 'My Progress' },
   { path: '/practice-exams', icon: <FaClipboardList />, label: 'Practice Exams' },
   { path: '/subject-quizzes', icon: <FaGraduationCap />, label: 'Quizzes' },
-  { path: '/lectures', icon: <FaBookReader />, label: 'Lectures' },
   { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },
-  { path: '/flashcards', icon: <FaLayerGroup />, label: 'Flashcards' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
+  { path: '/flashcards', icon: <FaLayerGroup />, label: 'Flashcards' },
+  { path: '/lectures', icon: <FaBookReader />, label: 'Lectures' },
   { path: '/all-results', icon: <FaTrophy />, label: 'Exam Results' },
 ];
 
