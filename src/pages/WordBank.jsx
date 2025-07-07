@@ -32,7 +32,7 @@ import '../components/WordBankUpgradeModal.css';
  * WordBank component - displays all saved vocabulary words with flashcard functionality
  */
 export default function WordBank() {
-  const { currentUser, isProMember } = useAuth();
+  const { currentUser, hasFeatureAccess } = useAuth();
   const [words, setWords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -349,7 +349,7 @@ export default function WordBank() {
     });
 
   const handleTabClick = (tab, feature) => {
-    if (!isProMember && (tab === 'flashcards' || tab === 'quizzes')) {
+    if (!hasFeatureAccess('plus') && (tab === 'flashcards' || tab === 'quizzes')) {
       setFeatureName(feature);
       setShowUpgradeModal(true);
     } else {
@@ -407,7 +407,7 @@ export default function WordBank() {
         >
           <FontAwesomeIcon icon={faLayerGroup} />
           Flashcard Decks ({flashcardDecks.length})
-          <span className="pro-badge">PRO</span>
+          {!hasFeatureAccess('plus') && <span className="pro-badge">PRO</span>}
         </button>
         {activeTab === 'flashcards' && (
           <button className="new-deck-button" onClick={() => setShowNewDeckModal(true)}>
@@ -420,7 +420,7 @@ export default function WordBank() {
         >
           <FontAwesomeIcon icon={faQuestionCircle} />
           Word Quizzes ({flashcardDecks.filter(deck => deck.wordCount >= 4).length})
-          <span className="pro-badge">PRO</span>
+          {!hasFeatureAccess('plus') && <span className="pro-badge">PRO</span>}
         </button>
       </div>
 
