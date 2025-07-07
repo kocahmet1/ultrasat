@@ -46,7 +46,7 @@ const Sidebar = () => {
   }
 
   const handleProLinkClick = (e) => {
-    const isProFeature = e.currentTarget.pathname === '/flashcards' || e.currentTarget.pathname === '/concept-bank';
+    const isProFeature = e.currentTarget.pathname === '/flashcards' || e.currentTarget.pathname === '/concept-bank' || e.currentTarget.pathname === '/lectures';
     const userIsPro = currentUser?.membership === 'Plus' || currentUser?.membership === 'Max';
 
     if (isProFeature && !userIsPro) {
@@ -90,7 +90,7 @@ const Sidebar = () => {
                     <span className="sidebar-icon">{item.icon}</span>
                     <span className="sidebar-label">
                       {item.label}
-                      {(item.path === '/flashcards' || item.path === '/concept-bank') && (
+                      {(item.path === '/flashcards' || item.path === '/concept-bank' || item.path === '/lectures') && (
                         <span className="pro-badge">Pro</span>
                       )}
                     </span>
