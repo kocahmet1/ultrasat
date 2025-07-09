@@ -78,6 +78,7 @@ import { MembershipGate } from './components/membership';
 import useIsMobile from './hooks/useIsMobile';
 import { SidebarProvider } from './contexts/SidebarContext';
 import SidebarVisibility from './contexts/SidebarVisibility';
+import AnalyticsTracker from './components/AnalyticsTracker';
 
 // Styles
 import './styles/App.css';
@@ -87,6 +88,7 @@ const RootLayout = () => {
   const isMobile = useIsMobile();
   return (
     <SidebarVisibility>
+      <AnalyticsTracker />
       <div className="app-container">
         {isMobile ? <TopNavBar /> : <Sidebar />}
         <div className="main-content">
