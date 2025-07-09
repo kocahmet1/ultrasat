@@ -94,6 +94,9 @@ const MembershipUpgrade = () => {
     },
   };
 
+  // Hide Max plan from the upgrade page
+  const visiblePlans = Object.entries(plans).filter(([tierId]) => tierId !== 'max');
+
   const renderPrice = (price) => {
     const [integer, decimal] = price.toFixed(2).split('.');
     return (
@@ -186,7 +189,7 @@ const MembershipUpgrade = () => {
       {renderSubscriptionStatus()}
 
       <div className="plans-container">
-        {Object.entries(plans).map(([tierId, plan]) => (
+        {visiblePlans.map(([tierId, plan]) => (
           <div className="plan-card" key={tierId}>
             <h2>{plan.name}</h2>
             <div className="plan-price">

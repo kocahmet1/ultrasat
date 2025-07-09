@@ -20,7 +20,8 @@ import {
   FaCrown,             // Membership
   FaBookReader,        // Lectures
   FaQuestionCircle,     // Help
-  FaSignInAlt          // Login
+  FaSignInAlt,         // Login
+  FaHome               // Home icon for collapsed sidebar
 } from 'react-icons/fa';
 
 const Sidebar = () => {
@@ -99,9 +100,16 @@ const Sidebar = () => {
           {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
         </div>
         <div className="sidebar-header">
-          {/* You can put a logo or app name here */}
-          <h3>UltraSatPrep</h3>
-
+          {/* Logo when expanded, home icon when collapsed */}
+          {isCollapsed ? (
+            <Link to="/">
+              <FaHome className="sidebar-home-icon" />
+            </Link>
+          ) : (
+            <Link to="/">
+              <img src="/images/logo.png" alt="UltraSatPrep Logo" className="sidebar-logo" />
+            </Link>
+          )}
         </div>
         <nav className="sidebar-nav">
           <ul>

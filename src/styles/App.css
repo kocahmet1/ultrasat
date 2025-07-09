@@ -140,9 +140,9 @@
 }
 
 .main-content {
-  margin-left: 260px; /* Default sidebar width */
+  margin-left: 240px; /* Default sidebar width */
   padding: 20px; /* Add some padding to the main content area */
-  width: calc(100% - 260px); /* Take up remaining width */
+  width: calc(100% - 240px); /* Take up remaining width */
   min-height: 100vh; /* Ensure it takes full viewport height */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
   transition: margin-left 0.3s ease, width 0.3s ease; /* Smooth transition for sidebar changes */

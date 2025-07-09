@@ -1,33 +1,34 @@
 :root {
-  --primary-color: #4A90E2;
-  --primary-color-dark: #3a7ac8;
-  --secondary-color: #50E3C2;
-  --text-color-dark: #2d3748;
-  --text-color-medium: #4a5568;
-  --text-on-primary: #ffffff;
-  --background-color-page: #f7f9fc;
-  --background-color-card: #ffffff;
-  --background-color-hover: #f0f4f8;
+  --primary-color: #1976d2;
+  --primary-color-dark: #003399;
+  --secondary-color: #90caf9;
+  --text-color-dark: #222b45;
+  --text-color-medium: #3a4664;
+  --text-on-primary: #1976d2;
+  --background-color-page: #ebf2f9;
+  --background-color-card: #fff;
+  --background-color-hover: #f5f5f5;
   --border-color-soft: #e2e8f0;
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --shadow-md: 0 4px 6px -1px rgba(30, 41, 59, 0.10), 0 2px 4px -1px rgba(30, 41, 59, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(30, 41, 59, 0.12), 0 4px 6px -2px rgba(30, 41, 59, 0.08);
+  --font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --border-radius-lg: 0.75rem;
   --border-radius-xl: 1rem;
 }
 
 .subject-quizzes-container {
-  padding: 5px 20px 20px;
+  padding: 30px 45px;
   text-align: center;
   background-color: var(--background-color-page);
   min-height: 100vh;
   font-family: var(--font-family-sans);
+  margin: -20px;
 }
 
 .subject-quizzes-title {
   font-size: 1.5rem;
   font-weight: 300;
-  color: var(--text-color-medium);
+  color: var(--primary-color-dark);
   margin-bottom: 15px;
   letter-spacing: 4px;
   text-transform: uppercase;
@@ -42,7 +43,7 @@
   max-width: 100%;
   height: 4px;
   margin: 2px auto 0 auto;
-  background: #FFD600;
+  background: var(--secondary-color);
   border-radius: 2px;
 }
 
@@ -64,23 +65,24 @@
   justify-content: flex-start;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: var(--text-on-primary);
+  color: var(--text-color-dark);
+  background: var(--background-color-card);
   padding: 15px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid transparent;
+  box-shadow: 0 8px 32px rgba(30,41,59,0.18), 0 4px 16px rgba(30,41,59,0.10);
+  border: 4px solid #fff;
 }
 
 .quiz-category-card:hover {
   transform: translateY(-12px) scale(1.03);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 16px 48px rgba(30,41,59,0.22), 0 8px 24px rgba(30,41,59,0.14);
 }
 
 .quiz-category-card h2 {
   font-size: 2.4rem;
   font-weight: 700;
-  color: var(--text-on-primary);
+  color: var(--primary-color);
   margin-bottom: 26px;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  text-shadow: none;
   flex-shrink: 0;
   position: relative;
   display: inline-block;
@@ -92,7 +94,7 @@
   width: 100%;
   height: 4px;
   margin: 2px auto 0 auto;
-  background: #50FFC2;
+  background: var(--secondary-color);
   border-radius: 2px;
 }
 
@@ -104,11 +106,11 @@
 
 
 .reading-writing-card {
-  background: linear-gradient(145deg, #4a90e2, #647dee);
+  background: var(--background-color-card);
 }
 
 .math-card {
-  background: linear-gradient(145deg, #50e3c2, #48bb78);
+  background: var(--background-color-card);
 }
 
 .subcategory-list-inline {
@@ -122,31 +124,33 @@
 
 .subcategory-list-inline li {
   margin-bottom: 15px;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--background-color-hover);
   border-radius: var(--border-radius-lg);
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 1.15rem;
   font-weight: 500;
   text-align: left;
-  color: var(--text-on-primary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-color-medium);
+  border: 1px solid var(--border-color-soft);
   break-inside: avoid;
   page-break-inside: avoid;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 16px 48px rgba(0,0,0,0.28);
+  box-shadow: 0 4px 16px rgba(30,41,59,0.28), 0 1.5px 6px rgba(30,41,59,0.18);
+  background-clip: border-box;
+  border: 2px solid #fff;
 }
 
 .subcategory-list-inline li:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: #e3f2fd;
   transform: scale(1.02);
-  box-shadow: 0 16px 64px rgba(0,0,0,0.44), 0 24px 80px rgba(0,0,0,0.36);
+  box-shadow: 0 8px 24px rgba(30,41,59,0.32), 0 3px 12px rgba(30,41,59,0.22);
 }
 
 .subcategory-list-inline li.expanded {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: #e3f2fd;
   transform: scale(1.02);
-  box-shadow: 0 16px 64px rgba(0,0,0,0.44), 0 24px 80px rgba(0,0,0,0.36);
+  box-shadow: 0 8px 24px rgba(30,41,59,0.32), 0 3px 12px rgba(30,41,59,0.22);
 }
 
 .subcategory-header {
@@ -159,7 +163,9 @@
 
 .subcategory-name {
   flex: 1;
-  color: #fff;
+  color: #000;
+  font-size: 1.25rem;
+  font-weight: 400;
 }
 
 .subcategory-controls {
@@ -173,7 +179,8 @@
 .current-level {
   font-size: 0.85rem;
   font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #e3f2fd;
+  color: var(--primary-color-dark);
   padding: 4px 8px;
   border-radius: 12px;
   white-space: nowrap;
@@ -181,9 +188,13 @@
 
 .level-selection-menu {
   padding: 0 17px 15px 17px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--border-color-soft);
   margin-top: 5px;
   padding-top: 15px;
+  background: #f0f7ff; /* very light blue */
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 2px 8px rgba(30,41,59,0.07);
+  border-bottom: 2px solid #e3f2fd;
 }
 
 .level-buttons {
@@ -205,42 +216,31 @@
 }
 
 .level-btn.available {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #fff;
   color: var(--primary-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(30, 41, 59, 0.08);
 }
 
 .level-btn.available:hover {
-  background-color: white;
+  background-color: #e3f2fd;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(30, 41, 59, 0.12);
 }
 
 .level-btn.preview {
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: #f5f7fa;
   color: var(--primary-color-dark);
-  border: 2px dashed rgba(255, 255, 255, 0.8);
+  border: 2.5px dashed #90caf9; /* more visible, thicker, more saturated blue */
 }
 
 .level-btn.preview:hover {
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: #e3f2fd;
   transform: translateY(-1px);
 }
 
-.level-btn.preview::after {
-  content: '(Preview Mode)';
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.75rem;
-  opacity: 0.7;
-  font-style: italic;
-}
-
 .level-btn.locked {
-  background-color: rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.7);
+  background-color: #f5f5f5;
+  color: #b0b0b0;
   cursor: not-allowed;
 }
 
@@ -249,21 +249,21 @@
   opacity: 0.6;
 }
 
-.reading-writing-card .subcategory-list-inline li {
-  background-color: #2952a3;
+.reading-writing-card .subcategory-list-inline li,
+.math-card .subcategory-list-inline li {
+  background-color: var(--background-color-hover);
 }
 
 .reading-writing-card .subcategory-list-inline li:hover,
-.reading-writing-card .subcategory-list-inline li.expanded {
-  background-color: #3a66b7;
-}
-
-.math-card .subcategory-list-inline li {
-  background-color: #009973;
-}
-
+.reading-writing-card .subcategory-list-inline li.expanded,
 .math-card .subcategory-list-inline li:hover,
 .math-card .subcategory-list-inline li.expanded {
-  background-color: #33b98c;
+  background-color: #e3f2fd;
+}
+
+.subject-quizzes-container .subcategory-list-inline li,
+.subject-quizzes-container .subcategory-list-inline li:hover,
+.subject-quizzes-container .subcategory-list-inline li.expanded {
+  background-color: #fff !important;
 }
 

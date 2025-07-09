@@ -4,7 +4,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { 
@@ -98,6 +100,48 @@ export function AuthProvider({ children }) {
       initializeMessaging();
       
       return userCredential.user;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }
+
+  async function signInWithGoogle() {
+    try {
+      setError('');
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+
+      // Check if the user is new
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (!userDoc.exists()) {
+        // New user, create a document in Firestore
+        await setDoc(userDocRef, {
+          name: user.displayName,
+          email: user.email,
+          createdAt: new Date().toISOString(),
+          examResults: [],
+          membershipTier: 'free',
+          membershipStartDate: new Date().toISOString(),
+          membershipEndDate: null
+        });
+
+        // Create default "Deck 1" flashcard deck
+        const defaultDeckRef = doc(collection(db, 'users', user.uid, 'flashcardDecks'));
+        await setDoc(defaultDeckRef, {
+          name: 'Deck 1',
+          description: 'Default flashcard deck',
+          createdAt: serverTimestamp(),
+          wordCount: 0,
+          lastStudiedAt: null
+        });
+      }
+
+      initializeMessaging();
+      return user;
     } catch (err) {
       setError(err.message);
       throw err;
@@ -570,6 +614,7 @@ export function AuthProvider({ children }) {
     userMembership,
     signup,
     login,
+    signInWithGoogle,
     logout,
     saveExamResult,
     saveComprehensiveExamResult,  // Add new function to context

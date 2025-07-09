@@ -19,7 +19,14 @@ service cloud.firestore {
     // Allow users to read their own documents and admin to read all
     match /users/{userId} {
       allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
-      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow delete: if isAdmin();
+
+      // Allow users to manage their own flashcard decks
+      match /flashcardDecks/{deckId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
       
       // Unified progress tracking system - allow users to read/write their own subcategory progress
       match /progress/{subcategoryId} {

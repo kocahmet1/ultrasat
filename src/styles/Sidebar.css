@@ -8,7 +8,7 @@
   --text-color-on-primary: #ffffff;
   --text-color-sidebar-link: #c5cee0; /* Lighter text for links */
   --text-color-sidebar-link-hover: #ffffff;
-  --background-color-sidebar: #23272f; /* Sleek dark blue-gray */
+  --background-color-sidebar: #11182c; /* Updated to deep navy */
   --background-color-sidebar-hover: #31343c; /* Gentle hover effect */
   --background-color-sidebar-active: var(--primary-color); /* Active link background */
   --border-color-sidebar: #4a5568;
@@ -327,4 +327,19 @@
   text-transform: uppercase;
   line-height: 1;
   flex-shrink: 0; /* Prevents the badge from shrinking */
+}
+
+.sidebar-logo {
+  display: block;
+  max-width: 120px;
+  max-height: 60px;
+  margin: 0 0 10px 20px;
+  object-fit: contain;
+}
+
+.sidebar-home-icon {
+  display: block;
+  margin: 0 auto 10px auto;
+  font-size: 2rem;
+  color: #fff;
 }

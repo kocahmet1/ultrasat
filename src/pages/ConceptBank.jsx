@@ -169,11 +169,8 @@ const ConceptBank = () => {
       
       <div className="bank-header">
         <h1>
-          <FontAwesomeIcon icon={faPuzzlePiece} /> My Concept Bank
+          <FontAwesomeIcon icon={faPuzzlePiece} /> Concept Bank
         </h1>
-        <button className="back-button" onClick={() => navigate('/progress')}>
-          <FontAwesomeIcon icon={faArrowLeft} /> Back to Progress
-        </button>
       </div>
       
       <div className="bank-controls">

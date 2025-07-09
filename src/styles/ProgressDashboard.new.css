@@ -34,9 +34,11 @@
 }
 
 .progress-dashboard-page {
-  padding: 10px 25px 25px 25px;
+  padding: 30px 45px;
   background-color: var(--background-color-page);
   font-family: var(--font-family-sans);
+  margin: -20px;
+  min-height: calc(100vh - 60px); /* Adjust based on header/footer if any */
 }
 
 .pd-header {

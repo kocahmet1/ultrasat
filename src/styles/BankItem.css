@@ -1,7 +1,9 @@
 .bank-container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: -20px auto 0;
+  padding: 30px 45px;
+  background-color: #ebf2f9;
+  min-height: 100vh;
 }
 
 .bank-header {
@@ -19,20 +21,8 @@
   color: #333;
 }
 
-.back-button {
-  background-color: #f0f0f0;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.back-button:hover {
-  background-color: #e0e0e0;
+.bank-header .back-button {
+  display: none; /* Hide the original back button inside the header */
 }
 
 .bank-controls {

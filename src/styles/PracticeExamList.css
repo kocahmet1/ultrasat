@@ -1,8 +1,9 @@
 .practice-exam-list-page {
-  background-color: #f5f7fa;
+  background-color: #ebf2f9;
   min-height: 100vh;
-  padding: 20px 0;
+  padding: 30px 45px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: -20px;
 }
 
 .page-container {
@@ -54,20 +55,22 @@ h2 {
   gap: 15px;
 }
 
-.exam-card {
+.practice-exam-list-page .exam-card {
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Much stronger shadow for more depth */
+  box-shadow: 0 8px 32px rgba(30, 41, 59, 0.22), 0 4px 16px rgba(30, 41, 59, 0.16);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-left: 4px solid transparent;
   text-align: center;
 }
 
-.exam-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+.practice-exam-list-page .exam-card:hover {
+  transform: translateY(-8px) scale(1.05);
+  /* Even stronger shadow on hover */
+  box-shadow: 0 16px 48px rgba(30, 41, 59, 0.28), 0 8px 24px rgba(30, 41, 59, 0.18);
   border-left: 4px solid #90caf9;
 }
 

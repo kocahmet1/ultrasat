@@ -23,13 +23,17 @@
   --border-color: #e5e7eb;
 }
 
+body {
+  background-color: #ebf2f9;
+}
+
 .word-bank-container {
   flex: 1;
-  padding: 25px 35px;
+  padding: 30px 45px;
   max-width: 1300px;
-  margin: 20px auto;
+  margin: -20px auto 20px;
   overflow-y: auto;
-  background-color: var(--white);
+  background-color: #ebf2f9;
   border-radius: var(--border-radius);
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
   font-family: var(--font-family-sans-serif);
@@ -147,7 +151,7 @@
 
 .search-input {
   width: 100%;
-  padding: 12px 12px 12px 40px;
+  padding: 12px 12px 12px 48px !important;
   border: 1px solid var(--medium-gray);
   border-radius: var(--border-radius);
   font-size: 1rem;
@@ -164,7 +168,8 @@
 }
 
 .search-input::placeholder {
-  color: var(--secondary-color);
+  color: #c0c7d1 !important;
+  font-size: 0.95em;
 }
 
 .sort-button {

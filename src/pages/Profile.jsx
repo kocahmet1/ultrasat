@@ -12,7 +12,7 @@ import { getUserRankings } from '../firebase/rankingServices';
 import CountUp from 'react-countup';
 
 function Profile() {
-  const { currentUser, logout, initializeNotifications, getUserResults, userMembership, updateMembershipTier } = useAuth();
+  const { currentUser, logout, initializeNotifications, getUserResults, userMembership, updateMembershipTier, loading } = useAuth();
   const [error, setError] = useState('');
   const [notificationStatus, setNotificationStatus] = useState('unknown');
   const [notificationLoading, setNotificationLoading] = useState(false);
@@ -170,7 +170,21 @@ function Profile() {
     }
   };
 
-  if (!userMembership) {
+  // Auto-reload logic if stuck loading for too long (only once per session)
+  React.useEffect(() => {
+    if ((loading || !userMembership) && typeof window !== 'undefined') {
+      const alreadyReloaded = sessionStorage.getItem('profile_auto_reloaded');
+      const timeout = setTimeout(() => {
+        if (!(userMembership) && !alreadyReloaded) {
+          sessionStorage.setItem('profile_auto_reloaded', 'true');
+          window.location.reload();
+        }
+      }, 2000); // 2 seconds
+      return () => clearTimeout(timeout);
+    }
+  }, [loading, userMembership]);
+
+  if (loading || !userMembership) {
     return (
       <div className="membership-page">
         <div className="membership-loading">
@@ -182,10 +196,11 @@ function Profile() {
   }
 
   const availableUpgrades = getAvailableUpgrades(userMembership.tier);
+  // Hide Max tier from the plans grid
   const allTiers = [
     { tier: MEMBERSHIP_TIERS.FREE, ...getTierInfo(MEMBERSHIP_TIERS.FREE) },
-    { tier: MEMBERSHIP_TIERS.PLUS, ...getTierInfo(MEMBERSHIP_TIERS.PLUS) },
-    { tier: MEMBERSHIP_TIERS.MAX, ...getTierInfo(MEMBERSHIP_TIERS.MAX) }
+    { tier: MEMBERSHIP_TIERS.PLUS, ...getTierInfo(MEMBERSHIP_TIERS.PLUS) }
+    // { tier: MEMBERSHIP_TIERS.MAX, ...getTierInfo(MEMBERSHIP_TIERS.MAX) } // Hidden for now
   ];
 
   return (

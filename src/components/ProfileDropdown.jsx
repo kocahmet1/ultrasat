@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './ProfileDropdown.css';
 import { FaUserCircle, FaCog, FaSignOutAlt, FaGem, FaUser, FaChartBar, FaQuestionCircle } from 'react-icons/fa';
@@ -9,6 +9,7 @@ const ProfileDropdown = () => {
   const { currentUser, logout, userMembership } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const location = useLocation();
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -24,6 +25,11 @@ const ProfileDropdown = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Close dropdown on route/location change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
 
   if (!currentUser) {
     return null;
