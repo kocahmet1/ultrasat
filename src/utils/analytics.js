@@ -4,7 +4,7 @@ export const trackPageView = (path) => {
   
   if (typeof window !== 'undefined' && window.gtag) {
     console.log('Analytics: gtag found, sending page view...');
-    window.gtag('config', 'G-VRG24M0NE4', {
+    window.gtag('config', 'G-VRGZ4M0WE4', {
       page_path: path,
     });
     console.log('Analytics: Page view sent successfully');
