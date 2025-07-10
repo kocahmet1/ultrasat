@@ -49,6 +49,7 @@ import GraphDescriptionTool from './pages/GraphDescriptionTool';
 import AdminLearningContent from './pages/AdminLearningContent';
 import HelpPage from './pages/HelpPage';
 import AuthNoticePage from './pages/AuthNoticePage';
+import PrivacyPage from './pages/PrivacyPage';
 
 import MembershipManagement from './components/admin/MembershipManagement';
 import MembershipUpgrade from './components/MembershipUpgrade';
@@ -157,6 +158,7 @@ const router = createBrowserRouter([
       { path: '/payment/cancel', element: <PrivateRoute><PaymentCancel /></PrivateRoute> },
       { path: '/help', element: <HelpPage /> },
       { path: '/auth-notice', element: <AuthNoticePage /> },
+      { path: '/privacy', element: <PrivacyPage /> },
       { path: '*', element: <Navigate to="/" /> },
     ],
   },
