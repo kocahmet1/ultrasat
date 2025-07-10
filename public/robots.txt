@@ -2,4 +2,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://veritas-blue-web.onrender.com/sitemap.xml
+Sitemap: https://ultrasatprep.com/sitemap.xml

@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Main Public Pages -->
   <url>
-    <loc>https://veritas-blue-web.onrender.com/</loc>
+    <loc>https://ultrasatprep.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/login</loc>
+    <loc>https://ultrasatprep.com/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/signup</loc>
+    <loc>https://ultrasatprep.com/signup</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/help</loc>
+    <loc>https://ultrasatprep.com/help</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/auth-notice</loc>
+    <loc>https://ultrasatprep.com/auth-notice</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <lastmod>2024-12-01</lastmod>
@@ -38,21 +38,21 @@
 
   <!-- Main Dashboard & Profile -->
   <url>
-    <loc>https://veritas-blue-web.onrender.com/dashboard</loc>
+    <loc>https://ultrasatprep.com/dashboard</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/profile</loc>
+    <loc>https://ultrasatprep.com/profile</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/progress</loc>
+    <loc>https://ultrasatprep.com/progress</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <lastmod>2024-12-01</lastmod>
@@ -60,42 +60,42 @@
 
   <!-- Learning & Study Pages -->
   <url>
-    <loc>https://veritas-blue-web.onrender.com/skills</loc>
+    <loc>https://ultrasatprep.com/skills</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/study-resources</loc>
+    <loc>https://ultrasatprep.com/study-resources</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/lectures</loc>
+    <loc>https://ultrasatprep.com/lectures</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/concept-bank</loc>
+    <loc>https://ultrasatprep.com/concept-bank</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/word-bank</loc>
+    <loc>https://ultrasatprep.com/word-bank</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/flashcards</loc>
+    <loc>https://ultrasatprep.com/flashcards</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
@@ -103,42 +103,42 @@
 
   <!-- Quiz & Exam Pages -->
   <url>
-    <loc>https://veritas-blue-web.onrender.com/smart-quiz-generator</loc>
+    <loc>https://ultrasatprep.com/smart-quiz-generator</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/smart-quiz-intro</loc>
+    <loc>https://ultrasatprep.com/smart-quiz-intro</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/subject-quizzes</loc>
+    <loc>https://ultrasatprep.com/subject-quizzes</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/practice-exams</loc>
+    <loc>https://ultrasatprep.com/practice-exams</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/exam/landing</loc>
+    <loc>https://ultrasatprep.com/exam/landing</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/all-results</loc>
+    <loc>https://ultrasatprep.com/all-results</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <lastmod>2024-12-01</lastmod>
@@ -146,21 +146,21 @@
 
   <!-- Membership & Payment Pages -->
   <url>
-    <loc>https://veritas-blue-web.onrender.com/membership/upgrade</loc>
+    <loc>https://ultrasatprep.com/membership/upgrade</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/payment/success</loc>
+    <loc>https://ultrasatprep.com/payment/success</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/payment/cancel</loc>
+    <loc>https://ultrasatprep.com/payment/cancel</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
@@ -168,77 +168,77 @@
 
   <!-- Admin Pages (Lower priority as they're restricted) -->
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin</loc>
+    <loc>https://ultrasatprep.com/admin</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/ai-content</loc>
+    <loc>https://ultrasatprep.com/admin/ai-content</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/practice-exams</loc>
+    <loc>https://ultrasatprep.com/admin/practice-exams</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/question-editor</loc>
+    <loc>https://ultrasatprep.com/admin/question-editor</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/subcategory-settings</loc>
+    <loc>https://ultrasatprep.com/admin/subcategory-settings</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/concept-import</loc>
+    <loc>https://ultrasatprep.com/admin/concept-import</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/question-import</loc>
+    <loc>https://ultrasatprep.com/admin/question-import</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/graph-generation</loc>
+    <loc>https://ultrasatprep.com/admin/graph-generation</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/graph-descriptions</loc>
+    <loc>https://ultrasatprep.com/admin/graph-descriptions</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/learning-content</loc>
+    <loc>https://ultrasatprep.com/admin/learning-content</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
   </url>
   
   <url>
-    <loc>https://veritas-blue-web.onrender.com/admin/membership-management</loc>
+    <loc>https://ultrasatprep.com/admin/membership-management</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2024-12-01</lastmod>
