@@ -1,0 +1,474 @@
+.careers-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 2rem 1rem;
+}
+
+.careers-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 3rem;
+  line-height: 1.7;
+}
+
+.careers-page h1 {
+  color: #1a202c;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #2563eb, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.careers-subtitle {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 500;
+}
+
+.careers-page section {
+  margin-bottom: 3rem;
+}
+
+.careers-page h2 {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+.careers-page h3 {
+  color: #374151;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.careers-page p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Culture Section */
+.culture-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.culture-value {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  border: 2px solid #e5e7eb;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.culture-value:hover {
+  border-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.culture-value h3 {
+  color: #2563eb;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.culture-value p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
+  text-align: center;
+}
+
+/* Benefits Section */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.benefit-category {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  border-left: 4px solid #2563eb;
+}
+
+.benefit-category h3 {
+  color: #2563eb;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.benefit-category ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefit-category li {
+  color: #4b5563;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.benefit-category li:last-child {
+  border-bottom: none;
+}
+
+.benefit-category li:before {
+  content: "✓";
+  color: #059669;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Positions Section */
+.positions-intro {
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.positions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.position-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.position-card:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.position-header {
+  margin-bottom: 1.5rem;
+}
+
+.position-header h3 {
+  color: #1a202c;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.position-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.position-meta span {
+  background: #f3f4f6;
+  color: #4b5563;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.department {
+  background: #dbeafe !important;
+  color: #2563eb !important;
+}
+
+.location {
+  background: #d1fae5 !important;
+  color: #059669 !important;
+}
+
+.type {
+  background: #fef3c7 !important;
+  color: #d97706 !important;
+}
+
+.position-description {
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.position-requirements h4 {
+  color: #374151;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.position-requirements ul {
+  color: #4b5563;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.position-requirements li {
+  margin-bottom: 0.5rem;
+}
+
+.apply-btn {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.apply-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Diversity Section */
+.diversity-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  background: #f0f9ff;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.diversity-stat {
+  text-align: center;
+}
+
+.diversity-stat h3 {
+  color: #2563eb;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.diversity-stat p {
+  color: #374151;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Application Process */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.process-step {
+  text-align: center;
+  position: relative;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #2563eb, #059669);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 1rem;
+}
+
+.process-step h3 {
+  color: #374151;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.process-step p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Internship Section */
+.internship-benefits {
+  background: #fef7ed;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 1rem;
+}
+
+.internship-benefits ul {
+  color: #4b5563;
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.internship-benefits li {
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
+}
+
+/* Contact Recruiting */
+.recruiting-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.contact-btn {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+}
+
+.general-contact {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.general-contact:hover {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .careers-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .careers-container {
+    padding: 2rem 1.5rem;
+    margin: 0 0.5rem;
+  }
+  
+  .careers-page h1 {
+    font-size: 2.5rem;
+  }
+  
+  .careers-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .careers-page h2 {
+    font-size: 1.6rem;
+  }
+  
+  .culture-values {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .position-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .process-steps {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .diversity-stats {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .recruiting-cta {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .contact-btn,
+  .general-contact {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .careers-page h1 {
+    font-size: 2rem;
+  }
+  
+  .careers-subtitle {
+    font-size: 1rem;
+  }
+  
+  .careers-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .culture-value {
+    padding: 1.5rem;
+  }
+  
+  .benefit-category {
+    padding: 1.5rem;
+  }
+  
+  .position-card {
+    padding: 1.5rem;
+  }
+  
+  .diversity-stat h3 {
+    font-size: 2rem;
+  }
+} 

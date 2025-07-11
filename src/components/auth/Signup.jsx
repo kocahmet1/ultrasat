@@ -33,6 +33,31 @@ function Signup() {
         return;
       }
     }
+
+    // Check if coming from exam landing page
+    if (location.state?.from === 'exam') {
+      const { examId, actionType } = location.state;
+      
+      if (actionType === 'view') {
+        navigate('/practice-exams');
+      } else if (actionType === 'start' && examId) {
+        // Check if examId is a number (1, 2, 3) or actual ID
+        if (typeof examId === 'number' || (typeof examId === 'string' && /^\d+$/.test(examId))) {
+          // It's an exam number, redirect to practice exams with the exam number
+          navigate('/practice-exams', { 
+            state: { startExamNumber: parseInt(examId) } 
+          });
+        } else {
+          // It's an actual exam ID, navigate directly
+          navigate(`/practice-exam/${examId}`, { 
+            state: { startExam: true } 
+          });
+        }
+      } else {
+        navigate('/practice-exams');
+      }
+      return;
+    }
     
     // Default navigation
     navigate('/progress');

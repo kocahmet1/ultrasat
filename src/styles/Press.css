@@ -1,0 +1,572 @@
+.press-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 2rem 1rem;
+}
+
+.press-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 3rem;
+  line-height: 1.7;
+}
+
+.press-page h1 {
+  color: #1a202c;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #2563eb, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.press-subtitle {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 500;
+}
+
+.press-page section {
+  margin-bottom: 3rem;
+}
+
+.press-page h2 {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+.press-page h3 {
+  color: #374151;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.press-page h4 {
+  color: #4b5563;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.press-page p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Company Overview */
+.company-description {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: #374151;
+  margin-bottom: 2rem;
+}
+
+.facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.fact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.fact-item:last-child {
+  border-bottom: none;
+}
+
+.fact-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.fact-value {
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Press Releases */
+.press-releases {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.press-release {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.press-release:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.release-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.release-date {
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.release-category {
+  background: #dbeafe;
+  color: #2563eb;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.press-release h3 {
+  color: #1a202c;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.press-release p {
+  color: #6b7280;
+  font-size: 1.05rem;
+  margin-bottom: 1.5rem;
+}
+
+.read-more-btn {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.read-more-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Executive Team */
+.executives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.executive-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  border: 2px solid #e5e7eb;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.executive-card:hover {
+  border-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.executive-photo {
+  margin-bottom: 1.5rem;
+}
+
+.photo-placeholder {
+  width: 80px;
+  height: 80px;
+  background: #e5e7eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 2rem;
+}
+
+.executive-card h3 {
+  color: #1a202c;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.executive-card h4 {
+  color: #2563eb;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.executive-card p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Media Kit */
+.media-kit-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.brand-assets,
+.additional-assets {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.logo-downloads {
+  margin-bottom: 2rem;
+}
+
+.asset-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.asset-item:last-child {
+  border-bottom: none;
+}
+
+.asset-details {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.download-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.download-btn:hover {
+  background: #1d4ed8;
+}
+
+/* Brand Colors */
+.colors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.color-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.color-swatch {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  border: 2px solid #e5e7eb;
+}
+
+.color-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.color-name {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.color-hex,
+.color-rgb {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Additional Resources */
+.resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.resource-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.resource-item h4 {
+  color: #1a202c;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.resource-item p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Awards and Recognition */
+.awards-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.award-item {
+  background: #fef7ed;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  border-left: 4px solid #f59e0b;
+}
+
+.award-item h3 {
+  color: #d97706;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.award-item p {
+  color: #92400e;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Media Coverage */
+.coverage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.coverage-item {
+  display: grid;
+  grid-template-columns: 150px 1fr 120px;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.outlet {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.article {
+  color: #374151;
+  font-style: italic;
+}
+
+.date {
+  color: #6b7280;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+/* Press Contact */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.contact-card {
+  background: #f0f9ff;
+  border-radius: 12px;
+  padding: 2rem;
+  border-left: 4px solid #0284c7;
+}
+
+.contact-card h3 {
+  color: #0284c7;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.contact-card p {
+  color: #4b5563;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-card strong {
+  color: #374151;
+}
+
+/* Guidelines */
+.guidelines-content {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 1rem;
+}
+
+.guidelines-content ul {
+  color: #4b5563;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.guidelines-content li {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .press-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .press-container {
+    padding: 2rem 1.5rem;
+    margin: 0 0.5rem;
+  }
+  
+  .press-page h1 {
+    font-size: 2.5rem;
+  }
+  
+  .press-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .media-kit-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .facts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .executives-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .awards-list {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .coverage-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .date {
+    text-align: center;
+  }
+  
+  .colors-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .press-page h1 {
+    font-size: 2rem;
+  }
+  
+  .press-subtitle {
+    font-size: 1rem;
+  }
+  
+  .press-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .release-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .asset-item {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .resource-item {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .colors-grid {
+    grid-template-columns: 1fr;
+  }
+} 

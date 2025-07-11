@@ -44,12 +44,24 @@ import SubcategoryProgressPage from './pages/SubcategoryProgressPage';
 import SubcategorySettings from './components/admin/SubcategorySettings';
 import ConceptImport from './pages/ConceptImport';
 import QuestionImport from './pages/QuestionImport';
+import AdminBlogManagement from './pages/AdminBlogManagement';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import GraphGenerationPage from './pages/GraphGenerationPage';
 import GraphDescriptionTool from './pages/GraphDescriptionTool';
 import AdminLearningContent from './pages/AdminLearningContent';
 import HelpPage from './pages/HelpPage';
 import AuthNoticePage from './pages/AuthNoticePage';
 import PrivacyPage from './pages/PrivacyPage';
+import TermsOfService from './pages/TermsOfService';
+import CookiePolicy from './pages/CookiePolicy';
+import Accessibility from './pages/Accessibility';
+import AboutUs from './pages/AboutUs';
+import Contact from './pages/Contact';
+import Careers from './pages/Careers';
+import Press from './pages/Press';
+import SATGuide from './pages/SATGuide';
+import ScoreCalculator from './pages/ScoreCalculator';
 
 import MembershipManagement from './components/admin/MembershipManagement';
 import MembershipUpgrade from './components/MembershipUpgrade';
@@ -117,6 +129,17 @@ const router = createBrowserRouter([
       { path: '/help', element: <HelpPage /> },
       { path: '/auth-notice', element: <AuthNoticePage /> },
       { path: '/privacy', element: <PrivacyPage /> },
+      { path: '/terms', element: <TermsOfService /> },
+      { path: '/cookies', element: <CookiePolicy /> },
+      { path: '/accessibility', element: <Accessibility /> },
+      { path: '/about', element: <AboutUs /> },
+      { path: '/contact', element: <Contact /> },
+      { path: '/careers', element: <Careers /> },
+      { path: '/press', element: <Press /> },
+      { path: '/sat-guide', element: <SATGuide /> },
+      { path: '/score-calculator', element: <ScoreCalculator /> },
+      { path: '/blog', element: <Blog /> },
+      { path: '/blog/:id', element: <BlogPost /> },
     ],
   },
   // All other routes with standard layout (with sidebar)
@@ -164,6 +187,7 @@ const router = createBrowserRouter([
       { path: '/admin/graph-generation', element: <PrivateRoute><GraphGenerationPage /></PrivateRoute> },
       { path: '/admin/graph-descriptions', element: <PrivateRoute><GraphDescriptionTool /></PrivateRoute> },
       { path: '/admin/learning-content', element: <PrivateRoute><AdminLearningContent /></PrivateRoute> },
+      { path: '/admin/blog-management', element: <PrivateRoute><AdminBlogManagement /></PrivateRoute> },
       { path: '/admin/membership-management', element: <PrivateRoute><MembershipManagement /></PrivateRoute> },
       { path: '/membership/upgrade', element: <PrivateRoute><MembershipUpgrade /></PrivateRoute> },
       { path: '/payment/success', element: <PrivateRoute><PaymentSuccess /></PrivateRoute> },

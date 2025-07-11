@@ -1512,7 +1512,7 @@ h4 {
 }
 
 /* Delete Button Styles */
-.btn-delete {
+.module-card .btn-delete {
   position: absolute;
   top: 0;
   right: 0;
@@ -1537,7 +1537,7 @@ h4 {
   opacity: 1;
 }
 
-.btn-delete:hover {
+.module-card .btn-delete:hover {
   background-color: #d32f2f;
   transform: scale(1.1);
 }

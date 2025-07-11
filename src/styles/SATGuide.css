@@ -1,0 +1,502 @@
+.sat-guide-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 2rem 1rem;
+}
+
+.sat-guide-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 3rem;
+  line-height: 1.7;
+}
+
+.sat-guide-page h1 {
+  color: #1a202c;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #2563eb, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 500;
+}
+
+.sat-guide-page section {
+  margin-bottom: 3rem;
+}
+
+.sat-guide-page h2 {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+.sat-guide-page h3 {
+  color: #374151;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.sat-guide-page p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  text-align: justify;
+  font-size: 1.1rem;
+}
+
+.sat-guide-page ul {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.sat-guide-page li {
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
+}
+
+/* Quick Facts */
+.quick-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.fact-item {
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  border-left: 4px solid #2563eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fact-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.fact-item h3 {
+  color: #2563eb;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.fact-item p {
+  color: #374151;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Test Structure */
+.section-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.test-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 2px solid #e5e7eb;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.test-section:hover {
+  border-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.test-section h3 {
+  color: #2563eb;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.section-details p {
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  font-size: 1rem;
+}
+
+/* Scoring System */
+.scoring-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.score-component {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.score-component h3 {
+  color: #059669;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.score-component ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.score-component li {
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Percentiles */
+.percentile-info {
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.percentile-info h3 {
+  color: #374151;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.percentile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.percentile-item {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.percentile-item .score {
+  display: block;
+  color: #2563eb;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.percentile-item .percentile {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Strategies */
+.strategies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.strategy-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.strategy-card:hover {
+  border-color: #059669;
+  transform: translateY(-2px);
+}
+
+.strategy-card h3 {
+  color: #059669;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.strategy-card p {
+  color: #4b5563;
+  margin: 0;
+  text-align: left;
+  font-size: 1rem;
+}
+
+/* Tips Section */
+.tips-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.tip-category {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  border-left: 4px solid #dc2626;
+}
+
+.tip-category h3 {
+  color: #dc2626;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.tip-category ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.tip-category li {
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+/* Timeline */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.timeline-item {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  position: relative;
+}
+
+.timeline-item h3 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.timeline-item ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.timeline-item li {
+  color: #e5e7eb;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Resources */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.resource-item {
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 2rem;
+  border-left: 4px solid #059669;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resource-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.resource-item h3 {
+  color: #059669;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.resource-item p {
+  color: #4b5563;
+  margin: 0;
+  text-align: left;
+  font-size: 1rem;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  color: white;
+}
+
+.cta-section h2 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  color: white;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background: white;
+  color: #2563eb;
+}
+
+.btn-primary:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border-color: white;
+}
+
+.btn-secondary:hover {
+  background: white;
+  color: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sat-guide-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .sat-guide-container {
+    padding: 2rem;
+  }
+
+  .sat-guide-page h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .sat-guide-page h2 {
+    font-size: 1.75rem;
+  }
+
+  .sat-guide-page h3 {
+    font-size: 1.2rem;
+  }
+
+  .sat-guide-page p {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .quick-facts {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .section-breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .strategies-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tips-categories {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sat-guide-page h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .sat-guide-container {
+    padding: 1.5rem;
+  }
+
+  .percentile-item .score {
+    font-size: 1.25rem;
+  }
+} 

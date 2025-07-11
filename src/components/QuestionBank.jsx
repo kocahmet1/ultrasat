@@ -87,6 +87,15 @@ const QuestionBank = () => {
   return (
     <section className="question-bank-section">
       <div className="container">
+        {/* Free Access Notice */}
+        <div className="free-access-notice">
+          <div className="notice-content">
+            <span className="notice-icon">🎉</span>
+            <span className="notice-text">All questions in the Question Bank are accessible with a free account</span>
+            <span className="notice-badge">100% Free</span>
+          </div>
+        </div>
+        
         <div className="section-header-center">
           <h2>Question Bank: Take a mini test <span className="yellow-underline">Now</span></h2>
         </div>

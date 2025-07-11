@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getAllPracticeExams } from '../firebase/services';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/PracticeExamList.css';
@@ -14,11 +14,28 @@ const PracticeExamList = () => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Fetch all public practice exams on component mount
   useEffect(() => {
     fetchPracticeExams();
   }, []);
+
+  // Auto-start exam if redirected from authentication
+  useEffect(() => {
+    if (location.state?.startExamNumber && practiceExams.length > 0) {
+      const examNumber = location.state.startExamNumber;
+      const examIndex = examNumber - 1; // Convert to 0-based index
+      
+      if (examIndex >= 0 && examIndex < practiceExams.length) {
+        const exam = practiceExams[examIndex];
+        // Clear the state to prevent re-triggering
+        window.history.replaceState({}, document.title);
+        // Start the exam
+        handleStartExam(exam, examIndex, false);
+      }
+    }
+  }, [practiceExams, location.state]);
 
   // Fetch practice exams that are marked as public
   const fetchPracticeExams = async () => {

@@ -1,0 +1,299 @@
+.about-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 2rem 1rem;
+}
+
+.about-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 3rem;
+  line-height: 1.7;
+}
+
+.about-page h1 {
+  color: #1a202c;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #2563eb, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 500;
+}
+
+.about-page section {
+  margin-bottom: 3rem;
+}
+
+.about-page h2 {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+.about-page h3 {
+  color: #374151;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.about-page p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  text-align: justify;
+  font-size: 1.1rem;
+}
+
+.about-page ul {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.about-page li {
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
+}
+
+/* Values Section */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.value-item {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  border-left: 4px solid #2563eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.value-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.value-item h3 {
+  color: #2563eb;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.value-item p {
+  color: #6b7280;
+  font-size: 1rem;
+  text-align: left;
+  margin: 0;
+}
+
+/* Approach Section */
+.approach-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.feature:hover {
+  border-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.feature h3 {
+  color: #1a202c;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.feature p {
+  color: #6b7280;
+  font-size: 1rem;
+  text-align: center;
+  margin: 0;
+}
+
+/* Team Section */
+.team-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.team-stat {
+  text-align: center;
+}
+
+.team-stat h3 {
+  color: #2563eb;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.team-stat p {
+  color: #374151;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+/* Contact CTA */
+.contact-cta {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+}
+
+.contact-cta h2 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.contact-cta p {
+  color: white;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 0;
+}
+
+.contact-link,
+.help-link {
+  color: #fbbf24;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.contact-link:hover,
+.help-link:hover {
+  border-bottom-color: #fbbf24;
+}
+
+/* Mission and Story Sections */
+.mission-section,
+.story-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.commitment-section {
+  background: #f0f9ff;
+  border-radius: 12px;
+  padding: 2rem;
+  border-left: 4px solid #0284c7;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .about-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .about-container {
+    padding: 2rem 1.5rem;
+    margin: 0 0.5rem;
+  }
+  
+  .about-page h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .about-page h2 {
+    font-size: 1.6rem;
+  }
+  
+  .about-page h3 {
+    font-size: 1.2rem;
+  }
+  
+  .about-page p {
+    text-align: left;
+    font-size: 1rem;
+  }
+  
+  .values-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .approach-features {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .team-highlights {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .value-item {
+    padding: 1.5rem;
+  }
+  
+  .feature {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-page h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .about-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .team-stat h3 {
+    font-size: 2rem;
+  }
+} 

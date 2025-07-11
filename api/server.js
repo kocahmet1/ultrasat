@@ -19,6 +19,7 @@ const conceptsRouter = require('./conceptsAPI');
 const conceptDetailRouter = require('./conceptDetailRoutes');
 const questionsRouter = require('./questionsAPI');
 const stripeRouter = require('./stripeRoutes');
+const blogRouter = require('./blogRoutes');
 // Conditionally load graph generation modules only if dependencies are available
 let graphGenerationPlotlyRouter;
 console.log('--- ENV VARS FOR GRAPH GENERATION ---');
@@ -167,6 +168,7 @@ app.use('/api/concepts', conceptsRouter);
 app.use('/api/concepts', conceptDetailRouter);
 app.use('/api/questions', questionsRouter);
 app.use('/api/stripe', attachFirebaseAdmin, stripeRouter);
+app.use('/api/blog', blogRouter);
 
 // Help/FAQ endpoint
 app.get('/api/help', (req, res) => {
@@ -198,6 +200,390 @@ app.get('/api/help', (req, res) => {
       },
     ],
   });
+});
+
+// Dynamic sitemap generation
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    res.set('Content-Type', 'application/xml');
+    
+    // Base sitemap content
+    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Public Pages -->
+  <url>
+    <loc>https://ultrasatprep.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/login</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/signup</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/help</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/auth-notice</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- Company & Information Pages -->
+  <url>
+    <loc>https://ultrasatprep.com/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/careers</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/press</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- SAT Resources & Tools -->
+  <url>
+    <loc>https://ultrasatprep.com/sat-guide</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/score-calculator</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- Blog Section -->
+  <url>
+    <loc>https://ultrasatprep.com/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>`;
+
+    // Fetch blog posts and add them to sitemap
+    try {
+      if (firebaseAdmin) {
+        const db = firebaseAdmin.firestore();
+        const blogQuery = db.collection('blogPosts')
+          .where('status', '==', 'published')
+          .orderBy('createdAt', 'desc')
+          .limit(100); // Reasonable limit for sitemap
+        
+        const snapshot = await blogQuery.get();
+        
+        console.log(`Found ${snapshot.docs.length} published blog posts for sitemap`);
+        
+        snapshot.docs.forEach(doc => {
+          const post = doc.data();
+          const lastMod = post.updatedAt || post.createdAt;
+          const lastModDate = lastMod?.toDate?.() || new Date(lastMod);
+          
+          sitemap += `
+  
+  <url>
+    <loc>https://ultrasatprep.com/blog/${doc.id}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${lastModDate.toISOString().split('T')[0]}</lastmod>
+  </url>`;
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching blog posts for sitemap:', error);
+      // Continue without blog posts if there's an error
+    }
+
+    // Add remaining static pages
+    sitemap += `
+
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://ultrasatprep.com/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/cookies</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/accessibility</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- Main Dashboard & Profile -->
+  <url>
+    <loc>https://ultrasatprep.com/dashboard</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/profile</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/progress</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- Learning & Study Pages -->
+  <url>
+    <loc>https://ultrasatprep.com/skills</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/study-resources</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/lectures</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/concept-bank</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/word-bank</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/flashcards</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- Quiz & Exam Pages -->
+  <url>
+    <loc>https://ultrasatprep.com/smart-quiz-generator</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/smart-quiz-intro</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/subject-quizzes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/practice-exams</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/exam/landing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/all-results</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- Membership & Payment Pages -->
+  <url>
+    <loc>https://ultrasatprep.com/membership/upgrade</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/payment/success</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/payment/cancel</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+
+  <!-- Admin Pages (Lower priority as they're restricted) -->
+  <url>
+    <loc>https://ultrasatprep.com/admin</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/ai-content</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/practice-exams</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/question-editor</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/subcategory-settings</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/concept-import</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/question-import</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/graph-generation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/graph-descriptions</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/learning-content</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/blog-management</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ultrasatprep.com/admin/membership-management</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  </url>
+</urlset>`;
+
+    res.send(sitemap);
+  } catch (error) {
+    console.error('Error generating sitemap:', error);
+    res.status(500).send('Error generating sitemap');
+  }
 });
 
 // Serve React build files in production

@@ -113,3 +113,24 @@
   generatedAt: timestamp     // When these recommendations were generated
 }
 */
+
+// Collection: blogPosts
+// Purpose: Stores blog posts for the application
+/*
+{
+  id: string,                // Auto-generated Firestore ID
+  title: string,             // Blog post title
+  content: string,           // Full blog post content (supports HTML/Markdown)
+  excerpt: string,           // Short summary/preview of the post
+  author: string,            // Author name
+  category: string,          // Blog post category (e.g., "Study Tips", "SAT News", "Math Help")
+  tags: array,               // Array of tags for categorization and search
+  imageUrl: string,          // Featured image URL (optional)
+  featured: boolean,         // Whether this post is featured
+  status: string,            // "draft", "published", or "archived"
+  views: number,             // Number of times the post has been viewed
+  readTime: number,          // Estimated reading time in minutes
+  createdAt: timestamp,      // When this post was created
+  updatedAt: timestamp       // When this post was last modified
+}
+*/

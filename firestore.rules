@@ -262,6 +262,15 @@ service cloud.firestore {
       allow write: if isSignedIn() && isAdmin();
     }
     
+    // Blog posts collection - allow public read access to published posts
+    match /blogPosts/{postId} {
+      // Allow public read access to published blog posts (for landing page and blog listing)
+      allow read: if resource.data.status == 'published';
+      
+      // Allow admins to read all posts (including drafts) and perform all write operations
+      allow read, write: if isSignedIn() && isAdmin();
+    }
+    
     // Catch-all rule - deny everything else
     match /{document=**} {
       allow read, write: if false;

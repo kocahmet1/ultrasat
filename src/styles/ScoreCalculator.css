@@ -1,0 +1,598 @@
+.score-calculator-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 2rem 1rem;
+}
+
+.calculator-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 3rem;
+  line-height: 1.7;
+}
+
+.score-calculator-page h1 {
+  color: #1a202c;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #2563eb, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 500;
+}
+
+.score-calculator-page section {
+  margin-bottom: 3rem;
+}
+
+.score-calculator-page h2 {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+.score-calculator-page h3 {
+  color: #374151;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.score-calculator-page p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Calculator Layout */
+.calculator-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+/* Input Section */
+.input-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 2px solid #e5e7eb;
+}
+
+.score-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.score-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.score-input label {
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.score-slider {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: #e5e7eb;
+  outline: none;
+  cursor: pointer;
+}
+
+.score-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2563eb;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.score-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2563eb;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.score-number {
+  width: 80px;
+  padding: 0.5rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  color: #374151;
+}
+
+.score-number:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.score-range {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Results Section */
+.results-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.total-score-display {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.total-score-display h2 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.total-score {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.percentile {
+  margin-bottom: 1.5rem;
+}
+
+.percentile-label {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.percentile-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-left: 0.5rem;
+}
+
+.score-breakdown {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.breakdown-item span:first-child {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.breakdown-item span:last-child {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Admission Level */
+.admission-level {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.admission-badge {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 1rem 0;
+}
+
+.admission-description {
+  color: #6b7280;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Score Analysis */
+.score-analysis {
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.analysis-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.analysis-item .label {
+  color: #374151;
+  font-weight: 500;
+}
+
+.analysis-item .value {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.analysis-item .value.positive {
+  color: #059669;
+}
+
+.analysis-item .value.negative {
+  color: #dc2626;
+}
+
+/* College Suggestions */
+.colleges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.college-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.college-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.college-card.match {
+  border-color: #059669;
+  background: linear-gradient(to bottom, #f0fdf4, white);
+}
+
+.college-card.reach {
+  border-color: #dc2626;
+  background: linear-gradient(to bottom, #fef2f2, white);
+}
+
+.college-card h4 {
+  color: #1a202c;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.college-score {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.match-indicator {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.match-indicator.good-match {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.match-indicator.reach-school {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Tips Grid */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.tip-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  border-left: 4px solid #2563eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tip-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tip-card h3 {
+  color: #2563eb;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.tip-card p {
+  color: #4b5563;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Percentile Chart */
+.chart-container {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.percentile-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.percentile-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bar-info {
+  min-width: 120px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.bar-score {
+  color: #374151;
+}
+
+.bar-percentile {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.bar-container {
+  flex: 1;
+  height: 30px;
+  background: #e5e7eb;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.percentile-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #e5e7eb, #cbd5e1);
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.percentile-bar.active {
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  color: white;
+}
+
+.cta-section h2 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  color: white;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background: white;
+  color: #2563eb;
+}
+
+.btn-primary:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border-color: white;
+}
+
+.btn-secondary:hover {
+  background: white;
+  color: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .score-calculator-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .calculator-container {
+    padding: 2rem;
+  }
+
+  .score-calculator-page h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .calculator-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .total-score {
+    font-size: 3rem;
+  }
+
+  .score-breakdown {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .breakdown-item {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .colleges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .percentile-bar-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .bar-info {
+    min-width: auto;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .score-calculator-page h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .calculator-container {
+    padding: 1.5rem;
+  }
+
+  .total-score {
+    font-size: 2.5rem;
+  }
+
+  .input-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .score-slider {
+    order: 2;
+  }
+
+  .score-number {
+    order: 1;
+    width: 100%;
+  }
+} 

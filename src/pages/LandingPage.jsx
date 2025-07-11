@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import QuestionBank from '../components/QuestionBank';
+import ExamAuthModal from '../components/ExamAuthModal';
+import { getAllPracticeExams } from '../firebase/services';
+import { getRecentBlogPosts } from '../firebase/blogServices';
 import '../styles/LandingPage.css';
 
 const LandingPage = () => {
@@ -12,6 +15,57 @@ const LandingPage = () => {
   const [animatedSuccessRate, setAnimatedSuccessRate] = useState(0);
   const [animatedQuestions, setAnimatedQuestions] = useState(0);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [modalExamId, setModalExamId] = useState(null);
+  const [modalActionType, setModalActionType] = useState('start');
+  const [practiceExams, setPracticeExams] = useState([]);
+  const [recentBlogs, setRecentBlogs] = useState([]);
+  
+  // Fetch practice exams on component mount (only if user is authenticated)
+  useEffect(() => {
+    const fetchPracticeExams = async () => {
+      // Only fetch if user is authenticated to avoid permissions error
+      if (!currentUser) {
+        // For unauthenticated users, we'll handle exam selection when they try to start
+        setPracticeExams([]);
+        return;
+      }
+      
+      try {
+        const exams = await getAllPracticeExams(true); // Only public exams
+        
+        // Sort exams numerically by title to match the display order
+        exams.sort((a, b) => {
+          const numA = parseInt(a.title.match(/\d+/)?.[0] || 0, 10);
+          const numB = parseInt(b.title.match(/\d+/)?.[0] || 0, 10);
+          return numA - numB;
+        });
+        
+        setPracticeExams(exams);
+      } catch (error) {
+        console.error('Error fetching practice exams:', error);
+        // Silently fail for unauthenticated users
+        setPracticeExams([]);
+      }
+    };
+    
+    fetchPracticeExams();
+  }, [currentUser]); // Re-fetch when currentUser changes
+
+  // Fetch recent blog posts
+  useEffect(() => {
+    const fetchRecentBlogs = async () => {
+      try {
+        const blogs = await getRecentBlogPosts(2); // Get latest 2 blogs
+        setRecentBlogs(blogs);
+      } catch (error) {
+        console.error('Error fetching recent blogs:', error);
+        setRecentBlogs([]);
+      }
+    };
+    
+    fetchRecentBlogs();
+  }, []);
   
   useEffect(() => {
     // Create subtle particle effect
@@ -42,7 +96,7 @@ const LandingPage = () => {
 
     // Animate score counter
     let scoreStart = 0;
-    const scoreEnd = 1580;
+    const scoreEnd = 1550;
     const scoreDuration = 2000;
     const scoreIncrement = scoreEnd / (scoreDuration / 50);
     
@@ -74,7 +128,7 @@ const LandingPage = () => {
 
     // Animate questions counter
     let questionsStart = 0;
-    const questionsEnd = 50;
+    const questionsEnd = 8;
     const questionsDuration = 2400;
     const questionsIncrement = questionsEnd / (questionsDuration / 50);
     
@@ -101,6 +155,44 @@ const LandingPage = () => {
     } catch (error) {
       console.error('Failed to log out', error);
     }
+  };
+
+  const handleExamStart = (examIndex) => {
+    if (currentUser) {
+      // User is logged in, navigate directly to the specific exam
+      const exam = practiceExams[examIndex];
+      if (exam) {
+        navigate(`/practice-exam/${exam.id}`, { 
+          state: { startExam: true } 
+        });
+      } else {
+        // Fallback: navigate to practice exams list
+        navigate('/practice-exams');
+      }
+    } else {
+      // User not logged in, show auth modal with exam number
+      setModalExamId(examIndex + 1); // Store exam number (1, 2, 3) for display
+      setModalActionType('start');
+      setAuthModalOpen(true);
+    }
+  };
+
+  const handleViewAllExams = () => {
+    if (currentUser) {
+      // User is logged in, navigate directly
+      navigate('/practice-exams');
+    } else {
+      // User not logged in, show auth modal
+      setModalExamId(null);
+      setModalActionType('view');
+      setAuthModalOpen(true);
+    }
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(false);
+    setModalExamId(null);
+    setModalActionType('start');
   };
 
   return (
@@ -139,6 +231,7 @@ const LandingPage = () => {
                   <li><Link to="/practice-exams" onClick={() => setMobileNavOpen(false)}>Practice Exams</Link></li>
                   <li><Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Quizzes</Link></li>
                   <li><Link to="/word-bank" onClick={() => setMobileNavOpen(false)}>Word Bank</Link></li>
+                  <li><Link to="/blog" onClick={() => setMobileNavOpen(false)}>Blog</Link></li>
                   <li><Link to="/help" onClick={() => setMobileNavOpen(false)}>Help</Link></li>
                   <li><Link to="/login" onClick={() => setMobileNavOpen(false)}>Login</Link></li>
                   <li><Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Get Started</Link></li>
@@ -162,8 +255,9 @@ const LandingPage = () => {
 
             <div className="hero-stats-grid">
               <div className="stat-card">
-                <div className="stat-number">{animatedScore}</div>
-                <div className="stat-label">Average Score</div>
+                <div className="stat-achieve">Achieve</div>
+                <div className="stat-number">{animatedScore}+</div>
+                <div className="stat-label"></div>
               </div>
               <div className="stat-card featured">
                 <div className="stat-number">{animatedSuccessRate}%</div>
@@ -196,7 +290,7 @@ const LandingPage = () => {
                   </div>
                   <button 
                     className="exam-start-button first-test-pulsate"
-                    onClick={() => navigate('/practice-exams')}
+                    onClick={() => handleExamStart(0)}
                   >
                     <span className="pulse-ring"></span>
                     <span className="button-text">START</span>
@@ -211,7 +305,7 @@ const LandingPage = () => {
                   </div>
                   <button 
                     className="exam-start-button"
-                    onClick={() => navigate('/practice-exams')}
+                    onClick={() => handleExamStart(1)}
                   >
                     <span className="pulse-ring"></span>
                     <span className="button-text">START</span>
@@ -226,7 +320,7 @@ const LandingPage = () => {
                   </div>
                   <button 
                     className="exam-start-button"
-                    onClick={() => navigate('/practice-exams')}
+                    onClick={() => handleExamStart(2)}
                   >
                     <span className="pulse-ring"></span>
                     <span className="button-text">START</span>
@@ -241,7 +335,7 @@ const LandingPage = () => {
                   </div>
                   <button 
                     className="exam-start-button view-all-button"
-                    onClick={() => navigate('/practice-exams')}
+                    onClick={handleViewAllExams}
                   >
                     <span className="pulse-ring"></span>
                     <span className="button-text">VIEW</span>
@@ -291,7 +385,7 @@ const LandingPage = () => {
             <div className="feature-card">
               <div className="feature-icon-large">📚</div>
               <h3>Smart Vocabulary Builder</h3>
-              <p>Learn 10,000+ SAT words with AI-powered flashcards that adapt to your pace</p>
+              <p>Improve your SAT Vocabulary with AI-powered flashcards that adapt to your pace</p>
               <ul className="feature-points">
                 <li>Spaced repetition algorithm</li>
                 <li>Context-based learning</li>
@@ -380,67 +474,62 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Results Section - Symmetric Stats */}
-      <section className="results-showcase-section">
+      {/* Recent Blog Posts Section */}
+      <section className="recent-blogs-section">
         <div className="container">
           <div className="section-header-center">
-            <h2>Proven Results</h2>
-            <p>Real improvements from real students</p>
+            <h2>Latest from Our Blog</h2>
+            <p>Stay updated with the latest SAT tips, strategies, and insights</p>
           </div>
           
-          <div className="results-grid">
-            <div className="result-stat">
-              <div className="result-number">+216</div>
-              <div className="result-label">Average Score Increase</div>
-              <div className="result-context">Points gained after 3 months</div>
-            </div>
-            
-            <div className="result-stat featured-stat">
-              <div className="result-number">87%</div>
-              <div className="result-label">Reach Target Score</div>
-              <div className="result-context">Students who achieve their goal</div>
+          {recentBlogs.length > 0 ? (
+            <div className="blog-posts-grid">
+              {recentBlogs.map((blog, index) => (
+                <div key={blog.id} className="blog-post-card">
+                  <div className="blog-image-container">
+                    {blog.imageUrl ? (
+                      <img 
+                        src={blog.imageUrl} 
+                        alt={blog.title}
+                        className="blog-image"
+                      />
+                    ) : (
+                      <div className="blog-image-placeholder">
+                        <div className="blog-icon">📚</div>
+                      </div>
+                    )}
+                    <div className="blog-category-badge">{blog.category || 'SAT Tips'}</div>
                   </div>
-            
-            <div className="result-stat">
-              <div className="result-number">4.8/5</div>
-              <div className="result-label">Student Rating</div>
-              <div className="result-context">Based on 10,000+ reviews</div>
+                  
+                  <div className="blog-content">
+                    <h3 className="blog-title">{blog.title}</h3>
+                    <p className="blog-excerpt">{blog.excerpt}</p>
+                    
+                    <div className="blog-meta">
+                      <span className="blog-read-time">{blog.readTime || 5} min read</span>
+                      <Link to={`/blog/${blog.id}`} className="blog-read-more">
+                        Read More →
+                      </Link>
+                    </div>
                   </div>
                 </div>
-
-          <div className="testimonials-carousel">
-            <div className="testimonial-card">
-              <div className="stars">⭐⭐⭐⭐⭐</div>
-              <div className="testimonial-quote">
-                "The adaptive quizzes knew exactly what I needed to practice. My math score improved by 130 points!"
-              </div>
-              <div className="testimonial-author">
-                <strong>Sarah Chen</strong>
-                <span>Stanford '28</span>
-                  </div>
+              ))}
             </div>
-            
-            <div className="testimonial-card">
-              <div className="stars">⭐⭐⭐⭐⭐</div>
-              <div className="testimonial-quote">
-                "Best SAT prep I've used. The instant feedback helped me understand my mistakes immediately."
-              </div>
-              <div className="testimonial-author">
-                <strong>Marcus Johnson</strong>
-                <span>MIT '27</span>
+          ) : (
+            <div className="blog-placeholder">
+              <div className="placeholder-icon">📝</div>
+              <h3>Coming Soon!</h3>
+              <p>We're working on some amazing SAT prep content for you. Check back soon!</p>
+              <Link to="/blog" className="blog-read-more">
+                Visit Our Blog →
+              </Link>
             </div>
-            </div>
-            
-            <div className="testimonial-card">
-              <div className="stars">⭐⭐⭐⭐⭐</div>
-              <div className="testimonial-quote">
-                "Went from 1320 to 1540 in just 2 months. The personalized study plan made all the difference."
-              </div>
-              <div className="testimonial-author">
-                <strong>Emma Rodriguez</strong>
-                <span>Yale '28</span>
-            </div>
-            </div>
+          )}
+          
+          <div className="blog-section-cta">
+            <Link to="/blog" className="cta-button secondary">
+              View All Articles
+            </Link>
           </div>
         </div>
       </section>
@@ -450,16 +539,14 @@ const LandingPage = () => {
         <div className="container">
           <div className="final-cta-content-center">
             <h2>Ready to Ace the SAT?</h2>
-            <p>Join 100,000+ students who've improved their scores with UltraSATPrep</p>
+
             
             {!currentUser ? (
               <div className="final-cta-buttons-center">
             <Link to="/signup" className="cta-button primary large">
               Get Started Free
             </Link>
-                <div className="cta-subtext">
-                  No credit card required • Results in 10 minutes
-                </div>
+
               </div>
             ) : (
               <div className="final-cta-buttons-center">
@@ -485,12 +572,7 @@ const LandingPage = () => {
                 <h3>Ultra<span>SAT</span>Prep</h3>
               </div>
               <p>Your AI-powered path to SAT success</p>
-              <div className="social-links">
-                <a href="https://twitter.com/ultrasatprep" aria-label="Twitter">𝕏</a>
-                <a href="https://facebook.com/ultrasatprep" aria-label="Facebook">f</a>
-                <a href="https://instagram.com/ultrasatprep" aria-label="Instagram">📷</a>
-                <a href="https://youtube.com/ultrasatprep" aria-label="YouTube">▶</a>
-              </div>
+
             </div>
             
             <div className="footer-links-grid">
@@ -538,6 +620,14 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <ExamAuthModal
+        isOpen={authModalOpen}
+        onClose={closeAuthModal}
+        examId={modalExamId}
+        actionType={modalActionType}
+      />
     </div>
   );
 };

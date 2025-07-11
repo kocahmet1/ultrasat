@@ -1979,6 +1979,12 @@ const migrateExistingQuestions = async () => {
             AI Content
           </button>
           <button 
+            className={`tab-button`}
+            onClick={() => navigate('/admin/blog-management')}
+          >
+            Blog Management
+          </button>
+          <button 
             className={`tab-button ${activeTab === 'maintenance' ? 'active' : ''}`}
             onClick={() => setActiveTab('maintenance')}
           >
