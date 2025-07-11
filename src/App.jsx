@@ -75,6 +75,7 @@ import { getFeatureFlags } from './firebase/config.featureFlags';
 import Sidebar from './components/Sidebar';
 import TopNavBar from './components/TopNavBar';
 import ProfileDropdown from './components/ProfileDropdown';
+import LandingPageLayout from './components/LandingPageLayout';
 import { MembershipGate } from './components/membership';
 import useIsMobile from './hooks/useIsMobile';
 import { SidebarProvider } from './contexts/SidebarContext';
@@ -105,13 +106,24 @@ const RootLayout = () => {
 
 // Create the router configuration using the modern createBrowserRouter API
 const router = createBrowserRouter([
+  // Landing page with special layout (no sidebar)
+  {
+    path: '/',
+    element: <LandingPageLayout />,
+    children: [
+      { path: '/', element: <LandingPage /> },
+      { path: '/login', element: <Login /> },
+      { path: '/signup', element: <Signup /> },
+      { path: '/help', element: <HelpPage /> },
+      { path: '/auth-notice', element: <AuthNoticePage /> },
+      { path: '/privacy', element: <PrivacyPage /> },
+    ],
+  },
+  // All other routes with standard layout (with sidebar)
   {
     element: <RootLayout />,
     children: [
-      { path: '/login', element: <Login /> },
-      { path: '/signup', element: <Signup /> },
       { path: '/profile', element: <PrivateRoute><Profile /></PrivateRoute> },
-      { path: '/', element: <LandingPage /> },
       { path: '/exam/landing', element: <PrivateRoute><ExamLandingPage /></PrivateRoute> },
       { path: '/exam/results/:examId?', element: <PrivateRoute><ExamResults /></PrivateRoute> },
       { path: '/exam/:moduleId', element: <PrivateRoute><ExamController /></PrivateRoute> },
@@ -156,9 +168,6 @@ const router = createBrowserRouter([
       { path: '/membership/upgrade', element: <PrivateRoute><MembershipUpgrade /></PrivateRoute> },
       { path: '/payment/success', element: <PrivateRoute><PaymentSuccess /></PrivateRoute> },
       { path: '/payment/cancel', element: <PrivateRoute><PaymentCancel /></PrivateRoute> },
-      { path: '/help', element: <HelpPage /> },
-      { path: '/auth-notice', element: <AuthNoticePage /> },
-      { path: '/privacy', element: <PrivacyPage /> },
       { path: '*', element: <Navigate to="/" /> },
     ],
   },

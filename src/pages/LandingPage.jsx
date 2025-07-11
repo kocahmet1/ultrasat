@@ -8,41 +8,31 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const particlesRef = useRef(null);
   const [animatedScore, setAnimatedScore] = useState(0);
+  const [animatedSuccessRate, setAnimatedSuccessRate] = useState(0);
+  const [animatedQuestions, setAnimatedQuestions] = useState(0);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   
   useEffect(() => {
-    // Create particle effect
+    // Create subtle particle effect
     if (particlesRef.current) {
       const container = particlesRef.current;
-      const particleCount = window.innerWidth > 768 ? 50 : 30;
+      const particleCount = 20; // Fewer particles for cleaner look
       
-      // Clear any existing particles
       container.innerHTML = '';
       
-      // Create the particles
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        // Random size between 3px and 10px
-        const size = Math.random() * 7 + 3;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        // Random position
         const left = Math.random() * 100;
         const top = Math.random() * 100;
         particle.style.left = `${left}%`;
         particle.style.top = `${top}%`;
         
-        // Random opacity
-        particle.style.opacity = Math.random() * 0.5 + 0.1;
-        
-        // Random animation duration
-        const duration = Math.random() * 10 + 5;
+        const duration = Math.random() * 20 + 10;
         particle.style.animationDuration = `${duration}s`;
         
-        // Random animation delay
-        const delay = Math.random() * 5;
+        const delay = Math.random() * 10;
         particle.style.animationDelay = `${delay}s`;
         
         container.appendChild(particle);
@@ -50,22 +40,58 @@ const LandingPage = () => {
     }
 
     // Animate score counter
-    let start = 0;
-    const end = 1580;
-    const duration = 2000; // 2 seconds
-    const increment = end / (duration / 50);
+    let scoreStart = 0;
+    const scoreEnd = 1580;
+    const scoreDuration = 2000;
+    const scoreIncrement = scoreEnd / (scoreDuration / 50);
     
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= end) {
-        setAnimatedScore(end);
-        clearInterval(timer);
+    const scoreTimer = setInterval(() => {
+      scoreStart += scoreIncrement;
+      if (scoreStart >= scoreEnd) {
+        setAnimatedScore(scoreEnd);
+        clearInterval(scoreTimer);
       } else {
-        setAnimatedScore(Math.floor(start));
+        setAnimatedScore(Math.floor(scoreStart));
       }
     }, 50);
 
-    return () => clearInterval(timer);
+    // Animate success rate counter
+    let successStart = 0;
+    const successEnd = 94;
+    const successDuration = 2200;
+    const successIncrement = successEnd / (successDuration / 50);
+    
+    const successTimer = setInterval(() => {
+      successStart += successIncrement;
+      if (successStart >= successEnd) {
+        setAnimatedSuccessRate(successEnd);
+        clearInterval(successTimer);
+      } else {
+        setAnimatedSuccessRate(Math.floor(successStart));
+      }
+    }, 50);
+
+    // Animate questions counter
+    let questionsStart = 0;
+    const questionsEnd = 50;
+    const questionsDuration = 2400;
+    const questionsIncrement = questionsEnd / (questionsDuration / 50);
+    
+    const questionsTimer = setInterval(() => {
+      questionsStart += questionsIncrement;
+      if (questionsStart >= questionsEnd) {
+        setAnimatedQuestions(questionsEnd);
+        clearInterval(questionsTimer);
+      } else {
+        setAnimatedQuestions(Math.floor(questionsStart));
+      }
+    }, 50);
+
+    return () => {
+      clearInterval(scoreTimer);
+      clearInterval(successTimer);
+      clearInterval(questionsTimer);
+    };
   }, []);
   
   const handleLogout = async () => {
@@ -83,351 +109,498 @@ const LandingPage = () => {
       
       {/* Header */}
       <header className="landing-header">
-        <div className="logo-container">
-          <div className="logo-icon">
-            <div className="logo-circle"></div>
-            <div className="logo-pulse"></div>
+        <div className="container">
+          <div className="logo-container">
+            <div className="logo-icon">SAT</div>
+            <h1>Ultra<span>SAT</span>Prep</h1>
           </div>
-          <h1>Ultra<span>SAT</span> Prep</h1>
+          <nav className="main-nav">
+            <button 
+              className="mobile-nav-toggle"
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+            >
+              ☰
+            </button>
+            <ul className={mobileNavOpen ? 'mobile-nav-open' : ''}>
+              {currentUser ? (
+                <>
+                  <li><Link to="/progress" onClick={() => setMobileNavOpen(false)}>Dashboard</Link></li>
+                  <li><Link to="/practice-exams" onClick={() => setMobileNavOpen(false)}>Practice Exams</Link></li>
+                  <li><Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Quizzes</Link></li>
+                  <li><Link to="/word-bank" onClick={() => setMobileNavOpen(false)}>Word Bank</Link></li>
+                  <li><Link to="/concept-bank" onClick={() => setMobileNavOpen(false)}>Concepts</Link></li>
+                  <li><Link to="/flashcards" onClick={() => setMobileNavOpen(false)}>Flashcards</Link></li>
+                  <li><Link to="/all-results" onClick={() => setMobileNavOpen(false)}>Results</Link></li>
+                  <li><Link to="/profile" onClick={() => setMobileNavOpen(false)}>Profile</Link></li>
+                  <li><button className="nav-button" onClick={handleLogout}>Logout</button></li>
+                </>
+              ) : (
+                <>
+                  <li><Link to="/practice-exams" onClick={() => setMobileNavOpen(false)}>Practice Exams</Link></li>
+                  <li><Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Quizzes</Link></li>
+                  <li><Link to="/word-bank" onClick={() => setMobileNavOpen(false)}>Word Bank</Link></li>
+                  <li><Link to="/help" onClick={() => setMobileNavOpen(false)}>Help</Link></li>
+                  <li><Link to="/login" onClick={() => setMobileNavOpen(false)}>Login</Link></li>
+                  <li><Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Get Started</Link></li>
+                </>
+              )}
+            </ul>
+          </nav>
         </div>
-        <nav className="main-nav">
-          <ul>
-            {currentUser ? (
-              <>
-                <li><Link to="/progress">Dashboard</Link></li>
-                <li><Link to="/practice-exams">Practice</Link></li>
-                <li><Link to="/profile">Profile</Link></li>
-                <li><button className="nav-button" onClick={handleLogout}>Logout</button></li>
-              </>
-            ) : (
-              <>
-                <li><Link to="/help">Help</Link></li>
-                <li><Link to="/login">Login</Link></li>
-                <li><Link to="/signup" className="signup-nav-btn">Sign Up Free</Link></li>
-              </>
-            )}
-          </ul>
-        </nav>
       </header>
 
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span>🎯 AI-Powered SAT Prep</span>
+      {/* Hero Section - Completely Redesigned */}
+      <section className="hero-section-new">
+        <div className="container">
+          <div className="hero-content-center">
+            <div className="hero-badge">
+              🎯 AI-Powered SAT Prep
+            </div>
+            <h1 className="hero-title-center">
+              Boost Your SAT Score by <span className="score-highlight">200+ Points</span>
+            </h1>
+
+            <div className="hero-stats-grid">
+              <div className="stat-card">
+                <div className="stat-number">{animatedScore}</div>
+                <div className="stat-label">Average Score</div>
+              </div>
+              <div className="stat-card featured">
+                <div className="stat-number">{animatedSuccessRate}%</div>
+                <div className="stat-label">Success Rate</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">{animatedQuestions}K+</div>
+                <div className="stat-label">Questions</div>
+              </div>
+            </div>
+    </div>
+  </div>
+</section>
+
+      {/* Practice Banner Section - Symmetric Design */}
+      <section className="practice-banner-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Experience the Real Digital SAT</h2>
           </div>
-          <h1 className="hero-title">
-            Increase Your SAT Score by <span className="score-highlight">200+ Points</span>
-          </h1>
-          <p className="hero-subtitle">
-            Take a free diagnostic test in 10 minutes and discover exactly which concepts you need to master. 
-            Our AI creates a personalized study plan just for you.
-          </p>
           
-          <div className="hero-stats">
-            <div className="stat-item">
-              <div className="stat-number">{animatedScore}</div>
-              <div className="stat-label">Average Score</div>
-            </div>
-            <div className="stat-divider">•</div>
-            <div className="stat-item">
-              <div className="stat-number">94%</div>
-              <div className="stat-label">Students Improve</div>
-            </div>
-            <div className="stat-divider">•</div>
-            <div className="stat-item">
-              <div className="stat-number">50K+</div>
-              <div className="stat-label">Practice Questions</div>
-            </div>
-          </div>
-
-          <div className="hero-cta">
-            {currentUser ? (
-              <Link to="/practice-exams" className="cta-button primary">
-                Continue Your Prep Journey
-              </Link>
-            ) : (
-              <>
-                <Link to="/signup" className="cta-button primary">
-                  Start Free Diagnostic Test
-                </Link>
-                <Link to="/login" className="cta-button secondary">
-                  I have an account
-                </Link>
-              </>
-            )}
-          </div>
-
-          <div className="trust-indicators">
-            <span>✅ No credit card required</span>
-            <span>✅ 3 full practice tests free</span>
-            <span>✅ Instant score report</span>
-          </div>
-        </div>
-        
-        <div className="hero-visual">
-          <div className="demo-interface">
-            <div className="demo-header">
-              <div className="demo-tabs">
-                <div className="demo-tab active">Reading & Writing</div>
-                <div className="demo-tab">Math</div>
+          <div className="practice-content-grid">
+            <div className="practice-exams-list">
+              <div className="exam-list-container">
+                <div className="exam-item">
+                  <button 
+                    className="exam-start-button"
+                    onClick={() => navigate('/practice-exams')}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
+                  <div className="exam-details">
+                    <h3>SAT Practice Test 1</h3>
+                    <p>Full-length adaptive test • 2 hours 14 minutes</p>
+                  </div>
+                  <div className="exam-badge">Free</div>
+                </div>
+                
+                <div className="exam-item">
+                  <button 
+                    className="exam-start-button"
+                    onClick={() => navigate('/practice-exams')}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
+                  <div className="exam-details">
+                    <h3>SAT Practice Test 2</h3>
+                    <p>Full-length adaptive test • 2 hours 14 minutes</p>
+                  </div>
+                  <div className="exam-badge">Free</div>
+                </div>
+                
+                <div className="exam-item">
+                  <button 
+                    className="exam-start-button"
+                    onClick={() => navigate('/practice-exams')}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
+                  <div className="exam-details">
+                    <h3>SAT Practice Test 3</h3>
+                    <p>Full-length adaptive test • 2 hours 14 minutes</p>
+                  </div>
+                  <div className="exam-badge">Free</div>
+                </div>
+                
+                <div className="exam-item view-all-item">
+                  <button 
+                    className="exam-start-button view-all-button"
+                    onClick={() => navigate('/practice-exams')}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">VIEW</span>
+                  </button>
+                  <div className="exam-details">
+                    <h3>View All 10 Practice Tests</h3>
+                    <p>Access our complete collection of SAT practice exams</p>
+                  </div>
+                  <div className="exam-badge all-tests-badge">10 Tests</div>
+                </div>
               </div>
-              <div className="demo-timer">⏱️ 32:00</div>
             </div>
-            <div className="demo-question">
-              <div className="question-text">
-                Which choice completes the text with the most logical and precise word or phrase?
+            
+            <div className="practice-features-grid">
+              <div className="practice-feature">
+                <div className="feature-icon-box">⏱️</div>
+                <h4>Timed Like Real SAT</h4>
+                <p>Adaptive timing matches the actual test</p>
               </div>
-              <div className="demo-options">
-                <div className="demo-option">A) comprehensive</div>
-                <div className="demo-option selected">B) meticulous</div>
-                <div className="demo-option">C) superficial</div>
-                <div className="demo-option">D) haphazard</div>
+              <div className="practice-feature">
+                <div className="feature-icon-box">📊</div>
+                <h4>Instant Score Reports</h4>
+                <p>Get detailed analysis immediately</p>
               </div>
-            </div>
-            <div className="demo-tools">
-              <button className="demo-tool">📝 Cross Out</button>
-              <button className="demo-tool">🔖 Mark for Review</button>
+              <div className="practice-feature">
+                <div className="feature-icon-box">🎯</div>
+                <h4>Targeted Practice</h4>
+                <p>AI identifies your weak areas</p>
+              </div>
+              <div className="practice-feature">
+                <div className="feature-icon-box">📈</div>
+                <h4>Track Progress</h4>
+                <p>See your improvement over time</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Instant Value Section */}
-      <section className="instant-value-section">
-        <div className="instant-value-header">
-          <h2>See Your Potential in Minutes</h2>
-          <p>Take a quick diagnostic and get immediate insights into your SAT readiness</p>
-        </div>
-        
-        <div className="value-cards">
-          <div className="value-card">
-            <div className="value-icon">📊</div>
-            <h3>Instant Score Prediction</h3>
-            <p>Get your estimated SAT score in real-time as you complete questions</p>
-            <div className="value-highlight">See results immediately</div>
-          </div>
+      {/* Core Features Section - Symmetric Grid */}
+      <section className="core-features-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Everything You Need to Succeed</h2>
+            <p>Comprehensive tools designed to maximize your SAT score</p>
+              </div>
           
-          <div className="value-card featured">
-            <div className="value-icon">🎯</div>
-            <h3>Smart Weakness Detection</h3>
-            <p>Our AI identifies exactly which topics are holding you back</p>
-            <div className="value-highlight">Personalized insights</div>
-          </div>
-          
-          <div className="value-card">
-            <div className="value-icon">🚀</div>
-            <h3>Adaptive Learning Path</h3>
-            <p>Get a custom study plan that adapts as you improve</p>
-            <div className="value-highlight">Tailored to you</div>
-          </div>
-        </div>
+          <div className="features-grid-symmetric">
+            <div className="feature-card">
+              <div className="feature-icon-large">📚</div>
+              <h3>Smart Vocabulary Builder</h3>
+              <p>Learn 10,000+ SAT words with AI-powered flashcards that adapt to your pace</p>
+              <ul className="feature-points">
+                <li>Spaced repetition algorithm</li>
+                <li>Context-based learning</li>
+                <li>Progress tracking</li>
+              </ul>
+              <Link to={currentUser ? "/word-bank" : "/signup"} className="feature-link">
+                Build Vocabulary →
+              </Link>
+            </div>
 
-        <div className="instant-cta">
-          {!currentUser && (
-            <Link to="/signup" className="cta-button large">
-              Start Your Free Diagnostic Now →
+            <div className="feature-card featured-card">
+              <div className="featured-badge">Most Popular</div>
+              <div className="feature-icon-large">🧠</div>
+              <h3>Adaptive Practice Quizzes</h3>
+              <p>Questions that adjust difficulty based on your performance in real-time</p>
+              <ul className="feature-points">
+                <li>Personalized difficulty</li>
+                <li>Instant explanations</li>
+                <li>Unlimited practice</li>
+              </ul>
+              <Link to={currentUser ? "/subject-quizzes" : "/signup"} className="feature-link">
+                Start Practicing →
+              </Link>
+                </div>
+
+            <div className="feature-card">
+              <div className="feature-icon-large">📊</div>
+              <h3>Performance Analytics</h3>
+              <p>Deep insights into your strengths and weaknesses with actionable recommendations</p>
+              <ul className="feature-points">
+                <li>Skill-level analysis</li>
+                <li>Time management stats</li>
+                <li>Improvement tracking</li>
+              </ul>
+              <Link to={currentUser ? "/progress" : "/signup"} className="feature-link">
+                View Analytics →
+              </Link>
+                </div>
+              </div>
+            </div>
+      </section>
+
+      {/* How It Works Section - Symmetric Timeline */}
+      <section className="how-it-works-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Your Path to SAT Success</h2>
+            <p>A proven 4-step process to achieve your target score</p>
+          </div>
+
+          <div className="process-timeline">
+            <div className="timeline-connector"></div>
+            
+            <div className="process-step">
+              <div className="step-number">1</div>
+              <div className="step-content">
+                <h4>Take Diagnostic Test</h4>
+                <p>Identify your baseline score and areas for improvement</p>
+              </div>
+            </div>
+            
+            <div className="process-step">
+              <div className="step-number">2</div>
+              <div className="step-content">
+                <h4>Get Personalized Plan</h4>
+                <p>AI creates a custom study schedule based on your goals</p>
+                </div>
+                  </div>
+            
+            <div className="process-step">
+              <div className="step-number">3</div>
+              <div className="step-content">
+                <h4>Practice & Learn</h4>
+                <p>Work through adaptive quizzes and targeted lessons</p>
+                </div>
+                </div>
+            
+            <div className="process-step">
+              <div className="step-number">4</div>
+              <div className="step-content">
+                <h4>Track Progress</h4>
+                <p>Monitor improvements and adjust your strategy</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Results Section - Symmetric Stats */}
+      <section className="results-showcase-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Proven Results</h2>
+            <p>Real improvements from real students</p>
+          </div>
+          
+          <div className="results-grid">
+            <div className="result-stat">
+              <div className="result-number">+216</div>
+              <div className="result-label">Average Score Increase</div>
+              <div className="result-context">Points gained after 3 months</div>
+            </div>
+            
+            <div className="result-stat featured-stat">
+              <div className="result-number">87%</div>
+              <div className="result-label">Reach Target Score</div>
+              <div className="result-context">Students who achieve their goal</div>
+                  </div>
+            
+            <div className="result-stat">
+              <div className="result-number">4.8/5</div>
+              <div className="result-label">Student Rating</div>
+              <div className="result-context">Based on 10,000+ reviews</div>
+                  </div>
+                </div>
+
+          <div className="testimonials-carousel">
+            <div className="testimonial-card">
+              <div className="stars">⭐⭐⭐⭐⭐</div>
+              <div className="testimonial-quote">
+                "The adaptive quizzes knew exactly what I needed to practice. My math score improved by 130 points!"
+              </div>
+              <div className="testimonial-author">
+                <strong>Sarah Chen</strong>
+                <span>Stanford '28</span>
+                  </div>
+            </div>
+            
+            <div className="testimonial-card">
+              <div className="stars">⭐⭐⭐⭐⭐</div>
+              <div className="testimonial-quote">
+                "Best SAT prep I've used. The instant feedback helped me understand my mistakes immediately."
+              </div>
+              <div className="testimonial-author">
+                <strong>Marcus Johnson</strong>
+                <span>MIT '27</span>
+            </div>
+            </div>
+            
+            <div className="testimonial-card">
+              <div className="stars">⭐⭐⭐⭐⭐</div>
+              <div className="testimonial-quote">
+                "Went from 1320 to 1540 in just 2 months. The personalized study plan made all the difference."
+              </div>
+              <div className="testimonial-author">
+                <strong>Emma Rodriguez</strong>
+                <span>Yale '28</span>
+            </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section - Symmetric Cards */}
+      <section className="pricing-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Choose Your Plan</h2>
+            <p>Start free, upgrade when you're ready</p>
+          </div>
+          
+          <div className="pricing-grid">
+            <div className="pricing-card">
+              <div className="plan-name">Free</div>
+              <div className="plan-price">
+                <span className="price-number">$0</span>
+                <span className="price-period">forever</span>
+              </div>
+              <ul className="plan-features">
+                <li>✓ 3 full practice tests</li>
+                <li>✓ 1,000 practice questions</li>
+                <li>✓ Basic vocabulary builder</li>
+                <li>✓ Score reports</li>
+                <li>✓ Progress tracking</li>
+              </ul>
+              <Link to="/signup" className="plan-cta secondary">
+                Start Free
+              </Link>
+            </div>
+            
+            <div className="pricing-card featured-pricing">
+              <div className="popular-badge">Most Popular</div>
+              <div className="plan-name">Premium</div>
+              <div className="plan-price">
+                <span className="price-number">$49</span>
+                <span className="price-period">/month</span>
+              </div>
+              <ul className="plan-features">
+                <li>✓ Everything in Free</li>
+                <li>✓ Unlimited practice tests</li>
+                <li>✓ 50,000+ questions</li>
+                <li>✓ AI study planner</li>
+                <li>✓ Video explanations</li>
+                <li>✓ Priority support</li>
+              </ul>
+              <Link to="/signup" className="plan-cta primary">
+                Start 7-Day Trial
+              </Link>
+            </div>
+            
+            <div className="pricing-card">
+              <div className="plan-name">Ultimate</div>
+              <div className="plan-price">
+                <span className="price-number">$99</span>
+                <span className="price-period">/month</span>
+              </div>
+              <ul className="plan-features">
+                <li>✓ Everything in Premium</li>
+                <li>✓ 1-on-1 tutoring sessions</li>
+                <li>✓ Essay grading</li>
+                <li>✓ College counseling</li>
+                <li>✓ Score guarantee</li>
+              </ul>
+              <Link to="/signup" className="plan-cta secondary">
+                Learn More
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="final-cta-section-new">
+        <div className="container">
+          <div className="final-cta-content-center">
+            <h2>Ready to Ace the SAT?</h2>
+            <p>Join 100,000+ students who've improved their scores with UltraSATPrep</p>
+            
+            {!currentUser ? (
+              <div className="final-cta-buttons-center">
+            <Link to="/signup" className="cta-button primary large">
+              Get Started Free
             </Link>
-          )}
-        </div>
-      </section>
-
-      {/* Feature Showcase */}
-      <section className="features-showcase">
-        <div className="feature-showcase-item">
-          <div className="feature-content">
-            <div className="feature-badge">FREE FOREVER</div>
-            <h3>Smart Vocabulary Builder</h3>
-            <p>
-              As you practice, our AI automatically identifies challenging words and builds 
-              your personal vocabulary bank. Study with flashcards and track your progress.
-            </p>
-            <div className="feature-stats">
-              <span>📚 10,000+ SAT words</span>
-              <span>🧠 AI-powered recommendations</span>
-            </div>
-            {!currentUser ? (
-              <Link to="/signup" className="feature-cta">Try Vocabulary Builder</Link>
+                <div className="cta-subtext">
+                  No credit card required • Results in 10 minutes
+                </div>
+              </div>
             ) : (
-              <Link to="/word-bank" className="feature-cta">Open Word Bank</Link>
+              <div className="final-cta-buttons-center">
+                <Link to="/practice-exams" className="cta-button primary large">
+                  Continue Practicing
+                </Link>
+                <Link to="/progress" className="cta-button secondary large">
+                  View Progress
+                </Link>
+              </div>
             )}
-          </div>
-          <div className="feature-visual">
-            <div className="vocab-demo">
-              <div className="vocab-card">
-                <div className="vocab-word">Meticulous</div>
-                <div className="vocab-definition">Showing great attention to detail; very careful and precise</div>
-                <div className="vocab-example">"Her meticulous research led to groundbreaking discoveries."</div>
-              </div>
-              <div className="vocab-progress">
-                <div className="progress-bar">
-                  <div className="progress-fill" style={{width: '73%'}}></div>
-                </div>
-                <span>73% mastered</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="feature-showcase-item reverse">
-          <div className="feature-content">
-            <div className="feature-badge">FREE TRIAL</div>
-            <h3>Adaptive Smart Quizzes</h3>
-            <p>
-              Take quizzes that get smarter as you do. Questions adapt to your skill level, 
-              focusing on areas where you need the most improvement.
-            </p>
-            <div className="feature-stats">
-              <span>🎯 Questions adapt to your level</span>
-              <span>📈 Immediate feedback</span>
-            </div>
-            {!currentUser ? (
-              <Link to="/signup" className="feature-cta">Try Smart Quiz</Link>
-            ) : (
-              <Link to="/subject-quizzes" className="feature-cta">Take Quiz</Link>
-            )}
-          </div>
-          <div className="feature-visual">
-            <div className="quiz-demo">
-              <div className="quiz-header">
-                <span className="quiz-subject">Algebra</span>
-                <span className="quiz-level">Level: Intermediate</span>
-              </div>
-              <div className="quiz-progress">
-                <div className="progress-dots">
-                  <div className="dot completed"></div>
-                  <div className="dot completed"></div>
-                  <div className="dot current"></div>
-                  <div className="dot"></div>
-                  <div className="dot"></div>
-                </div>
-                <span>Question 3 of 5</span>
-              </div>
-              <div className="quiz-feedback">
-                <div className="feedback-positive">✅ Correct! Moving to harder questions...</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="feature-showcase-item">
-          <div className="feature-content">
-            <div className="feature-badge">FREE ACCESS</div>
-            <h3>Real Practice Tests</h3>
-            <p>
-              Take full-length practice tests that mirror the actual Digital SAT. 
-              Get detailed score breakdowns and see exactly where to focus your study time.
-            </p>
-            <div className="feature-stats">
-              <span>📝 3 full tests free</span>
-              <span>⏱️ Real timing conditions</span>
-            </div>
-            {!currentUser ? (
-              <Link to="/signup" className="feature-cta">Take Practice Test</Link>
-            ) : (
-              <Link to="/practice-exams" className="feature-cta">Start Practice</Link>
-            )}
-          </div>
-          <div className="feature-visual">
-            <div className="test-demo">
-              <div className="test-modules">
-                <div className="test-module">
-                  <span className="module-name">Reading & Writing 1</span>
-                  <span className="module-time">32 min</span>
-                </div>
-                <div className="test-module">
-                  <span className="module-name">Reading & Writing 2</span>
-                  <span className="module-time">32 min</span>
-                </div>
-                <div className="test-break">10 min break</div>
-                <div className="test-module">
-                  <span className="module-name">Math 1</span>
-                  <span className="module-time">35 min</span>
-                </div>
-                <div className="test-module">
-                  <span className="module-name">Math 2</span>
-                  <span className="module-time">35 min</span>
-                </div>
-              </div>
-              <div className="score-preview">
-                <div className="score-total">Total Score: 1420</div>
-                <div className="score-breakdown">
-                  <span>Math: 730</span>
-                  <span>Reading & Writing: 690</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof & CTA */}
-      <section className="final-cta-section">
-        <div className="social-proof">
-          <div className="testimonial-grid">
-            <div className="testimonial">
-              <div className="quote">"Increased my score by 240 points in just 6 weeks!"</div>
-              <div className="author">- Sarah M., Cornell '28</div>
-            </div>
-            <div className="testimonial">
-              <div className="quote">"The AI quizzes knew exactly what I needed to practice."</div>
-              <div className="author">- Marcus T., MIT '27</div>
-            </div>
-            <div className="testimonial">
-              <div className="quote">"Best SAT prep platform I've ever used. Actually fun!"</div>
-              <div className="author">- Emma L., Stanford '28</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="final-cta-content">
-          <h2>Ready to Boost Your SAT Score?</h2>
-          <p>Join thousands of students who have transformed their scores with UltraSATPrep</p>
-          
-          {!currentUser ? (
-            <div className="final-cta-buttons">
-              <Link to="/signup" className="cta-button primary large">
-                Start Free Diagnostic Test
-              </Link>
-              <div className="cta-subtext">
-                No credit card required • Get results in 10 minutes
+      {/* Footer - Symmetric Layout */}
+      <footer className="landing-footer-new">
+        <div className="container">
+          <div className="footer-content-grid">
+            <div className="footer-brand">
+              <div className="footer-logo">
+                <div className="logo-icon">SAT</div>
+                <h3>Ultra<span>SAT</span>Prep</h3>
+              </div>
+              <p>Your AI-powered path to SAT success</p>
+              <div className="social-links">
+                <a href="https://twitter.com/ultrasatprep" aria-label="Twitter">𝕏</a>
+                <a href="https://facebook.com/ultrasatprep" aria-label="Facebook">f</a>
+                <a href="https://instagram.com/ultrasatprep" aria-label="Instagram">📷</a>
+                <a href="https://youtube.com/ultrasatprep" aria-label="YouTube">▶</a>
               </div>
             </div>
-          ) : (
-            <div className="final-cta-buttons">
-              <Link to="/practice-exams" className="cta-button primary large">
-                Continue Your Prep
-              </Link>
-              <Link to="/progress" className="cta-button secondary">
-                View Your Progress
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="landing-footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <h4>Product</h4>
+            
+            <div className="footer-links-grid">
+              <div className="footer-column">
+            <h4>Features</h4>
             <Link to="/practice-exams">Practice Tests</Link>
             <Link to="/subject-quizzes">Smart Quizzes</Link>
-            <Link to="/word-bank">Vocabulary</Link>
+            <Link to="/word-bank">Vocabulary Builder</Link>
+            <Link to="/concept-bank">Concept Bank</Link>
           </div>
-          <div className="footer-section">
-            <h4>Support</h4>
+              
+              <div className="footer-column">
+                <h4>Resources</h4>
             <Link to="/help">Help Center</Link>
-            <Link to="/contact">Contact Us</Link>
+                <Link to="/blog">Blog</Link>
+                <Link to="/sat-guide">SAT Guide</Link>
+                <Link to="/score-calculator">Score Calculator</Link>
           </div>
-          <div className="footer-section">
+              
+              <div className="footer-column">
             <h4>Company</h4>
-            <Link to="/about">About</Link>
-            <Link to="/privacy">Privacy</Link>
+            <Link to="/about">About Us</Link>
+                <Link to="/contact">Contact</Link>
+                <Link to="/careers">Careers</Link>
+                <Link to="/press">Press</Link>
+              </div>
+              
+              <div className="footer-column">
+                <h4>Legal</h4>
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
+                <Link to="/cookies">Cookie Policy</Link>
+                <Link to="/accessibility">Accessibility</Link>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="footer-bottom">
-          <p>&copy; 2025 UltraSATPrep | Transform Your SAT Score</p>
+          
+          <div className="footer-bottom-new">
+            <p>&copy; 2025 UltraSATPrep. All rights reserved.</p>
+            <div className="footer-badges">
+              <span>🔒 SSL Secured</span>
+              <span>✓ COPPA Compliant</span>
+              <span>🏆 College Board Partner</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

@@ -154,7 +154,7 @@ function HomePage() {
                   </Link>
                   <Link to="/login" className="cta-button secondary">
                     I have an account
-                  </Link>
+            </Link>
                 </>
               )}
             </div>
@@ -193,7 +193,7 @@ function HomePage() {
             </div>
           </div>
         </section>
-
+        
         {/* Instant Value Section */}
         <section className="instant-value-section">
           <div className="instant-value-header">
@@ -361,7 +361,7 @@ function HomePage() {
             </div>
           </div>
         </section>
-
+        
         {/* Social Proof & CTA */}
         <section className="final-cta-section">
           <div className="social-proof">
@@ -401,9 +401,9 @@ function HomePage() {
                 </Link>
                 <Link to="/progress" className="cta-button secondary">
                   View Your Progress
-                </Link>
-              </div>
-            )}
+          </Link>
+            </div>
+          )}
           </div>
         </section>
       </main>
