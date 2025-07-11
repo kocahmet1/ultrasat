@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Auth.css';
 
@@ -10,6 +10,31 @@ function Login() {
   const [error, setError] = useState('');
   const { login, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handlePostLogin = () => {
+    // Check if coming from Question Bank
+    if (location.state?.from === 'questionBank') {
+      const savedPreferences = sessionStorage.getItem('questionBankPreferences');
+      if (savedPreferences) {
+        const preferences = JSON.parse(savedPreferences);
+        sessionStorage.removeItem('questionBankPreferences');
+        
+        // Navigate to smart quiz generator with saved preferences
+        navigate('/smart-quiz-generator', {
+          state: {
+            subcategoryId: preferences.subcategory.id,
+            forceLevel: preferences.difficulty.level,
+            fromQuestionBank: true
+          }
+        });
+        return;
+      }
+    }
+    
+    // Default navigation
+    navigate('/progress');
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -18,8 +43,7 @@ function Login() {
       setError('');
       setLoading(true);
       await login(email, password);
-      // Redirect to Progress Dashboard directly after login
-      navigate('/progress');
+      handlePostLogin();
     } catch (err) {
       setError('Failed to sign in. Please check your credentials.');
       console.error(err);
@@ -33,7 +57,7 @@ function Login() {
       setError('');
       setLoading(true);
       await signInWithGoogle();
-      navigate('/progress');
+      handlePostLogin();
     } catch (err) {
       setError('Failed to sign in with Google.');
       console.error(err);

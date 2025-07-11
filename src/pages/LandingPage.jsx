@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import QuestionBank from '../components/QuestionBank';
 import '../styles/LandingPage.css';
 
 const LandingPage = () => {
@@ -97,7 +98,6 @@ const LandingPage = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/login');
     } catch (error) {
       console.error('Failed to log out', error);
     }
@@ -275,6 +275,9 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Question Bank Section */}
+      <QuestionBank />
 
       {/* Core Features Section - Symmetric Grid */}
       <section className="core-features-section">

@@ -127,7 +127,6 @@ function Profile() {
   async function handleLogout() {
     try {
       await logout();
-      navigate('/login');
     } catch (err) {
       setError('Failed to log out');
       console.error(err);

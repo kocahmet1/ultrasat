@@ -149,13 +149,22 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    // Clean up FCM token when user logs out
-    if (currentUser && fcmToken) {
-      await removeTokenFromFirestore(currentUser.uid, fcmToken);
-      setFcmToken(null);
-      setNotificationsEnabled(false);
+    try {
+      // Clean up FCM token when user logs out
+      if (currentUser && fcmToken) {
+        await removeTokenFromFirestore(currentUser.uid, fcmToken);
+        setFcmToken(null);
+        setNotificationsEnabled(false);
+      }
+      
+      await signOut(auth);
+      
+      // Redirect to landing page after successful logout
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error during logout:', error);
+      throw error;
     }
-    return signOut(auth);
   }
 
   // Legacy function, maintained for backward compatibility
