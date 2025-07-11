@@ -189,36 +189,26 @@ const LandingPage = () => {
             <div className="practice-exams-list">
               <div className="exam-list-container">
                 <div className="exam-item">
-                  <button 
-                    className="exam-start-button"
-                    onClick={() => navigate('/practice-exams')}
-                  >
-                    <span className="pulse-ring"></span>
-                    <span className="button-text">START</span>
-                  </button>
+                  <div className="exam-badge">Free</div>
                   <div className="exam-details">
                     <h3>SAT Practice Test 1</h3>
                     <p>Full-length adaptive test • 2 hours 14 minutes</p>
                   </div>
-                  <div className="exam-badge">Free</div>
-                </div>
-                
-                <div className="exam-item">
                   <button 
-                    className="exam-start-button"
+                    className="exam-start-button first-test-pulsate"
                     onClick={() => navigate('/practice-exams')}
                   >
                     <span className="pulse-ring"></span>
                     <span className="button-text">START</span>
                   </button>
+                </div>
+                
+                <div className="exam-item">
+                  <div className="exam-badge">Free</div>
                   <div className="exam-details">
                     <h3>SAT Practice Test 2</h3>
                     <p>Full-length adaptive test • 2 hours 14 minutes</p>
                   </div>
-                  <div className="exam-badge">Free</div>
-                </div>
-                
-                <div className="exam-item">
                   <button 
                     className="exam-start-button"
                     onClick={() => navigate('/practice-exams')}
@@ -226,14 +216,29 @@ const LandingPage = () => {
                     <span className="pulse-ring"></span>
                     <span className="button-text">START</span>
                   </button>
+                </div>
+                
+                <div className="exam-item">
+                  <div className="exam-badge">Free</div>
                   <div className="exam-details">
                     <h3>SAT Practice Test 3</h3>
                     <p>Full-length adaptive test • 2 hours 14 minutes</p>
                   </div>
-                  <div className="exam-badge">Free</div>
+                  <button 
+                    className="exam-start-button"
+                    onClick={() => navigate('/practice-exams')}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
                 </div>
                 
                 <div className="exam-item view-all-item">
+                  <div className="exam-badge all-tests-badge">10 Tests</div>
+                  <div className="exam-details">
+                    <h3>View All 10 Practice Tests</h3>
+                    <p>Access our complete collection of SAT practice exams</p>
+                  </div>
                   <button 
                     className="exam-start-button view-all-button"
                     onClick={() => navigate('/practice-exams')}
@@ -241,11 +246,6 @@ const LandingPage = () => {
                     <span className="pulse-ring"></span>
                     <span className="button-text">VIEW</span>
                   </button>
-                  <div className="exam-details">
-                    <h3>View All 10 Practice Tests</h3>
-                    <p>Access our complete collection of SAT practice exams</p>
-                  </div>
-                  <div className="exam-badge all-tests-badge">10 Tests</div>
                 </div>
               </div>
             </div>
@@ -440,74 +440,6 @@ const LandingPage = () => {
                 <strong>Emma Rodriguez</strong>
                 <span>Yale '28</span>
             </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section - Symmetric Cards */}
-      <section className="pricing-section">
-        <div className="container">
-          <div className="section-header-center">
-            <h2>Choose Your Plan</h2>
-            <p>Start free, upgrade when you're ready</p>
-          </div>
-          
-          <div className="pricing-grid">
-            <div className="pricing-card">
-              <div className="plan-name">Free</div>
-              <div className="plan-price">
-                <span className="price-number">$0</span>
-                <span className="price-period">forever</span>
-              </div>
-              <ul className="plan-features">
-                <li>✓ 3 full practice tests</li>
-                <li>✓ 1,000 practice questions</li>
-                <li>✓ Basic vocabulary builder</li>
-                <li>✓ Score reports</li>
-                <li>✓ Progress tracking</li>
-              </ul>
-              <Link to="/signup" className="plan-cta secondary">
-                Start Free
-              </Link>
-            </div>
-            
-            <div className="pricing-card featured-pricing">
-              <div className="popular-badge">Most Popular</div>
-              <div className="plan-name">Premium</div>
-              <div className="plan-price">
-                <span className="price-number">$49</span>
-                <span className="price-period">/month</span>
-              </div>
-              <ul className="plan-features">
-                <li>✓ Everything in Free</li>
-                <li>✓ Unlimited practice tests</li>
-                <li>✓ 50,000+ questions</li>
-                <li>✓ AI study planner</li>
-                <li>✓ Video explanations</li>
-                <li>✓ Priority support</li>
-              </ul>
-              <Link to="/signup" className="plan-cta primary">
-                Start 7-Day Trial
-              </Link>
-            </div>
-            
-            <div className="pricing-card">
-              <div className="plan-name">Ultimate</div>
-              <div className="plan-price">
-                <span className="price-number">$99</span>
-                <span className="price-period">/month</span>
-              </div>
-              <ul className="plan-features">
-                <li>✓ Everything in Premium</li>
-                <li>✓ 1-on-1 tutoring sessions</li>
-                <li>✓ Essay grading</li>
-                <li>✓ College counseling</li>
-                <li>✓ Score guarantee</li>
-              </ul>
-              <Link to="/signup" className="plan-cta secondary">
-                Learn More
-              </Link>
             </div>
           </div>
         </div>

@@ -88,7 +88,7 @@ const QuestionBank = () => {
     <section className="question-bank-section">
       <div className="container">
         <div className="section-header-center">
-          <h2>Question Bank: Take a mini test Now</h2>
+          <h2>Question Bank: Take a mini test <span className="yellow-underline">Now</span></h2>
         </div>
         
         <div className="minitest-creator">
@@ -166,18 +166,18 @@ const QuestionBank = () => {
 
           <div className="creator-info">
             <div className="info-card">
-              <div className="info-icon">📊</div>
+              <div className="info-icon">📚</div>
               <div className="info-content">
-                <div className="info-title">Instant Score Reports</div>
-                <div className="info-desc">Get detailed analysis immediately</div>
+                <div className="info-title">4000+ Free Questions</div>
+                <div className="info-desc">Access thousands of practice questions</div>
               </div>
             </div>
             
             <div className="info-card">
-              <div className="info-icon">📈</div>
+              <div className="info-icon">🤖</div>
               <div className="info-content">
-                <div className="info-title">Track Progress</div>
-                <div className="info-desc">See your improvement over time</div>
+                <div className="info-title">AI Assistant</div>
+                <div className="info-desc">Get smart hints and explanations</div>
               </div>
             </div>
           </div>
