@@ -116,7 +116,7 @@ app.use(attachFirebaseAdmin);
 // Configure CORS
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://veritas-blue.netlify.app', 'https://veritas-blue-web.onrender.com'] 
+    ? ['https://ultrasatprep.com', 'https://veritas-blue.netlify.app', 'https://veritas-blue-web.onrender.com'] 
     : process.env.CLIENT_URL || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
