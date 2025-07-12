@@ -294,66 +294,38 @@ function Profile() {
       {error && <div className="auth-error">{error}</div>}
 
       <div className="membership-section">
-        <div className="membership-page-header">
-          <h2>Your Membership</h2>
-
+        <div className="current-membership">
+          <h2>Your current membership tier: <span className="tier-name">{getTierInfo(userMembership.tier).displayName}</span></h2>
         </div>
 
-        {availableUpgrades.length > 0 && (
-          <div className="membership-upgrade-section">
-
-            <p className="membership-upgrade-description">Unlock more features and get the most out of your SAT preparation</p>
-            <div className="membership-plans-grid">
-              {allTiers.map((tierData) => (
-                <div key={tierData.tier} className={`membership-plan-card ${tierData.tier === userMembership.tier ? 'current-plan' : ''} ${isUpgrading && selectedPlan === tierData.tier ? 'upgrading' : ''}`}>
-                  <div className="membership-plan-header">
-                    <MembershipBadge tier={tierData.tier} size="large" />
-                    <h3>{tierData.displayName}</h3>
-                    <p className="membership-plan-price">{tierData.price}</p>
-                    <p className="membership-plan-description">{tierData.description}</p>
-                  </div>
-                  <div className="membership-plan-features">
-                    <h4>Features included:</h4>
-                    <ul>{tierData.features.map((feature, index) => <li key={index}>{feature}</li>)}</ul>
-                  </div>
-                  <div className="membership-plan-actions">
-                    {tierData.tier === userMembership.tier ? (
-                      <button className="membership-plan-btn current" disabled>Current Plan</button>
-                    ) : tierData.tier === MEMBERSHIP_TIERS.FREE ? (
-                      <button className="membership-plan-btn downgrade" onClick={() => handleUpgrade(tierData.tier)} disabled={isUpgrading}>Downgrade to Free</button>
-                    ) : (
-                      <button className="membership-plan-btn upgrade" onClick={() => handleUpgrade(tierData.tier)} disabled={isUpgrading}>
-                        {isUpgrading && selectedPlan === tierData.tier ? <span className="upgrading-text"><div className="upgrading-spinner"></div>Processing...</span> : `Upgrade to ${tierData.displayName}`}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
+        {userMembership.tier === MEMBERSHIP_TIERS.FREE && (
+          <div className="missing-features-section">
+            <h3>Features you're missing with Plus:</h3>
+            <ul className="missing-features-list">
+              <li>10 full length SAT exams</li>
+              <li>AI Coach</li>
+              <li>Detailed progress analysis</li>
+              <li>Word Bank Quizzes</li>
+              <li>Lectures</li>
+              <li>Flashcard system</li>
+              <li>Priority support</li>
+            </ul>
+            <div className="upgrade-action">
+              <button 
+                className="upgrade-btn"
+                onClick={() => navigate('/pricing')}
+              >
+                Upgrade to Plus
+              </button>
             </div>
           </div>
         )}
 
-        <div className="membership-faq">
-          <h3>Frequently Asked Questions</h3>
-          <div className="membership-faq-grid">
-            <div className="membership-faq-item">
-              <h4>Can I cancel anytime?</h4>
-              <p>Yes, you can cancel your subscription at any time. You'll continue to have access to premium features until the end of your billing period.</p>
-            </div>
-            <div className="membership-faq-item">
-              <h4>What happens if I downgrade?</h4>
-              <p>If you downgrade, you'll lose access to premium features immediately but keep your progress and data.</p>
-            </div>
-            <div className="membership-faq-item">
-              <h4>Is there a free trial?</h4>
-              <p>New users start with a Free account that includes basic features. You can upgrade anytime to unlock premium features.</p>
-            </div>
-            <div className="membership-faq-item">
-              <h4>How do I get support?</h4>
-              <p>Plus members get email support, while Max members get priority support with faster response times.</p>
-            </div>
+        {userMembership.tier === MEMBERSHIP_TIERS.PLUS && (
+          <div className="membership-status">
+            <p>You have access to all Plus features! Enjoy unlimited practice questions, detailed analytics, flashcards, and email support.</p>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -142,6 +142,40 @@
   margin: 0;
 }
 
+.send-another-btn {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 1rem;
+}
+
+.send-another-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+}
+
+.error-message {
+  background: #fef2f2;
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.error-message p {
+  color: #dc2626;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
 /* Contact Info Section */
 .contact-info-section h2 {
   color: #2563eb;

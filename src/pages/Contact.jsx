@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import '../styles/Contact.css';
 
 function Contact() {
@@ -11,6 +12,7 @@ function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -22,10 +24,28 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // EmailJS configuration - you'll need to replace these with your actual values
+      const serviceID = process.env.REACT_APP_EMAILJS_SERVICE_ID || 'your_service_id';
+      const templateID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'your_template_id';
+      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'your_public_key';
+      
+      // Prepare template parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        category: formData.category,
+        to_name: 'UltraSAT Support',
+        reply_to: formData.email,
+      };
+
+      // Send email using EmailJS
+      await emailjs.send(serviceID, templateID, templateParams, publicKey);
+      
       setSubmitted(true);
       setFormData({
         name: '',
@@ -34,7 +54,12 @@ function Contact() {
         message: '',
         category: 'general'
       });
-    }, 1000);
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      setError('Failed to send message. Please try again or contact us directly at hello@ultrasatprep.com');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,9 +75,21 @@ function Contact() {
               <div className="success-message">
                 <h3>✅ Message Sent Successfully!</h3>
                 <p>Thank you for contacting us. We'll get back to you within 24 hours.</p>
+                <button 
+                  className="send-another-btn"
+                  onClick={() => setSubmitted(false)}
+                >
+                  Send Another Message
+                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="contact-form">
+                {error && (
+                  <div className="error-message">
+                    <p>{error}</p>
+                  </div>
+                )}
+                
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="name">Full Name *</label>
@@ -137,10 +174,17 @@ function Contact() {
             <div className="contact-methods">
               <div className="contact-method">
                 <h3>📧 Email Support</h3>
-                <p><strong>General Inquiries:</strong> hello@ultrasatprep.com</p>
-                <p><strong>Technical Support:</strong> support@ultrasatprep.com</p>
-                <p><strong>Billing Questions:</strong> billing@ultrasatprep.com</p>
-                <p><strong>Press & Media:</strong> press@ultrasatprep.com</p>
+                <p><strong>General Inquiries:</strong> <a href="mailto:hello@ultrasatprep.com">hello@ultrasatprep.com</a></p>
+                <p><strong>Technical Support:</strong> <a href="mailto:support@ultrasatprep.com">support@ultrasatprep.com</a></p>
+                <p><strong>Billing Questions:</strong> <a href="mailto:billing@ultrasatprep.com">billing@ultrasatprep.com</a></p>
+                <p><strong>Press & Media:</strong> <a href="mailto:press@ultrasatprep.com">press@ultrasatprep.com</a></p>
+              </div>
+              
+              <div className="contact-method">
+                <h3>💬 Alternative Contact</h3>
+                <p>If the form above doesn't work, you can always reach us directly at:</p>
+                <p><strong><a href="mailto:hello@ultrasatprep.com?subject=Contact%20from%20UltraSAT%20User">hello@ultrasatprep.com</a></strong></p>
+                <p>We typically respond within 24 hours.</p>
               </div>
             </div>
 

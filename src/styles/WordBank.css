@@ -103,6 +103,40 @@ body {
   font-family: var(--font-family-sans-serif);
 }
 
+.help-icon-button {
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.help-icon-button:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-color);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.tab-button.active .help-icon-button {
+  color: var(--white);
+  opacity: 0.8;
+}
+
+.tab-button.active .help-icon-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  opacity: 1;
+}
+
 .tab-button:hover {
   background: var(--light-gray);
   color: var(--dark-gray);
@@ -692,6 +726,12 @@ body {
 
   .tab-button:last-child {
     border-radius: 0 0 var(--border-radius) var(--border-radius);
+  }
+
+  .help-icon-button {
+    margin-left: 4px;
+    padding: 2px;
+    font-size: 0.8rem;
   }
 
   .deck-actions {

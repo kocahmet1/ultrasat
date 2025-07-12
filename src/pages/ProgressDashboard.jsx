@@ -9,7 +9,7 @@ import { getConceptsBySubcategory } from '../firebase/conceptServices';
 import { db } from '../firebase/config';
 import { addDoc, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import DynamicQuizGenerator from '../components/DynamicQuizGenerator';
-import { FaChevronDown, FaChartBar, FaLightbulb, FaBullseye, FaBookOpen, FaTasks, FaRocket, FaBolt, FaThLarge, FaClipboardList, FaCheck, FaExclamationTriangle, FaGraduationCap, FaCalculator, FaBook, FaPuzzlePiece } from 'react-icons/fa';
+import { FaChevronDown, FaChartBar, FaLightbulb, FaBullseye, FaBookOpen, FaTasks, FaRocket, FaBolt, FaThLarge, FaClipboardList, FaCheck, FaExclamationTriangle, FaGraduationCap, FaCalculator, FaBook, FaPuzzlePiece, FaInfoCircle } from 'react-icons/fa';
 import {
   getSubcategoryName,
   getSubcategoryCategory,
@@ -19,6 +19,7 @@ import {
 } from '../utils/subcategoryConstants';
 import { normalizeSubcategoryName } from '../utils/subcategoryUtils';
 import { getSubcategoryProgress, calculateEstimatedSATScore } from '../utils/progressUtils';
+import FeatureHelpModal from '../components/FeatureHelpModal';
 import '../styles/ProgressDashboard.new.css';
 import '../styles/ConceptMastery.css';
 import '../styles/LevelIndicator.css';
@@ -48,6 +49,9 @@ function ProgressDashboard() {
   const [satScoreEstimate, setSatScoreEstimate] = useState(null);
   const [isSatCardExpanded, setIsSatCardExpanded] = useState(false);
   const [satCardHoverTimeout, setSatCardHoverTimeout] = useState(null);
+  
+  // Help modal state
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const handleSatCardMouseEnter = () => {
     if (satCardHoverTimeout) {
@@ -64,6 +68,10 @@ function ProgressDashboard() {
       clearTimeout(satCardHoverTimeout);
     }
     setIsSatCardExpanded(false);
+  };
+
+  const handleShowHelp = () => {
+    setShowHelpModal(true);
   };
 
   const toggleCategory = (categoryKey) => {
@@ -531,7 +539,16 @@ function ProgressDashboard() {
   return (
     <div className="progress-dashboard-page">
       <div className="pd-header">
-        <h1>Your Performance Progress</h1>
+        <h1>
+          Your Performance Progress
+          <button 
+            className="help-icon-button"
+            onClick={handleShowHelp}
+            title="Learn how to use performance tracking"
+          >
+            <FaInfoCircle />
+          </button>
+        </h1>
       </div>
 
       {/* SAT Score Estimate Display */}
@@ -940,6 +957,13 @@ function ProgressDashboard() {
           </div>
         </div>
       )}
+      
+      {/* Feature Help Modal */}
+      <FeatureHelpModal
+        isOpen={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+        feature="progress"
+      />
     </div>
   );
 }

@@ -13,7 +13,8 @@ import {
   faSpinner,
   faQuestionCircle,
   faEdit,
-  faPlus
+  faPlus,
+  faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { getFlashcardDecks, deleteFlashcardDeck, removeWordFromFlashcardDeck, getFlashcardDeckWords, createFlashcardDeck } from '../api/helperClient';
 import AddToFlashcardsModal from '../components/AddToFlashcardsModal';
@@ -22,6 +23,7 @@ import WordQuizzes from '../components/WordQuizzes';
 import Quiz from '../components/Quiz';
 import EditDeckModal from '../components/EditDeckModal';
 import NewDeckModal from '../components/NewDeckModal';
+import FeatureHelpModal from '../components/FeatureHelpModal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/WordBank.css';
@@ -51,6 +53,10 @@ export default function WordBank() {
   const [showNewDeckModal, setShowNewDeckModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [featureName, setFeatureName] = useState('');
+
+  // Help modal states
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [helpFeature, setHelpFeature] = useState('');
 
   // Quiz states
   const [activeQuiz, setActiveQuiz] = useState(null);
@@ -357,6 +363,11 @@ export default function WordBank() {
     }
   };
 
+  const handleShowHelp = (feature) => {
+    setHelpFeature(feature);
+    setShowHelpModal(true);
+  };
+
   // If studying a deck, show the study interface
   if (studyDeck) {
     return (
@@ -408,6 +419,16 @@ export default function WordBank() {
           <FontAwesomeIcon icon={faLayerGroup} />
           Flashcard Decks ({flashcardDecks.length})
           {!hasFeatureAccess('plus') && <span className="pro-badge">PRO</span>}
+          <button 
+            className="help-icon-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleShowHelp('flashcards');
+            }}
+            title="Learn how to use flashcard decks"
+          >
+            <FontAwesomeIcon icon={faInfoCircle} />
+          </button>
         </button>
         {activeTab === 'flashcards' && (
           <button className="new-deck-button" onClick={() => setShowNewDeckModal(true)}>
@@ -421,6 +442,16 @@ export default function WordBank() {
           <FontAwesomeIcon icon={faQuestionCircle} />
           Word Quizzes ({flashcardDecks.filter(deck => deck.wordCount >= 4).length})
           {!hasFeatureAccess('plus') && <span className="pro-badge">PRO</span>}
+          <button 
+            className="help-icon-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleShowHelp('quizzes');
+            }}
+            title="Learn how to use word quizzes"
+          >
+            <FontAwesomeIcon icon={faInfoCircle} />
+          </button>
         </button>
       </div>
 
@@ -625,6 +656,13 @@ export default function WordBank() {
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
         featureName={featureName}
+      />
+
+      {/* Feature Help Modal */}
+      <FeatureHelpModal
+        isOpen={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+        feature={helpFeature}
       />
     </div>
   );

@@ -21,6 +21,29 @@
   color: #333;
 }
 
+.bank-header .help-icon-button {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 6px;
+  margin-left: 12px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.bank-header .help-icon-button:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 .bank-header .back-button {
   display: none; /* Hide the original back button inside the header */
 }
@@ -275,6 +298,12 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+  }
+
+  .bank-header .help-icon-button {
+    margin-left: 8px;
+    padding: 4px;
+    font-size: 0.9rem;
   }
   
   .bank-controls {

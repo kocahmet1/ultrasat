@@ -4,8 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { collection, query, where, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTrash, faEdit, faArrowLeft, faPuzzlePiece, faSearch, faFilter, faSortAmountDown } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTrash, faEdit, faArrowLeft, faPuzzlePiece, faSearch, faFilter, faSortAmountDown, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
+import FeatureHelpModal from '../components/FeatureHelpModal';
 import '../styles/BankItem.css';
 
 const ConceptBank = () => {
@@ -20,6 +21,9 @@ const ConceptBank = () => {
   const [sortOrder, setSortOrder] = useState('newest'); // 'newest', 'oldest', 'alphabetical'
   const [subcategoryFilter, setSubcategoryFilter] = useState('all');
   const [uniqueSubcategories, setUniqueSubcategories] = useState([]);
+  
+  // Help modal state
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   // Load concepts from the user's bank
   useEffect(() => {
@@ -138,6 +142,11 @@ const ConceptBank = () => {
     }
   };
   
+  // Handle help modal
+  const handleShowHelp = () => {
+    setShowHelpModal(true);
+  };
+
   // Filter and sort concepts based on search term, subcategory filter, and sort order
   const filteredAndSortedConcepts = concepts
     .filter(concept => {
@@ -170,6 +179,13 @@ const ConceptBank = () => {
       <div className="bank-header">
         <h1>
           <FontAwesomeIcon icon={faPuzzlePiece} /> Concept Bank
+          <button 
+            className="help-icon-button"
+            onClick={handleShowHelp}
+            title="Learn how to use the Concept Bank"
+          >
+            <FontAwesomeIcon icon={faInfoCircle} />
+          </button>
         </h1>
       </div>
       
@@ -308,6 +324,13 @@ const ConceptBank = () => {
           ))}
         </div>
       )}
+      
+      {/* Feature Help Modal */}
+      <FeatureHelpModal
+        isOpen={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+        feature="concepts"
+      />
     </div>
   );
 };
