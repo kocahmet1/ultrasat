@@ -272,6 +272,55 @@ body {
   color: var(--primary-green);
 }
 
+.hero-badge-prominent {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.2rem;
+  background: #fff;
+  border: 2px solid rgba(184, 212, 255, 0.4);
+  border-radius: 22px;
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3d4a66;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(184, 212, 255, 0.25);
+}
+
+.hero-badge-prominent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 35px;
+  opacity: 0;
+  animation: glimmer 3s ease-in-out infinite;
+}
+
+.hero-badge-prominent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(184, 212, 255, 0.5);
+  background: #cce0ff;
+}
+
+@keyframes glimmer {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .hero-title-center {
   font-size: 3.5rem;
   font-weight: 800;
@@ -849,8 +898,108 @@ body {
   line-height: 1.5;
 }
 
+/* New image section to replace the features grid */
+.practice-features-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.features-showcase-image {
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.features-showcase-image:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
 .section-cta-center {
   text-align: center;
+}
+
+/* Bluebook on Phone Section */
+.bluebook-phone-section {
+  padding: 5rem 2rem;
+  background: white;
+}
+
+.bluebook-phone-section .container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.bluebook-content-grid {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.phone-image-container {
+  flex: 0 0 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phone-screen-image {
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+}
+
+.phone-screen-image:hover {
+  transform: translateY(-5px);
+}
+
+.phone-features-container {
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.phone-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  background: var(--light-gray);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.phone-feature-item:hover {
+  transform: translateX(5px);
+  box-shadow: var(--shadow-md);
+}
+
+.phone-feature-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.phone-feature-content h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--dark-text);
+  margin-bottom: 0.5rem;
+}
+
+.phone-feature-content p {
+  font-size: 0.95rem;
+  color: var(--medium-text);
+  line-height: 1.6;
 }
 
 /* Core Features Section - Symmetric Grid */
@@ -2001,6 +2150,22 @@ body {
   .footer-links-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  
+  /* Bluebook Phone Section Responsive */
+  .bluebook-content-grid {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .phone-image-container,
+  .phone-features-container {
+    flex: 1 1 100%;
+  }
+  
+  .phone-features-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2036,12 +2201,19 @@ body {
     color: var(--dark-text);
   }
   
-  .hero-title-center {
+    .hero-title-center {
     font-size: 2.5rem;
   }
-  
+
   .hero-subtitle-center {
     font-size: 1.1rem;
+  }
+
+  .hero-badge-prominent {
+    padding: 0.7rem 1.8rem;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    margin-bottom: 1.5rem;
   }
   
   .hero-stats-grid {
@@ -2095,6 +2267,16 @@ body {
   .practice-features-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .practice-features-image {
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+
+  .features-showcase-image {
+    max-width: 100%;
+    border-radius: var(--border-radius-sm);
   }
   
   .exam-list-container {
@@ -2152,6 +2334,33 @@ body {
     flex-direction: column;
     gap: 0.5rem;
   }
+  
+  /* Bluebook Phone Section Responsive */
+  .bluebook-phone-section {
+    padding: 3rem 2rem;
+  }
+  
+  .bluebook-content-grid {
+    gap: 1.5rem;
+  }
+  
+  .phone-feature-item {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .phone-feature-icon {
+    font-size: 1.5rem;
+  }
+  
+  .phone-feature-content h4 {
+    font-size: 1rem;
+  }
+  
+  .phone-feature-content p {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2165,6 +2374,13 @@ body {
   
   .hero-subtitle-center {
     font-size: 1rem;
+  }
+
+  .hero-badge-prominent {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.2px;
+    margin-bottom: 1.2rem;
   }
   
   .section-header-center h2 {
@@ -2197,6 +2413,20 @@ body {
   
   .exam-details p {
     font-size: 0.8rem;
+  }
+  
+  /* Bluebook Phone Section Responsive */
+  .bluebook-phone-section {
+    padding: 2rem 1rem;
+  }
+  
+  .phone-feature-item {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .phone-screen-image {
+    max-width: 90%;
   }
 }
 

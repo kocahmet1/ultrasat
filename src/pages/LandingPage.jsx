@@ -246,8 +246,8 @@ const LandingPage = () => {
       <section className="hero-section-new">
         <div className="container">
           <div className="hero-content-center">
-            <div className="hero-badge">
-              🎯 AI-Powered SAT Prep
+            <div className="hero-badge-prominent">
+              <img src="/images/aihot.png" alt="AI is hot!" style={{height: '36px', width: 'auto', display: 'block'}} />
             </div>
             <h1 className="hero-title-center">
               Boost Your SAT Score by <span className="score-highlight">200+ Points</span>
@@ -344,27 +344,8 @@ const LandingPage = () => {
               </div>
             </div>
             
-            <div className="practice-features-grid">
-              <div className="practice-feature">
-                <div className="feature-icon-box">⏱️</div>
-                <h4>Timed Like Real SAT</h4>
-                <p>Adaptive timing matches the actual test</p>
-              </div>
-              <div className="practice-feature">
-                <div className="feature-icon-box">📊</div>
-                <h4>Instant Score Reports</h4>
-                <p>Get detailed analysis immediately</p>
-              </div>
-              <div className="practice-feature">
-                <div className="feature-icon-box">🎯</div>
-                <h4>Targeted Practice</h4>
-                <p>AI identifies your weak areas</p>
-              </div>
-              <div className="practice-feature">
-                <div className="feature-icon-box">📈</div>
-                <h4>Track Progress</h4>
-                <p>See your improvement over time</p>
-              </div>
+            <div className="practice-features-image">
+              <img src="/images/newimage.png" alt="AI-powered SAT features" className="features-showcase-image" />
             </div>
           </div>
         </div>
@@ -372,6 +353,43 @@ const LandingPage = () => {
 
       {/* Question Bank Section */}
       <QuestionBank />
+
+      {/* Bluebook on Phone Section */}
+      <section className="bluebook-phone-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Bluebook on Your Phone!</h2>
+          </div>
+          
+          <div className="bluebook-content-grid">
+            <div className="phone-image-container">
+              <img 
+                src="/images/phonescreen.png" 
+                alt="Bluebook Digital SAT on Mobile" 
+                className="phone-screen-image"
+              />
+            </div>
+            
+            <div className="phone-features-container">
+              <div className="phone-feature-item">
+                <div className="phone-feature-icon">📱</div>
+                <div className="phone-feature-content">
+                  <h4>Mobile Comfort</h4>
+                  <p>Enjoy the comfort of taking bluebook tests on your phone</p>
+                </div>
+              </div>
+              
+              <div className="phone-feature-item">
+                <div className="phone-feature-icon">🔄</div>
+                <div className="phone-feature-content">
+                  <h4>Feature Coming Soon</h4>
+                  <p>More exciting mobile features are on the way</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Core Features Section - Symmetric Grid */}
       <section className="core-features-section">

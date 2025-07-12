@@ -316,7 +316,7 @@ function Profile() {
                 onClick={() => navigate('/pricing')}
               >
                 Upgrade to Plus
-              </button>
+                      </button>
             </div>
           </div>
         )}
