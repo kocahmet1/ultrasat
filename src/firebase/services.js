@@ -1612,6 +1612,7 @@ export const repairPracticeExamData = async () => {
  * @param {string} examData.description - The description of the practice exam
  * @param {Array} examData.moduleIds - Array of module IDs included in this exam
  * @param {boolean} examData.isPublic - Whether the exam is publicly available
+ * @param {boolean} examData.isDiagnostic - Whether this is a diagnostic exam (shorter format)
  * @returns {Promise<string>} - The ID of the created practice exam
  */
 export const createPracticeExam = async (examData) => {
@@ -1641,6 +1642,7 @@ export const createPracticeExam = async (examData) => {
       description: examData.description || 'No description provided',
       moduleIds: moduleIds,
       isPublic: examData.isPublic !== undefined ? examData.isPublic : true,
+      isDiagnostic: examData.isDiagnostic || false,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
@@ -1827,6 +1829,44 @@ export const deletePracticeExam = async (examId) => {
     await deleteDoc(examRef);
   } catch (error) {
     console.error('Error deleting practice exam:', error);
+    throw error;
+  }
+};
+
+/**
+ * Create a diagnostic exam module with specified question count
+ * @param {Object} moduleData - The module data
+ * @param {string} moduleData.title - The module title
+ * @param {string} moduleData.description - The module description
+ * @param {number} moduleData.moduleNumber - The module number
+ * @param {boolean} moduleData.calculatorAllowed - Whether calculator is allowed
+ * @param {Array} moduleData.categoryPaths - Array of category paths to select questions from
+ * @param {number} moduleData.questionCount - Number of questions (15 for R&W, 12 for Math)
+ * @param {number} moduleData.timeLimit - Time limit in seconds
+ * @returns {Promise<string>} - The ID of the created module
+ */
+/**
+ * Create a complete diagnostic exam with selected modules
+ * @param {Object} examData - The exam data
+ * @param {string} examData.title - The exam title
+ * @param {string} examData.description - The exam description
+ * @param {Array<string>} examData.moduleIds - Array of module IDs to include
+ * @param {boolean} examData.isPublic - Whether the exam is publicly available
+ * @returns {Promise<string>} - The ID of the created diagnostic exam
+ */
+export const createDiagnosticExam = async (examData) => {
+  try {
+    // Create the diagnostic exam with provided module IDs
+    const diagnosticExamData = {
+      ...examData,
+      isDiagnostic: true
+    };
+
+    const examId = await createPracticeExam(diagnosticExamData);
+    console.log('Created diagnostic exam with ID:', examId);
+    return examId;
+  } catch (error) {
+    console.error('Error creating diagnostic exam:', error);
     throw error;
   }
 };

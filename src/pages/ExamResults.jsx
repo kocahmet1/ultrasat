@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { getFirestore } from 'firebase/firestore';
 import { FaArrowRight } from 'react-icons/fa';
 import { SUBCATEGORY_SUBJECTS } from '../utils/subcategoryConstants';
+import { processTextMarkup } from '../utils/textProcessing';
 import '../styles/Results.css';
 
 function ExamResults() {
@@ -85,6 +86,7 @@ function ExamResults() {
     
     modules.forEach((module, index) => { 
       console.log(`[ExamResults] processModuleData - Processing module ${index} (raw object):`, module);
+      console.log(`[ExamResults] processModuleData - Module ${index} ID: ${module.id}, Title: ${module.title}`);
       console.log(`[ExamResults] processModuleData - Does module ${index} have 'questions'?`, module && module.hasOwnProperty('questions') ? 'Yes, length: ' + (module.questions ? module.questions.length : 'undefined') : 'No');
       moduleResponses[module.id] = {
         ...module, 
@@ -92,14 +94,25 @@ function ExamResults() {
       };
     });
     
+    // Log unique moduleIds from responses
+    const uniqueModuleIds = [...new Set(responses.map(r => r.moduleId))];
+    console.log('[ExamResults] processModuleData - Unique moduleIds in responses:', uniqueModuleIds);
+    console.log('[ExamResults] processModuleData - Module IDs from modules:', modules.map(m => m.id));
+    
     responses.forEach(response => {
       if (response.moduleId && moduleResponses[response.moduleId]) {
         moduleResponses[response.moduleId].responses.push(response);
+      } else if (response.moduleId) {
+        console.warn(`[ExamResults] processModuleData - Response with moduleId ${response.moduleId} doesn't match any module`);
       }
     });
     
     const resultModuleData = Object.values(moduleResponses);
     console.log('[ExamResults] processModuleData - Resulting moduleData (raw object):', resultModuleData);
+    // Log response counts per module
+    resultModuleData.forEach((module, index) => {
+      console.log(`[ExamResults] processModuleData - Module ${index} (${module.title}) has ${module.responses.length} responses`);
+    });
     return resultModuleData;
   };
 
@@ -328,6 +341,11 @@ function ExamResults() {
             <div className={`results-card ${splitView ? 'results-summary' : ''}`}>
               <div className="total-score-container">
                 <h2>Total Score</h2>
+                {examDetails?.isDiagnostic && (
+                  <div className="diagnostic-indicator">
+                    <span className="diagnostic-badge">Diagnostic Test</span>
+                  </div>
+                )}
                 <p>{readingWritingScore + mathScore} / 1600</p>
               </div>
               <div className="scores-row">
@@ -464,15 +482,39 @@ function ExamResults() {
                 <div className="module-questions-review">
                   {activeReviewModule?.questions?.map((question, questionIndex) => {
                     // Find the response for the current question from the original module definition
-                    const response = activeReviewModule.responses?.find(
-                      resp => resp.questionId === question.id
-                    );
+                    // Try multiple ways to match the response to handle different ID formats
+                    const response = activeReviewModule.responses?.find(resp => {
+                      // First try exact ID match
+                      if (resp.questionId === question.id) return true;
+                      
+                      // Then try matching by question content if both have it
+                      if (resp.question && resp.question.id === question.id) return true;
+                      
+                      // Try matching by index-based ID pattern
+                      const indexBasedId = `practice-${activeReviewModule.id}-q-${questionIndex}`;
+                      if (resp.questionId === indexBasedId) return true;
+                      
+                      // Try matching by moduleIndex if available
+                      if (resp.moduleIndex === questionIndex) return true;
+                      
+                      // Last resort: match by question text (for questions without proper IDs)
+                      if (resp.question && resp.question.text === question.text) return true;
+                      
+                      return false;
+                    });
 
                     console.log(`[ExamResults] Reviewing Question ${questionIndex + 1} (ID: ${question.id}):`, question);
                     if (response) {
                         console.log(`[ExamResults] Found response for Question ${question.id}:`, response);
                     } else {
                         console.log(`[ExamResults] No response found for Question ${question.id} (Skipped).`);
+                        // Debug: Log all response questionIds for this module
+                        if (questionIndex === 0 && activeReviewModule.responses) {
+                          console.log(`[ExamResults] Module ${activeReviewModule.title} - All response questionIds:`, 
+                            activeReviewModule.responses.map(r => r.questionId));
+                          console.log(`[ExamResults] Module ${activeReviewModule.title} - All question ids:`, 
+                            activeReviewModule.questions.map(q => q.id));
+                        }
                     }
                     
                     // Determine if the question was answered and if it was correct
@@ -508,14 +550,18 @@ function ExamResults() {
                           </span>
                         </div>
                         
-                        <div className="question-text">{question.text}</div>
+                        <div 
+                          className="question-text"
+                          dangerouslySetInnerHTML={{ __html: processTextMarkup(question.text) }}
+                        />
                         
                         {question.graphDescription && (
                           <div className="question-graph-description">
                             <h4>Graph Description:</h4>
-                            <div className="graph-description-text">
-                              {question.graphDescription}
-                            </div>
+                            <div 
+                              className="graph-description-text"
+                              dangerouslySetInnerHTML={{ __html: processTextMarkup(question.graphDescription) }}
+                            />
                           </div>
                         )}
                         
@@ -637,7 +683,7 @@ function ExamResults() {
                         {isAnswered && showExplanation[question.id] && (
                           <div className="question-explanation">
                             <h4>Explanation</h4>
-                            <p>{question.explanation || `The correct answer is "${question.correctAnswer}". ${question.reasoning || ''}`}</p>
+                            <p dangerouslySetInnerHTML={{ __html: processTextMarkup(question.explanation || `The correct answer is "${question.correctAnswer}". ${question.reasoning || ''}`) }} />
                           </div>
                         )}
                       </div>

@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import '../styles/QuestionTracker.css';
 
-const QuestionTracker = ({ 
+const QuestionTracker = memo(({ 
   isOpen, 
   closeTracker, 
   questions, 
@@ -12,10 +12,6 @@ const QuestionTracker = ({
 }) => {
   const trackerRef = useRef(null);
   
-  console.log('QuestionTracker rendered with isOpen:', isOpen);
-  console.log('Questions:', questions);
-  console.log('Current Question:', currentQuestion);
-
   useEffect(() => {
     // Handle clicking outside the tracker popup to close it
     const handleClickOutside = (event) => {
@@ -25,7 +21,6 @@ const QuestionTracker = ({
     };
 
     if (isOpen) {
-      console.log('Adding click outside listener');
       document.addEventListener('mousedown', handleClickOutside);
     }
     
@@ -35,7 +30,6 @@ const QuestionTracker = ({
   }, [isOpen, closeTracker]);
 
   if (!isOpen) {
-    console.log('QuestionTracker not showing because isOpen is false');
     return null;
   }
 
@@ -95,6 +89,6 @@ const QuestionTracker = ({
       </div>
     </div>
   );
-};
+});
 
 export default QuestionTracker;

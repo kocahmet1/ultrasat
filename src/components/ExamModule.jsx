@@ -50,12 +50,6 @@ function ExamModule({
     const newAnswer = updatedAnswers[currentQuestion] || '';
     setSelectedAnswer(newAnswer);
   }, [currentQuestion, updatedAnswers]);
-
-  // Sync selectedAnswer with the current question's stored answer
-  useEffect(() => {
-    const newAnswer = updatedAnswers[currentQuestion] || '';
-    setSelectedAnswer(newAnswer);
-  }, [currentQuestion]);
   
   // Animation states
   const [moduleAnimation, setModuleAnimation] = useState('fade-in');
@@ -65,16 +59,20 @@ function ExamModule({
 
   // Debug logging, question enrichment, and entrance animation
   useEffect(() => {
-    console.log(`Module ${moduleNumber} initialized`);
     
     // Enrich questions with subcategory IDs based on their categories
     const withCategories = enrichQuestionsWithNewCategories(questions);
     // Ensure all questions have proper subcategory IDs
     const enriched = ensureQuestionsHaveSubcategoryIds(withCategories);
-    setEnrichedQuestions(enriched);
     
-    console.log('Enriched Questions:', enriched);
-    console.log('Initial answers:', updatedAnswers);
+    // Ensure IDs are preserved - create new objects with spread to avoid reference issues
+    const enrichedWithIds = enriched.map((q, index) => ({
+      ...q,
+      id: q.id || `temp-${moduleNumber}-q-${index}` // Ensure every question has an ID
+    }));
+    
+    setEnrichedQuestions(enrichedWithIds);
+    
     
     // Reset to first question when module loads
     setCurrentQuestion(0);
@@ -177,18 +175,7 @@ function ExamModule({
 
   // Toggle tracker
   const toggleTracker = () => {
-    console.log('Toggle tracker clicked, current state:', isTrackerOpen);
-    const newState = !isTrackerOpen;
-    console.log('Setting isTrackerOpen to:', newState);
-    setIsTrackerOpen(newState);
-    // Log after state update attempt
-    setTimeout(() => {
-      console.log('Tracker state after update attempt:', isTrackerOpen);
-      // This will show the actual updated state in the next render cycle
-      setTimeout(() => {
-        console.log('Final tracker state in next render cycle:', isTrackerOpen);
-      }, 100);
-    }, 0);
+    setIsTrackerOpen(prevState => !prevState);
   };
 
   // Toggle mark for review

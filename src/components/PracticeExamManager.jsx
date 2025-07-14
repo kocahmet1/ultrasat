@@ -5,7 +5,8 @@ import {
   getAllPracticeExams,
   updatePracticeExam,
   deletePracticeExam,
-  getPracticeExamModules
+  getPracticeExamModules,
+  createDiagnosticExam
 } from '../firebase/services';
 import '../styles/PracticeExamManager.css';
 
@@ -20,6 +21,15 @@ const PracticeExamManager = () => {
   // State for exam creation form
   const [availableModules, setAvailableModules] = useState([]);
   const [newExam, setNewExam] = useState({
+    title: '',
+    description: '',
+    moduleIds: [],
+    isPublic: true,
+    isDiagnostic: false
+  });
+  
+  // State for diagnostic exam creation
+  const [diagnosticExam, setDiagnosticExam] = useState({
     title: '',
     description: '',
     moduleIds: [],
@@ -111,6 +121,24 @@ const PracticeExamManager = () => {
     }));
   };
 
+  // Handle diagnostic exam form changes
+  const handleDiagnosticExamChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setDiagnosticExam(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  // Handle diagnostic exam module selection
+  const handleDiagnosticModuleSelection = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    setDiagnosticExam(prev => ({
+      ...prev,
+      moduleIds: selectedOptions
+    }));
+  };
+
   // Handle create practice exam
   const handleCreateExam = async (e) => {
     e.preventDefault();
@@ -138,7 +166,8 @@ const PracticeExamManager = () => {
         title: '',
         description: '',
         moduleIds: [],
-        isPublic: true
+        isPublic: true,
+        isDiagnostic: false
       });
       
       await fetchPracticeExams();
@@ -149,13 +178,51 @@ const PracticeExamManager = () => {
     }
   };
 
+  // Handle create diagnostic exam
+  const handleCreateDiagnosticExam = async (e) => {
+    e.preventDefault();
+    
+    if (diagnosticExam.moduleIds.length !== 2) {
+      setError('Please select exactly 2 modules for the diagnostic exam');
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      await createDiagnosticExam({
+        title: diagnosticExam.title,
+        description: diagnosticExam.description,
+        moduleIds: diagnosticExam.moduleIds,
+        isPublic: diagnosticExam.isPublic
+      });
+      
+      // Reset form
+      setDiagnosticExam({
+        title: '',
+        description: '',
+        moduleIds: [],
+        isPublic: true
+      });
+      
+      await fetchPracticeExams();
+      setIsLoading(false);
+      alert('Diagnostic exam created successfully!');
+    } catch (err) {
+      setError('Failed to create diagnostic exam: ' + err.message);
+      setIsLoading(false);
+    }
+  };
+
   // Handle edit exam
   const handleEditExam = (exam) => {
     setNewExam({
       title: exam.title,
       description: exam.description,
       moduleIds: exam.moduleIds || [],
-      isPublic: exam.isPublic
+      isPublic: exam.isPublic,
+      isDiagnostic: exam.isDiagnostic || false
     });
     setSelectedExam(exam);
     setIsEditMode(true);
@@ -189,6 +256,13 @@ const PracticeExamManager = () => {
   const handleCancelEdit = () => {
     setIsEditMode(false);
     setNewExam({
+      title: '',
+      description: '',
+      moduleIds: [],
+      isPublic: true,
+      isDiagnostic: false
+    });
+    setDiagnosticExam({
       title: '',
       description: '',
       moduleIds: [],
@@ -261,6 +335,9 @@ const PracticeExamManager = () => {
                     <span className={exam.isPublic ? 'status-public' : 'status-private'}>
                       {exam.isPublic ? 'Public' : 'Private'}
                     </span>
+                    {exam.isDiagnostic && (
+                      <span className="diagnostic-badge">Diagnostic</span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -345,7 +422,90 @@ const PracticeExamManager = () => {
       </div>
       
       <div className="exam-creation-section">
-        <h3>{isEditMode ? 'Edit Practice Exam' : 'Create New Practice Exam'}</h3>
+        <div className="creation-options">
+          <div className="quick-create-section">
+            <h3>Create Diagnostic Exam</h3>
+            <p>Create a diagnostic exam by selecting exactly 2 modules</p>
+            
+            <form onSubmit={handleCreateDiagnosticExam} className="diagnostic-exam-form">
+              <div className="form-group">
+                <label htmlFor="diagnostic-title">Diagnostic Exam Title</label>
+                <input
+                  type="text"
+                  id="diagnostic-title"
+                  name="title"
+                  value={diagnosticExam.title}
+                  onChange={handleDiagnosticExamChange}
+                  placeholder="SAT Diagnostic Test"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="diagnostic-description">Description</label>
+                <textarea
+                  id="diagnostic-description"
+                  name="description"
+                  value={diagnosticExam.description}
+                  onChange={handleDiagnosticExamChange}
+                  placeholder="Quick diagnostic test to assess your current SAT level"
+                  rows="2"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="diagnostic-modules">Select Modules (Choose exactly 2)</label>
+                <select
+                  id="diagnostic-modules"
+                  name="moduleIds"
+                  multiple
+                  value={diagnosticExam.moduleIds}
+                  onChange={handleDiagnosticModuleSelection}
+                  required
+                  size="4"
+                >
+                  {availableModules.map((module) => (
+                    <option key={module.id} value={module.id}>
+                      Module {module.moduleNumber}: {module.title} ({module.questionCount || (module.questionIds ? module.questionIds.length : 0)} questions)
+                    </option>
+                  ))}
+                </select>
+                <small>Hold Ctrl (or Cmd) to select exactly 2 modules</small>
+              </div>
+              
+              <div className="form-group checkbox-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="isPublic"
+                    checked={diagnosticExam.isPublic}
+                    onChange={handleDiagnosticExamChange}
+                  />
+                  Make this diagnostic exam public
+                </label>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="diagnostic-create-button"
+                disabled={isLoading || diagnosticExam.moduleIds.length !== 2}
+              >
+                {isLoading ? 'Creating...' : 'Create Diagnostic Exam'}
+              </button>
+              
+              {diagnosticExam.moduleIds.length !== 2 && (
+                <div className="warning-message">Please select exactly 2 modules for the diagnostic exam.</div>
+              )}
+            </form>
+          </div>
+          
+          <div className="divider">OR</div>
+          
+          <div className="custom-create-section">
+            <h3>{isEditMode ? 'Edit Practice Exam' : 'Create Custom Practice Exam'}</h3>
+            <p>Create a custom exam by selecting specific modules</p>
+          </div>
+        </div>
         
         <form onSubmit={handleCreateExam} className="exam-form">
           <div className="form-group">

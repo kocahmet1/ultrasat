@@ -16,6 +16,21 @@
   color: #007bff;
 }
 
+.diagnostic-indicator {
+  margin-bottom: 1rem;
+}
+
+.diagnostic-badge {
+  background-color: #ff6b35;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .scores-row {
   display: flex;
   justify-content: space-between;
@@ -1323,6 +1338,7 @@
   color: #495057;
   line-height: 1.6;
   font-size: 1rem;
+  white-space: pre-line; /* Preserve line breaks and spaces in explanations */
 }
 
 /* SAT Score Summary */

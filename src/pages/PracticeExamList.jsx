@@ -85,8 +85,47 @@ const PracticeExamList = () => {
         <div className="page-container">
           {error && <div className="error-message">{error}</div>}
           <div className="exam-selection-container">
+            {/* Diagnostic Exams Section */}
             <div className="exam-list-section">
-              <h2>Choose a Full-Length Practice</h2>
+              <h2>Quick Diagnostic Tests</h2>
+              <p className="section-description">Short 27-question tests to assess your current level (15 R&W + 12 Math)</p>
+              {isLoading && !practiceExams.length ? (
+                <div className="loading-spinner">
+                  <div className="spinner"></div>
+                  <p>Loading diagnostic exams...</p>
+                </div>
+              ) : practiceExams.length > 0 ? (
+                <div className="exam-cards">
+                  {practiceExams.filter(exam => exam.isDiagnostic).map((exam, idx) => {
+                    // Diagnostic exams are always free
+                    return (
+                      <div 
+                        key={exam.id}
+                        className="exam-card diagnostic-exam-card"
+                        onClick={() => handleStartExam(exam, idx, false)}
+                      >
+                        <div className="exam-title-row">
+                          <span className="exam-title-text">{exam.title}</span>
+                          <span className="exam-duration">~30 min</span>
+                        </div>
+                        <div className="exam-description">
+                          <small>{exam.description}</small>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="no-exams-message">
+                  <p>No diagnostic exams are currently available.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Full-Length Exams Section */}
+            <div className="exam-list-section">
+              <h2>Full-Length Practice Exams</h2>
+              <p className="section-description">Complete practice exams with 4 modules (2 R&W + 2 Math) and intermission</p>
               {isLoading && !practiceExams.length ? (
                 <div className="loading-spinner">
                   <div className="spinner"></div>
@@ -94,7 +133,7 @@ const PracticeExamList = () => {
                 </div>
               ) : practiceExams.length > 0 ? (
                 <div className="exam-cards">
-                  {practiceExams.map((exam, idx) => {
+                  {practiceExams.filter(exam => !exam.isDiagnostic).map((exam, idx) => {
                     // Show pro badge if NOT one of the first 3 and user is free or not signed in
                     const isProExam = idx > 2;
                     const showPro = isProExam && (!currentUser || !userMembership || userMembership.tier === 'free');
@@ -109,6 +148,7 @@ const PracticeExamList = () => {
                           {showPro && (
                             <span className="pro-badge" style={{marginLeft: 8}}>Pro</span>
                           )}
+                          <span className="exam-duration">~3 hours</span>
                         </div>
                       </div>
                     );

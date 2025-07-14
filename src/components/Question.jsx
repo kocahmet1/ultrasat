@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { processTextMarkup } from '../utils/textProcessing';
 import '../styles/Question.css';
 
 const Question = ({ 
@@ -113,14 +114,15 @@ const Question = ({
 
   const renderQuestionText = () => (
     <div className="question-text" style={{ fontSize: '1.8rem', lineHeight: '1.6' }}>
-      {questionText}
+      <div dangerouslySetInnerHTML={{ __html: processTextMarkup(questionText) }} />
       
       {graphDescription && (
         <div className="question-graph-description">
           <div className="graph-description-label">Graph Description:</div>
-          <div className="graph-description-content">
-            {graphDescription}
-          </div>
+          <div 
+            className="graph-description-content"
+            dangerouslySetInnerHTML={{ __html: processTextMarkup(graphDescription) }}
+          />
         </div>
       )}
       

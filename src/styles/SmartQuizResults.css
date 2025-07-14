@@ -396,6 +396,31 @@
   font-weight: 500;
 }
 
+/* Question Explanation */
+.question-explanation {
+  background: linear-gradient(135deg, #f2f8ff 0%, #e6f3ff 100%);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.question-explanation h4 {
+  color: #667eea;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.question-explanation p {
+  color: #495057;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 0;
+  white-space: pre-line; /* Preserve line breaks and spaces in explanations */
+}
+
 /* Action Buttons */
 .actions {
   display: flex;

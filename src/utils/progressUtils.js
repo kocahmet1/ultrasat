@@ -19,6 +19,7 @@ import {
 } from 'firebase/firestore';
 import { normalizeSubcategoryName } from './subcategoryUtils';
 import { SUBCATEGORY_SUBJECTS, getSubcategoryIdFromString } from './subcategoryConstants';
+import { getUserAttemptHistory } from '../firebase/services';
 
 /**
  * Maximum number of questions to keep in the askedQuestions array
@@ -444,8 +445,8 @@ export const updateConceptProgress = async (userId, subcategoryId, conceptId, ma
 };
 
 /**
- * Calculates estimated SAT score based on user's subcategory accuracies
- * 
+ * Calculates estimated SAT score based on user's last N question attempts
+ *
  * @param {string} userId - User ID
  * @returns {Promise<Object>} - Object containing estimatedScore, confidence, and breakdown
  */
@@ -453,6 +454,86 @@ export const calculateEstimatedSATScore = async (userId) => {
   try {
     if (!userId) {
       console.error('Missing userId for calculateEstimatedSATScore');
+      return { estimatedScore: 0, confidence: 0, breakdown: {} };
+    }
+
+    // Fetch the last 100 attempts (most recent first)
+    const attempts = await getUserAttemptHistory(userId);
+    if (!Array.isArray(attempts) || attempts.length === 0) {
+      // Fallback to previous logic if no attempts found
+      return await calculateEstimatedSATScore_Legacy(userId);
+    }
+
+    // Helper to get subcategoryId as number (if possible)
+    const getSubcatId = (attempt) => {
+      if (typeof attempt.subcategoryId === 'number') return attempt.subcategoryId;
+      if (typeof attempt.subcategoryId === 'string' && !isNaN(Number(attempt.subcategoryId))) return Number(attempt.subcategoryId);
+      if (attempt.subcategory) {
+        // Try to map kebab-case to numeric ID
+        const id = getSubcategoryIdFromString(attempt.subcategory);
+        if (id) return id;
+      }
+      return null;
+    };
+
+    // Partition attempts into R&W and Math
+    const rwAttempts = [];
+    const mathAttempts = [];
+    for (const attempt of attempts) {
+      const subcatId = getSubcatId(attempt);
+      if (!subcatId) continue;
+      const subject = SUBCATEGORY_SUBJECTS[subcatId];
+      if (subject === 1) rwAttempts.push(attempt);
+      else if (subject === 2) mathAttempts.push(attempt);
+    }
+
+    // Take the most recent 54 R&W and 44 Math attempts
+    const rwRecent = rwAttempts.slice(0, 54);
+    const mathRecent = mathAttempts.slice(0, 44);
+
+    // Calculate accuracy for each section
+    const rwCorrect = rwRecent.filter(a => a.isCorrect === true).length;
+    const mathCorrect = mathRecent.filter(a => a.isCorrect === true).length;
+    const rwTotal = rwRecent.length;
+    const mathTotal = mathRecent.length;
+    const rwAccuracy = rwTotal > 0 ? rwCorrect / rwTotal : 0;
+    const mathAccuracy = mathTotal > 0 ? mathCorrect / mathTotal : 0;
+
+    // Scale to SAT section scores (200-800), rounded to nearest 10
+    const readingWritingEstimate = rwTotal > 0 ? Math.round((200 + rwAccuracy * 600) / 10) * 10 : 200;
+    const mathEstimate = mathTotal > 0 ? Math.round((200 + mathAccuracy * 600) / 10) * 10 : 200;
+    const estimatedScore = readingWritingEstimate + mathEstimate;
+
+    // Confidence: based on how close to 54/44 attempts we have
+    const rwConfidence = Math.min(1, rwTotal / 54);
+    const mathConfidence = Math.min(1, mathTotal / 44);
+    const confidence = Math.round(((rwConfidence + mathConfidence) / 2) * 100);
+
+    // If both sections have 0 attempts, fallback to legacy logic
+    if (rwTotal === 0 && mathTotal === 0) {
+      return await calculateEstimatedSATScore_Legacy(userId);
+    }
+
+    return {
+      estimatedScore: Math.max(400, Math.min(1600, estimatedScore)),
+      confidence,
+      breakdown: {
+        readingWriting: { score: readingWritingEstimate, attempts: rwTotal },
+        math: { score: mathEstimate, attempts: mathTotal }
+      },
+      subcategoriesWithData: rwTotal + mathTotal
+    };
+  } catch (error) {
+    console.error('Error calculating estimated SAT score:', error);
+    return { estimatedScore: 0, confidence: 0, breakdown: {} };
+  }
+};
+
+// Legacy fallback: previous subcategory-based logic
+export const calculateEstimatedSATScore_Legacy = async (userId) => {
+  try {
+    if (!userId) {
+      console.error('Missing userId for calculateEstimatedSATScore_Legacy');
       return { estimatedScore: 0, confidence: 0, breakdown: {} };
     }
 

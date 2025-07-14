@@ -18,6 +18,7 @@ import { getConceptsBySubcategory } from '../firebase/conceptServices';
 import { getLearningContent } from '../firebase/learningContentServices';
 import { getDiverseSampleQuestions } from '../firebase/questionServices';
 import { getSubcategoryName } from '../utils/subcategoryConstants';
+import { processTextMarkup } from '../utils/textProcessing';
 import { toast, ToastContainer } from 'react-toastify';
 import '../styles/SubcategoryLearnPage.css';
 
@@ -109,7 +110,10 @@ const SampleQuestionsSection = ({ subcategoryId, questions, onPracticeClick }) =
       </div>
 
       <div className="question-display">
-        <div className="question-text">{currentQuestion.text}</div>
+        <div 
+          className="question-text"
+          dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.text) }}
+        />
         
         <div className="question-options">
           {currentQuestion.options?.map((option, index) => (
@@ -137,7 +141,7 @@ const SampleQuestionsSection = ({ subcategoryId, questions, onPracticeClick }) =
             <div className="answer-explanation">
               <p><strong>Correct Answer:</strong> {currentQuestion.correctAnswer}</p>
               {currentQuestion.explanation && (
-                <p><strong>Explanation:</strong> {currentQuestion.explanation}</p>
+                <p><strong>Explanation:</strong> <span dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.explanation) }} /></p>
               )}
               <button className="try-again-btn" onClick={resetQuestion}>
                 Try Again

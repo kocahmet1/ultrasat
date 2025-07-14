@@ -16,6 +16,7 @@
   line-height: 1.6;
   margin-bottom: 20px;
   color: #555;
+  white-space: pre-line; /* Preserve line breaks and spaces in passage text */
 }
 
 .question-text-content {
@@ -23,6 +24,7 @@
   line-height: 1.7;
   font-weight: 500;
   margin-bottom: 25px;
+  white-space: pre-line; /* Preserve line breaks and spaces in text */
 }
 
 .quiz-content {

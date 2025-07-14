@@ -6,6 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { getSubcategoryName } from '../utils/subcategoryConstants';
+import { processTextMarkup } from '../utils/textProcessing';
 import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaMedal, FaGraduationCap } from 'react-icons/fa';
 import '../styles/SmartQuizResults.css';
 
@@ -171,7 +172,10 @@ export default function SmartQuizResults() {
                       {isCorrect ? 'Correct' : 'Incorrect'}
                     </span>
                   </div>
-                  <p className="question-text">{q.text}</p>
+                  <p 
+                    className="question-text"
+                    dangerouslySetInnerHTML={{ __html: processTextMarkup(q.text) }}
+                  />
                   
                   <div className="answers-review">
                     <div className="answer-item your-answer">
@@ -189,7 +193,7 @@ export default function SmartQuizResults() {
                   {!isCorrect && q.explanation && (
                     <div className="question-explanation">
                       <h4>Explanation</h4>
-                      <p>{q.explanation}</p>
+                      <p dangerouslySetInnerHTML={{ __html: processTextMarkup(q.explanation) }} />
                     </div>
                   )}
                 </div>

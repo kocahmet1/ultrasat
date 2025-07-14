@@ -117,10 +117,14 @@ const PracticeExamController = () => {
   };
   
   const handleIntermissionComplete = () => {
+    console.log(`PracticeExamController: Intermission complete. currentModuleIndex before: ${currentModuleIndex}, modules.length: ${modules.length}`);
     if (currentModuleIndex < modules.length - 1) {
-      setCurrentModuleIndex(currentModuleIndex + 1);
+      const newIndex = currentModuleIndex + 1;
+      console.log(`PracticeExamController: Setting currentModuleIndex to ${newIndex}, next module: ${modules[newIndex]?.title}`);
+      setCurrentModuleIndex(newIndex);
       setExamStatus('in-progress');
     } else {
+      console.log('PracticeExamController: All modules completed from intermission');
       setExamStatus('completed');
       setSidebarHidden(false);
     }
@@ -132,17 +136,53 @@ const PracticeExamController = () => {
     const currentModule = modules[currentModuleIndex];
     const moduleId = currentModule.id;
     
-    console.log('PracticeExamController: Module complete:', moduleId, 'Results summary:', {
+    // Safety check: ensure we're saving to the correct module
+    const expectedModuleNumber = moduleResults.moduleNumber;
+    const actualModuleNumber = currentModule.moduleNumber;
+    
+    let finalModuleId = moduleId;
+    
+    if (expectedModuleNumber !== actualModuleNumber) {
+      console.error(`PracticeExamController: Module number mismatch! Expected ${expectedModuleNumber}, but currentModuleIndex points to module ${actualModuleNumber}`);
+      console.error(`PracticeExamController: currentModuleIndex=${currentModuleIndex}, moduleId=${moduleId}, moduleTitle=${currentModule.title}`);
+      
+      // Find the correct module by moduleNumber
+      const correctModule = modules.find(m => m.moduleNumber === expectedModuleNumber);
+      if (correctModule) {
+        console.log(`PracticeExamController: Correcting moduleId from ${moduleId} to ${correctModule.id} (${correctModule.title})`);
+        finalModuleId = correctModule.id;
+      } else {
+        console.error(`PracticeExamController: Could not find module with moduleNumber ${expectedModuleNumber}`);
+      }
+    }
+    
+    // Create updated moduleResponses object to ensure state consistency
+    const updatedModuleResponses = {
+      ...moduleResponses,
+      [finalModuleId]: moduleResults
+    };
+    
+    // Update state
+    setModuleResponses(updatedModuleResponses);
+    
+    // Debug: Log what was actually saved
+    const answerCount = Array.isArray(moduleResults.answers) ? 
+      moduleResults.answers.filter(a => a !== undefined && a !== null && a !== '').length :
+      Object.values(moduleResults.answers).filter(a => a !== undefined && a !== null && a !== '').length;
+    console.log(`PracticeExamController: Saved ${answerCount} answers to moduleResponses[${finalModuleId}] for ${currentModule.title}`);
+    
+    console.log('PracticeExamController: Module complete:', finalModuleId, 'Results summary:', {
       moduleNumber: moduleResults.moduleNumber,
       answersCount: Array.isArray(moduleResults.answers) ? moduleResults.answers.length : Object.keys(moduleResults.answers).length,
-      questionsCount: moduleResults.questions ? moduleResults.questions.length : 0
+      questionsCount: moduleResults.questions ? moduleResults.questions.length : 0,
+      currentModuleIndex: currentModuleIndex,
+      moduleTitle: currentModule.title
     });
     
-    // Save module results
-    setModuleResponses(prev => ({
-      ...prev,
-      [moduleId]: moduleResults
-    }));
+    // Debug: Verify we're using the correct module
+    console.log(`PracticeExamController: Saving responses for module at index ${currentModuleIndex}: ${currentModule.title} (ID: ${finalModuleId})`);
+    
+    // Save module results - this is now done above with validation
 
     // Record progress for each question in the completed module
     if (currentUser && currentUser.uid && moduleResults.questions && moduleResults.answers) {
@@ -298,28 +338,61 @@ const PracticeExamController = () => {
 
     // Move to the next module, show intermission, or complete the exam
     const moduleNumber = currentModule.moduleNumber;
-    if (moduleNumber === 2 && currentModuleIndex < modules.length - 1) {
+    const isDiagnostic = exam?.isDiagnostic || false;
+    
+    if (moduleNumber === 2 && currentModuleIndex < modules.length - 1 && !isDiagnostic) {
+      // After module 2, go to intermission but don't increment currentModuleIndex yet
+      // Skip intermission for diagnostic exams
+      console.log('PracticeExamController: Going to intermission after module 2');
       setExamStatus('intermission');
       setModuleTransitionLoading(false);
     } else if (currentModuleIndex < modules.length - 1) {
-      setCurrentModuleIndex(currentModuleIndex + 1);
+      // Normal progression: increment currentModuleIndex
+      const newIndex = currentModuleIndex + 1;
+      console.log(`PracticeExamController: Moving to next module. currentModuleIndex: ${currentModuleIndex} -> ${newIndex}`);
+      setCurrentModuleIndex(newIndex);
       setModuleTransitionLoading(false);
     } else {
       // All modules are completed
+      console.log('PracticeExamController: All modules completed, processing results');
       setLoadingMessage('Computing the results...');
       setExamStatus('completed');
       // Show sidebar again when exam is finished
       setSidebarHidden(false);
       
-      // Save the comprehensive result
-      await handleViewResults();
+      // Save the comprehensive result using the updated moduleResponses
+      await handleViewResults(updatedModuleResponses);
       setModuleTransitionLoading(false);
     }
+    
+    // Debug: Show final moduleResponses state
+    console.log('PracticeExamController: Final moduleResponses keys after this completion:', Object.keys(updatedModuleResponses));
+    Object.keys(updatedModuleResponses).forEach(key => {
+      const module = modules.find(m => m.id === key);
+      const data = updatedModuleResponses[key];
+      const answerCount = Array.isArray(data?.answers) ? 
+        data.answers.filter(a => a !== undefined && a !== null && a !== '').length :
+        Object.values(data?.answers || {}).filter(a => a !== undefined && a !== null && a !== '').length;
+      console.log(`  - moduleResponses[${key}] (${module?.title}) has ${answerCount} answers`);
+    });
   };
   
   // Handle exam completion and navigate to results
-  const handleViewResults = async () => {
+  const handleViewResults = async (moduleResponsesToUse) => {
     console.log('Processing results for Practice Exam:', examId);
+    
+    // Use provided moduleResponses or fallback to state
+    const responsesToProcess = moduleResponsesToUse || moduleResponses;
+    
+    // Debug: Log the moduleResponses structure
+    console.log('PracticeExamController: moduleResponses object:', responsesToProcess);
+    Object.entries(responsesToProcess).forEach(([moduleId, moduleData]) => {
+      const module = modules.find(m => m.id === moduleId);
+      const answerCount = Array.isArray(moduleData.answers) ? 
+        moduleData.answers.filter(a => a !== undefined && a !== null && a !== '').length :
+        Object.values(moduleData.answers).filter(a => a !== undefined && a !== null && a !== '').length;
+      console.log(`PracticeExamController: moduleResponses[${moduleId}] (${module?.title}) has ${answerCount} answered questions`);
+    });
     
     // Process exam results to calculate overall score
     let totalCorrect = 0;
@@ -331,9 +404,15 @@ const PracticeExamController = () => {
     let mathTotal = 0;
     
     // Process each module's responses
-    Object.entries(moduleResponses).forEach(([moduleId, moduleData]) => {
+    Object.entries(responsesToProcess).forEach(([moduleId, moduleData]) => {
       const module = modules.find(m => m.id === moduleId);
       if (!module || !module.questions) return;
+      
+      console.log(`Processing module ${module.title} with moduleId: ${moduleId}`);
+      console.log(`  - Module has ${module.questions.length} questions`);
+      console.log(`  - ModuleData answers:`, Array.isArray(moduleData.answers) ? 
+        `Array of ${moduleData.answers.length}` : 
+        `Object with ${Object.keys(moduleData.answers).length} keys`);
       
       // Determine if this is a reading/writing or math module
       // Usually modules 1-2 are Reading/Writing, 3-4 are Math
@@ -431,6 +510,11 @@ const PracticeExamController = () => {
         const category = question.category || (isReadingWritingModule ? 'reading-writing' : 'math');
         const mainCategory = question.mainCategory || category;
         
+        // Debug logging for Math Module 2
+        if (module.title && module.title.includes("Math- Module 2")) {
+          console.log(`Math Module 2 - Question ${index}: questionId = ${question.id || `practice-${moduleId}-q-${index}`}`);
+        }
+        
         allResponses.push({
           question: {
             ...question,
@@ -441,6 +525,7 @@ const PracticeExamController = () => {
           correctAnswer, // The correct answer
           isCorrect, // Whether user got it correct
           moduleId, // Which module this belongs to
+          moduleIndex: index, // Add the question index for fallback matching
           timeSpent: 60 + Math.floor(Math.random() * 60), // Default time spent
           subcategory,
           subcategoryId,
@@ -482,6 +567,7 @@ const PracticeExamController = () => {
     });
     
     // Create the summary object for the exam in the new format
+    const isDiagnostic = exam?.isDiagnostic || false;
     const examSummary = {
       examTitle: exam && exam.title ? `${exam.title} - ${dateStr}` : `Practice Exam - ${dateStr}`,
       overallScore: percentageScore,
@@ -492,6 +578,7 @@ const PracticeExamController = () => {
       totalQuestions,
       correctAnswers: totalCorrect,
       practiceExamId: examId,
+      isDiagnostic,
       modules: modules.map(module => ({
         id: module.id,
         title: module.title,
@@ -670,6 +757,14 @@ const PracticeExamController = () => {
   // Render exam in progress (current module)
   if (examStatus === 'in-progress' && modules.length > 0) {
     const currentModule = modules[currentModuleIndex];
+    
+    // Safety check: ensure currentModuleIndex is valid
+    if (!currentModule) {
+      console.error(`PracticeExamController: Invalid currentModuleIndex ${currentModuleIndex}, modules.length=${modules.length}`);
+      return <div className="error-message">Invalid module state. Please refresh and try again.</div>;
+    }
+    
+    console.log(`PracticeExamController: Rendering module at index ${currentModuleIndex}: ${currentModule.title} (moduleNumber: ${currentModule.moduleNumber})`);
     
     return (
       <div className="practice-exam-controller module-state">

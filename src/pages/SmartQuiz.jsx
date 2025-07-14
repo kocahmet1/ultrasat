@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { normalizeSubcategoryName } from '../utils/subcategoryUtils';
+import { processTextMarkup } from '../utils/textProcessing';
 import { db } from '../firebase/config';
 import { recordSmartQuizResult, QUESTIONS_PER_QUIZ, DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -827,8 +828,16 @@ export default function SmartQuiz() {
             </div>
           </div>
 
-          {currentQuestion.passage && <div className="question-passage">{currentQuestion.passage}</div>}
-          <div className="question-text-content">{currentQuestion.text}</div>
+          {currentQuestion.passage && (
+            <div 
+              className="question-passage"
+              dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.passage) }}
+            />
+          )}
+          <div 
+            className="question-text-content"
+            dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.text) }}
+          />
 
           <ul className="options-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {currentQuestion.options.map((opt, idx) => {

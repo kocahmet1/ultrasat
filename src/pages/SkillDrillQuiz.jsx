@@ -8,6 +8,7 @@ import { db } from '../firebase/config';
 import { normalizeSubcategoryName, getHumanReadableSubcategory } from '../utils/subcategoryUtils';
 import { generateSkillQuiz, generateLesson } from '../utils/openaiService';
 import { logUserEngagement } from '../utils/analyticsService';
+import { processTextMarkup } from '../utils/textProcessing';
 import '../styles/SkillDrillQuiz.css';
 
 /**
@@ -441,7 +442,10 @@ const SkillDrillQuiz = () => {
                     className={`question-item ${isCorrect ? 'correct' : 'incorrect'}`}
                   >
                     <div className="question-number">Question {index + 1}</div>
-                    <div className="question-text">{question.text}</div>
+                    <div 
+                      className="question-text"
+                      dangerouslySetInnerHTML={{ __html: processTextMarkup(question.text) }}
+                    />
                     <div className="question-result">
                       {isCorrect ? 
                         <span className="correct-label">Correct</span> : 
@@ -450,7 +454,7 @@ const SkillDrillQuiz = () => {
                     </div>
                     <div className="question-explanation">
                       <h4>Explanation</h4>
-                      <p>{question.explanation}</p>
+                      <p dangerouslySetInnerHTML={{ __html: processTextMarkup(question.explanation) }} />
                     </div>
                   </div>
                 );
@@ -489,15 +493,16 @@ const SkillDrillQuiz = () => {
         
         <div className="question-container">
           <div className="question-text">
-            {currentQuestion.text}
+            <div dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.text) }} />
             
             {/* Display graph description if available */}
             {currentQuestion.graphDescription && (
               <div className="question-graph-description">
                 <div className="graph-description-label">Graph Description:</div>
-                <div className="graph-description-content">
-                  {currentQuestion.graphDescription}
-                </div>
+                <div 
+                  className="graph-description-content"
+                  dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.graphDescription) }}
+                />
               </div>
             )}
             

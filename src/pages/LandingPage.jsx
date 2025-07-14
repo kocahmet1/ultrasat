@@ -286,7 +286,7 @@ const LandingPage = () => {
                   <div className="exam-badge">Free</div>
                   <div className="exam-details">
                     <h3>SAT Practice Test 1</h3>
-                    <p>Full-length adaptive test • 2 hours 14 minutes</p>
+                    <p>Full-length • 4 Modules • 98 Questions</p>
                   </div>
                   <button 
                     className="exam-start-button first-test-pulsate"
@@ -301,7 +301,7 @@ const LandingPage = () => {
                   <div className="exam-badge">Free</div>
                   <div className="exam-details">
                     <h3>SAT Practice Test 2</h3>
-                    <p>Full-length adaptive test • 2 hours 14 minutes</p>
+                    <p>Full-length • 4 Modules • 98 Questions</p>
                   </div>
                   <button 
                     className="exam-start-button"
@@ -316,7 +316,7 @@ const LandingPage = () => {
                   <div className="exam-badge">Free</div>
                   <div className="exam-details">
                     <h3>SAT Practice Test 3</h3>
-                    <p>Full-length adaptive test • 2 hours 14 minutes</p>
+                    <p>Full-length • 4 Modules • 98 Questions</p>
                   </div>
                   <button 
                     className="exam-start-button"
@@ -328,18 +328,15 @@ const LandingPage = () => {
                 </div>
                 
                 <div className="exam-item view-all-item">
-                  <div className="exam-badge all-tests-badge">10 Tests</div>
+                  <div className="exam-badge all-tests-badge">FREE</div>
                   <div className="exam-details">
-                    <h3>View All 10 Practice Tests</h3>
-                    <p>Access our complete collection of SAT practice exams</p>
+                    <h3>Predictive Test</h3>
+                    <p>Estimate your current SAT score in <span className="highlight-green">30 minutes</span></p>
                   </div>
-                  <button 
-                    className="exam-start-button view-all-button"
-                    onClick={handleViewAllExams}
-                  >
+                  <Link to="/practice-exams" className="exam-start-button view-all-button">
                     <span className="pulse-ring"></span>
-                    <span className="button-text">VIEW</span>
-                  </button>
+                    <span className="button-text">START</span>
+                  </Link>
                 </div>
               </div>
             </div>

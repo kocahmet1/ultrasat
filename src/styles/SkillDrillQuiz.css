@@ -261,6 +261,7 @@
   padding: 1rem;
   border-radius: 4px;
   margin-top: 1rem;
+  white-space: pre-line; /* Preserve line breaks and spaces in explanations */
 }
 
 .question-explanation h4 {
