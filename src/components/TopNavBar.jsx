@@ -7,8 +7,10 @@ import {
   FaBookOpen,
   FaUserCircle,
   FaBook,
-  FaPuzzlePiece
+  FaPuzzlePiece,
+  FaHome
 } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext';
 
 const navItems = [
   { path: '/progress', icon: <FaChartBar />, label: 'Progress' },
@@ -22,6 +24,7 @@ const navItems = [
 const TopNavBar = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,6 +50,12 @@ const TopNavBar = () => {
   return (
     <div className={`top-navbar ${scrolled ? 'minimized' : ''}`}>
       <ul>
+        <li>
+          <Link to={currentUser ? "/progress" : "/"}>
+            {/* You can use a logo image or FaHome icon here. Replace as needed. */}
+            <img src="/images/logo.png" alt="UltraSatPrep Logo" style={{ height: 32, marginRight: 8, verticalAlign: 'middle' }} />
+          </Link>
+        </li>
         {navItems.map((item) => (
           <li
             key={item.path}

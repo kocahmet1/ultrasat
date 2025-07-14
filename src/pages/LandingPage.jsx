@@ -218,7 +218,7 @@ const LandingPage = () => {
                 <>
                   <li><Link to="/progress" onClick={() => setMobileNavOpen(false)}>Dashboard</Link></li>
                   <li><Link to="/practice-exams" onClick={() => setMobileNavOpen(false)}>Practice Exams</Link></li>
-                  <li><Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Quizzes</Link></li>
+                  <li><Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Question Bank</Link></li>
                   <li><Link to="/word-bank" onClick={() => setMobileNavOpen(false)}>Word Bank</Link></li>
                   <li><Link to="/concept-bank" onClick={() => setMobileNavOpen(false)}>Concepts</Link></li>
                   <li><Link to="/flashcards" onClick={() => setMobileNavOpen(false)}>Flashcards</Link></li>
@@ -229,8 +229,11 @@ const LandingPage = () => {
               ) : (
                 <>
                   <li><Link to="/practice-exams" onClick={() => setMobileNavOpen(false)}>Practice Exams</Link></li>
-                  <li><Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Quizzes</Link></li>
+                  <li><Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Question Bank</Link></li>
                   <li><Link to="/word-bank" onClick={() => setMobileNavOpen(false)}>Word Bank</Link></li>
+                  <li><Link to="/concept-bank" onClick={() => setMobileNavOpen(false)}>Concept Bank</Link></li>
+                  <li><Link to="/flashcards" onClick={() => setMobileNavOpen(false)}>Flashcards</Link></li>
+                  <li><Link to="/lectures" onClick={() => setMobileNavOpen(false)}>Lectures</Link></li>
                   <li><Link to="/blog" onClick={() => setMobileNavOpen(false)}>Blog</Link></li>
                   <li><Link to="/help" onClick={() => setMobileNavOpen(false)}>Help</Link></li>
                   <li><Link to="/login" onClick={() => setMobileNavOpen(false)}>Login</Link></li>
@@ -341,8 +344,21 @@ const LandingPage = () => {
               </div>
             </div>
             
-            <div className="practice-features-image">
-              <img src="/images/newimage.png" alt="AI-powered SAT features" className="features-showcase-image" />
+            <div className="practice-features-image" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3.5rem', margin: '32px 0' }}>
+              {/* Left column: 1a (top), 3a (bottom) */}
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end', gap: '48px' }}>
+                <img src="/images/1a.png" alt="Timed Like Real SAT" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
+                <img src="/images/3a.png" alt="Targeted Practice" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
+              </div>
+              {/* Center: middle.png vertically centered */}
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 264 }}>
+                <img src="/images/middle.png" alt="AI Brain" style={{ width: 180, height: 180, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
+              </div>
+              {/* Right column: 2a (top), 4a (bottom) */}
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: '48px' }}>
+                <img src="/images/2a.png" alt="Instant Score Reports" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
+                <img src="/images/4a.png" alt="Track Progress" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
+              </div>
             </div>
           </div>
         </div>

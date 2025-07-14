@@ -13,6 +13,12 @@ function Login() {
   const location = useLocation();
 
   const handlePostLogin = () => {
+    // Check if coming from a protected route (PrivateRoute redirect)
+    if (location.state?.from && location.state.from !== '/login') {
+      navigate(location.state.from);
+      return;
+    }
+
     // Check if coming from Question Bank
     if (location.state?.from === 'questionBank') {
       const savedPreferences = sessionStorage.getItem('questionBankPreferences');
@@ -92,6 +98,13 @@ function Login() {
 
   return (
     <div className="auth-container">
+      <button 
+        className="back-button-global"
+        onClick={() => navigate('/')}
+        type="button"
+      >
+        ← Back to Home
+      </button>
       <div className="auth-card">
         <h2>Log In</h2>
         {error && <div className="auth-error">{error}</div>}
@@ -146,10 +159,9 @@ function Login() {
             {loading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
-        <div className="auth-links">
-          <p>
-            Need an account? <Link to="/signup">Sign Up</Link>
-          </p>
+        <div className="auth-links auth-signup-prompt">
+          Need an account?{' '}
+          <Link to="/signup"><strong>Sign up for a free account.</strong></Link>
         </div>
       </div>
     </div>

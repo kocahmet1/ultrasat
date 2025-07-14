@@ -102,11 +102,11 @@ const Sidebar = () => {
         <div className="sidebar-header">
           {/* Logo when expanded, home icon when collapsed */}
           {isCollapsed ? (
-            <Link to="/">
+            <Link to={currentUser ? "/progress" : "/"}>
               <FaHome className="sidebar-home-icon" />
             </Link>
           ) : (
-            <Link to="/">
+            <Link to={currentUser ? "/progress" : "/"}>
               <img src="/images/logo.png" alt="UltraSatPrep Logo" className="sidebar-logo" />
             </Link>
           )}

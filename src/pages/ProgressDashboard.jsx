@@ -52,6 +52,7 @@ function ProgressDashboard() {
   
   // Help modal state
   const [showHelpModal, setShowHelpModal] = useState(false);
+  const [noticeClosed, setNoticeClosed] = useState(false);
 
   const handleSatCardMouseEnter = () => {
     if (satCardHoverTimeout) {
@@ -577,6 +578,13 @@ function ProgressDashboard() {
             <span className="collapsed-confidence">{satScoreEstimate.confidence}% confidence</span>
           </div>
           
+          {/* Sleek horizontal notice for when there's no SAT data */}
+          {!satScoreEstimate.subcategoriesWithData && !noticeClosed && (
+            <div className="sat-score-horizontal-notice always-visible">
+              <button className="sat-notice-close-btn" onClick={() => setNoticeClosed(true)} title="Close">×</button>
+              Complete an <Link to="/practice-exams" className="notice-link">SAT Practice test</Link> or a <Link to="/practice-exams" className="notice-link">Predictive Test</Link> to see your estimated digital SAT score below
+            </div>
+          )}
           <div className="sat-score-display">
             <div className="score-value">
               {satScoreEstimate.subcategoriesWithData > 0 ? satScoreEstimate.estimatedScore : '---'}
@@ -628,8 +636,9 @@ function ProgressDashboard() {
                 : 'Complete some practice questions to see your estimated SAT score!'}
             </small>
           </div>
-      </div>
-    )}
+          
+        </div>
+      )}
 
     <p className="pd-page-subtitle">Track your development and identify areas for improvement.</p>
 
