@@ -24,6 +24,7 @@ import PracticeExamManager from '../components/PracticeExamManager';
 import QuestionGeneratorLive from '../components/QuestionGeneratorLive';
 import SubcategoryMigrationTool from '../components/admin/SubcategoryMigrationTool';
 import SubcategorySettings from '../components/admin/SubcategorySettings';
+import UserActivityTracker from '../components/UserActivityTracker';
 import { exportQuestionsAsJSON } from '../utils/exportUtils.js'; // Added import
 import { checkPlotlyEnvironment } from '../utils/apiClient';
 
@@ -1935,6 +1936,12 @@ const migrateExistingQuestions = async () => {
             Skills
           </button>
           <button 
+            className={`tab-button ${activeTab === 'userActivity' ? 'active' : ''}`}
+            onClick={() => setActiveTab('userActivity')}
+          >
+            User Activity
+          </button>
+          <button 
             className={`tab-button`}
             onClick={() => navigate('/admin/membership-management')}
           >
@@ -2732,6 +2739,13 @@ const migrateExistingQuestions = async () => {
                 ))
               )}
             </div>
+          </div>
+        )}
+
+        {/* User Activity Tracker Tab */}
+        {activeTab === 'userActivity' && (
+          <div className="user-activity-tab">
+            <UserActivityTracker />
           </div>
         )}
       </div>
