@@ -365,7 +365,7 @@ const LandingPage = () => {
           <div className="bluebook-content-grid">
             <div className="phone-image-container">
               <OptimizedImage 
-                src="/images/phonescreen.png" 
+                src="/images/phonescreen.webp" 
                 alt="Bluebook Digital SAT on Mobile" 
                 className="phone-screen-image"
               />
