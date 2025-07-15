@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import QuestionBank from '../components/QuestionBank';
 import ExamAuthModal from '../components/ExamAuthModal';
+import OptimizedImage from '../components/OptimizedImage';
 import { getAllPracticeExams } from '../firebase/services';
 import { getRecentBlogPosts } from '../firebase/blogServices';
 import '../styles/LandingPage.css';
@@ -250,7 +251,7 @@ const LandingPage = () => {
         <div className="container">
           <div className="hero-content-center">
             <div className="hero-badge-prominent">
-              <img src="/images/aihot.png" alt="AI is hot!" style={{height: '36px', width: 'auto', display: 'block'}} />
+              <OptimizedImage src="/images/aihot.png" alt="AI is hot!" style={{height: '36px', width: 'auto', display: 'block'}} lazy={false} />
             </div>
             <h1 className="hero-title-center">
               Boost Your SAT Score by <span className="score-highlight">200+ Points</span>
@@ -352,7 +353,7 @@ const LandingPage = () => {
               </div>
               {/* Center: middle.png vertically centered */}
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 264 }}>
-                <img src="/images/middle.png" alt="AI Brain" style={{ width: 180, height: 180, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
+                <OptimizedImage src="/images/middle.png" alt="AI Brain" style={{ width: 180, height: 180, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
               </div>
               {/* Right column: 2a (top), 4a (bottom) */}
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: '48px' }}>
@@ -376,7 +377,7 @@ const LandingPage = () => {
           
           <div className="bluebook-content-grid">
             <div className="phone-image-container">
-              <img 
+              <OptimizedImage 
                 src="/images/phonescreen.png" 
                 alt="Bluebook Digital SAT on Mobile" 
                 className="phone-screen-image"

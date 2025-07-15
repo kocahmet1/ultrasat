@@ -35,7 +35,7 @@ const Sidebar = () => {
   const baseNavItems = [
     { path: '/progress', icon: <FaChartBar />, label: 'My Progress' },
     { path: '/practice-exams', icon: <FaClipboardList />, label: 'Practice Exams' },
-    { path: '/subject-quizzes', icon: <FaGraduationCap />, label: 'Quizzes' },
+    { path: '/subject-quizzes', icon: <FaGraduationCap />, label: 'Question Bank' },
     { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },
     { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concept Bank' },
     { path: '/flashcards', icon: <FaLayerGroup />, label: 'Flashcards' },
