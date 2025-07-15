@@ -66,6 +66,70 @@ const optimizations = [
     width: 212,
     height: 72,
     quality: 90
+  },
+  // Additional images from PageSpeed report
+  {
+    input: '1a.png',
+    output: '1a',
+    width: 240,
+    height: 240,
+    quality: 90
+  },
+  {
+    input: '2a.png',
+    output: '2a',
+    width: 240,
+    height: 240,
+    quality: 90
+  },
+  {
+    input: '3a.png',
+    output: '3a',
+    width: 240,
+    height: 240,
+    quality: 90
+  },
+  {
+    input: '4a.png',
+    output: '4a',
+    width: 240,
+    height: 240,
+    quality: 90
+  },
+  {
+    input: 'logo.png',
+    output: 'logo',
+    width: 200,
+    height: 200,
+    quality: 90
+  },
+  {
+    input: 'bannerImg.png',
+    output: 'bannerImg',
+    width: 400,
+    height: 200,
+    quality: 85
+  },
+  {
+    input: 'newimage.png',
+    output: 'newimage',
+    width: 600,
+    height: 400,
+    quality: 85
+  },
+  {
+    input: 'progress-dashboard.png',
+    output: 'progress-dashboard',
+    width: 400,
+    height: 300,
+    quality: 85
+  },
+  {
+    input: 'practice-test.png',
+    output: 'practice-test',
+    width: 400,
+    height: 300,
+    quality: 85
   }
 ];
 

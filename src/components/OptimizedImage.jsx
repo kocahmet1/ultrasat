@@ -26,7 +26,16 @@ const OptimizedImage = ({
       'sat-test-day',
       'phonescreen',
       'middle',
-      'aihot'
+      'aihot',
+      '1a',
+      '2a', 
+      '3a',
+      '4a',
+      'logo',
+      'bannerImg',
+      'newimage',
+      'progress-dashboard',
+      'practice-test'
     ];
     
     if (optimizedImages.includes(filename)) {
@@ -39,7 +48,7 @@ const OptimizedImage = ({
     return originalSrc;
   };
 
-  // Intersection Observer for lazy loading
+  // Intersection Observer for lazy loading with aggressive optimization
   useEffect(() => {
     if (!lazy || isInView) return;
 
@@ -51,7 +60,8 @@ const OptimizedImage = ({
         }
       },
       {
-        rootMargin: '50px' // Start loading 50px before image enters viewport
+        rootMargin: '100px', // Increased margin for smoother loading
+        threshold: 0.01 // Trigger as soon as 1% is visible
       }
     );
 
@@ -64,7 +74,7 @@ const OptimizedImage = ({
 
   const optimizedSrc = getOptimizedSrc(src);
   
-  // If not optimized or not in view (for lazy loading), show placeholder
+  // If not optimized or not in view (for lazy loading), show optimized placeholder
   if (lazy && !isInView) {
     return (
       <div 
@@ -72,15 +82,24 @@ const OptimizedImage = ({
         className={`image-placeholder ${className}`}
         style={{
           ...style,
-          backgroundColor: '#f0f0f0',
+          backgroundColor: '#f8f9fa',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: style.height || '100px'
+          minHeight: style.height || '100px',
+          border: '1px solid #e9ecef',
+          borderRadius: '8px'
         }}
         {...props}
       >
-        <span style={{ color: '#ccc', fontSize: '12px' }}>Loading...</span>
+        <div style={{ 
+          width: '20px', 
+          height: '20px', 
+          border: '2px solid #dee2e6',
+          borderTop: '2px solid #6c757d',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
       </div>
     );
   }
@@ -90,12 +109,14 @@ const OptimizedImage = ({
     return (
       <picture className={className} {...props}>
         <source srcSet={optimizedSrc.webp} type="image/webp" />
+        <source srcSet={optimizedSrc.fallback} type="image/jpeg" />
         <img
           ref={imgRef}
           src={optimizedSrc.fallback}
           alt={alt}
           style={style}
           loading={lazy ? 'lazy' : 'eager'}
+          decoding="async"
           onLoad={() => setIsLoaded(true)}
           className={`optimized-image ${isLoaded ? 'loaded' : 'loading'}`}
         />
@@ -112,6 +133,7 @@ const OptimizedImage = ({
       className={`image ${className} ${isLoaded ? 'loaded' : 'loading'}`}
       style={style}
       loading={lazy ? 'lazy' : 'eager'}
+      decoding="async"
       onLoad={() => setIsLoaded(true)}
       {...props}
     />

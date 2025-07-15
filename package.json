@@ -58,7 +58,8 @@
     "dev": "concurrently \"npm run start-frontend\" \"npm run start-api\"",
     "optimize:images": "node scripts/convertImages.js",
     "optimize:analyze": "node scripts/buildOptimization.js",
-    "optimize:all": "npm run optimize:images && npm run optimize:analyze"
+    "optimize:all": "npm run optimize:images && npm run optimize:analyze",
+    "deploy:optimize": "node scripts/deployOptimizations.js"
   },
   "eslintConfig": {
     "extends": [
