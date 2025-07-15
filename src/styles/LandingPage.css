@@ -960,11 +960,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
 }
 
 .phone-screen-image {
   max-width: 100%;
   height: auto;
+  object-fit: contain;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
   transition: transform 0.3s ease;
 }
@@ -2173,6 +2175,11 @@ body {
     flex: 1 1 100%;
   }
   
+  .phone-image-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
   .phone-features-container {
     max-width: 600px;
     margin: 0 auto;
@@ -2351,11 +2358,24 @@ body {
   
   /* Bluebook Phone Section Responsive */
   .bluebook-phone-section {
-    padding: 3rem 2rem;
+    padding: 3rem 1rem;
   }
   
   .bluebook-content-grid {
     gap: 1.5rem;
+  }
+  
+  .phone-image-container {
+    flex: 0 0 auto !important;
+    max-width: 250px !important;
+    margin: 0 auto !important;
+    padding: 0 1rem !important;
+  }
+  
+  .phone-screen-image {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
   }
   
   .phone-feature-item {
@@ -2431,21 +2451,63 @@ body {
   
   /* Bluebook Phone Section Responsive */
   .bluebook-phone-section {
-    padding: 2rem 1rem;
+    padding: 2rem 0.5rem;
+  }
+  
+  .phone-image-container {
+    flex: 0 0 auto !important;
+    max-width: 200px !important;
+    margin: 0 auto !important;
+    padding: 0 0.5rem !important;
+  }
+  
+  .phone-screen-image {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
   }
   
   .phone-feature-item {
     padding: 0.75rem;
     gap: 0.5rem;
   }
-  
-  .phone-screen-image {
-    max-width: 90%;
-  }
 
   /* Extra small mobile devices */
   .practice-features-image {
     padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 320px) {
+  /* Bluebook Phone Section for very small screens */
+  .bluebook-phone-section {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .phone-image-container {
+    flex: 0 0 auto !important;
+    max-width: 180px !important;
+    margin: 0 auto !important;
+    padding: 0 0.25rem !important;
+  }
+  
+  .phone-screen-image {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+  }
+  
+  .phone-feature-item {
+    padding: 0.5rem;
+    gap: 0.25rem;
+  }
+  
+  .phone-feature-content h4 {
+    font-size: 0.9rem;
+  }
+  
+  .phone-feature-content p {
+    font-size: 0.8rem;
   }
 }
 
