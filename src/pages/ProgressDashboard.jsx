@@ -9,7 +9,8 @@ import { getConceptsBySubcategory } from '../firebase/conceptServices';
 import { db } from '../firebase/config';
 import { addDoc, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import DynamicQuizGenerator from '../components/DynamicQuizGenerator';
-import { FaChevronDown, FaChartBar, FaLightbulb, FaBullseye, FaBookOpen, FaTasks, FaRocket, FaBolt, FaThLarge, FaClipboardList, FaCheck, FaExclamationTriangle, FaGraduationCap, FaCalculator, FaBook, FaPuzzlePiece, FaInfoCircle } from 'react-icons/fa';
+import LearnUpgradeModal from '../components/LearnUpgradeModal';
+import { FaChevronDown, FaChartBar, FaLightbulb, FaBullseye, FaBookOpen, FaTasks, FaRocket, FaBolt, FaThLarge, FaClipboardList, FaCheck, FaExclamationTriangle, FaGraduationCap, FaCalculator, FaBook, FaPuzzlePiece, FaInfoCircle, FaCrown } from 'react-icons/fa';
 import {
   getSubcategoryName,
   getSubcategoryCategory,
@@ -27,7 +28,7 @@ import '../styles/LevelIndicator.css';
 function ProgressDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser } = useAuth();
+  const { currentUser, userMembership } = useAuth();
   const { 
     loading: subcategoriesLoading, 
     allSubcategories, 
@@ -53,6 +54,9 @@ function ProgressDashboard() {
   // Help modal state
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [noticeClosed, setNoticeClosed] = useState(false);
+  
+  // Learn upgrade modal state
+  const [showLearnUpgradeModal, setShowLearnUpgradeModal] = useState(false);
 
   const handleSatCardMouseEnter = () => {
     if (satCardHoverTimeout) {
@@ -267,6 +271,16 @@ function ProgressDashboard() {
           }
         }
       });
+    }
+  };
+
+  const handleLearnClick = (subcategoryId) => {
+    // Check if user is on free tier
+    if (userMembership?.tier === 'free') {
+      setShowLearnUpgradeModal(true);
+    } else {
+      // For paid users, navigate to lessons
+      navigate(`/lessons/${subcategoryId}`);
     }
   };
 
@@ -771,9 +785,14 @@ function ProgressDashboard() {
                 {/* Learn button only visible on hover/expand */}
                 <button 
                   className="action-button learn expanded-action" 
-                  onClick={() => navigate(`/lessons/${sub.id}`)}
+                  onClick={() => handleLearnClick(sub.id)}
                 >
                   <FaBook /> Learn
+                  {userMembership?.tier === 'free' && (
+                    <span className="pd-learn-pro-badge">
+                      PRO
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
@@ -908,9 +927,14 @@ function ProgressDashboard() {
                   {/* Learn button only visible on hover/expand */}
                   <button 
                     className="action-button learn expanded-action" 
-                    onClick={() => navigate(`/lessons/${sub.id}`)}
+                    onClick={() => handleLearnClick(sub.id)}
                   >
                     <FaBook /> Learn
+                    {userMembership?.tier === 'free' && (
+                      <span className="pd-learn-pro-badge">
+                        PRO
+                      </span>
+                    )}
                   </button>
                 </div>
               </div>
@@ -972,6 +996,12 @@ function ProgressDashboard() {
         isOpen={showHelpModal}
         onClose={() => setShowHelpModal(false)}
         feature="progress"
+      />
+      
+      {/* Learn Upgrade Modal */}
+      <LearnUpgradeModal
+        isOpen={showLearnUpgradeModal}
+        onClose={() => setShowLearnUpgradeModal(false)}
       />
     </div>
   );

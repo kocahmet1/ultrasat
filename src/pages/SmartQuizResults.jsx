@@ -7,7 +7,10 @@ import { db } from '../firebase/config';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { getSubcategoryName } from '../utils/subcategoryConstants';
 import { processTextMarkup } from '../utils/textProcessing';
-import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaMedal, FaGraduationCap } from 'react-icons/fa';
+import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaMedal, FaGraduationCap, FaFlag } from 'react-icons/fa';
+import ReportQuestionModal from '../components/ReportQuestionModal';
+import { reportQuestion } from '../api/reportClient';
+import { toast } from 'react-toastify';
 import '../styles/SmartQuizResults.css';
 
 export default function SmartQuizResults() {
@@ -18,6 +21,11 @@ export default function SmartQuizResults() {
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Report modal state
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [selectedQuestionForReport, setSelectedQuestionForReport] = useState(null);
 
   useEffect(() => {
     const fetchQuizResults = async () => {
@@ -72,6 +80,29 @@ export default function SmartQuizResults() {
 
   const handlePracticeAgain = (level) => {
     handleNavigation('/smart-quiz-generator', { subcategoryId: quiz.subcategoryId, forceLevel: level });
+  };
+
+  // Report question handler
+  const handleReportQuestion = async (reason) => {
+    if (!selectedQuestionForReport) return;
+    
+    setReportLoading(true);
+    try {
+      await reportQuestion(selectedQuestionForReport.id, quizId, reason);
+      toast.success('Question reported successfully. Thank you for your feedback!');
+      setIsReportModalOpen(false);
+      setSelectedQuestionForReport(null);
+    } catch (error) {
+      console.error('Error reporting question:', error);
+      toast.error(error.message || 'Failed to report question. Please try again.');
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  const openReportModal = (question) => {
+    setSelectedQuestionForReport(question);
+    setIsReportModalOpen(true);
   };
 
   if (loading) {
@@ -166,11 +197,24 @@ export default function SmartQuizResults() {
               return (
                 <div key={q.id} className={`question-container-review ${isCorrect ? 'correct' : 'incorrect'}`}>
                   <div className="question-review-header">
-                    <h3>Question {index + 1}</h3>
-                    <span className={`status-tag ${isCorrect ? 'status-correct' : 'status-incorrect'}`}>
-                      {isCorrect ? <FaCheckCircle /> : <FaTimesCircle />}
-                      {isCorrect ? 'Correct' : 'Incorrect'}
-                    </span>
+                    <div className="question-review-left">
+                      <h3>Question {index + 1}</h3>
+                    </div>
+                    <div className="question-review-center">
+                      <button
+                        className="report-button-results"
+                        onClick={() => openReportModal(q)}
+                        title="Report this question"
+                      >
+                        <FaFlag />
+                      </button>
+                    </div>
+                    <div className="question-review-right">
+                      <span className={`status-tag ${isCorrect ? 'status-correct' : 'status-incorrect'}`}>
+                        {isCorrect ? <FaCheckCircle /> : <FaTimesCircle />}
+                        {isCorrect ? 'Correct' : 'Incorrect'}
+                      </span>
+                    </div>
                   </div>
                   <p 
                     className="question-text"
@@ -202,6 +246,17 @@ export default function SmartQuizResults() {
           </div>
         </div>
       </div>
+      
+      {/* Report Question Modal */}
+      <ReportQuestionModal
+        isOpen={isReportModalOpen}
+        onClose={() => {
+          setIsReportModalOpen(false);
+          setSelectedQuestionForReport(null);
+        }}
+        onReport={handleReportQuestion}
+        loading={reportLoading}
+      />
     </div>
   );
 }

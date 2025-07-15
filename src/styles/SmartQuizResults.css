@@ -539,3 +539,101 @@
     max-width: 300px;
   }
 }
+
+/* Question Review Header Layout */
+.question-review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 16px 0;
+}
+
+.question-review-left {
+  flex: 1;
+}
+
+.question-review-left h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.question-review-center {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.question-review-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Report Button for Results */
+.report-button-results {
+  background: none;
+  border: none;
+  color: #4e73df;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  min-width: 36px;
+  height: 36px;
+}
+
+.report-button-results:hover {
+  background-color: rgba(78, 115, 223, 0.1);
+  color: #2e59d9;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.report-button-results:active {
+  transform: scale(0.95);
+}
+
+/* Mobile responsiveness for report button */
+@media (max-width: 768px) {
+  .question-review-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .question-review-left,
+  .question-review-center,
+  .question-review-right {
+    flex: none;
+  }
+  
+  .question-review-center {
+    order: 2;
+  }
+  
+  .question-review-right {
+    order: 1;
+  }
+  
+  .question-review-left {
+    order: 3;
+  }
+  
+  .report-button-results {
+    font-size: 1rem;
+    padding: 6px 10px;
+    min-width: 32px;
+    height: 32px;
+  }
+}
