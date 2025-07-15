@@ -961,6 +961,7 @@ body {
   justify-content: center;
   align-items: center;
   max-width: 100%;
+  overflow: hidden;
 }
 
 .phone-screen-image {
@@ -2370,12 +2371,18 @@ body {
     max-width: 250px !important;
     margin: 0 auto !important;
     padding: 0 1rem !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
   
   .phone-screen-image {
     width: 100% !important;
     height: auto !important;
     max-width: 100% !important;
+    max-height: 400px !important;
+    object-fit: contain !important;
   }
   
   .phone-feature-item {
@@ -2459,12 +2466,18 @@ body {
     max-width: 200px !important;
     margin: 0 auto !important;
     padding: 0 0.5rem !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
   
   .phone-screen-image {
     width: 100% !important;
     height: auto !important;
     max-width: 100% !important;
+    max-height: 350px !important;
+    object-fit: contain !important;
   }
   
   .phone-feature-item {
@@ -2489,12 +2502,18 @@ body {
     max-width: 180px !important;
     margin: 0 auto !important;
     padding: 0 0.25rem !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
   
   .phone-screen-image {
     width: 100% !important;
     height: auto !important;
     max-width: 100% !important;
+    max-height: 300px !important;
+    object-fit: contain !important;
   }
   
   .phone-feature-item {

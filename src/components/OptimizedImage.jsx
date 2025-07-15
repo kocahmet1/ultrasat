@@ -7,6 +7,7 @@ const OptimizedImage = ({
   style = {}, 
   lazy = true,
   optimized = true,
+  mobileSrc = null,
   ...props 
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -25,6 +26,7 @@ const OptimizedImage = ({
       'sat-reading-tips',
       'sat-test-day',
       'phonescreen',
+      'phonescreen-mobile',
       'middle',
       'aihot',
       '1a',
@@ -73,6 +75,7 @@ const OptimizedImage = ({
   }, [lazy, isInView]);
 
   const optimizedSrc = getOptimizedSrc(src);
+  const optimizedMobileSrc = mobileSrc;
   
   // If not optimized or not in view (for lazy loading), show optimized placeholder
   if (lazy && !isInView) {
@@ -108,6 +111,11 @@ const OptimizedImage = ({
   if (typeof optimizedSrc === 'object') {
     return (
       <picture className={className} {...props}>
+        {/* Mobile source if provided */}
+        {optimizedMobileSrc && (
+          <source media="(max-width: 768px)" srcSet={optimizedMobileSrc} />
+        )}
+        {/* Desktop source */}
         <source srcSet={optimizedSrc.webp} type="image/webp" />
         <source srcSet={optimizedSrc.fallback} type="image/jpeg" />
         <img
@@ -125,6 +133,26 @@ const OptimizedImage = ({
   }
 
   // Fallback for non-optimized images
+  if (mobileSrc) {
+    return (
+      <picture className={className} {...props}>
+        {/* Mobile source */}
+        <source media="(max-width: 768px)" srcSet={mobileSrc} />
+        {/* Desktop source */}
+        <img
+          ref={imgRef}
+          src={optimizedSrc}
+          alt={alt}
+          className={`image ${className} ${isLoaded ? 'loaded' : 'loading'}`}
+          style={style}
+          loading={lazy ? 'lazy' : 'eager'}
+          decoding="async"
+          onLoad={() => setIsLoaded(true)}
+        />
+      </picture>
+    );
+  }
+  
   return (
     <img
       ref={imgRef}
