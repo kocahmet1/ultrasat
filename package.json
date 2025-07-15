@@ -59,7 +59,9 @@
     "optimize:images": "node scripts/convertImages.js",
     "optimize:analyze": "node scripts/buildOptimization.js",
     "optimize:all": "npm run optimize:images && npm run optimize:analyze",
-    "deploy:optimize": "node scripts/deployOptimizations.js"
+    "deploy:optimize": "node scripts/deployOptimizations.js",
+    "build:prod": "GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false npm run build",
+    "optimize:complete": "npm run optimize:images && npm run build:prod"
   },
   "eslintConfig": {
     "extends": [

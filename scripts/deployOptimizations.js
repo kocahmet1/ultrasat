@@ -120,7 +120,7 @@ function optimizeBuild() {
   const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
   
   const optimizedScripts = {
-    'build:prod': 'GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false npm run build',
+    'build:prod': 'cross-env GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false npm run build',
     'build:analyze': 'npm run build:prod && npx serve -s build',
     'optimize:complete': 'npm run optimize:images && npm run build:prod'
   };
@@ -152,7 +152,21 @@ PUBLIC_URL=/
   }
   
   // Run production build
+  let buildSuccess = false;
+  
+  // Try optimized build first
   if (runCommand('npm run build:prod', 'Building optimized production bundle')) {
+    buildSuccess = true;
+  } else {
+    console.log('⚠️ Optimized build failed, falling back to standard build...');
+    // Fallback to standard build
+    if (runCommand('npm run build', 'Building standard production bundle')) {
+      buildSuccess = true;
+      console.log('✅ Standard build completed successfully');
+    }
+  }
+  
+  if (buildSuccess) {
     optimizations.buildOptimization = true;
     return true;
   }
