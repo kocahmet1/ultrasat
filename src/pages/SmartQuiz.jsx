@@ -8,13 +8,15 @@ import { processTextMarkup } from '../utils/textProcessing';
 import { db } from '../firebase/config';
 import { recordSmartQuizResult, QUESTIONS_PER_QUIZ, DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowRight, faLightbulb, faFileAlt, faBook, faToggleOn, faToggleOff, faComment, faSave, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faLightbulb, faFileAlt, faBook, faToggleOn, faToggleOff, faComment, faSave, faCheck, faFlag } from '@fortawesome/free-solid-svg-icons';
 import SmartQuizAssistant from '../components/SmartQuizAssistant';
 import Modal from '../components/Modal';
+import ReportQuestionModal from '../components/ReportQuestionModal';
 import { askAssistant, getChatHistory } from '../api/assistantClient';
 import { getHelperData } from '../api/helperClient';
 import { checkMultipleBankItems } from '../utils/wordBankUtils';
 import { saveBankItem } from '../api/helperClient';
+import { reportQuestion } from '../api/reportClient';
 import HelperItemsPanel from '../components/HelperItemsPanel';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,6 +24,7 @@ import '../styles/SmartQuiz.css';
 import '../styles/SmartQuizAssistant.css';
 import '../styles/Modal.css';
 import './SmartQuizProBadge.css';
+import ProFeatureModal from '../components/ProFeatureModal';
 
 export default function SmartQuiz() {
   const { quizId } = useParams();
@@ -76,6 +79,13 @@ export default function SmartQuiz() {
   const [savedVocabularyItems, setSavedVocabularyItems] = useState([]);
   const [showMobileVocab, setShowMobileVocab] = useState(false);
   
+  // Add state for ProFeatureModal
+  const [showProModal, setShowProModal] = useState(false);
+  
+  // Report modal state
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
+
   // Load quiz document
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -580,6 +590,26 @@ export default function SmartQuiz() {
     );
   }
 
+  // Update AI button handlers to gate for free/guest users
+  const handleProFeatureClick = () => {
+    setShowProModal(true);
+  };
+
+  // Report question handler
+  const handleReportQuestion = async (reason) => {
+    setReportLoading(true);
+    try {
+      await reportQuestion(currentQuestion.id, quizId, reason);
+      toast.success('Question reported successfully. Thank you for your feedback!');
+      setIsReportModalOpen(false);
+    } catch (error) {
+      console.error('Error reporting question:', error);
+      toast.error(error.message || 'Failed to report question. Please try again.');
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
   return (
     <div className="smart-quiz__container">
       {/* AI Features Toggle Switch - Pill style */}
@@ -695,6 +725,14 @@ export default function SmartQuiz() {
         </div>
       </Modal>
       
+      {/* Report Question Modal */}
+      <ReportQuestionModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        onReport={handleReportQuestion}
+        loading={reportLoading}
+      />
+      
       {/* Main Content Area: Four-column layout with vocabulary on the left */}
       <div className="quiz-main-area" style={{
         display: 'flex',
@@ -749,7 +787,7 @@ export default function SmartQuiz() {
                   color: '#6c757d',
                   fontStyle: 'italic'
                 }}>
-                  <p>Loading vocabulary...</p>
+                  <p>{helperType === 'concept' ? 'Loading concepts...' : 'Loading vocabulary...'}</p>
                 </div>
               ) : helperItems.length === 0 ? (
                 <div style={{
@@ -761,7 +799,7 @@ export default function SmartQuiz() {
                   color: '#6c757d',
                   fontStyle: 'italic'
                 }}>
-                  <p>No vocabulary terms found.</p>
+                  <p>{helperType === 'concept' ? 'No concepts found.' : 'No vocabulary terms found.'}</p>
                 </div>
               ) : (
                 <div className="vocabulary-items" style={{
@@ -801,9 +839,30 @@ export default function SmartQuiz() {
                       }}
                     >
                       <span>{item.term}</span>
-                      {savedVocabularyItems.includes(item.term) && (
-                        <FontAwesomeIcon icon={faCheck} style={{ color: '#28a745', fontSize: '12px' }} />
-                      )}
+                      <button
+                        className="vocab-save-btn"
+                        onClick={e => {
+                          e.stopPropagation();
+                          if (!savedVocabularyItems.includes(item.term)) handleSaveVocabularyItem(item);
+                        }}
+                        disabled={savedVocabularyItems.includes(item.term)}
+                        title={savedVocabularyItems.includes(item.term) ? 'Saved' : 'Save to My Words'}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          marginLeft: '8px',
+                          cursor: savedVocabularyItems.includes(item.term) ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          color: savedVocabularyItems.includes(item.term) ? '#28a745' : '#4e73df',
+                          fontSize: '16px',
+                          outline: 'none',
+                          transition: 'color 0.2s'
+                        }}
+                      >
+                        <FontAwesomeIcon icon={savedVocabularyItems.includes(item.term) ? faCheck : faSave} />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -819,12 +878,26 @@ export default function SmartQuiz() {
           backgroundColor: '#ffffff',
           borderRadius: '12px',
           padding: '25px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+          position: 'relative'
         }}>
+          {/* Report button - absolute top right corner */}
+          <button
+            className="report-button-absolute"
+            onClick={() => setIsReportModalOpen(true)}
+            title="Report this question"
+          >
+            <FontAwesomeIcon icon={faFlag} />
+          </button>
+
           <div className="quiz-header">
-            <div className="quiz-title">SmartQuiz – Question {currentIdx + 1} / {quiz.questions.length}</div>
-            <div className="level-indicator">
-              Level: {DIFFICULTY_FOR_LEVEL[quiz.difficulty]} ({quiz.difficulty})
+            <div className="quiz-header-left">
+              <div className="quiz-title">SmartQuiz – Question {currentIdx + 1} / {quiz.questions.length}</div>
+            </div>
+            <div className="quiz-header-right">
+              <div className="level-indicator">
+                Level: {quiz.level} ({DIFFICULTY_FOR_LEVEL[quiz.level]})
+              </div>
             </div>
           </div>
 
@@ -885,7 +958,7 @@ export default function SmartQuiz() {
           }}>
             <button 
               className="assistant-action-button assistant-button"
-              onClick={() => setIsAssistantModalOpen(true)}
+              onClick={isFreeOrGuest ? handleProFeatureClick : () => setIsAssistantModalOpen(true)}
               style={{
                 backgroundColor: '#e0f2f7', // Light blue
                 color: '#333',
@@ -913,7 +986,7 @@ export default function SmartQuiz() {
             
             <button 
               className="assistant-action-button tip-button"
-              onClick={handleDirectTipRequest}
+              onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest}
               disabled={assistantLoading}
               style={{
                 backgroundColor: '#e0f7f7', // Light teal
@@ -943,7 +1016,7 @@ export default function SmartQuiz() {
             
             <button 
               className="assistant-action-button summarise-button"
-              onClick={handleDirectSummariseText}
+              onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText}
               disabled={assistantLoading}
               style={{
                 backgroundColor: '#f0e6f7', // Light purple
@@ -1052,8 +1125,10 @@ export default function SmartQuiz() {
               >
                 <FontAwesomeIcon icon={savedVocabularyItems.includes(selectedVocabularyItem.term) ? faCheck : faSave} />
                 {savedVocabularyItems.includes(selectedVocabularyItem.term) 
-                  ? 'Saved to My Words' 
-                  : (savingVocabularyItem ? 'Saving...' : 'Save to My Words')}
+                  ? (helperType === 'concept' ? 'Saved to My Concepts' : 'Saved to My Words')
+                  : (savingVocabularyItem 
+                      ? 'Saving...' 
+                      : (helperType === 'concept' ? 'Save to My Concepts' : 'Save to My Words'))}
               </button>
             </div>
           )}
@@ -1062,6 +1137,13 @@ export default function SmartQuiz() {
       
       {/* Toast container for notifications */}
       <ToastContainer position="bottom-right" autoClose={3000} />
+
+      {/* Render the ProFeatureModal */}
+      <ProFeatureModal
+        isOpen={showProModal}
+        onClose={() => setShowProModal(false)}
+        position={{ x: window.innerWidth / 2 - 200, y: window.innerHeight / 2 - 150 }}
+      />
     </div>
   );
 }

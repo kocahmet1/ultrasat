@@ -31,6 +31,7 @@ import ProgressDashboard from './pages/ProgressDashboard';
 import SkillsPractice from './pages/SkillsPractice';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminAiContent from './pages/AdminAiContent';
+import AdminReportedQuestions from './pages/AdminReportedQuestions';
 import PracticeExamManagerPage from './pages/PracticeExamManagerPage';
 import QuestionEditor from './pages/QuestionEditor';
 import AllExamResults from './pages/AllExamResults';
@@ -178,6 +179,7 @@ const router = createBrowserRouter([
       { path: '/practice-exam/:examId/results', element: <PrivateRoute><ExamResults /></PrivateRoute> },
       { path: '/admin', element: <PrivateRoute><AdminDashboard /></PrivateRoute> },
       { path: '/admin/ai-content', element: <PrivateRoute><AdminAiContent /></PrivateRoute> },
+      { path: '/admin/reported-questions', element: <PrivateRoute><AdminReportedQuestions /></PrivateRoute> },
       { path: '/admin/practice-exams', element: <PrivateRoute><PracticeExamManagerPage /></PrivateRoute> },
       { path: '/admin/question-editor', element: <PrivateRoute><QuestionEditor /></PrivateRoute> },
       { path: '/admin/question-editor/:questionId', element: <PrivateRoute><QuestionEditor /></PrivateRoute> },

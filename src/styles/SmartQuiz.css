@@ -145,6 +145,46 @@
   margin-bottom: 20px;
 }
 
+.quiz-header-left {
+  flex: 1;
+}
+
+.quiz-header-right {
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.report-button-absolute {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: none;
+  border: none;
+  color: #4e73df;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.report-button-absolute:hover {
+  background-color: rgba(78, 115, 223, 0.1);
+  color: #2e59d9;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.report-button-absolute:active {
+  transform: scale(0.95);
+}
+
 /* Assistant Action Buttons Styling */
 .assistant-action-buttons {
   display: flex;
@@ -248,6 +288,13 @@
   
   .vocabulary-button {
     margin: 5px;
+  }
+
+  .report-button-absolute {
+    top: -5px;
+    right: -5px;
+    font-size: 1.1rem;
+    padding: 8px;
   }
 }
 
@@ -439,6 +486,26 @@
   line-height: 1.6;
 }
 
+.vocab-save-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #888;
+  font-size: 16px;
+  outline: none;
+  transition: color 0.2s;
+}
+.vocab-save-btn:disabled {
+  color: #28a745;
+  cursor: not-allowed;
+}
+.vocab-save-btn:not(:disabled):hover {
+  color: #555;
+}
 
 
 @keyframes fadeIn {

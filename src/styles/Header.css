@@ -32,10 +32,10 @@
 
 .section-title {
   font-family: Arial, sans-serif;
-  font-size: 17px;
+  font-size: 17px !important;
   font-weight: bold;
   color: #333333;
-  margin-top: 0;
+  margin-top: 12px !important;
   margin-bottom: 2px;
   display: block;
   text-align: center;

@@ -279,7 +279,7 @@ function ExamResults() {
   };
 
   const returnHome = () => {
-    navigate('/');
+    navigate('/progress');
   };
 
   const startNewExam = () => {

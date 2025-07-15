@@ -1992,6 +1992,12 @@ const migrateExistingQuestions = async () => {
             Blog Management
           </button>
           <button 
+            className={`tab-button`}
+            onClick={() => navigate('/admin/reported-questions')}
+          >
+            Reported Questions
+          </button>
+          <button 
             className={`tab-button ${activeTab === 'maintenance' ? 'active' : ''}`}
             onClick={() => setActiveTab('maintenance')}
           >

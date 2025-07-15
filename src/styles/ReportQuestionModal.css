@@ -1,0 +1,135 @@
+.report-question-modal {
+  text-align: center;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.report-icon {
+  font-size: 3rem;
+  color: #f39c12;
+  margin-bottom: 20px;
+}
+
+.report-description {
+  margin-bottom: 25px;
+}
+
+.report-description p {
+  margin: 0 0 10px 0;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.report-description p:first-child {
+  font-weight: 600;
+  color: #333;
+}
+
+.report-input-section {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.report-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.report-textarea:focus {
+  outline: none;
+  border-color: #4e73df;
+  box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+}
+
+.report-textarea:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.character-count {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+.report-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.cancel-button,
+.confirm-report-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.cancel-button:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.confirm-report-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.confirm-report-button:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.confirm-report-button:disabled {
+  background-color: #f8d7da;
+  color: #721c24;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .report-question-modal {
+    padding: 15px;
+  }
+  
+  .report-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .cancel-button,
+  .confirm-report-button {
+    width: 100%;
+  }
+} 
