@@ -915,7 +915,8 @@ body {
   align-items: center;
   width: 100%;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 32px auto;
+  padding: 0 1rem;
 }
 
 .features-showcase-image {
@@ -2176,6 +2177,8 @@ body {
     max-width: 600px;
     margin: 0 auto;
   }
+
+
 }
 
 @media (max-width: 768px) {
@@ -2282,6 +2285,7 @@ body {
   .practice-features-image {
     max-width: 100%;
     margin: 1rem 0;
+    padding: 0 1rem;
   }
 
   .features-showcase-image {
@@ -2437,6 +2441,11 @@ body {
   
   .phone-screen-image {
     max-width: 90%;
+  }
+
+  /* Extra small mobile devices */
+  .practice-features-image {
+    padding: 0 0.5rem;
   }
 }
 

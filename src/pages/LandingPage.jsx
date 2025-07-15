@@ -345,21 +345,8 @@ const LandingPage = () => {
               </div>
             </div>
             
-            <div className="practice-features-image" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3.5rem', margin: '32px 0' }}>
-              {/* Left column: 1a (top), 3a (bottom) */}
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end', gap: '48px' }}>
-                <img src="/images/1a.png" alt="Timed Like Real SAT" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
-                <img src="/images/3a.png" alt="Targeted Practice" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
-              </div>
-              {/* Center: middle.png vertically centered */}
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 264 }}>
-                <OptimizedImage src="/images/middle.png" alt="AI Brain" style={{ width: 180, height: 180, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
-              </div>
-              {/* Right column: 2a (top), 4a (bottom) */}
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: '48px' }}>
-                <img src="/images/2a.png" alt="Instant Score Reports" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
-                <img src="/images/4a.png" alt="Track Progress" style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: '18px', boxShadow: '0 4px 16px rgba(44, 62, 80, 0.12)' }} />
-              </div>
+            <div className="practice-features-image">
+              <img src="/images/newimage.png" alt="AI-Powered SAT Features" className="features-showcase-image" />
             </div>
           </div>
         </div>
