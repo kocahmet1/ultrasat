@@ -1,0 +1,135 @@
+/* UltraSATLogo.css - Reusable logo component styles */
+
+.ultrasat-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.ultrasat-logo:hover {
+  transform: scale(1.02);
+}
+
+.ultrasat-logo .logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-green, #5FCF7F);
+  border-radius: 10px;
+  font-weight: bold;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ultrasat-logo .logo-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ultrasat-logo .logo-text-container {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.ultrasat-logo .logo-prefix,
+.ultrasat-logo .logo-suffix {
+  color: #fff;
+}
+
+.ultrasat-logo .logo-highlight {
+  color: var(--primary-green, #5FCF7F);
+}
+
+/* Size variants */
+.ultrasat-logo--small .logo-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.ultrasat-logo--small .logo-text {
+  font-size: 0.9rem;
+}
+
+.ultrasat-logo--small .logo-text-container {
+  font-size: 1rem;
+}
+
+.ultrasat-logo--medium .logo-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.ultrasat-logo--medium .logo-text {
+  font-size: 1.2rem;
+}
+
+.ultrasat-logo--medium .logo-text-container {
+  font-size: 1.5rem;
+}
+
+.ultrasat-logo--large .logo-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.ultrasat-logo--large .logo-text {
+  font-size: 1.5rem;
+}
+
+.ultrasat-logo--large .logo-text-container {
+  font-size: 1.8rem;
+}
+
+/* Variant styles */
+.ultrasat-logo--sidebar {
+  /* Sidebar specific styling */
+  margin: 0 0 10px 20px;
+}
+
+.ultrasat-logo--sidebar .logo-text-container {
+  color: var(--text-color-on-primary, #ffffff);
+}
+
+.ultrasat-logo--sidebar .logo-highlight {
+  color: var(--primary-green, #5FCF7F);
+}
+
+.ultrasat-logo--landing {
+  /* Landing page specific styling */
+}
+
+.ultrasat-logo--landing .logo-text-container {
+  color: #fff;
+}
+
+.ultrasat-logo--landing .logo-highlight {
+  color: var(--primary-green, #5FCF7F);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ultrasat-logo--medium .logo-text-container {
+    font-size: 1.3rem;
+  }
+  
+  .ultrasat-logo--large .logo-text-container {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ultrasat-logo--medium .logo-text-container {
+    font-size: 1.2rem;
+  }
+  
+  .ultrasat-logo--large .logo-text-container {
+    font-size: 1.4rem;
+  }
+} 

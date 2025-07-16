@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import QuestionBank from '../components/QuestionBank';
 import ExamAuthModal from '../components/ExamAuthModal';
 import OptimizedImage from '../components/OptimizedImage';
+import UltraSATLogo from '../components/UltraSATLogo';
 import { getAllPracticeExams } from '../firebase/services';
 import { getRecentBlogPosts } from '../firebase/blogServices';
 import '../styles/LandingPage.css';
@@ -204,8 +205,11 @@ const LandingPage = () => {
       <header className="landing-header">
         <div className="container">
           <div className="logo-container">
-            <div className="logo-icon">SAT</div>
-            <h1>Ultra<span>SAT</span>Prep</h1>
+            <UltraSATLogo 
+              size="medium" 
+              variant="landing" 
+              className="landing-logo"
+            />
           </div>
           <nav className="main-nav">
             <button 

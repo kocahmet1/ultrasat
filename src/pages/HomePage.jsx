@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import AdminAccessButton from '../components/AdminAccessButton';
+import UltraSATLogo from '../components/UltraSATLogo';
 import '../styles/HomePage.css';
 
 function HomePage() {
@@ -83,11 +84,11 @@ function HomePage() {
       
       <header className="home-header">
         <div className="logo-container">
-          <div className="logo-icon">
-            <div className="logo-circle"></div>
-            <div className="logo-pulse"></div>
-          </div>
-          <h1>Ultra<span>SAT</span> Prep</h1>
+          <UltraSATLogo 
+            size="medium" 
+            variant="landing" 
+            className="home-logo"
+          />
         </div>
         <nav className="main-nav">
           <ul>

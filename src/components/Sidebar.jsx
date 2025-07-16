@@ -5,6 +5,7 @@ import { useSidebar } from '../contexts/SidebarContext';
 import { useAuth } from '../contexts/AuthContext';
 import { MembershipBadge } from './membership';
 import ProFeatureModal from './ProFeatureModal';
+import UltraSATLogo from './UltraSATLogo';
 import {
   FaChartBar,          // Progress Dashboard
   FaClipboardList,     // Practice Exams
@@ -107,7 +108,11 @@ const Sidebar = () => {
             </Link>
           ) : (
             <Link to={currentUser ? "/progress" : "/"}>
-              <img src="/images/logo.png" alt="UltraSatPrep Logo" className="sidebar-logo" />
+              <UltraSATLogo 
+                size="medium" 
+                variant="sidebar" 
+                className="sidebar-logo"
+              />
             </Link>
           )}
         </div>

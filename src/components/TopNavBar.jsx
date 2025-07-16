@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../styles/TopNavBar.css';
+import UltraSATLogo from './UltraSATLogo';
 import {
   FaChartBar,
   FaClipboardList,
@@ -52,8 +53,11 @@ const TopNavBar = () => {
       <ul>
         <li>
           <Link to={currentUser ? "/progress" : "/"}>
-            {/* You can use a logo image or FaHome icon here. Replace as needed. */}
-            <img src="/images/logo.png" alt="UltraSatPrep Logo" style={{ height: 32, marginRight: 8, verticalAlign: 'middle' }} />
+            <UltraSATLogo 
+              size="small" 
+              variant="sidebar" 
+              style={{ height: 32, marginRight: 8, verticalAlign: 'middle' }} 
+            />
           </Link>
         </li>
         {navItems.map((item) => (
