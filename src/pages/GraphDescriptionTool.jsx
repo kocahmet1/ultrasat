@@ -73,10 +73,21 @@ const GraphDescriptionTool = () => {
         const filtered = allQuestions.filter(
           (q) => q.graphDescription && q.graphDescription !== 'null' && q.graphDescription !== null
         );
-        // Sort by createdAt or importedAt (latest first)
+        
+        // Sort by context first (general first, then exam), then by date within each context
         filtered.sort((a, b) => {
+          // Get context values, defaulting to 'general' if undefined/null
+          const contextA = a.usageContext || 'general';
+          const contextB = b.usageContext || 'general';
+          
+          // Sort by context first - general before exam
+          if (contextA === 'general' && contextB === 'exam') return -1;
+          if (contextA === 'exam' && contextB === 'general') return 1;
+          
+          // If same context, sort by date (latest first within each context)
           const dateA = a.importedAt || a.createdAt;
           const dateB = b.importedAt || b.createdAt;
+          
           // Convert Firestore Timestamp or string to Date
           const getDate = (d) => {
             if (!d) return 0;
@@ -87,7 +98,8 @@ const GraphDescriptionTool = () => {
           };
           return getDate(dateB) - getDate(dateA);
         });
-        // Apply reverse order if needed
+        
+        // Apply reverse order if needed (this will reverse the entire sorted list)
         const sorted = reverseOrder ? [...filtered].reverse() : filtered;
         
         console.log(`Questions with graph descriptions: ${sorted.length}`);
@@ -120,7 +132,7 @@ const GraphDescriptionTool = () => {
   }, [searchTerm, questionsWithGraphs]);
 
   const handleEditQuestion = (questionId) => {
-    navigate(`/admin/question-editor/${questionId}`);
+    navigate(`/admin/question-editor/${questionId}?referrer=/admin/graph-descriptions`);
   };
 
   const handleBackToAdmin = () => {
@@ -174,6 +186,18 @@ const GraphDescriptionTool = () => {
             <p className="stat-number">{questionsWithGraphs.length}</p>
           </div>
           <div className="stat-card">
+            <h3>General Context</h3>
+            <p className="stat-number">
+              {questionsWithGraphs.filter(q => (q.usageContext || 'general') === 'general').length}
+            </p>
+          </div>
+          <div className="stat-card">
+            <h3>Exam Context</h3>
+            <p className="stat-number">
+              {questionsWithGraphs.filter(q => q.usageContext === 'exam').length}
+            </p>
+          </div>
+          <div className="stat-card">
             <h3>Percentage with Graphs</h3>
             <p className="stat-number">
               {totalQuestions > 0 ? ((questionsWithGraphs.length / totalQuestions) * 100).toFixed(1) : 0}%
@@ -219,6 +243,9 @@ const GraphDescriptionTool = () => {
                     <span className={`difficulty-badge ${question.difficulty || 'medium'}`}>
                       {question.difficulty || 'medium'}
                     </span>
+                    <span className={`context-badge ${question.usageContext || 'general'}`}>
+                      {question.usageContext === 'exam' ? 'Exam' : 'General'}
+                    </span>
                   </div>
                   
                   <div className="question-content">
@@ -253,6 +280,9 @@ const GraphDescriptionTool = () => {
                           <strong>Subcategory:</strong> {question.subcategory}
                         </span>
                       )}
+                      <span className="metadata-item">
+                        <strong>Usage Context:</strong> {question.usageContext || 'General'}
+                      </span>
                     </div>
                   </div>
                   

@@ -40,9 +40,13 @@ const GraphGenerationPage = () => {
   const [filter, setFilter] = useState('needsGraph'); // 'all', 'needsGraph', 'hasGraph'
   const [searchTerm, setSearchTerm] = useState('');
   
+  // Selection state
+  const [selectedQuestions, setSelectedQuestions] = useState(new Set());
+  
   // Generation state
   const [generatingQuestions, setGeneratingQuestions] = useState(new Set());
   const [bulkGenerating, setBulkGenerating] = useState(false);
+  const [selectiveGenerating, setSelectiveGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 });
   const [generationResults, setGenerationResults] = useState([]);
   
@@ -160,6 +164,32 @@ const GraphGenerationPage = () => {
         }));
         
         console.log(`Total questions loaded: ${allQuestions.length}`);
+        
+        // Sort by context first (general first, then exam), then by date within each context
+        allQuestions.sort((a, b) => {
+          // Get context values, defaulting to 'general' if undefined/null
+          const contextA = a.usageContext || 'general';
+          const contextB = b.usageContext || 'general';
+          
+          // Sort by context first - general before exam
+          if (contextA === 'general' && contextB === 'exam') return -1;
+          if (contextA === 'exam' && contextB === 'general') return 1;
+          
+          // If same context, sort by date (latest first within each context)
+          const dateA = a.importedAt || a.createdAt;
+          const dateB = b.importedAt || b.createdAt;
+          
+          // Convert Firestore Timestamp or string to Date
+          const getDate = (d) => {
+            if (!d) return 0;
+            if (typeof d === 'object' && typeof d.toDate === 'function') return d.toDate().getTime();
+            if (typeof d === 'string') return new Date(d).getTime();
+            if (d instanceof Date) return d.getTime();
+            return d;
+          };
+          return getDate(dateB) - getDate(dateA);
+        });
+        
         setQuestions(allQuestions);
         setTotalQuestions(allQuestions.length);
         
@@ -211,6 +241,9 @@ const GraphGenerationPage = () => {
     }
     
     setFilteredQuestions(filtered);
+    
+    // Clear selections when filter or search changes to avoid confusion
+    setSelectedQuestions(new Set());
   }, [questions, filter, searchTerm]);
 
   // Generate graph for individual question
@@ -333,6 +366,121 @@ const GraphGenerationPage = () => {
     }
   };
 
+  // Selection handling functions
+  const handleSelectQuestion = (questionId) => {
+    setSelectedQuestions(prev => {
+      const newSelected = new Set(prev);
+      if (newSelected.has(questionId)) {
+        newSelected.delete(questionId);
+      } else {
+        newSelected.add(questionId);
+      }
+      return newSelected;
+    });
+  };
+
+  const handleSelectAll = () => {
+    const selectableQuestions = filteredQuestions.filter(q => 
+      q.graphDescription && q.graphDescription.trim() !== ''
+    );
+    
+    if (selectedQuestions.size === selectableQuestions.length) {
+      // Deselect all
+      setSelectedQuestions(new Set());
+    } else {
+      // Select all
+      setSelectedQuestions(new Set(selectableQuestions.map(q => q.id)));
+    }
+  };
+
+  // Sequential generation for selected questions
+  const handleGenerateSelectedGraphs = async () => {
+    if (!environmentStatus.isReady) {
+      alert('Graph generation environment is not ready. Please check the environment status.');
+      return;
+    }
+
+    if (selectedQuestions.size === 0) {
+      alert('Please select at least one question to generate graphs for.');
+      return;
+    }
+
+    // Get the actual question objects for selected IDs, maintaining the order from filteredQuestions
+    const selectedQuestionObjects = filteredQuestions.filter(q => selectedQuestions.has(q.id));
+
+    const confirmed = window.confirm(
+      `This will generate graphs for ${selectedQuestionObjects.length} selected questions sequentially. ` +
+      'This may take several minutes and will use API credits. Continue?'
+    );
+
+    if (!confirmed) return;
+
+    setSelectiveGenerating(true);
+    setGenerationProgress({ current: 0, total: selectedQuestionObjects.length });
+    setGenerationResults([]);
+
+    const results = [];
+
+    // Process questions sequentially (one by one)
+    for (let i = 0; i < selectedQuestionObjects.length; i++) {
+      const question = selectedQuestionObjects[i];
+      setGenerationProgress({ current: i + 1, total: selectedQuestionObjects.length });
+
+      try {
+        console.log(`Generating graph for question ${i + 1}/${selectedQuestionObjects.length}: ${question.id}`);
+        
+        // Call the individual graph generation function
+        const result = await generateQuestionGraphPlotly(
+          question.id,
+          question.text,
+          question.graphDescription
+        );
+
+        if (result.success) {
+          // Update local state
+          setQuestions(prev => prev.map(q => 
+            q.id === question.id 
+              ? { ...q, graphUrl: result.graphUrl, plotlyConfig: result.plotlyConfig }
+              : q
+          ));
+
+          results.push({
+            questionId: question.id,
+            success: true,
+            result
+          });
+
+          console.log(`✅ Successfully generated graph for question ${question.id}`);
+        } else {
+          throw new Error(result.error || 'Graph generation failed');
+        }
+      } catch (error) {
+        console.error(`❌ Failed to generate graph for question ${question.id}:`, error);
+        results.push({
+          questionId: question.id,
+          success: false,
+          error: error.message
+        });
+      }
+
+      // Small delay between generations to avoid overwhelming the API
+      if (i < selectedQuestionObjects.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      }
+    }
+
+    setGenerationResults(results);
+    setSelectiveGenerating(false);
+    
+    // Clear selection after completion
+    setSelectedQuestions(new Set());
+
+    // Show summary
+    const successful = results.filter(r => r.success).length;
+    const failed = results.filter(r => !r.success).length;
+    alert(`Selective generation complete!\nSuccessful: ${successful}\nFailed: ${failed}`);
+  };
+
   const handleBackToAdmin = () => {
     navigate('/admin');
   };
@@ -421,6 +569,24 @@ const GraphGenerationPage = () => {
           <p className="stat-number">{filterCounts.all}</p>
         </div>
         <div className="stat-card">
+          <h3>General Context</h3>
+          <p className="stat-number">
+            {questions.filter(q => 
+              q.graphDescription && q.graphDescription.trim() !== '' && 
+              (q.usageContext || 'general') === 'general'
+            ).length}
+          </p>
+        </div>
+        <div className="stat-card">
+          <h3>Exam Context</h3>
+          <p className="stat-number">
+            {questions.filter(q => 
+              q.graphDescription && q.graphDescription.trim() !== '' && 
+              q.usageContext === 'exam'
+            ).length}
+          </p>
+        </div>
+        <div className="stat-card">
           <h3>Need Graphs</h3>
           <p className="stat-number">{filterCounts.needsGraph}</p>
         </div>
@@ -468,18 +634,50 @@ const GraphGenerationPage = () => {
       {/* Bulk Actions */}
       {environmentStatus.isReady && filterCounts.needsGraph > 0 && (
         <div className="bulk-actions">
-          <button 
-            className="bulk-generate-btn"
-            onClick={handleBulkGenerate}
-            disabled={bulkGenerating}
-          >
-            {bulkGenerating 
-              ? `🚀 Generating... (${generationProgress.current}/${generationProgress.total})`
-              : `🚀 Generate All Missing Graphs (${filterCounts.needsGraph})`
-            }
-          </button>
+          <div className="selection-controls">
+            <label className="select-all-checkbox">
+              <input
+                type="checkbox"
+                checked={selectedQuestions.size > 0 && selectedQuestions.size === filteredQuestions.filter(q => q.graphDescription && q.graphDescription.trim() !== '').length}
+                onChange={handleSelectAll}
+                disabled={bulkGenerating || selectiveGenerating}
+              />
+              <span className="checkbox-label">
+                {selectedQuestions.size > 0 
+                  ? `${selectedQuestions.size} questions selected`
+                  : 'Select all questions'
+                }
+              </span>
+            </label>
+          </div>
           
-          {bulkGenerating && (
+          <div className="generation-buttons">
+            <button 
+              className="bulk-generate-btn"
+              onClick={handleBulkGenerate}
+              disabled={bulkGenerating || selectiveGenerating}
+            >
+              {bulkGenerating 
+                ? `🚀 Generating All... (${generationProgress.current}/${generationProgress.total})`
+                : `🚀 Generate All Missing Graphs (${filterCounts.needsGraph})`
+              }
+            </button>
+            
+            {selectedQuestions.size > 0 && (
+              <button 
+                className="selective-generate-btn"
+                onClick={handleGenerateSelectedGraphs}
+                disabled={bulkGenerating || selectiveGenerating}
+              >
+                {selectiveGenerating 
+                  ? `🎯 Generating Selected... (${generationProgress.current}/${generationProgress.total})`
+                  : `🎯 Generate Selected Graphs (${selectedQuestions.size})`
+                }
+              </button>
+            )}
+          </div>
+          
+          {(bulkGenerating || selectiveGenerating) && (
             <div className="progress-bar">
               <div 
                 className="progress-fill" 
@@ -525,13 +723,27 @@ const GraphGenerationPage = () => {
                 }}
               >
                 <div className="question-header">
-                  <span className="question-id">{question.id}</span>
+                  <div className="question-header-left">
+                    <label className="question-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={selectedQuestions.has(question.id)}
+                        onChange={() => handleSelectQuestion(question.id)}
+                        disabled={bulkGenerating || selectiveGenerating}
+                        onClick={(e) => e.stopPropagation()} // Prevent modal from opening when clicking checkbox
+                      />
+                    </label>
+                    <span className="question-id">{question.id}</span>
+                  </div>
                   <div className="header-actions">
                     <span className={`graph-status ${question.graphUrl ? 'has-graph' : 'needs-graph'}`}>
                       {question.graphUrl ? '✅ Has Graph' : '⏳ Needs Graph'}
                     </span>
                     <span className={`difficulty-badge ${question.difficulty || 'medium'}`}>
                       {question.difficulty || 'medium'}
+                    </span>
+                    <span className={`context-badge ${question.usageContext || 'general'}`}>
+                      {question.usageContext === 'exam' ? 'Exam' : 'General'}
                     </span>
                   </div>
                 </div>
@@ -560,7 +772,7 @@ const GraphGenerationPage = () => {
                     <button 
                       className="generate-graph-btn"
                       onClick={() => handleGenerateGraph(question)}
-                      disabled={generatingQuestions.has(question.id) || bulkGenerating}
+                      disabled={generatingQuestions.has(question.id) || bulkGenerating || selectiveGenerating}
                       style={{
                         backgroundColor: '#28a745',
                         color: 'white',
@@ -603,7 +815,7 @@ const GraphGenerationPage = () => {
                     <button 
                       className="regenerate-graph-btn"
                       onClick={() => handleGenerateGraph(question)}
-                      disabled={generatingQuestions.has(question.id) || bulkGenerating}
+                      disabled={generatingQuestions.has(question.id) || bulkGenerating || selectiveGenerating}
                       style={{
                         backgroundColor: '#17a2b8',
                         color: 'white',
@@ -741,7 +953,7 @@ const GraphGenerationPage = () => {
                   <button 
                     className="btn btn-primary"
                     onClick={() => handleModalGenerateGraph(selectedQuestion)}
-                    disabled={generatingQuestions.has(selectedQuestion.id) || bulkGenerating}
+                    disabled={generatingQuestions.has(selectedQuestion.id) || bulkGenerating || selectiveGenerating}
                   >
                     {generatingQuestions.has(selectedQuestion.id) 
                       ? '⏳ Generating...' 
@@ -760,7 +972,7 @@ const GraphGenerationPage = () => {
                   <button 
                     className="btn btn-secondary"
                     onClick={() => handleModalGenerateGraph(selectedQuestion)}
-                    disabled={generatingQuestions.has(selectedQuestion.id) || bulkGenerating}
+                    disabled={generatingQuestions.has(selectedQuestion.id) || bulkGenerating || selectiveGenerating}
                   >
                     {generatingQuestions.has(selectedQuestion.id) 
                       ? '⏳ Regenerating...' 

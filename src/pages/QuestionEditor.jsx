@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { doc, getDoc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { uploadFile, deleteFile } from '../utils/storageService';
@@ -16,7 +16,14 @@ import '../styles/GraphUpload.css';
 const QuestionEditor = () => {
   const { questionId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const isEditing = !!questionId;
+  
+  // Helper function to navigate back to the correct location
+  const navigateBack = () => {
+    const referrer = searchParams.get('referrer');
+    navigate(referrer || '/admin');
+  };
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -94,9 +101,11 @@ const QuestionEditor = () => {
     fetchQuestion();
   }, [questionId, isEditing]);
   
-  // Handle graph file selection
-  const handleGraphFileChange = (e) => {
+  // Handle graph file selection and automatic upload
+  const handleGraphFileChange = async (e) => {
     const file = e.target.files[0];
+    console.log('DEBUG - File selected:', file);
+    
     if (!file) return;
     
     // Validate file type
@@ -114,57 +123,92 @@ const QuestionEditor = () => {
     
     setGraphFile(file);
     setUploadError('');
-    setUploadSuccess(false); // Reset success message when selecting a new file
+    setUploadSuccess(false);
     
-    // Create a preview URL
+    console.log('DEBUG - File validation passed, creating preview and uploading');
+    
+    // Create a preview URL first
     const reader = new FileReader();
     reader.onload = (e) => {
+      console.log('DEBUG - File reader completed, setting preview');
       setGraphPreview(e.target.result);
     };
     reader.readAsDataURL(file);
+    
+    // Automatically upload the file
+    console.log('DEBUG - Auto-uploading file after selection');
+    const uploadedUrl = await uploadGraph(file);
+    if (uploadedUrl) {
+      console.log('DEBUG - Auto-upload successful, setting question graphUrl to:', uploadedUrl);
+      setQuestion(prev => ({
+        ...prev,
+        graphUrl: uploadedUrl
+      }));
+      setGraphPreview(uploadedUrl); // Use the uploaded URL as preview
+      console.log('DEBUG - Question state updated with auto-uploaded graphUrl');
+    } else {
+      console.log('DEBUG - Auto-upload failed');
+    }
   };
   
   // Handle upload button click - separate from form submission
   const handleUploadButtonClick = async (e) => {
     e.preventDefault(); // Prevent form submission
+    console.log('DEBUG - Upload button clicked');
+    
     if (!graphFile) {
       setUploadError('Please select a graph file first');
       return;
     }
     
+    console.log('DEBUG - About to upload graph file:', graphFile);
+    
     const uploadedUrl = await uploadGraph();
     if (uploadedUrl) {
-      // Store the uploaded URL in the question state
+      console.log('DEBUG - Setting question graphUrl to:', uploadedUrl);
+      // Store the uploaded URL in the question state and update preview
       setQuestion(prev => ({
         ...prev,
         graphUrl: uploadedUrl
       }));
+      setGraphPreview(uploadedUrl);
+      console.log('DEBUG - Question state updated with graphUrl');
+    } else {
+      console.log('DEBUG - Upload failed, no URL returned');
     }
   };
   
   // Upload the graph to Firebase Storage (or local storage in development)
-  const uploadGraph = async () => {
-    if (!graphFile) return null;
+  const uploadGraph = async (fileToUpload = null) => {
+    const file = fileToUpload || graphFile;
+    if (!file) return null;
     
     try {
       setUploadProgress(0);
       setUploadSuccess(false);
       setUploadError('');
       
+      console.log('DEBUG - Starting graph upload, file:', file);
+      
       // Create a unique path for the graph
       const storageId = isEditing ? questionId : `temp_${Date.now()}`;
-      const graphPath = `graphs/${storageId}_${graphFile.name.replace(/\s+/g, '_')}`;
+      const graphPath = `graphs/${storageId}_${file.name.replace(/\s+/g, '_')}`;
+      
+      console.log('DEBUG - Upload path:', graphPath);
       
       // Upload the file using our storageService utility
       setUploadProgress(50); // Show progress to user
-      const downloadUrl = await uploadFile(graphFile, graphPath);
+      const downloadUrl = await uploadFile(file, graphPath);
       setUploadProgress(100);
+      
+      console.log('DEBUG - Upload completed, downloadUrl:', downloadUrl);
       
       // Show success message
       setUploadSuccess(true);
       
       return downloadUrl;
     } catch (err) {
+      console.error('DEBUG - Upload error:', err);
       setUploadError(`Error uploading graph: ${err.message}`);
       setUploadSuccess(false);
       return null;
@@ -177,6 +221,8 @@ const QuestionEditor = () => {
     setGraphFile(null);
     setGraphPreview(null);
     setUploadProgress(0);
+    setUploadSuccess(false);
+    setUploadError('');
     
     // If we have a stored graph URL and we're editing, delete it from storage
     if (question.graphUrl && isEditing) {
@@ -255,6 +301,11 @@ const QuestionEditor = () => {
       // NOTE: We no longer handle graph upload here - it's done separately via the upload button
       // Use the graphUrl that's already in the question state
       
+      // Debug: Check what's in the question state
+      console.log('DEBUG - Question state before save:', question);
+      console.log('DEBUG - GraphUrl in question state:', question.graphUrl);
+      console.log('DEBUG - GraphPreview state:', graphPreview);
+      
       // Create question object - use the graphUrl from the question state
       const questionToSave = {
         ...question
@@ -278,6 +329,7 @@ const QuestionEditor = () => {
       }
       
       console.log(`QuestionEditor: Saving question with subcategoryId=${numericSubcategoryId}, subcategory=${questionToSave.subcategory}`);
+      console.log('DEBUG - Final questionToSave object:', questionToSave);
       
       // Add timestamps
       if (isEditing) {
@@ -298,7 +350,8 @@ const QuestionEditor = () => {
       }
 
       await setDoc(questionRef, questionToSave);
-      navigate('/admin'); // Go back to admin dashboard after saving
+      console.log('DEBUG - Question saved successfully to Firestore');
+      navigateBack(); // Go back to the referrer page after saving
     } catch (err) {
       setError('Error saving question: ' + err.message);
     }
@@ -346,7 +399,7 @@ const QuestionEditor = () => {
       {showPreview && (
         <QuestionPreview 
           question={question}
-          graphUrl={graphPreview}
+          graphUrl={question.graphUrl || graphPreview}
           onClose={() => setShowPreview(false)}
         />
       )}
@@ -525,10 +578,10 @@ const QuestionEditor = () => {
         <div className="form-group">
           <label>Graph Image (for Math Questions):</label>
           <div className="graph-upload-container">
-            {graphPreview ? (
+            {(graphPreview || question.graphUrl) ? (
               <div className="graph-preview">
                 <img 
-                  src={graphPreview} 
+                  src={question.graphUrl || graphPreview} 
                   alt="Graph Preview" 
                   className="graph-preview-image" 
                 />
@@ -566,18 +619,9 @@ const QuestionEditor = () => {
                   >
                     Select Graph Image
                   </button>
-                  {graphFile && (
-                    <button 
-                      type="button" 
-                      className="upload-graph-btn"
-                      onClick={handleUploadButtonClick}
-                    >
-                      Upload Graph
-                    </button>
-                  )}
                 </div>
                 <p className="graph-upload-help">
-                  Supported formats: JPG, PNG, SVG (max 300KB)
+                  Supported formats: JPG, PNG, SVG (max 300KB). Upload happens automatically when you select a file.
                 </p>
               </div>
             )}
@@ -586,7 +630,7 @@ const QuestionEditor = () => {
             )}
             {uploadSuccess && (
               <div className="graph-upload-success">
-                Graph successfully uploaded! 
+                Graph automatically uploaded and attached to question! 
                 <button 
                   type="button" 
                   className="preview-btn" 
@@ -638,7 +682,7 @@ const QuestionEditor = () => {
           <button
             type="button"
             className="cancel-btn"
-            onClick={() => navigate('/admin')}
+            onClick={navigateBack}
           >
             Cancel
           </button>

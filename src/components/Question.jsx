@@ -114,18 +114,7 @@ const Question = ({
 
   const renderQuestionText = () => (
     <div className="question-text" style={{ fontSize: '1.8rem', lineHeight: '1.6' }}>
-      <div dangerouslySetInnerHTML={{ __html: processTextMarkup(questionText) }} />
-      
-      {graphDescription && (
-        <div className="question-graph-description">
-          <div className="graph-description-label">Graph Description:</div>
-          <div 
-            className="graph-description-content"
-            dangerouslySetInnerHTML={{ __html: processTextMarkup(graphDescription) }}
-          />
-        </div>
-      )}
-      
+      {/* Display graph ABOVE the question text if available */}
       {graphUrl && (
         <div className="question-graph-container">
           <img 
@@ -135,6 +124,10 @@ const Question = ({
           />
         </div>
       )}
+      
+      <div dangerouslySetInnerHTML={{ __html: processTextMarkup(questionText) }} />
+      
+      {/* Graph description removed - no longer displayed */}
     </div>
   );
 

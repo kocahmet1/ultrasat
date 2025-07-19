@@ -38,6 +38,9 @@ export default function SmartQuiz() {
   const [submitting, setSubmitting] = useState(false);
   const timerRef = useRef(null);
   
+  // User input state for grid-in questions
+  const [userInput, setUserInput] = useState('');
+  
   // AI features toggle state
   const [aiEnabled, setAiEnabled] = useState(true);
 
@@ -276,6 +279,23 @@ export default function SmartQuiz() {
     }
   }, [currentUser, quiz, currentQuestion, quizId, normalizeSubcategoryName, db, toast, setHelperItems, setHelperType, setHelperLoading]);
 
+  // Detect question type based on available options
+  const getQuestionType = (question) => {
+    if (!question) return 'multiple-choice';
+    
+    // If questionType is explicitly set, use it
+    if (question.questionType) {
+      return question.questionType;
+    }
+    
+    // Smart detection: if no options or empty options array, it's user-input
+    if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+      return 'user-input';
+    }
+    
+    return 'multiple-choice';
+  };
+
   const handleSelect = (optionIdx) => {
     setAnswers((prev) => ({
       ...prev,
@@ -286,6 +306,49 @@ export default function SmartQuiz() {
       },
     }));
     // No longer automatically advancing to next question
+  };
+
+  const handleUserInput = (value) => {
+    setUserInput(value);
+    
+    // For user input questions, check correctness
+    let isCorrect = false;
+    
+    if (currentQuestion.correctAnswer !== undefined) {
+      // Direct comparison with correct answer
+      isCorrect = value === currentQuestion.correctAnswer;
+      
+      // Also check against accepted answers if available
+      if (!isCorrect && currentQuestion.acceptedAnswers && Array.isArray(currentQuestion.acceptedAnswers)) {
+        isCorrect = currentQuestion.acceptedAnswers.includes(value);
+      }
+      
+      // For number inputs, handle different formats
+      if (!isCorrect && (currentQuestion.inputType === 'number' || !currentQuestion.inputType)) {
+        const userNum = parseFloat(value);
+        const correctNum = parseFloat(currentQuestion.correctAnswer);
+        if (!isNaN(userNum) && !isNaN(correctNum)) {
+          isCorrect = Math.abs(userNum - correctNum) < 0.0001;
+        }
+        
+        // Check accepted answers as numbers too
+        if (!isCorrect && currentQuestion.acceptedAnswers) {
+          isCorrect = currentQuestion.acceptedAnswers.some(accepted => {
+            const acceptedNum = parseFloat(accepted);
+            return !isNaN(acceptedNum) && Math.abs(userNum - acceptedNum) < 0.0001;
+          });
+        }
+      }
+    }
+
+    setAnswers((prev) => ({
+      ...prev,
+      [currentQuestion.id]: {
+        selectedOption: value, // Store the user's input as selectedOption for compatibility
+        isCorrect: isCorrect,
+        timeSpent: timerRef.current ?? 0,
+      },
+    }));
   };
 
   const handleNavigation = (direction) => {
@@ -302,6 +365,19 @@ export default function SmartQuiz() {
       timerRef.current = 0;
     }
   };
+
+  // Sync userInput with current question's answer when navigating
+  useEffect(() => {
+    if (currentQuestion) {
+      const questionType = getQuestionType(currentQuestion);
+      if (questionType === 'user-input') {
+        const existingAnswer = answers[currentQuestion.id];
+        setUserInput(existingAnswer?.selectedOption || '');
+      } else {
+        setUserInput(''); // Clear for multiple choice questions
+      }
+    }
+  }, [currentIdx, currentQuestion, answers]);
 
   // Simple timer per question
   useEffect(() => {
@@ -907,26 +983,62 @@ export default function SmartQuiz() {
               dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.passage) }}
             />
           )}
+          
+          {/* Display graph if one exists - ABOVE the question text */}
+          {currentQuestion.graphUrl && (
+            <div className="question-graph-container">
+              <img 
+                src={currentQuestion.graphUrl} 
+                alt="Graph for question" 
+                className="question-graph" 
+              />
+            </div>
+          )}
+          
           <div 
             className="question-text-content"
             dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.text) }}
           />
 
-          <ul className="options-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {currentQuestion.options.map((opt, idx) => {
-              const isSelected = answers[currentQuestion.id]?.selectedOption === idx;
-              return (
-                <li key={idx} style={{ marginBottom: '12px' }}>
-                  <button
-                    onClick={() => handleSelect(idx)}
-                    className={`option-button ${isSelected ? 'selected' : ''}`}
-                  >
-                    {opt}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          {/* Conditional rendering based on question type */}
+          {getQuestionType(currentQuestion) === 'multiple-choice' ? (
+            <ul className="options-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              {currentQuestion.options.map((opt, idx) => {
+                const isSelected = answers[currentQuestion.id]?.selectedOption === idx;
+                return (
+                  <li key={idx} style={{ marginBottom: '12px' }}>
+                    <button
+                      onClick={() => handleSelect(idx)}
+                      className={`option-button ${isSelected ? 'selected' : ''}`}
+                    >
+                      {opt}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <div className="user-input-container">
+              <div className="question-instructions">
+                {currentQuestion.answerFormat ? currentQuestion.answerFormat : 'Enter your answer in the box below.'}
+              </div>
+              <div className="input-container">
+                <input
+                  type="text"
+                  value={userInput}
+                  onChange={(e) => handleUserInput(e.target.value)}
+                  className="user-answer-input"
+                  placeholder={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? 'Enter a number' : 'Enter your answer'}
+                  pattern={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? '[0-9]*[.]?[0-9]*' : undefined}
+                />
+              </div>
+              {(currentQuestion.inputType === 'number' || !currentQuestion.inputType) && (
+                <div className="input-hint">
+                  You may enter integers, decimals, or fractions. Do not enter spaces or commas.
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="quiz-navigation">
             <button

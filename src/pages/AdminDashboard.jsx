@@ -27,6 +27,7 @@ import SubcategorySettings from '../components/admin/SubcategorySettings';
 import UserActivityTracker from '../components/UserActivityTracker';
 import { exportQuestionsAsJSON } from '../utils/exportUtils.js'; // Added import
 import { checkPlotlyEnvironment } from '../utils/apiClient';
+import { runGraphQuestionDiagnostic, diagnoseGraphQuestionsDetailed } from '../utils/diagnosticUtils';
 
 import '../styles/AdminDashboard.css';
 
@@ -76,6 +77,12 @@ function AdminDashboard() {
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [questionsPerPage] = useState(100); // Fixed at 100 per page
+  
+  // State for diagnostics
+  const [diagnosticResults, setDiagnosticResults] = useState(null);
+  const [diagnosticLoading, setDiagnosticLoading] = useState(false);
+  const [diagnosticSubcategory, setDiagnosticSubcategory] = useState('');
+  const [diagnosticUserId, setDiagnosticUserId] = useState('');
   
   
   // Check if user has admin access
@@ -1043,6 +1050,28 @@ function AdminDashboard() {
     }
   };
   
+  // Graph question diagnostic
+  const handleRunGraphDiagnostic = async () => {
+    if (!diagnosticSubcategory.trim()) {
+      alert('Please enter a subcategory to diagnose');
+      return;
+    }
+    
+    setDiagnosticLoading(true);
+    setDiagnosticResults(null);
+    
+    try {
+      const userId = diagnosticUserId.trim() || null;
+      const results = await diagnoseGraphQuestionsDetailed(diagnosticSubcategory.trim(), userId);
+      setDiagnosticResults(results);
+    } catch (error) {
+      console.error('Error running graph diagnostic:', error);
+      alert(`Error running diagnostic: ${error.message}`);
+    } finally {
+      setDiagnosticLoading(false);
+    }
+  };
+
   // Handle diagnosing question contexts
   const handleDiagnoseQuestionContexts = async () => {
     try {
@@ -2707,6 +2736,146 @@ const migrateExistingQuestions = async () => {
             </div>
             
 
+          </div>
+        )}
+        
+        {/* Feature Flags Tab */}
+        {activeTab === 'featureFlags' && (
+          <div className="feature-flags-tab">
+            <div className="tab-header">
+              <h2>Feature Flags & Diagnostics</h2>
+            </div>
+            
+            <div className="diagnostic-section">
+              <h3>Graph Questions in Smart Quizzes Diagnostic</h3>
+              <p>
+                This tool investigates why graph questions might not be appearing in smart quizzes.
+                It compares the database directly with what the smart quiz system sees.
+              </p>
+              
+              <div className="diagnostic-controls">
+                <div className="form-group">
+                  <label htmlFor="diagnostic-subcategory">Subcategory to diagnose:</label>
+                  <input
+                    type="text"
+                    id="diagnostic-subcategory"
+                    value={diagnosticSubcategory}
+                    onChange={(e) => setDiagnosticSubcategory(e.target.value)}
+                    placeholder="e.g., lines-angles-triangles, two-variable-data"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="diagnostic-user-id">User ID (optional):</label>
+                  <input
+                    type="text"
+                    id="diagnostic-user-id"
+                    value={diagnosticUserId}
+                    onChange={(e) => setDiagnosticUserId(e.target.value)}
+                    placeholder="Check specific user's progress"
+                    className="form-control"
+                  />
+                </div>
+                <button 
+                  onClick={handleRunGraphDiagnostic}
+                  className="button-primary"
+                  disabled={diagnosticLoading}
+                >
+                  {diagnosticLoading ? 'Running Diagnostic...' : 'Run Enhanced Diagnostic'}
+                </button>
+              </div>
+              
+              {diagnosticResults && (
+                <div className="diagnostic-results">
+                  <h4>Enhanced Diagnostic Results for: {diagnosticResults.subcategoryId}</h4>
+                  
+                  <div className="results-grid">
+                    <div className="result-card">
+                      <strong>Total DB Questions:</strong> {diagnosticResults.totalQuestions}
+                    </div>
+                    <div className="result-card">
+                      <strong>Smart Quiz Eligible:</strong> {diagnosticResults.smartQuizEligibleQuestions}
+                    </div>
+                    <div className="result-card">
+                      <strong>Smart Quiz with Graphs:</strong> {diagnosticResults.smartQuizEligibleWithGraphs}
+                    </div>
+                    <div className="result-card">
+                      <strong>Graph Percentage:</strong> {diagnosticResults.smartQuizEligibleQuestions > 0 ? Math.round((diagnosticResults.smartQuizEligibleWithGraphs / diagnosticResults.smartQuizEligibleQuestions) * 100) : 0}%
+                    </div>
+                  </div>
+
+                  {diagnosticResults.difficultyTests && (
+                    <div className="difficulty-section">
+                      <h4>Difficulty Level Breakdown:</h4>
+                      <div className="difficulty-grid">
+                        {Object.entries(diagnosticResults.difficultyTests).map(([difficulty, test]) => (
+                          <div key={difficulty} className="difficulty-card">
+                            <h5>{difficulty.toUpperCase()}</h5>
+                            <div><strong>Total:</strong> {test.total}</div>
+                            <div><strong>With Graphs:</strong> {test.withGraphs}</div>
+                            <div><strong>Percentage:</strong> {test.percentage}%</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {diagnosticResults.userProgress && (
+                    <div className="user-progress-section">
+                      <h4>User Progress Analysis:</h4>
+                      <div className="progress-grid">
+                        <div className="progress-card">
+                          <strong>Current Level:</strong> {diagnosticResults.userProgress.currentLevel}
+                        </div>
+                        <div className="progress-card">
+                          <strong>Questions Seen:</strong> {diagnosticResults.userProgress.totalAsked}
+                        </div>
+                        <div className="progress-card">
+                          <strong>Graph Questions Seen:</strong> {diagnosticResults.userProgress.askedWithGraphs || 0}
+                        </div>
+                        <div className="progress-card">
+                          <strong>Questions Missed:</strong> {diagnosticResults.userProgress.totalMissed}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="issues-section">
+                    <h4>Analysis:</h4>
+                    <ul>
+                      {diagnosticResults.issues.map((issue, index) => (
+                        <li key={index} className={
+                          issue.startsWith('❌') ? 'error' : 
+                          issue.startsWith('⚠️') ? 'warning' : 
+                          issue.startsWith('✅') || issue.startsWith('📊') || issue.startsWith('👤') ? 'info' :
+                          'success'
+                        }>
+                          {issue}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {diagnosticResults.sampleQuestions.eligibleWithGraphs.length > 0 && (
+                    <div className="sample-section">
+                      <h4>Smart Quiz Eligible Questions with Graphs:</h4>
+                      <div className="sample-questions">
+                        {diagnosticResults.sampleQuestions.eligibleWithGraphs.map((q, index) => (
+                          <div key={index} className="sample-question">
+                            <strong>ID:</strong> {q.id}<br/>
+                            <strong>Difficulty:</strong> {q.difficulty}<br/>
+                            <strong>Context:</strong> {q.usageContext || 'undefined'}<br/>
+                            <strong>Graph URL:</strong> {q.hasGraphUrl ? 'Yes' : 'No'}<br/>
+                            <strong>Graph Description:</strong> {q.hasGraphDescription ? 'Yes' : 'No'}<br/>
+                            <strong>Text:</strong> {q.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         )}
         

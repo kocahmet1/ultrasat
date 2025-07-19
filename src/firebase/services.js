@@ -1134,12 +1134,10 @@ export const getQuestionsBySubcategory = async (subcategory, difficulty = null, 
     // Normalize all questions to ensure consistent subcategory format
     let questions = normalizeQuestions(Object.values(resultsMap));
     
-    // TEMPORARILY DISABLED: Allow all questions regardless of usageContext
-    // This will help diagnose the context issue
-    // TODO: Re-enable filtering after fixing the context values
-    // questions = questions.filter(q => !q.usageContext || q.usageContext === 'general');
+    // Filter out exam-specific questions - only include general use questions in smart quizzes
+    questions = questions.filter(q => !q.usageContext || q.usageContext === 'general');
     
-    console.log(`[getQuestionsBySubcategory] Returning ${questions.length} questions (context filter disabled)`);
+    console.log(`[getQuestionsBySubcategory] Returning ${questions.length} questions (filtered for general use)`);
     if (questions.length > 0) {
       console.log(`[getQuestionsBySubcategory] Sample question contexts:`, 
         questions.slice(0, 3).map(q => ({ id: q.id, usageContext: q.usageContext })));

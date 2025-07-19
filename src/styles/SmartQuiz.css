@@ -27,6 +27,24 @@
   white-space: pre-line; /* Preserve line breaks and spaces in text */
 }
 
+/* Graph container styles */
+.question-graph-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.question-graph {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 10px;
+}
+
+
+
 .quiz-content {
   display: flex;
   gap: 20px;
@@ -617,4 +635,46 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* User input styles for grid-in questions */
+.user-input-container {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.question-instructions {
+  font-size: 1.1rem;
+  color: #495057;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.input-container {
+  margin: 1.5rem 0;
+}
+
+.user-answer-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.user-answer-input:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.input-hint {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+  font-style: italic;
 }
