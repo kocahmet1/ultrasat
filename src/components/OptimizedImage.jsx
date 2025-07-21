@@ -109,15 +109,34 @@ const OptimizedImage = ({
 
   // If we have optimized versions with WebP support
   if (typeof optimizedSrc === 'object') {
-    return (
-      <picture className={className} {...props}>
-        {/* Mobile source if provided */}
-        {optimizedMobileSrc && (
-          <source media="(max-width: 768px)" srcSet={optimizedMobileSrc} />
-        )}
-        {/* Desktop source */}
-        <source srcSet={optimizedSrc.webp} type="image/webp" />
-        <source srcSet={optimizedSrc.fallback} type="image/jpeg" />
+    // Check if WebP file exists, if not use fallback directly
+    const webpExists = optimizedSrc.webp && optimizedSrc.webp.includes('aihot') ? false : true;
+    
+    if (webpExists) {
+      return (
+        <picture className={className} {...props}>
+          {/* Mobile source if provided */}
+          {optimizedMobileSrc && (
+            <source media="(max-width: 768px)" srcSet={optimizedMobileSrc} />
+          )}
+          {/* Desktop source */}
+          <source srcSet={optimizedSrc.webp} type="image/webp" />
+          <source srcSet={optimizedSrc.fallback} type="image/jpeg" />
+          <img
+            ref={imgRef}
+            src={optimizedSrc.fallback}
+            alt={alt}
+            style={style}
+            loading={lazy ? 'lazy' : 'eager'}
+            decoding="async"
+            onLoad={() => setIsLoaded(true)}
+            className={`optimized-image ${isLoaded ? 'loaded' : 'loading'}`}
+          />
+        </picture>
+      );
+    } else {
+      // Fallback to JPG only for aihot image
+      return (
         <img
           ref={imgRef}
           src={optimizedSrc.fallback}
@@ -127,9 +146,10 @@ const OptimizedImage = ({
           decoding="async"
           onLoad={() => setIsLoaded(true)}
           className={`optimized-image ${isLoaded ? 'loaded' : 'loading'}`}
+          {...props}
         />
-      </picture>
-    );
+      );
+    }
   }
 
   // Fallback for non-optimized images
