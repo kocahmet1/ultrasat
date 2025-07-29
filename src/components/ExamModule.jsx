@@ -26,6 +26,7 @@ function ExamModule({
   const [timeRemaining, setTimeRemaining] = useState(32 * 60); // 32 minutes
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [timerRunning, setTimerRunning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [clockVisible, setClockVisible] = useState(true);
   const [showCrossOut, setShowCrossOut] = useState(false);
   const [localCrossedOut, setLocalCrossedOut] = useState(crossedOut || {});
@@ -92,7 +93,7 @@ function ExamModule({
   // Timer logic
   useEffect(() => {
     let timer;
-    if (timerRunning && timeRemaining > 0) {
+    if (timerRunning && !isPaused && timeRemaining > 0) {
       timer = setInterval(() => {
         setTimeRemaining(prev => {
           if (prev <= 1) {
@@ -107,7 +108,7 @@ function ExamModule({
       completeModule();
     }
     return () => clearInterval(timer);
-  }, [timerRunning]);
+  }, [timerRunning, isPaused]);
 
   // Pause timer when modal is open
   useEffect(() => {
@@ -169,6 +170,9 @@ function ExamModule({
 
   // Toggle the clock visibility
   const toggleClock = () => setClockVisible(!clockVisible);
+
+  // Toggle pause functionality
+  const togglePause = () => setIsPaused(!isPaused);
 
   // Toggle cross-out functionality
   const toggleCrossOut = () => setShowCrossOut(!showCrossOut);
@@ -395,6 +399,8 @@ function ExamModule({
         timeRemaining={timeRemaining}
         clockVisible={clockVisible}
         toggleClock={toggleClock}
+        isPaused={isPaused}
+        togglePause={togglePause}
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}
       />

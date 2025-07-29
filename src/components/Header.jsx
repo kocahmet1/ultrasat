@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Header.css';
 
-const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock, isFullscreen, toggleFullscreen }) => {
+const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock, isPaused, togglePause, isFullscreen, toggleFullscreen }) => {
   // Format time as mm:ss
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -27,6 +27,9 @@ const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock, isFull
           {clockVisible && (
             <div className="timer">
               {formatTime(timeRemaining)}
+              <button className="pause-btn" onClick={togglePause}>
+                {isPaused ? 'resume' : 'pause'}
+              </button>
             </div>
           )}
           <button className="timer-toggle-btn" onClick={toggleClock}>
