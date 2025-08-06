@@ -613,7 +613,7 @@ const LandingPage = () => {
             <Link to="/help">Help Center</Link>
                 <Link to="/blog">Blog</Link>
                 <Link to="/sat-guide">SAT Guide</Link>
-                <Link to="/score-calculator">Score Calculator</Link>
+                <Link to="/score-calculator">Digital SAT College Finder</Link>
           </div>
               
               <div className="footer-column">

@@ -384,10 +384,25 @@ const PracticeExamController = () => {
     // Use provided moduleResponses or fallback to state
     const responsesToProcess = moduleResponsesToUse || moduleResponses;
     
+    // Validate that responsesToProcess is a proper object
+    if (!responsesToProcess || typeof responsesToProcess !== 'object' || responsesToProcess.constructor !== Object) {
+      console.error('Invalid moduleResponses data:', responsesToProcess);
+      console.error('moduleResponses state:', moduleResponses);
+      alert('Error: Unable to process exam results. Invalid response data.');
+      return;
+    }
+    
     // Debug: Log the moduleResponses structure
     console.log('PracticeExamController: moduleResponses object:', responsesToProcess);
     Object.entries(responsesToProcess).forEach(([moduleId, moduleData]) => {
       const module = modules.find(m => m.id === moduleId);
+      
+      // Add null check for moduleData and moduleData.answers
+      if (!moduleData || !moduleData.answers) {
+        console.log(`PracticeExamController: moduleResponses[${moduleId}] (${module?.title}) has no answers data`);
+        return;
+      }
+      
       const answerCount = Array.isArray(moduleData.answers) ? 
         moduleData.answers.filter(a => a !== undefined && a !== null && a !== '').length :
         Object.values(moduleData.answers).filter(a => a !== undefined && a !== null && a !== '').length;
@@ -814,7 +829,7 @@ const PracticeExamController = () => {
             </button>
             <button 
               className="primary-button"
-              onClick={handleViewResults}
+              onClick={() => handleViewResults()}
             >
               View Results
             </button>

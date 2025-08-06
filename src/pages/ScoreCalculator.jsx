@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/ScoreCalculator.css';
+import collegeScorecard from '../api/collegeScorecard';
 
 function ScoreCalculator() {
   const [mathScore, setMathScore] = useState(500);
-  const [readingScore, setReadingScore] = useState(500);
-  const [writingScore, setWritingScore] = useState(25);
+  const [readingWritingScore, setReadingWritingScore] = useState(500);
   const [totalScore, setTotalScore] = useState(1000);
   const [percentile, setPercentile] = useState(50);
+  
+  // College finder states
+  const [colleges, setColleges] = useState([]);
+  const [isLoadingColleges, setIsLoadingColleges] = useState(false);
+  const [filters, setFilters] = useState({
+    state: '',
+    schoolSize: '',
+    schoolType: '',
+    maxAdmissionRate: ''
+  });
 
-  // Score conversion tables (simplified for demo)
+  // Updated percentile map for Digital SAT (2024+)
   const percentileMap = {
     1600: 99, 1590: 99, 1580: 99, 1570: 99, 1560: 99, 1550: 99, 1540: 99, 1530: 99, 1520: 99, 1510: 99,
     1500: 99, 1490: 98, 1480: 98, 1470: 97, 1460: 97, 1450: 96, 1440: 96, 1430: 95, 1420: 95, 1410: 94,
@@ -35,7 +45,7 @@ function ScoreCalculator() {
   };
 
   useEffect(() => {
-    const total = mathScore + readingScore + (writingScore * 10);
+    const total = mathScore + readingWritingScore;
     setTotalScore(Math.min(1600, Math.max(400, total)));
     
     // Find closest percentile
@@ -43,26 +53,85 @@ function ScoreCalculator() {
       Math.abs(parseInt(curr) - total) < Math.abs(parseInt(prev) - total) ? curr : prev
     );
     setPercentile(percentileMap[closest] || 1);
-  }, [mathScore, readingScore, writingScore]);
+  }, [mathScore, readingWritingScore]);
 
-  const collegeSuggestions = [
-    { name: "Harvard University", avgScore: 1520, match: totalScore >= 1500 },
-    { name: "Stanford University", avgScore: 1505, match: totalScore >= 1480 },
-    { name: "MIT", avgScore: 1540, match: totalScore >= 1520 },
-    { name: "UC Berkeley", avgScore: 1415, match: totalScore >= 1350 },
-    { name: "UCLA", avgScore: 1405, match: totalScore >= 1340 },
-    { name: "University of Michigan", avgScore: 1350, match: totalScore >= 1280 },
-    { name: "Georgia Tech", avgScore: 1370, match: totalScore >= 1300 },
-    { name: "NYU", avgScore: 1310, match: totalScore >= 1240 }
-  ];
+  // Fetch college recommendations when score or filters change
+  useEffect(() => {
+    const fetchColleges = async () => {
+      if (totalScore < 400) return;
+      
+      setIsLoadingColleges(true);
+      try {
+        const apiFilters = {
+          satScore: totalScore,
+          ...filters,
+          // Convert UI filters to API format
+          minSize: filters.schoolSize === 'small' ? 0 : filters.schoolSize === 'medium' ? 2000 : filters.schoolSize === 'large' ? 10000 : undefined,
+          maxSize: filters.schoolSize === 'small' ? 2000 : filters.schoolSize === 'medium' ? 10000 : undefined,
+          maxAdmissionRate: filters.maxAdmissionRate ? parseFloat(filters.maxAdmissionRate) : undefined
+        };
+        
+        const recommendations = await collegeScorecard.getCollegeRecommendations(totalScore, apiFilters);
+        setColleges(recommendations.slice(0, 20)); // Limit to top 20 results
+      } catch (error) {
+        console.error('Error fetching colleges:', error);
+        setColleges([]);
+      } finally {
+        setIsLoadingColleges(false);
+      }
+    };
+
+    const timeoutId = setTimeout(fetchColleges, 500); // Debounce API calls
+    return () => clearTimeout(timeoutId);
+  }, [totalScore, filters]);
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterName]: value
+    }));
+  };
+
+  const getMatchColorClass = (matchLevel) => {
+    switch (matchLevel) {
+      case 'Safety': return 'match-safety';
+      case 'Match': return 'match-good';
+      case 'Reach': return 'match-reach';
+      default: return 'match-unknown';
+    }
+  };
+
+  const formatCurrency = (amount) => {
+    if (!amount) return 'N/A';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+
+  const formatPercentage = (rate) => {
+    if (!rate) return 'N/A';
+    return `${Math.round(rate * 100)}%`;
+  };
 
   const admissionInfo = getCollegeAdmissionInfo(totalScore);
 
   return (
     <div className="score-calculator-page">
       <div className="calculator-container">
-        <h1>SAT Score Calculator</h1>
-        <p className="hero-subtitle">Calculate your SAT score, see percentile rankings, and explore college admission prospects.</p>
+        <h1>Digital SAT College Finder</h1>
+        <p className="hero-subtitle">Calculate your Digital SAT score, see percentile rankings, and explore college admission prospects with the new 2024+ format.</p>
+        
+        <div className="digital-sat-info">
+          <div className="info-badge">
+            <span className="badge-icon">🔄</span>
+            <div className="badge-text">
+              <h4>New Digital SAT Format</h4>
+              <p>Adaptive testing • Shorter format • Calculator allowed for all Math</p>
+            </div>
+          </div>
+        </div>
         
         <div className="calculator-layout">
           <div className="input-section">
@@ -91,61 +160,39 @@ function ScoreCalculator() {
                   />
                 </div>
                 <div className="score-range">200 - 800</div>
+                <div className="score-description">Includes Algebra, Advanced Math, Problem-Solving, Geometry & Trigonometry</div>
               </div>
 
               <div className="score-input">
-                <label htmlFor="reading-score">Reading Score</label>
+                <label htmlFor="reading-writing-score">Reading and Writing Score</label>
                 <div className="input-wrapper">
                   <input
                     type="range"
-                    id="reading-score"
+                    id="reading-writing-score"
                     min="200"
                     max="800"
-                    value={readingScore}
-                    onChange={(e) => setReadingScore(parseInt(e.target.value))}
+                    value={readingWritingScore}
+                    onChange={(e) => setReadingWritingScore(parseInt(e.target.value))}
                     className="score-slider"
                   />
                   <input
                     type="number"
                     min="200"
                     max="800"
-                    value={readingScore}
-                    onChange={(e) => setReadingScore(Math.max(200, Math.min(800, parseInt(e.target.value) || 200)))}
+                    value={readingWritingScore}
+                    onChange={(e) => setReadingWritingScore(Math.max(200, Math.min(800, parseInt(e.target.value) || 200)))}
                     className="score-number"
                   />
                 </div>
                 <div className="score-range">200 - 800</div>
-              </div>
-
-              <div className="score-input">
-                <label htmlFor="writing-score">Writing Subscore (Optional)</label>
-                <div className="input-wrapper">
-                  <input
-                    type="range"
-                    id="writing-score"
-                    min="10"
-                    max="40"
-                    value={writingScore}
-                    onChange={(e) => setWritingScore(parseInt(e.target.value))}
-                    className="score-slider"
-                  />
-                  <input
-                    type="number"
-                    min="10"
-                    max="40"
-                    value={writingScore}
-                    onChange={(e) => setWritingScore(Math.max(10, Math.min(40, parseInt(e.target.value) || 10)))}
-                    className="score-number"
-                  />
-                </div>
-                <div className="score-range">10 - 40</div>
+                <div className="score-description">Combined section: Reading Comprehension, Vocabulary, Grammar & Writing Skills</div>
               </div>
             </div>
           </div>
 
           <div className="results-section">
             <div className="total-score-display">
-              <h2>Your SAT Score</h2>
+              <h2>Your Digital SAT Score</h2>
               <div className="total-score">{totalScore}</div>
               <div className="percentile">
                 <span className="percentile-label">Percentile:</span>
@@ -158,7 +205,7 @@ function ScoreCalculator() {
                 </div>
                 <div className="breakdown-item">
                   <span>Reading & Writing:</span>
-                  <span>{readingScore}</span>
+                  <span>{readingWritingScore}</span>
                 </div>
               </div>
             </div>
@@ -179,7 +226,7 @@ function ScoreCalculator() {
               <div className="analysis-grid">
                 <div className="analysis-item">
                   <span className="label">National Average:</span>
-                  <span className="value">1060</span>
+                  <span className="value">1050</span>
                 </div>
                 <div className="analysis-item">
                   <span className="label">Your Score:</span>
@@ -187,8 +234,8 @@ function ScoreCalculator() {
                 </div>
                 <div className="analysis-item">
                   <span className="label">Difference:</span>
-                  <span className={`value ${totalScore >= 1060 ? 'positive' : 'negative'}`}>
-                    {totalScore >= 1060 ? '+' : ''}{totalScore - 1060}
+                  <span className={`value ${totalScore >= 1050 ? 'positive' : 'negative'}`}>
+                    {totalScore >= 1050 ? '+' : ''}{totalScore - 1050}
                   </span>
                 </div>
               </div>
@@ -196,24 +243,177 @@ function ScoreCalculator() {
           </div>
         </div>
 
-        <section className="college-suggestions">
-          <h2>College Match Suggestions</h2>
-          <p>Based on your score of {totalScore}, here are some colleges where you might be competitive:</p>
-          <div className="colleges-grid">
-            {collegeSuggestions.map((college, index) => (
-              <div 
-                key={index} 
-                className={`college-card ${college.match ? 'match' : 'reach'}`}
-              >
-                <h4>{college.name}</h4>
-                <div className="college-score">
-                  Average SAT: {college.avgScore}
-                </div>
-                <div className={`match-indicator ${college.match ? 'good-match' : 'reach-school'}`}>
-                  {college.match ? 'Good Match' : 'Reach School'}
-                </div>
+        <section className="digital-sat-features">
+          <h2>Digital SAT Key Features</h2>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">⚡</div>
+              <h3>Adaptive Testing</h3>
+              <p>Module 2 difficulty adapts based on your Module 1 performance, providing a more accurate assessment of your abilities.</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">⏱️</div>
+              <h3>Shorter Format</h3>
+              <p>Just 2 hours 24 minutes total (including break) compared to 3+ hours for the old paper SAT.</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">🧮</div>
+              <h3>Calculator Allowed</h3>
+              <p>Use a calculator for ALL math questions, including the built-in Desmos graphing calculator.</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">📖</div>
+              <h3>Shorter Passages</h3>
+              <p>Reading passages are 25-150 words with just 1 question each, making them more manageable.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="college-finder">
+          <h2>Find Your Perfect College Match</h2>
+          <p>Based on your Digital SAT score of {totalScore}, discover personalized college recommendations with real admission data:</p>
+          
+          <div className="finder-filters">
+            <h3>Refine Your Search</h3>
+            <div className="filters-grid">
+              <div className="filter-group">
+                <label htmlFor="state-filter">State</label>
+                <select 
+                  id="state-filter"
+                  value={filters.state}
+                  onChange={(e) => handleFilterChange('state', e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">Any State</option>
+                  <option value="CA">California</option>
+                  <option value="NY">New York</option>
+                  <option value="TX">Texas</option>
+                  <option value="FL">Florida</option>
+                  <option value="IL">Illinois</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="OH">Ohio</option>
+                  <option value="GA">Georgia</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="MI">Michigan</option>
+                </select>
               </div>
-            ))}
+              
+              <div className="filter-group">
+                <label htmlFor="size-filter">School Size</label>
+                <select 
+                  id="size-filter"
+                  value={filters.schoolSize}
+                  onChange={(e) => handleFilterChange('schoolSize', e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">Any Size</option>
+                  <option value="small">Small (&lt; 2,000)</option>
+                  <option value="medium">Medium (2,000 - 10,000)</option>
+                  <option value="large">Large (&gt; 10,000)</option>
+                </select>
+              </div>
+              
+              <div className="filter-group">
+                <label htmlFor="admission-filter">Max Admission Rate</label>
+                <select 
+                  id="admission-filter"
+                  value={filters.maxAdmissionRate}
+                  onChange={(e) => handleFilterChange('maxAdmissionRate', e.target.value)}
+                  className="filter-select"
+                >
+                  <option value="">Any Rate</option>
+                  <option value="0.1">Very Selective (&lt; 10%)</option>
+                  <option value="0.25">Highly Selective (&lt; 25%)</option>
+                  <option value="0.5">Moderately Selective (&lt; 50%)</option>
+                  <option value="0.75">Less Selective (&lt; 75%)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="college-results">
+            {isLoadingColleges ? (
+              <div className="loading-state">
+                <div className="spinner"></div>
+                <p>Finding your perfect college matches...</p>
+              </div>
+            ) : colleges.length > 0 ? (
+              <>
+                <div className="results-header">
+                  <h3>Your College Matches ({colleges.length} found)</h3>
+                  <div className="match-legend">
+                    <span className="legend-item safety">🟢 Safety</span>
+                    <span className="legend-item match">🟡 Match</span>
+                    <span className="legend-item reach">🔴 Reach</span>
+                  </div>
+                </div>
+                <div className="colleges-grid">
+                  {colleges.map((college) => (
+                    <div 
+                      key={college.id} 
+                      className={`college-card enhanced ${getMatchColorClass(college.matchLevel)}`}
+                    >
+                      <div className="college-header">
+                        <h4>{college.name}</h4>
+                        <span className={`match-badge ${college.matchLevel.toLowerCase()}`}>
+                          {college.matchLevel}
+                        </span>
+                      </div>
+                      
+                      <div className="college-location">
+                        📍 {college.city}, {college.state}
+                      </div>
+                      
+                      <div className="college-stats">
+                        <div className="stat-row">
+                          <span className="stat-label">SAT Range:</span>
+                          <span className="stat-value">
+                            {college.satReading25 + college.satMath25} - {college.satReading75 + college.satMath75}
+                          </span>
+                        </div>
+                        
+                        <div className="stat-row">
+                          <span className="stat-label">Admission Rate:</span>
+                          <span className="stat-value">{formatPercentage(college.admissionRate)}</span>
+                        </div>
+                        
+                        <div className="stat-row">
+                          <span className="stat-label">Students:</span>
+                          <span className="stat-value">{college.size?.toLocaleString() || 'N/A'}</span>
+                        </div>
+                        
+                        <div className="stat-row">
+                          <span className="stat-label">Type:</span>
+                          <span className="stat-value">{college.type}</span>
+                        </div>
+                        
+                        {college.tuitionInState && (
+                          <div className="stat-row">
+                            <span className="stat-label">Tuition:</span>
+                            <span className="stat-value">{formatCurrency(college.tuitionInState)}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {college.website && (
+                        <a 
+                          href={college.website.startsWith('http') ? college.website : `https://${college.website}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="college-website-link"
+                        >
+                          Visit Website →
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="no-results">
+                <p>No colleges found matching your criteria. Try adjusting your filters or SAT scores.</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -227,9 +427,9 @@ function ScoreCalculator() {
             <div className="tip-card">
               <h3>📊 Focus on Weaker Section</h3>
               <p>
-                {mathScore < readingScore ? 
+                {mathScore < readingWritingScore ? 
                   'Your math score could use improvement. Focus on algebra, geometry, and data analysis practice.' :
-                  readingScore < mathScore ?
+                  readingWritingScore < mathScore ?
                   'Your reading score has room for growth. Practice reading comprehension and evidence-based questions.' :
                   'Your scores are balanced. Work on both sections equally or focus on your target schools\' preferences.'
                 }
@@ -241,13 +441,13 @@ function ScoreCalculator() {
             </div>
             <div className="tip-card">
               <h3>📚 Use UltraSATPrep</h3>
-              <p>Our adaptive practice system identifies your weak areas and provides personalized question recommendations.</p>
+              <p>Our adaptive practice system mirrors the Digital SAT format and identifies your weak areas with personalized recommendations.</p>
             </div>
           </div>
         </section>
 
         <section className="percentile-chart">
-          <h2>SAT Score Percentiles</h2>
+          <h2>Digital SAT Score Percentiles</h2>
           <div className="chart-container">
             <div className="percentile-bars">
               {[
@@ -279,8 +479,8 @@ function ScoreCalculator() {
         </section>
 
         <section className="cta-section">
-          <h2>Ready to Improve Your Score?</h2>
-          <p>Start your personalized SAT prep journey with UltraSATPrep. Our adaptive platform helps you target your weak areas and maximize your score potential.</p>
+          <h2>Ready to Improve Your Digital SAT Score?</h2>
+          <p>Start your personalized Digital SAT prep journey with UltraSATPrep. Our adaptive platform mirrors the new test format and helps you master both sections efficiently.</p>
           <div className="cta-buttons">
             <Link to="/smart-quiz" className="btn-primary">Start Practice Test</Link>
             <Link to="/sat-guide" className="btn-secondary">SAT Study Guide</Link>

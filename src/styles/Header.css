@@ -231,6 +231,20 @@
   text-decoration: underline;
 }
 
+.report-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  margin-right: 10px;
+}
+
+.report-btn:hover {
+  text-decoration: underline;
+}
+
 .more-btn {
   background: none;
   border: none;

@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getFirestore } from 'firebase/firestore';
-import { FaArrowRight } from 'react-icons/fa';
+import { FaArrowRight, FaFlag } from 'react-icons/fa';
 import { SUBCATEGORY_SUBJECTS } from '../utils/subcategoryConstants';
 import { processTextMarkup } from '../utils/textProcessing';
+import ReportQuestionModal from '../components/ReportQuestionModal';
+import { reportQuestion } from '../api/reportClient';
+import { toast } from 'react-toastify';
 import '../styles/Results.css';
 
 function ExamResults() {
@@ -29,6 +32,11 @@ function ExamResults() {
   const [isLoading, setIsLoading] = useState(true);
   const [pageError, setPageError] = useState(null);
   const [weakSubcats, setWeakSubcats] = useState([]);
+
+  // Report modal state
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [selectedQuestionForReport, setSelectedQuestionForReport] = useState(null);
 
   // Helper function to identify the weakest subcategories based on exam performance
   const getWeakSubcategories = (modules) => {
@@ -315,6 +323,29 @@ function ExamResults() {
     }));
   };
 
+  // Report question handlers
+  const handleReportQuestion = async (reason) => {
+    if (!selectedQuestionForReport) return;
+    
+    setReportLoading(true);
+    try {
+      await reportQuestion(selectedQuestionForReport.id, examId, reason);
+      toast.success('Question reported successfully. Thank you for your feedback!');
+      setIsReportModalOpen(false);
+      setSelectedQuestionForReport(null);
+    } catch (error) {
+      console.error('Error reporting question:', error);
+      toast.error(error.message || 'Failed to report question. Please try again.');
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  const openReportModal = (question) => {
+    setSelectedQuestionForReport(question);
+    setIsReportModalOpen(true);
+  };
+
   if (isLoading) {
     return <div className="loading-container"><div className="spinner"></div><p>Loading results...</p></div>;
   }
@@ -330,6 +361,13 @@ function ExamResults() {
 
   return (
     <div className="results-container">
+      <ReportQuestionModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        onReport={handleReportQuestion}
+        loading={reportLoading}
+      />
+      
       <div className={`results-content ${splitView ? 'split-view' : ''}`}>
         {savingError ? (
           <div className="error-message">
@@ -544,10 +582,23 @@ function ExamResults() {
                     return (
                       <div key={question.id || questionIndex} className="question-container-review">
                         <div className="question-review-header">
-                          <span className="question-number">Question {questionIndex + 1}</span>
-                          <span className={`question-status ${!isAnswered ? 'not-answered' : isCorrect ? 'correct' : 'incorrect'}`}>
-                            {!isAnswered ? 'Not Answered' : isCorrect ? 'Correct' : 'Incorrect'}
-                          </span>
+                          <div className="question-review-left">
+                            <span className="question-number">Question {questionIndex + 1}</span>
+                          </div>
+                          <div className="question-review-center">
+                            <button
+                              className="report-button-results"
+                              onClick={() => openReportModal(question)}
+                              title="Report this question"
+                            >
+                              <FaFlag />
+                            </button>
+                          </div>
+                          <div className="question-review-right">
+                            <span className={`question-status ${!isAnswered ? 'not-answered' : isCorrect ? 'correct' : 'incorrect'}`}>
+                              {!isAnswered ? 'Not Answered' : isCorrect ? 'Correct' : 'Incorrect'}
+                            </span>
+                          </div>
                         </div>
                         
                         <div 

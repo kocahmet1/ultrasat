@@ -9,6 +9,11 @@ import '../styles/App.css';
 import '../styles/Transitions.css';
 import FullscreenModal from './FullscreenModal';
 import ConfirmationModal from './ConfirmationModal';
+import ReportQuestionModal from './ReportQuestionModal';
+import { reportQuestion } from '../api/reportClient';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFlag } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 function ExamModule({ 
   moduleNumber, 
@@ -36,6 +41,10 @@ function ExamModule({
   const [markedForReview, setMarkedForReview] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+
+  // Report modal state
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
 
   // Block navigation when exam is in progress
   const blocker = useBlocker(timerRunning);
@@ -379,6 +388,22 @@ function ExamModule({
     setIsExitModalOpen(false);
   };
 
+  // Report question handler
+  const handleReportQuestion = async (reason) => {
+    setReportLoading(true);
+    try {
+      const currentQuestionData = enrichedQuestions[currentQuestion];
+      await reportQuestion(currentQuestionData.id, `exam-${moduleNumber}`, reason);
+      toast.success('Question reported successfully. Thank you for your feedback!');
+      setIsReportModalOpen(false);
+    } catch (error) {
+      console.error('Error reporting question:', error);
+      toast.error(error.message || 'Failed to report question. Please try again.');
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
   return (
     <div className={`app ${moduleAnimation}`}>
       <FullscreenModal
@@ -394,6 +419,14 @@ function ExamModule({
         title="Exit Exam?"
         message="Are you sure you want to leave the exam? Your progress in this module will not be saved."
       />
+
+      <ReportQuestionModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        onReport={handleReportQuestion}
+        loading={reportLoading}
+      />
+
       <Header
         sectionTitle={moduleTitle}
         timeRemaining={timeRemaining}
@@ -403,6 +436,7 @@ function ExamModule({
         togglePause={togglePause}
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}
+        onReportQuestion={() => setIsReportModalOpen(true)}
       />
       
       <div className="main-content">

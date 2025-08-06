@@ -500,3 +500,154 @@
     font-size: 1.25rem;
   }
 } 
+
+/* Digital SAT specific styles */
+.digital-note {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.digital-note strong {
+  font-weight: 700;
+}
+
+/* Adaptive Testing Explanation */
+.adaptive-explanation {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-left: 4px solid #3b82f6;
+}
+
+.adaptive-explanation h3 {
+  color: #3b82f6;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.adaptive-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.adaptive-step {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+  border: 2px solid #e5e7eb;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.adaptive-step:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.adaptive-step h4 {
+  color: #2563eb;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.adaptive-step p {
+  color: #4b5563;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.adaptive-arrow {
+  color: #3b82f6;
+  font-size: 1.5rem;
+  font-weight: bold;
+  flex: 0;
+}
+
+/* Digital Features Section */
+.digital-features-section {
+  margin-bottom: 3rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border-left: 4px solid #3b82f6;
+}
+
+.feature-card:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(59, 130, 246, 0.1);
+}
+
+.feature-card h3 {
+  color: #3b82f6;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.feature-card p {
+  color: #4b5563;
+  margin: 0;
+  text-align: left;
+  font-size: 1rem;
+}
+
+/* Responsive styles for digital SAT sections */
+@media (max-width: 768px) {
+  .adaptive-steps {
+    flex-direction: column;
+  }
+  
+  .adaptive-arrow {
+    transform: rotate(90deg);
+    margin: 0.5rem 0;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .digital-note {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .adaptive-step {
+    min-width: unset;
+    padding: 1rem;
+  }
+  
+  .feature-card {
+    padding: 1rem;
+  }
+  
+  .adaptive-explanation {
+    padding: 1.5rem;
+  }
+}

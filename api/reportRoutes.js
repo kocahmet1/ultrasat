@@ -125,29 +125,70 @@ router.get('/questions', verifyFirebaseToken, verifyAdminAccess, async (req, res
     query = query.limit(parseInt(limit));
 
     const snapshot = await query.get();
-    const reports = [];
+    
+    if (snapshot.empty) {
+      return res.json({
+        reports: [],
+        total: 0,
+        hasMore: false
+      });
+    }
 
-    // Process each report
-    for (const doc of snapshot.docs) {
+    // Extract all unique IDs for batch fetching
+    const questionIds = [];
+    const userIds = new Set();
+    const reportsData = [];
+
+    snapshot.docs.forEach(doc => {
       const reportData = doc.data();
+      reportsData.push({ id: doc.id, ...reportData });
       
-      // Get question details
-      const questionDoc = await req.db.collection('questions').doc(reportData.questionId).get();
-      const questionData = questionDoc.exists ? questionDoc.data() : null;
-
-      // Get reporter details
-      const userDoc = await req.db.collection('users').doc(reportData.reportedBy).get();
-      const userData = userDoc.exists ? userDoc.data() : null;
-
-      // Get reviewer details if reviewed
-      let reviewerData = null;
+      questionIds.push(reportData.questionId);
+      userIds.add(reportData.reportedBy);
       if (reportData.reviewedBy) {
-        const reviewerDoc = await req.db.collection('users').doc(reportData.reviewedBy).get();
-        reviewerData = reviewerDoc.exists ? reviewerDoc.data() : null;
+        userIds.add(reportData.reviewedBy);
       }
+    });
 
-      reports.push({
-        id: doc.id,
+    // Batch fetch all questions in parallel
+    const questionPromises = questionIds.map(id => 
+      req.db.collection('questions').doc(id).get()
+    );
+
+    // Batch fetch all users in parallel
+    const userPromises = Array.from(userIds).map(id => 
+      req.db.collection('users').doc(id).get()
+    );
+
+    // Execute all database calls in parallel
+    const [questionDocs, userDocs] = await Promise.all([
+      Promise.all(questionPromises),
+      Promise.all(userPromises)
+    ]);
+
+    // Create lookup maps for O(1) access
+    const questionsMap = new Map();
+    questionDocs.forEach((doc, index) => {
+      if (doc.exists) {
+        questionsMap.set(questionIds[index], doc.data());
+      }
+    });
+
+    const usersMap = new Map();
+    userDocs.forEach((doc, index) => {
+      if (doc.exists) {
+        const userId = Array.from(userIds)[index];
+        usersMap.set(userId, doc.data());
+      }
+    });
+
+    // Build the final reports array using the lookup maps
+    const reports = reportsData.map(reportData => {
+      const questionData = questionsMap.get(reportData.questionId);
+      const userData = usersMap.get(reportData.reportedBy);
+      const reviewerData = reportData.reviewedBy ? usersMap.get(reportData.reviewedBy) : null;
+
+      return {
         ...reportData,
         question: questionData ? {
           id: reportData.questionId,
@@ -165,8 +206,8 @@ router.get('/questions', verifyFirebaseToken, verifyAdminAccess, async (req, res
           displayName: reviewerData.displayName || reviewerData.email || 'Unknown Admin',
           email: reviewerData.email
         } : null
-      });
-    }
+      };
+    });
 
     res.json({
       reports,

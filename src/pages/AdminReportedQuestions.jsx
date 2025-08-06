@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit, faEye, faCheck, faTimes, faFlag, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getReportedQuestions, deleteReportedQuestion, dismissReport } from '../api/reportClient';
+import { getReportedQuestions, deleteReportedQuestion, dismissReport, updateReportedQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import Modal from '../components/Modal';
 import ConfirmationModal from '../components/ConfirmationModal';
@@ -17,21 +17,44 @@ const AdminReportedQuestions = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [editedQuestion, setEditedQuestion] = useState(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalReports, setTotalReports] = useState(0);
 
-  useEffect(() => {
-    fetchReports();
-  }, [statusFilter]);
+  const REPORTS_PER_PAGE = 25; // Reduced from default 50 for faster loading
 
-  const fetchReports = async () => {
+  const fetchReports = useCallback(async (page = 0, append = false) => {
     try {
-      setLoading(true);
-      const response = await getReportedQuestions(statusFilter);
-      setReports(response.reports);
+      if (!append) setLoading(true);
+      
+      const offset = page * REPORTS_PER_PAGE;
+      const response = await getReportedQuestions(statusFilter, REPORTS_PER_PAGE, offset);
+      
+      if (append) {
+        setReports(prev => [...prev, ...response.reports]);
+      } else {
+        setReports(response.reports);
+      }
+      
+      setHasMore(response.hasMore);
+      setTotalReports(response.total || response.reports.length);
+      setCurrentPage(page);
     } catch (error) {
       console.error('Error fetching reports:', error);
       toast.error('Failed to fetch reported questions');
     } finally {
       setLoading(false);
+    }
+  }, [statusFilter]);
+
+  useEffect(() => {
+    setCurrentPage(0);
+    fetchReports(0, false);
+  }, [statusFilter, fetchReports]);
+
+  const loadMoreReports = () => {
+    if (hasMore && !loading) {
+      fetchReports(currentPage + 1, true);
     }
   };
 
@@ -49,7 +72,8 @@ const AdminReportedQuestions = () => {
       toast.success('Question deleted successfully');
       setIsDeleteModalOpen(false);
       setSelectedReport(null);
-      await fetchReports();
+      // Optimistically remove from UI instead of refetching all
+      setReports(prev => prev.filter(r => r.id !== selectedReport.id));
     } catch (error) {
       console.error('Error deleting question:', error);
       toast.error(error.message || 'Failed to delete question');
@@ -74,13 +98,17 @@ const AdminReportedQuestions = () => {
 
     try {
       setActionLoading(true);
-      // For now, we'll just dismiss the report since we don't have a proper question edit endpoint
-      await dismissReport(selectedReport.id, 'Question reviewed and updated');
+      await updateReportedQuestion(selectedReport.questionId, editedQuestion, selectedReport.id);
       toast.success('Question updated successfully');
       setIsEditModalOpen(false);
       setSelectedReport(null);
       setEditedQuestion(null);
-      await fetchReports();
+      // Optimistically update the report status
+      setReports(prev => prev.map(r => 
+        r.id === selectedReport.id 
+          ? { ...r, status: 'resolved', question: { ...r.question, ...editedQuestion } }
+          : r
+      ));
     } catch (error) {
       console.error('Error updating question:', error);
       toast.error(error.message || 'Failed to update question');
@@ -94,7 +122,10 @@ const AdminReportedQuestions = () => {
       setActionLoading(true);
       await dismissReport(reportId, 'No action needed');
       toast.success('Report dismissed');
-      await fetchReports();
+      // Optimistically update the report status
+      setReports(prev => prev.map(r => 
+        r.id === reportId ? { ...r, status: 'dismissed' } : r
+      ));
     } catch (error) {
       console.error('Error dismissing report:', error);
       toast.error(error.message || 'Failed to dismiss report');
@@ -123,8 +154,38 @@ const AdminReportedQuestions = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    
+    let date;
+    try {
+      // Handle Firebase Timestamp objects
+      if (timestamp && typeof timestamp.toDate === 'function') {
+        date = timestamp.toDate();
+      } 
+      // Handle Firebase Timestamp objects with seconds/nanoseconds (with or without underscores)
+      else if (timestamp && (timestamp.seconds || timestamp._seconds)) {
+        const seconds = timestamp.seconds || timestamp._seconds;
+        date = new Date(seconds * 1000);
+      }
+      // Handle regular Date objects
+      else if (timestamp instanceof Date) {
+        date = timestamp;
+      }
+      // Handle timestamp numbers or ISO strings
+      else {
+        date = new Date(timestamp);
+      }
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date timestamp:', timestamp);
+        return 'Invalid Date';
+      }
+      
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    } catch (error) {
+      console.error('Error formatting date:', error, timestamp);
+      return 'Invalid Date';
+    }
   };
 
   return (
@@ -216,17 +277,6 @@ const AdminReportedQuestions = () => {
                         </button>
                         
                         <button
-                          className="action-button delete-button"
-                          onClick={() => {
-                            setSelectedReport(report);
-                            setIsDeleteModalOpen(true);
-                          }}
-                          title="Delete question"
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                        
-                        <button
                           className="action-button dismiss-button"
                           onClick={() => handleDismissReport(report.id)}
                           title="Dismiss report"
@@ -238,6 +288,19 @@ const AdminReportedQuestions = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+          
+          {/* Load More Button */}
+          {hasMore && !loading && (
+            <div className="load-more-container">
+              <button 
+                className="load-more-button"
+                onClick={loadMoreReports}
+                disabled={loading}
+              >
+                Load More Reports
+              </button>
             </div>
           )}
         </div>

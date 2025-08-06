@@ -405,4 +405,38 @@
   .form-actions {
     flex-direction: column;
   }
+}
+
+/* Load More Button Styles */
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.load-more-button {
+  background: #4e73df;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.load-more-button:hover:not(:disabled) {
+  background: #3a5bc7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.load-more-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 } 
