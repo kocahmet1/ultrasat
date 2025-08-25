@@ -101,31 +101,42 @@ export const getReportedQuestions = async (status = 'all', limit = 50, offset = 
  * Delete a reported question (admin only)
  * @param {string} questionId - The ID of the question to delete
  * @param {string} reportId - The ID of the report (optional)
+ * @param {boolean} deleteReportOnly - If true, only delete the report record, not the question
  * @returns {Promise<Object>} Response object
  */
-export const deleteReportedQuestion = async (questionId, reportId = null) => {
+export const deleteReportedQuestion = async (questionId, reportId = null, deleteReportOnly = false) => {
   try {
     const token = await getIdToken();
     
-    const response = await fetch(`${getApiUrl()}/api/reports/question/${questionId}`, {
+    let url, body;
+    
+    if (deleteReportOnly && reportId) {
+      // Delete only the report record
+      url = `${getApiUrl()}/api/reports/${reportId}`;
+      body = null;
+    } else {
+      // Delete the question (and optionally update report)
+      url = `${getApiUrl()}/api/reports/question/${questionId}`;
+      body = JSON.stringify({ reportId });
+    }
+    
+    const response = await fetch(url, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({
-        reportId
-      })
+      ...(body && { body })
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to delete question');
+      throw new Error(errorData.error || 'Failed to delete');
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Error deleting question:', error);
+    console.error('Error deleting:', error);
     throw error;
   }
 };

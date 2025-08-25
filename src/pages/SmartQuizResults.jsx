@@ -238,7 +238,7 @@ export default function SmartQuizResults() {
                         // Multiple choice question display
                         return (
                           <>
-                            <div className="answer-item your-answer">
+                            <div className={`answer-item ${isCorrect ? 'correct-answer' : 'your-answer'}`}>
                               <strong>Your Answer:</strong>
                               <span>{q.options[answer.selectedOption] || 'Not Answered'}</span>
                             </div>
@@ -254,14 +254,16 @@ export default function SmartQuizResults() {
                         // User input question display
                         return (
                           <>
-                            <div className="answer-item your-answer">
+                            <div className={`answer-item ${isCorrect ? 'correct-answer' : 'your-answer'}`}>
                               <strong>Your Answer:</strong>
                               <span>{answer.selectedOption || 'Not Answered'}</span>
                             </div>
-                            <div className="answer-item correct-answer">
-                              <strong>Correct Answer:</strong>
-                              <span>{q.correctAnswer}</span>
-                            </div>
+                            {!isCorrect && (
+                              <div className="answer-item correct-answer">
+                                <strong>Correct Answer:</strong>
+                                <span>{q.correctAnswer}</span>
+                              </div>
+                            )}
                             {q.acceptedAnswers && q.acceptedAnswers.length > 0 && (
                               <div className="answer-item accepted-answers">
                                 <strong>Also Accepted:</strong>

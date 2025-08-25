@@ -194,31 +194,61 @@ function AdminDashboard() {
       return;
     }
 
-    // Create a map from any known ID (from allSubcategories context) to its display name
-    const contextIdToDisplayNameMap = new Map();
+    // Create maps for different ID formats to display names
+    const kebabToDisplayNameMap = new Map();
+    const numericToDisplayNameMap = new Map();
+    
     allSubcategories.forEach(sc => {
       if (sc && sc.name) {
-        // Assuming sc.id is the canonical ID (kebab-case, numeric, etc.) used in the context
+        // Map kebab-case ID to display name
         if (sc.id !== undefined && sc.id !== null) {
-          contextIdToDisplayNameMap.set(String(sc.id), sc.name);
+          kebabToDisplayNameMap.set(String(sc.id), sc.name);
         }
-        // If subcategory names themselves can be IDs in questions, map them too.
-        // However, usually, questions would store an ID (kebab or numeric) rather than the full display name.
-        // contextIdToDisplayNameMap.set(sc.name, sc.name); 
+        
+        // Also map numeric ID to display name if we can get it
+        const numericId = getSubcategoryIdFromString(sc.id);
+        if (numericId !== null) {
+          numericToDisplayNameMap.set(String(numericId), sc.name);
+        }
       }
     });
 
-    const derivedSubcategoryOptions = new Map(); // Use a map to ensure unique 'value' (IDs)
+    const derivedSubcategoryOptions = new Map(); // Use a map to ensure unique subcategories
 
     questions.forEach(q => {
-      if (q && q.subcategoryId !== undefined && q.subcategoryId !== null) {
-        const questionSubcatId = String(q.subcategoryId); // The ID stored in the question
-        
-        if (!derivedSubcategoryOptions.has(questionSubcatId)) {
-          // Determine the display name: Try mapping from context, otherwise use the ID itself
-          const displayName = contextIdToDisplayNameMap.get(questionSubcatId) || questionSubcatId;
-          derivedSubcategoryOptions.set(questionSubcatId, { value: questionSubcatId, display: displayName });
+      if (!q) return;
+      
+      // Check all possible subcategory fields and formats
+      let subcategoryIdentifier = null;
+      let displayName = null;
+      
+      // 1. Check numeric subcategoryId first
+      if (q.subcategoryId !== undefined && q.subcategoryId !== null) {
+        subcategoryIdentifier = String(q.subcategoryId);
+        displayName = numericToDisplayNameMap.get(subcategoryIdentifier);
+      }
+      
+      // 2. Check kebab-case subcategory field
+      if (!displayName && q.subcategory) {
+        subcategoryIdentifier = String(q.subcategory);
+        displayName = kebabToDisplayNameMap.get(subcategoryIdentifier);
+      }
+      
+      // 3. Check legacy subCategory field - convert to get proper ID and display name
+      if (!displayName && q.subCategory) {
+        const numericId = getSubcategoryIdFromString(q.subCategory);
+        if (numericId !== null) {
+          subcategoryIdentifier = String(numericId);
+          displayName = numericToDisplayNameMap.get(subcategoryIdentifier);
         }
+      }
+      
+      // If we found a valid subcategory, add it to options
+      if (subcategoryIdentifier && displayName && !derivedSubcategoryOptions.has(subcategoryIdentifier)) {
+        derivedSubcategoryOptions.set(subcategoryIdentifier, { 
+          value: subcategoryIdentifier, 
+          display: displayName 
+        });
       }
     });
 
@@ -246,7 +276,7 @@ function AdminDashboard() {
           
           // Ensure the question has a normalized subcategoryId
           if (questionData.subCategory) {
-            const subcategoryId = normalizeSubcategoryId(questionData.subCategory);
+            const subcategoryId = getSubcategoryIdFromString(questionData.subCategory);
             processedQuestion.subcategoryId = subcategoryId;
           }
           
@@ -316,15 +346,38 @@ function AdminDashboard() {
     // Apply subcategory filter
     if (subcategoryFilter !== 'all') {
       filtered = filtered.filter(q => {
-        // Check if the question's subcategoryId matches the filter
-        if (q.subcategoryId && q.subcategoryId === subcategoryFilter) {
+        // Get the question's subcategory in various possible formats
+        const questionSubcategoryId = q.subcategoryId;
+        const questionSubcategory = q.subcategory;
+        const questionSubCategory = q.subCategory;
+        
+        // Convert the filter value (kebab-case from dropdown) to numeric ID for comparison
+        const filterNumericId = getSubcategoryIdFromString(subcategoryFilter);
+        
+        // Check if question has a numeric subcategoryId that matches the filter
+        if (questionSubcategoryId && filterNumericId && questionSubcategoryId === filterNumericId) {
           return true;
         }
         
-        // If no subcategoryId, check if the normalized subCategory matches
-        if (q.subCategory) {
-          const normalizedSubcategoryId = normalizeSubcategoryId(q.subCategory);
-          return normalizedSubcategoryId === subcategoryFilter;
+        // Check if question has a kebab-case subcategory that matches the filter directly
+        if (questionSubcategory && questionSubcategory === subcategoryFilter) {
+          return true;
+        }
+        
+        // Check if question has a different format subcategory - normalize both and compare
+        if (questionSubCategory) {
+          const normalizedQuestionId = getSubcategoryIdFromString(questionSubCategory);
+          if (normalizedQuestionId && filterNumericId && normalizedQuestionId === filterNumericId) {
+            return true;
+          }
+        }
+        
+        // Also check if question subcategory field matches when both are converted to kebab-case
+        if (questionSubcategory) {
+          const questionKebab = getKebabCaseFromAnyFormat(questionSubcategory);
+          if (questionKebab === subcategoryFilter) {
+            return true;
+          }
         }
         
         return false;
@@ -428,7 +481,7 @@ function AdminDashboard() {
         if (q.subcategoryId) {
           allSubcategories.add(q.subcategoryId);
         } else if (q.subCategory) {
-          const subcategoryId = normalizeSubcategoryId(q.subCategory);
+                      const subcategoryId = getSubcategoryIdFromString(q.subCategory);
           allSubcategories.add(subcategoryId);
         }
       });
@@ -719,7 +772,7 @@ function AdminDashboard() {
         };
         
         if (questionData.subCategory) {
-          const subcategoryId = normalizeSubcategoryId(questionData.subCategory);
+          const subcategoryId = getSubcategoryIdFromString(questionData.subCategory);
           processedQuestion.subcategoryId = subcategoryId;
         }
         
@@ -1246,18 +1299,7 @@ function AdminDashboard() {
     setSelectedQuestion(null);
   };
   
-  // Convert any subcategory format to our numeric ID system
-  const normalizeSubcategoryId = (subcategory) => {
-    if (!subcategory) return null;
-    
-    // If it's already a numeric ID, return as is
-    if (!isNaN(parseInt(subcategory, 10))) {
-      return parseInt(subcategory, 10);
-    }
-    
-    // Convert from any string format to numeric ID
-    return getSubcategoryIdFromString(subcategory);
-  };
+  // Note: Using getSubcategoryIdFromString from utils/subcategoryConstants instead of local function
   
   // Official Digital SAT categories and subcategories for validation
 const officialSATCategories = {
@@ -1578,7 +1620,7 @@ const migrateToNumericIds = async () => {
       // Check if subcategory needs conversion to numeric ID
       if (question.subCategory || question.subcategory) {
         const subCat = question.subCategory || question.subcategory;
-        const numericId = normalizeSubcategoryId(subCat);
+                  const numericId = getSubcategoryIdFromString(subCat);
         
         if (numericId && (question.subcategoryId !== numericId)) {
           question.subcategoryId = numericId;

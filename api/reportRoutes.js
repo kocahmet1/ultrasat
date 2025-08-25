@@ -196,7 +196,9 @@ router.get('/questions', verifyFirebaseToken, verifyAdminAccess, async (req, res
           options: questionData.options,
           correctAnswer: questionData.correctAnswer,
           subcategory: questionData.subcategory,
-          difficulty: questionData.difficulty
+          subcategoryId: questionData.subcategoryId,
+          difficulty: questionData.difficulty,
+          explanation: questionData.explanation
         } : null,
         reporter: userData ? {
           displayName: userData.displayName || userData.email || 'Unknown User',
@@ -218,6 +220,34 @@ router.get('/questions', verifyFirebaseToken, verifyAdminAccess, async (req, res
   } catch (error) {
     console.error('Error fetching reported questions:', error);
     res.status(500).json({ error: error.message || 'Failed to fetch reported questions' });
+  }
+});
+
+/**
+ * DELETE /api/reports/:reportId
+ * Delete a report record (admin only)
+ */
+router.delete('/:reportId', verifyFirebaseToken, verifyAdminAccess, async (req, res) => {
+  try {
+    const { reportId } = req.params;
+
+    // Check if report exists
+    const reportDoc = await req.db.collection('questionReports').doc(reportId).get();
+    if (!reportDoc.exists) {
+      return res.status(404).json({ error: 'Report not found' });
+    }
+
+    // Delete the report record
+    await req.db.collection('questionReports').doc(reportId).delete();
+
+    res.json({
+      success: true,
+      message: 'Report deleted successfully'
+    });
+
+  } catch (error) {
+    console.error('Error deleting report:', error);
+    res.status(500).json({ error: error.message || 'Failed to delete report' });
   }
 });
 
@@ -284,7 +314,29 @@ router.put('/question/:questionId', verifyFirebaseToken, verifyAdminAccess, asyn
       lastModifiedBy: adminId
     };
 
+    // Clear any legacy subcategory fields to avoid confusion
+    if (updateData.subcategory || updateData.subcategoryId) {
+      updateData.subCategory = admin.firestore.FieldValue.delete();
+    }
+
+    console.log('Updating question with data:', {
+      questionId,
+      subcategoryId: updateData.subcategoryId,
+      subcategory: updateData.subcategory,
+      hasSubCategory: 'subCategory' in updateData
+    });
+
     await req.db.collection('questions').doc(questionId).update(updateData);
+
+    // Verify the update by reading the question back
+    const updatedQuestionDoc = await req.db.collection('questions').doc(questionId).get();
+    const updatedData = updatedQuestionDoc.data();
+    console.log('Question after update:', {
+      questionId,
+      subcategoryId: updatedData.subcategoryId,
+      subcategory: updatedData.subcategory,
+      subCategory: updatedData.subCategory
+    });
 
     // Update the report status if reportId is provided
     if (reportId) {

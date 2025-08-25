@@ -439,4 +439,95 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+/* Bulk Actions Styles */
+.bulk-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.bulk-select-button {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bulk-select-button:hover {
+  background: #5a6268;
+}
+
+.bulk-delete-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bulk-delete-button:hover {
+  background: #c82333;
+}
+
+/* Report Card Selection Styles */
+.report-card.selected {
+  border: 2px solid #4e73df;
+  box-shadow: 0 0 10px rgba(78, 115, 223, 0.3);
+}
+
+.report-checkbox {
+  margin-right: 10px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.delete-button {
+  background: #dc3545 !important;
+}
+
+.delete-button:hover {
+  background: #c82333 !important;
+} 
+
+.question-subcategory {
+  margin-top: 8px;
+  padding: 4px 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #495057;
+}
+
+.question-explanation {
+  margin-top: 12px;
+  padding: 8px;
+  background-color: #f0f8ff;
+  border-left: 3px solid #4e73df;
+  border-radius: 4px;
+}
+
+.question-explanation h4 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.question-explanation p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #495057;
 } 
