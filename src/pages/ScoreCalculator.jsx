@@ -1,9 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import QuizAuthModal from '../components/QuizAuthModal';
 import '../styles/ScoreCalculator.css';
 import collegeScorecard from '../api/collegeScorecard';
 
 function ScoreCalculator() {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const [quizAuthOpen, setQuizAuthOpen] = useState(false);
+  const [quizPath, setQuizPath] = useState('');
+  const [quizLabel, setQuizLabel] = useState('');
+  const [quizState, setQuizState] = useState(null);
+
+  const handleStartPractice = (e) => {
+    e.preventDefault();
+    const navObj = { pathname: '/smart-quiz-generator', state: {} };
+    if (currentUser) {
+      navigate(navObj.pathname, { state: navObj.state });
+    } else {
+      setQuizPath('/smart-quiz-generator');
+      setQuizLabel('Practice Test');
+      setQuizState(navObj);
+      setQuizAuthOpen(true);
+    }
+  };
+
   const [mathScore, setMathScore] = useState(500);
   const [readingWritingScore, setReadingWritingScore] = useState(500);
   const [totalScore, setTotalScore] = useState(1000);
@@ -482,13 +504,21 @@ function ScoreCalculator() {
           <h2>Ready to Improve Your Digital SAT Score?</h2>
           <p>Start your personalized Digital SAT prep journey with UltraSATPrep. Our adaptive platform mirrors the new test format and helps you master both sections efficiently.</p>
           <div className="cta-buttons">
-            <Link to="/smart-quiz" className="btn-primary">Start Practice Test</Link>
+            <Link to="#" onClick={handleStartPractice} className="btn-primary">Start Practice Test</Link>
             <Link to="/sat-guide" className="btn-secondary">SAT Study Guide</Link>
           </div>
         </section>
       </div>
+      {/* Auth Modal for starting practice */}
+      <QuizAuthModal
+        isOpen={quizAuthOpen}
+        onClose={() => setQuizAuthOpen(false)}
+        quizPath={quizPath}
+        quizLabel={quizLabel}
+        quizState={quizState}
+      />
     </div>
   );
 }
 
-export default ScoreCalculator; 
+export default ScoreCalculator;

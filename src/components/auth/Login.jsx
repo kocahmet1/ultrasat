@@ -19,6 +19,34 @@ function Login() {
       return;
     }
 
+    // Check if coming from Quiz gating
+    if (location.state?.from === 'quiz') {
+      // Prefer a navigation object if provided
+      const quizNavFromLocation = location.state?.quizNav;
+      let storedNavObj = null;
+      if (!quizNavFromLocation) {
+        const navStr = sessionStorage.getItem('intendedQuizNav');
+        if (navStr) {
+          try { storedNavObj = JSON.parse(navStr); } catch (e) { console.error('Failed to parse intendedQuizNav:', e); }
+        }
+      }
+
+      const navObj = quizNavFromLocation || storedNavObj;
+      if (navObj && navObj.pathname) {
+        sessionStorage.removeItem('intendedQuizNav');
+        sessionStorage.removeItem('intendedQuizPath');
+        navigate(navObj.pathname, { state: navObj.state });
+        return;
+      }
+
+      const quizPath = location.state?.quizPath || sessionStorage.getItem('intendedQuizPath');
+      if (quizPath) {
+        sessionStorage.removeItem('intendedQuizPath');
+        navigate(quizPath);
+        return;
+      }
+    }
+
     // Check if coming from Question Bank
     if (location.state?.from === 'questionBank') {
       const savedPreferences = sessionStorage.getItem('questionBankPreferences');

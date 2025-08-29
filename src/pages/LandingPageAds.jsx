@@ -3,15 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import QuestionBank from '../components/QuestionBank';
 import ExamAuthModal from '../components/ExamAuthModal';
-import QuizAuthModal from '../components/QuizAuthModal';
 import OptimizedImage from '../components/OptimizedImage';
 import UltraSATLogo from '../components/UltraSATLogo';
 import { getAllPracticeExams } from '../firebase/services';
 import { getRecentBlogPosts } from '../firebase/blogServices';
 import '../styles/LandingPage.css';
-import { FaBookOpen, FaPencilAlt, FaBullseye, FaRegCircle, FaChartLine } from 'react-icons/fa';
 
-const LandingPage = () => {
+const LandingPageAds = () => {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const particlesRef = useRef(null);
@@ -24,10 +22,6 @@ const LandingPage = () => {
   const [modalActionType, setModalActionType] = useState('start');
   const [practiceExams, setPracticeExams] = useState([]);
   const [recentBlogs, setRecentBlogs] = useState([]);
-  const [quizAuthOpen, setQuizAuthOpen] = useState(false);
-  const [quizPath, setQuizPath] = useState('');
-  const [quizLabel, setQuizLabel] = useState('');
-  const [quizState, setQuizState] = useState(null);
   
   // Fetch practice exams on component mount (only if user is authenticated)
   useEffect(() => {
@@ -217,21 +211,6 @@ const LandingPage = () => {
     setModalActionType('start');
   };
 
-  // Gated navigation for quiz tiles with navigation state
-  const handleQuizTileClick = (e, subcategoryId, label) => {
-    e.preventDefault();
-    const navObj = { pathname: '/smart-quiz-generator', state: { subcategoryId } };
-    if (currentUser) {
-      navigate(navObj.pathname, { state: navObj.state });
-    } else {
-      // Backward compatibility: keep a path too
-      setQuizPath('/smart-quiz-generator');
-      setQuizLabel(label);
-      setQuizState(navObj);
-      setQuizAuthOpen(true);
-    }
-  };
-
   return (
     <div className="landing-page">
       <div className="particles-bg" ref={particlesRef}></div>
@@ -289,6 +268,9 @@ const LandingPage = () => {
       <section className="hero-section-new">
         <div className="container">
           <div className="hero-content-center">
+            <div className="hero-badge-prominent">
+              <OptimizedImage src="/images/aihot.png" alt="AI is hot!" style={{height: '36px', width: 'auto', display: 'block'}} lazy={false} />
+            </div>
             <h1 className="hero-title-center">
               Boost Your SAT Score by <span className="score-highlight">200+ Points</span>
             </h1>
@@ -308,278 +290,87 @@ const LandingPage = () => {
                 <div className="stat-label">Questions</div>
               </div>
             </div>
+    </div>
+  </div>
+</section>
+
+      {/* Practice Banner Section - Symmetric Design */}
+      <section className="practice-banner-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Experience the Real Digital SAT</h2>
           </div>
-        </div>
-        
-      </section>
-
-    {/* Practice Banner Section - Symmetric Design */}
-    <section className="practice-banner-section">
-      <div className="container">
-        {/* Removed central header; adding individual column headers below */}
-        
-        <div className="practice-content-grid">
-          <div className="practice-exams-list">
-            <div className="column-header" style={{ marginBottom: '12px' }}>
-              <h3 style={{ margin: 0 }}>Take a Practice Test Now</h3>
-            </div>
-            <div className="exam-list-container">
-              <div className="exam-item">
-                <div className="exam-badge">Free</div>
-                <div className="exam-details">
-                  <h3>SAT Practice Test 1</h3>
-                  <p>Full-length • 4 Modules • 98 Questions</p>
+          
+          <div className="practice-content-grid">
+            <div className="practice-exams-list">
+              <div className="exam-list-container">
+                <div className="exam-item">
+                  <div className="exam-badge">Free</div>
+                  <div className="exam-details">
+                    <h3>SAT Practice Test 1</h3>
+                    <p>Full-length • 4 Modules • 98 Questions</p>
+                  </div>
+                  <button 
+                    className="exam-start-button first-test-pulsate"
+                    onClick={() => handleExamStart(0)}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
                 </div>
-                <button 
-                  className="exam-start-button first-test-pulsate"
-                  onClick={() => handleExamStart(0)}
-                >
-                  <span className="pulse-ring"></span>
-                  <span className="button-text">START</span>
-                </button>
-              </div>
-              
-              <div className="exam-item">
-                <div className="exam-badge">Free</div>
-                <div className="exam-details">
-                  <h3>SAT Practice Test 2</h3>
-                  <p>Full-length • 4 Modules • 98 Questions</p>
+                
+                <div className="exam-item">
+                  <div className="exam-badge">Free</div>
+                  <div className="exam-details">
+                    <h3>SAT Practice Test 2</h3>
+                    <p>Full-length • 4 Modules • 98 Questions</p>
+                  </div>
+                  <button 
+                    className="exam-start-button"
+                    onClick={() => handleExamStart(1)}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
                 </div>
-                <button 
-                  className="exam-start-button"
-                  onClick={() => handleExamStart(1)}
-                >
-                  <span className="pulse-ring"></span>
-                  <span className="button-text">START</span>
-                </button>
-              </div>
-              
-              <div className="exam-item">
-                <div className="exam-badge">Free</div>
-                <div className="exam-details">
-                  <h3>SAT Practice Test 3</h3>
-                  <p>Full-length • 4 Modules • 98 Questions</p>
+                
+                <div className="exam-item">
+                  <div className="exam-badge">Free</div>
+                  <div className="exam-details">
+                    <h3>SAT Practice Test 3</h3>
+                    <p>Full-length • 4 Modules • 98 Questions</p>
+                  </div>
+                  <button 
+                    className="exam-start-button"
+                    onClick={() => handleExamStart(2)}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
                 </div>
-                <button 
-                  className="exam-start-button"
-                  onClick={() => handleExamStart(2)}
-                >
-                  <span className="pulse-ring"></span>
-                  <span className="button-text">START</span>
-                </button>
-              </div>
-              
-              <div className="exam-item view-all-item">
-                <div className="exam-badge all-tests-badge">FREE</div>
-                <div className="exam-details">
-                  <h3>Predictive Test</h3>
-                  <p>Estimate your current SAT score in <span className="highlight-green">30 minutes</span></p>
+                
+                <div className="exam-item view-all-item">
+                  <div className="exam-badge all-tests-badge">FREE</div>
+                  <div className="exam-details">
+                    <h3>Predictive Test</h3>
+                    <p>Estimate your current SAT score in <span className="highlight-green">30 minutes</span></p>
+                  </div>
+                  <button 
+                    className="exam-start-button view-all-button"
+                    onClick={handlePredictiveTest}
+                  >
+                    <span className="pulse-ring"></span>
+                    <span className="button-text">START</span>
+                  </button>
                 </div>
-                <button 
-                  className="exam-start-button view-all-button"
-                  onClick={handlePredictiveTest}
-                >
-                  <span className="pulse-ring"></span>
-                  <span className="button-text">START</span>
-                </button>
               </div>
             </div>
-          </div>
-          <div className="practice-features-image">
-            <div className="right-column-inner" style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <div className="column-header" style={{ marginBottom: '12px' }}>
-                <h3 style={{ margin: 0 }}>Question Bank</h3>
-              </div>
-              <div className="smart-quiz-grid" style={{
-                position: 'relative',
-                width: '100%',
-                height: '400px',
-                background: 'linear-gradient(135deg, #F3F8FF 0%, #F5FFF9 100%)',
-                borderRadius: '20px',
-                border: '1px solid rgba(74, 144, 226, 0.15)',
-                backdropFilter: 'blur(8px)',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08), 0 0 40px rgba(95, 207, 127, 0.08)',
-                overflow: 'hidden'
-              }}>
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'vocabulary', 'Vocabulary')} style={{
-                  position: 'absolute',
-                  top: '20px',
-                  left: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaBookOpen size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Vocabulary</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Reading and Writing</span>
-                </Link>
-                
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'circles', 'Circles')} style={{
-                  position: 'absolute',
-                  top: '20px',
-                  right: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaRegCircle size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Circles</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Math</span>
-                </Link>
-                
-                <div style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '140px',
-                  height: '120px',
-                  background: 'linear-gradient(135deg, rgba(155, 89, 182, 0.10) 0%, rgba(155, 89, 182, 0.08) 100%)',
-                  border: '1px solid rgba(155, 89, 182, 0.25)',
-                  borderRadius: '16px',
-                  color: 'var(--dark-text)',
-                  cursor: 'default',
-                  zIndex: 2
-                }}>
-                  <FaBullseye size={40} style={{ marginBottom: '0.5rem', opacity: '0.7' }} />
-                  <span style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Coming Soon</span>
-                  <span style={{ fontSize: '0.8rem', color: '#5A6C7D', fontWeight: '500', textAlign: 'center' }}>AI Adaptive</span>
-                </div>
-                
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'boundaries', 'Boundaries')} style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '20px',
-                  transform: 'translateY(-50%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaPencilAlt size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Boundaries</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Reading and Writing</span>
-                </Link>
-                
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'linear-equations', 'Linear Equations')} style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '20px',
-                  transform: 'translateY(-50%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaChartLine size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Linear Equations</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Math</span>
-                </Link>
-
-                {/* New bottom-left CTA: Ten more quizzes */}
-                <Link to="/subject-quizzes" style={{
-                  position: 'absolute',
-                  bottom: '20px',
-                  left: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaBookOpen size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', textAlign: 'center' }}>8 more Reading and Writing quiz topics</span>
-                </Link>
-
-                {/* New bottom-right CTA: Ten more quizzes */}
-                <Link to="/subject-quizzes" style={{
-                  position: 'absolute',
-                  bottom: '20px',
-                  right: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaBookOpen size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', textAlign: 'center' }}>17 more Math quiz topics</span>
-                </Link>
-              </div>
+            
+            <div className="practice-features-image">
+              <img src="/images/newimage.png" alt="AI-Powered SAT Features" className="features-showcase-image" />
             </div>
           </div>
         </div>
-      </div>
       </section>
 
       {/* Question Bank Section */}
@@ -871,23 +662,15 @@ const LandingPage = () => {
         </div>
       </footer>
 
-      {/* Auth Modals */}
+      {/* Auth Modal */}
       <ExamAuthModal
         isOpen={authModalOpen}
         onClose={closeAuthModal}
         examId={modalExamId}
         actionType={modalActionType}
       />
-
-      <QuizAuthModal
-        isOpen={quizAuthOpen}
-        onClose={() => setQuizAuthOpen(false)}
-        quizPath={quizPath}
-        quizLabel={quizLabel}
-        quizState={quizState}
-      />
     </div>
   );
 };
 
-export default LandingPage;
+export default LandingPageAds;

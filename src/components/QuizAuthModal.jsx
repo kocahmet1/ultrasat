@@ -1,39 +1,51 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Modal.css';
 
-const ExamAuthModal = ({ 
-  isOpen, 
-  onClose, 
-  examId, // Can be either actual exam ID or exam number (1, 2, 3)
-  actionType = 'start' // 'start' or 'view'
-}) => {
+const QuizAuthModal = ({ isOpen, onClose, quizPath, quizLabel, quizState }) => {
   const navigate = useNavigate();
   const { signInWithGoogle } = useAuth();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    // Prefer storing full navigation object if provided
+    if (quizState && typeof quizState === 'object') {
+      try {
+        sessionStorage.setItem('intendedQuizNav', JSON.stringify(quizState));
+      } catch (e) {
+        console.warn('Failed to store intendedQuizNav, falling back to path:', e);
+      }
+    } else if (quizPath) {
+      sessionStorage.setItem('intendedQuizPath', quizPath);
+    }
+  }, [isOpen, quizState, quizPath]);
 
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      onClose();
-      
-      // Navigate based on action type
-      if (actionType === 'view') {
-        navigate('/practice-exams');
-      } else if (examId === 'predictive') {
-        // For predictive test, redirect to practice exams with diagnostic flag
-        navigate('/practice-exams', { 
-          state: { startDiagnostic: true } 
-        });
-      } else {
-        // For Google sign-in, we'll redirect to practice exams with exam number
-        // The practice exams page will handle starting the specific exam
-        navigate('/practice-exams', { 
-          state: { startExamNumber: examId } 
-        });
+      // Prefer object-based navigation if available
+      const navStr = sessionStorage.getItem('intendedQuizNav');
+      if (navStr) {
+        let navObj;
+        try {
+          navObj = JSON.parse(navStr);
+        } catch (e) {
+          console.error('Failed to parse intendedQuizNav:', e);
+        }
+        sessionStorage.removeItem('intendedQuizNav');
+        sessionStorage.removeItem('intendedQuizPath');
+        onClose();
+        if (navObj && navObj.pathname) {
+          navigate(navObj.pathname, { state: navObj.state });
+          return;
+        }
       }
+
+      const path = quizPath || sessionStorage.getItem('intendedQuizPath') || '/subject-quizzes';
+      sessionStorage.removeItem('intendedQuizPath');
+      onClose();
+      navigate(path);
     } catch (error) {
       console.error('Failed to sign in with Google:', error);
     }
@@ -41,24 +53,19 @@ const ExamAuthModal = ({
 
   const handleLogin = () => {
     onClose();
-    navigate('/login', { 
-      state: { 
-        from: 'exam',
-        examId: actionType === 'start' ? examId : null,
-        actionType: actionType
-      } 
-    });
+    // Pass along nav object if available
+    const navObj = quizState && typeof quizState === 'object' 
+      ? quizState 
+      : (quizPath ? { pathname: quizPath } : undefined);
+    navigate('/login', { state: { from: 'quiz', quizPath, quizNav: navObj } });
   };
 
   const handleSignup = () => {
     onClose();
-    navigate('/signup', { 
-      state: { 
-        from: 'exam',
-        examId: actionType === 'start' ? examId : null,
-        actionType: actionType
-      } 
-    });
+    const navObj = quizState && typeof quizState === 'object' 
+      ? quizState 
+      : (quizPath ? { pathname: quizPath } : undefined);
+    navigate('/signup', { state: { from: 'quiz', quizPath, quizNav: navObj } });
   };
 
   if (!isOpen) return null;
@@ -69,39 +76,19 @@ const ExamAuthModal = ({
     }
   };
 
-  const getModalText = () => {
-    if (actionType === 'view') {
-      return "Access to practice exams will begin as soon as you login.";
-    }
-    
-    // Handle predictive test
-    if (examId === 'predictive') {
-      return "The Predictive Test will start as soon as you login. Get your estimated SAT score in just 30 minutes!";
-    }
-    
-    // Check if examId is a number (exam number from landing page)
-    if (typeof examId === 'number' || (typeof examId === 'string' && /^\d+$/.test(examId))) {
-      return `SAT Practice Test ${examId} will start as soon as you login.`;
-    }
-    
-    return "The exam will start as soon as you login.";
-  };
-
   return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
       <div className="modal-container" style={{ maxWidth: '450px' }}>
         <div className="modal-header">
-          <h3>Login to Continue</h3>
-          <button className="modal-close-button" onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
+          <h3>Login to Start Quiz</h3>
+          <button className="modal-close-button" onClick={onClose}>×</button>
         </div>
         <div className="modal-content">
           <div className="exam-auth-modal-content">
             <p className="exam-auth-description">
-              {getModalText()}
+              {quizLabel ? `${quizLabel} quiz` : 'The quiz'} will start as soon as you login.
             </p>
-            
+
             <div className="google-signin-container" style={{ marginBottom: '20px' }}>
               <button
                 type="button"
@@ -160,10 +147,7 @@ const ExamAuthModal = ({
               }}></div>
             </div>
             
-            <div className="auth-buttons" style={{
-              display: 'flex',
-              gap: '12px'
-            }}>
+            <div className="auth-buttons" style={{ display: 'flex', gap: '12px' }}>
               <button 
                 onClick={handleLogin} 
                 className="login-button"
@@ -206,4 +190,4 @@ const ExamAuthModal = ({
   );
 };
 
-export default ExamAuthModal; 
+export default QuizAuthModal;

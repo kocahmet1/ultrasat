@@ -26,10 +26,13 @@ function ExamModule({
 }) {
   const navigate = useNavigate();
   // Always start from question 0 when a module loads
+  // Determine whether to show fullscreen modal for this module (only modules 1 and 3)
+  const moduleNumForModal = parseInt(moduleNumber, 10);
+  const shouldShowFullscreenPrompt = moduleNumForModal === 1 || moduleNumForModal === 3;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(Array.isArray(userAnswers) ? userAnswers[0] : (userAnswers[0] || ''));
   const [timeRemaining, setTimeRemaining] = useState(32 * 60); // 32 minutes
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(shouldShowFullscreenPrompt);
   const [timerRunning, setTimerRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [clockVisible, setClockVisible] = useState(true);
@@ -98,6 +101,11 @@ function ExamModule({
       setModuleAnimation('');  // Remove animation class after it completes
     }, 1000);
   }, [moduleNumber, questions]);
+
+  // Ensure modal visibility is recalculated when the module changes
+  useEffect(() => {
+    setIsModalOpen(shouldShowFullscreenPrompt);
+  }, [shouldShowFullscreenPrompt]);
 
   // Timer logic
   useEffect(() => {

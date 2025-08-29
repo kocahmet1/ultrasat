@@ -1,8 +1,30 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import QuizAuthModal from '../components/QuizAuthModal';
 import '../styles/SATGuide.css';
 
 function SATGuide() {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const [quizAuthOpen, setQuizAuthOpen] = useState(false);
+  const [quizPath, setQuizPath] = useState('');
+  const [quizLabel, setQuizLabel] = useState('');
+  const [quizState, setQuizState] = useState(null);
+
+  const handleStartDiagnostic = (e) => {
+    e.preventDefault();
+    const navObj = { pathname: '/smart-quiz-generator', state: {} };
+    if (currentUser) {
+      navigate(navObj.pathname, { state: navObj.state });
+    } else {
+      setQuizPath('/smart-quiz-generator');
+      setQuizLabel('Diagnostic Test');
+      setQuizState(navObj);
+      setQuizAuthOpen(true);
+    }
+  };
+
   return (
     <div className="sat-guide-page">
       <div className="sat-guide-container">
@@ -332,13 +354,21 @@ function SATGuide() {
             Start with our diagnostic test to identify your strengths and areas for improvement on the new Digital SAT.
           </p>
           <div className="cta-buttons">
-            <Link to="/smart-quiz" className="btn-primary">Take Diagnostic Test</Link>
+            <Link to="#" onClick={handleStartDiagnostic} className="btn-primary">Take Diagnostic Test</Link>
             <Link to="/score-calculator" className="btn-secondary">Try Digital SAT Score Calculator</Link>
           </div>
         </section>
       </div>
+      {/* Auth Modal for starting diagnostic */}
+      <QuizAuthModal
+        isOpen={quizAuthOpen}
+        onClose={() => setQuizAuthOpen(false)}
+        quizPath={quizPath}
+        quizLabel={quizLabel}
+        quizState={quizState}
+      />
     </div>
   );
 }
 
-export default SATGuide; 
+export default SATGuide;

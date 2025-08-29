@@ -6,7 +6,8 @@ import {
   onAuthStateChanged,
   updateProfile,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  sendEmailVerification
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { 
@@ -81,6 +82,21 @@ export function AuthProvider({ children }) {
       } catch (deckError) {
         console.error('Error creating default flashcard deck:', deckError);
         // Don't fail signup if deck creation fails - it's non-critical
+      }
+      
+      // Send email verification
+      try {
+        // Optional: set language
+        auth.languageCode = 'en';
+        const actionCodeSettings = {
+          url: `${window.location.origin}/verify-email`,
+          handleCodeInApp: false
+        };
+        await sendEmailVerification(userCredential.user, actionCodeSettings);
+        console.log('Verification email sent');
+      } catch (verifyErr) {
+        console.error('Failed to send verification email:', verifyErr);
+        // Do not block signup on email sending errors
       }
       
       return userCredential.user;

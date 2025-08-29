@@ -21,6 +21,9 @@
   --border-radius: 12px;
   --border-radius-sm: 8px;
   --max-width: 1200px;
+  /* Pastel tones for backgrounds */
+  --pastel-blue: #F3F8FF; /* very light blue */
+  --pastel-green: #F5FFF9; /* very light green */
 }
 
 * {
@@ -59,7 +62,7 @@ body {
   height: 100%;
   z-index: -1;
   overflow: hidden;
-  background: linear-gradient(180deg, var(--white) 0%, var(--light-gray) 100%);
+  background: linear-gradient(180deg, var(--pastel-blue) 0%, var(--pastel-green) 100%);
 }
 
 .particle {
@@ -111,6 +114,7 @@ body {
 
 .landing-logo {
   /* Landing page specific logo styling */
+  line-height: 1; /* avoid empty ruleset lint */
 }
 
 .main-nav ul {
@@ -330,7 +334,7 @@ body {
 /* Unified Counter Tool */
 .hero-stats-grid {
   display: flex;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--pastel-green) 100%);
   border-radius: 20px;
   padding: 0;
   margin-bottom: 0;
@@ -482,26 +486,29 @@ body {
 }
 
 .cta-button.primary {
-  background: var(--primary-green);
-  color: white;
-  box-shadow: 0 4px 15px rgba(95, 207, 127, 0.3);
+  background: linear-gradient(135deg, rgba(95, 207, 127, 0.15) 0%, rgba(74, 144, 226, 0.12) 100%);
+  color: var(--dark-text);
+  border: 1px solid rgba(95, 207, 127, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .cta-button.primary:hover {
-  background: var(--primary-green-dark);
+  background: linear-gradient(135deg, rgba(95, 207, 127, 0.22) 0%, rgba(74, 144, 226, 0.18) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(95, 207, 127, 0.4);
+  border-color: rgba(74, 144, 226, 0.35);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .cta-button.secondary {
-  background: white;
-  color: var(--primary-green);
-  border: 2px solid var(--primary-green);
+  background: #FFFFFF;
+  color: var(--dark-text);
+  border: 1px solid rgba(74, 144, 226, 0.35);
 }
 
 .cta-button.secondary:hover {
-  background: rgba(95, 207, 127, 0.1);
+  background: rgba(74, 144, 226, 0.06);
   transform: translateY(-2px);
+  border-color: rgba(74, 144, 226, 0.45);
 }
 
 .cta-button.large {
@@ -566,6 +573,15 @@ body {
 .practice-exams-list {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.practice-exams-list .column-header {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .exam-list-container {
@@ -893,10 +909,31 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 100%;
   max-width: 600px;
   margin: 32px auto;
   padding: 0 1rem;
+}
+
+.practice-features-image .column-header {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.column-header h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--dark-text);
+}
+
+@media (max-width: 768px) {
+  .column-header h3 {
+    font-size: 1.4rem;
+  }
 }
 
 .features-showcase-image {
@@ -1497,6 +1534,7 @@ body {
   margin-bottom: 1.5rem;
   flex: 1;
   display: -webkit-box;
+  line-clamp: 3; /* standard property for compatibility */
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;

@@ -9,6 +9,7 @@ import {
 // Only import critical components that are needed immediately
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
+import VerifyEmail from './pages/VerifyEmail';
 import PrivateRoute from './components/auth/PrivateRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { SubcategoryProvider } from './contexts/SubcategoryContext';
@@ -47,6 +48,7 @@ const PageLoadingSpinner = () => (
 // Lazy load all pages for code splitting
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const LandingPage = React.lazy(() => import('./pages/LandingPage'));
+const LandingPageAds = React.lazy(() => import('./pages/LandingPageAds'));
 const ExamLandingPage = React.lazy(() => import('./pages/ExamLandingPage'));
 const ExamController = React.lazy(() => import('./pages/ExamController'));
 const IntermissionController = React.lazy(() => import('./pages/IntermissionController'));
@@ -167,8 +169,10 @@ const router = createBrowserRouter([
     element: <LandingPageLayout />,
     children: [
       { path: '/', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPage /></Suspense> },
+      { path: '/landing_page', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPageAds /></Suspense> },
       { path: '/login', element: <Login /> },
       { path: '/signup', element: <Signup /> },
+      { path: '/verify-email', element: <VerifyEmail /> },
       { path: '/help', element: <Suspense fallback={<PageLoadingSpinner />}><HelpPage /></Suspense> },
       { path: '/auth-notice', element: <Suspense fallback={<PageLoadingSpinner />}><AuthNoticePage /></Suspense> },
       { path: '/privacy', element: <Suspense fallback={<PageLoadingSpinner />}><PrivacyPage /></Suspense> },

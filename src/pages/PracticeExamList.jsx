@@ -35,6 +35,17 @@ const PracticeExamList = () => {
         handleStartExam(exam, examIndex, false);
       }
     }
+    
+    // Auto-start diagnostic test if redirected from predictive test button
+    if (location.state?.startDiagnostic && practiceExams.length > 0) {
+      const diagnosticExam = practiceExams.find(exam => exam.isDiagnostic);
+      if (diagnosticExam) {
+        // Clear the state to prevent re-triggering
+        window.history.replaceState({}, document.title);
+        // Start the diagnostic exam
+        handleStartExam(diagnosticExam, 0, false);
+      }
+    }
   }, [practiceExams, location.state]);
 
   // Fetch practice exams that are marked as public

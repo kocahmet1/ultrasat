@@ -4,12 +4,18 @@ import { useAuth } from '../contexts/AuthContext';
 import AdminAccessButton from '../components/AdminAccessButton';
 import UltraSATLogo from '../components/UltraSATLogo';
 import '../styles/HomePage.css';
+import { FaBookOpen, FaPencilAlt, FaBullseye, FaRegCircle, FaChartLine } from 'react-icons/fa';
+import QuizAuthModal from '../components/QuizAuthModal';
 
 function HomePage() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const particlesRef = useRef(null);
   const [animatedScore, setAnimatedScore] = useState(0);
+  const [quizAuthOpen, setQuizAuthOpen] = useState(false);
+  const [quizPath, setQuizPath] = useState('');
+  const [quizLabel, setQuizLabel] = useState('');
+  const [quizState, setQuizState] = useState(null);
   
   useEffect(() => {
     // Create particle effect
@@ -75,6 +81,21 @@ function HomePage() {
       await logout();
     } catch (error) {
       console.error('Failed to log out', error);
+    }
+  };
+
+  // Gate quiz tile clicks for non-logged-in users and navigate with state
+  const handleQuizTileClick = (e, subcategoryId, label) => {
+    e.preventDefault();
+    const navObj = { pathname: '/smart-quiz-generator', state: { subcategoryId } };
+    if (currentUser) {
+      navigate(navObj.pathname, { state: navObj.state });
+    } else {
+      // Backward compat: also set a path, but prefer nav object in modal
+      setQuizPath('/smart-quiz-generator');
+      setQuizLabel(label);
+      setQuizState(navObj);
+      setQuizAuthOpen(true);
     }
   };
 
@@ -289,24 +310,140 @@ function HomePage() {
               )}
             </div>
             <div className="feature-visual">
-              <div className="quiz-demo">
-                <div className="quiz-header">
-                  <span className="quiz-subject">Algebra</span>
-                  <span className="quiz-level">Level: Intermediate</span>
+              <div className="smart-quiz-grid" style={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: '500px',
+                height: '400px',
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(17, 24, 39, 0.6) 50%, rgba(30, 41, 59, 0.8) 100%)',
+                borderRadius: '20px',
+                border: '1px solid rgba(75, 85, 99, 0.3)',
+                backdropFilter: 'blur(20px)',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 60px rgba(37, 99, 235, 0.1)',
+                overflow: 'hidden'
+              }}>
+                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'vocabulary', 'Vocabulary')} className="quiz-link top-left" style={{
+                  position: 'absolute',
+                  top: '20px',
+                  left: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '120px',
+                  height: '100px',
+                  background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)',
+                  border: '1px solid rgba(37, 99, 235, 0.3)',
+                  borderRadius: '16px',
+                  textDecoration: 'none',
+                  color: '#f8fafc',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  backdropFilter: 'blur(10px)',
+                  cursor: 'pointer',
+                  zIndex: 2
+                }}>
+                  <FaBookOpen size={32} style={{ marginBottom: '0.5rem' }} />
+                  <span className="quiz-title" style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Vocabulary</span>
+                  <span className="quiz-subtitle" style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Word Power</span>
+                </Link>
+                
+                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'circles', 'Circles')} className="quiz-link top-right" style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '120px',
+                  height: '100px',
+                  background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)',
+                  border: '1px solid rgba(37, 99, 235, 0.3)',
+                  borderRadius: '16px',
+                  textDecoration: 'none',
+                  color: '#f8fafc',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  backdropFilter: 'blur(10px)',
+                  cursor: 'pointer',
+                  zIndex: 2
+                }}>
+                  <FaRegCircle size={32} style={{ marginBottom: '0.5rem' }} />
+                  <span className="quiz-title" style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Circles</span>
+                  <span className="quiz-subtitle" style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Geometry</span>
+                </Link>
+                
+                <div className="quiz-link center-placeholder" style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '140px',
+                  height: '120px',
+                  background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)',
+                  border: '1px solid rgba(139, 92, 246, 0.4)',
+                  borderRadius: '16px',
+                  color: '#f8fafc',
+                  cursor: 'default',
+                  zIndex: 2
+                }}>
+                  <FaBullseye size={40} style={{ marginBottom: '0.5rem', opacity: '0.7' }} />
+                  <span className="quiz-title" style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Coming Soon</span>
+                  <span className="quiz-subtitle" style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>AI Adaptive</span>
                 </div>
-                <div className="quiz-progress">
-                  <div className="progress-dots">
-                    <div className="dot completed"></div>
-                    <div className="dot completed"></div>
-                    <div className="dot current"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                  </div>
-                  <span>Question 3 of 5</span>
-                </div>
-                <div className="quiz-feedback">
-                  <div className="feedback-positive">✅ Correct! Moving to harder questions...</div>
-                </div>
+                
+                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'boundaries', 'Boundaries')} className="quiz-link bottom-left" style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  left: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '120px',
+                  height: '100px',
+                  background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)',
+                  border: '1px solid rgba(37, 99, 235, 0.3)',
+                  borderRadius: '16px',
+                  textDecoration: 'none',
+                  color: '#f8fafc',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  backdropFilter: 'blur(10px)',
+                  cursor: 'pointer',
+                  zIndex: 2
+                }}>
+                  <FaPencilAlt size={32} style={{ marginBottom: '0.5rem' }} />
+                  <span className="quiz-title" style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Boundaries</span>
+                  <span className="quiz-subtitle" style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Writing</span>
+                </Link>
+                
+                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'linear-equations', 'Linear Equations')} className="quiz-link bottom-right" style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  right: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '120px',
+                  height: '100px',
+                  background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)',
+                  border: '1px solid rgba(37, 99, 235, 0.3)',
+                  borderRadius: '16px',
+                  textDecoration: 'none',
+                  color: '#f8fafc',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  backdropFilter: 'blur(10px)',
+                  cursor: 'pointer',
+                  zIndex: 2
+                }}>
+                  <FaChartLine size={32} style={{ marginBottom: '0.5rem' }} />
+                  <span className="quiz-title" style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Linear Equations</span>
+                  <span className="quiz-subtitle" style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Algebra</span>
+                </Link>
               </div>
             </div>
           </div>
@@ -410,6 +547,15 @@ function HomePage() {
       
       {/* Admin Access Utility - only visible when logged in */}
       {currentUser && <AdminAccessButton />}
+
+      {/* Quiz Auth Modal for gated quiz tiles */}
+      <QuizAuthModal
+        isOpen={quizAuthOpen}
+        onClose={() => setQuizAuthOpen(false)}
+        quizPath={quizPath}
+        quizLabel={quizLabel}
+        quizState={quizState}
+      />
       
       <footer className="home-footer">
         <div className="footer-content">
