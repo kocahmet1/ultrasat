@@ -51,6 +51,12 @@ service cloud.firestore {
         }
       }
       
+      // Allow users to read/write their own in-progress exam progress
+      match /examProgress/{practiceExamId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+      
       // Allow users to read/write their own word bank collection
       match /wordBank/{wordId} {
         allow read: if isSignedIn() && (isOwner(userId) || isAdmin());

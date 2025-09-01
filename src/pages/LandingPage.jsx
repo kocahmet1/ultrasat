@@ -199,10 +199,8 @@ const LandingPage = () => {
 
   const handlePredictiveTest = () => {
     if (currentUser) {
-      // User is logged in, navigate to practice exams and look for diagnostic test
-      navigate('/practice-exams', { 
-        state: { startDiagnostic: true } 
-      });
+      // User is logged in, navigate to the dedicated Predictive Exam page
+      navigate('/predictive-exam');
     } else {
       // User not logged in, show auth modal for predictive test
       setModalExamId('predictive');

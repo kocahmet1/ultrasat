@@ -15,7 +15,7 @@ import '../styles/Quiz.css';
 /**
  * Quiz component - displays a 10-question multiple choice quiz for a flashcard deck
  */
-export default function Quiz({ deckId, deckName, onClose, allWords = [] }) {
+export default function Quiz({ deckId, deckName, onClose, allWords = [], providedWords = [] }) {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -28,15 +28,23 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [] }) {
 
   useEffect(() => {
     generateQuiz();
-  }, [deckId]);
+  }, [deckId, providedWords]);
 
   const generateQuiz = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Get words from the specific deck
-      const deckWords = await getFlashcardDeckWords(deckId);
+      // Get words either from providedWords (guest flow) or from the specific deck (authenticated flow)
+      let deckWords = [];
+      if (providedWords && providedWords.length > 0) {
+        deckWords = providedWords;
+      } else if (deckId) {
+        deckWords = await getFlashcardDeckWords(deckId);
+      } else {
+        setError('No deck or words provided for the quiz.');
+        return;
+      }
       
       if (deckWords.length < 4) {
         setError('This deck needs at least 4 words to generate a quiz.');

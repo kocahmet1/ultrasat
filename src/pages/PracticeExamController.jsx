@@ -20,7 +20,13 @@ const PracticeExamController = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser, saveComprehensiveExamResult } = useAuth();
+  const { 
+    currentUser, 
+    saveComprehensiveExamResult,
+    saveOrUpdateExamProgress,
+    getExamProgress,
+    clearExamProgress
+  } = useAuth();
   const { setForceSidebarCollapsed, setSidebarHidden } = useSidebar();
   
   const [exam, setExam] = useState(null);
@@ -29,6 +35,7 @@ const PracticeExamController = () => {
   const [moduleResponses, setModuleResponses] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [savedProgress, setSavedProgress] = useState(null);
   
   // Track if the exam is in progress or completed
   const [examStatus, setExamStatus] = useState('loading'); // loading, intro, in-progress, intermission, completed
@@ -81,6 +88,31 @@ const PracticeExamController = () => {
           };
         });
         setModuleResponses(initialResponses);
+
+        // Attempt to load saved progress for this exam
+        let loadedProgress = null;
+        try {
+          loadedProgress = await getExamProgress(examId);
+        } catch (e) {
+          console.warn('Failed to load saved progress:', e);
+        }
+        if (loadedProgress) {
+          setSavedProgress(loadedProgress);
+          // Merge any saved module responses
+          if (loadedProgress.moduleResponses && typeof loadedProgress.moduleResponses === 'object') {
+            setModuleResponses(prev => ({ ...prev, ...loadedProgress.moduleResponses }));
+          }
+          // If user is resuming explicitly, jump straight into in-progress
+          if (location.state?.resume === true) {
+            setCurrentModuleIndex(
+              typeof loadedProgress.currentModuleIndex === 'number' ? loadedProgress.currentModuleIndex : 0
+            );
+            setExamStatus('in-progress');
+            setSidebarHidden(true);
+            setIsLoading(false);
+            return;
+          }
+        }
         
         setIsLoading(false);
         if (location.state?.startExam) {
@@ -109,7 +141,29 @@ const PracticeExamController = () => {
   }, [setForceSidebarCollapsed]);
   
   // Handle starting the exam
-  const handleStartExam = () => {
+  const handleStartExam = async () => {
+    // If there is saved progress, clear it (start over)
+    try {
+      if (savedProgress) {
+        await clearExamProgress(examId);
+        setSavedProgress(null);
+      }
+    } catch (e) {
+      console.warn('Failed to clear saved progress on start over:', e);
+    }
+
+    // Reset module responses to empty
+    const resetResponses = {};
+    modules.forEach(module => {
+      resetResponses[module.id] = {
+        answers: {},
+        crossedOut: {},
+        completionTime: 0,
+        moduleId: module.id
+      };
+    });
+    setModuleResponses(resetResponses);
+
     setExamStatus('in-progress');
     setCurrentModuleIndex(0);
     // Hide sidebar completely during exam
@@ -334,6 +388,24 @@ const PracticeExamController = () => {
         console.error('PracticeExamController: Error processing module results for subcategory progress update:', error);
         // Don't let progress tracking errors block the exam flow
       }
+    }
+
+    // Persist latest progress snapshot after finishing a module
+    try {
+      if (currentUser && saveOrUpdateExamProgress && exam) {
+        const modulesMeta = modules.map(m => ({ id: m.id, title: m.title, moduleNumber: m.moduleNumber, calculatorAllowed: m.calculatorAllowed }));
+        await saveOrUpdateExamProgress({
+          practiceExamId: examId,
+          examTitle: exam.title,
+          currentModuleIndex,
+          currentQuestionIndex: 0,
+          currentModuleTimeRemaining: modules[currentModuleIndex]?.timeLimit || 1920,
+          moduleResponses: updatedModuleResponses,
+          modulesMeta
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to auto-save module completion progress:', e);
     }
 
     // Move to the next module, show intermission, or complete the exam
@@ -608,6 +680,8 @@ const PracticeExamController = () => {
         console.log('Saving practice exam result to Firestore');
         const savedExam = await saveComprehensiveExamResult(examSummary, allResponses);
         console.log('Practice exam saved with ID:', savedExam.id);
+        // Clear any in-progress saved state now that exam is complete
+        try { await clearExamProgress(examId); } catch (e) { console.warn('Failed to clear saved progress:', e); }
         
         // Navigate to results with the new exam ID
         navigate(`/exam/results/${savedExam.id}`, {
@@ -622,6 +696,38 @@ const PracticeExamController = () => {
     
     // Fallback: Navigate to generic results page (old method)
     navigate('/exam/results');
+  };
+
+  // Save progress callback to pass into ExamModule (called on exit)
+  const handleSaveProgress = async ({ moduleNumber, answers, crossedOut, currentQuestionIndex, timeRemaining }) => {
+    const currentModule = modules[currentModuleIndex];
+    if (!currentModule) return;
+
+    // Build updated moduleResponses snapshot
+    const finalModuleId = currentModule.id;
+    const updatedForModule = {
+      ...moduleResponses[finalModuleId],
+      answers,
+      crossedOut,
+      moduleId: finalModuleId,
+      moduleNumber: currentModule.moduleNumber,
+      title: currentModule.title,
+      questions: currentModule.questions || []
+    };
+    const updatedAll = { ...moduleResponses, [finalModuleId]: updatedForModule };
+    setModuleResponses(updatedAll);
+
+    if (!currentUser || !saveOrUpdateExamProgress) return;
+    const modulesMeta = modules.map(m => ({ id: m.id, title: m.title, moduleNumber: m.moduleNumber, calculatorAllowed: m.calculatorAllowed }));
+    await saveOrUpdateExamProgress({
+      practiceExamId: examId,
+      examTitle: exam?.title || null,
+      currentModuleIndex,
+      currentQuestionIndex: typeof currentQuestionIndex === 'number' ? currentQuestionIndex : 0,
+      currentModuleTimeRemaining: typeof timeRemaining === 'number' ? timeRemaining : undefined,
+      moduleResponses: updatedAll,
+      modulesMeta
+    });
   };
   
   // Handle going back to exam list
@@ -743,12 +849,34 @@ const PracticeExamController = () => {
             >
               Back to Exam List
             </button>
-            <button 
-              className="primary-button"
-              onClick={handleStartExam}
-            >
-              Start Exam
-            </button>
+            {savedProgress ? (
+              <>
+                <button 
+                  className="primary-button"
+                  onClick={() => {
+                    setCurrentModuleIndex(savedProgress.currentModuleIndex || 0);
+                    setExamStatus('in-progress');
+                    setSidebarHidden(true);
+                  }}
+                >
+                  Resume Exam
+                </button>
+                <button 
+                  className="tertiary-button"
+                  onClick={handleStartExam}
+                  style={{ marginLeft: 8 }}
+                >
+                  Start Over
+                </button>
+              </>
+            ) : (
+              <button 
+                className="primary-button"
+                onClick={handleStartExam}
+              >
+                Start Exam
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -781,6 +909,14 @@ const PracticeExamController = () => {
     
     console.log(`PracticeExamController: Rendering module at index ${currentModuleIndex}: ${currentModule.title} (moduleNumber: ${currentModule.moduleNumber})`);
     
+    // Determine resume parameters (only apply when resuming the saved module)
+    const initialQuestionIndex = (savedProgress && (savedProgress.currentModuleIndex === currentModuleIndex)) 
+      ? (savedProgress.currentQuestionIndex || 0) 
+      : 0;
+    const initialTimeRemaining = (savedProgress && (savedProgress.currentModuleIndex === currentModuleIndex))
+      ? (savedProgress.currentModuleTimeRemaining || (currentModule.timeLimit || 1920))
+      : (currentModule.timeLimit || 1920);
+
     return (
       <div className="practice-exam-controller module-state">
         <ExamModule
@@ -791,6 +927,9 @@ const PracticeExamController = () => {
           crossedOut={moduleResponses[currentModule.id]?.crossedOut || {}}
           onModuleComplete={handleModuleComplete}
           calculatorAllowed={currentModule.calculatorAllowed}
+          initialQuestionIndex={initialQuestionIndex}
+          initialTimeRemaining={initialTimeRemaining}
+          onSaveProgress={handleSaveProgress}
         />
       </div>
     );

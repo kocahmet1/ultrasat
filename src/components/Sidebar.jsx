@@ -22,7 +22,8 @@ import {
   FaBookReader,        // Lectures
   FaQuestionCircle,     // Help
   FaSignInAlt,         // Login
-  FaHome               // Home icon for collapsed sidebar
+  FaHome,              // Home icon for collapsed sidebar
+  FaBullseye
 } from 'react-icons/fa';
 
 const Sidebar = () => {
@@ -35,6 +36,7 @@ const Sidebar = () => {
 
   const baseNavItems = [
     { path: '/progress', icon: <FaChartBar />, label: 'My Progress' },
+    { path: '/predictive-exam', icon: <FaBullseye />, label: 'Predictive Exam' },
     { path: '/practice-exams', icon: <FaClipboardList />, label: 'Practice Exams' },
     { path: '/subject-quizzes', icon: <FaGraduationCap />, label: 'Question Bank' },
     { path: '/word-bank', icon: <FaBook />, label: 'Word Bank' },

@@ -22,16 +22,19 @@ function ExamModule({
   userAnswers, 
   crossedOut, 
   onModuleComplete,
-  calculatorAllowed = false
+  calculatorAllowed = false,
+  initialQuestionIndex = 0,
+  initialTimeRemaining = 32 * 60,
+  onSaveProgress
 }) {
   const navigate = useNavigate();
   // Always start from question 0 when a module loads
   // Determine whether to show fullscreen modal for this module (only modules 1 and 3)
   const moduleNumForModal = parseInt(moduleNumber, 10);
   const shouldShowFullscreenPrompt = moduleNumForModal === 1 || moduleNumForModal === 3;
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(initialQuestionIndex || 0);
   const [selectedAnswer, setSelectedAnswer] = useState(Array.isArray(userAnswers) ? userAnswers[0] : (userAnswers[0] || ''));
-  const [timeRemaining, setTimeRemaining] = useState(32 * 60); // 32 minutes
+  const [timeRemaining, setTimeRemaining] = useState(initialTimeRemaining || 32 * 60); // allow resume
   const [isModalOpen, setIsModalOpen] = useState(shouldShowFullscreenPrompt);
   const [timerRunning, setTimerRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -40,7 +43,11 @@ function ExamModule({
   const [localCrossedOut, setLocalCrossedOut] = useState(crossedOut || {});
   const [isTrackerOpen, setIsTrackerOpen] = useState(false);
   // Handle both array and object answer formats
-  const [updatedAnswers, setUpdatedAnswers] = useState(Array.isArray(userAnswers) ? [...userAnswers] : {});
+  const [updatedAnswers, setUpdatedAnswers] = useState(
+    Array.isArray(userAnswers)
+      ? [...userAnswers]
+      : (userAnswers && typeof userAnswers === 'object' ? { ...userAnswers } : {})
+  );
   const [markedForReview, setMarkedForReview] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
@@ -87,10 +94,14 @@ function ExamModule({
     setEnrichedQuestions(enrichedWithIds);
     
     
-    // Reset to first question when module loads
-    setCurrentQuestion(0);
-    if (userAnswers && userAnswers[0]) {
-      setSelectedAnswer(userAnswers[0]);
+    // Reset to initial question when module loads (supports resume)
+    const initIndex = initialQuestionIndex || 0;
+    setCurrentQuestion(initIndex);
+    if (userAnswers) {
+      const initialAns = Array.isArray(userAnswers)
+        ? userAnswers[initIndex]
+        : userAnswers[initIndex];
+      setSelectedAnswer(initialAns || '');
     } else {
       setSelectedAnswer('');
     }
@@ -106,6 +117,22 @@ function ExamModule({
   useEffect(() => {
     setIsModalOpen(shouldShowFullscreenPrompt);
   }, [shouldShowFullscreenPrompt]);
+
+  // Sync updatedAnswers when userAnswers prop changes (e.g., resume from saved progress)
+  useEffect(() => {
+    if (Array.isArray(userAnswers)) {
+      setUpdatedAnswers([...userAnswers]);
+    } else if (userAnswers && typeof userAnswers === 'object') {
+      setUpdatedAnswers({ ...userAnswers });
+    } else {
+      setUpdatedAnswers({});
+    }
+  }, [userAnswers]);
+
+  // Sync crossed-out state when prop changes (e.g., resume from saved progress)
+  useEffect(() => {
+    setLocalCrossedOut(crossedOut || {});
+  }, [crossedOut]);
 
   // Timer logic
   useEffect(() => {
@@ -373,7 +400,9 @@ function ExamModule({
   };
 
   const handleExitExamClick = () => {
+    // Open exit confirmation and pause timer to avoid navigation blocker
     setIsExitModalOpen(true);
+    setTimerRunning(false);
   };
 
   const handleCloseExitModal = () => {
@@ -381,12 +410,43 @@ function ExamModule({
     if (blocker.state === 'blocked') {
       blocker.reset();
     }
+    // Resume timer if user cancels exit
+    setTimerRunning(true);
   };
 
-  const handleConfirmExit = () => {
+  const handleConfirmExit = async () => {
     // Exit fullscreen if currently in fullscreen mode
     if (document.fullscreenElement && document.exitFullscreen) {
       document.exitFullscreen();
+    }
+    // Ensure blocker is disabled before navigating
+    setTimerRunning(false);
+
+    // Persist current progress if handler is provided
+    try {
+      if (typeof onSaveProgress === 'function') {
+        // Snapshot current answers including current selection
+        let finalAnswers;
+        if (Array.isArray(updatedAnswers)) {
+          const newAnswers = [...updatedAnswers];
+          newAnswers[currentQuestion] = selectedAnswer;
+          finalAnswers = newAnswers;
+        } else {
+          finalAnswers = {
+            ...updatedAnswers,
+            [currentQuestion]: selectedAnswer
+          };
+        }
+        await onSaveProgress({
+          moduleNumber: parseInt(moduleNumber, 10),
+          answers: finalAnswers,
+          crossedOut: localCrossedOut,
+          currentQuestionIndex: currentQuestion,
+          timeRemaining
+        });
+      }
+    } catch (e) {
+      console.error('Failed to save progress on exit:', e);
     }
     if (blocker.state === 'blocked') {
       blocker.proceed();
@@ -425,7 +485,7 @@ function ExamModule({
         onClose={handleCloseExitModal}
         onConfirm={handleConfirmExit}
         title="Exit Exam?"
-        message="Are you sure you want to leave the exam? Your progress in this module will not be saved."
+        message="Are you sure you want to leave the exam? Your progress will be saved and you can resume later."
       />
 
       <ReportQuestionModal

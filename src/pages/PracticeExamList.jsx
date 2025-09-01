@@ -7,11 +7,12 @@ import '../styles/Sidebar.css'; // for .pro-badge style
 import UpgradeModal from '../components/UpgradeModal';
 
 const PracticeExamList = () => {
-  const { currentUser, userMembership } = useAuth();
+  const { currentUser, userMembership, getInProgressExams } = useAuth();
   const [practiceExams, setPracticeExams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [inProgressExams, setInProgressExams] = useState([]);
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,6 +21,24 @@ const PracticeExamList = () => {
   useEffect(() => {
     fetchPracticeExams();
   }, []);
+
+  // Fetch in-progress exams for current user
+  useEffect(() => {
+    const fetchInProgress = async () => {
+      if (!currentUser || !getInProgressExams) {
+        setInProgressExams([]);
+        return;
+      }
+      try {
+        const items = await getInProgressExams();
+        setInProgressExams(items || []);
+      } catch (e) {
+        // Non-blocking
+        setInProgressExams([]);
+      }
+    };
+    fetchInProgress();
+  }, [currentUser]);
 
   // Auto-start exam if redirected from authentication
   useEffect(() => {
@@ -33,17 +52,6 @@ const PracticeExamList = () => {
         window.history.replaceState({}, document.title);
         // Start the exam
         handleStartExam(exam, examIndex, false);
-      }
-    }
-    
-    // Auto-start diagnostic test if redirected from predictive test button
-    if (location.state?.startDiagnostic && practiceExams.length > 0) {
-      const diagnosticExam = practiceExams.find(exam => exam.isDiagnostic);
-      if (diagnosticExam) {
-        // Clear the state to prevent re-triggering
-        window.history.replaceState({}, document.title);
-        // Start the diagnostic exam
-        handleStartExam(diagnosticExam, 0, false);
       }
     }
   }, [practiceExams, location.state]);
@@ -72,6 +80,12 @@ const PracticeExamList = () => {
     }
   };
 
+  // Handle continue saved exam
+  const handleContinueExam = (progress) => {
+    if (!progress || !progress.practiceExamId) return;
+    navigate('/practice-exam/' + progress.practiceExamId, { state: { resume: true } });
+  };
+
   // Handle start practice exam
   const handleStartExam = (exam, idx, isPro) => {
     if (!exam) return;
@@ -95,43 +109,35 @@ const PracticeExamList = () => {
       <div className="practice-exam-list-page">
         <div className="page-container">
           {error && <div className="error-message">{error}</div>}
+
           <div className="exam-selection-container">
-            {/* Diagnostic Exams Section */}
+          {currentUser && inProgressExams && inProgressExams.length > 0 && (
             <div className="exam-list-section">
-              <h2>Quick Diagnostic Tests</h2>
-              <p className="section-description">Short 27-question tests to assess your current level (15 R&W + 12 Math)</p>
-              {isLoading && !practiceExams.length ? (
-                <div className="loading-spinner">
-                  <div className="spinner"></div>
-                  <p>Loading diagnostic exams...</p>
-                </div>
-              ) : practiceExams.length > 0 ? (
-                <div className="exam-cards">
-                  {practiceExams.filter(exam => exam.isDiagnostic).map((exam, idx) => {
-                    // Diagnostic exams are always free
-                    return (
-                      <div 
-                        key={exam.id}
-                        className="exam-card diagnostic-exam-card"
-                        onClick={() => handleStartExam(exam, idx, false)}
-                      >
-                        <div className="exam-title-row">
-                          <span className="exam-title-text">{exam.title}</span>
-                          <span className="exam-duration">~30 min</span>
-                        </div>
-                        <div className="exam-description">
-                          <small>{exam.description}</small>
-                        </div>
+              <h2>Continue Where You Left Off</h2>
+              <div className="exam-cards">
+                {inProgressExams.map((p) => {
+                  const updatedAt = p.updatedAt?.toDate ? p.updatedAt.toDate() : (p.updatedAt?.seconds ? new Date(p.updatedAt.seconds * 1000) : null);
+                  const subtitle = `Module ${typeof p.currentModuleIndex === 'number' ? (p.currentModuleIndex + 1) : 1}, Question ${typeof p.currentQuestionIndex === 'number' ? (p.currentQuestionIndex + 1) : 1}`;
+                  return (
+                    <div 
+                      key={p.practiceExamId}
+                      className="exam-card"
+                      onClick={() => handleContinueExam(p)}
+                    >
+                      <div className="exam-title-row">
+                        <span className="exam-title-text">{p.examTitle || 'Practice Exam'}</span>
+                        <span className="exam-duration">Continue</span>
                       </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="no-exams-message">
-                  <p>No diagnostic exams are currently available.</p>
-                </div>
-              )}
+                      <div className="exam-description">
+                        <small>{subtitle}{updatedAt ? ` • Saved ${updatedAt.toLocaleString()}` : ''}</small>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
+          )}
+            {/* Predictive/diagnostic exams have been moved to /predictive-exam */}
 
             {/* Full-Length Exams Section */}
             <div className="exam-list-section">

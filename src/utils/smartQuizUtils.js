@@ -22,7 +22,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { getQuestionsBySubcategory } from '../firebase/services';
+import { getQuestionsBySubcategory, getQuestionsByIds } from '../firebase/services';
 import {
   getSubcategoryProgress,
   updateSubcategoryProgress,
@@ -135,6 +135,105 @@ async function getQuizQuestions(subcategoryId, level, excludeIds = []) {
   }
   return sampleN(filtered, QUESTIONS_PER_QUIZ);
 }
+
+/**
+ * Create a Meta SmartQuiz that mixes questions from multiple subcategories.
+ *
+ * @param {string} userId
+ * @param {string[]} subcategoryIds - Array of subcategory identifiers (any format)
+ * @param {number} level - 1,2,3 (maps to easy/medium/hard)
+ * @param {number} questionCount - desired number of questions
+ * @returns {Promise<string>} quizId
+ */
+export const createMetaSmartQuiz = async (
+  userId,
+  subcategoryIds,
+  level,
+  questionCount = QUESTIONS_PER_QUIZ,
+) => {
+  return quizQueue.add(async () => {
+    return monitoredOperation(async (uid, subcats, lvl, qCount) => {
+      const normalizedSubcats = (subcats || [])
+        .map((s) => getKebabCaseFromAnyFormat(s))
+        .filter(Boolean);
+      if (!uid || normalizedSubcats.length === 0) {
+        throw new Error('Meta quiz requires a user and at least one subcategory');
+      }
+
+      const difficulty = DIFFICULTY_FOR_LEVEL[lvl] || 'easy';
+
+      // Collect asked questions across all selected subcategories to avoid repeats
+      const askedUnion = new Set();
+      for (const sc of normalizedSubcats) {
+        try {
+          const prog = await getSubcategoryProgress(uid, sc);
+          (prog?.askedQuestions || []).forEach((id) => askedUnion.add(id));
+        } catch (e) {
+          console.warn(`[createMetaSmartQuiz] Failed to get progress for ${sc}:`, e?.message);
+        }
+      }
+
+      // Fetch candidate questions from each subcategory, respecting difficulty with fallback
+      let pool = [];
+      for (const sc of normalizedSubcats) {
+        let items = await getQuestionsBySubcategory(sc, difficulty, 60);
+        if (items.length === 0) {
+          items = await getQuestionsBySubcategory(sc, null, 60);
+        }
+        pool.push(...items);
+      }
+
+      // Deduplicate and filter out already asked
+      const seen = new Set();
+      const filteredPool = [];
+      for (const q of pool) {
+        if (!q?.id) continue;
+        if (seen.has(q.id)) continue;
+        seen.add(q.id);
+        if (!askedUnion.has(q.id)) filteredPool.push(q);
+      }
+
+      // If not enough, allow asked ones (still unique)
+      let finalPool = filteredPool;
+      if (finalPool.length < qCount) {
+        // Add back some asked ones to reach desired count
+        const askedBack = pool.filter((q) => q?.id && askedUnion.has(q.id) && !seen.has(`${q.id}-readd`));
+        // Avoid duplicates with finalPool
+        const existing = new Set(finalPool.map((x) => x.id));
+        for (const q of askedBack) {
+          if (!existing.has(q.id)) finalPool.push(q);
+          if (finalPool.length >= qCount) break;
+        }
+      }
+
+      const countToUse = Math.max(1, Math.min(qCount, finalPool.length));
+      const selected = sampleN(finalPool, countToUse);
+
+      if (selected.length === 0) {
+        const levelName = DIFFICULTY_FOR_LEVEL[lvl] || 'this level';
+        throw new Error(`No questions available for the selected skills at ${levelName} difficulty.`);
+      }
+
+      const quizData = {
+        userId: uid,
+        meta: true,
+        metaSubcategoryIds: normalizedSubcats,
+        level: lvl,
+        questionIds: selected.map((q) => q.id),
+        questionCount: selected.length,
+        currentQuestionIndex: 0,
+        score: 0,
+        status: 'created',
+        createdAt: serverTimestamp(),
+      };
+
+      const ref = await addDoc(collection(db, SMARTQUIZ_COLLECTION), quizData);
+      const newQuizId = ref.id;
+      console.log(`Created Meta SmartQuiz ${newQuizId}: ${selected.length} questions across ${normalizedSubcats.length} subcategories.`);
+      return newQuizId;
+    }, 'createMetaSmartQuiz')(userId, subcategoryIds, level, questionCount);
+  });
+};
 
 /**
  * Create and persist a SmartQuiz document. Returns the new quizId.
@@ -289,6 +388,7 @@ export const recordSmartQuizResult = async (quizId, answers) => {
   if (!snap.exists()) throw new Error('Quiz not found');
 
   const quiz = snap.data();
+  const isMetaQuiz = !!quiz.meta || (Array.isArray(quiz.metaSubcategoryIds) && quiz.metaSubcategoryIds.length > 0);
   
   // Handle both new format (questionIds) and legacy format (questions)
   let questionIds;
@@ -354,50 +454,108 @@ export const recordSmartQuizResult = async (quizId, answers) => {
     }
   }
 
-  // Persist progress update with question results for tracking missed questions
-  await updateSubcategoryProgress(
-    quiz.userId,
-    quiz.subcategoryId,
-    progressionLevel,
-    scorePct,
-    progressionPassed,
-    questionIds,
-    { correct, total: questionIds.length },
-    questionResults  // Add the question results to track missed questions
-  );
+  // Persist progress update(s) with question results for tracking missed questions
+  if (!isMetaQuiz) {
+    await updateSubcategoryProgress(
+      quiz.userId,
+      quiz.subcategoryId,
+      progressionLevel,
+      scorePct,
+      progressionPassed,
+      questionIds,
+      { correct, total: questionIds.length },
+      questionResults
+    );
+  } else {
+    // For meta quizzes, update progress per subcategory based on the questions asked
+    try {
+      const details = await getQuestionsByIds(questionIds);
+      const subcatMap = {}; // id -> normalized subcategory
+      details.forEach((q) => {
+        const sc = getKebabCaseFromAnyFormat(q?.subcategory || q?.subcategoryId || '');
+        if (q?.id && sc) subcatMap[q.id] = sc;
+      });
+
+      // Group question IDs by subcategory
+      const group = {};
+      questionIds.forEach((id) => {
+        const sc = subcatMap[id];
+        if (!sc) return;
+        if (!group[sc]) group[sc] = [];
+        group[sc].push(id);
+      });
+
+      for (const [sc, ids] of Object.entries(group)) {
+        const correctCount = ids.filter((id) => answers[id]?.isCorrect).length;
+        const pct = Math.round((correctCount / ids.length) * 100);
+        const passedSC = pct >= 80;
+        const resultsSC = {};
+        ids.forEach((id) => { resultsSC[id] = questionResults[id]; });
+
+        await updateSubcategoryProgress(
+          quiz.userId,
+          sc,
+          quiz.level,
+          pct,
+          passedSC,
+          ids,
+          { correct: correctCount, total: ids.length },
+          resultsSC
+        );
+      }
+    } catch (metaUpdateErr) {
+      console.error('[recordSmartQuizResult] Meta progress update failed:', metaUpdateErr);
+    }
+  }
 
   // === ADDITION: Record this attempt in the history ===
   try {
-    // Instead of using a subcollection, we'll add to an array field in the progress document
-    // First, let's get the current progress document
-    const progressDocRef = doc(db, 'users', quiz.userId, 'progress', quiz.subcategoryId);
-    const progressDoc = await getDoc(progressDocRef);
-    
-    // Get the current attemptHistory array or initialize it
-    const currentData = progressDoc.data() || {};
-    const attemptHistory = currentData.attemptHistory || [];
-    
-    // Add the new attempt to the beginning of the array (most recent first)
-    const newAttempt = {
-      timestamp: new Date().toISOString(), // Use ISO string format for dates (easier to sort)
-      accuracy: scorePct, // Percentage accuracy for this quiz
-      questionsAttempted: questionIds.length, // Fixed: use questionIds.length instead of quiz.questions.length
+    const baseAttempt = {
+      timestamp: new Date().toISOString(),
+      accuracy: scorePct,
+      questionsAttempted: questionIds.length,
       questionsCorrect: correct,
       quizId: quizId,
     };
-    
-    // Limit array to last 30 attempts to prevent it from growing too large
-    const updatedHistory = [newAttempt, ...attemptHistory].slice(0, 30);
-    
-    // Update the progress document with the new attemptHistory
-    await updateDoc(progressDocRef, {
-      attemptHistory: updatedHistory
-    });
-    
-    console.log(`[recordSmartQuizResult] Attempt history saved for quiz ${quizId}, user ${quiz.userId}, subcategory ${quiz.subcategoryId}`);
+
+    if (!isMetaQuiz) {
+      const progressDocRef = doc(db, 'users', quiz.userId, 'progress', quiz.subcategoryId);
+      const progressDoc = await getDoc(progressDocRef);
+      const currentData = progressDoc.data() || {};
+      const attemptHistory = currentData.attemptHistory || [];
+      const updatedHistory = [baseAttempt, ...attemptHistory].slice(0, 30);
+      await updateDoc(progressDocRef, { attemptHistory: updatedHistory });
+      console.log(`[recordSmartQuizResult] Attempt history saved for quiz ${quizId}, user ${quiz.userId}, subcategory ${quiz.subcategoryId}`);
+    } else {
+      // Save a scoped attempt entry per subcategory for meta quizzes
+      const details = await getQuestionsByIds(questionIds);
+      const subcatMap = {};
+      details.forEach((q) => {
+        const sc = getKebabCaseFromAnyFormat(q?.subcategory || q?.subcategoryId || '');
+        if (q?.id && sc) subcatMap[q.id] = sc;
+      });
+      const group = {};
+      questionIds.forEach((id) => {
+        const sc = subcatMap[id];
+        if (!sc) return;
+        if (!group[sc]) group[sc] = [];
+        group[sc].push(id);
+      });
+      for (const [sc, ids] of Object.entries(group)) {
+        const correctCount = ids.filter((id) => answers[id]?.isCorrect).length;
+        const pct = Math.round((correctCount / ids.length) * 100);
+        const attempt = { ...baseAttempt, accuracy: pct, questionsAttempted: ids.length, questionsCorrect: correctCount };
+        const progressDocRef = doc(db, 'users', quiz.userId, 'progress', sc);
+        const progressDoc = await getDoc(progressDocRef);
+        const currentData = progressDoc.data() || {};
+        const attemptHistory = currentData.attemptHistory || [];
+        const updatedHistory = [attempt, ...attemptHistory].slice(0, 30);
+        await updateDoc(progressDocRef, { attemptHistory: updatedHistory });
+      }
+      console.log(`[recordSmartQuizResult] Attempt history saved for meta quiz ${quizId} across ${Object.keys(group).length} subcategories.`);
+    }
   } catch (historyError) {
     console.error('[recordSmartQuizResult] Error saving attempt history:', historyError);
-    // We just log the error but don't propagate it since this is an enhancement
   }
   // === END ADDITION ===
 
@@ -413,7 +571,19 @@ export const recordSmartQuizResult = async (quizId, answers) => {
   // === ADDITION: Update concept mastery for each question ===
   try {
     console.log(`[recordSmartQuizResult] Updating concept mastery for quiz ${quizId}`);
-    
+    let qSubcatMap = {};
+    if (isMetaQuiz) {
+      try {
+        const details = await getQuestionsByIds(questionIds);
+        details.forEach((q) => {
+          const sc = getKebabCaseFromAnyFormat(q?.subcategory || q?.subcategoryId || '');
+          if (q?.id && sc) qSubcatMap[q.id] = sc;
+        });
+      } catch (e) {
+        console.warn('[recordSmartQuizResult] Failed to fetch question details for concept mastery subcategories:', e?.message);
+      }
+    }
+
     // Process each question ID to update concept mastery
     for (const questionId of questionIds) {
       try {
@@ -424,9 +594,10 @@ export const recordSmartQuizResult = async (quizId, answers) => {
           const isCorrect = answers[questionId]?.isCorrect || false;
           
           // Update mastery for each concept associated with this question
+          const subcatForQuestion = isMetaQuiz ? (qSubcatMap[questionId] || quiz.subcategoryId) : quiz.subcategoryId;
           await updateConceptMastery(
             quiz.userId,
-            quiz.subcategoryId,
+            subcatForQuestion,
             conceptAssociation.conceptIds,
             isCorrect
           );

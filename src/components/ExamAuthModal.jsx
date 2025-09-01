@@ -23,10 +23,8 @@ const ExamAuthModal = ({
       if (actionType === 'view') {
         navigate('/practice-exams');
       } else if (examId === 'predictive') {
-        // For predictive test, redirect to practice exams with diagnostic flag
-        navigate('/practice-exams', { 
-          state: { startDiagnostic: true } 
-        });
+        // For predictive test, redirect to the new predictive exam page
+        navigate('/predictive-exam');
       } else {
         // For Google sign-in, we'll redirect to practice exams with exam number
         // The practice exams page will handle starting the specific exam

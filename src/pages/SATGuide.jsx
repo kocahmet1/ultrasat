@@ -1,27 +1,21 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import QuizAuthModal from '../components/QuizAuthModal';
+import ExamAuthModal from '../components/ExamAuthModal';
 import '../styles/SATGuide.css';
 
 function SATGuide() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const [quizAuthOpen, setQuizAuthOpen] = useState(false);
-  const [quizPath, setQuizPath] = useState('');
-  const [quizLabel, setQuizLabel] = useState('');
-  const [quizState, setQuizState] = useState(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const handleStartDiagnostic = (e) => {
     e.preventDefault();
-    const navObj = { pathname: '/smart-quiz-generator', state: {} };
+    const navObj = { pathname: '/predictive-exam', state: {} };
     if (currentUser) {
       navigate(navObj.pathname, { state: navObj.state });
     } else {
-      setQuizPath('/smart-quiz-generator');
-      setQuizLabel('Diagnostic Test');
-      setQuizState(navObj);
-      setQuizAuthOpen(true);
+      setAuthModalOpen(true);
     }
   };
 
@@ -359,13 +353,12 @@ function SATGuide() {
           </div>
         </section>
       </div>
-      {/* Auth Modal for starting diagnostic */}
-      <QuizAuthModal
-        isOpen={quizAuthOpen}
-        onClose={() => setQuizAuthOpen(false)}
-        quizPath={quizPath}
-        quizLabel={quizLabel}
-        quizState={quizState}
+      {/* Auth Modal for starting predictive test */}
+      <ExamAuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        examId={'predictive'}
+        actionType={'start'}
       />
     </div>
   );

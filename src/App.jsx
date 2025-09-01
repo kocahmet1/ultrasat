@@ -62,6 +62,7 @@ const ConceptDetail = React.lazy(() => import('./pages/ConceptDetail'));
 // Practice Exam Pages
 const PracticeExamList = React.lazy(() => import('./pages/PracticeExamList'));
 const PracticeExamController = React.lazy(() => import('./pages/PracticeExamController'));
+const PredictiveExam = React.lazy(() => import('./pages/PredictiveExam'));
 
 // Adaptive Learning Pages
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
@@ -114,6 +115,7 @@ const Careers = React.lazy(() => import('./pages/Careers'));
 const Press = React.lazy(() => import('./pages/Press'));
 const SATGuide = React.lazy(() => import('./pages/SATGuide'));
 const ScoreCalculator = React.lazy(() => import('./pages/ScoreCalculator'));
+const GuestQuiz = React.lazy(() => import('./pages/GuestQuiz'));
 
 // Payment Pages
 const MembershipUpgrade = React.lazy(() => import('./components/MembershipUpgrade'));
@@ -185,6 +187,8 @@ const router = createBrowserRouter([
       { path: '/press', element: <Suspense fallback={<PageLoadingSpinner />}><Press /></Suspense> },
       { path: '/sat-guide', element: <Suspense fallback={<PageLoadingSpinner />}><SATGuide /></Suspense> },
       { path: '/score-calculator', element: <Suspense fallback={<PageLoadingSpinner />}><ScoreCalculator /></Suspense> },
+      { path: '/guest-quiz', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
+      { path: '/guest-quiz/:deckKey', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
       { path: '/blog', element: <Suspense fallback={<PageLoadingSpinner />}><Blog /></Suspense> },
       { path: '/blog/:id', element: <Suspense fallback={<PageLoadingSpinner />}><BlogPost /></Suspense> },
     ],
@@ -221,6 +225,7 @@ const router = createBrowserRouter([
       { path: '/lesson/:skillTag', element: <Navigate to="/progress" replace /> },
       { path: '/skill-drill/:skillTag', element: <Navigate to="/smart-quiz-generator" replace /> },
       { path: '/practice-exams', element: <PrivateSuspenseRoute><PracticeExamList /></PrivateSuspenseRoute> },
+      { path: '/predictive-exam', element: <PrivateSuspenseRoute><PredictiveExam /></PrivateSuspenseRoute> },
       { path: '/practice-exam/:examId', element: <PrivateSuspenseRoute><PracticeExamController /></PrivateSuspenseRoute> },
       { path: '/practice-exam/:examId/results', element: <PrivateSuspenseRoute><ExamResults /></PrivateSuspenseRoute> },
       { path: '/admin', element: <PrivateSuspenseRoute><AdminDashboard /></PrivateSuspenseRoute> },

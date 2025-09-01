@@ -9,12 +9,14 @@ import {
   FaUserCircle,
   FaBook,
   FaPuzzlePiece,
-  FaHome
+  FaHome,
+  FaBullseye
 } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 
 const navItems = [
   { path: '/progress', icon: <FaChartBar />, label: 'Progress' },
+  { path: '/predictive-exam', icon: <FaBullseye />, label: 'Predictive' },
   { path: '/practice-exams', icon: <FaClipboardList />, label: 'Exams' },
   { path: '/study-resources', icon: <FaBookOpen />, label: 'Resources' },
   { path: '/word-bank', icon: <FaBook />, label: 'Words' },

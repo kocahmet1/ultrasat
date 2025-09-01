@@ -21,7 +21,8 @@ import {
   orderBy, 
   limit, 
   serverTimestamp, 
-  writeBatch 
+  writeBatch,
+  deleteDoc 
 } from 'firebase/firestore';
 import { 
   initializeMessaging, 
@@ -103,6 +104,81 @@ export function AuthProvider({ children }) {
     } catch (err) {
       setError(err.message);
       throw err;
+    }
+  }
+
+  // Save or update in-progress practice exam for the current user
+  async function saveOrUpdateExamProgress(progress) {
+    if (!currentUser || !progress || !progress.practiceExamId) {
+      console.error('[saveOrUpdateExamProgress] Missing user or practiceExamId');
+      return null;
+    }
+
+    try {
+      const progressRef = doc(db, `users/${currentUser.uid}/examProgress`, progress.practiceExamId);
+      const existing = await getDoc(progressRef);
+
+      const payload = {
+        practiceExamId: progress.practiceExamId,
+        examTitle: progress.examTitle || null,
+        status: 'in-progress',
+        currentModuleIndex: typeof progress.currentModuleIndex === 'number' ? progress.currentModuleIndex : 0,
+        currentQuestionIndex: typeof progress.currentQuestionIndex === 'number' ? progress.currentQuestionIndex : 0,
+        moduleResponses: progress.moduleResponses || {},
+        modulesMeta: progress.modulesMeta || [],
+        currentModuleTimeRemaining: typeof progress.currentModuleTimeRemaining === 'number' ? progress.currentModuleTimeRemaining : undefined,
+        updatedAt: serverTimestamp(),
+        // Preserve original startedAt if exists
+        startedAt: existing.exists() ? (existing.data().startedAt || serverTimestamp()) : serverTimestamp()
+      };
+
+      await setDoc(progressRef, payload, { merge: true });
+
+      return { id: progressRef.id, ...payload };
+    } catch (err) {
+      console.error('[saveOrUpdateExamProgress] Error:', err);
+      throw err;
+    }
+  }
+
+  // Get saved in-progress exam for a specific practice exam ID
+  async function getExamProgress(practiceExamId) {
+    if (!currentUser || !practiceExamId) return null;
+    try {
+      const progressRef = doc(db, `users/${currentUser.uid}/examProgress`, practiceExamId);
+      const snap = await getDoc(progressRef);
+      if (!snap.exists()) return null;
+      return { id: snap.id, ...snap.data() };
+    } catch (err) {
+      console.error('[getExamProgress] Error:', err);
+      return null;
+    }
+  }
+
+  // List all in-progress exams for current user, newest first
+  async function getInProgressExams() {
+    if (!currentUser) return [];
+    try {
+      const progressCol = collection(db, `users/${currentUser.uid}/examProgress`);
+      const qRef = query(progressCol, orderBy('updatedAt', 'desc'));
+      const qs = await getDocs(qRef);
+      return qs.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch (err) {
+      console.error('[getInProgressExams] Error:', err);
+      return [];
+    }
+  }
+
+  // Clear in-progress exam (after completion or if user discards it)
+  async function clearExamProgress(practiceExamId) {
+    if (!currentUser || !practiceExamId) return false;
+    try {
+      const progressRef = doc(db, `users/${currentUser.uid}/examProgress`, practiceExamId);
+      await deleteDoc(progressRef);
+      return true;
+    } catch (err) {
+      console.error('[clearExamProgress] Error:', err);
+      return false;
     }
   }
 
@@ -653,7 +729,12 @@ export function AuthProvider({ children }) {
     error,
     notificationsEnabled,
     toggleNotifications,
-    initializeNotifications
+    initializeNotifications,
+    // In-progress practice exams
+    saveOrUpdateExamProgress,
+    getExamProgress,
+    getInProgressExams,
+    clearExamProgress
   };
 
   return (
