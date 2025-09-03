@@ -18,6 +18,38 @@ const getApiUrl = () => {
 };
 
 /**
+ * Public, unauthenticated fetch for cached helper items
+ * Will NOT trigger any AI calls; only returns cached data if present
+ * @param {string} questionId
+ * @param {('vocabulary'|'concept')} helperType
+ * @returns {Promise<{items: Array, helperType: string, fromCache: boolean, source: string}>}
+ */
+export async function getPublicHelperCache(questionId, helperType = 'vocabulary') {
+  try {
+    if (!questionId) {
+      return { items: [], helperType, fromCache: false, source: 'cache' };
+    }
+    const apiUrl = getApiUrl();
+    const endpoint = `${apiUrl}/api/assistant/helper/public/${encodeURIComponent(questionId)}?helperType=${encodeURIComponent(helperType)}`;
+    const res = await fetch(endpoint, { method: 'GET' });
+    if (!res.ok) {
+      // 404 is expected when no cache; treat as empty
+      return { items: [], helperType, fromCache: false, source: 'cache' };
+    }
+    const data = await res.json();
+    return {
+      items: Array.isArray(data.items) ? data.items : [],
+      helperType: data.helperType || helperType,
+      fromCache: !!data.fromCache,
+      source: data.source || 'cache'
+    };
+  } catch (e) {
+    console.warn('getPublicHelperCache error:', e);
+    return { items: [], helperType, fromCache: false, source: 'cache' };
+  }
+}
+
+/**
  * Get the current user's ID token for authentication
  * @returns {Promise<string>} The ID token
  */

@@ -48,6 +48,7 @@ const PageLoadingSpinner = () => (
 // Lazy load all pages for code splitting
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const LandingPage = React.lazy(() => import('./pages/LandingPage'));
+const LandingPage2 = React.lazy(() => import('./pages/LandingPage2'));
 const LandingPageAds = React.lazy(() => import('./pages/LandingPageAds'));
 const ExamLandingPage = React.lazy(() => import('./pages/ExamLandingPage'));
 const ExamController = React.lazy(() => import('./pages/ExamController'));
@@ -116,6 +117,8 @@ const Press = React.lazy(() => import('./pages/Press'));
 const SATGuide = React.lazy(() => import('./pages/SATGuide'));
 const ScoreCalculator = React.lazy(() => import('./pages/ScoreCalculator'));
 const GuestQuiz = React.lazy(() => import('./pages/GuestQuiz'));
+const GuestSubjectQuizzes = React.lazy(() => import('./pages/GuestSubjectQuizzes'));
+const GuestSmartQuiz = React.lazy(() => import('./pages/GuestSmartQuiz'));
 
 // Payment Pages
 const MembershipUpgrade = React.lazy(() => import('./components/MembershipUpgrade'));
@@ -172,6 +175,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPage /></Suspense> },
       { path: '/landing_page', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPageAds /></Suspense> },
+      { path: '/landingpage2', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPage2 /></Suspense> },
       { path: '/login', element: <Login /> },
       { path: '/signup', element: <Signup /> },
       { path: '/verify-email', element: <VerifyEmail /> },
@@ -187,8 +191,7 @@ const router = createBrowserRouter([
       { path: '/press', element: <Suspense fallback={<PageLoadingSpinner />}><Press /></Suspense> },
       { path: '/sat-guide', element: <Suspense fallback={<PageLoadingSpinner />}><SATGuide /></Suspense> },
       { path: '/score-calculator', element: <Suspense fallback={<PageLoadingSpinner />}><ScoreCalculator /></Suspense> },
-      { path: '/guest-quiz', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
-      { path: '/guest-quiz/:deckKey', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
+      
       { path: '/blog', element: <Suspense fallback={<PageLoadingSpinner />}><Blog /></Suspense> },
       { path: '/blog/:id', element: <Suspense fallback={<PageLoadingSpinner />}><BlogPost /></Suspense> },
     ],
@@ -228,6 +231,10 @@ const router = createBrowserRouter([
       { path: '/predictive-exam', element: <PrivateSuspenseRoute><PredictiveExam /></PrivateSuspenseRoute> },
       { path: '/practice-exam/:examId', element: <PrivateSuspenseRoute><PracticeExamController /></PrivateSuspenseRoute> },
       { path: '/practice-exam/:examId/results', element: <PrivateSuspenseRoute><ExamResults /></PrivateSuspenseRoute> },
+      { path: '/guest-quiz', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
+      { path: '/guest-quiz/:deckKey', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
+      { path: '/guest-subject-quizzes', element: <Suspense fallback={<PageLoadingSpinner />}><GuestSubjectQuizzes /></Suspense> },
+      { path: '/guest-smart-quiz', element: <Suspense fallback={<PageLoadingSpinner />}><GuestSmartQuiz /></Suspense> },
       { path: '/admin', element: <PrivateSuspenseRoute><AdminDashboard /></PrivateSuspenseRoute> },
       { path: '/admin/ai-content', element: <PrivateSuspenseRoute><AdminAiContent /></PrivateSuspenseRoute> },
       { path: '/admin/reported-questions', element: <PrivateSuspenseRoute><AdminReportedQuestions /></PrivateSuspenseRoute> },

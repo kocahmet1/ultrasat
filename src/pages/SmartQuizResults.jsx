@@ -139,7 +139,7 @@ export default function SmartQuizResults() {
         <div className="results-card results-summary">
           <h1>{hasMastered ? 'Skill Mastered!' : 'Quiz Results'}</h1>
           
-          <div className="score-circle">
+          <div className="score-circle" style={{ '--pct': `${score}%` }}>
             <div className="score-percentage">{score}%</div>
           </div>
           

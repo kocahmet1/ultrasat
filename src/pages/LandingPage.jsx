@@ -9,7 +9,7 @@ import UltraSATLogo from '../components/UltraSATLogo';
 import { getAllPracticeExams } from '../firebase/services';
 import { getRecentBlogPosts } from '../firebase/blogServices';
 import '../styles/LandingPage.css';
-import { FaBookOpen, FaPencilAlt, FaBullseye, FaRegCircle, FaChartLine } from 'react-icons/fa';
+ 
 
 const LandingPage = () => {
   const { currentUser, logout } = useAuth();
@@ -318,8 +318,8 @@ const LandingPage = () => {
         
         <div className="practice-content-grid">
           <div className="practice-exams-list">
-            <div className="column-header" style={{ marginBottom: '12px' }}>
-              <h3 style={{ margin: 0 }}>Take a Practice Test Now</h3>
+            <div className="column-header">
+              <h3>Take a Practice Test Now</h3>
             </div>
             <div className="exam-list-container">
               <div className="exam-item">
@@ -384,194 +384,93 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="practice-features-image">
-            <div className="right-column-inner" style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <div className="column-header" style={{ marginBottom: '12px' }}>
-                <h3 style={{ margin: 0 }}>Question Bank</h3>
+            <div className="right-column-inner">
+              <div className="column-header">
+                <h3>Question Bank</h3>
               </div>
-              <div className="smart-quiz-grid" style={{
-                position: 'relative',
-                width: '100%',
-                height: '400px',
-                background: 'linear-gradient(135deg, #F3F8FF 0%, #F5FFF9 100%)',
-                borderRadius: '20px',
-                border: '1px solid rgba(74, 144, 226, 0.15)',
-                backdropFilter: 'blur(8px)',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08), 0 0 40px rgba(95, 207, 127, 0.08)',
-                overflow: 'hidden'
-              }}>
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'vocabulary', 'Vocabulary')} style={{
-                  position: 'absolute',
-                  top: '20px',
-                  left: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaBookOpen size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Vocabulary</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Reading and Writing</span>
+              <div className="landing-quiz-grid">
+                <Link
+                  to="#"
+                  onClick={(e) => handleQuizTileClick(e, 'vocabulary', 'Vocabulary')}
+                  className="landing-quiz-card landing-quiz-card--small pos-tl theme-blue"
+                >
+                  <div className="card-header">Vocabulary</div>
+                  <div className="card-body">
+                    <span className="card-meta">Reading and writing. 5 questions</span>
+                  </div>
+                  <span className="card-cta small">Start Quiz</span>
                 </Link>
                 
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'circles', 'Circles')} style={{
-                  position: 'absolute',
-                  top: '20px',
-                  right: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaRegCircle size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Circles</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Math</span>
+                <Link
+                  to="#"
+                  onClick={(e) => handleQuizTileClick(e, 'circles', 'Circles')}
+                  className="landing-quiz-card landing-quiz-card--small pos-tr theme-purple"
+                >
+                  <div className="card-header">Circles</div>
+                  <div className="card-body">
+                    <span className="card-meta">Math. 5 questions</span>
+                  </div>
+                  <span className="card-cta small">Start Quiz</span>
                 </Link>
                 
-                <div style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '140px',
-                  height: '120px',
-                  background: 'linear-gradient(135deg, rgba(155, 89, 182, 0.10) 0%, rgba(155, 89, 182, 0.08) 100%)',
-                  border: '1px solid rgba(155, 89, 182, 0.25)',
-                  borderRadius: '16px',
-                  color: 'var(--dark-text)',
-                  cursor: 'default',
-                  zIndex: 2
-                }}>
-                  <FaBullseye size={40} style={{ marginBottom: '0.5rem', opacity: '0.7' }} />
-                  <span style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Coming Soon</span>
-                  <span style={{ fontSize: '0.8rem', color: '#5A6C7D', fontWeight: '500', textAlign: 'center' }}>AI Adaptive</span>
-                </div>
-                
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'boundaries', 'Boundaries')} style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '20px',
-                  transform: 'translateY(-50%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaPencilAlt size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Boundaries</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Reading and Writing</span>
+                <Link
+                  to="#"
+                  onClick={(e) => { e.preventDefault(); handlePredictiveTest(); }}
+                  className="landing-quiz-card landing-quiz-card--large pos-center first-test-pulsate theme-green"
+                  aria-label="Create a mini test"
+                >
+                  <div className="card-header">Create a mini test</div>
+                  <div className="card-body">
+                    <span className="card-title">Choose question topics</span>
+                    <span className="card-meta">Choose difficulty level and number of questions</span>
+                  </div>
+                  <span className="card-cta">START</span>
                 </Link>
                 
-                <Link to="#" onClick={(e) => handleQuizTileClick(e, 'linear-equations', 'Linear Equations')} style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '20px',
-                  transform: 'translateY(-50%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaChartLine size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.2rem', textAlign: 'center' }}>Linear Equations</span>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500', textAlign: 'center' }}>Math</span>
+                <Link
+                  to="#"
+                  onClick={(e) => handleQuizTileClick(e, 'boundaries', 'Boundaries')}
+                  className="landing-quiz-card landing-quiz-card--small pos-ml theme-orange"
+                >
+                  <div className="card-header">Boundaries</div>
+                  <div className="card-body">
+                    <span className="card-meta">Reading and writing. 5 questions</span>
+                  </div>
+                  <span className="card-cta small">Start Quiz</span>
+                </Link>
+                
+                <Link
+                  to="#"
+                  onClick={(e) => handleQuizTileClick(e, 'linear-equations', 'Linear Equations')}
+                  className="landing-quiz-card landing-quiz-card--small pos-mr theme-teal"
+                >
+                  <div className="card-header">Linear Equations</div>
+                  <div className="card-body">
+                    <span className="card-meta">Math. 5 questions</span>
+                  </div>
+                  <span className="card-cta small">Start Quiz</span>
                 </Link>
 
                 {/* New bottom-left CTA: Ten more quizzes */}
-                <Link to="/subject-quizzes" style={{
-                  position: 'absolute',
-                  bottom: '20px',
-                  left: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaBookOpen size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', textAlign: 'center' }}>8 more Reading and Writing quiz topics</span>
+                <Link
+                  to="/subject-quizzes"
+                  className="landing-quiz-card landing-quiz-card--small pos-bl theme-gray"
+                >
+                  <div className="card-body">
+                    <span className="card-title">8 more Reading and Writing quiz topics</span>
+                  </div>
+                  <span className="card-cta">VIEW ALL</span>
                 </Link>
 
                 {/* New bottom-right CTA: Ten more quizzes */}
-                <Link to="/subject-quizzes" style={{
-                  position: 'absolute',
-                  bottom: '20px',
-                  right: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '120px',
-                  height: '100px',
-                  background: 'linear-gradient(135deg, rgba(74, 144, 226, 0.12) 0%, rgba(95, 207, 127, 0.10) 100%)',
-                  border: '1px solid rgba(74, 144, 226, 0.25)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  color: 'var(--dark-text)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backdropFilter: 'blur(10px)',
-                  cursor: 'pointer',
-                  zIndex: 2
-                }}>
-                  <FaBookOpen size={32} style={{ marginBottom: '0.5rem' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', textAlign: 'center' }}>17 more Math quiz topics</span>
+                <Link
+                  to="/subject-quizzes"
+                  className="landing-quiz-card landing-quiz-card--small pos-br theme-gray"
+                >
+                  <div className="card-body">
+                    <span className="card-title">17 more Math quiz topics</span>
+                  </div>
+                  <span className="card-cta">VIEW ALL</span>
                 </Link>
               </div>
             </div>

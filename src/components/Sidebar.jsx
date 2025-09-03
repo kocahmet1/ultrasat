@@ -47,7 +47,9 @@ const Sidebar = () => {
   ];
 
   const navItems = currentUser ? baseNavItems : [
-    ...baseNavItems.filter(item => item.path !== '/all-results'),
+    ...baseNavItems
+      .map(item => item.path === '/subject-quizzes' ? { ...item, path: '/guest-subject-quizzes' } : item)
+      .filter(item => item.path !== '/all-results'),
     { path: '/login', icon: <FaSignInAlt />, label: 'Login / Sign Up' }
   ];
 
@@ -63,7 +65,7 @@ const Sidebar = () => {
     const isProFeature = proFeatures.includes(path);
 
     if (!currentUser) {
-      const publicPaths = ['/login', '/signup', '/'];
+      const publicPaths = ['/login', '/signup', '/', '/guest-subject-quizzes', '/guest-quiz', '/guest-smart-quiz'];
       if (publicPaths.includes(path)) return;
 
       const proPaths = ['/concept-bank', '/flashcards', '/lectures'];

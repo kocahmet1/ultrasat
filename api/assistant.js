@@ -24,6 +24,15 @@ const assistantLimiter = rateLimit({
 // Apply rate limiting to all assistant routes
 router.use('/', assistantLimiter);
 
+// Stricter limiter for public helper cache endpoint
+const publicHelperLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 60, // more restrictive limit for public unauthenticated access
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests to public helper endpoint. Please try again later.' }
+});
+
 // Middleware to verify Firebase ID token
 const verifyFirebaseToken = async (req, res, next) => {
   try {
@@ -685,6 +694,75 @@ router.post('/helper', verifyFirebaseToken, async (req, res) => {
     console.error('Error in /api/assistant/helper POST:', error.message);
     if (error.stack) console.error(error.stack);
     res.status(500).json({ error: error.message || 'Failed to get helper data' });
+  }
+});
+
+/**
+ * GET /api/assistant/helper/public/:questionId
+ * Public, read-only endpoint to fetch cached helper items (no auth, no AI calls)
+ * Optional query: ?helperType=vocabulary|concept (defaults to vocabulary)
+ */
+router.get('/helper/public/:questionId', publicHelperLimiter, async (req, res) => {
+  try {
+    const { questionId } = req.params;
+    const helperTypeRaw = (req.query.helperType || 'vocabulary');
+    const requestedHelperType = String(helperTypeRaw).toLowerCase();
+
+    if (!req.db) {
+      return res.status(500).json({ error: 'Firebase Firestore not available' });
+    }
+
+    if (!questionId) {
+      return res.status(400).json({ error: 'Missing questionId' });
+    }
+
+    if (!['vocabulary', 'concept'].includes(requestedHelperType)) {
+      return res.status(400).json({ error: 'Invalid helperType. Use "vocabulary" or "concept".' });
+    }
+
+    const cacheDocId = `${questionId}_${requestedHelperType}`;
+    const helperCacheRef = req.db.collection('helperCache').doc(cacheDocId);
+
+    let helperCacheDoc;
+    try {
+      helperCacheDoc = await helperCacheRef.get();
+    } catch (e) {
+      console.error('[PUBLIC HELPER] Cache read error:', e);
+      return res.status(500).json({ error: 'Cache lookup failed' });
+    }
+
+    if (!helperCacheDoc.exists) {
+      return res.status(404).json({ error: 'No cached helper data for this question.' });
+    }
+
+    const cacheData = helperCacheDoc.data() || {};
+    const items = Array.isArray(cacheData.items) ? cacheData.items : [];
+
+    if (!items.length) {
+      return res.status(404).json({ error: 'No cached helper data for this question.' });
+    }
+
+    // Non-blocking: update simple usage metrics
+    try {
+      setImmediate(() => {
+        helperCacheRef.update({
+          lastPublicAccessAt: req.admin?.firestore?.FieldValue?.serverTimestamp?.(),
+          publicAccessCount: req.admin?.firestore?.FieldValue?.increment?.(1)
+        }).catch(() => {});
+      });
+    } catch (_) {
+      // ignore metric update errors
+    }
+
+    return res.json({
+      items,
+      helperType: requestedHelperType,
+      fromCache: true,
+      source: 'cache'
+    });
+  } catch (error) {
+    console.error('Error in /api/assistant/helper/public:', error);
+    return res.status(500).json({ error: 'Failed to fetch cached helper data' });
   }
 });
 

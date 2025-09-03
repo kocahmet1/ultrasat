@@ -719,4 +719,145 @@ router.post('/validate', verifyFirebaseToken, upload.single('questionsFile'), as
   }
 });
 
-module.exports = router; 
+/**
+ * Normalize a question document for API response
+ * Ensures consistent fields and subcategory normalization
+ */
+function normalizeQuestionForResponse(raw) {
+  // Derive subcategory from any legacy field
+  const subcategorySource = raw.subcategory ?? raw.subCategory ?? raw.subcategoryId;
+  const normalizedSubcategory = getKebabCaseFromAnyFormat(subcategorySource);
+  const numericSubcategoryId = getSubcategoryIdFromString(subcategorySource);
+
+  // Determine question type if missing
+  let questionType = raw.questionType;
+  if (!questionType) {
+    if (!raw.options || !Array.isArray(raw.options) || raw.options.length === 0) {
+      questionType = 'user-input';
+    } else {
+      questionType = 'multiple-choice';
+    }
+  }
+
+  // Normalize difficulty
+  let difficulty = raw.difficulty;
+  if (!['easy', 'medium', 'hard'].includes(difficulty)) {
+    difficulty = 'medium';
+  }
+
+  return {
+    id: raw.id,
+    text: (raw.text || '').trim(),
+    questionType,
+    options: Array.isArray(raw.options) ? raw.options : [],
+    correctAnswer: raw.correctAnswer,
+    acceptedAnswers: Array.isArray(raw.acceptedAnswers) && raw.acceptedAnswers.length > 0 ? raw.acceptedAnswers : null,
+    inputType: raw.inputType || 'number',
+    answerFormat: raw.answerFormat || null,
+    explanation: normalizeExplanation(raw.explanation),
+    difficulty,
+    subcategory: normalizedSubcategory,
+    subCategory: normalizedSubcategory, // back-compat
+    subcategoryId: numericSubcategoryId, // back-compat
+    source: raw.source || 'import',
+    usageContext: raw.usageContext || 'general',
+    skillTags: Array.isArray(raw.skillTags) ? raw.skillTags : [],
+    graphUrl: raw.graphUrl || null,
+    graphDescription: typeof raw.graphDescription === 'string' ? raw.graphDescription : null,
+    passage: raw.passage && typeof raw.passage === 'string' ? raw.passage.trim() : null,
+    // keep common categorization fields if present
+    categoryPath: raw.categoryPath || null,
+    mainCategory: raw.mainCategory || null,
+    subjectArea: raw.subjectArea || null
+  };
+}
+
+/**
+ * GET /api/questions/public/subcategory/:subcategory
+ * Public endpoint: returns normalized questions for a subcategory (no auth required)
+ * Optional query params: difficulty=easy|medium|hard, limit=N (default 50, max 200)
+ */
+router.get('/public/subcategory/:subcategory', async (req, res) => {
+  try {
+    if (!req.db) {
+      return res.status(503).json({ error: 'Database not available' });
+    }
+
+    const rawParam = req.params.subcategory;
+    const kebabSubcategory = getKebabCaseFromAnyFormat(rawParam);
+    const numericSubcategoryId = getSubcategoryIdFromString(rawParam);
+
+    if (!kebabSubcategory && numericSubcategoryId == null) {
+      return res.status(400).json({ error: 'Invalid subcategory parameter' });
+    }
+
+    // Parse and clamp limit
+    const maxLimit = 200;
+    let limitCount = parseInt(req.query.limit, 10);
+    if (isNaN(limitCount) || limitCount <= 0) limitCount = 50;
+    limitCount = Math.min(limitCount, maxLimit);
+
+    // Optional difficulty filter
+    const diff = typeof req.query.difficulty === 'string' ? req.query.difficulty.toLowerCase() : null;
+    const difficulty = ['easy', 'medium', 'hard'].includes(diff) ? diff : null;
+
+    // Build queries for legacy field names (cannot OR across fields in a single query)
+    const queries = [];
+    const questionsCol = req.db.collection('questions');
+
+    // where(subcategory == kebab)
+    if (kebabSubcategory) {
+      let q1 = questionsCol.where('subcategory', '==', kebabSubcategory);
+      if (difficulty) q1 = q1.where('difficulty', '==', difficulty);
+      q1 = q1.limit(limitCount);
+      queries.push(q1.get());
+    }
+
+    // where(subCategory == kebab)
+    if (kebabSubcategory) {
+      let q2 = questionsCol.where('subCategory', '==', kebabSubcategory);
+      if (difficulty) q2 = q2.where('difficulty', '==', difficulty);
+      q2 = q2.limit(limitCount);
+      queries.push(q2.get());
+    }
+
+    // where(subcategoryId == numeric)
+    if (numericSubcategoryId != null) {
+      let q3 = questionsCol.where('subcategoryId', '==', numericSubcategoryId);
+      if (difficulty) q3 = q3.where('difficulty', '==', difficulty);
+      q3 = q3.limit(limitCount);
+      queries.push(q3.get());
+    }
+
+    // Execute in parallel
+    const snapshots = await Promise.all(queries);
+
+    // Merge and de-duplicate by doc ID
+    const map = new Map();
+    snapshots.forEach((snap) => {
+      snap.docs.forEach((doc) => {
+        if (!map.has(doc.id)) {
+          map.set(doc.id, { id: doc.id, ...doc.data() });
+        }
+      });
+    });
+
+    // Normalize
+    let questions = Array.from(map.values()).map(normalizeQuestionForResponse);
+
+    // Server-side filter to ensure only general-usage content for public quizzes
+    questions = questions.filter((q) => !q.usageContext || q.usageContext === 'general');
+
+    // Enforce overall limit after merge
+    if (questions.length > limitCount) {
+      questions = questions.slice(0, limitCount);
+    }
+
+    return res.json(questions);
+  } catch (error) {
+    console.error('Public subcategory fetch error:', error);
+    return res.status(500).json({ error: 'Failed to fetch questions' });
+  }
+});
+
+module.exports = router;

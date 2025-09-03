@@ -7,6 +7,131 @@
   min-height: 100vh;
 }
 
+.results-container {
+  /* Match the global look used previously on smart-quiz-results__container */
+  padding: 32px 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Center and limit the main content width */
+.results-content {
+  max-width: 1000px; /* intentionally narrower for a sleeker feel */
+  margin: 0 auto;
+}
+
+/* Two-column split view */
+.results-content.split-view {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* Base card styling shared by summary and review panels */
+.results-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+}
+
+/* Right panel behavior */
+.question-review-panel {
+  flex: 1 1 0;
+  min-width: 0; /* allow flex container to shrink nicely */
+}
+
+/* Status tag base (colors provided by .status-correct / .status-incorrect below) */
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Individual question container cards */
+.question-container-review {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 16px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.question-container-review.correct {
+  border-left: 6px solid #38a169;
+}
+
+.question-container-review.incorrect {
+  border-left: 6px solid #e53e3e;
+}
+
+/* Circular score display */
+.score-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: conic-gradient(#667eea var(--pct, 0%), #e2e8f0 0%);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.score-circle::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.score-percentage {
+  position: relative;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+/* Passed/failed compact badges used in summary */
+.status-passed,
+.status-failed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 999px;
+}
+
+.status-passed {
+  color: #2f855a;
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+}
+
+.status-failed {
+  color: #c53030;
+  background: #fff5f5;
+  border: 1px solid #fc8181;
+}
+
+/* Responsive adjustments for the split layout */
+@media (max-width: 1024px) {
+  .results-content.split-view {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 880px) {
+  .results-content.split-view {
+    flex-direction: column;
+  }
+  .results-summary {
+    max-width: 100%;
+  }
+}
+
 .smart-quiz-results__container h1 {
   text-align: center;
   margin-bottom: 32px;
