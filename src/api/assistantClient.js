@@ -17,6 +17,42 @@ const getApiUrl = () => {
   }
 };
 
+// -------- Helper: retry and caching for public helper endpoint --------
+const PUBLIC_HELPER_TTL_MS = 5 * 60 * 1000; // 5 minutes for positive cache
+const PUBLIC_HELPER_NEG_TTL_MS = 60 * 1000; // 1 minute for negative cache (e.g., 404/no cache yet)
+const _publicHelperMemoryCache = new Map(); // key -> { expiresAt, value }
+const _publicHelperInflight = new Map(); // key -> Promise resolving to value
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function fetchWithRetry(url, options = {}, retries = 3, baseDelayMs = 500) {
+  let attempt = 0;
+  while (true) {
+    try {
+      const res = await fetch(url, options);
+      if (res.status === 429 || res.status === 503) {
+        if (attempt >= retries) return res; // give up and let caller handle as non-ok
+        // respect Retry-After if present
+        const retryAfter = res.headers?.get && res.headers.get('Retry-After');
+        let waitMs = retryAfter ? Number(retryAfter) * 1000 : baseDelayMs * Math.pow(2, attempt);
+        // add jitter +/- 20%
+        const jitter = waitMs * (Math.random() * 0.4 - 0.2);
+        waitMs = Math.max(100, waitMs + jitter);
+        await sleep(waitMs);
+        attempt++;
+        continue;
+      }
+      // For other statuses, return directly (caller will decide)
+      return res;
+    } catch (err) {
+      if (attempt >= retries) throw err;
+      const waitMs = baseDelayMs * Math.pow(2, attempt);
+      await sleep(waitMs);
+      attempt++;
+    }
+  }
+}
+
 /**
  * Public, unauthenticated fetch for cached helper items
  * Will NOT trigger any AI calls; only returns cached data if present
@@ -29,22 +65,60 @@ export async function getPublicHelperCache(questionId, helperType = 'vocabulary'
     if (!questionId) {
       return { items: [], helperType, fromCache: false, source: 'cache' };
     }
+    const key = `${questionId}|${helperType}`;
+    const now = Date.now();
+
+    // Memory cache hit
+    const cached = _publicHelperMemoryCache.get(key);
+    if (cached && cached.expiresAt > now) {
+      return cached.value;
+    }
+
+    // In-flight de-duplication
+    if (_publicHelperInflight.has(key)) {
+      return await _publicHelperInflight.get(key);
+    }
+
     const apiUrl = getApiUrl();
     const endpoint = `${apiUrl}/api/assistant/helper/public/${encodeURIComponent(questionId)}?helperType=${encodeURIComponent(helperType)}`;
-    const res = await fetch(endpoint, { method: 'GET' });
-    if (!res.ok) {
-      // 404 is expected when no cache; treat as empty
-      return { items: [], helperType, fromCache: false, source: 'cache' };
+
+    const promise = (async () => {
+      let value;
+      let ttl = PUBLIC_HELPER_TTL_MS;
+      try {
+        const res = await fetchWithRetry(endpoint, { method: 'GET' }, 3, 500);
+        if (!res.ok) {
+          // 404 is expected when no cache; treat as empty with shorter TTL to avoid hammering
+          value = { items: [], helperType, fromCache: false, source: 'cache' };
+          ttl = PUBLIC_HELPER_NEG_TTL_MS;
+        } else {
+          const data = await res.json();
+          value = {
+            items: Array.isArray(data.items) ? data.items : [],
+            helperType: data.helperType || helperType,
+            fromCache: !!data.fromCache,
+            source: data.source || 'cache',
+          };
+        }
+      } catch (e) {
+        console.warn('getPublicHelperCache error:', e);
+        value = { items: [], helperType, fromCache: false, source: 'cache' };
+        ttl = PUBLIC_HELPER_NEG_TTL_MS;
+      }
+
+      _publicHelperMemoryCache.set(key, { expiresAt: now + ttl, value });
+      return value;
+    })();
+
+    _publicHelperInflight.set(key, promise);
+    try {
+      const result = await promise;
+      return result;
+    } finally {
+      _publicHelperInflight.delete(key);
     }
-    const data = await res.json();
-    return {
-      items: Array.isArray(data.items) ? data.items : [],
-      helperType: data.helperType || helperType,
-      fromCache: !!data.fromCache,
-      source: data.source || 'cache'
-    };
   } catch (e) {
-    console.warn('getPublicHelperCache error:', e);
+    console.warn('getPublicHelperCache outer error:', e);
     return { items: [], helperType, fromCache: false, source: 'cache' };
   }
 }

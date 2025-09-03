@@ -12,6 +12,37 @@ const getApiUrl = () => {
   }
 };
 
+// Basic fetch with retry/backoff to mitigate transient 429/503 and network hiccups
+async function fetchWithRetry(url, options = {}, {
+  retries = 2,
+  baseDelayMs = 400,
+} = {}) {
+  let attempt = 0;
+  let lastErr;
+  while (attempt <= retries) {
+    try {
+      const res = await fetch(url, options);
+      if (res.status === 429 || res.status === 503) {
+        // Respect Retry-After if provided
+        const retryAfter = parseInt(res.headers.get('retry-after') || '0', 10);
+        const backoff = retryAfter > 0 ? retryAfter * 1000 : baseDelayMs * Math.pow(2, attempt) + Math.floor(Math.random() * 150);
+        await new Promise(r => setTimeout(r, backoff));
+        attempt += 1;
+        continue;
+      }
+      return res;
+    } catch (err) {
+      lastErr = err;
+      const backoff = baseDelayMs * Math.pow(2, attempt) + Math.floor(Math.random() * 150);
+      await new Promise(r => setTimeout(r, backoff));
+      attempt += 1;
+    }
+  }
+  // Final attempt without catching to throw real error
+  if (lastErr) throw lastErr;
+  return fetch(url, options);
+}
+
 /**
  * Fetch public questions by subcategory
  * @param {string|number} subcategory - Kebab-case name or numeric ID
@@ -31,7 +62,7 @@ export const getPublicQuestionsBySubcategory = async (subcategory, difficulty = 
 
   const endpoint = `${apiUrl}/api/questions/public/subcategory/${encodedSub}${params.toString() ? `?${params.toString()}` : ''}`;
 
-  const res = await fetch(endpoint, { method: 'GET' });
+  const res = await fetchWithRetry(endpoint, { method: 'GET' }, { retries: 2, baseDelayMs: 350 });
   if (!res.ok) {
     let errMsg = 'Failed to fetch public questions';
     try {

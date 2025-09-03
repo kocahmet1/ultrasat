@@ -9,6 +9,7 @@ import UltraSATLogo from '../components/UltraSATLogo';
 import { getAllPracticeExams } from '../firebase/services';
 import { getRecentBlogPosts } from '../firebase/blogServices';
 import '../styles/LandingPage.css';
+import { getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
  
 
 const LandingPage = () => {
@@ -28,6 +29,16 @@ const LandingPage = () => {
   const [quizPath, setQuizPath] = useState('');
   const [quizLabel, setQuizLabel] = useState('');
   const [quizState, setQuizState] = useState(null);
+  
+  // Map landing keys to canonical kebab-case subcategories used by guest quizzes
+  const mapLandingKeyToCanonical = (key) => {
+    const lower = String(key || '').toLowerCase();
+    const explicitMap = {
+      vocabulary: 'words-in-context',
+      'linear-equations': 'linear-equations-one-variable',
+    };
+    return explicitMap[lower] || getKebabCaseFromAnyFormat(lower) || lower;
+  };
   
   // Fetch practice exams on component mount (only if user is authenticated)
   useEffect(() => {
@@ -202,10 +213,8 @@ const LandingPage = () => {
       // User is logged in, navigate to the dedicated Predictive Exam page
       navigate('/predictive-exam');
     } else {
-      // User not logged in, show auth modal for predictive test
-      setModalExamId('predictive');
-      setModalActionType('start');
-      setAuthModalOpen(true);
+      // Guest: open the guest meta quiz builder on the guest subject quizzes page
+      navigate('/guest-subject-quizzes', { state: { openMeta: true } });
     }
   };
 
@@ -218,15 +227,19 @@ const LandingPage = () => {
   // Gated navigation for quiz tiles with navigation state
   const handleQuizTileClick = (e, subcategoryId, label) => {
     e.preventDefault();
-    const navObj = { pathname: '/smart-quiz-generator', state: { subcategoryId } };
     if (currentUser) {
+      // Preserve existing behavior for logged-in users
+      const navObj = { pathname: '/smart-quiz-generator', state: { subcategoryId } };
       navigate(navObj.pathname, { state: navObj.state });
     } else {
-      // Backward compatibility: keep a path too
-      setQuizPath('/smart-quiz-generator');
-      setQuizLabel(label);
-      setQuizState(navObj);
-      setQuizAuthOpen(true);
+      // Guest users: go straight to guest-smart-quiz with medium difficulty
+      const canonicalSub = mapLandingKeyToCanonical(subcategoryId);
+      navigate('/guest-smart-quiz', {
+        state: {
+          subcategoryId: canonicalSub,
+          forceLevel: 2, // Medium
+        },
+      });
     }
   };
 
@@ -453,7 +466,7 @@ const LandingPage = () => {
 
                 {/* New bottom-left CTA: Ten more quizzes */}
                 <Link
-                  to="/subject-quizzes"
+                  to="/guest-subject-quizzes"
                   className="landing-quiz-card landing-quiz-card--small pos-bl theme-gray"
                 >
                   <div className="card-body">
@@ -464,7 +477,7 @@ const LandingPage = () => {
 
                 {/* New bottom-right CTA: Ten more quizzes */}
                 <Link
-                  to="/subject-quizzes"
+                  to="/guest-subject-quizzes"
                   className="landing-quiz-card landing-quiz-card--small pos-br theme-gray"
                 >
                   <div className="card-body">

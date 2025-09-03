@@ -20,10 +20,13 @@ function sampleN(arr, n) {
   return out;
 }
 
+// Module-level cache to avoid refetch storms (e.g., React 18 StrictMode) and reduce rate-limit hits
+const guestQuizPoolCache = new Map();
+
 function GuestSmartQuiz() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { subcategoryId, forceLevel } = location.state || {};
+  const { subcategoryId, forceLevel, meta, metaSubcategoryIds = [], questionCount } = location.state || {};
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -42,10 +45,40 @@ function GuestSmartQuiz() {
   const [vocabLoading, setVocabLoading] = useState(false);
 
   const difficulty = useMemo(() => DIFFICULTY_FOR_LEVEL[forceLevel] || 'easy', [forceLevel]);
+  // Stable key for meta subcategory array to avoid effect re-running due to array identity
+  const idsKey = useMemo(() => {
+    if (meta && Array.isArray(metaSubcategoryIds)) return metaSubcategoryIds.join(',');
+    return String(subcategoryId ?? '');
+  }, [meta, metaSubcategoryIds, subcategoryId]);
+  // Guard to avoid re-sampling/refetching when we've already populated for the same key
+  const lastCacheKeyRef = useRef(null);
 
   useEffect(() => {
-    if (!subcategoryId || !forceLevel) {
+    // Validate inputs for both single and meta flows
+    const validSingle = subcategoryId && forceLevel && !meta;
+    const validMeta = meta && Array.isArray(metaSubcategoryIds) && metaSubcategoryIds.length > 0 && forceLevel;
+    if (!validSingle && !validMeta) {
       navigate('/guest-subject-quizzes', { replace: true });
+      return;
+    }
+
+    // Try cached pool first to avoid duplicate network bursts
+    const ids = validMeta ? metaSubcategoryIds : [subcategoryId];
+    const cacheKey = JSON.stringify({ ids, difficulty });
+    // If we already produced questions for this cacheKey, skip rework
+    if (lastCacheKeyRef.current === cacheKey && questions.length > 0) {
+      setLoading(false);
+      return;
+    }
+    const cachedPool = guestQuizPoolCache.get(cacheKey);
+    if (Array.isArray(cachedPool) && cachedPool.length) {
+      const targetCountCached = Math.min(cachedPool.length, Math.max(1, questionCount || QUESTIONS_PER_QUIZ));
+      const selectedCached = sampleN(cachedPool, targetCountCached);
+      setQuestions(selectedCached);
+      setCurrentIdx(0);
+      setLoading(false);
+      setError('');
+      lastCacheKeyRef.current = cacheKey;
       return;
     }
 
@@ -55,25 +88,48 @@ function GuestSmartQuiz() {
         setLoading(true);
         setError('');
 
-        // First, try with difficulty
-        let pool = await getPublicQuestionsBySubcategory(subcategoryId, difficulty, 60);
-        if (!Array.isArray(pool)) pool = [];
-
-        // Fallback without difficulty filter
-        if (pool.length === 0) {
-          pool = await getPublicQuestionsBySubcategory(subcategoryId, null, 60);
+        let pool = [];
+        if (validMeta) {
+          // Fetch sequentially from multiple subcategories to avoid rate-limit bursts
+          const merged = [];
+          const seen = new Set();
+          for (const id of ids) {
+            let arr = await getPublicQuestionsBySubcategory(id, difficulty, 25);
+            if (!Array.isArray(arr) || arr.length === 0) {
+              arr = await getPublicQuestionsBySubcategory(id, null, 25);
+            }
+            const safeArr = Array.isArray(arr) ? arr : [];
+            for (const q of safeArr) {
+              if (q && q.id && !seen.has(q.id)) {
+                seen.add(q.id);
+                merged.push(q);
+              }
+            }
+          }
+          pool = merged;
+        } else {
+          // Single subcategory flow
+          pool = await getPublicQuestionsBySubcategory(subcategoryId, difficulty, 40);
           if (!Array.isArray(pool)) pool = [];
+          if (pool.length === 0) {
+            pool = await getPublicQuestionsBySubcategory(subcategoryId, null, 40);
+            if (!Array.isArray(pool)) pool = [];
+          }
         }
 
-        // If still empty, show error
-        if (pool.length === 0) {
-          throw new Error('No questions available for this skill. Please try another difficulty or subcategory.');
+        if (!Array.isArray(pool) || pool.length === 0) {
+          throw new Error('No questions available for this selection. Please try a different difficulty or skill.');
         }
 
-        const selected = sampleN(pool, Math.min(QUESTIONS_PER_QUIZ, pool.length));
+        // Cache the raw pool for this key to prevent re-fetch storms
+        guestQuizPoolCache.set(cacheKey, pool);
+
+        const targetCount = Math.min(pool.length, Math.max(1, questionCount || QUESTIONS_PER_QUIZ));
+        const selected = sampleN(pool, targetCount);
         if (isMounted) {
           setQuestions(selected);
           setCurrentIdx(0);
+          lastCacheKeyRef.current = cacheKey;
         }
       } catch (e) {
         if (isMounted) setError(e?.message || 'Failed to load questions');
@@ -83,7 +139,7 @@ function GuestSmartQuiz() {
     })();
 
     return () => { isMounted = false; };
-  }, [subcategoryId, difficulty, forceLevel, navigate]);
+  }, [difficulty, meta, idsKey, questionCount]);
 
   // Track viewport for responsive layout
   useEffect(() => {
@@ -132,7 +188,7 @@ function GuestSmartQuiz() {
       }
     })();
     return () => { cancelled = true; };
-  }, [aiEnabled, currentQuestionId, vocabCache]);
+  }, [aiEnabled, currentQuestionId]);
 
   const handleSelect = (optionIdx) => {
     if (!currentQuestion) return;
@@ -219,7 +275,7 @@ function GuestSmartQuiz() {
         score={scorePct}
         level={forceLevel}
         passed={passed}
-        subcategoryId={subcategoryId}
+        subcategoryId={meta ? (Array.isArray(metaSubcategoryIds) && metaSubcategoryIds.length > 0 ? metaSubcategoryIds[0] : subcategoryId) : subcategoryId}
         questionCount={questions.length}
         userAnswers={answers}
         questions={questions}

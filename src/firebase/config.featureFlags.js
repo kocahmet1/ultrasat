@@ -23,7 +23,8 @@ export async function getFeatureFlags() {
       return { ...DEFAULT_FEATURE_FLAGS, ...snap.data() };
     }
   } catch (err) {
-    console.error('Error loading feature flags:', err);
+    // Guests may not have Firestore read permissions; fall back to defaults quietly
+    console.warn('Feature flags unavailable, using defaults. Reason:', err?.message || err);
   }
   return DEFAULT_FEATURE_FLAGS;
 }
