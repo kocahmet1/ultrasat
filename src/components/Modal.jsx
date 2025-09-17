@@ -9,8 +9,10 @@ import '../styles/Modal.css';
  * @param {function} onClose - Function to call when the modal is closed
  * @param {string} title - Modal title
  * @param {React.ReactNode} children - Modal content
+ * @param {('default'|'large')} [size='default'] - Optional modal size variant
+ * @param {string} [className] - Optional extra class names for the container
  */
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children, size = 'default', className = '' }) => {
   // Close modal on escape key
   useEffect(() => {
     const handleEscapeKey = (e) => {
@@ -45,7 +47,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
   return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
-      <div className="modal-container">
+      <div className={`modal-container ${size === 'large' ? 'modal-container--large' : ''} ${className}`.trim()}>
         <div className="modal-header">
           <h3>{title}</h3>
           <button className="modal-close-button" onClick={onClose}>

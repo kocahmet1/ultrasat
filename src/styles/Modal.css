@@ -24,6 +24,13 @@
   animation: slideUp 0.3s ease-out;
 }
 
+/* Large variant for more complex UI like builders */
+.modal-container--large {
+  max-width: 960px;
+  width: min(94vw, 960px);
+  max-height: 86vh;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;

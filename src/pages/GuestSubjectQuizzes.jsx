@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { getSubcategoriesArray } from '../utils/subcategoryConstants';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import '../styles/SubjectQuizzes.css';
-import Modal from '../components/Modal';
+import GuestMetaQuizModal from '../components/GuestMetaQuizModal';
 
 const GuestSubjectQuizzes = () => {
   const navigate = useNavigate();
@@ -188,93 +188,26 @@ const GuestSubjectQuizzes = () => {
 
       <div className="meta-quiz-actions">
         <button className="meta-quiz-btn" onClick={openMetaModal}>
-          Create Meta Quiz
+          Create Mini Test
         </button>
       </div>
 
-      {/* Meta Quiz Modal (Guest) */}
-      <Modal isOpen={isMetaOpen} onClose={closeMetaModal} title="Create Meta Quiz">
-        <div className="meta-modal-content">
-          <div className="meta-section">
-            <h3>Select Subcategories</h3>
-            <div className="meta-subcat-groups">
-              <div className="meta-group">
-                <h4>Reading & Writing</h4>
-                <div className="meta-subcat-list">
-                  {readingWritingSubcategories.map(sc => (
-                    <label key={sc.id} className="meta-subcat-item">
-                      <input
-                        type="checkbox"
-                        checked={selectedSubcats.includes(sc.id)}
-                        onChange={() => toggleSubcat(sc.id)}
-                      />
-                      <span>{sc.name}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div className="meta-group">
-                <h4>Math</h4>
-                <div className="meta-subcat-list">
-                  {mathSubcategories.map(sc => (
-                    <label key={sc.id} className="meta-subcat-item">
-                      <input
-                        type="checkbox"
-                        checked={selectedSubcats.includes(sc.id)}
-                        onChange={() => toggleSubcat(sc.id)}
-                      />
-                      <span>{sc.name}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="meta-selected-count">Selected: {selectedSubcats.length}</div>
-          </div>
-
-          <div className="meta-section">
-            <h3>Difficulty</h3>
-            <div className="meta-levels">
-              {[1,2,3].map(l => (
-                <label key={l} className={`meta-level-option ${metaLevel === l ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="meta-level"
-                    value={l}
-                    checked={metaLevel === l}
-                    onChange={() => setMetaLevel(l)}
-                  />
-                  Level {l}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="meta-section">
-            <h3>Question Count</h3>
-            <input
-              type="number"
-              min={1}
-              max={30}
-              value={questionCount}
-              onChange={(e) => setQuestionCount(parseInt(e.target.value || '1', 10))}
-              style={{ width: '100%', padding: '8px' }}
-            />
-          </div>
-
-          {metaError && <div className="meta-error">{metaError}</div>}
-          <div className="meta-actions">
-            <button className="btn-secondary" onClick={closeMetaModal} disabled={creating}>Cancel</button>
-            <button
-              className="btn-primary"
-              onClick={handleCreateMeta}
-              disabled={creating || selectedSubcats.length === 0}
-            >
-              {creating ? 'Creating...' : 'Create Quiz'}
-            </button>
-          </div>
-        </div>
-      </Modal>
+      {/* Meta Quiz Modal (Guest) - Overhauled UI */}
+      <GuestMetaQuizModal
+        isOpen={isMetaOpen}
+        onClose={closeMetaModal}
+        readingSubcategories={readingWritingSubcategories}
+        mathSubcategories={mathSubcategories}
+        selectedSubcats={selectedSubcats}
+        setSelectedSubcats={setSelectedSubcats}
+        metaLevel={metaLevel}
+        setMetaLevel={setMetaLevel}
+        questionCount={questionCount}
+        setQuestionCount={setQuestionCount}
+        onCreate={handleCreateMeta}
+        creating={creating}
+        error={metaError}
+      />
     </div>
   );
 };

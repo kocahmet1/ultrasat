@@ -43,6 +43,13 @@ const LandingPage2 = () => {
           <div className="lp2-ctas">
             <Link to={practiceCtaHref} className="lp2-btn lp2-btn--primary">Start Your First Free Practice</Link>
             <Link to={questionBankHref} className="lp2-btn lp2-btn--outline">Explore Our Question Bank</Link>
+            <Link
+              to="/guest-subject-quizzes"
+              state={!currentUser ? { openMeta: true } : undefined}
+              className="lp2-btn lp2-btn--ghost"
+            >
+              Create a Mini Test
+            </Link>
           </div>
 
           <div className="lp2-hero-stats">
