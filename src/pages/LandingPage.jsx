@@ -167,6 +167,42 @@ const LandingPage = () => {
       clearInterval(questionsTimer);
     };
   }, []);
+
+  // Lightweight tilt interaction for quiz cards (desktop only)
+  useEffect(() => {
+    if (!(window && window.matchMedia && window.matchMedia('(pointer: fine)').matches)) return;
+    const cards = document.querySelectorAll('.landing-quiz-card.tilt-card');
+    if (!cards.length) return;
+
+    const maxTiltDeg = 10;
+
+    const handleMove = (e) => {
+      const card = e.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width; // 0..1
+      const py = (e.clientY - rect.top) / rect.height; // 0..1
+      const rotateX = (0.5 - py) * maxTiltDeg;
+      const rotateY = (px - 0.5) * maxTiltDeg;
+      card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    };
+
+    const handleLeave = (e) => {
+      const card = e.currentTarget;
+      card.style.transform = '';
+    };
+
+    cards.forEach((card) => {
+      card.addEventListener('mousemove', handleMove);
+      card.addEventListener('mouseleave', handleLeave);
+    });
+
+    return () => {
+      cards.forEach((card) => {
+        card.removeEventListener('mousemove', handleMove);
+        card.removeEventListener('mouseleave', handleLeave);
+      });
+    };
+  }, []);
   
   const handleLogout = async () => {
     try {
@@ -397,7 +433,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="practice-features-image">
-            <div className="right-column-inner">
+            <div className="right-column-inner glass-panel">
               <div className="column-header">
                 <h3>Question Bank</h3>
               </div>
@@ -405,31 +441,33 @@ const LandingPage = () => {
                 <Link
                   to="#"
                   onClick={(e) => handleQuizTileClick(e, 'vocabulary', 'Vocabulary')}
-                  className="landing-quiz-card landing-quiz-card--small pos-tl theme-blue"
+                  className="landing-quiz-card tilt-card landing-quiz-card--small pos-tl theme-blue"
                 >
+                  <div className="card-count">400 questions</div>
                   <div className="card-header">Vocabulary</div>
                   <div className="card-body">
-                    <span className="card-meta">Reading and writing. 5 questions</span>
+                    <span className="card-meta">Reading and writing</span>
                   </div>
-                  <span className="card-cta small">Start Quiz</span>
+                  <span className="card-cta small">Start Mini Quiz</span>
                 </Link>
                 
                 <Link
                   to="#"
                   onClick={(e) => handleQuizTileClick(e, 'circles', 'Circles')}
-                  className="landing-quiz-card landing-quiz-card--small pos-tr theme-purple"
+                  className="landing-quiz-card tilt-card landing-quiz-card--small pos-tr theme-purple"
                 >
+                  <div className="card-count">300 questions</div>
                   <div className="card-header">Circles</div>
                   <div className="card-body">
-                    <span className="card-meta">Math. 5 questions</span>
+                    <span className="card-meta">Math</span>
                   </div>
-                  <span className="card-cta small">Start Quiz</span>
+                  <span className="card-cta small">Start Mini Quiz</span>
                 </Link>
                 
                 <Link
                   to="#"
                   onClick={(e) => { e.preventDefault(); handlePredictiveTest(); }}
-                  className="landing-quiz-card landing-quiz-card--large pos-center first-test-pulsate theme-green"
+                  className="landing-quiz-card tilt-card landing-quiz-card--large pos-center first-test-pulsate theme-green"
                   aria-label="Create a mini test"
                 >
                   <div className="card-header">Create a mini test</div>
@@ -443,31 +481,33 @@ const LandingPage = () => {
                 <Link
                   to="#"
                   onClick={(e) => handleQuizTileClick(e, 'boundaries', 'Boundaries')}
-                  className="landing-quiz-card landing-quiz-card--small pos-ml theme-orange"
+                  className="landing-quiz-card tilt-card landing-quiz-card--small pos-ml theme-orange"
                 >
+                  <div className="card-count">320 questions</div>
                   <div className="card-header">Boundaries</div>
                   <div className="card-body">
-                    <span className="card-meta">Reading and writing. 5 questions</span>
+                    <span className="card-meta">Reading and writing</span>
                   </div>
-                  <span className="card-cta small">Start Quiz</span>
+                  <span className="card-cta small">Start Mini Quiz</span>
                 </Link>
                 
                 <Link
                   to="#"
                   onClick={(e) => handleQuizTileClick(e, 'linear-equations', 'Linear Equations')}
-                  className="landing-quiz-card landing-quiz-card--small pos-mr theme-teal"
+                  className="landing-quiz-card tilt-card landing-quiz-card--small pos-mr theme-teal"
                 >
+                  <div className="card-count">300 questions</div>
                   <div className="card-header">Linear Equations</div>
                   <div className="card-body">
-                    <span className="card-meta">Math. 5 questions</span>
+                    <span className="card-meta">Math</span>
                   </div>
-                  <span className="card-cta small">Start Quiz</span>
+                  <span className="card-cta small">Start Mini Quiz</span>
                 </Link>
 
                 {/* New bottom-left CTA: Ten more quizzes */}
                 <Link
                   to="/guest-subject-quizzes"
-                  className="landing-quiz-card landing-quiz-card--small pos-bl theme-gray"
+                  className="landing-quiz-card tilt-card landing-quiz-card--small pos-bl theme-gray"
                 >
                   <div className="card-body">
                     <span className="card-title">8 more Reading and Writing quiz topics</span>
@@ -478,7 +518,7 @@ const LandingPage = () => {
                 {/* New bottom-right CTA: Ten more quizzes */}
                 <Link
                   to="/guest-subject-quizzes"
-                  className="landing-quiz-card landing-quiz-card--small pos-br theme-gray"
+                  className="landing-quiz-card tilt-card landing-quiz-card--small pos-br theme-gray"
                 >
                   <div className="card-body">
                     <span className="card-title">17 more Math quiz topics</span>
@@ -492,10 +532,7 @@ const LandingPage = () => {
       </div>
       </section>
 
-      {/* Question Bank Section */}
-      <QuestionBank />
-
-      {/* Bluebook on Phone Section */}
+      {/* Bluebook on Phone Section - moved above Question Bank */}
       <section className="bluebook-phone-section">
         <div className="container">
           <div className="section-header-center">
@@ -532,6 +569,9 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Question Bank Section */}
+      <QuestionBank />
 
       {/* Core Features Section - Symmetric Grid */}
       <section className="core-features-section">

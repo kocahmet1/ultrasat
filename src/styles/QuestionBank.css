@@ -1,35 +1,14 @@
 /* Question Bank - Horizontal Layout */
 .question-bank-section {
   padding: 80px 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: #ffffff; /* swapped to plain white */
   border-top: 1px solid #e8eaed;
   position: relative;
   overflow: hidden;
 }
 
-.question-bank-section::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 20%,
-    rgba(16, 185, 129, 0.08) 25%,
-    rgba(16, 185, 129, 0.12) 30%,
-    rgba(240, 253, 250, 0.25) 40%,
-    rgba(240, 253, 250, 0.35) 50%,
-    rgba(240, 253, 250, 0.25) 60%,
-    rgba(16, 185, 129, 0.12) 70%,
-    rgba(16, 185, 129, 0.08) 75%,
-    transparent 80%
-  );
-  animation: shimmer-shine 6s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-}
+/* swap out shimmer for plain background */
+.question-bank-section::before { display: none; }
 
 @keyframes shimmer-shine {
   0% {

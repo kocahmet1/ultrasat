@@ -86,3 +86,137 @@
     align-self: flex-end;
   }
 }
+
+/* --- Modal & Analysis Panel Styles --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  width: min(1000px, 95vw);
+  max-height: 85vh;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #555;
+}
+
+.icon-button:hover { color: #000; }
+
+.modal-body {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
+}
+
+.modal-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modal-col { min-width: 0; }
+
+.question-text {
+  background: #fafafa;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.answers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.answer-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid #e6e6e6;
+  border-left: 4px solid transparent;
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.answer-choice .answer-left {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.answer-letter { font-weight: 600; width: 20px; color: #666; }
+.answer-text { flex: 1; }
+.answer-actions { display: flex; gap: 8px; }
+
+/* Highlight correct answer */
+.answer-correct { border-left-color: #2e7d32; background: #f1f8e9; }
+
+.rewrite-notes {
+  font-size: 12px;
+  color: #555;
+  background: #f7f7f7;
+  border-left: 3px solid #90caf9;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.analysis-panel {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.analysis-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: #555;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.flags-list { list-style: disc; padding-left: 20px; margin: 8px 0; }
+.flags-list li { margin-bottom: 6px; }
+
+@media (max-width: 900px) {
+  .modal-columns { grid-template-columns: 1fr; }
+}

@@ -27,6 +27,7 @@
     "express-rate-limit": "^6.7.0",
     "firebase": "^9.22.0",
     "firebase-admin": "^13.4.0",
+    "framer-motion": "^12.23.21",
     "helmet": "^7.0.0",
     "marked": "^5.1.2",
     "multer": "^2.0.0",

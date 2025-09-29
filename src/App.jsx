@@ -84,6 +84,7 @@ const MembershipManagement = React.lazy(() => import('./components/admin/Members
 const SubcategorySettings = React.lazy(() => import('./components/admin/SubcategorySettings'));
 const ConceptImport = React.lazy(() => import('./pages/ConceptImport'));
 const QuestionImport = React.lazy(() => import('./pages/QuestionImport'));
+const AdminQuestionQuality = React.lazy(() => import('./pages/AdminQuestionQuality'));
 
 // Quiz and Learning Pages
 const AllExamResults = React.lazy(() => import('./pages/AllExamResults'));
@@ -248,6 +249,7 @@ const router = createBrowserRouter([
       { path: '/admin/graph-descriptions', element: <PrivateSuspenseRoute><GraphDescriptionTool /></PrivateSuspenseRoute> },
       { path: '/admin/learning-content', element: <PrivateSuspenseRoute><AdminLearningContent /></PrivateSuspenseRoute> },
       { path: '/admin/blog-management', element: <PrivateSuspenseRoute><AdminBlogManagement /></PrivateSuspenseRoute> },
+      { path: '/admin/question-quality', element: <PrivateSuspenseRoute><AdminQuestionQuality /></PrivateSuspenseRoute> },
       { path: '/admin/membership-management', element: <PrivateSuspenseRoute><MembershipManagement /></PrivateSuspenseRoute> },
       { path: '/membership/upgrade', element: <PrivateSuspenseRoute><MembershipUpgrade /></PrivateSuspenseRoute> },
       { path: '/payment/success', element: <PrivateSuspenseRoute><PaymentSuccess /></PrivateSuspenseRoute> },

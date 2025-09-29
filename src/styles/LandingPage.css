@@ -918,10 +918,63 @@ body {
   padding: 0 1rem;
 }
 
+/* Glass panel wrapper for the right column Question Bank */
+.glass-panel {
+  position: relative;
+  width: 100%;
+  padding: 10px 12px 10px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 20px 40px rgba(17, 24, 39, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+
+/* Ambient gradient orbs behind content */
+.glass-panel::before,
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(35px);
+  opacity: 0.25;
+  z-index: 0;
+}
+
+.glass-panel::before {
+  width: 220px;
+  height: 220px;
+  top: -60px;
+  right: -60px;
+  background: radial-gradient(circle at 30% 30%, rgba(59,130,246,0.75), rgba(99,102,241,0.25), transparent 70%);
+  animation: floatOrb1 14s ease-in-out infinite;
+}
+
+.glass-panel::after {
+  width: 280px;
+  height: 280px;
+  bottom: -80px;
+  left: -80px;
+  background: radial-gradient(circle at 60% 60%, rgba(16,185,129,0.7), rgba(59,130,246,0.25), transparent 70%);
+  animation: floatOrb2 16s ease-in-out infinite;
+}
+
+@keyframes floatOrb1 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(12px) translateX(-8px); }
+}
+
+@keyframes floatOrb2 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-10px) translateX(10px); }
+}
+
 .practice-features-image .column-header {
   width: 100%;
   max-width: 500px;
-  margin: 0 auto;
+  margin: 0 auto 6px;
   text-align: center;
 }
 
@@ -959,7 +1012,34 @@ body {
 /* Bluebook on Phone Section */
 .bluebook-phone-section {
   padding: 5rem 2rem;
-  background: white;
+  /* Adopt the gradient/ambient style from Question Bank */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bluebook-phone-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 20%,
+    rgba(16, 185, 129, 0.08) 25%,
+    rgba(16, 185, 129, 0.12) 30%,
+    rgba(240, 253, 250, 0.25) 40%,
+    rgba(240, 253, 250, 0.35) 50%,
+    rgba(240, 253, 250, 0.25) 60%,
+    rgba(16, 185, 129, 0.12) 70%,
+    rgba(16, 185, 129, 0.08) 75%,
+    transparent 80%
+  );
+  animation: shimmer-shine 6s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .bluebook-phone-section .container {
@@ -1918,9 +1998,79 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, auto);
-  gap: 12px;
+  gap: 6px;
   width: 100%;
   max-width: 500px;
+  align-items: start; /* prevent small tiles from stretching vertically */
+  position: relative;
+  z-index: 0;
+}
+
+/* Decorative horizontal traces suggesting additional buttons below */
+.landing-quiz-grid::before,
+.landing-quiz-grid::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  bottom: 64px;
+  width: 43%;
+  height: 120px;
+  z-index: 0;
+}
+
+.landing-quiz-grid::before {
+  left: 0;
+  background-image:
+    /* violet */
+    linear-gradient(to right, rgba(168, 85, 247, 0.22), rgba(168, 85, 247, 0.22)),
+    /* blue */
+    linear-gradient(to right, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.18)),
+    /* cyan */
+    linear-gradient(to right, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0.16)),
+    /* pink */
+    linear-gradient(to right, rgba(244, 114, 182, 0.14), rgba(244, 114, 182, 0.14));
+  background-repeat: no-repeat;
+  background-size:
+    100% 12px,
+    92% 10px,
+    84% 8px,
+    72% 6px;
+  background-position:
+    left 0 top 0,
+    left 0 top 28px,
+    left 0 top 52px,
+    left 0 top 74px;
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+.landing-quiz-grid::after {
+  right: 0;
+  background-image:
+    /* emerald */
+    linear-gradient(to right, rgba(16, 185, 129, 0.22), rgba(16, 185, 129, 0.22)),
+    /* teal */
+    linear-gradient(to right, rgba(45, 212, 191, 0.18), rgba(45, 212, 191, 0.18)),
+    /* amber */
+    linear-gradient(to right, rgba(245, 158, 11, 0.16), rgba(245, 158, 11, 0.16)),
+    /* indigo */
+    linear-gradient(to right, rgba(99, 102, 241, 0.14), rgba(99, 102, 241, 0.14));
+  background-repeat: no-repeat;
+  background-size:
+    100% 12px,
+    92% 10px,
+    84% 8px,
+    72% 6px;
+  background-position:
+    right 0 top 0,
+    right 0 top 28px,
+    right 0 top 52px,
+    right 0 top 74px;
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+/* Ensure tiles render above the traces */
+.landing-quiz-grid .landing-quiz-card {
+  z-index: 1;
 }
 
 /* Wrapper near quiz grid */
@@ -1952,9 +2102,29 @@ body {
   padding: 14px 16px 6px;
   text-decoration: none;
   color: var(--dark-text);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
   position: relative;
   overflow: hidden;
+}
+
+/* Sheen highlight overlay */
+.landing-quiz-card::after {
+  content: '';
+  position: absolute;
+  top: -120%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 65%);
+  transform: rotate(12deg);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landing-quiz-card:hover::after {
+  opacity: 1;
+  transform: rotate(12deg) translateY(25%);
 }
 
 /* Internal layout for header/body/cta to match sample */
@@ -1962,18 +2132,34 @@ body {
   background: var(--tile-accent-header, #eef5ff);
   color: var(--dark-text);
   border-radius: 10px;
-  padding: 8px 12px;
+  padding: 5px 9px;
   font-weight: 600;
   font-size: 0.92rem;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .landing-quiz-card .card-body {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+/* Center meta text for small quiz tiles */
+.landing-quiz-card--small .card-body {
+  text-align: center;
+  align-items: center;
+}
+
+/* Small count label above headers */
+.landing-quiz-card .card-count {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b; /* slate-500 */
+  margin-bottom: 4px;
+  text-align: center;
+  letter-spacing: 0.2px;
 }
 
 .landing-quiz-card .card-meta {
@@ -1997,6 +2183,38 @@ body {
   padding: 7px 12px;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+/* Middle-row card density tweaks (Boundaries, Linear Equations) */
+.landing-quiz-card.pos-ml,
+.landing-quiz-card.pos-mr {
+  padding: 6px 8px 4px;
+  min-height: 80px;
+  align-self: start; /* ensure these tiles keep their natural height */
+}
+
+.landing-quiz-card.pos-ml .card-header,
+.landing-quiz-card.pos-mr .card-header {
+  margin-bottom: 4px;
+  padding: 5px 8px;
+}
+
+.landing-quiz-card.pos-ml .card-body,
+.landing-quiz-card.pos-mr .card-body {
+  margin-bottom: 4px;
+  gap: 2px;
+}
+
+/* Compress bottom spacing by reducing CTA offset */
+.landing-quiz-card.pos-ml .card-cta.small,
+.landing-quiz-card.pos-mr .card-cta.small {
+  margin-top: 0;
+}
+
+.landing-quiz-card.pos-ml .card-cta.small,
+.landing-quiz-card.pos-mr .card-cta.small {
+  padding: 6px 9px;
+  font-size: 0.8rem;
 }
 
 .landing-quiz-card:hover .card-cta {
@@ -2032,9 +2250,11 @@ body {
 }
 
 .landing-quiz-card:hover {
-  transform: translateY(-2px);
+  /* Keep hover translation subtle so it doesn't fight tilt */
+  transform: translateY(-1px);
   box-shadow: var(--shadow-hover);
   border-color: rgba(0, 0, 0, 0.08);
+  filter: saturate(1.02);
 }
 
 .landing-quiz-card:focus-visible {
@@ -2044,12 +2264,12 @@ body {
 
 /* Size modifiers */
 .landing-quiz-card--small {
-  min-height: 100px;
+  min-height: 88px;
 }
 
 .landing-quiz-card--large {
-  min-height: 150px;
-  padding: 18px 20px 10px;
+  min-height: 126px;
+  padding: 14px 16px 6px;
   font-weight: 700;
   background: linear-gradient(180deg, #ffffff, #fbfffb);
   border-color: rgba(95, 207, 127, 0.3);
@@ -2117,6 +2337,18 @@ body {
   }
   .landing-quiz-card--large {
     min-height: 120px;
+  }
+}
+
+/* Reduce glass intensity and animations on mobile for performance */
+@media (max-width: 768px) {
+  .glass-panel {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .glass-panel::before,
+  .glass-panel::after {
+    display: none;
   }
 }
 
