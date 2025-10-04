@@ -85,18 +85,46 @@ export function AuthProvider({ children }) {
         // Don't fail signup if deck creation fails - it's non-critical
       }
       
-      // Send email verification
+      // Send email verification via custom email service
       try {
-        // Optional: set language
-        auth.languageCode = 'en';
-        const actionCodeSettings = {
-          url: `${window.location.origin}/verify-email`,
-          handleCodeInApp: false
-        };
-        await sendEmailVerification(userCredential.user, actionCodeSettings);
-        console.log('Verification email sent');
+        // Try to send via custom SendGrid service first
+        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${API_URL}/api/email/send-verification`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: userCredential.user.email,
+            name: name
+          })
+        });
+
+        if (response.ok) {
+          console.log('✅ Custom verification email sent via SendGrid');
+        } else {
+          // Fallback to Firebase default if custom email fails
+          console.warn('Custom email service failed, falling back to Firebase default');
+          auth.languageCode = 'en';
+          const actionCodeSettings = {
+            url: `${window.location.origin}/verify-email`,
+            handleCodeInApp: false
+          };
+          await sendEmailVerification(userCredential.user, actionCodeSettings);
+          console.log('Verification email sent via Firebase default');
+        }
       } catch (verifyErr) {
         console.error('Failed to send verification email:', verifyErr);
+        // Try Firebase fallback one more time
+        try {
+          auth.languageCode = 'en';
+          const actionCodeSettings = {
+            url: `${window.location.origin}/verify-email`,
+            handleCodeInApp: false
+          };
+          await sendEmailVerification(userCredential.user, actionCodeSettings);
+          console.log('Verification email sent via Firebase fallback');
+        } catch (fallbackErr) {
+          console.error('Both email methods failed:', fallbackErr);
+        }
         // Do not block signup on email sending errors
       }
       

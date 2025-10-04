@@ -291,3 +291,45 @@
   box-shadow: 0 14px 32px rgba(79,70,229,0.28);
 }
 
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .subject-quizzes-container {
+    padding: 20px;
+    margin: 0;
+  }
+
+  .quiz-selection-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+  }
+
+  .quiz-category-card {
+    width: 100%;
+    min-width: unset;
+    margin: 0;
+  }
+
+  /* Make subcategory list single column on mobile */
+  .subcategory-list-inline {
+    column-count: 1;
+  }
+
+  .subcategory-list-inline li {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .quiz-category-card h2 {
+    font-size: 2rem;
+  }
+
+  .subcategory-name {
+    font-size: 1.1rem;
+  }
+
+  .current-level {
+    font-size: 0.75rem;
+  }
+}
+

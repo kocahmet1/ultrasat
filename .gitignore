@@ -29,3 +29,26 @@ yarn-error.log*
 !package.json
 !package-lock.json
 ultrasat-5e4c4-369f564bdaef.json
+
+# Backup files
+*.bak
+*.old
+*.new
+*.backup
+
+# Debug and log files
+*.log
+*-debug.log
+pglite-debug.log
+
+# Temporary and test files
+temp/
+tmp/
+test_*.js
+*_test.js
+git_output.txt
+prompt.txt
+
+# Build analysis
+build-analysis.json
+firebase-structure.json

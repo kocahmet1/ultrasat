@@ -18,7 +18,7 @@ const navItems = [
   { path: '/progress', icon: <FaChartBar />, label: 'Progress' },
   { path: '/predictive-exam', icon: <FaBullseye />, label: 'Predictive' },
   { path: '/practice-exams', icon: <FaClipboardList />, label: 'Exams' },
-  { path: '/study-resources', icon: <FaBookOpen />, label: 'Resources' },
+  { path: '/subject-quizzes', icon: <FaBookOpen />, label: 'Questions' },
   { path: '/word-bank', icon: <FaBook />, label: 'Words' },
   { path: '/concept-bank', icon: <FaPuzzlePiece />, label: 'Concepts' },
   { path: '/profile', icon: <FaUserCircle />, label: 'Profile' }

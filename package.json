@@ -12,6 +12,7 @@
     "@google/generative-ai": "^0.24.1",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
+    "@sendgrid/mail": "^8.1.6",
     "@stripe/stripe-js": "^2.4.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

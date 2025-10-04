@@ -22,6 +22,7 @@ const stripeRouter = require('./stripeRoutes');
 const blogRouter = require('./blogRoutes');
 const reportRouter = require('./reportRoutes');
 const questionQualityRouter = require('./questionQualityRoutes');
+const emailRouter = require('./emailRoutes');
 // Conditionally load graph generation modules only if dependencies are available
 let graphGenerationPlotlyRouter;
 console.log('--- ENV VARS FOR GRAPH GENERATION ---');
@@ -173,6 +174,7 @@ app.use('/api/stripe', attachFirebaseAdmin, stripeRouter);
 app.use('/api/blog', blogRouter);
 app.use('/api/reports', attachFirebaseAdmin, reportRouter);
 app.use('/api/question-quality', attachFirebaseAdmin, questionQualityRouter);
+app.use('/api/email', attachFirebaseAdmin, emailRouter);
 
 // Help/FAQ endpoint
 app.get('/api/help', (req, res) => {
