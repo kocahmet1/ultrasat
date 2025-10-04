@@ -32,6 +32,15 @@ async function sendVerificationEmail(email, name, verificationLink) {
       name: 'UltraSAT'
     },
     subject: 'Verify your UltraSAT account',
+    trackingSettings: {
+      clickTracking: {
+        enable: false,
+        enableText: false
+      },
+      openTracking: {
+        enable: true
+      }
+    },
     text: `Hi ${name},\n\nWelcome to UltraSAT! Please verify your email address by clicking the link below:\n\n${verificationLink}\n\nThis link will expire in 24 hours.\n\nIf you didn't create an account, you can safely ignore this email.\n\nBest regards,\nThe UltraSAT Team`,
     html: `
       <!DOCTYPE html>
@@ -134,6 +143,15 @@ async function sendPasswordResetEmail(email, resetLink) {
       name: 'UltraSAT'
     },
     subject: 'Reset your UltraSAT password',
+    trackingSettings: {
+      clickTracking: {
+        enable: false,
+        enableText: false
+      },
+      openTracking: {
+        enable: true
+      }
+    },
     text: `You requested to reset your password.\n\nClick the link below to set a new password:\n\n${resetLink}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, you can safely ignore this email.\n\nBest regards,\nThe UltraSAT Team`,
     html: `
       <!DOCTYPE html>
