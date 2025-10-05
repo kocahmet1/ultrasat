@@ -41,6 +41,13 @@
   line-height: 1.6;
 }
 
+.fullscreen-modal-content .mobile-tip {
+  margin-top: -20px;
+  margin-bottom: 30px;
+  color: #444;
+  font-size: 1rem;
+}
+
 .fullscreen-modal-actions {
   display: flex;
   justify-content: center;
@@ -73,6 +80,12 @@
     font-size: 1rem;
     max-width: 100%;
     margin-bottom: 30px;
+  }
+
+  .fullscreen-modal-content .mobile-tip {
+    margin-top: -10px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
   }
 
   .fullscreen-modal-actions {
