@@ -294,12 +294,22 @@ const LandingPage = () => {
             />
           </div>
           <nav className="main-nav">
-            <button 
-              className="mobile-nav-toggle"
-              onClick={() => setMobileNavOpen(!mobileNavOpen)}
-            >
-              ☰
-            </button>
+            <div className="mobile-quick-links">
+              {!currentUser && (
+                <Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Sign Up</Link>
+              )}
+              <Link to="/practice-exams" onClick={() => setMobileNavOpen(false)}>Exams</Link>
+              <Link to="/subject-quizzes" onClick={() => setMobileNavOpen(false)}>Question Bank</Link>
+              <Link to="/word-bank" onClick={() => setMobileNavOpen(false)}>Word Bank</Link>
+              <button 
+                className="mobile-more-button"
+                onClick={() => setMobileNavOpen(!mobileNavOpen)}
+                aria-expanded={mobileNavOpen}
+                aria-controls="landing-mobile-menu"
+              >
+                More ▾
+              </button>
+            </div>
             <ul className={mobileNavOpen ? 'mobile-nav-open' : ''}>
               {currentUser ? (
                 <>

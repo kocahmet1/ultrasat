@@ -126,6 +126,29 @@ body {
   align-items: center;
 }
 
+/* Mobile quick links row visible only on small screens */
+.mobile-quick-links {
+  display: none;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.mobile-quick-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.mobile-quick-links .mobile-more-button {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 1200px) {
   .main-nav ul {
     gap: 1rem;
@@ -2478,6 +2501,12 @@ body {
   .main-nav ul {
     display: none; /* Hide full nav on mobile */
   }
+
+  .mobile-quick-links {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
   
   .main-nav ul.mobile-nav-open {
     display: flex;
@@ -2696,6 +2725,11 @@ body {
   
   .main-nav ul {
     display: none;
+  }
+
+  .mobile-quick-links {
+    display: flex;
+    gap: 0.6rem;
   }
   
   .main-nav ul.mobile-nav-open {
