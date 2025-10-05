@@ -173,70 +173,81 @@ function ExamModule({
     }
   };
 
-  // Handle fullscreen state changes and orientation locking
+  // Lock orientation to landscape on mobile when in fullscreen
   useEffect(() => {
-    // Use a ref-like variable to track if we're already attempting to lock
-    let lockAttempted = false;
+    let isLocking = false; // Prevent multiple simultaneous lock attempts
 
-    const lockOrientation = async () => {
-      // Skip if already attempted, not mobile, or API not available
-      if (lockAttempted || !isMobile || !window.screen?.orientation?.lock) {
+    const canUseOrientationAPI = () => {
+      return (
+        typeof window !== 'undefined' &&
+        window.screen &&
+        window.screen.orientation &&
+        (window.screen.orientation.lock || window.screen.orientation.unlock)
+      );
+    };
+
+    const lockOrientation = () => {
+      if (isLocking || !isMobile || !canUseOrientationAPI() || !window.screen.orientation.lock) {
         return;
       }
 
-      // Check if already in landscape
       const currentOrientation = window.screen.orientation.type;
-      if (currentOrientation.includes('landscape')) {
-        console.log('Already in landscape orientation');
+      if (currentOrientation && currentOrientation.includes('landscape')) {
         return;
       }
 
-      lockAttempted = true;
-      
+      isLocking = true;
+
+      window.screen.orientation
+        .lock('landscape-primary')
+        .catch(() => window.screen.orientation.lock('landscape'))
+        .finally(() => {
+          isLocking = false;
+        });
+    };
+
+    const unlockOrientation = () => {
+      if (!isMobile || !canUseOrientationAPI() || !window.screen.orientation.unlock) {
+        return;
+      }
+
       try {
-        // Try landscape-primary first
-        await window.screen.orientation.lock('landscape-primary');
-        console.log('Orientation locked to landscape-primary');
-      } catch (err) {
-        try {
-          // Fallback to just landscape
-          await window.screen.orientation.lock('landscape');
-          console.log('Orientation locked to landscape');
-        } catch (error) {
-          console.log('Orientation lock failed:', error.message);
-        }
+        window.screen.orientation.unlock();
+      } catch (error) {
+        console.log('Orientation unlock failed:', error.message);
       }
     };
 
     const handleFullscreenChange = () => {
       const isNowFullscreen = !!document.fullscreenElement;
       setIsFullscreen(isNowFullscreen);
-      
-      // Only lock orientation when ENTERING fullscreen on mobile
-      if (isNowFullscreen && isMobile) {
-        // Small delay to ensure fullscreen is fully established
+
+      if (!isMobile || !canUseOrientationAPI()) {
+        return;
+      }
+
+      if (isNowFullscreen) {
         setTimeout(() => {
           lockOrientation();
-        }, 150);
+        }, 100);
+      } else {
+        unlockOrientation();
       }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
 
+    // Sync state and orientation on mount
+    handleFullscreenChange();
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      
-      // Unlock orientation when component unmounts
-      if (isMobile && window.screen?.orientation?.unlock) {
-        try {
-          window.screen.orientation.unlock();
-          console.log('Orientation unlocked');
-        } catch (error) {
-          console.log('Orientation unlock failed:', error.message);
-        }
+
+      if (isMobile) {
+        unlockOrientation();
       }
     };
-  }, [isMobile]); // Only depend on isMobile, not isFullscreen
+  }, [isMobile]);
 
   // Prevent accidental tab closing
   useEffect(() => {
