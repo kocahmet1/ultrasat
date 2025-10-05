@@ -22,7 +22,7 @@ const FullscreenModal = ({ isOpen, onSwitch, onClose }) => {
     <div className="fullscreen-modal-overlay">
       <div className="fullscreen-modal-content">
         <h2>Fullscreen Recommended</h2>
-        <p>For the best experience, we recommend taking the exam in fullscreen mode. The exam will be displayed in landscape orientation.</p>
+        <p>For the best experience, we recommend taking the exam in fullscreen mode. For mobile devices, landscape orientation is recommended for optimal viewing.</p>
         <div className="fullscreen-modal-actions">
           <button className="primary-button" onClick={handleSwitchToFullscreen}>
             Switch to Fullscreen
