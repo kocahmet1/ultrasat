@@ -10,18 +10,7 @@ const FullscreenModal = ({ isOpen, onSwitch, onClose }) => {
     if (document.documentElement.requestFullscreen) {
       try {
         await document.documentElement.requestFullscreen();
-        
-        // After entering fullscreen, try to lock orientation to landscape on mobile
-        if (window.innerWidth <= 768 && window.screen.orientation && window.screen.orientation.lock) {
-          // Try landscape-primary first, fallback to landscape
-          window.screen.orientation.lock('landscape-primary')
-            .catch(() => {
-              return window.screen.orientation.lock('landscape');
-            })
-            .catch((error) => {
-              console.log('Orientation lock failed:', error.message);
-            });
-        }
+        // Orientation lock will be handled by ExamModule's fullscreenchange listener
       } catch (error) {
         console.log('Fullscreen request failed:', error);
       }
@@ -33,7 +22,7 @@ const FullscreenModal = ({ isOpen, onSwitch, onClose }) => {
     <div className="fullscreen-modal-overlay">
       <div className="fullscreen-modal-content">
         <h2>Fullscreen Recommended</h2>
-        <p>For the best experience, we recommend taking the exam in fullscreen mode.</p>
+        <p>For the best experience, we recommend taking the exam in fullscreen mode.{window.innerWidth <= 768 ? ' The exam will be displayed in landscape orientation.' : ''}</p>
         <div className="fullscreen-modal-actions">
           <button className="secondary-button" onClick={onClose}>Maybe Later</button>
           <button className="primary-button" onClick={handleSwitchToFullscreen}>
