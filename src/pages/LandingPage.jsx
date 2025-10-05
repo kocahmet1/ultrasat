@@ -16,6 +16,7 @@ const LandingPage = () => {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const particlesRef = useRef(null);
+  const navRef = useRef(null);
   const [animatedScore, setAnimatedScore] = useState(0);
   const [animatedSuccessRate, setAnimatedSuccessRate] = useState(0);
   const [animatedQuestions, setAnimatedQuestions] = useState(0);
@@ -39,6 +40,22 @@ const LandingPage = () => {
     };
     return explicitMap[lower] || getKebabCaseFromAnyFormat(lower) || lower;
   };
+  
+  // Close mobile nav when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target) && mobileNavOpen) {
+        setMobileNavOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [mobileNavOpen]);
   
   // Fetch practice exams on component mount (only if user is authenticated)
   useEffect(() => {
@@ -293,7 +310,7 @@ const LandingPage = () => {
               className="landing-logo"
             />
           </div>
-          <nav className="main-nav">
+          <nav className="main-nav" ref={navRef}>
             <div className="mobile-quick-links">
               {!currentUser && (
                 <Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Sign Up</Link>
@@ -341,6 +358,14 @@ const LandingPage = () => {
           </nav>
         </div>
       </header>
+
+      {/* Mobile nav overlay */}
+      {mobileNavOpen && (
+        <div 
+          className="mobile-nav-overlay" 
+          onClick={() => setMobileNavOpen(false)}
+        ></div>
+      )}
 
       {/* Hero Section - Completely Redesigned */}
       <section className="hero-section-new">

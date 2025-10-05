@@ -116,13 +116,16 @@
 
   .dropdown-menu {
     position: fixed;
-    top: 60px;
-    right: 10px;
-    width: calc(100vw - 20px);
-    max-width: 280px;
-    max-height: calc(100vh - 70px);
+    top: 70px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: calc(100vw - 40px);
+    max-width: 320px;
+    max-height: calc(100vh - 90px);
     overflow-y: auto;
     z-index: 9999;
+    border: 2px solid #007bff;
   }
 
   .dropdown-header {
@@ -141,5 +144,19 @@
 
   .dropdown-icon {
     margin-right: 10px;
+  }
+}
+
+/* Overlay for mobile dropdown */
+@media (max-width: 768px) {
+  .dropdown-menu::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
   }
 }
