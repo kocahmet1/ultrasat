@@ -177,15 +177,6 @@ function ExamModule({
   useEffect(() => {
     let isLocking = false; // Prevent multiple simultaneous lock attempts
 
-    const isEdgeLike = () => {
-      if (typeof navigator === 'undefined') {
-        return false;
-      }
-
-      const ua = navigator.userAgent || '';
-      return /EdgA|EdgiOS|Edg\//.test(ua);
-    };
-
     const canUseOrientationAPI = () => {
       return (
         typeof window !== 'undefined' &&
@@ -195,10 +186,8 @@ function ExamModule({
       );
     };
 
-    const shouldUseOrientationLock = isMobile && !isEdgeLike();
-
     const lockOrientation = () => {
-      if (isLocking || !shouldUseOrientationLock || !canUseOrientationAPI() || !window.screen.orientation.lock) {
+      if (isLocking || !isMobile || !canUseOrientationAPI() || !window.screen.orientation.lock) {
         return;
       }
 
@@ -218,7 +207,7 @@ function ExamModule({
     };
 
     const unlockOrientation = () => {
-      if (!shouldUseOrientationLock || !canUseOrientationAPI() || !window.screen.orientation.unlock) {
+      if (!isMobile || !canUseOrientationAPI() || !window.screen.orientation.unlock) {
         return;
       }
 
@@ -233,7 +222,7 @@ function ExamModule({
       const isNowFullscreen = !!document.fullscreenElement;
       setIsFullscreen(isNowFullscreen);
 
-      if (!shouldUseOrientationLock || !canUseOrientationAPI()) {
+      if (!isMobile || !canUseOrientationAPI()) {
         return;
       }
 
@@ -254,7 +243,7 @@ function ExamModule({
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
 
-      if (shouldUseOrientationLock) {
+      if (isMobile) {
         unlockOrientation();
       }
     };

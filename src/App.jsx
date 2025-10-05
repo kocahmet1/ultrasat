@@ -4,6 +4,7 @@ import {
   RouterProvider,
   Navigate,
   Outlet,
+  useLocation,
 } from 'react-router-dom';
 
 // Only import critical components that are needed immediately
@@ -151,15 +152,21 @@ const PrivateSuspenseRoute = ({ children }) => (
 // Define a RootLayout component that includes the common UI structure
 const RootLayout = () => {
   const isMobile = useIsMobile();
+  const location = useLocation();
+  const isExamPage = location.pathname.includes('/practice-exam/') || location.pathname.includes('/exam/');
+  const showProfileDropdown = !isMobile || !isExamPage;
+  
   return (
     <SidebarVisibility>
       <AnalyticsTracker />
       <div className="app-container">
         {isMobile ? <TopNavBar /> : <Sidebar />}
         <div className="main-content">
-          <div className="top-bar">
-             <ProfileDropdown />
-          </div>
+          {showProfileDropdown && (
+            <div className="top-bar">
+               <ProfileDropdown />
+            </div>
+          )}
           <Outlet />
         </div>
       </div>

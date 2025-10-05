@@ -18,14 +18,51 @@
     padding: 4px 6px;
   }
   .section-title {
-    font-size: 15px;
+    font-size: 13px;
   }
   .timer {
-    font-size: 12px;
+    font-size: 11px;
   }
   .timer-toggle-btn {
     font-size: 10px;
     padding: 3px 7px;
+  }
+}
+
+/* Mobile-specific adjustments for very small screens */
+@media (max-width: 768px) {
+  .header {
+    height: 36px;
+    padding: 3px 4px;
+  }
+  
+  .left-section {
+    margin-right: 5px;
+    max-width: 25%;
+  }
+  
+  .section-title {
+    font-size: 11px !important;
+    margin-top: 8px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .timer-container {
+    transform: translateX(-50%);
+    max-width: 30%;
+  }
+  
+  .timer {
+    font-size: 10px;
+    padding: 2px 5px;
+    gap: 3px;
+    margin-right: 2px;
+  }
+  
+  .pause-btn {
+    font-size: 8px;
   }
 }
 
@@ -173,9 +210,43 @@
 .header-controls {
   display: flex;
   align-items: center;
+  gap: 10px;
   position: absolute;
   right: 20px;
   font-family: Arial, sans-serif;
+}
+
+.timer-toggle-btn-mobile {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: Arial, sans-serif;
+  white-space: nowrap;
+}
+
+.timer-toggle-btn-mobile:hover {
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .header-controls {
+    right: 5px;
+    gap: 5px;
+  }
+  
+  .timer-toggle-btn-mobile {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .fullscreen-btn {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
 }
 
 .left-section {
@@ -254,14 +325,35 @@
   font-family: Arial, sans-serif;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
+/* Additional mobile adjustments */
+@media (max-width: 480px) {
   .header {
-    flex-direction: column;
-    align-items: flex-start;
+    height: 34px;
+    padding: 2px 3px;
   }
   
-  .timer-container {
-    margin-top: 10px;
+  .section-title {
+    font-size: 10px !important;
+    margin-top: 6px !important;
+  }
+  
+  .timer {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+  
+  .timer-toggle-btn-mobile {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .fullscreen-btn {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .header-controls {
+    right: 3px;
+    gap: 3px;
   }
 }

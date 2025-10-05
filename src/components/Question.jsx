@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { processTextMarkup } from '../utils/textProcessing';
+import useIsMobile from '../hooks/useIsMobile';
 import '../styles/Question.css';
 
 const Question = ({ 
@@ -21,6 +22,7 @@ const Question = ({
   inputType = 'number',
   answerFormat = null
 }) => {
+  const isMobile = useIsMobile();
   const [userInput, setUserInput] = useState('');
 
   useEffect(() => {
@@ -146,7 +148,7 @@ const Question = ({
         </div>
       </div>
       <div className="right-controls">
-        {questionType === 'multiple-choice' && (
+        {questionType === 'multiple-choice' && !isMobile && (
           <div className="abc-toggle-container">
             <button 
               className={`cross-out-toggle ${showCrossOut ? 'active' : ''}`}
