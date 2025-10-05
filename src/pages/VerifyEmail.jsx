@@ -84,26 +84,56 @@ function VerifyEmail() {
   const goLogin = () => navigate('/login');
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Verify your email</h2>
-        <p>
+    <div className="verify-email-container">
+      <div className="verify-email-card">
+        {/* Email Icon */}
+        <div className="verify-email-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+        </div>
+
+        {/* Title */}
+        <h1 className="verify-email-title">Verify your email</h1>
+        
+        {/* Description */}
+        <p className="verify-email-description">
           {user?.email
-            ? `We sent a verification email to ${user.email}.`
+            ? (
+              <>
+                We sent a verification email to<br />
+                <strong>{user.email}</strong>
+              </>
+            )
             : 'You need to be logged in to verify your email.'}
         </p>
+
+        {/* Spam Warning */}
         {user?.email && (
-          <div className="auth-info" style={{ marginTop: '12px', marginBottom: '12px' }}>
-            <strong>⚠️ Check your spam/junk folder!</strong>
-            <br />
-            Our verification emails sometimes end up in spam. If you don't see it in your inbox, please check your spam folder and mark it as "Not Spam".
+          <div className="verify-warning-box">
+            <div className="warning-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+            </div>
+            <div className="warning-content">
+              <h3>Check your spam/junk folder!</h3>
+              <p>Our verification emails sometimes end up in spam. If you don't see it in your inbox, please check your spam folder and mark it as "Not Spam".</p>
+            </div>
           </div>
         )}
-        {message && <div className={status === 'error' ? 'auth-error' : 'auth-info'}>{message}</div>}
 
-        <div className="auth-actions">
+        {/* Status Message */}
+        {message && (
+          <div className={`verify-message ${status === 'error' ? 'verify-message-error' : 'verify-message-success'}`}>
+            {message}
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="verify-actions">
           {!user && (
-            <button className="auth-button" onClick={goLogin} type="button">
+            <button className="verify-button verify-button-primary" onClick={goLogin} type="button">
               Log In
             </button>
           )}
@@ -111,27 +141,37 @@ function VerifyEmail() {
           {user && !user.emailVerified && (
             <>
               <button
-                className="auth-button"
+                className="verify-button verify-button-secondary"
                 onClick={handleResend}
                 type="button"
                 disabled={status === 'sending'}
               >
-                {status === 'sending' ? 'Sending…' : 'Resend email'}
+                {status === 'sending' ? (
+                  <>
+                    <span className="button-spinner"></span>
+                    Sending…
+                  </>
+                ) : 'Resend email'}
               </button>
               <button
-                className="auth-button secondary"
+                className="verify-button verify-button-primary"
                 onClick={handleIHaveVerified}
                 type="button"
                 disabled={status === 'checking'}
               >
-                {status === 'checking' ? 'Checking…' : "I've verified"}
+                {status === 'checking' ? (
+                  <>
+                    <span className="button-spinner"></span>
+                    Checking…
+                  </>
+                ) : "I've verified"}
               </button>
             </>
           )}
 
           {user && user.emailVerified && (
-            <button className="auth-button" onClick={() => navigate('/progress')} type="button">
-              Continue
+            <button className="verify-button verify-button-primary" onClick={() => navigate('/progress')} type="button">
+              Continue to Dashboard
             </button>
           )}
         </div>
