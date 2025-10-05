@@ -13,9 +13,14 @@ const FullscreenModal = ({ isOpen, onSwitch, onClose }) => {
         
         // After entering fullscreen, try to lock orientation to landscape on mobile
         if (window.innerWidth <= 768 && window.screen.orientation && window.screen.orientation.lock) {
-          window.screen.orientation.lock('landscape').catch((error) => {
-            console.log('Orientation lock failed:', error);
-          });
+          // Try landscape-primary first, fallback to landscape
+          window.screen.orientation.lock('landscape-primary')
+            .catch(() => {
+              return window.screen.orientation.lock('landscape');
+            })
+            .catch((error) => {
+              console.log('Orientation lock failed:', error.message);
+            });
         }
       } catch (error) {
         console.log('Fullscreen request failed:', error);

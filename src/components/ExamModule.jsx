@@ -173,34 +173,66 @@ function ExamModule({
     }
   };
 
+  // Lock orientation to landscape on mobile when in fullscreen
   useEffect(() => {
+    const lockOrientation = () => {
+      if (isMobile && isFullscreen && window.screen.orientation && window.screen.orientation.lock) {
+        // Try landscape-primary first, fallback to landscape
+        window.screen.orientation.lock('landscape-primary')
+          .catch(() => {
+            // If landscape-primary fails, try just landscape
+            return window.screen.orientation.lock('landscape');
+          })
+          .catch((error) => {
+            console.log('Orientation lock failed:', error.message);
+          });
+      }
+    };
+
     const handleFullscreenChange = () => {
       const isNowFullscreen = !!document.fullscreenElement;
       setIsFullscreen(isNowFullscreen);
       
       // When entering fullscreen on mobile, lock orientation to landscape
-      if (isNowFullscreen && isMobile && window.screen.orientation && window.screen.orientation.lock) {
-        window.screen.orientation.lock('landscape').catch((error) => {
-          console.log('Orientation lock failed:', error);
-        });
+      if (isNowFullscreen) {
+        lockOrientation();
       }
-      
-      // When exiting fullscreen on mobile, unlock orientation
-      if (!isNowFullscreen && isMobile && window.screen.orientation && window.screen.orientation.unlock) {
-        window.screen.orientation.unlock();
+    };
+
+    const handleOrientationChange = () => {
+      // Re-lock orientation if it changes while in fullscreen
+      if (isFullscreen && isMobile) {
+        lockOrientation();
       }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
+    
+    // Listen for orientation changes to re-lock if needed
+    if (window.screen.orientation) {
+      window.screen.orientation.addEventListener('change', handleOrientationChange);
+    }
+
+    // Initial lock if already in fullscreen
+    lockOrientation();
 
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      
+      if (window.screen.orientation) {
+        window.screen.orientation.removeEventListener('change', handleOrientationChange);
+      }
+      
       // Unlock orientation when component unmounts
       if (isMobile && window.screen.orientation && window.screen.orientation.unlock) {
-        window.screen.orientation.unlock();
+        try {
+          window.screen.orientation.unlock();
+        } catch (error) {
+          console.log('Orientation unlock failed:', error.message);
+        }
       }
     };
-  }, [isMobile]);
+  }, [isMobile, isFullscreen]);
 
   // Prevent accidental tab closing
   useEffect(() => {
