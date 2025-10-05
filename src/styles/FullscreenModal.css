@@ -45,6 +45,7 @@
   display: flex;
   justify-content: center;
   gap: 20px;
+  width: 100%;
 }
 
 .fullscreen-modal-actions .primary-button,
@@ -53,4 +54,38 @@
   font-size: 1.1rem;
   border-radius: 8px;
   min-width: 200px;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .fullscreen-modal-content {
+    width: 90vw;
+    height: auto;
+    min-height: 50vh;
+    padding: 30px 20px;
+  }
+
+  .fullscreen-modal-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .fullscreen-modal-content p {
+    font-size: 1rem;
+    max-width: 100%;
+    margin-bottom: 30px;
+  }
+
+  .fullscreen-modal-actions {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .fullscreen-modal-actions .primary-button,
+  .fullscreen-modal-actions .secondary-button {
+    width: 100%;
+    min-width: unset;
+    padding: 15px 20px;
+    font-size: 1rem;
+  }
 }

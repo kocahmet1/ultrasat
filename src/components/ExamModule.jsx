@@ -173,7 +173,7 @@ function ExamModule({
     }
   };
 
-  // Lock orientation to landscape on mobile as soon as exam loads
+  // Lock orientation to landscape on mobile when in fullscreen
   useEffect(() => {
     const lockOrientation = () => {
       if (isMobile && window.screen.orientation && window.screen.orientation.lock) {
@@ -184,7 +184,7 @@ function ExamModule({
             return window.screen.orientation.lock('landscape');
           })
           .catch((error) => {
-            console.log('Orientation lock failed (may require fullscreen):', error.message);
+            console.log('Orientation lock failed:', error.message);
           });
       }
     };
@@ -211,8 +211,8 @@ function ExamModule({
     };
 
     const handleOrientationChange = () => {
-      // Re-lock orientation if it changes while exam is active
-      if (isMobile) {
+      // Re-lock orientation if it changes while in fullscreen
+      if (isFullscreen && isMobile) {
         lockOrientation();
       }
     };
@@ -224,8 +224,8 @@ function ExamModule({
       window.screen.orientation.addEventListener('change', handleOrientationChange);
     }
 
-    // Lock orientation immediately when exam loads on mobile
-    if (isMobile) {
+    // Lock orientation if we're in fullscreen (for state changes or remounts)
+    if (isFullscreen) {
       lockOrientation();
     }
 
