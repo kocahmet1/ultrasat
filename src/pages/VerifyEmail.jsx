@@ -108,21 +108,6 @@ function VerifyEmail() {
             : 'You need to be logged in to verify your email.'}
         </p>
 
-        {/* Spam Warning */}
-        {user?.email && (
-          <div className="verify-warning-box">
-            <div className="warning-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
-            </div>
-            <div className="warning-content">
-              <h3>Check your spam/junk folder!</h3>
-              <p>Our verification emails sometimes end up in spam. If you don't see it in your inbox, please check your spam folder and mark it as "Not Spam".</p>
-            </div>
-          </div>
-        )}
-
         {/* Status Message */}
         {message && (
           <div className={`verify-message ${status === 'error' ? 'verify-message-error' : 'verify-message-success'}`}>
