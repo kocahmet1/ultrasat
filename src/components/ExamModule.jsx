@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useBlocker } from 'react-router-dom';
 import Header from './Header';
 import Question from './Question';
@@ -54,6 +54,9 @@ function ExamModule({
   const [markedForReview, setMarkedForReview] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+
+  // Track whether we've already attempted an orientation lock for the current fullscreen session
+  const orientationLockAttemptedRef = useRef(false);
 
   // Report modal state
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -169,6 +172,14 @@ function ExamModule({
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
+        // Best-effort unlock when exiting via toggle
+        try {
+          if (isMobile && window.screen.orientation && window.screen.orientation.unlock) {
+            window.screen.orientation.unlock();
+          }
+        } catch (error) {
+          console.log('Orientation unlock failed:', error.message);
+        }
       }
     }
   };
@@ -187,16 +198,24 @@ function ExamModule({
     };
 
     const lockOrientation = () => {
-      if (isLocking || !isMobile || !canUseOrientationAPI() || !window.screen.orientation.lock) {
+      if (
+        isLocking ||
+        orientationLockAttemptedRef.current ||
+        !isMobile ||
+        !canUseOrientationAPI() ||
+        !window.screen.orientation.lock
+      ) {
         return;
       }
 
       const currentOrientation = window.screen.orientation.type;
       if (currentOrientation && currentOrientation.includes('landscape')) {
+        orientationLockAttemptedRef.current = true;
         return;
       }
 
       isLocking = true;
+      orientationLockAttemptedRef.current = true;
 
       window.screen.orientation
         .lock('landscape-primary')
@@ -231,14 +250,16 @@ function ExamModule({
           lockOrientation();
         }, 100);
       } else {
-        unlockOrientation();
+        // Reset for the next session. Do not unlock here; some browsers
+        // briefly exit fullscreen during rotation.
+        orientationLockAttemptedRef.current = false;
       }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
 
-    // Sync state and orientation on mount
-    handleFullscreenChange();
+    // Sync state and orientation on mount, without forcing a lock attempt
+    setIsFullscreen(!!document.fullscreenElement);
 
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
@@ -485,6 +506,14 @@ function ExamModule({
     // Exit fullscreen if currently in fullscreen mode
     if (document.fullscreenElement && document.exitFullscreen) {
       document.exitFullscreen();
+      // Ensure orientation is released when leaving the exam
+      try {
+        if (isMobile && window.screen.orientation && window.screen.orientation.unlock) {
+          window.screen.orientation.unlock();
+        }
+      } catch (error) {
+        console.log('Orientation unlock failed:', error.message);
+      }
     }
     // Ensure blocker is disabled before navigating
     setTimerRunning(false);
