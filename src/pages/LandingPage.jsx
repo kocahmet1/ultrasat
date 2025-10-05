@@ -472,8 +472,8 @@ const LandingPage = () => {
                 >
                   <div className="card-header">Create a mini test</div>
                   <div className="card-body">
-                    <span className="card-title">Choose question topics</span>
-                    <span className="card-meta">Choose difficulty level and number of questions</span>
+                    <span className="card-meta">• Choose question topics</span>
+                    <span className="card-meta">• Choose difficulty level and number of questions</span>
                   </div>
                   <span className="card-cta">START</span>
                 </Link>

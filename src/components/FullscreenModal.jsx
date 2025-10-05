@@ -6,9 +6,20 @@ const FullscreenModal = ({ isOpen, onSwitch, onClose }) => {
     return null;
   }
 
-  const handleSwitchToFullscreen = () => {
+  const handleSwitchToFullscreen = async () => {
     if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
+      try {
+        await document.documentElement.requestFullscreen();
+        
+        // After entering fullscreen, try to lock orientation to landscape on mobile
+        if (window.innerWidth <= 768 && window.screen.orientation && window.screen.orientation.lock) {
+          window.screen.orientation.lock('landscape').catch((error) => {
+            console.log('Orientation lock failed:', error);
+          });
+        }
+      } catch (error) {
+        console.log('Fullscreen request failed:', error);
+      }
     }
     onSwitch();
   };

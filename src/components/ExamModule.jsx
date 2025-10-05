@@ -14,6 +14,7 @@ import { reportQuestion } from '../api/reportClient';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFlag } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
+import useIsMobile from '../hooks/useIsMobile';
 
 function ExamModule({ 
   moduleNumber, 
@@ -28,6 +29,8 @@ function ExamModule({
   onSaveProgress
 }) {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  
   // Always start from question 0 when a module loads
   // Determine whether to show fullscreen modal for this module (only modules 1 and 3)
   const moduleNumForModal = parseInt(moduleNumber, 10);
@@ -172,15 +175,32 @@ function ExamModule({
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      const isNowFullscreen = !!document.fullscreenElement;
+      setIsFullscreen(isNowFullscreen);
+      
+      // When entering fullscreen on mobile, lock orientation to landscape
+      if (isNowFullscreen && isMobile && window.screen.orientation && window.screen.orientation.lock) {
+        window.screen.orientation.lock('landscape').catch((error) => {
+          console.log('Orientation lock failed:', error);
+        });
+      }
+      
+      // When exiting fullscreen on mobile, unlock orientation
+      if (!isNowFullscreen && isMobile && window.screen.orientation && window.screen.orientation.unlock) {
+        window.screen.orientation.unlock();
+      }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
 
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      // Unlock orientation when component unmounts
+      if (isMobile && window.screen.orientation && window.screen.orientation.unlock) {
+        window.screen.orientation.unlock();
+      }
     };
-  }, []);
+  }, [isMobile]);
 
   // Prevent accidental tab closing
   useEffect(() => {
