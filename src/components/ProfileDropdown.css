@@ -99,6 +99,47 @@
     color: #d9534f;
   }
 
-  .dropdown-item-logout .dropdown-icon {
-      color: #d9534f;
+.dropdown-item-logout .dropdown-icon {
+    color: #d9534f;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .profile-dropdown-container {
+    position: relative;
+    margin-right: 0;
   }
+
+  .profile-trigger-btn {
+    padding: 2px;
+  }
+
+  .dropdown-menu {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    width: calc(100vw - 20px);
+    max-width: 280px;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    z-index: 9999;
+  }
+
+  .dropdown-header {
+    padding: 10px 12px;
+  }
+
+  .dropdown-header span {
+    font-size: 12px;
+    max-width: calc(100vw - 100px);
+  }
+
+  .dropdown-item, .dropdown-item-logout {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .dropdown-icon {
+    margin-right: 10px;
+  }
+}
