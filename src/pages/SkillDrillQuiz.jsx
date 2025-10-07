@@ -87,6 +87,13 @@ const SkillDrillQuiz = () => {
     loadQuizData();
   }, [currentUser, skillTag, navigate]);
   
+  // Scroll to top when quiz is completed
+  useEffect(() => {
+    if (quizCompleted) {
+      window.scrollTo(0, 0);
+    }
+  }, [quizCompleted]);
+  
   // Generate a new quiz from a question the student got wrong
   const generateNewQuiz = async (questionData) => {
     try {

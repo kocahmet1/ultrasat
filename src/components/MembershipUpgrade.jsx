@@ -18,6 +18,10 @@ const MembershipUpgrade = () => {
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [loading, setLoading] = useState({ plus: false, max: false });
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [couponCode, setCouponCode] = useState('');
+  const [validatedCoupon, setValidatedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState('');
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -36,20 +40,73 @@ const MembershipUpgrade = () => {
     }
   };
 
+  const validateCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code');
+      return;
+    }
+
+    setValidatingCoupon(true);
+    setCouponError('');
+
+    try {
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.valid) {
+        // Check if coupon is applicable to current selection
+        const coupon = data.coupon;
+        
+        // We'll validate against all visible plans for now
+        setValidatedCoupon(coupon);
+        setCouponError('');
+      } else {
+        setCouponError(data.error || 'Invalid coupon code');
+        setValidatedCoupon(null);
+      }
+    } catch (error) {
+      console.error('Error validating coupon:', error);
+      setCouponError('Failed to validate coupon');
+      setValidatedCoupon(null);
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponCode('');
+    setValidatedCoupon(null);
+    setCouponError('');
+  };
+
   const handleCheckout = async (tier) => {
     if (!currentUser) return;
 
     setLoading(prev => ({ ...prev, [tier]: true }));
     try {
+      const payload = {
+        tier,
+        billing: billingCycle,
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+      };
+
+      // Add coupon if validated and applicable
+      if (validatedCoupon && 
+          validatedCoupon.applicableTiers.includes(tier) &&
+          validatedCoupon.applicableBilling.includes(billingCycle)) {
+        payload.couponId = validatedCoupon.id;
+      }
+
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tier,
-          billing: billingCycle,
-          userId: currentUser.uid,
-          userEmail: currentUser.email,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -97,13 +154,49 @@ const MembershipUpgrade = () => {
   // Hide Max plan from the upgrade page
   const visiblePlans = Object.entries(plans).filter(([tierId]) => tierId !== 'max');
 
-  const renderPrice = (price) => {
-    const [integer, decimal] = price.toFixed(2).split('.');
+  const calculateDiscountedPrice = (originalPrice, tier) => {
+    if (!validatedCoupon) return originalPrice;
+    
+    // Check if coupon is applicable to this tier and billing cycle
+    if (!validatedCoupon.applicableTiers.includes(tier) ||
+        !validatedCoupon.applicableBilling.includes(billingCycle)) {
+      return originalPrice;
+    }
+
+    if (validatedCoupon.discountType === 'percentage') {
+      return originalPrice * (1 - validatedCoupon.discountValue / 100);
+    } else if (validatedCoupon.discountType === 'fixed') {
+      return Math.max(0, originalPrice - validatedCoupon.discountValue);
+    }
+    
+    return originalPrice;
+  };
+
+  const renderPrice = (price, tier) => {
+    const discountedPrice = calculateDiscountedPrice(price, tier);
+    const hasDiscount = discountedPrice !== price && validatedCoupon;
+    
+    const [integer, decimal] = discountedPrice.toFixed(2).split('.');
+    
     return (
-      <>
-        <span className="price">${integer}</span>
-        <span className="currency">.{decimal}</span>
-      </>
+      <div className="price-container">
+        {hasDiscount && (
+          <div className="original-price">
+            <span className="strikethrough">${price.toFixed(2)}</span>
+          </div>
+        )}
+        <div className="final-price">
+          <span className="price">${integer}</span>
+          <span className="currency">.{decimal}</span>
+        </div>
+        {hasDiscount && (
+          <div className="discount-badge">
+            {validatedCoupon.discountType === 'percentage' 
+              ? `${validatedCoupon.discountValue}% OFF`
+              : `$${validatedCoupon.discountValue} OFF`}
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -188,12 +281,49 @@ const MembershipUpgrade = () => {
 
       {renderSubscriptionStatus()}
 
+      {/* Coupon Code Section */}
+      <div className="coupon-section">
+        <h3>Have a coupon code?</h3>
+        {!validatedCoupon ? (
+          <div className="coupon-input-container">
+            <input
+              type="text"
+              placeholder="Enter coupon code"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              onKeyPress={(e) => e.key === 'Enter' && validateCoupon()}
+              disabled={validatingCoupon}
+            />
+            <button 
+              onClick={validateCoupon}
+              disabled={validatingCoupon || !couponCode.trim()}
+              className="apply-coupon-btn"
+            >
+              {validatingCoupon ? 'Validating...' : 'Apply'}
+            </button>
+          </div>
+        ) : (
+          <div className="coupon-applied">
+            <div className="coupon-applied-info">
+              <svg className="check-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Coupon <strong>{validatedCoupon.code}</strong> applied!</span>
+            </div>
+            <button onClick={removeCoupon} className="remove-coupon-btn">
+              Remove
+            </button>
+          </div>
+        )}
+        {couponError && <p className="coupon-error">{couponError}</p>}
+      </div>
+
       <div className="plans-container">
         {visiblePlans.map(([tierId, plan]) => (
           <div className="plan-card" key={tierId}>
             <h2>{plan.name}</h2>
             <div className="plan-price">
-              {renderPrice(plan.prices[billingCycle])}
+              {renderPrice(plan.prices[billingCycle], tierId)}
               <span className="period"> / {billingCycle === 'monthly' ? 'month' : 'year'}</span>
             </div>
             <p className="plan-description">{plan.description}</p>

@@ -277,6 +277,20 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && isAdmin();
     }
     
+    // Coupons collection - allow admins to manage, users can validate through API only
+    match /coupons/{couponId} {
+      // Only admins can read and write coupons directly
+      // Users validate coupons through the API endpoint
+      allow read, write: if isSignedIn() && isAdmin();
+    }
+    
+    // Coupon usage history - only admins can read
+    match /couponUsage/{usageId} {
+      allow read: if isSignedIn() && isAdmin();
+      // Writing is handled by backend only
+      allow write: if false;
+    }
+    
     // Catch-all rule - deny everything else
     match /{document=**} {
       allow read, write: if false;

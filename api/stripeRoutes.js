@@ -24,7 +24,7 @@ const MEMBERSHIP_PRICES = {
 // Create Stripe Checkout Session
 router.post('/create-checkout-session', async (req, res) => {
   try {
-    const { tier, billing, userId, userEmail } = req.body;
+    const { tier, billing, userId, userEmail, couponId } = req.body;
 
     // Validate input
     if (!tier || !billing || !userId || !userEmail) {
@@ -41,11 +41,49 @@ router.post('/create-checkout-session', async (req, res) => {
       return res.status(400).json({ error: 'Invalid billing. Must be monthly or yearly' });
     }
 
-    const price = MEMBERSHIP_PRICES[tier][billing];
+    let price = MEMBERSHIP_PRICES[tier][billing];
     const billingInterval = billing === 'monthly' ? 'month' : 'year';
+    let couponData = null;
+
+    // Apply coupon discount if provided
+    if (couponId) {
+      try {
+        const couponDoc = await admin.firestore().collection('coupons').doc(couponId).get();
+        
+        if (couponDoc.exists) {
+          const coupon = couponDoc.data();
+          
+          // Verify coupon is still valid
+          if (coupon.isActive && 
+              (!coupon.expiryDate || new Date(coupon.expiryDate) > new Date()) &&
+              (!coupon.maxUses || coupon.timesUsed < coupon.maxUses) &&
+              coupon.applicableTiers.includes(tier) &&
+              coupon.applicableBilling.includes(billing)) {
+            
+            // Calculate discount
+            if (coupon.discountType === 'percentage') {
+              price = Math.round(price * (1 - coupon.discountValue / 100));
+            } else if (coupon.discountType === 'fixed') {
+              // Convert fixed discount to cents
+              price = Math.max(0, price - Math.round(coupon.discountValue * 100));
+            }
+            
+            couponData = {
+              id: couponId,
+              code: coupon.code,
+              discountType: coupon.discountType,
+              discountValue: coupon.discountValue
+            };
+          }
+        }
+      } catch (error) {
+        console.error('Error applying coupon:', error);
+        // Continue without coupon if there's an error
+      }
+    }
 
     // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig = {
       payment_method_types: ['card'],
       line_items: [
         {
@@ -72,9 +110,24 @@ router.post('/create-checkout-session', async (req, res) => {
         tier: tier,
         billing: billing,
       },
-    });
+    };
 
-    res.json({ sessionId: session.id, url: session.url });
+    // Add coupon to metadata if applied
+    if (couponData) {
+      sessionConfig.metadata.couponId = couponData.id;
+      sessionConfig.metadata.couponCode = couponData.code;
+      sessionConfig.metadata.originalPrice = MEMBERSHIP_PRICES[tier][billing].toString();
+      sessionConfig.metadata.discountedPrice = price.toString();
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig);
+
+    res.json({ 
+      sessionId: session.id, 
+      url: session.url,
+      couponApplied: !!couponData,
+      finalPrice: price / 100 // Convert back to dollars for display
+    });
   } catch (error) {
     console.error('Error creating checkout session:', error);
     res.status(500).json({ error: 'Failed to create checkout session' });
@@ -166,11 +219,36 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 async function handleCheckoutSessionCompleted(session) {
   console.log('Checkout session completed:', session.id);
   
-  const { userId, tier, billing } = session.metadata;
+  const { userId, tier, billing, couponId, discountedPrice } = session.metadata;
   
   if (userId && tier) {
     // Update user membership in Firebase
     await updateUserMembership(userId, tier, billing, session.subscription);
+    
+    // Record coupon usage if a coupon was applied
+    if (couponId) {
+      try {
+        const couponRef = admin.firestore().collection('coupons').doc(couponId);
+        await couponRef.update({
+          timesUsed: admin.firestore.FieldValue.increment(1),
+          lastUsedAt: new Date().toISOString()
+        });
+        
+        // Record usage history
+        await admin.firestore().collection('couponUsage').add({
+          couponId,
+          userId,
+          amount: parseInt(discountedPrice) / 100,
+          tier,
+          billing,
+          usedAt: new Date().toISOString()
+        });
+        
+        console.log(`Coupon ${couponId} usage recorded for user ${userId}`);
+      } catch (error) {
+        console.error('Error recording coupon usage:', error);
+      }
+    }
   }
 }
 

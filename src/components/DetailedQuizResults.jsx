@@ -1,5 +1,5 @@
 // components/DetailedQuizResults.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaFlag } from 'react-icons/fa';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { getSubcategoryName } from '../utils/subcategoryConstants';
@@ -39,6 +39,11 @@ export default function DetailedQuizResults({
   primaryButtonContent,
   secondaryButtonContent,
 }) {
+  // Scroll to top when results load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const correctCount = Object.values(userAnswers).filter((a) => a?.isCorrect).length;
   const levelName = DIFFICULTY_FOR_LEVEL[level] || 'Unknown';
   const wasPromoted = passed && level < 3;

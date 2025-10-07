@@ -2019,6 +2019,12 @@ const migrateExistingQuestions = async () => {
             Membership Management
           </button>
           <button 
+            className={`tab-button`}
+            onClick={() => navigate('/admin/coupon-management')}
+          >
+            Coupon Management
+          </button>
+          <button 
             className={`tab-button ${activeTab === 'subcategorySettings' ? 'active' : ''}`}
             onClick={() => navigate('/admin/subcategory-settings')}
           >

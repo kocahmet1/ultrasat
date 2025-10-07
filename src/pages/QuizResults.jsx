@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate, Navigate, Link } from 'react-router-dom';
 import { normalizeSubcategoryName } from '../utils/subcategoryUtils'; // Assuming this utility exists and is useful
 
@@ -18,6 +18,11 @@ function QuizResults() {
     isAdaptive,
     progressSaveFailed 
   } = location.state || {};
+
+  // Scroll to top when results load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!location.state) {
     // Redirect if no state is passed, maybe to dashboard or an error page

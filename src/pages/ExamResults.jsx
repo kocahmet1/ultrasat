@@ -254,6 +254,8 @@ function ExamResults() {
         if (examData) {
             processAndSetExamData(examData);
             setSavedToFirebase(true);
+            // Scroll to top when results are loaded
+            window.scrollTo(0, 0);
         } else {
             setPageError("No exam data found to display.");
         }

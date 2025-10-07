@@ -82,6 +82,7 @@ const QuestionEditor = React.lazy(() => import('./pages/QuestionEditor'));
 const AdminBlogManagement = React.lazy(() => import('./pages/AdminBlogManagement'));
 const AdminLearningContent = React.lazy(() => import('./pages/AdminLearningContent'));
 const MembershipManagement = React.lazy(() => import('./components/admin/MembershipManagement'));
+const CouponManagement = React.lazy(() => import('./components/admin/CouponManagement'));
 const SubcategorySettings = React.lazy(() => import('./components/admin/SubcategorySettings'));
 const ConceptImport = React.lazy(() => import('./pages/ConceptImport'));
 const QuestionImport = React.lazy(() => import('./pages/QuestionImport'));
@@ -258,6 +259,7 @@ const router = createBrowserRouter([
       { path: '/admin/blog-management', element: <PrivateSuspenseRoute><AdminBlogManagement /></PrivateSuspenseRoute> },
       { path: '/admin/question-quality', element: <PrivateSuspenseRoute><AdminQuestionQuality /></PrivateSuspenseRoute> },
       { path: '/admin/membership-management', element: <PrivateSuspenseRoute><MembershipManagement /></PrivateSuspenseRoute> },
+      { path: '/admin/coupon-management', element: <PrivateSuspenseRoute><CouponManagement /></PrivateSuspenseRoute> },
       { path: '/membership/upgrade', element: <PrivateSuspenseRoute><MembershipUpgrade /></PrivateSuspenseRoute> },
       { path: '/payment/success', element: <PrivateSuspenseRoute><PaymentSuccess /></PrivateSuspenseRoute> },
       { path: '/payment/cancel', element: <PrivateSuspenseRoute><PaymentCancel /></PrivateSuspenseRoute> },

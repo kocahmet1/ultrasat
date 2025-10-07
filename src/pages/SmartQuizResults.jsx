@@ -66,6 +66,8 @@ export default function SmartQuizResults() {
         
         setQuiz({ id: snap.id, ...data, questions: questionsData });
         setLoading(false);
+        // Scroll to top when results are loaded
+        window.scrollTo(0, 0);
       } catch (err) {
         console.error('Error fetching quiz results:', err);
         setError('Failed to load quiz results');
