@@ -568,14 +568,23 @@
   .creator-controls {
     flex-direction: column;
     gap: 16px;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .dropdown-container {
+    width: 100%;
+    max-width: 90%;
   }
   
   .dropdown-button {
-    min-width: 100%;
+    width: 100%;
+    min-width: auto;
   }
   
   .dropdown-menu {
-    min-width: 100%;
+    width: 100%;
+    min-width: auto;
   }
   
   .info-card {
@@ -584,13 +593,19 @@
   }
   
   .topic-menu {
-    min-width: 100%;
+    width: 100%;
+    min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
   .minitest-creator {
-    padding: 0 16px;
+    padding: 40px 16px;
+  }
+  
+  .dropdown-container {
+    width: 100%;
+    max-width: 95%;
   }
   
   .dropdown-button {
