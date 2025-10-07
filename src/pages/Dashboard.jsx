@@ -169,12 +169,22 @@ function Dashboard() {
                 <div className="overall-accuracy-section">
                   <div className="accuracy-card reading-writing-accuracy card-style-container">
                     <h3 className="accuracy-title">Reading and Writing</h3>
-                    <p className="accuracy-value">{Math.round(subcategoryStats.filter(stat => ['reading', 'writing'].includes(stat.section)).reduce((sum, stat) => sum + stat.accuracyRate, 0) / subcategoryStats.filter(stat => ['reading', 'writing'].includes(stat.section)).length || 0)}%</p>
+                    <p className="accuracy-value">{(() => {
+                      if (!Array.isArray(subcategoryStats) || subcategoryStats.length === 0) return 0;
+                      const filtered = subcategoryStats.filter(stat => ['reading', 'writing'].includes(stat.section));
+                      if (filtered.length === 0) return 0;
+                      return Math.round(filtered.reduce((sum, stat) => sum + (stat.accuracyRate || 0), 0) / filtered.length);
+                    })()}%</p>
                     <span className="accuracy-label">Accuracy</span>
                   </div>
                   <div className="accuracy-card math-accuracy card-style-container">
                     <h3 className="accuracy-title">Math</h3>
-                    <p className="accuracy-value">{Math.round(subcategoryStats.filter(stat => ['math-calc', 'math-no-calc'].includes(stat.section)).reduce((sum, stat) => sum + stat.accuracyRate, 0) / subcategoryStats.filter(stat => ['math-calc', 'math-no-calc'].includes(stat.section)).length || 0)}%</p>
+                    <p className="accuracy-value">{(() => {
+                      if (!Array.isArray(subcategoryStats) || subcategoryStats.length === 0) return 0;
+                      const filtered = subcategoryStats.filter(stat => ['math-calc', 'math-no-calc'].includes(stat.section));
+                      if (filtered.length === 0) return 0;
+                      return Math.round(filtered.reduce((sum, stat) => sum + (stat.accuracyRate || 0), 0) / filtered.length);
+                    })()}%</p>
                     <span className="accuracy-label">Accuracy</span>
                   </div>
                 </div>

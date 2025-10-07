@@ -306,10 +306,12 @@ async function updateUserMembership(userId, tier, billing, subscriptionId) {
       updateData.membershipEndDate = null;
     }
 
-    await userRef.update(updateData);
+    // Use set with merge:true to handle both new and existing users
+    await userRef.set(updateData, { merge: true });
     console.log(`Updated membership for user ${userId} to ${tier}`);
   } catch (error) {
     console.error('Error updating user membership:', error);
+    throw error; // Re-throw to ensure webhook handler knows about the failure
   }
 }
 

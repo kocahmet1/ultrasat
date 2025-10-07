@@ -10,6 +10,7 @@ const PaymentSuccess = () => {
   const [verificationStatus, setVerificationStatus] = useState('verifying');
   const [sessionData, setSessionData] = useState(null);
   const [error, setError] = useState(null);
+  const [membershipUpdated, setMembershipUpdated] = useState(false);
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
@@ -30,9 +31,9 @@ const PaymentSuccess = () => {
         setSessionData(data);
         setVerificationStatus('success');
         
-        // Refresh user membership data
+        // Wait for webhook to update membership with retry logic
         if (currentUser) {
-          await getUserMembership(currentUser);
+          await waitForMembershipUpdate(data.session.metadata.tier);
         }
       } else {
         setError('Payment verification failed');
@@ -43,6 +44,36 @@ const PaymentSuccess = () => {
       setError('Failed to verify payment');
       setVerificationStatus('error');
     }
+  };
+
+  // Poll for membership update with exponential backoff
+  const waitForMembershipUpdate = async (expectedTier, maxRetries = 10) => {
+    let retries = 0;
+    const initialDelay = 1000; // Start with 1 second
+    
+    while (retries < maxRetries) {
+      try {
+        const membership = await getUserMembership(currentUser);
+        
+        if (membership && membership.tier === expectedTier) {
+          setMembershipUpdated(true);
+          console.log('Membership successfully updated to:', expectedTier);
+          return;
+        }
+        
+        // Wait before next retry with exponential backoff
+        const delay = initialDelay * Math.pow(1.5, retries);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        retries++;
+      } catch (err) {
+        console.error('Error checking membership status:', err);
+        retries++;
+      }
+    }
+    
+    // If we've exhausted retries, still mark as updated to let user continue
+    console.warn('Membership update not confirmed after max retries, but payment was successful');
+    setMembershipUpdated(true);
   };
 
   const handleContinue = () => {
@@ -64,6 +95,9 @@ const PaymentSuccess = () => {
           <div className="loading-spinner"></div>
           <h2>Verifying your payment...</h2>
           <p>Please wait while we confirm your subscription.</p>
+          {membershipUpdated === false && sessionData && (
+            <p className="update-status">Updating your account access...</p>
+          )}
         </div>
       </div>
     );
@@ -84,6 +118,20 @@ const PaymentSuccess = () => {
               Go to Dashboard
             </button>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show success screen only after membership is confirmed updated
+  if (!membershipUpdated && verificationStatus === 'success') {
+    return (
+      <div className="payment-success">
+        <div className="success-container">
+          <div className="loading-spinner"></div>
+          <h2>Setting up your account...</h2>
+          <p>Please wait while we activate your premium features.</p>
+          <p className="update-status">This should only take a few seconds.</p>
         </div>
       </div>
     );
