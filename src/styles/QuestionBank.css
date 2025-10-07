@@ -566,7 +566,7 @@
   }
 
   .minitest-creator {
-    padding: 40px 20px;
+    display: none;
   }
 
   .creator-controls {
