@@ -13,7 +13,7 @@ require('dotenv').config();
 
 const admin = require('firebase-admin');
 const path = require('path');
-const { normalizeSubcategoryName } = require('../src/utils/subcategoryUtils');
+const { normalizeSubcategoryName } = require('../apps/web/src/utils/subcategoryUtils');
 
 // Initialize Firebase Admin SDK
 try {

@@ -13,7 +13,7 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
-const ALL_SUBCATEGORIES = require('../src/utils/subcategoryUtils').getAllSubcategories();
+const ALL_SUBCATEGORIES = require('../apps/web/src/utils/subcategoryUtils').getAllSubcategories();
 
 // Math subcategories that should use concept helpers
 const CONCEPT_HELPER_SUBCATEGORIES = [
@@ -27,7 +27,7 @@ const CONCEPT_HELPER_SUBCATEGORIES = [
 
 async function initializeHelperTypes() {
   const subcategoriesCollection = db.collection('subcategories');
-  const batch = db.batch();
+  let batch = db.batch();
   let docCount = 0;
   let batchCount = 0;
   

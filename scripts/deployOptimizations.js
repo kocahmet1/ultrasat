@@ -20,7 +20,7 @@ const optimizations = {
 function runCommand(command, description) {
   console.log(`⚡ ${description}...`);
   try {
-    const output = execSync(command, { encoding: 'utf8', stdio: 'pipe' });
+    execSync(command, { encoding: 'utf8', stdio: 'pipe' });
     console.log(`✅ ${description} completed successfully\n`);
     return true;
   } catch (error) {
@@ -47,7 +47,7 @@ async function optimizeImages() {
   console.log('📸 STEP 1: Image Optimization');
   console.log('==============================');
   
-  if (!checkDir('public/images/optimized', true)) {
+  if (!checkDir('apps/web/public/images/optimized', true)) {
     console.log('❌ Failed to create optimized images directory');
     return false;
   }
@@ -75,8 +75,8 @@ function validateServiceWorker() {
   console.log('🛡️  STEP 2: Service Worker Validation');
   console.log('====================================');
   
-  const swPath = 'public/sw.js';
-  const swRegPath = 'src/utils/serviceWorkerRegistration.js';
+  const swPath = 'apps/web/public/sw.js';
+  const swRegPath = 'apps/web/src/utils/serviceWorkerRegistration.js';
   
   if (!fs.existsSync(swPath)) {
     console.log('❌ Service Worker file missing: public/sw.js');
@@ -98,7 +98,7 @@ function validateCacheConfig() {
   console.log('⚡ STEP 3: Cache Configuration Validation');
   console.log('========================================');
   
-  const cacheConfigPath = 'src/utils/cacheConfig.js';
+  const cacheConfigPath = 'apps/web/src/utils/cacheConfig.js';
   
   if (!fs.existsSync(cacheConfigPath)) {
     console.log('❌ Cache configuration missing: src/utils/cacheConfig.js');
@@ -120,8 +120,8 @@ function optimizeBuild() {
   const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
   
   const optimizedScripts = {
-    'build:prod': 'cross-env GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false npm run build',
-    'build:analyze': 'npm run build:prod && npx serve -s build',
+    'build:prod': 'npm run build:prod --workspace @ultrasat/web',
+    'build:analyze': 'npm run build:analyze --workspace @ultrasat/web',
     'optimize:complete': 'npm run optimize:images && npm run build:prod'
   };
   
@@ -141,8 +141,6 @@ function optimizeBuild() {
   // Create production environment file
   const envProdPath = '.env.production';
   const envProdContent = `GENERATE_SOURCEMAP=false
-INLINE_RUNTIME_CHUNK=false
-BUILD_PATH=./build
 PUBLIC_URL=/
 `;
   
@@ -185,7 +183,7 @@ function validateOptimizations() {
   }
   
   // Check for optimized images
-  const optimizedImagesDir = 'public/images/optimized';
+  const optimizedImagesDir = 'apps/web/public/images/optimized';
   if (checkDir(optimizedImagesDir)) {
     const optimizedFiles = fs.readdirSync(optimizedImagesDir);
     const webpFiles = optimizedFiles.filter(f => f.endsWith('.webp'));

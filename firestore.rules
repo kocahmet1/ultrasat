@@ -16,11 +16,223 @@ service cloud.firestore {
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
 
+    function hasPaidMembership() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             (
+               get(/databases/$(database)/documents/users/$(request.auth.uid)).data.membershipTier == 'plus' ||
+               get(/databases/$(database)/documents/users/$(request.auth.uid)).data.membershipTier == 'max'
+             );
+    }
+
+    function isSafeUserCreate(userId) {
+      return isSignedIn() &&
+             isOwner(userId) &&
+             !request.resource.data.keys().hasAny(['isAdmin', 'adminSince', 'stripeSubscriptionId']) &&
+             (
+               !request.resource.data.keys().hasAny(['membershipTier']) ||
+               request.resource.data.membershipTier == 'free'
+             ) &&
+             (
+               !request.resource.data.keys().hasAny(['membershipEndDate']) ||
+               request.resource.data.membershipEndDate == null
+             ) &&
+             (
+               !request.resource.data.keys().hasAny(['email']) ||
+               request.resource.data.email == request.auth.token.email
+             );
+    }
+
+    function ownerCanUpdateOwnUser(userId) {
+      return isSignedIn() &&
+             isOwner(userId) &&
+             !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+               'isAdmin',
+               'adminSince',
+               'email',
+               'membershipTier',
+               'membershipStartDate',
+               'membershipEndDate',
+               'stripeSubscriptionId'
+             ]);
+    }
+
+    function isNonNegativeInt(value) {
+      return value is int && value >= 0;
+    }
+
+    function isValidPercent(value) {
+      return value is int && value >= 0 && value <= 100;
+    }
+
+    function hasOnlyProgressFields() {
+      return request.resource.data.keys().hasOnly([
+        'level',
+        'lastScore',
+        'lastAttemptDate',
+        'mastered',
+        'conceptMastery',
+        'askedQuestions',
+        'missedQuestions',
+        'lastUpdated',
+        'correctTotal',
+        'totalQuestions',
+        'accuracy',
+        'attempts',
+        'last10QuestionResults',
+        'attemptHistory'
+      ]);
+    }
+
+    function progressStatsAreConsistent() {
+      return (
+        !request.resource.data.keys().hasAny(['correctTotal', 'totalQuestions', 'accuracy', 'attempts'])
+      ) || (
+        request.resource.data.keys().hasAll(['correctTotal', 'totalQuestions', 'accuracy', 'attempts']) &&
+        isNonNegativeInt(request.resource.data.correctTotal) &&
+        isNonNegativeInt(request.resource.data.totalQuestions) &&
+        isValidPercent(request.resource.data.accuracy) &&
+        isNonNegativeInt(request.resource.data.attempts) &&
+        request.resource.data.correctTotal <= request.resource.data.totalQuestions &&
+        (
+          request.resource.data.totalQuestions == 0 ||
+          (
+            request.resource.data.accuracy >= ((request.resource.data.correctTotal * 100) / request.resource.data.totalQuestions) - 1 &&
+            request.resource.data.accuracy <= ((request.resource.data.correctTotal * 100) / request.resource.data.totalQuestions) + 1
+          )
+        )
+      );
+    }
+
+    function isValidProgressDocument() {
+      return hasOnlyProgressFields() &&
+             (!request.resource.data.keys().hasAny(['level']) ||
+               (request.resource.data.level is int &&
+                request.resource.data.level >= 1 &&
+                request.resource.data.level <= 3)) &&
+             (!request.resource.data.keys().hasAny(['lastScore']) ||
+               isValidPercent(request.resource.data.lastScore)) &&
+             (!request.resource.data.keys().hasAny(['mastered']) ||
+               request.resource.data.mastered is bool) &&
+             (!request.resource.data.keys().hasAny(['conceptMastery']) ||
+               request.resource.data.conceptMastery is map) &&
+             (!request.resource.data.keys().hasAny(['askedQuestions']) ||
+               (request.resource.data.askedQuestions is list &&
+                request.resource.data.askedQuestions.size() <= 200)) &&
+             (!request.resource.data.keys().hasAny(['missedQuestions']) ||
+               (request.resource.data.missedQuestions is list &&
+                request.resource.data.missedQuestions.size() <= 200)) &&
+             (!request.resource.data.keys().hasAny(['last10QuestionResults']) ||
+               (request.resource.data.last10QuestionResults is list &&
+                request.resource.data.last10QuestionResults.size() <= 10)) &&
+             (!request.resource.data.keys().hasAny(['attemptHistory']) ||
+               (request.resource.data.attemptHistory is list &&
+                request.resource.data.attemptHistory.size() <= 30)) &&
+             progressStatsAreConsistent();
+    }
+
+    function existingProgressTotalQuestions() {
+      return resource.data.totalQuestions is int ? resource.data.totalQuestions : 0;
+    }
+
+    function existingProgressCorrectTotal() {
+      return resource.data.correctTotal is int ? resource.data.correctTotal : 0;
+    }
+
+    function existingProgressAttempts() {
+      return resource.data.attempts is int ? resource.data.attempts : 0;
+    }
+
+    function existingProgressLevel() {
+      return resource.data.level is int ? resource.data.level : 1;
+    }
+
+    function existingAskedQuestionCount() {
+      return resource.data.askedQuestions is list ? resource.data.askedQuestions.size() : 0;
+    }
+
+    function isReasonableProgressCreate() {
+      return isValidProgressDocument() &&
+             (!request.resource.data.keys().hasAny(['totalQuestions']) ||
+               request.resource.data.totalQuestions <= 20) &&
+             (!request.resource.data.keys().hasAny(['correctTotal']) ||
+               request.resource.data.correctTotal <= 20) &&
+             (!request.resource.data.keys().hasAny(['attempts']) ||
+               request.resource.data.attempts <= 5);
+    }
+
+    function isReasonableProgressUpdate() {
+      return isValidProgressDocument() &&
+             request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+               'level',
+               'lastScore',
+               'lastAttemptDate',
+               'mastered',
+               'conceptMastery',
+               'askedQuestions',
+               'missedQuestions',
+               'lastUpdated',
+               'correctTotal',
+               'totalQuestions',
+               'accuracy',
+               'attempts',
+               'last10QuestionResults',
+               'attemptHistory'
+             ]) &&
+             (!request.resource.data.keys().hasAny(['totalQuestions']) ||
+               (
+                 request.resource.data.totalQuestions >= existingProgressTotalQuestions() &&
+                 request.resource.data.totalQuestions <= existingProgressTotalQuestions() + 10
+               )) &&
+             (!request.resource.data.keys().hasAny(['correctTotal']) ||
+               (
+                 request.resource.data.correctTotal >= existingProgressCorrectTotal() &&
+                 request.resource.data.correctTotal <= existingProgressCorrectTotal() + 10
+               )) &&
+             (!request.resource.data.keys().hasAny(['attempts']) ||
+               (
+                 request.resource.data.attempts >= existingProgressAttempts() &&
+                 request.resource.data.attempts <= existingProgressAttempts() + 3
+               )) &&
+             (!request.resource.data.keys().hasAny(['level']) ||
+               (
+                 request.resource.data.level >= existingProgressLevel() &&
+                 request.resource.data.level <= existingProgressLevel() + 2
+               )) &&
+             (!request.resource.data.keys().hasAny(['mastered']) ||
+               (resource.data.mastered == true || request.resource.data.mastered == true || request.resource.data.mastered == resource.data.mastered)) &&
+             (!request.resource.data.keys().hasAny(['askedQuestions']) ||
+               request.resource.data.askedQuestions.size() >= existingAskedQuestionCount());
+    }
+
+    function isValidUserProgressCreate() {
+      return request.resource.data.keys().hasOnly([
+               'userId',
+               'questionId',
+               'isCorrect',
+               'timeSpent',
+               'skillTags',
+               'moduleId',
+               'attemptedAt'
+             ]) &&
+             request.resource.data.userId == request.auth.uid &&
+             request.resource.data.questionId is string &&
+             request.resource.data.isCorrect is bool &&
+             (
+               !request.resource.data.keys().hasAny(['timeSpent']) ||
+               request.resource.data.timeSpent is int ||
+               request.resource.data.timeSpent is float
+             ) &&
+             (
+               !request.resource.data.keys().hasAny(['skillTags']) ||
+               request.resource.data.skillTags is list
+             );
+    }
+
     // Allow users to read their own documents and admin to read all
     match /users/{userId} {
       allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
-      allow create: if isSignedIn() && isOwner(userId);
-      allow update: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow create: if isSafeUserCreate(userId) || (isSignedIn() && isAdmin());
+      allow update: if ownerCanUpdateOwnUser(userId) || (isSignedIn() && isAdmin());
       allow delete: if isAdmin();
 
       // Allow users to manage their own flashcard decks
@@ -30,7 +242,10 @@ service cloud.firestore {
       
       // Unified progress tracking system - allow users to read/write their own subcategory progress
       match /progress/{subcategoryId} {
-        allow read, write: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow create: if isSignedIn() && (isOwner(userId) || isAdmin()) && isReasonableProgressCreate();
+        allow update: if isSignedIn() && (isOwner(userId) || isAdmin()) && isReasonableProgressUpdate();
+        allow delete: if false;
       }
       
       // Allow users to read/write their own exam documents
@@ -92,25 +307,28 @@ service cloud.firestore {
       allow read: if isSignedIn() && (
         isOwner(resource.data.userId) || isAdmin()
       );
-      allow write: if isSignedIn() && (
-        isOwner(request.resource.data.userId) || isAdmin()
+      allow create: if isSignedIn() && (
+        (request.resource.data.userId == request.auth.uid && isValidUserProgressCreate()) || isAdmin()
       );
+      allow update, delete: if false;
     }
     
     match /userStats/{userId} {
       allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
-      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if false;
     }
     
-    match /userRecommendations/{userId} {
-      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
-      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+    match /userRecommendations/{recommendationId} {
+      allow read: if isSignedIn() && (
+        isAdmin() || resource.data.userId == request.auth.uid
+      );
+      allow write: if false;
     }
     
     // User stats cache collection - for efficient ranking calculations
     match /userStatsCache/{userId} {
       allow read: if isSignedIn(); // Anyone can read stats for ranking purposes
-      allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow write: if false;
     }
     
     match /userSkillStats/{docId} {
@@ -156,21 +374,27 @@ service cloud.firestore {
       allow read: if isSignedIn() && (
         isOwner(resource.data.userId) || isAdmin()
       );
-      allow create: if isSignedIn();
+      allow create: if isSignedIn() && (
+        request.resource.data.userId == request.auth.uid || isAdmin()
+      );
       allow update, delete: if isSignedIn() && (
         isOwner(resource.data.userId) || isAdmin()
       );
     }
     
+    // Legacy quiz collections remain read-only for compatibility redirects.
     match /adaptiveQuizzes/{quizId} {
       allow read: if isSignedIn() && (
         isOwner(resource.data.userId) || isAdmin()
       );
-      // Creator owns the document, but must be authenticated
-      allow create: if isSignedIn();
-      allow update, delete: if isSignedIn() && (
+      allow create, update, delete: if false;
+    }
+
+    match /targetedQuizzes/{quizId} {
+      allow read: if isSignedIn() && (
         isOwner(resource.data.userId) || isAdmin()
       );
+      allow create, update, delete: if false;
     }
     
     match /questionAttempts/{attemptId} {
@@ -180,7 +404,9 @@ service cloud.firestore {
       );
       
       // Only allow creation if the userId matches the authenticated user
-      allow create: if isSignedIn();
+      allow create: if isSignedIn() && (
+        request.resource.data.userId == request.auth.uid
+      );
       
       // Disallow updates and deletes to maintain data integrity
       allow update, delete: if false;
@@ -243,6 +469,12 @@ service cloud.firestore {
     // Learning content collection - allow read for authenticated users, write for admins
     match /learningContent/{subcategoryId} {
       allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+
+    // Premium study resources - readable by paid members, writable by admins
+    match /studyResources/{resourceId} {
+      allow read: if isSignedIn() && (hasPaidMembership() || isAdmin());
       allow write: if isSignedIn() && isAdmin();
     }
     

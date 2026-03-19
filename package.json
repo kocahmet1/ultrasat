@@ -1,94 +1,28 @@
 {
-  "name": "veritas-blue-web",
-  "version": "0.1.0",
+  "name": "ultrasat-workspace",
   "private": true,
-  "dependencies": {
-    "@emailjs/browser": "^4.4.1",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@fortawesome/fontawesome-svg-core": "^6.7.2",
-    "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "@google/generative-ai": "^0.24.1",
-    "@mui/icons-material": "^7.0.2",
-    "@mui/material": "^7.0.2",
-    "@sendgrid/mail": "^8.1.6",
-    "@stripe/stripe-js": "^2.4.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.2.3",
-    "chart.js": "^4.3.0",
-    "concurrently": "^8.2.0",
-    "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
-    "dompurify": "^3.2.5",
-    "dotenv": "^16.5.0",
-    "express": "^4.18.2",
-    "express-rate-limit": "^6.7.0",
-    "firebase": "^9.22.0",
-    "firebase-admin": "^13.4.0",
-    "framer-motion": "^12.23.21",
-    "helmet": "^7.0.0",
-    "marked": "^5.1.2",
-    "multer": "^2.0.0",
-    "node-fetch": "^2.6.12",
-    "papaparse": "^5.5.2",
-    "puppeteer": "^24.11.1",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.7.4",
-    "react-calendar": "^4.2.1",
-    "react-chartjs-2": "^5.2.0",
-    "react-countup": "^6.5.3",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.8.0",
-    "react-markdown": "^8.0.7",
-    "react-router-dom": "^6.11.1",
-    "react-scripts": "5.0.1",
-    "react-toastify": "^11.0.5",
-    "stripe": "^14.21.0",
-    "web-vitals": "^2.1.4"
-  },
+  "workspaces": [
+    "apps/web",
+    "apps/api"
+  ],
   "scripts": {
-    "start": "cross-env NODE_ENV=production node api/server.js",
-    "start-frontend": "react-scripts start",
-    "build": "react-scripts build",
-    "build:analyze": "npm run build && npx serve -s build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "start-api": "cross-env PORT=3001 node api/server.js",
+    "start": "npm run start --workspace @ultrasat/api",
+    "start-api": "npm run dev --workspace @ultrasat/api",
+    "start-frontend": "npm run dev --workspace @ultrasat/web",
     "dev": "concurrently \"npm run start-frontend\" \"npm run start-api\"",
+    "build": "npm run build --workspace @ultrasat/web",
+    "build:analyze": "npm run build:analyze --workspace @ultrasat/web",
+    "build:prod": "npm run build:prod --workspace @ultrasat/web",
+    "preview": "npm run preview --workspace @ultrasat/web",
+    "test": "npm run test --workspace @ultrasat/web",
+    "eject": "npm run eject --workspace @ultrasat/web",
     "optimize:images": "node scripts/convertImages.js",
     "optimize:analyze": "node scripts/buildOptimization.js",
     "optimize:all": "npm run optimize:images && npm run optimize:analyze",
     "deploy:optimize": "node scripts/deployOptimizations.js",
-    "build:prod": "GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false npm run build",
     "optimize:complete": "npm run optimize:images && npm run build:prod"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "proxy": "http://localhost:3001",
   "devDependencies": {
-    "imagemin": "^9.0.1",
-    "imagemin-mozjpeg": "^10.0.0",
-    "imagemin-pngquant": "^10.0.0",
-    "imagemin-webp": "^8.0.0",
-    "sharp": "^0.34.3"
+    "concurrently": "^8.2.0"
   }
 }

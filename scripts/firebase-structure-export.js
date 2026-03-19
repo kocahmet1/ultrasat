@@ -50,7 +50,7 @@ const db = admin.firestore();
 async function exportFirestoreStructure() {
   console.log('Starting Firestore structure export...');
   
-  const base64Regex = /^data:[a-zA-Z0-9\/;,+=]+base64,/;
+  const base64Regex = /^data:[a-zA-Z0-9/;,+=]+base64,/;
 
   function processDataRecursive(data) {
     if (typeof data !== 'object' || data === null) {

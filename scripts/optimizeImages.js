@@ -66,11 +66,11 @@ Object.entries(imageOptimizations).forEach(([filename, info]) => {
 console.log('=== NEXT STEPS ===');
 console.log('1. Use online tools like squoosh.app or tinypng.com');
 console.log('2. Or install tools like: npm install -g @squoosh/cli');
-console.log('3. Batch convert: squoosh-cli --webp auto public/images/*.jpg');
+console.log('3. Batch convert: squoosh-cli --webp auto apps/web/public/images/*.jpg');
 console.log('4. Update image references in components to use WebP with fallbacks');
 
 // Check if images exist
-const imagesDir = path.join(__dirname, '../public/images');
+const imagesDir = path.join(__dirname, '../apps/web/public/images');
 console.log('\n=== CURRENT IMAGES ===');
 if (fs.existsSync(imagesDir)) {
   const files = fs.readdirSync(imagesDir);

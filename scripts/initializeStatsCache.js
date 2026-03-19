@@ -95,20 +95,12 @@ async function initializeAllUsersStatsCache() {
       console.log(`\n📦 Processing batch ${Math.floor(i/BATCH_SIZE) + 1}/${Math.ceil(userDocs.length/BATCH_SIZE)} (${batch.length} users)`);
       
       // Process batch concurrently
-      const promises = batch.map(async (userDoc) => {
-        const userId = userDoc.id;
-        const result = await initializeUserStatsCache(userId);
-        processedCount++;
-        
-        if (result) {
-          cacheCreatedCount++;
-        }
-        
-        return result;
-      });
-      
       try {
-        await Promise.all(promises);
+        const results = await Promise.all(
+          batch.map((userDoc) => initializeUserStatsCache(userDoc.id))
+        );
+        processedCount += batch.length;
+        cacheCreatedCount += results.filter(Boolean).length;
       } catch (batchError) {
         console.error(`❌ Error in batch processing:`, batchError);
         errorCount++;

@@ -5,7 +5,7 @@ console.log('🚀 BUILD OPTIMIZATION ANALYZER\n');
 
 // Analyze CSS files and their sizes
 const analyzeCSS = () => {
-  const stylesDir = path.join(__dirname, '../src/styles');
+  const stylesDir = path.join(__dirname, '../apps/web/src/styles');
   const cssFiles = [];
   
   if (fs.existsSync(stylesDir)) {
@@ -32,7 +32,7 @@ const analyzeCSS = () => {
 
 // Check for potential unused imports
 const analyzeJSImports = () => {
-  const srcDir = path.join(__dirname, '../src');
+  const srcDir = path.join(__dirname, '../apps/web/src');
   let totalFiles = 0;
   let potentialIssues = [];
   
