@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useAICompanion } from '../contexts/AICompanionContext';
 import { FaFlag } from 'react-icons/fa';
 import { SUBCATEGORY_SUBJECTS } from '../utils/subcategoryConstants';
 import { processTextMarkup } from '../utils/textProcessing';
@@ -14,6 +15,7 @@ function ExamResults() {
   const location = useLocation();
   const { examId } = useParams();
   const { currentUser, getExamResultById, getLatestExamResult } = useAuth();
+  const { refreshGreeting } = useAICompanion();
   
   const [examDetails, setExamDetails] = useState(null);
   const [, setScore] = useState(0);
@@ -254,6 +256,8 @@ function ExamResults() {
             setSavedToFirebase(true);
             // Scroll to top when results are loaded
             window.scrollTo(0, 0);
+            // Refresh AI companion greeting to reflect this completed exam
+            refreshGreeting();
         } else {
             setPageError("No exam data found to display.");
         }

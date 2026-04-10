@@ -106,8 +106,8 @@ function Signup() {
       setError('');
       setLoading(true);
       await signup(email, password, name);
-      // Direct user to verify email page for email/password signups
-      navigate('/verify-email');
+      // Let the user into the app immediately; verification reminder will show later
+      handlePostSignup();
     } catch (err) {
       setError('Failed to create an account. ' + err.message);
       console.error(err);

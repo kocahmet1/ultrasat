@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useAICompanion } from '../contexts/AICompanionContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
@@ -16,6 +17,7 @@ import '../styles/SmartQuizResults.css';
 export default function SmartQuizResults() {
   const { quizId } = useParams();
   const { currentUser } = useAuth();
+  const { refreshGreeting } = useAICompanion();
   const navigate = useNavigate();
   
   const [quiz, setQuiz] = useState(null);
@@ -68,6 +70,8 @@ export default function SmartQuizResults() {
         setLoading(false);
         // Scroll to top when results are loaded
         window.scrollTo(0, 0);
+        // Refresh AI companion greeting to reflect this completed quiz
+        refreshGreeting();
       } catch (err) {
         console.error('Error fetching quiz results:', err);
         setError('Failed to load quiz results');

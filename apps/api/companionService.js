@@ -19,6 +19,55 @@ const TEXT_MODEL = process.env.COMPANION_MODEL || 'gpt-5-mini';
 const REALTIME_MODEL = process.env.REALTIME_MODEL || 'gpt-realtime-mini-2025-12-15';
 const REALTIME_VOICE = process.env.REALTIME_VOICE || 'cedar';
 
+// ─── Subcategory reference data (mirror of frontend constants) ───
+// Kebab-case doc ID → human-readable name
+const SUBCATEGORY_NAME_MAP = {
+  'central-ideas-details': 'Central Ideas and Details',
+  'inferences': 'Inferences',
+  'command-of-evidence': 'Command of Evidence',
+  'words-in-context': 'Words in Context',
+  'text-structure-purpose': 'Text Structure and Purpose',
+  'cross-text-connections': 'Cross-Text Connections',
+  'rhetorical-synthesis': 'Rhetorical Synthesis',
+  'transitions': 'Transitions',
+  'boundaries': 'Boundaries',
+  'form-structure-sense': 'Form, Structure, and Sense',
+  'linear-equations-one-variable': 'Linear Equations in One Variable',
+  'linear-functions': 'Linear Functions',
+  'linear-equations-two-variables': 'Linear Equations in Two Variables',
+  'systems-linear-equations': 'Systems of Linear Equations',
+  'linear-inequalities': 'Linear Inequalities',
+  'nonlinear-functions': 'Nonlinear Functions',
+  'nonlinear-equations': 'Nonlinear Equations',
+  'equivalent-expressions': 'Equivalent Expressions',
+  'ratios-rates-proportions': 'Ratios, Rates, and Proportions',
+  'percentages': 'Percentages',
+  'one-variable-data': 'One-Variable Data',
+  'two-variable-data': 'Two-Variable Data',
+  'probability': 'Probability',
+  'inference-statistics': 'Inference from Statistics',
+  'evaluating-statistical-claims': 'Evaluating Statistical Claims',
+  'area-volume': 'Area and Volume',
+  'lines-angles-triangles': 'Lines, Angles, and Triangles',
+  'right-triangles-trigonometry': 'Right Triangles and Trigonometry',
+  'circles': 'Circles'
+};
+
+// Kebab-case → subject section (1 = R&W, 2 = Math)
+const SUBCATEGORY_SECTION = {
+  'central-ideas-details': 1, 'inferences': 1, 'command-of-evidence': 1,
+  'words-in-context': 1, 'text-structure-purpose': 1, 'cross-text-connections': 1,
+  'rhetorical-synthesis': 1, 'transitions': 1, 'boundaries': 1, 'form-structure-sense': 1,
+  'linear-equations-one-variable': 2, 'linear-functions': 2,
+  'linear-equations-two-variables': 2, 'systems-linear-equations': 2,
+  'linear-inequalities': 2, 'nonlinear-functions': 2, 'nonlinear-equations': 2,
+  'equivalent-expressions': 2, 'ratios-rates-proportions': 2, 'percentages': 2,
+  'one-variable-data': 2, 'two-variable-data': 2, 'probability': 2,
+  'inference-statistics': 2, 'evaluating-statistical-claims': 2,
+  'area-volume': 2, 'lines-angles-triangles': 2, 'right-triangles-trigonometry': 2,
+  'circles': 2
+};
+
 /**
  * Build the system prompt for SAT Coach personality
  */
@@ -50,16 +99,18 @@ ALWAYS:
 const buildUserContextString = (userContext) => {
   const parts = [];
 
+  // ── Basic profile ──
   if (userContext.displayName) {
     parts.push(`Student name: ${userContext.displayName}`);
   }
 
-  if (userContext.targetScore) {
-    parts.push(`Target SAT score: ${userContext.targetScore}`);
+  // ── Most recent activity (placed first so AI prioritizes it) ──
+  if (userContext.recentActivity) {
+    parts.push(`MOST RECENT ACTIVITY: ${userContext.recentActivity}`);
   }
 
-  if (userContext.estimatedScore) {
-    parts.push(`Current estimated score: ${userContext.estimatedScore}`);
+  if (userContext.targetScore) {
+    parts.push(`Target SAT score: ${userContext.targetScore}`);
   }
 
   if (userContext.examDate) {
@@ -67,6 +118,20 @@ const buildUserContextString = (userContext) => {
     parts.push(`Days until SAT: ${daysUntil}`);
   }
 
+  // ── Estimated SAT score (computed server-side) ──
+  if (userContext.estimatedScore) {
+    parts.push(`Current estimated SAT score: ${userContext.estimatedScore}`);
+    if (userContext.scoreConfidence) {
+      parts.push(`Score confidence: ${userContext.scoreConfidence}%`);
+    }
+    if (userContext.scoreBreakdown) {
+      const b = userContext.scoreBreakdown;
+      if (b.readingWriting) parts.push(`  Reading & Writing section: ${b.readingWriting.score} (based on ${b.readingWriting.attempts} questions)`);
+      if (b.math) parts.push(`  Math section: ${b.math.score} (based on ${b.math.attempts} questions)`);
+    }
+  }
+
+  // ── Study habits ──
   if (userContext.streak !== undefined) {
     parts.push(`Current study streak: ${userContext.streak} days`);
   }
@@ -81,25 +146,85 @@ const buildUserContextString = (userContext) => {
     }
   }
 
-  if (userContext.weakAreas && userContext.weakAreas.length > 0) {
-    parts.push(`Weak areas: ${userContext.weakAreas.slice(0, 3).join(', ')}`);
-  }
-
-  if (userContext.strongAreas && userContext.strongAreas.length > 0) {
-    parts.push(`Strong areas: ${userContext.strongAreas.slice(0, 3).join(', ')}`);
-  }
-
-  if (userContext.recentActivity) {
-    parts.push(`Recent activity: ${userContext.recentActivity}`);
-  }
-
-  if (userContext.questionsAttempted !== undefined) {
+  // ── Overall questions & accuracy ──
+  if (userContext.questionsAttempted !== undefined && userContext.questionsAttempted > 0) {
     parts.push(`Total questions attempted: ${userContext.questionsAttempted}`);
   }
 
-  if (userContext.overallAccuracy !== undefined) {
+  if (userContext.overallAccuracy !== undefined && userContext.overallAccuracy !== null) {
     parts.push(`Overall accuracy: ${userContext.overallAccuracy}%`);
   }
+
+  // ── Practice exam history ──
+  if (userContext.practiceExams && userContext.practiceExams.length > 0) {
+    parts.push('');
+    parts.push(`PRACTICE EXAM HISTORY (${userContext.practiceExams.length} completed):`);
+    userContext.practiceExams.forEach((exam, i) => {
+      const dateStr = exam.completedAt ? new Date(exam.completedAt).toLocaleDateString() : 'Unknown date';
+      let examLine = `  ${i + 1}. ${exam.examTitle || 'Practice Exam'} — Score: ${exam.overallScore ?? 'N/A'}/${exam.totalQuestions ?? '?'}`;
+      if (exam.scores) {
+        const rwScore = exam.scores.readingWriting ?? exam.scores['reading-writing'];
+        const mathScore = exam.scores.math;
+        if (rwScore !== undefined || mathScore !== undefined) {
+          examLine += ` (R&W: ${rwScore ?? '?'}, Math: ${mathScore ?? '?'})`;
+        }
+      }
+      examLine += ` — ${dateStr}`;
+      if (exam.isDiagnostic) examLine += ' [Diagnostic]';
+      parts.push(examLine);
+    });
+  }
+
+  // ── Recent quiz results ──
+  if (userContext.recentQuizzes && userContext.recentQuizzes.length > 0) {
+    parts.push('');
+    parts.push(`RECENT QUIZ RESULTS (last ${userContext.recentQuizzes.length}):`);
+    userContext.recentQuizzes.forEach((quiz, i) => {
+      const subcatName = SUBCATEGORY_NAME_MAP[quiz.subcategoryId] || quiz.subcategoryId || 'Unknown';
+      const dateStr = quiz.completedAt ? new Date(quiz.completedAt).toLocaleDateString() : '';
+      parts.push(`  ${i + 1}. ${subcatName} (Level ${quiz.level ?? '?'}) — ${quiz.score ?? '?'}/${quiz.questionCount ?? '?'} ${quiz.passed ? '✓ Passed' : '✗ Failed'} — ${dateStr}`);
+    });
+  }
+
+  // ── Per-subcategory progress (Reading & Writing) ──
+  if (userContext.subcategoryDetails && userContext.subcategoryDetails.length > 0) {
+    const rwSubs = userContext.subcategoryDetails.filter(s => s.section === 1);
+    const mathSubs = userContext.subcategoryDetails.filter(s => s.section === 2);
+
+    if (rwSubs.length > 0) {
+      parts.push('');
+      parts.push('READING & WRITING SUBCATEGORY PROGRESS:');
+      rwSubs.forEach(s => {
+        const status = s.mastered ? '★ Mastered' : `Level ${s.level}/3`;
+        const accStr = s.accuracyLast10 !== null ? `${s.accuracyLast10}% accuracy (last 10)` : 'No data yet';
+        const qStr = s.totalQuestions > 0 ? `${s.totalQuestions} questions answered` : '';
+        parts.push(`  • ${s.name}: ${status} — ${accStr}${qStr ? ', ' + qStr : ''}`);
+      });
+    }
+
+    if (mathSubs.length > 0) {
+      parts.push('');
+      parts.push('MATH SUBCATEGORY PROGRESS:');
+      mathSubs.forEach(s => {
+        const status = s.mastered ? '★ Mastered' : `Level ${s.level}/3`;
+        const accStr = s.accuracyLast10 !== null ? `${s.accuracyLast10}% accuracy (last 10)` : 'No data yet';
+        const qStr = s.totalQuestions > 0 ? `${s.totalQuestions} questions answered` : '';
+        parts.push(`  • ${s.name}: ${status} — ${accStr}${qStr ? ', ' + qStr : ''}`);
+      });
+    }
+  }
+
+  // ── Weak and strong areas (summary) ──
+  if (userContext.weakAreas && userContext.weakAreas.length > 0) {
+    parts.push('');
+    parts.push(`Weakest areas (below 60% accuracy): ${userContext.weakAreas.join(', ')}`);
+  }
+
+  if (userContext.strongAreas && userContext.strongAreas.length > 0) {
+    parts.push(`Strongest areas (80%+ accuracy): ${userContext.strongAreas.join(', ')}`);
+  }
+
+  // (Recent activity is already included at the top of the context)
 
   return parts.join('\n');
 };
@@ -121,9 +246,10 @@ ${contextString}
 
 REQUIREMENTS:
 - 2-3 sentences maximum
-- Reference something specific about their progress or situation
-- End with ONE suggested next action (not a list)
+- ALWAYS reference the student's MOST RECENT ACTIVITY first (the latest quiz or exam they completed). This is the most important thing to acknowledge.
+- Then suggest ONE clear next action based on their weakest areas or logical next step
 - Be warm but not sycophantic
+- Do NOT reference older activity when there is newer activity available
 
 Respond with JSON:
 {
@@ -381,6 +507,7 @@ FIELD RULES:
 
 /**
  * Aggregate user context from Firebase data
+ * Pulls ALL available user activity data for comprehensive AI awareness
  * @param {Object} firebaseAdmin - Firebase Admin instance
  * @param {string} userId - User ID
  * @returns {Promise<Object>} - Aggregated user context
@@ -394,8 +521,49 @@ exports.aggregateUserContext = async (firebaseAdmin, userId) => {
   const context = { userId };
 
   try {
-    // Get user profile
-    const userDoc = await db.collection('users').doc(userId).get();
+    // ──────────────────────────────────────────────
+    // Run all Firestore queries in parallel
+    // ──────────────────────────────────────────────
+    const [
+      userDoc,
+      loginSnapshot,
+      progressSnapshot,
+      practiceExamsSnapshot,
+      quizSnapshot,
+      questionAttemptsSnapshot
+    ] = await Promise.all([
+      // 1. User profile
+      db.collection('users').doc(userId).get(),
+
+      // 2. Login history (last 2 for streak calculation)
+      db.collection('users').doc(userId)
+        .collection('loginHistory').orderBy('timestamp', 'desc').limit(2).get(),
+
+      // 3. Subcategory progress (FIXED: was 'subcategoryProgress', now 'progress')
+      db.collection('users').doc(userId)
+        .collection('progress').get(),
+
+      // 4. Practice exam history (last 10, most recent first)
+      db.collection('users').doc(userId)
+        .collection('practiceExams').orderBy('completedAt', 'desc').limit(10).get(),
+
+      // 5. Quiz results from smartQuizzes (last 20)
+      db.collection('smartQuizzes')
+        .where('userId', '==', userId)
+        .where('status', '==', 'completed')
+        .orderBy('completedAt', 'desc')
+        .limit(20).get(),
+
+      // 6. Question attempts for SAT score calculation (last 100)
+      db.collection('questionAttempts')
+        .where('userId', '==', userId)
+        .orderBy('attemptedAt', 'desc')
+        .limit(100).get()
+    ]);
+
+    // ──────────────────────────────────────────────
+    // 1. User profile
+    // ──────────────────────────────────────────────
     if (userDoc.exists) {
       const userData = userDoc.data();
       context.displayName = userData.displayName || userData.email?.split('@')[0];
@@ -404,12 +572,11 @@ exports.aggregateUserContext = async (firebaseAdmin, userId) => {
       context.onboardingComplete = userData.onboardingComplete || false;
     }
 
-    // Calculate study streak (simplified)
-    const lastLoginDoc = await db.collection('users').doc(userId)
-      .collection('loginHistory').orderBy('timestamp', 'desc').limit(2).get();
-
-    if (!lastLoginDoc.empty) {
-      const logins = lastLoginDoc.docs.map(d => d.data().timestamp?.toDate?.() || new Date(d.data().timestamp));
+    // ──────────────────────────────────────────────
+    // 2. Login history / streak
+    // ──────────────────────────────────────────────
+    if (!loginSnapshot.empty) {
+      const logins = loginSnapshot.docs.map(d => d.data().timestamp?.toDate?.() || new Date(d.data().timestamp));
       if (logins.length > 0) {
         const lastLogin = logins[0];
         const now = new Date();
@@ -417,41 +584,210 @@ exports.aggregateUserContext = async (firebaseAdmin, userId) => {
       }
     }
 
-    // Get subcategory performance summary
-    const progressSnapshot = await db.collection('users').doc(userId)
-      .collection('subcategoryProgress').get();
-
+    // ──────────────────────────────────────────────
+    // 3. Per-subcategory progress (FIXED field names)
+    // ──────────────────────────────────────────────
     const weakAreas = [];
     const strongAreas = [];
+    const subcategoryDetails = [];
     let totalQuestions = 0;
     let totalCorrect = 0;
 
     progressSnapshot.forEach(doc => {
       const data = doc.data();
-      const accuracy = data.accuracy || (data.correct / data.attempted * 100) || 0;
-      const name = data.subcategoryName || doc.id;
+      const docId = doc.id; // kebab-case like 'central-ideas-details'
+      const name = SUBCATEGORY_NAME_MAP[docId] || docId;
+      const section = SUBCATEGORY_SECTION[docId] || 0;
 
-      if (accuracy < 60 && data.attempted >= 3) {
-        weakAreas.push(name);
-      } else if (accuracy >= 80 && data.attempted >= 3) {
-        strongAreas.push(name);
+      // FIXED: use correct field names that the frontend writes
+      const questionsAnswered = data.totalQuestions || 0;
+      const correct = data.correctTotal || 0;
+
+      // Calculate accuracy from last10QuestionResults (matches frontend logic)
+      const last10Results = data.last10QuestionResults || [];
+      const last10Count = last10Results.length;
+      const last10Correct = last10Results.filter(r => r === true).length;
+      const accuracyLast10 = last10Count > 0 ? Math.round((last10Correct / last10Count) * 100) : null;
+
+      // Overall accuracy from stored fields
+      const overallAccuracy = data.accuracy || (questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : null);
+
+      // Determine weak/strong areas using last-10 accuracy (more indicative) or overall
+      const effectiveAccuracy = accuracyLast10 !== null ? accuracyLast10 : overallAccuracy;
+      const hasEnoughData = last10Count >= 3 || questionsAnswered >= 3;
+
+      if (hasEnoughData && effectiveAccuracy !== null) {
+        if (effectiveAccuracy < 60) {
+          weakAreas.push(name);
+        } else if (effectiveAccuracy >= 80) {
+          strongAreas.push(name);
+        }
       }
 
-      totalQuestions += data.attempted || 0;
-      totalCorrect += data.correct || 0;
+      totalQuestions += questionsAnswered;
+      totalCorrect += correct;
+
+      // Store detailed per-subcategory info for the AI
+      subcategoryDetails.push({
+        id: docId,
+        name,
+        section, // 1=R&W, 2=Math
+        level: data.level || 1,
+        mastered: data.mastered || false,
+        accuracyLast10,
+        overallAccuracy,
+        totalQuestions: questionsAnswered,
+        lastScore: data.lastScore,
+        attempts: data.attempts || 0
+      });
     });
 
     context.weakAreas = weakAreas;
     context.strongAreas = strongAreas;
+    context.subcategoryDetails = subcategoryDetails;
     context.questionsAttempted = totalQuestions;
     context.overallAccuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : null;
 
-    // Get estimated SAT score if available
-    const scoreDoc = await db.collection('users').doc(userId)
-      .collection('analytics').doc('estimatedScore').get();
+    // ──────────────────────────────────────────────
+    // 4. Practice exam history
+    // ──────────────────────────────────────────────
+    const practiceExams = [];
+    practiceExamsSnapshot.forEach(doc => {
+      const data = doc.data();
+      practiceExams.push({
+        id: doc.id,
+        examTitle: data.examTitle || data.title || 'Practice Exam',
+        overallScore: data.overallScore ?? data.score ?? null,
+        totalQuestions: data.totalQuestions ?? null,
+        correctAnswers: data.correctAnswers ?? null,
+        scores: data.scores || null,
+        completedAt: data.completedAt?.toDate?.()?.toISOString() || data.examDate || null,
+        isDiagnostic: data.isDiagnostic || false
+      });
+    });
+    context.practiceExams = practiceExams;
 
-    if (scoreDoc.exists) {
-      context.estimatedScore = scoreDoc.data().score;
+    // ──────────────────────────────────────────────
+    // 5. Recent quiz results
+    // ──────────────────────────────────────────────
+    const recentQuizzes = [];
+    quizSnapshot.forEach(doc => {
+      const data = doc.data();
+      recentQuizzes.push({
+        id: doc.id,
+        subcategoryId: data.subcategoryId || null,
+        level: data.level || null,
+        score: data.score ?? null,
+        questionCount: data.questionCount ?? null,
+        passed: data.passed || false,
+        completedAt: data.completedAt?.toDate?.()?.toISOString() || null
+      });
+    });
+    context.recentQuizzes = recentQuizzes;
+
+    // ──────────────────────────────────────────────
+    // 6. Compute estimated SAT score server-side
+    //    (mirrors frontend calculateEstimatedSATScore logic)
+    // ──────────────────────────────────────────────
+    if (!questionAttemptsSnapshot.empty) {
+      const rwAttempts = [];
+      const mathAttempts = [];
+
+      questionAttemptsSnapshot.forEach(doc => {
+        const data = doc.data();
+        const subcatId = data.subcategoryId;
+        if (!subcatId) return;
+
+        // Determine section from the subcategory
+        let section = 0;
+        if (typeof subcatId === 'string') {
+          section = SUBCATEGORY_SECTION[subcatId] || 0;
+        }
+        // Also try numeric lookup
+        if (section === 0 && !isNaN(parseInt(subcatId, 10))) {
+          const numId = parseInt(subcatId, 10);
+          if (numId >= 1 && numId <= 10) section = 1;
+          else if (numId >= 11 && numId <= 29) section = 2;
+        }
+
+        if (section === 1) rwAttempts.push(data);
+        else if (section === 2) mathAttempts.push(data);
+      });
+
+      const rwRecent = rwAttempts.slice(0, 54);
+      const mathRecent = mathAttempts.slice(0, 44);
+
+      const rwCorrect = rwRecent.filter(a => a.isCorrect === true).length;
+      const mathCorrect = mathRecent.filter(a => a.isCorrect === true).length;
+      const rwTotal = rwRecent.length;
+      const mathTotal = mathRecent.length;
+
+      if (rwTotal > 0 || mathTotal > 0) {
+        const rwAccuracy = rwTotal > 0 ? rwCorrect / rwTotal : 0;
+        const mathAccuracy = mathTotal > 0 ? mathCorrect / mathTotal : 0;
+
+        const rwEstimate = rwTotal > 0 ? Math.round((200 + rwAccuracy * 600) / 10) * 10 : 200;
+        const mathEstimate = mathTotal > 0 ? Math.round((200 + mathAccuracy * 600) / 10) * 10 : 200;
+        const estimatedScore = rwEstimate + mathEstimate;
+
+        const rwConfidence = Math.min(1, rwTotal / 54);
+        const mathConfidence = Math.min(1, mathTotal / 44);
+        const confidence = Math.round(((rwConfidence + mathConfidence) / 2) * 100);
+
+        context.estimatedScore = Math.max(400, Math.min(1600, estimatedScore));
+        context.scoreConfidence = confidence;
+        context.scoreBreakdown = {
+          readingWriting: { score: rwEstimate, attempts: rwTotal },
+          math: { score: mathEstimate, attempts: mathTotal }
+        };
+      }
+    }
+
+    // If we didn't get an estimated score from questionAttempts, fall back to progress-based estimate
+    if (!context.estimatedScore && subcategoryDetails.length > 0) {
+      // Use the per-subcategory accuracy data we already have
+      let rwScore = 0, rwWeight = 0, mathScore = 0, mathWeight = 0;
+      subcategoryDetails.forEach(s => {
+        const acc = s.accuracyLast10 !== null ? s.accuracyLast10 : s.overallAccuracy;
+        if (acc === null || s.totalQuestions < 1) return;
+        const weight = s.section === 1 ? 4.0 : 2.1;
+        const contribution = (acc / 100) * weight;
+        if (s.section === 1) { rwScore += contribution; rwWeight += weight; }
+        else if (s.section === 2) { mathScore += contribution; mathWeight += weight; }
+      });
+
+      if (rwWeight > 0 || mathWeight > 0) {
+        const rwEstimate = rwWeight > 0 ? Math.round((200 + (rwScore / rwWeight) * 600) / 10) * 10 : 200;
+        const mathEstimate = mathWeight > 0 ? Math.round((200 + (mathScore / mathWeight) * 600) / 10) * 10 : 200;
+        context.estimatedScore = Math.max(400, Math.min(1600, rwEstimate + mathEstimate));
+        context.scoreBreakdown = {
+          readingWriting: { score: rwEstimate, attempts: 0 },
+          math: { score: mathEstimate, attempts: 0 }
+        };
+      }
+    }
+
+    // ──────────────────────────────────────────────
+    // 7. Recent activity summary
+    // ──────────────────────────────────────────────
+    const activityParts = [];
+    if (recentQuizzes.length > 0) {
+      const latestQuiz = recentQuizzes[0];
+      const qSubcat = SUBCATEGORY_NAME_MAP[latestQuiz.subcategoryId] || latestQuiz.subcategoryId;
+      const scoreStr = (latestQuiz.score !== null && latestQuiz.questionCount !== null)
+        ? ` — scored ${latestQuiz.score}/${latestQuiz.questionCount}`
+        : '';
+      activityParts.push(`Most recent quiz: ${qSubcat} Level ${latestQuiz.level ?? '?'}${scoreStr}, ${latestQuiz.passed ? 'PASSED ✓' : 'DID NOT PASS ✗'}`);
+    }
+    if (practiceExams.length > 0) {
+      const latestExam = practiceExams[0];
+      let examStr = `Most recent practice exam: "${latestExam.examTitle}"`;
+      if (latestExam.overallScore !== null) examStr += ` — score: ${latestExam.overallScore}/${latestExam.totalQuestions ?? '?'}`;
+      if (latestExam.completedAt) examStr += ` (${new Date(latestExam.completedAt).toLocaleDateString()})`;
+      activityParts.push(examStr);
+    }
+    if (activityParts.length > 0) {
+      context.recentActivity = activityParts.join('. ');
     }
 
   } catch (error) {

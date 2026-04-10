@@ -81,7 +81,7 @@ describe('auth and admin access', () => {
     expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument();
   });
 
-  it('sends successful email signups to verification', async () => {
+  it('sends successful email signups to the app (deferred verification)', async () => {
     const signup = jest.fn().mockResolvedValue({});
 
     useAuth.mockReturnValue({
@@ -92,7 +92,7 @@ describe('auth and admin access', () => {
     renderWithRoute(<Signup />, {
       path: '/signup',
       initialEntries: ['/signup'],
-      routes: [{ path: '/verify-email', element: <div>Verify Email Page</div> }],
+      routes: [{ path: '/progress', element: <div>Progress Page</div> }],
     });
 
     fireEvent.change(screen.getByLabelText(/full name/i), {
@@ -117,7 +117,7 @@ describe('auth and admin access', () => {
       );
     });
 
-    expect(await screen.findByText('Verify Email Page')).toBeInTheDocument();
+    expect(await screen.findByText('Progress Page')).toBeInTheDocument();
   });
 
   it('redirects anonymous users away from private routes', () => {
@@ -138,7 +138,7 @@ describe('auth and admin access', () => {
     expect(screen.getByTestId('login')).toHaveTextContent('/dashboard');
   });
 
-  it('redirects unverified password users to email verification', () => {
+  it('allows unverified password users into protected routes (deferred verification)', () => {
     useAuth.mockReturnValue({
       currentUser: createMockUser({ emailVerified: false }),
     });
@@ -150,11 +150,10 @@ describe('auth and admin access', () => {
       {
         path: '/dashboard',
         initialEntries: ['/dashboard'],
-        routes: [{ path: '/verify-email', element: <div>Verify Email Page</div> }],
       },
     );
 
-    expect(screen.getByText('Verify Email Page')).toBeInTheDocument();
+    expect(screen.getByText('Protected Content')).toBeInTheDocument();
   });
 
   it('redirects non-admin users away from admin routes', () => {

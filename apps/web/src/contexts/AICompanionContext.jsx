@@ -247,6 +247,17 @@ export const AICompanionProvider = ({ children }) => {
     }, [currentUser, updateProfile]);
 
     /**
+     * Refresh greeting after a user activity (quiz, exam, etc.)
+     * Bypasses cache to get a fresh greeting reflecting the latest activity
+     */
+    const refreshGreeting = useCallback(async () => {
+        if (!currentUser || !isAvailable) return null;
+        // Small delay to let Firestore writes settle
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return fetchGreeting(false); // false = skip cache
+    }, [currentUser, isAvailable, fetchGreeting]);
+
+    /**
      * Toggle panel visibility
      */
     const togglePanel = useCallback(() => {
@@ -317,6 +328,7 @@ export const AICompanionProvider = ({ children }) => {
 
         // Actions
         fetchGreeting,
+        refreshGreeting,
         fetchNextSteps,
         getVoiceToken,
         updateProfile,

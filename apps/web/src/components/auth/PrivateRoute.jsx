@@ -11,13 +11,7 @@ function PrivateRoute({ children }) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // If email/password user and not verified -> go to verify-email
-  const isPasswordProvider = (currentUser.providerData || []).some(p => p.providerId === 'password');
-  if (isPasswordProvider && !currentUser.emailVerified) {
-    return <Navigate to="/verify-email" replace />;
-  }
-
-  // Otherwise allow
+  // Allow all authenticated users through (email verification is handled by reminder banner)
   return children;
 }
 

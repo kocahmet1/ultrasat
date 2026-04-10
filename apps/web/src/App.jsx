@@ -31,6 +31,7 @@ import AnalyticsTracker from './components/AnalyticsTracker';
 import CriticalCSS from './components/CriticalCSS';
 import AICompanionPanel from './components/AICompanionPanel';
 import RouteErrorBoundary from './components/errors/RouteErrorBoundary';
+import EmailVerificationBanner from './components/EmailVerificationBanner';
 
 // Styles
 import './styles/App.css';
@@ -169,6 +170,7 @@ const RootLayout = () => {
       <div className="app-container">
         {isMobile ? <TopNavBar /> : <Sidebar />}
         <div className="main-content">
+          <EmailVerificationBanner />
           {showProfileDropdown && (
             <div className="top-bar">
               <ProfileDropdown />

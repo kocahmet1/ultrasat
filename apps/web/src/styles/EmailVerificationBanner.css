@@ -1,0 +1,176 @@
+/* ============================================
+   Email Verification Banner
+   ============================================ */
+
+/* Full banner - slides down from top */
+.email-verify-banner {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border-bottom: 2px solid #f0c040;
+  padding: 0;
+  position: relative;
+  z-index: 100;
+  animation: emailBannerSlideDown 0.4s ease-out;
+}
+
+@keyframes emailBannerSlideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.email-verify-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.email-verify-banner-icon {
+  flex-shrink: 0;
+  color: #856404;
+}
+
+.email-verify-banner-text {
+  flex: 1;
+  font-size: 14px;
+  color: #664d03;
+  line-height: 1.4;
+}
+
+.email-verify-banner-text strong {
+  font-weight: 700;
+}
+
+.email-verify-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.email-verify-banner-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.email-verify-banner-btn-primary {
+  background: #856404;
+  color: #fff;
+}
+
+.email-verify-banner-btn-primary:hover {
+  background: #6d5303;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(133, 100, 4, 0.3);
+}
+
+.email-verify-banner-btn-dismiss {
+  background: transparent;
+  color: #856404;
+  padding: 6px 12px;
+}
+
+.email-verify-banner-btn-dismiss:hover {
+  background: rgba(133, 100, 4, 0.1);
+}
+
+/* ============================================
+   Minimized Badge (floating)
+   ============================================ */
+
+.email-verify-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f0c040 0%, #e6a800 100%);
+  border: 2px solid #d4950a;
+  color: #664d03;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(230, 168, 0, 0.35);
+  transition: all 0.3s ease;
+  animation: emailBadgePulse 3s ease-in-out infinite;
+}
+
+.email-verify-badge:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 24px rgba(230, 168, 0, 0.5);
+}
+
+@keyframes emailBadgePulse {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(230, 168, 0, 0.35);
+  }
+  50% {
+    box-shadow: 0 4px 24px rgba(230, 168, 0, 0.55);
+  }
+}
+
+.email-verify-badge-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e74c3c;
+  border: 2px solid #fff;
+  animation: emailDotBlink 2s ease-in-out infinite;
+}
+
+@keyframes emailDotBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+  .email-verify-banner-content {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px;
+  }
+
+  .email-verify-banner-text {
+    font-size: 13px;
+    flex-basis: calc(100% - 36px);
+  }
+
+  .email-verify-banner-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .email-verify-badge {
+    bottom: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+}
