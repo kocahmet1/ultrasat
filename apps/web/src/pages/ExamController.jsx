@@ -10,6 +10,7 @@ import {
 } from '../firebase/services';
 import { enrichQuestionsWithSubcategory } from '../utils/subcategoryUtils';
 import { recordSubcategoryProgress } from '../firebase/subcategoryServices';
+import { getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 
 const DEFAULT_MODULE_METADATA = {
   1: { title: "Module 1: Reading and Writing", calculatorAllowed: false },
@@ -211,7 +212,7 @@ function ExamController() {
             ...question,
             id: question.id || `module-${data.moduleNumber}-q-${index}`,
             // Use subcategory information instead of skill tags
-            subcategoryId: question.subcategoryId || (question.subCategory ? question.subCategory.toLowerCase().replace(/\s+/g, '-') : '')
+            subcategoryId: question.subcategoryId || (question.subCategory ? (getKebabCaseFromAnyFormat(question.subCategory) || question.subCategory.toLowerCase().replace(/\s+/g, '-')) : '')
           },
           selectedAnswer,
           isCorrect,

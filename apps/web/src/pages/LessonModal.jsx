@@ -3,6 +3,7 @@ import { Modal, Button, Spinner } from 'react-bootstrap';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { normalizeSubcategoryName, getHumanReadableSubcategory } from '../utils/subcategoryUtils';
+import { getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import { db } from '../firebase/config';
 import { generateLesson } from '../utils/openaiService';
 import DOMPurify from 'dompurify';
@@ -109,7 +110,7 @@ const LessonModal = ({ skillTag, show, onHide, onStartDrill }) => {
       setLoading(true);
       setError(null);
       // Normalize the skill tag to ensure consistent format
-      const normalized = normalizeSubcategoryName(skillTag.toLowerCase().replace(/\s+/g, '-'));
+      const normalized = getKebabCaseFromAnyFormat(skillTag) || normalizeSubcategoryName(skillTag);
       setNormalizedSkillTag(normalized);
       fetchLesson(normalized);
     }

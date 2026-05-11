@@ -3,6 +3,7 @@ import { Card, Button, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useReview } from '../contexts/ReviewContext';
 import { getHumanReadableSubcategory } from '../utils/subcategoryUtils';
+import { getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import '../styles/ReviewTile.css';
 
 /**
@@ -32,7 +33,8 @@ const ReviewTile = () => {
   
   // Handle clicking on a skill to view the lesson
   const handleViewLesson = (skillTag) => {
-    navigate(`/learn/${skillTag}`);
+    const slug = getKebabCaseFromAnyFormat(skillTag) || skillTag;
+    navigate(`/learn/${slug}`);
   };
   
   // Handle starting a practice drill for a skill

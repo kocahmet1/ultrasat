@@ -30,133 +30,122 @@ const authenticateUser = requireAuth({
 });
 
 /**
- * Generate Plotly.js configuration from question text and graph description using Gemini
+ * Generate Plotly.js configuration from question text and graph description using OpenAI
  */
 const generatePlotlyConfig = async (questionText, graphDescription) => {
-  if (!genAI) {
-    throw new Error('Gemini API key not found in environment variables. Please set GEMINI_API_KEY.');
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY not found in environment variables.');
   }
 
-  const prompt = `You are an expert in mathematical visualization using Plotly.js. Generate a complete Plotly.js configuration object to create a mathematical graph based on the following:
+  const prompt = `You are an expert in data visualization using Plotly.js. Generate a complete Plotly.js configuration to accurately represent the following data visualization for an SAT exam question.
 
 Question Text: "${questionText}"
-Graph Description: "${graphDescription}"
+Graph/Visual Description: "${graphDescription}"
 
-Requirements:
-1. Generate a valid Plotly.js data and layout configuration
-2. Use appropriate mathematical plotting (scatter, line, function plots, etc.)
-3. Include proper axis labels, titles, and styling
-4. Set figure size to width: 800, height: 600
-5. Use educational/academic styling with clear fonts
-6. Include grid lines and proper axis ranges
-7. Use colors suitable for educational materials
-8. Make sure all mathematical elements are clearly visible
+CRITICAL INSTRUCTIONS:
+1. MATCH THE DESCRIPTION EXACTLY. If the description says "table", generate a Plotly TABLE (type: "table"). If it says "scatter plot", generate a scatter plot. If it says "bar chart", generate a bar chart. Etc.
+2. Include ALL data values from the description — do not omit any rows or data points.
+3. Use appropriate chart types:
+   - For tables: use { type: "table", header: {...}, cells: {...} }
+   - For bar charts: use { type: "bar" }
+   - For scatter/line: use { type: "scatter" }
+   - For histograms: use { type: "histogram" }
+4. Style for educational/academic use: clear fonts (size 14+), readable colors, proper axis labels.
+5. Set figure size: width: 800, height: 600 (or taller for tables with many rows).
+6. Use distinct, high-contrast colors suitable for SAT test materials.
 
-CRITICAL REQUIREMENTS: 
-- Return ONLY a valid JSON object with "data" and "layout" properties
-- No explanations, comments, markdown formatting, or code blocks
-- The JSON must be parseable directly by JSON.parse()
-- Use Plotly.js syntax (not Python plotly)
-- Do not include any text before or after the JSON
+Return ONLY a valid JSON object with "data" and "layout" properties. No explanations, no markdown, no code blocks.
 
-Example structure:
+Example for a table:
 {
-  "data": [
-    {
-      "x": [1, 2, 3, 4],
-      "y": [1, 4, 9, 16],
-      "type": "scatter",
-      "mode": "lines+markers",
-      "name": "f(x) = x²"
-    }
-  ],
-  "layout": {
-    "title": "Graph Title",
-    "xaxis": { "title": "X-axis", "range": [0, 5] },
-    "yaxis": { "title": "Y-axis", "range": [0, 20] },
-    "width": 800,
-    "height": 600,
-    "font": { "size": 14 },
-    "showlegend": true
-  }
+  "data": [{
+    "type": "table",
+    "header": { "values": ["Col A", "Col B"], "fill": { "color": "#2c3e50" }, "font": { "color": "white", "size": 14 }, "align": "center" },
+    "cells": { "values": [["Row1A", "Row2A"], ["Row1B", "Row2B"]], "fill": { "color": ["#f8f9fa", "#ecf0f1"] }, "font": { "size": 13 }, "align": "center" }
+  }],
+  "layout": { "title": "Table Title", "width": 800, "height": 400 }
+}
+
+Example for a bar chart:
+{
+  "data": [{ "x": ["A", "B"], "y": [10, 20], "type": "bar" }],
+  "layout": { "title": "Chart Title", "xaxis": { "title": "X" }, "yaxis": { "title": "Y" }, "width": 800, "height": 600 }
 }`;
 
   try {
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.5-flash-preview-05-20'
+    const fetch = require('node-fetch');
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-5.4',
+        input: [
+          {
+            role: 'system',
+            content: 'You are an expert data visualization developer. Return ONLY valid JSON for Plotly.js configurations. No markdown, no explanations.'
+          },
+          { role: 'user', content: prompt }
+        ],
+        max_output_tokens: 16384,
+      }),
     });
-    
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const configText = response.text().trim();
-    
-    // Clean up the response and parse JSON
-    let cleanConfig = configText
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || `OpenAI API error: ${response.status}`);
+    }
+
+    // Extract text from the Responses API format
+    let configText = '';
+    if (data.output && Array.isArray(data.output)) {
+      const messageOutput = data.output.find(item => item.type === 'message');
+      if (messageOutput?.content && Array.isArray(messageOutput.content)) {
+        const textContent = messageOutput.content.find(item => item.type === 'output_text');
+        if (textContent?.text) {
+          configText = textContent.text;
+        }
+      }
+    }
+    if (!configText) {
+      configText = data.output_text || '';
+    }
+    if (!configText) {
+      throw new Error('No content returned from OpenAI');
+    }
+
+    // Clean up and parse JSON
+    let cleanConfig = configText.trim()
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
-      .replace(/^[^{]*/, '') // Remove any text before the first {
-      .replace(/[^}]*$/, '') // Remove any text after the last }
       .trim();
-    
-    // Ensure we have valid JSON brackets
-    if (!cleanConfig.startsWith('{')) {
-      const firstBrace = cleanConfig.indexOf('{');
-      if (firstBrace !== -1) {
-        cleanConfig = cleanConfig.substring(firstBrace);
-      } else {
-        throw new Error('No valid JSON object found in Gemini response');
-      }
+
+    // Extract the JSON object
+    const firstBrace = cleanConfig.indexOf('{');
+    const lastBrace = cleanConfig.lastIndexOf('}');
+    if (firstBrace === -1 || lastBrace === -1) {
+      throw new Error('No valid JSON object found in OpenAI response');
     }
-    
-    if (!cleanConfig.endsWith('}')) {
-      const lastBrace = cleanConfig.lastIndexOf('}');
-      if (lastBrace !== -1) {
-        cleanConfig = cleanConfig.substring(0, lastBrace + 1);
-      } else {
-        throw new Error('No valid JSON object found in Gemini response');
-      }
-    }
-    
-    // Handle common JSON formatting issues
+    cleanConfig = cleanConfig.substring(firstBrace, lastBrace + 1);
+
+    // Fix common JSON issues
     cleanConfig = cleanConfig
-      .replace(/,\s*}/g, '}') // Remove trailing commas before closing braces
-      .replace(/,\s*]/g, ']') // Remove trailing commas before closing brackets
-      .replace(/SOME OTHER NUMBERS HERE FOR MANY ROWS/g, '') // Remove placeholder text
-      .replace(/[\r\n\t]/g, ' ') // Replace line breaks and tabs with spaces
-      .replace(/\s+/g, ' ') // Normalize whitespace
-      .trim();
-    
-    // Handle mathematical expressions that Gemini sometimes generates
-    // Replace simple mathematical expressions with computed values
-    cleanConfig = cleanConfig.replace(/\(\s*(\d+(?:\.\d+)?)\s*\+\s*(\d+(?:\.\d+)?)\s*\)/g, (match, a, b) => {
-      return (parseFloat(a) + parseFloat(b)).toString();
-    });
-    cleanConfig = cleanConfig.replace(/\(\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*\)/g, (match, a, b) => {
-      return (parseFloat(a) - parseFloat(b)).toString();
-    });
-    cleanConfig = cleanConfig.replace(/\(\s*(\d+(?:\.\d+)?)\s*\*\s*(\d+(?:\.\d+)?)\s*\)/g, (match, a, b) => {
-      return (parseFloat(a) * parseFloat(b)).toString();
-    });
-    cleanConfig = cleanConfig.replace(/\(\s*(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)\s*\)/g, (match, a, b) => {
-      return (parseFloat(a) / parseFloat(b)).toString();
-    });
-    
-    try {
-      const parsedConfig = JSON.parse(cleanConfig);
-      
-      // Validate that we have the required structure
-      if (!parsedConfig.data || !parsedConfig.layout) {
-        throw new Error('Invalid Plotly config: missing required data or layout properties');
-      }
-      
-      return parsedConfig;
-    } catch (parseError) {
-      console.error('Failed to parse Plotly config:', cleanConfig.substring(0, 500) + '...');
-      console.error('Parse error:', parseError.message);
-      throw new Error('Generated configuration is not valid JSON: ' + parseError.message);
+      .replace(/,\s*}/g, '}')
+      .replace(/,\s*]/g, ']');
+
+    const parsedConfig = JSON.parse(cleanConfig);
+
+    if (!parsedConfig.data || !parsedConfig.layout) {
+      throw new Error('Invalid Plotly config: missing required data or layout properties');
     }
+
+    return parsedConfig;
   } catch (error) {
-    console.error('Error generating Plotly config with Gemini:', error);
+    console.error('Error generating Plotly config with OpenAI:', error);
     throw error;
   }
 };

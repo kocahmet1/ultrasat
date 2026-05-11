@@ -20,7 +20,7 @@ import {
   importMultipleLearningContents,
   validateLearningContent 
 } from '../utils/learningContentImporter';
-import { SUBCATEGORY_NAMES } from '../utils/subcategoryConstants';
+import { SUBCATEGORY_NAMES, getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import { toast, ToastContainer } from 'react-toastify';
 import '../styles/AdminLearningContent.css';
 
@@ -46,7 +46,7 @@ export default function AdminLearningContent() {
   const subcategories = Object.entries(SUBCATEGORY_NAMES).map(([id, name]) => ({
     id: parseInt(id),
     name,
-    kebabCase: name.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-')
+    kebabCase: getKebabCaseFromAnyFormat(id) || name.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-')
   }));
 
   const loadContent = useCallback(async () => {

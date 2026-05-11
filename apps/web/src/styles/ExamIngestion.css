@@ -1,0 +1,413 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Exam Ingestion Admin Page
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ingest-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding: 30px 20px;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #e2e8f0;
+}
+
+.ingest-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.ingest-loading,
+.ingest-denied {
+  text-align: center;
+  padding: 60px;
+  color: #94a3b8;
+}
+
+.ingest-denied h2 { color: #f87171; margin-bottom: 12px; }
+.ingest-denied button {
+  margin-top: 16px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Header ────────────────────────────────────────────────────────── */
+
+.ingest-header {
+  margin-bottom: 32px;
+}
+
+.ingest-back-btn {
+  background: none;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+.ingest-back-btn:hover {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
+.ingest-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 8px 0;
+}
+
+.ingest-subtitle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ── Form ──────────────────────────────────────────────────────────── */
+
+.ingest-form {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(12px);
+}
+
+.ingest-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.ingest-field label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.ingest-field input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.ingest-field input[type="text"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.ingest-field input[type="text"]::placeholder {
+  color: #475569;
+}
+
+.ingest-file-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ingest-file-input input[type="file"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px dashed #475569;
+  background: #0f172a;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.ingest-file-input input[type="file"]:hover {
+  border-color: #3b82f6;
+}
+
+.ingest-file-name {
+  font-size: 0.8rem;
+  color: #10b981;
+  font-weight: 500;
+}
+
+.ingest-options-row {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.ingest-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+}
+
+.ingest-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+.ingest-option-hint {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.ingest-submit-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.5px;
+}
+.ingest-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+.ingest-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Stage Progress ────────────────────────────────────────────────── */
+
+.ingest-stages {
+  margin-bottom: 24px;
+}
+
+.ingest-stages h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f1f5f9 !important;
+  margin: 0 0 16px 0;
+  border: none !important;
+  text-align: left !important;
+}
+
+.ingest-stage-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.ingest-stage-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 18px 14px;
+  display: flex;
+  gap: 12px;
+  transition: all 0.3s;
+}
+
+.ingest-stage-card.stage-running {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.1);
+}
+
+.ingest-stage-card.stage-completed {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.ingest-stage-card.stage-failed {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.stage-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.stage-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.stage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.stage-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #f1f5f9;
+}
+
+.stage-status-icon {
+  font-size: 1rem;
+}
+
+.stage-desc {
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.stage-status-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-pending   { color: #475569; }
+.status-running   { color: #3b82f6; }
+.status-completed { color: #10b981; }
+.status-failed    { color: #ef4444; }
+.status-skipped   { color: #f59e0b; }
+
+.stage-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin-stage 0.8s linear infinite;
+}
+
+@keyframes spin-stage {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Logs ──────────────────────────────────────────────────────────── */
+
+.ingest-logs {
+  margin-bottom: 24px;
+}
+
+.ingest-logs h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f1f5f9 !important;
+  margin: 0 0 12px 0;
+  border: none !important;
+  text-align: left !important;
+}
+
+.ingest-log-window {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.ingest-log-line {
+  display: flex;
+  gap: 12px;
+  padding: 1px 0;
+}
+
+.log-time {
+  color: #475569;
+  flex-shrink: 0;
+  min-width: 75px;
+  font-size: 0.78rem;
+}
+
+.log-msg {
+  word-break: break-word;
+}
+
+.log-info    .log-msg { color: #94a3b8; }
+.log-success .log-msg { color: #10b981; }
+.log-warning .log-msg { color: #f59e0b; }
+.log-error   .log-msg { color: #f87171; }
+
+/* Scrollbar */
+.ingest-log-window::-webkit-scrollbar { width: 6px; }
+.ingest-log-window::-webkit-scrollbar-track { background: #020617; }
+.ingest-log-window::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+/* ── Summary ───────────────────────────────────────────────────────── */
+
+.ingest-summary {
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.ingest-summary h2 {
+  margin: 0 0 12px 0 !important;
+  border: none !important;
+  text-align: center !important;
+}
+
+.summary-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid #10b981;
+}
+.summary-success h2 { color: #10b981 !important; }
+
+.summary-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+}
+.summary-error h2 { color: #ef4444 !important; }
+
+.summary-note {
+  color: #f59e0b;
+  font-size: 0.9rem;
+}
+
+.summary-error-msg {
+  color: #f87171;
+  font-size: 0.9rem;
+  font-family: monospace;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .ingest-page { padding: 16px 12px; }
+  .ingest-form { padding: 20px 16px; }
+  .ingest-form-row { grid-template-columns: 1fr; }
+  .ingest-stage-grid { grid-template-columns: 1fr 1fr; }
+  .ingest-options-row { flex-direction: column; gap: 12px; }
+  .ingest-header h1 { font-size: 1.4rem; }
+}
+
+@media (max-width: 480px) {
+  .ingest-stage-grid { grid-template-columns: 1fr; }
+}

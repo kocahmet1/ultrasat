@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaBookOpen, FaChevronDown, FaChevronUp, FaRobot, FaShieldAlt } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 import { getSubcategoriesArray } from '../utils/subcategoryConstants';
 import AuthPromptModal from './AuthPromptModal';
@@ -90,7 +91,7 @@ const QuestionBank = () => {
         {/* Free Access Notice */}
         <div className="free-access-notice">
           <div className="notice-content">
-            <span className="notice-icon">🎉</span>
+            <span className="notice-icon"><FaShieldAlt aria-hidden="true" /></span>
             <span className="notice-text">All questions in the Question Bank are accessible with a free account</span>
             <span className="notice-badge">100% Free</span>
           </div>
@@ -113,7 +114,7 @@ const QuestionBank = () => {
                 disabled
               >
                 <span>{getTopicButtonText()}</span>
-                <span className="dropdown-arrow">▼</span>
+                <span className="dropdown-arrow"><FaChevronDown aria-hidden="true" /></span>
               </button>
               
               <div className="dropdown-menu topic-menu always-open">
@@ -125,7 +126,7 @@ const QuestionBank = () => {
                     >
                       <span>{category.name}</span>
                       <span className="category-arrow">
-                        {expandedCategory === category.id ? '▲' : '▼'}
+                        {expandedCategory === category.id ? <FaChevronUp aria-hidden="true" /> : <FaChevronDown aria-hidden="true" />}
                       </span>
                     </button>
                     
@@ -154,7 +155,7 @@ const QuestionBank = () => {
                 disabled
               >
                 <span>{getDifficultyButtonText()}</span>
-                <span className="dropdown-arrow">▼</span>
+                <span className="dropdown-arrow"><FaChevronDown aria-hidden="true" /></span>
               </button>
               
               <div className="dropdown-menu difficulty-menu always-open">
@@ -175,7 +176,7 @@ const QuestionBank = () => {
 
           <div className="creator-info">
             <div className="info-card">
-              <div className="info-icon">📚</div>
+              <div className="info-icon"><FaBookOpen aria-hidden="true" /></div>
               <div className="info-content">
                 <div className="info-title">4000+ Free Questions</div>
                 <div className="info-desc">Access thousands of practice questions</div>
@@ -183,7 +184,7 @@ const QuestionBank = () => {
             </div>
             
             <div className="info-card">
-              <div className="info-icon">🤖</div>
+              <div className="info-icon"><FaRobot aria-hidden="true" /></div>
               <div className="info-content">
                 <div className="info-title">AI Assistant</div>
                 <div className="info-desc">Get smart hints and explanations</div>

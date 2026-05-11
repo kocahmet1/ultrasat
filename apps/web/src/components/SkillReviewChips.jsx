@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useReview } from '../contexts/ReviewContext';
 import { useSubcategories } from '../contexts/SubcategoryContext';
 import LessonModal from '../pages/LessonModal';
+import { getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import '../styles/ReviewChips.css';
 
 /**
@@ -45,7 +46,7 @@ const SkillReviewChips = ({ wrongAnswers = [] }) => {
         <div className="review-chips">
           {wrongAnswers.map((wrongAnswer, index) => {
             const subcategory = allSubcategories.find(s => s.id === wrongAnswer.subcategory);
-            const skillTag = subcategory ? subcategory.name.toLowerCase().replace(/\s+/g, '-') : wrongAnswer.subcategory;
+            const skillTag = getKebabCaseFromAnyFormat(wrongAnswer.subcategory) || (subcategory ? subcategory.name.toLowerCase().replace(/\s+/g, '-') : wrongAnswer.subcategory);
             return (
               <button 
                 key={index} 

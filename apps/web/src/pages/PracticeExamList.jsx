@@ -151,26 +151,38 @@ const PracticeExamList = () => {
                 </div>
               ) : practiceExams.length > 0 ? (
                 <div className="exam-cards">
-                  {practiceExams.filter(exam => !exam.isDiagnostic).map((exam, idx) => {
-                    // Show pro badge if NOT one of the first 3 and user is free or not signed in
-                    const isProExam = idx > 2;
-                    const showPro = isProExam && (!currentUser || !userMembership || userMembership.tier === 'free');
-                    return (
-                      <div 
-                        key={exam.id}
-                        className="exam-card"
-                        onClick={() => handleStartExam(exam, isProExam)}
-                      >
-                        <div className="exam-title-row">
-                          <span className="exam-title-text">{`SAT Practice ${idx + 1}`}</span>
-                          {showPro && (
-                            <span className="pro-badge" style={{marginLeft: 8}}>Pro</span>
-                          )}
-                          <span className="exam-duration">~3 hours</span>
+                  {(() => {
+                    const nonDiagnostic = practiceExams.filter(exam => !exam.isDiagnostic);
+                    let practiceCounter = 0;
+                    return nonDiagnostic.map((exam, idx) => {
+                      // Official exams use their stored title; others get auto-numbered
+                      const isOfficial = exam.isOfficial === true;
+                      if (!isOfficial) practiceCounter++;
+                      const displayTitle = isOfficial ? exam.title : `SAT Practice ${practiceCounter}`;
+
+                      // Show pro badge if NOT one of the first 3 and user is free or not signed in
+                      const isProExam = idx > 2;
+                      const showPro = isProExam && (!currentUser || !userMembership || userMembership.tier === 'free');
+                      return (
+                        <div 
+                          key={exam.id}
+                          className="exam-card"
+                          onClick={() => handleStartExam(exam, isProExam)}
+                        >
+                          <div className="exam-title-row">
+                            <span className="exam-title-text">{displayTitle}</span>
+                            {isOfficial && (
+                              <span className="official-badge">Official</span>
+                            )}
+                            {showPro && (
+                              <span className="pro-badge" style={{marginLeft: 8}}>Pro</span>
+                            )}
+                            <span className="exam-duration">~3 hours</span>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    });
+                  })()}
                 </div>
               ) : (
                 <div className="no-exams-message">

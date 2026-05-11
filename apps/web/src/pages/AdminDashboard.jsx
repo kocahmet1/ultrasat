@@ -200,6 +200,13 @@ function AdminDashboard() {
           >
             Import Questions
           </button>
+          <button
+            className="tab-button"
+            onClick={() => navigate('/admin/exam-ingestion')}
+            style={{ background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white' }}
+          >
+            📄 PDF Exam Ingestion
+          </button>
           {isGraphGenerationAvailable && (
             <button
               className="tab-button"

@@ -652,6 +652,8 @@ function ExamModule({
               graphUrl={enrichedQuestions[currentQuestion].graphUrl}
               // Pass graph description if available
               graphDescription={enrichedQuestions[currentQuestion].graphDescription}
+              // Pass passage for R&W questions
+              passage={enrichedQuestions[currentQuestion].passage}
               // Pass subcategory instead of skill tags
               subcategory={enrichedQuestions[currentQuestion].subcategory}
               // Pass user input question properties

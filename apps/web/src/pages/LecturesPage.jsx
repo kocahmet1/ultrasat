@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSubcategoriesArray } from '../utils/subcategoryConstants';
+import { getSubcategoriesArray, getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import '../styles/LecturesPage.css';
 
 const LecturesPage = () => {
@@ -11,7 +11,7 @@ const LecturesPage = () => {
   const mathSubcategories = allSubcategories.filter(sc => sc.section === 'math');
 
   const handleSubcategoryClick = (subcategory) => {
-    const slug = subcategory.name.toLowerCase().replace(/\s+/g, '-');
+    const slug = getKebabCaseFromAnyFormat(subcategory.id) || subcategory.name.toLowerCase().replace(/\s+/g, '-');
     navigate(`/learn/${slug}`);
   };
 

@@ -19,6 +19,7 @@ const Question = ({
   toggleMarkedForReview = () => {},
   graphUrl = null,
   graphDescription = null,
+  passage = null,
   inputType = 'number',
   answerFormat = null
 }) => {
@@ -124,6 +125,20 @@ const Question = ({
             alt="Graph for question" 
             className="question-graph mb-4 max-h-72 mx-auto" 
           />
+        </div>
+      )}
+      
+      {/* Display passage ABOVE the question stem for R&W questions */}
+      {passage && (
+        <div className="question-passage" style={{
+          fontSize: '1.6rem',
+          lineHeight: '1.8',
+          marginBottom: '1.6rem',
+          paddingBottom: '1.2rem',
+          borderBottom: '1px solid #e0e0e0',
+          whiteSpace: 'pre-wrap',
+        }}>
+          <div dangerouslySetInnerHTML={{ __html: processTextMarkup(passage) }} />
         </div>
       )}
       

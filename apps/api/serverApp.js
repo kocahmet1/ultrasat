@@ -34,6 +34,7 @@ function loadDefaultRouters() {
     questionQualityRouter: require('./questionQualityRoutes'),
     emailRouter: require('./emailRoutes'),
     companionRouter: require('./companionRouter'),
+    ingestRouter: require('./ingestRoutes'),
   };
 }
 
@@ -196,6 +197,10 @@ function createServerApp(options = {}) {
     if (req.originalUrl.startsWith('/api/stripe/webhook')) {
       return next();
     }
+    // Skip JSON parsing for multipart file upload (ingestion uses multer)
+    if (req.originalUrl.startsWith('/api/ingest/run') && req.method === 'POST') {
+      return next();
+    }
     return jsonParser(req, res, next);
   });
 
@@ -220,7 +225,7 @@ function createServerApp(options = {}) {
   logger.log(`API Server running in ${process.env.NODE_ENV || 'development'} mode`);
   logger.log(`CORS configured for: ${corsOptions.origin}`);
   logger.log(
-    `Gemini Model: ${process.env.GEMINI_ASSISTANT_MODEL || 'gemini-2.5-flash-preview-04-17'}`,
+    `Gemini Model: ${process.env.GEMINI_ASSISTANT_MODEL || 'gemini-2.5-pro'}`,
   );
 
   if (process.env.NODE_ENV !== 'production') {
@@ -266,6 +271,7 @@ function createServerApp(options = {}) {
   app.use('/api/question-quality', attachFirebaseAdmin, routers.questionQualityRouter);
   app.use('/api/email', attachFirebaseAdmin, routers.emailRouter);
   app.use('/api/companion', attachFirebaseAdmin, routers.companionRouter);
+  app.use('/api/ingest', attachFirebaseAdmin, routers.ingestRouter);
 
   logger.log(
     `AI Companion features ${process.env.OPENAI_API_KEY ? 'enabled' : 'disabled (no OPENAI_API_KEY)'}`,

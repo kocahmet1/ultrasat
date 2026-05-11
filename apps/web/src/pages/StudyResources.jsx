@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSubcategories } from '../contexts/SubcategoryContext';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import '../styles/StudyResources.css';
 
 function StudyResources() {
@@ -154,7 +155,7 @@ function StudyResources() {
                 {/* If no subcategories, fall back to using subCategory directly */}
                 {!selectedResource.subcategories && selectedResource.subCategory && (
                   <Link 
-                    to={`/subcategory-progress/${selectedResource.subCategory.toLowerCase().replace(/\s+/g, '-')}`}
+                    to={`/subcategory-progress/${getKebabCaseFromAnyFormat(selectedResource.subCategory) || selectedResource.subCategory.toLowerCase().replace(/\s+/g, '-')}`}
                     className="skill-tag"
                   >
                     {selectedResource.subCategory}

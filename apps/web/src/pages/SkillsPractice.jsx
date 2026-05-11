@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBook, FaBrain, FaChevronDown, FaChevronUp, FaRegChartBar } from 'react-icons/fa'; 
 import { useSubcategories } from '../contexts/SubcategoryContext';
+import { getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import '../styles/SkillsPractice.new.css'; 
 
 function SkillsPractice() {
@@ -115,7 +116,7 @@ function SkillsPractice() {
   };
 
   const goToLesson = (subcategoryId) => {
-    navigate(`/learn/${subcategoryId}`);
+    navigate(`/learn/${getKebabCaseFromAnyFormat(subcategoryId) || subcategoryId}`);
   };
 
   const currentSectionData = categorizedSubcategories[activeSection];
