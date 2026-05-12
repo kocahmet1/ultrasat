@@ -72,6 +72,7 @@ const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'));
 
 // Adaptive Learning Pages
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const AICoachPage = React.lazy(() => import('./pages/AICoachPage'));
 const QuizResults = React.lazy(() => import('./pages/QuizResults'));
 const StudyResources = React.lazy(() => import('./pages/StudyResources'));
 const ProgressDashboard = React.lazy(() => import('./pages/ProgressDashboard'));
@@ -163,15 +164,19 @@ const RootLayout = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const isExamPage = location.pathname.includes('/practice-exam/') || location.pathname.includes('/exam/');
-  const showProfileDropdown = !isMobile || !isExamPage;
+  const isPracticeExamListPage = location.pathname === '/practice-exams';
+  const isDashboardPage = location.pathname === '/dashboard';
+  const isAICoachPage = location.pathname === '/ai-coach';
+  const isCustomShellPage = isPracticeExamListPage || isDashboardPage || isAICoachPage;
+  const showProfileDropdown = !isCustomShellPage && (!isMobile || !isExamPage);
 
   return (
     <SidebarVisibility>
       <AnalyticsTracker />
-      <div className="app-container">
-        {isMobile ? <TopNavBar /> : <Sidebar />}
+      <div className={`app-container ${isCustomShellPage ? 'custom-page-shell' : ''}`}>
+        {!isCustomShellPage && (isMobile ? <TopNavBar /> : <Sidebar />)}
         <div className="main-content">
-          <EmailVerificationBanner />
+          {!isCustomShellPage && <EmailVerificationBanner />}
           {showProfileDropdown && (
             <div className="top-bar">
               <ProfileDropdown />
@@ -180,7 +185,7 @@ const RootLayout = () => {
           <Outlet />
         </div>
       </div>
-      <AICompanionPanel />
+      {!isDashboardPage && !isAICoachPage && <AICompanionPanel />}
     </SidebarVisibility>
   );
 };
@@ -245,6 +250,7 @@ const router = createBrowserRouter([
       { path: '/resources/:resourceId', element: <PrivateSuspenseRoute><LegacyStudyResourceRedirect /></PrivateSuspenseRoute> },
       { path: '/study-resources', element: <PrivateRoute><MembershipGate requiredTier="plus"><Suspense fallback={<PageLoadingSpinner />}><StudyResources /></Suspense></MembershipGate></PrivateRoute> },
       { path: '/dashboard', element: <PrivateSuspenseRoute><Dashboard /></PrivateSuspenseRoute> },
+      { path: '/ai-coach', element: <PrivateSuspenseRoute><AICoachPage /></PrivateSuspenseRoute> },
       { path: '/progress', element: <PrivateSuspenseRoute><ProgressDashboard /></PrivateSuspenseRoute> },
       { path: '/skills', element: <PrivateSuspenseRoute><SkillsPractice /></PrivateSuspenseRoute> },
       { path: '/subcategory-progress/:subcategoryId', element: <PrivateSuspenseRoute><SubcategoryProgressPage /></PrivateSuspenseRoute> },

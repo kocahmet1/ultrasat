@@ -51,7 +51,7 @@ const LandingPage = () => {
   const [quizLabel] = useState('');
   const [quizState] = useState(null);
   const questionBankHref = currentUser ? '/subject-quizzes' : '/guest-subject-quizzes';
-  const aiCoachHref = currentUser ? '/progress' : '/signup';
+  const aiCoachHref = currentUser ? '/ai-coach' : '/signup';
   const flashcardsHref = currentUser ? '/flashcards' : '/signup';
   const pricingHref = currentUser ? '/membership/upgrade' : '/signup';
   
@@ -325,7 +325,7 @@ const LandingPage = () => {
           <nav className="main-nav" ref={navRef}>
             <div className="mobile-quick-links">
               {!currentUser && (
-                <Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Get Started</Link>
+                <Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Sign Up</Link>
               )}
               {currentUser && (
                 <Link to="/progress" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Dashboard</Link>
@@ -361,7 +361,7 @@ const LandingPage = () => {
                   <li><Link to={aiCoachHref} onClick={() => setMobileNavOpen(false)}>AI Coach</Link></li>
                   <li><Link to={pricingHref} onClick={() => setMobileNavOpen(false)}>Pricing</Link></li>
                   <li><Link to="/login" onClick={() => setMobileNavOpen(false)}>Login</Link></li>
-                  <li><Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Get Started</Link></li>
+                  <li><Link to="/signup" className="signup-nav-btn" onClick={() => setMobileNavOpen(false)}>Sign Up</Link></li>
                 </>
               )}
             </ul>

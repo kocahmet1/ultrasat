@@ -88,7 +88,7 @@ function Signup() {
     }
     
     // Default navigation
-    navigate('/progress');
+    navigate('/dashboard');
   };
 
   async function handleSubmit(e) {

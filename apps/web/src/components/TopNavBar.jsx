@@ -16,7 +16,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 // Primary items: Most frequently used features (visible on mobile)
 const primaryNavItems = [
-  { path: '/progress', icon: <FaChartBar />, label: 'Progress', isPrimary: true },
+  { path: '/dashboard', icon: <FaChartBar />, label: 'Dashboard', isPrimary: true },
   { path: '/practice-exams', icon: <FaClipboardList />, label: 'Exams', isPrimary: true },
   { path: '/subject-quizzes', icon: <FaBookOpen />, label: 'Practice', isPrimary: true },
   { path: '/profile', icon: <FaUserCircle />, label: 'Profile', isPrimary: true }
@@ -66,7 +66,7 @@ const TopNavBar = () => {
     <div className={`top-navbar ${scrolled ? 'minimized' : ''}`}>
       <ul>
         <li>
-          <Link to={currentUser ? "/progress" : "/"}>
+          <Link to={currentUser ? "/dashboard" : "/"}>
             <UltraSATLogo 
               size="small" 
               variant="sidebar" 
