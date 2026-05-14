@@ -84,6 +84,7 @@ const AdminAiContent = React.lazy(() => import('./pages/AdminAiContent'));
 const AdminReportedQuestions = React.lazy(() => import('./pages/AdminReportedQuestions'));
 const PracticeExamManagerPage = React.lazy(() => import('./pages/PracticeExamManagerPage'));
 const QuestionEditor = React.lazy(() => import('./pages/QuestionEditor'));
+const AdminQuestionCreation = React.lazy(() => import('./pages/AdminQuestionCreation'));
 const AdminBlogManagement = React.lazy(() => import('./pages/AdminBlogManagement'));
 const AdminLearningContent = React.lazy(() => import('./pages/AdminLearningContent'));
 const MembershipManagement = React.lazy(() => import('./components/admin/MembershipManagement'));
@@ -167,7 +168,9 @@ const RootLayout = () => {
   const isPracticeExamListPage = location.pathname === '/practice-exams';
   const isDashboardPage = location.pathname === '/dashboard';
   const isAICoachPage = location.pathname === '/ai-coach';
-  const isCustomShellPage = isPracticeExamListPage || isDashboardPage || isAICoachPage;
+  const isProgressPage = location.pathname === '/progress';
+  const isSmartQuizPage = location.pathname.startsWith('/smart-quiz/');
+  const isCustomShellPage = isPracticeExamListPage || isDashboardPage || isAICoachPage || isSmartQuizPage;
   const showProfileDropdown = !isCustomShellPage && (!isMobile || !isExamPage);
 
   return (
@@ -185,7 +188,7 @@ const RootLayout = () => {
           <Outlet />
         </div>
       </div>
-      {!isDashboardPage && !isAICoachPage && <AICompanionPanel />}
+      {isProgressPage && <AICompanionPanel />}
     </SidebarVisibility>
   );
 };
@@ -274,6 +277,7 @@ const router = createBrowserRouter([
       { path: '/admin/ai-content', element: <AdminSuspenseRoute><AdminAiContent /></AdminSuspenseRoute> },
       { path: '/admin/reported-questions', element: <AdminSuspenseRoute><AdminReportedQuestions /></AdminSuspenseRoute> },
       { path: '/admin/practice-exams', element: <AdminSuspenseRoute><PracticeExamManagerPage /></AdminSuspenseRoute> },
+      { path: '/admin/question-creation', element: <AdminSuspenseRoute><AdminQuestionCreation /></AdminSuspenseRoute> },
       { path: '/admin/question-editor', element: <AdminSuspenseRoute><QuestionEditor /></AdminSuspenseRoute> },
       { path: '/admin/question-editor/:questionId', element: <AdminSuspenseRoute><QuestionEditor /></AdminSuspenseRoute> },
       { path: '/admin/subcategory-settings', element: <AdminSuspenseRoute><SubcategorySettings /></AdminSuspenseRoute> },

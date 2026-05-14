@@ -20,8 +20,10 @@ function createEmptyRouters(overrides = {}) {
     blogRouter: empty(),
     reportRouter: empty(),
     questionQualityRouter: empty(),
+    questionGenerationRouter: empty(),
     emailRouter: empty(),
     companionRouter: empty(),
+    ingestRouter: empty(),
     ...overrides,
   };
 }

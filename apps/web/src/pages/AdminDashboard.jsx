@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import QuestionGeneratorLive from '../components/QuestionGeneratorLive';
 import AdminAiContentSection from '../components/admin/AdminAiContentSection';
 import AdminExamModulesSection from '../components/admin/AdminExamModulesSection';
 import AdminFeatureFlagsSection from '../components/admin/AdminFeatureFlagsSection';
@@ -135,10 +134,10 @@ function AdminDashboard() {
             Question Management
           </button>
           <button
-            className={activeTab === 'generate' ? 'active' : ''}
-            onClick={() => setActiveTab('generate')}
+            className="tab-button"
+            onClick={() => navigate('/admin/question-creation')}
           >
-            Generate Questions
+            Question Creation
           </button>
           <button
             className={activeTab === 'quizzes' ? 'active' : ''}
@@ -300,18 +299,10 @@ function AdminDashboard() {
             uniqueSubcategories={uniqueSubcategories}
           />
         )}
-        {/* Question Generation Tab */}
         {activeTab === 'subcategorySettings' && (
           <div className="admin-content">
             <h2>Subcategory Settings</h2>
             <SubcategorySettings />
-          </div>
-        )}
-
-        {activeTab === 'generate' && (
-          <div className="admin-content">
-            <h2>AI Question Generator</h2>
-            <QuestionGeneratorLive />
           </div>
         )}
 

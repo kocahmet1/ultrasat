@@ -32,6 +32,7 @@ function loadDefaultRouters() {
     blogRouter: require('./blogRoutes'),
     reportRouter: require('./reportRoutes'),
     questionQualityRouter: require('./questionQualityRoutes'),
+    questionGenerationRouter: require('./questionGenerationRoutes'),
     emailRouter: require('./emailRoutes'),
     companionRouter: require('./companionRouter'),
     ingestRouter: require('./ingestRoutes'),
@@ -269,6 +270,9 @@ function createServerApp(options = {}) {
   app.use('/api/blog', routers.blogRouter);
   app.use('/api/reports', attachFirebaseAdmin, routers.reportRouter);
   app.use('/api/question-quality', attachFirebaseAdmin, routers.questionQualityRouter);
+  if (routers.questionGenerationRouter) {
+    app.use('/api/question-generation', attachFirebaseAdmin, routers.questionGenerationRouter);
+  }
   app.use('/api/email', attachFirebaseAdmin, routers.emailRouter);
   app.use('/api/companion', attachFirebaseAdmin, routers.companionRouter);
   app.use('/api/ingest', attachFirebaseAdmin, routers.ingestRouter);

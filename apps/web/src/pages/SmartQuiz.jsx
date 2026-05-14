@@ -8,7 +8,31 @@ import { processTextMarkup } from '../utils/textProcessing';
 import { db } from '../firebase/config';
 import { recordSmartQuizResult, DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowRight, faLightbulb, faFileAlt, faBook, faComment, faSave, faCheck, faFlag } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowLeft,
+  faArrowRight,
+  faLightbulb,
+  faFileAlt,
+  faBook,
+  faComment,
+  faSave,
+  faCheck,
+  faFlag,
+  faBookmark,
+  faBullseye,
+  faList,
+  faStar,
+  faTrophy,
+  faBell,
+  faChartBar,
+  faClipboardList,
+  faBookOpen,
+  faChevronDown,
+  faClock,
+  faSignal,
+  faWandMagicSparkles,
+  faFileLines,
+} from '@fortawesome/free-solid-svg-icons';
 import SmartQuizAssistant from '../components/SmartQuizAssistant';
 import Modal from '../components/Modal';
 import ReportQuestionModal from '../components/ReportQuestionModal';
@@ -25,6 +49,26 @@ import '../styles/Modal.css';
 import './SmartQuizProBadge.css';
 import ProFeatureModal from '../components/ProFeatureModal';
 
+const formatElapsedTime = (seconds = 0) => {
+  const safeSeconds = Math.max(0, Number(seconds) || 0);
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainder = safeSeconds % 60;
+  return `${minutes}:${String(remainder).padStart(2, '0')}`;
+};
+
+const getDefinitionPreview = (definition = '') => {
+  if (!definition) return 'Tap to review this term in context.';
+  const [firstClause] = definition.split(/[.;]/);
+  return firstClause.length > 90 ? `${firstClause.slice(0, 87)}...` : firstClause;
+};
+
+const getQuestionSkill = (question, quiz) => {
+  const rawSkill = question?.subcategory || question?.subcategoryId || quiz?.subcategoryId || 'Reading & Writing';
+  return String(rawSkill)
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+};
+
 export default function SmartQuiz() {
   const { quizId } = useParams();
   const { currentUser, userMembership } = useAuth();
@@ -34,7 +78,9 @@ export default function SmartQuiz() {
   const [quiz, setQuiz] = useState(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [confidenceLevels, setConfidenceLevels] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef(null);
   
   // User input state for grid-in questions
@@ -301,6 +347,7 @@ export default function SmartQuiz() {
         selectedOption: optionIdx,
         isCorrect: optionIdx === currentQuestion.correctAnswer,
         timeSpent: timerRef.current ?? 0,
+        confidence: confidenceLevels[currentQuestion.id] ?? 3,
       },
     }));
     // No longer automatically advancing to next question
@@ -345,8 +392,32 @@ export default function SmartQuiz() {
         selectedOption: value, // Store the user's input as selectedOption for compatibility
         isCorrect: isCorrect,
         timeSpent: timerRef.current ?? 0,
+        confidence: confidenceLevels[currentQuestion.id] ?? 3,
       },
     }));
+  };
+
+  const handleConfidenceSelect = (level) => {
+    if (!currentQuestion) return;
+
+    setConfidenceLevels((prev) => ({
+      ...prev,
+      [currentQuestion.id]: level,
+    }));
+
+    setAnswers((prev) => {
+      const existingAnswer = prev[currentQuestion.id];
+      if (!existingAnswer) return prev;
+
+      return {
+        ...prev,
+        [currentQuestion.id]: {
+          ...existingAnswer,
+          confidence: level,
+          timeSpent: timerRef.current ?? 0,
+        },
+      };
+    });
   };
 
   const handleNavigation = (direction) => {
@@ -361,6 +432,7 @@ export default function SmartQuiz() {
     } else if (direction === 'next') {
       setCurrentIdx((prev) => prev + 1);
       timerRef.current = 0;
+      setElapsedSeconds(0);
     }
   };
 
@@ -381,6 +453,7 @@ export default function SmartQuiz() {
   useEffect(() => {
     const interval = setInterval(() => {
       timerRef.current = (timerRef.current || 0) + 1;
+      setElapsedSeconds(timerRef.current);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -633,8 +706,10 @@ export default function SmartQuiz() {
 
   if (!quiz) return <p>Loading quiz…</p>;
 
+  const loadedQuestionTotal = quiz.questions?.length || quiz.questionCount || 0;
+
   // Completed?
-  if (currentIdx >= quiz.questionCount) {
+  if (currentIdx >= loadedQuestionTotal) {
     if (!submitting) {
       handleFinish();
     }
@@ -669,576 +744,555 @@ export default function SmartQuiz() {
     }
   };
 
-  return (
-    <div className="smart-quiz__container">
-      {/* AI Features Toggle Switch - Pill style */}
-      <div className="ai-toggle-container" style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        margin: '1rem auto', 
-        alignItems: 'center'
-      }}>
-        <div style={{ 
-          display: 'flex',
-          position: 'relative',
-          backgroundColor: '#f0f4f8', 
-          borderRadius: '30px',
-          padding: '4px', 
-          width: '200px', 
-          boxShadow: '0 1px 5px rgba(0,0,0,0.15)' 
-        }}>
-          <div 
-            onClick={() => setAiEnabled(false)}
-            style={{ 
-              flex: 1,
-              textAlign: 'center',
-              padding: '6px 8px', 
-              borderRadius: '25px',
-              cursor: 'pointer',
-              fontWeight: '600', 
-              fontSize: '0.85rem', 
-              color: !aiEnabled ? '#333' : 'rgba(0, 0, 0, 0.6)', 
-              backgroundColor: !aiEnabled ? '#d1eaff' : 'transparent', 
-              transition: 'all 0.3s ease',
-              zIndex: 1
-            }}
-          >
-            Basic Mode
-          </div>
-          <div 
-            onClick={() => setAiEnabled(true)}
-            style={{ 
-              flex: 1,
-              textAlign: 'center',
-              padding: '6px 8px', 
-              borderRadius: '25px',
-              cursor: 'pointer',
-              fontWeight: '600', 
-              fontSize: '0.85rem', 
-              color: aiEnabled ? '#333' : 'rgba(0, 0, 0, 0.6)', 
-              backgroundColor: aiEnabled ? '#c9f0e1' : 'transparent', 
-              transition: 'all 0.3s ease',
-              zIndex: 1
-            }}
-          >
-            AI Mode
-          </div>
-        </div>
-      </div>
+  const handleCoachMessage = async (message) => {
+    if (isFreeOrGuest) {
+      handleProFeatureClick();
+      return;
+    }
 
-      {aiEnabled && (
-        <>
-          <div className="mobile-ai-bar">
-            <button onClick={() => setIsAssistantModalOpen(true)}>
-              <FontAwesomeIcon icon={faComment} />
-              <span>AI</span>
-            </button>
-            <button onClick={handleDirectTipRequest} disabled={assistantLoading}>
-              <FontAwesomeIcon icon={faLightbulb} />
-              <span>Tip</span>
-            </button>
-            <button onClick={handleDirectSummariseText} disabled={assistantLoading}>
-              <FontAwesomeIcon icon={faFileAlt} />
-              <span>Summary</span>
-            </button>
-            <button onClick={() => setShowMobileVocab(!showMobileVocab)}>
-              <FontAwesomeIcon icon={faBook} />
-              <span>Words</span>
-            </button>
-          </div>
-          {showMobileVocab && (
-            <div className="mobile-vocab-dropdown">
-              {helperLoading ? (
-                <p>Loading vocabulary...</p>
-              ) : helperItems.length === 0 ? (
-                <p>No vocabulary terms found.</p>
-              ) : (
-                <div className="vocabulary-items" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {helperItems.map((item, index) => (
-                    <div
-                      key={index}
-                      className="vocabulary-item"
-                      onClick={() => handleVocabularyItemClick(item)}
-                    >
-                      <span>{item.term}</span>
-                      {savedVocabularyItems.includes(item.term) && (
-                        <FontAwesomeIcon icon={faCheck} style={{ color: '#28a745', fontSize: '12px' }} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </>
-      )}
+    setIsAssistantModalOpen(true);
+    await handleSendMessage(message);
+  };
 
-      {/* Modal for displaying tip or summary */}
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)}
-        title={modalTitle}
-      >
-        <div className="modal-response-content">
-          {modalContent}
-        </div>
-      </Modal>
-      
-      {/* Report Question Modal */}
-      <ReportQuestionModal
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
-        onReport={handleReportQuestion}
-        loading={reportLoading}
-      />
-      
-      {/* Main Content Area: Four-column layout with vocabulary on the left */}
-      <div className="quiz-main-area" style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        gap: '20px',
-        padding: '0 20px',
-        maxWidth: '1400px', // Increased to accommodate four columns
-        margin: '20px auto'
-      }}>
-        
-        {/* Left Column: Key Vocabulary (only when AI is enabled and not mobile) */}
-        {aiEnabled && !isMobile && (
-          <div className="vocabulary-column" style={{
-            width: '200px',
-            flexShrink: 0,
-            backgroundColor: '#f8f9fa',
-            borderRadius: '12px',
-            padding: '20px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-            marginTop: '60px', // Align with question content
-            maxHeight: '500px',
-            overflowY: 'auto'
-          }}>
-            <div className="vocabulary-header" style={{
-              marginBottom: '16px',
-              paddingBottom: '8px',
-              borderBottom: '2px solid #4e73df'
-            }}>
-              <h3 style={{
-                margin: 0,
-                fontSize: '16px',
-                color: '#4e73df',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <FontAwesomeIcon icon={faBook} />
-                {helperType === 'concept' ? 'Key Concepts' : 'Key Vocabulary'}
-              </h3>
-            </div>
-            
-            <div className="vocabulary-content">
-              {helperLoading ? (
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  minHeight: '60px',
-                  fontSize: '14px',
-                  color: '#6c757d',
-                  fontStyle: 'italic'
-                }}>
-                  <p>{helperType === 'concept' ? 'Loading concepts...' : 'Loading vocabulary...'}</p>
-                </div>
-              ) : helperItems.length === 0 ? (
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  minHeight: '60px',
-                  fontSize: '14px',
-                  color: '#6c757d',
-                  fontStyle: 'italic'
-                }}>
-                  <p>{helperType === 'concept' ? 'No concepts found.' : 'No vocabulary terms found.'}</p>
-                </div>
-              ) : (
-                <div className="vocabulary-items" style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px'
-                }}>
-                  {helperItems.map((item, index) => (
-                    <div 
-                      key={index} 
-                      className="vocabulary-item"
-                      onClick={() => handleVocabularyItemClick(item)}
-                      style={{
-                        padding: '8px 12px',
-                        backgroundColor: savedVocabularyItems.includes(item.term) ? '#e2f0d9' : '#ffffff',
-                        borderRadius: '6px',
-                        borderLeft: '3px solid #4e73df',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        color: '#495057',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!savedVocabularyItems.includes(item.term)) {
-                          e.target.style.backgroundColor = '#e9ecef';
-                        }
-                        e.target.style.transform = 'translateX(2px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = savedVocabularyItems.includes(item.term) ? '#e2f0d9' : '#ffffff';
-                        e.target.style.transform = 'translateX(0)';
-                      }}
-                    >
-                      <span>{item.term}</span>
-                      <button
-                        className="vocab-save-btn"
-                        onClick={e => {
-                          e.stopPropagation();
-                          if (!savedVocabularyItems.includes(item.term)) handleSaveVocabularyItem(item);
-                        }}
-                        disabled={savedVocabularyItems.includes(item.term)}
-                        title={savedVocabularyItems.includes(item.term) ? 'Saved' : 'Save to My Words'}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          marginLeft: '8px',
-                          cursor: savedVocabularyItems.includes(item.term) ? 'not-allowed' : 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          color: savedVocabularyItems.includes(item.term) ? '#28a745' : '#4e73df',
-                          fontSize: '16px',
-                          outline: 'none',
-                          transition: 'color 0.2s'
-                        }}
-                      >
-                        <FontAwesomeIcon icon={savedVocabularyItems.includes(item.term) ? faCheck : faSave} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {/* Middle Column: Main Question Box */}
-        <div className="question-panel" style={{
-          flexGrow: 1,
-          maxWidth: '700px',
-          backgroundColor: '#ffffff',
-          borderRadius: '12px',
-          padding: '25px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-          position: 'relative'
-        }}>
-          {/* Report button - absolute top right corner */}
-          <button
-            className="report-button-absolute"
-            onClick={() => setIsReportModalOpen(true)}
-            title="Report this question"
-          >
-            <FontAwesomeIcon icon={faFlag} />
+  const handleStudyPlanClick = () => {
+    toast.success('Added to your study plan.');
+  };
+
+  const questionTotal = loadedQuestionTotal;
+  const progressPct = questionTotal > 0 ? ((currentIdx + 1) / questionTotal) * 100 : 0;
+  const selectedAnswer = currentQuestion ? answers[currentQuestion.id] : null;
+  const selectedConfidence = currentQuestion ? (confidenceLevels[currentQuestion.id] ?? selectedAnswer?.confidence ?? 3) : 3;
+  const difficultyLabel = DIFFICULTY_FOR_LEVEL[quiz.level] || currentQuestion?.difficulty || 'medium';
+  const skillLabel = getQuestionSkill(currentQuestion, quiz);
+  const completedCount = Object.keys(answers).length;
+  const weeklyAccuracy = questionTotal > 0 ? Math.round((completedCount / questionTotal) * 100) : 0;
+
+  if (currentQuestion) {
+    return (
+      <div className="smart-quiz__container">
+        <header className="sq-top-nav">
+          <button className="sq-brand" onClick={() => navigate('/dashboard')}>
+            <span className="sq-brand-mark">U</span>
+            <span className="sq-brand-name">UltraSAT <strong>Prep</strong></span>
           </button>
 
-          <div className="quiz-header">
-            <div className="quiz-header-left">
-              <div className="quiz-title">SmartQuiz – Question {currentIdx + 1} / {quiz.questions.length}</div>
-            </div>
-            <div className="quiz-header-right">
-              <div className="level-indicator">
-                Level: {quiz.level} ({DIFFICULTY_FOR_LEVEL[quiz.level]})
-              </div>
-            </div>
+          <nav className="sq-primary-nav" aria-label="Smart quiz navigation">
+            <button className="active" onClick={() => navigate('/subject-quizzes')}>
+              <FontAwesomeIcon icon={faWandMagicSparkles} />
+              Practice
+            </button>
+            <button onClick={() => navigate('/progress')}>
+              <FontAwesomeIcon icon={faClipboardList} />
+              Review
+            </button>
+            <button onClick={() => navigate('/smart-quiz-intro')}>
+              <FontAwesomeIcon icon={faBookOpen} />
+              Study Plan
+            </button>
+            <button onClick={() => navigate('/progress')}>
+              <FontAwesomeIcon icon={faChartBar} />
+              Analytics
+            </button>
+          </nav>
+
+          <div className="sq-top-actions">
+            <button
+              className={`sq-ai-mode ${aiEnabled ? 'enabled' : ''}`}
+              onClick={() => setAiEnabled((enabled) => !enabled)}
+              aria-pressed={aiEnabled}
+            >
+              <FontAwesomeIcon icon={faWandMagicSparkles} />
+              {aiEnabled ? 'AI Mode' : 'Basic Mode'}
+            </button>
+            <span className="sq-top-divider" />
+            <button className="sq-icon-button" title="Notifications">
+              <FontAwesomeIcon icon={faBell} />
+            </button>
+            <button className="sq-user-menu" title="Profile">
+              <span>{currentUser?.displayName?.[0] || currentUser?.email?.[0] || 'A'}</span>
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
           </div>
+        </header>
 
-          {currentQuestion.passage && (
-            <div 
-              className="question-passage"
-              dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.passage) }}
-            />
-          )}
-          
-          {/* Display graph if one exists - ABOVE the question text */}
-          {currentQuestion.graphUrl && (
-            <div className="question-graph-container">
-              <img 
-                src={currentQuestion.graphUrl} 
-                alt="Graph for question" 
-                className="question-graph" 
-              />
+        <main className="sq-page">
+          <section className="sq-session-bar" aria-label="Quiz progress">
+            <button className="sq-skill-select">
+              {skillLabel}
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
+            <div className="sq-progress-wrap" aria-label={`Question ${currentIdx + 1} of ${questionTotal}`}>
+              <div className="sq-progress-track">
+                <div className="sq-progress-fill" style={{ width: `${progressPct}%` }} />
+              </div>
+              <span>{currentIdx + 1} of {questionTotal}</span>
             </div>
-          )}
-          
-          <div 
-            className="question-text-content"
-            dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.text) }}
-          />
+            <div className="sq-timer">
+              <span>Time Elapsed</span>
+              <FontAwesomeIcon icon={faClock} />
+              <strong>{formatElapsedTime(elapsedSeconds)}</strong>
+            </div>
+          </section>
 
-          {/* Conditional rendering based on question type */}
-          {getQuestionType(currentQuestion) === 'multiple-choice' ? (
-            <ul className="options-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-              {currentQuestion.options.map((opt, idx) => {
-                const isSelected = answers[currentQuestion.id]?.selectedOption === idx;
-                return (
-                  <li key={idx} style={{ marginBottom: '12px' }}>
-                    <button
-                      onClick={() => handleSelect(idx)}
-                      className={`option-button ${isSelected ? 'selected' : ''}`}
-                    >
-                      {opt}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <div className="user-input-container">
-              <div className="question-instructions">
-                {currentQuestion.answerFormat ? currentQuestion.answerFormat : 'Enter your answer in the box below.'}
+          {aiEnabled && (
+            <>
+              <div className="mobile-ai-bar">
+                <button onClick={isFreeOrGuest ? handleProFeatureClick : () => setIsAssistantModalOpen(true)}>
+                  <FontAwesomeIcon icon={faComment} />
+                  <span>AI</span>
+                </button>
+                <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest} disabled={assistantLoading}>
+                  <FontAwesomeIcon icon={faLightbulb} />
+                  <span>Hint</span>
+                </button>
+                <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText} disabled={assistantLoading}>
+                  <FontAwesomeIcon icon={faFileAlt} />
+                  <span>Summary</span>
+                </button>
+                <button onClick={() => setShowMobileVocab(!showMobileVocab)}>
+                  <FontAwesomeIcon icon={faBook} />
+                  <span>{helperType === 'concept' ? 'Concepts' : 'Words'}</span>
+                </button>
               </div>
-              <div className="input-container">
-                <input
-                  type="text"
-                  value={userInput}
-                  onChange={(e) => handleUserInput(e.target.value)}
-                  className="user-answer-input"
-                  placeholder={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? 'Enter a number' : 'Enter your answer'}
-                  pattern={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? '[0-9]*[.]?[0-9]*' : undefined}
-                />
-              </div>
-              {(currentQuestion.inputType === 'number' || !currentQuestion.inputType) && (
-                <div className="input-hint">
-                  You may enter integers, decimals, or fractions. Do not enter spaces or commas.
+
+              {showMobileVocab && (
+                <div className="mobile-vocab-dropdown">
+                  {helperLoading ? (
+                    <p>Loading {helperType === 'concept' ? 'concepts' : 'vocabulary'}...</p>
+                  ) : helperItems.length === 0 ? (
+                    <p>No {helperType === 'concept' ? 'concepts' : 'vocabulary terms'} found.</p>
+                  ) : (
+                    <div className="vocabulary-items">
+                      {helperItems.map((item, index) => (
+                        <button
+                          key={index}
+                          className="vocabulary-item"
+                          onClick={() => handleVocabularyItemClick(item)}
+                        >
+                          <span>{item.term}</span>
+                          {savedVocabularyItems.includes(item.term) && (
+                            <FontAwesomeIcon icon={faCheck} />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
+            </>
           )}
 
-          <div className="quiz-navigation">
-            <button
-              className="nav-button prev"
-              onClick={() => handleNavigation('prev')}
-              disabled={currentIdx === 0}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} /> Previous
-            </button>
-            <button
-              className="nav-button next"
-              onClick={() => handleNavigation('next')}
-              disabled={!answers[currentQuestion?.id]}
-            >
-              Next <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-          </div>
-        </div>
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title={modalTitle}
+          >
+            <div className="modal-response-content">
+              {modalContent}
+            </div>
+          </Modal>
 
-        {/* Right Column: AI Buttons - hidden on mobile */}
-        {aiEnabled && !isMobile && (
-          <div className="ai-tools-column" style={{
-            width: '150px',
-            flexShrink: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            marginTop: '60px' // Align with question content
-          }}>
-            <button 
-              className="assistant-action-button assistant-button"
-              onClick={isFreeOrGuest ? handleProFeatureClick : () => setIsAssistantModalOpen(true)}
-              style={{
-                backgroundColor: '#e0f2f7', // Light blue
-                color: '#333',
-                padding: '15px 10px',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontWeight: '500',
-                fontSize: '0.9rem',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                position: 'relative'
-              }}
-            >
-              {isFreeOrGuest && (
-                <span className="sq-pro-badge">PRO</span>
-              )}
-              <FontAwesomeIcon icon={faComment} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
-              <span>AI Assistant</span>
-            </button>
-            
-            <button 
-              className="assistant-action-button tip-button"
-              onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest}
-              disabled={assistantLoading}
-              style={{
-                backgroundColor: '#e0f7f7', // Light teal
-                color: '#333',
-                padding: '15px 10px',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: assistantLoading ? 'not-allowed' : 'pointer',
-                fontWeight: '500',
-                fontSize: '0.9rem',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                opacity: assistantLoading ? 0.7 : 1,
-                position: 'relative'
-              }}
-            >
-              {isFreeOrGuest && (
-                <span className="sq-pro-badge">PRO</span>
-              )}
-              <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
-              <span>Get a Tip</span>
-            </button>
-            
-            <button 
-              className="assistant-action-button summarise-button"
-              onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText}
-              disabled={assistantLoading}
-              style={{
-                backgroundColor: '#f0e6f7', // Light purple
-                color: '#333',
-                padding: '15px 10px',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: assistantLoading ? 'not-allowed' : 'pointer',
-                fontWeight: '500',
-                fontSize: '0.9rem',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                opacity: assistantLoading ? 0.7 : 1,
-                position: 'relative'
-              }}
-            >
-              {isFreeOrGuest && (
-                <span className="sq-pro-badge">PRO</span>
-              )}
-              <FontAwesomeIcon icon={faFileAlt} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
-              <span>Summarize</span>
-            </button>
-          </div>
-        )}
-      </div> {/* End of quiz-main-area */}
-      
-      {/* Modal for AI Assistant */}
-      <Modal 
-        isOpen={isAssistantModalOpen} 
-        onClose={() => setIsAssistantModalOpen(false)}
-        title="AI Assistant"
-      >
-        <div className="modal-assistant-container">
-          <SmartQuizAssistant
-            question={{
-              id: currentQuestion?.id,
-              text: currentQuestion?.text,
-              options: currentQuestion?.options,
-              correctAnswer: currentQuestion?.correctAnswer,
-              explanation: currentQuestion?.explanation
-            }}
-            onMessage={handleSendMessage}
-            onTip={handleRequestTip}
-            onSummarise={handleSummariseText}
-            initialHistory={assistantHistory}
-            loading={assistantLoading}
-            expanded={true}
+          <ReportQuestionModal
+            isOpen={isReportModalOpen}
+            onClose={() => setIsReportModalOpen(false)}
+            onReport={handleReportQuestion}
+            loading={reportLoading}
           />
-        </div>
-      </Modal>
-      
-      {/* Modal for Vocabulary Definition */}
-      <Modal 
-        isOpen={isVocabularyModalOpen} 
-        onClose={() => setIsVocabularyModalOpen(false)}
-        title={selectedVocabularyItem ? selectedVocabularyItem.term : 'Vocabulary'}
-      >
-        <div className="modal-response-content">
-          {selectedVocabularyItem && (
-            <div className="vocabulary-definition">
-              <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '16px' }}>
-                {selectedVocabularyItem.definition}
-              </p>
-              <button 
-                onClick={() => handleSaveVocabularyItem(selectedVocabularyItem)} 
-                disabled={savingVocabularyItem || savedVocabularyItems.includes(selectedVocabularyItem.term)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
-                  backgroundColor: savedVocabularyItems.includes(selectedVocabularyItem.term) ? '#e9ecef' : '#f8f9fa',
-                  border: '1px solid #ced4da',
-                  borderRadius: '6px',
-                  color: savedVocabularyItems.includes(selectedVocabularyItem.term) ? '#6c757d' : '#495057',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  cursor: savedVocabularyItems.includes(selectedVocabularyItem.term) ? 'not-allowed' : 'pointer',
-                  transition: 'all 0.2s',
-                  ...((!savingVocabularyItem && !savedVocabularyItems.includes(selectedVocabularyItem.term)) ? {
-                    ':hover': {
-                      backgroundColor: '#4e73df',
-                      borderColor: '#4e73df',
-                      color: '#fff'
-                    }
-                  } : {})
-                }}
-                onMouseEnter={(e) => {
-                  if (!savingVocabularyItem && !savedVocabularyItems.includes(selectedVocabularyItem.term)) {
-                    e.target.style.backgroundColor = '#4e73df';
-                    e.target.style.borderColor = '#4e73df';
-                    e.target.style.color = '#fff';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!savingVocabularyItem && !savedVocabularyItems.includes(selectedVocabularyItem.term)) {
-                    e.target.style.backgroundColor = '#f8f9fa';
-                    e.target.style.borderColor = '#ced4da';
-                    e.target.style.color = '#495057';
-                  }
-                }}
-              >
-                <FontAwesomeIcon icon={savedVocabularyItems.includes(selectedVocabularyItem.term) ? faCheck : faSave} />
-                {savedVocabularyItems.includes(selectedVocabularyItem.term) 
-                  ? (helperType === 'concept' ? 'Saved to My Concepts' : 'Saved to My Words')
-                  : (savingVocabularyItem 
-                      ? 'Saving...' 
-                      : (helperType === 'concept' ? 'Save to My Concepts' : 'Save to My Words'))}
-              </button>
-            </div>
-          )}
-        </div>
-      </Modal>
-      
-      {/* Toast container for notifications */}
-      <ToastContainer position="bottom-right" autoClose={3000} />
 
-      {/* Render the ProFeatureModal */}
-      <ProFeatureModal
-        isOpen={showProModal}
-        onClose={() => setShowProModal(false)}
-        position={{ x: window.innerWidth / 2 - 200, y: window.innerHeight / 2 - 150 }}
-      />
-    </div>
-  );
+          <div className={`sq-workspace ${!aiEnabled ? 'sq-workspace--basic' : ''}`}>
+            {aiEnabled && !isMobile && (
+              <aside className="sq-vocab-panel">
+                <div className="sq-panel-title">
+                  <span className="sq-panel-icon blue">
+                    <FontAwesomeIcon icon={faBook} />
+                  </span>
+                  <div>
+                    <h2>{helperType === 'concept' ? 'Key Concepts' : 'Key Vocabulary'}</h2>
+                    <p>Tap a {helperType === 'concept' ? 'concept' : 'word'} to review meaning and usage.</p>
+                  </div>
+                  <FontAwesomeIcon className="sq-panel-spark" icon={faWandMagicSparkles} />
+                </div>
+
+                <div className="sq-vocab-list">
+                  {helperLoading ? (
+                    <div className="sq-panel-state">Loading {helperType === 'concept' ? 'concepts' : 'vocabulary'}...</div>
+                  ) : helperItems.length === 0 ? (
+                    <div className="sq-panel-state">No {helperType === 'concept' ? 'concepts' : 'vocabulary terms'} found.</div>
+                  ) : (
+                    helperItems.slice(0, 6).map((item, index) => {
+                      const isSaved = savedVocabularyItems.includes(item.term);
+                      return (
+                        <div
+                          key={`${item.term}-${index}`}
+                          className={`sq-vocab-card ${isSaved ? 'saved' : ''}`}
+                          onClick={() => handleVocabularyItemClick(item)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault();
+                              handleVocabularyItemClick(item);
+                            }
+                          }}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          <span className="sq-vocab-term">{item.term}</span>
+                          <span className="sq-vocab-definition">
+                            <strong>{helperType === 'concept' ? 'concept' : 'adj.'}</strong>
+                            {getDefinitionPreview(item.definition)}
+                          </span>
+                          <button
+                            className="sq-vocab-save"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              if (!isSaved) handleSaveVocabularyItem(item);
+                            }}
+                            onKeyDown={(event) => {
+                              if ((event.key === 'Enter' || event.key === ' ') && !isSaved) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                handleSaveVocabularyItem(item);
+                              }
+                            }}
+                            aria-label={isSaved ? `${item.term} saved` : `Save ${item.term}`}
+                          >
+                            <FontAwesomeIcon icon={isSaved ? faCheck : faSave} />
+                          </button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+
+                {helperItems.length > 6 && (
+                  <button className="sq-view-all" onClick={() => setShowMobileVocab(true)}>
+                    View all {helperType === 'concept' ? 'concepts' : 'words'}
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </button>
+                )}
+              </aside>
+            )}
+
+            <section className="sq-question-card">
+              <div className="sq-question-header">
+                <div>
+                  <h1>Question {currentIdx + 1} of {questionTotal}</h1>
+                  <p>Read the following passage carefully and answer the question that follows.</p>
+                </div>
+                <div className="sq-question-tools">
+                  <button
+                    className="sq-icon-button"
+                    onClick={() => toast.success('Question bookmarked.')}
+                    title="Bookmark this question"
+                  >
+                    <FontAwesomeIcon icon={faBookmark} />
+                  </button>
+                  <button
+                    className="sq-icon-button"
+                    onClick={() => setIsReportModalOpen(true)}
+                    title="Report this question"
+                  >
+                    <FontAwesomeIcon icon={faFlag} />
+                  </button>
+                  <span className={`sq-difficulty ${String(difficultyLabel).toLowerCase()}`}>
+                    {difficultyLabel}
+                    <FontAwesomeIcon icon={faSignal} />
+                  </span>
+                </div>
+              </div>
+
+              <div className="sq-question-body">
+                {currentQuestion.passage && (
+                  <div
+                    className="question-passage"
+                    dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.passage) }}
+                  />
+                )}
+
+                {currentQuestion.graphUrl && (
+                  <div className="question-graph-container">
+                    <img
+                      src={currentQuestion.graphUrl}
+                      alt="Graph for question"
+                      className="question-graph"
+                    />
+                  </div>
+                )}
+
+                <div
+                  className="question-text-content"
+                  dangerouslySetInnerHTML={{ __html: processTextMarkup(currentQuestion.text) }}
+                />
+              </div>
+
+              {getQuestionType(currentQuestion) === 'multiple-choice' ? (
+                <ul className="options-list">
+                  {currentQuestion.options.map((opt, idx) => {
+                    const isSelected = selectedAnswer?.selectedOption === idx;
+                    return (
+                      <li key={idx}>
+                        <button
+                          onClick={() => handleSelect(idx)}
+                          className={`option-button ${isSelected ? 'selected' : ''}`}
+                        >
+                          <span className="sq-option-letter">{String.fromCharCode(65 + idx)}</span>
+                          <span className="sq-option-copy">{opt}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div className="user-input-container">
+                  <div className="question-instructions">
+                    {currentQuestion.answerFormat ? currentQuestion.answerFormat : 'Enter your answer in the box below.'}
+                  </div>
+                  <div className="input-container">
+                    <input
+                      type="text"
+                      value={userInput}
+                      onChange={(e) => handleUserInput(e.target.value)}
+                      className="user-answer-input"
+                      placeholder={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? 'Enter a number' : 'Enter your answer'}
+                      pattern={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? '[0-9]*[.]?[0-9]*' : undefined}
+                    />
+                  </div>
+                  {(currentQuestion.inputType === 'number' || !currentQuestion.inputType) && (
+                    <div className="input-hint">
+                      You may enter integers, decimals, or fractions. Do not enter spaces or commas.
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="quiz-navigation">
+                <button
+                  className="nav-button prev"
+                  onClick={() => handleNavigation('prev')}
+                  disabled={currentIdx === 0}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                  Previous
+                </button>
+
+                <div className="sq-confidence">
+                  <span>How confident are you?</span>
+                  <div className="sq-confidence-scale" aria-label="Confidence">
+                    {[1, 2, 3, 4, 5].map((level) => (
+                      <button
+                        key={level}
+                        className={selectedConfidence === level ? 'selected' : ''}
+                        onClick={() => handleConfidenceSelect(level)}
+                        aria-label={`Confidence ${level}`}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="sq-confidence-labels">
+                    <span>Not at all</span>
+                    <span>Extremely</span>
+                  </div>
+                </div>
+
+                <button
+                  className="nav-button next"
+                  onClick={() => handleNavigation('next')}
+                  disabled={!selectedAnswer}
+                >
+                  {currentIdx + 1 >= questionTotal ? 'Finish' : 'Next'}
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+              </div>
+            </section>
+
+            {aiEnabled && !isMobile && (
+              <aside className="sq-coach-panel">
+                <div className="sq-coach-header">
+                  <div>
+                    <span className="sq-panel-icon sparkle">
+                      <FontAwesomeIcon icon={faWandMagicSparkles} />
+                    </span>
+                    <h2>AI Study Coach</h2>
+                  </div>
+                  <span className="sq-beta">BETA</span>
+                </div>
+                <p className="sq-coach-subtitle">Personalized, step-by-step support.</p>
+
+                <div className="sq-focus-card">
+                  <FontAwesomeIcon icon={faBullseye} />
+                  <div>
+                    <span>Focus for you</span>
+                    <strong>Main idea & central claim</strong>
+                    <small>Based on your recent performance</small>
+                  </div>
+                </div>
+
+                <div className="sq-coach-actions">
+                  <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText} disabled={assistantLoading}>
+                    <span className="sq-action-icon violet"><FontAwesomeIcon icon={faFileLines} /></span>
+                    <span>
+                      <strong>Main idea in one sentence</strong>
+                      <small>See the passage's central claim</small>
+                    </span>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                    {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
+                  </button>
+
+                  <button
+                    onClick={() => handleCoachMessage('Break down this passage line by line and explain how each sentence contributes to the answer.')}
+                    disabled={assistantLoading}
+                  >
+                    <span className="sq-action-icon blue"><FontAwesomeIcon icon={faList} /></span>
+                    <span>
+                      <strong>Line-by-line explanation</strong>
+                      <small>Break down the passage</small>
+                    </span>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                    {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
+                  </button>
+
+                  <button
+                    className="featured"
+                    onClick={() => handleCoachMessage('Analyze every answer choice and explain why each option is right or wrong.')}
+                    disabled={assistantLoading}
+                  >
+                    <span className="sq-action-icon amber"><FontAwesomeIcon icon={faStar} /></span>
+                    <span>
+                      <strong>Choice-by-choice analysis</strong>
+                      <small>See why each option is right or wrong</small>
+                      <span className="sq-choice-chips">
+                        {['A', 'B', 'C', 'D'].map((choice) => <em key={choice}>{choice}</em>)}
+                      </span>
+                    </span>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                    <b>Top pick</b>
+                    {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
+                  </button>
+
+                  <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest} disabled={assistantLoading}>
+                    <span className="sq-action-icon gold"><FontAwesomeIcon icon={faLightbulb} /></span>
+                    <span>
+                      <strong>Hint, not answer</strong>
+                      <small>Get a strategic clue without spoilers</small>
+                    </span>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                    {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
+                  </button>
+
+                  <button
+                    onClick={() => handleCoachMessage('Explain why the best answer is stronger than the other answer choices.')}
+                    disabled={assistantLoading}
+                  >
+                    <span className="sq-action-icon green"><FontAwesomeIcon icon={faTrophy} /></span>
+                    <span>
+                      <strong>Why this answer wins</strong>
+                      <small>Understand the strongest choice</small>
+                    </span>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                    {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
+                  </button>
+
+                  <button onClick={handleStudyPlanClick}>
+                    <span className="sq-action-icon pink"><FontAwesomeIcon icon={faBookmark} /></span>
+                    <span>
+                      <strong>Add to study plan</strong>
+                      <small>Save this question type to strengthen your skills</small>
+                    </span>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </button>
+                </div>
+
+                <div className="sq-weekly-card">
+                  <div>
+                    <h3>Your progress this week</h3>
+                    <FontAwesomeIcon icon={faClock} />
+                  </div>
+                  <div className="sq-weekly-grid">
+                    <span>
+                      <small>Questions answered</small>
+                      <strong>{completedCount}</strong>
+                    </span>
+                    <span>
+                      <small>Completion</small>
+                      <strong>{weeklyAccuracy}%</strong>
+                    </span>
+                  </div>
+                  <div className="sq-sparkline" aria-hidden="true">
+                    {[34, 48, 46, 63, 58, 68, 61, 78].map((height, index) => (
+                      <i key={index} style={{ height: `${height}%` }} />
+                    ))}
+                  </div>
+                </div>
+              </aside>
+            )}
+          </div>
+
+          <p className="sq-bottom-tip">
+            <FontAwesomeIcon icon={faLightbulb} />
+            Tip: Main idea questions ask for the overall point. Look for the sentence that best represents the whole paragraph.
+          </p>
+        </main>
+
+        <Modal
+          isOpen={isAssistantModalOpen}
+          onClose={() => setIsAssistantModalOpen(false)}
+          title="AI Assistant"
+        >
+          <div className="modal-assistant-container">
+            <SmartQuizAssistant
+              question={{
+                id: currentQuestion?.id,
+                text: currentQuestion?.text,
+                options: currentQuestion?.options,
+                correctAnswer: currentQuestion?.correctAnswer,
+                explanation: currentQuestion?.explanation
+              }}
+              onMessage={handleSendMessage}
+              onTip={handleRequestTip}
+              onSummarise={handleSummariseText}
+              initialHistory={assistantHistory}
+              loading={assistantLoading}
+              expanded={true}
+            />
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={isVocabularyModalOpen}
+          onClose={() => setIsVocabularyModalOpen(false)}
+          title={selectedVocabularyItem ? selectedVocabularyItem.term : 'Vocabulary'}
+        >
+          <div className="modal-response-content">
+            {selectedVocabularyItem && (
+              <div className="vocabulary-definition">
+                <p>{selectedVocabularyItem.definition}</p>
+                <button
+                  className="sq-modal-save"
+                  onClick={() => handleSaveVocabularyItem(selectedVocabularyItem)}
+                  disabled={savingVocabularyItem || savedVocabularyItems.includes(selectedVocabularyItem.term)}
+                >
+                  <FontAwesomeIcon icon={savedVocabularyItems.includes(selectedVocabularyItem.term) ? faCheck : faSave} />
+                  {savedVocabularyItems.includes(selectedVocabularyItem.term)
+                    ? (helperType === 'concept' ? 'Saved to My Concepts' : 'Saved to My Words')
+                    : (savingVocabularyItem
+                        ? 'Saving...'
+                        : (helperType === 'concept' ? 'Save to My Concepts' : 'Save to My Words'))}
+                </button>
+              </div>
+            )}
+          </div>
+        </Modal>
+
+        <ToastContainer position="bottom-right" autoClose={3000} />
+
+        <ProFeatureModal
+          isOpen={showProModal}
+          onClose={() => setShowProModal(false)}
+          position={{ x: window.innerWidth / 2 - 200, y: window.innerHeight / 2 - 150 }}
+        />
+      </div>
+    );
+  }
+
+  return null;
 }
