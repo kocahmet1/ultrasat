@@ -198,6 +198,21 @@ function normalizeDifficulty(value) {
   return 'medium';
 }
 
+function normalizeReviewScore(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return 0;
+  const normalized = numeric > 0 && numeric <= 10 ? numeric * 10 : numeric;
+  return Math.max(0, Math.min(100, Math.round(normalized)));
+}
+
+function normalizeReviewResult(reviewResult = {}) {
+  return {
+    ...reviewResult,
+    qualityScore: normalizeReviewScore(reviewResult.qualityScore),
+    collegeBoardStyleScore: normalizeReviewScore(reviewResult.collegeBoardStyleScore),
+  };
+}
+
 function resolveSubcategoryOrThrow(input) {
   const entry = resolveSubcategory(input);
   if (!entry) {
@@ -458,6 +473,7 @@ function validateDraftQuestion(question, {
   selectedSubcategory,
   requestedDifficulty,
   existingQuestionId = null,
+  allowedDuplicateQuestionId = null,
   siblingTexts = [],
 } = {}) {
   const errors = [];
@@ -520,7 +536,7 @@ function validateDraftQuestion(question, {
     errors.push(`Draft subcategory "${draftSubcategory.kebab}" does not match selected subcategory "${subcategoryEntry.kebab}"`);
   }
 
-  if (existingQuestionId) {
+  if (existingQuestionId && existingQuestionId !== allowedDuplicateQuestionId) {
     errors.push(`Duplicate question text already exists in questions/${existingQuestionId}`);
   }
 
@@ -566,6 +582,124 @@ async function generateQuestionsFromPrompt({
   return {
     questions: normalizedQuestions,
     rawQuestions,
+    model,
+    usage: response.usage,
+    rawOutput: response.rawText,
+  };
+}
+
+function collectRevisionNotices(draft) {
+  const notices = [];
+  const addNotice = (notice) => {
+    if (!notice) return;
+    const text = String(notice).trim();
+    if (text && !notices.includes(text)) {
+      notices.push(text);
+    }
+  };
+
+  const deterministic = draft?.validation?.deterministic || {};
+  (deterministic.errors || []).forEach(error => addNotice(`Format error: ${error}`));
+  (deterministic.warnings || []).forEach(warning => addNotice(`Format warning: ${warning}`));
+
+  const solver = draft?.validation?.solver;
+  if (solver?.possibleIssue) {
+    addNotice(`Solver concern: ${solver.issueSummary || solver.reasoningSummary || 'The independent solver reported a possible issue.'}`);
+  }
+  if (draft?.validation?.answerKeyMatches === false) {
+    addNotice(`Answer key mismatch: independent solver selected ${draft.validation.solvedAnswerIndex}; the draft marks ${draft.correctAnswer}.`);
+  }
+  if (draft?.validation?.difficultyMatchesRequest === false) {
+    addNotice(`Difficulty mismatch: reviewer calibrated this as ${draft.validation.calibratedDifficulty}, but the requested tier is ${draft.requestedDifficulty || draft.difficulty}.`);
+  }
+
+  const review = draft?.validation?.review || {};
+  if (review.summary) addNotice(`Review summary: ${review.summary}`);
+  (review.recommendations || []).forEach(recommendation => addNotice(`Recommendation: ${recommendation}`));
+
+  const validationFlags = [
+    ...(Array.isArray(draft?.validation?.flags) ? draft.validation.flags : []),
+    ...(Array.isArray(review.flags) ? review.flags : []),
+  ];
+  validationFlags.forEach(flag => {
+    addNotice(`${flag.type || 'review_flag'} (${flag.severity || 'medium'}): ${flag.description || ''}${flag.fixSuggestion ? ` Fix: ${flag.fixSuggestion}` : ''}`);
+  });
+
+  return notices;
+}
+
+async function reviseDraftQuestion({
+  draft,
+  subcategory,
+  requestedDifficulty,
+  notices,
+  customInstruction = '',
+}) {
+  const selectedSubcategory = resolveSubcategoryOrThrow(subcategory || draft.subcategory);
+  const normalizedDifficulty = normalizeDifficulty(requestedDifficulty || draft.requestedDifficulty || draft.difficulty);
+  const revisionNotices = Array.isArray(notices) && notices.length > 0
+    ? notices
+    : collectRevisionNotices(draft);
+  const model = getGenerationModel();
+
+  const response = await callOpenAIJson({
+    model,
+    system: 'You are a senior Digital SAT question writer revising a flawed draft. Return only strict JSON that conforms to the provided schema.',
+    user: `Revise this Digital SAT question so it directly fixes every revision notice.
+
+Target:
+- Section: ${selectedSubcategory.section}
+- Main category: ${selectedSubcategory.mainCategory}
+- Subcategory display name: ${selectedSubcategory.name}
+- Canonical subcategory id: ${selectedSubcategory.kebab}
+- Requested difficulty: ${normalizedDifficulty}
+
+Revision notices:
+${revisionNotices.length ? revisionNotices.map((notice, index) => `${index + 1}. ${notice}`).join('\n') : '1. Improve official Digital SAT quality, precision, and distractor plausibility.'}
+
+${customInstruction ? `Additional admin instruction:\n${customInstruction}\n` : ''}
+Current draft:
+${JSON.stringify({
+  text: draft.text,
+  options: draft.options,
+  correctAnswer: draft.correctAnswer,
+  explanation: draft.explanation,
+  difficulty: draft.difficulty,
+  subcategory: draft.subcategory,
+  skillTags: draft.skillTags || [],
+}, null, 2)}
+
+Requirements:
+- Return exactly one revised question in the "questions" array.
+- Preserve the target subcategory and requested difficulty unless a notice explicitly says the difficulty is wrong.
+- Fix the underlying issue; do not make only cosmetic changes.
+- Keep exactly four answer choices and one objectively correct answer.
+- Make distractors plausible but definitively wrong.
+- Keep the explanation aligned with the revised correct answer.
+- Do not include markdown fences or commentary outside JSON.`,
+    schema: GENERATED_QUESTIONS_SCHEMA,
+    schemaName: 'revised_sat_question',
+    maxOutputTokens: DEFAULT_MAX_OUTPUT_TOKENS,
+    reasoningEffort: 'high',
+  });
+
+  const rawQuestion = Array.isArray(response.parsed?.questions)
+    ? response.parsed.questions[0]
+    : null;
+
+  if (!rawQuestion) {
+    throw new Error('Revision did not return a question');
+  }
+
+  const revisedQuestion = normalizeGeneratedQuestion(rawQuestion, {
+    subcategory: selectedSubcategory.kebab,
+    difficulty: normalizedDifficulty,
+    index: 0,
+  });
+
+  return {
+    question: revisedQuestion,
+    notices: revisionNotices,
     model,
     usage: response.usage,
     rawOutput: response.rawText,
@@ -644,6 +778,10 @@ Evaluate:
 - whether the difficulty label is calibrated relative to official Digital SAT expectations
 - whether the wording, passage/setup, answer choices, and explanation meet College Board-level quality
 
+Scoring scale:
+- qualityScore and collegeBoardStyleScore must be integers from 0 to 100, not 0 to 10.
+- 85 or higher means publish-ready quality; below 85 means the draft should require revision.
+
 Be severe. A question should require human review if there is any correctness, ambiguity, format, difficulty-calibration, or style concern.`,
     schema: REVIEW_SCHEMA,
     schemaName: 'sat_question_quality_review',
@@ -651,11 +789,11 @@ Be severe. A question should require human review if there is any correctness, a
     reasoningEffort: 'high',
   });
 
-  return {
+  return normalizeReviewResult({
     ...response.parsed,
     model,
     usage: response.usage,
-  };
+  });
 }
 
 function buildVerificationResult({
@@ -664,18 +802,19 @@ function buildVerificationResult({
   reviewResult,
   requestedDifficulty,
 }) {
-  const flags = Array.isArray(reviewResult?.flags) ? [...reviewResult.flags] : [];
+  const review = reviewResult ? normalizeReviewResult(reviewResult) : null;
+  const flags = Array.isArray(review?.flags) ? [...review.flags] : [];
   const solvedAnswer = Number.isInteger(solverResult?.solvedAnswerIndex)
     ? solverResult.solvedAnswerIndex
     : -1;
-  const answerKeyMatches = solvedAnswer >= 0 && reviewResult && solvedAnswer === reviewResult.claimedCorrectAnswer;
+  const answerKeyMatches = solvedAnswer >= 0 && review && solvedAnswer === review.claimedCorrectAnswer;
   const requested = normalizeDifficulty(requestedDifficulty);
-  const calibrated = reviewResult?.calibratedDifficulty || null;
+  const calibrated = review?.calibratedDifficulty || null;
 
   return {
     deterministic,
     solver: solverResult,
-    review: reviewResult,
+    review,
     answerKeyMatches,
     solvedAnswerIndex: solvedAnswer,
     calibratedDifficulty: calibrated,
@@ -699,8 +838,8 @@ function getDraftStatusFromValidation(validation) {
   if (hasHighSeverityFlag) return 'needs_revision';
   if (validation.solver?.possibleIssue) return 'needs_revision';
   if (review.requiresHumanReview) return 'needs_revision';
-  if (review.qualityScore < QUALITY_PASS_SCORE) return 'needs_revision';
-  if (review.collegeBoardStyleScore < QUALITY_PASS_SCORE) return 'needs_revision';
+  if (normalizeReviewScore(review.qualityScore) < QUALITY_PASS_SCORE) return 'needs_revision';
+  if (normalizeReviewScore(review.collegeBoardStyleScore) < QUALITY_PASS_SCORE) return 'needs_revision';
   if (review.difficultyConfidence !== 'high') return 'needs_revision';
   if (validation.solver.confidence !== 'high') return 'needs_revision';
 
@@ -757,7 +896,7 @@ async function verifyDraftQuestion(question, {
 
 function isPublishEligible(draft) {
   const validation = draft?.validation || {};
-  const review = validation.review || {};
+  const review = normalizeReviewResult(validation.review || {});
 
   return draft?.status === 'verified' &&
     validation?.deterministic?.valid === true &&
@@ -766,6 +905,69 @@ function isPublishEligible(draft) {
     review.qualityScore >= QUALITY_PASS_SCORE &&
     review.collegeBoardStyleScore >= QUALITY_PASS_SCORE &&
     review.requiresHumanReview === false;
+}
+
+function getPublishBlockers(draft) {
+  if (!draft) return ['Draft could not be found.'];
+  if (draft.status === 'published') return ['This draft has already been published.'];
+
+  const validation = draft.validation || {};
+  const review = normalizeReviewResult(validation.review || {});
+  const blockers = [];
+
+  if (draft.status !== 'verified') {
+    blockers.push(`Status is ${String(draft.status || 'unknown').replace(/_/g, ' ')}, not verified.`);
+  }
+  if (validation.deterministic?.valid === false) {
+    blockers.push('Format validation failed.');
+  }
+  if (!validation.deterministic) {
+    blockers.push('Format validation has not run.');
+  }
+  if (validation.answerKeyMatches === false) {
+    blockers.push('The independent solver did not match the answer key.');
+  }
+  if (validation.answerKeyMatches !== true) {
+    blockers.push('Answer key verification has not passed.');
+  }
+  if (validation.difficultyMatchesRequest === false) {
+    blockers.push(`Reviewer calibrated this as ${validation.calibratedDifficulty || 'a different tier'}.`);
+  }
+  if (validation.solver?.possibleIssue) {
+    blockers.push(validation.solver.issueSummary || 'The independent solver reported a possible issue.');
+  }
+  if (validation.solver?.confidence && validation.solver.confidence !== 'high') {
+    blockers.push(`Solver confidence is ${validation.solver.confidence}.`);
+  }
+  if (review.difficultyConfidence && review.difficultyConfidence !== 'high') {
+    blockers.push(`Difficulty confidence is ${review.difficultyConfidence}.`);
+  }
+  if (review.requiresHumanReview) {
+    blockers.push('Reviewer requires human review.');
+  }
+  if (review.qualityScore < QUALITY_PASS_SCORE) {
+    blockers.push(`Quality score ${review.qualityScore} is below ${QUALITY_PASS_SCORE}.`);
+  }
+  if (review.collegeBoardStyleScore < QUALITY_PASS_SCORE) {
+    blockers.push(`Style score ${review.collegeBoardStyleScore} is below ${QUALITY_PASS_SCORE}.`);
+  }
+
+  const allFlags = [
+    ...(Array.isArray(review.flags) ? review.flags : []),
+    ...(Array.isArray(validation.flags) ? validation.flags : []),
+  ];
+  if (allFlags.some(flag => flag.severity === 'high')) {
+    blockers.push('High-severity review flags must be fixed.');
+  }
+
+  return Array.from(new Set(blockers));
+}
+
+function canOverridePublish(draft) {
+  const validation = draft?.validation || {};
+  return draft?.status !== 'published' &&
+    validation.deterministic?.valid === true &&
+    validation.answerKeyMatches === true;
 }
 
 function buildQuestionForPublish(draft) {
@@ -802,14 +1004,19 @@ module.exports = {
   QUALITY_PASS_SCORE,
   buildQuestionForPublish,
   buildQuestionGenerationPrompt,
+  collectRevisionNotices,
   generateQuestionsFromPrompt,
   getDraftStatusFromValidation,
   getGenerationModel,
   getReviewModel,
+  getPublishBlockers,
   isPublishEligible,
+  canOverridePublish,
   normalizeGeneratedQuestion,
+  normalizeReviewScore,
   normalizeTextFingerprint,
   resolveSubcategoryOrThrow,
+  reviseDraftQuestion,
   validateDraftQuestion,
   verifyDraftQuestion,
 };

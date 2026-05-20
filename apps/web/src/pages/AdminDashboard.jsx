@@ -140,6 +140,12 @@ function AdminDashboard() {
             Question Creation
           </button>
           <button
+            className="tab-button"
+            onClick={() => navigate('/admin/question-audit')}
+          >
+            Question Audit
+          </button>
+          <button
             className={activeTab === 'quizzes' ? 'active' : ''}
             onClick={() => setActiveTab('quizzes')}
           >

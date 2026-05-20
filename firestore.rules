@@ -283,6 +283,11 @@ service cloud.firestore {
         allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
         allow write: if isSignedIn() && (isOwner(userId) || isAdmin());
       }
+
+      // Allow users to manage saved SmartQuiz study plan items
+      match /studyPlanItems/{itemId} {
+        allow read, write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
     }
     
     // User specific collections - allow users to read/write their own data

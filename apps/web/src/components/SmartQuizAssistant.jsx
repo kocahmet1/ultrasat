@@ -107,14 +107,17 @@ const SmartQuizAssistant = ({
               </div>
             ) : (
               <div className="chat-messages">
-                {history.map((message, index) => (
-                  <div 
-                    key={index} 
-                    className={`message ${message.isUser ? 'user-message' : 'assistant-message'}`}
-                  >
-                    <div className="message-content">{message.content}</div>
-                  </div>
-                ))}
+                {history.map((message, index) => {
+                  const isUserMessage = message.isUser ?? message.role === 'user';
+                  return (
+                    <div
+                      key={index}
+                      className={`message ${isUserMessage ? 'user-message' : 'assistant-message'}`}
+                    >
+                      <div className="message-content">{message.content}</div>
+                    </div>
+                  );
+                })}
                 <div ref={chatEndRef} />
                 {loading && (
                   <div className="message assistant-message">

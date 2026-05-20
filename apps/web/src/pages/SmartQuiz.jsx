@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { normalizeSubcategoryName } from '../utils/subcategoryUtils';
 import { processTextMarkup } from '../utils/textProcessing';
 import { db } from '../firebase/config';
@@ -32,6 +32,8 @@ import {
   faSignal,
   faWandMagicSparkles,
   faFileLines,
+  faCopy,
+  faPen,
 } from '@fortawesome/free-solid-svg-icons';
 import SmartQuizAssistant from '../components/SmartQuizAssistant';
 import Modal from '../components/Modal';
@@ -67,6 +69,85 @@ const getQuestionSkill = (question, quiz) => {
   return String(rawSkill)
     .replace(/[-_]+/g, ' ')
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
+};
+
+const getChoiceLabel = (index) => String.fromCharCode(65 + index);
+
+const getAnswerChoiceText = (question, answer) => {
+  if (answer === undefined || answer === null || answer === '') return 'No answer selected yet';
+
+  const rawValue = typeof answer === 'object' ? answer.selectedOption : answer;
+  if (rawValue === undefined || rawValue === null || rawValue === '') return 'No answer selected yet';
+
+  const options = Array.isArray(question?.options) ? question.options : [];
+  const numericValue = Number(rawValue);
+  if (Number.isInteger(numericValue) && numericValue >= 0 && numericValue < options.length) {
+    return `${getChoiceLabel(numericValue)}. ${options[numericValue]}`;
+  }
+
+  const matchingIndex = options.findIndex((option) => String(option) === String(rawValue));
+  if (matchingIndex >= 0) {
+    return `${getChoiceLabel(matchingIndex)}. ${options[matchingIndex]}`;
+  }
+
+  return String(rawValue);
+};
+
+const buildCoachPrompt = ({ actionType, question, selectedAnswer, skillLabel }) => {
+  const passage = question?.passage || question?.stimulus || question?.text || '';
+  const questionText = question?.question || question?.prompt || question?.text || '';
+  const options = Array.isArray(question?.options) ? question.options : [];
+  const answerChoices = options.length
+    ? options.map((option, index) => `${getChoiceLabel(index)}. ${option}`).join('\n')
+    : 'No answer choices are available.';
+
+  const sharedContext = [
+    `Skill focus: ${skillLabel || 'Reading & Writing'}`,
+    `Passage or stimulus:\n${passage || 'No passage text is available.'}`,
+    `Question:\n${questionText || 'No question text is available.'}`,
+    `Answer choices:\n${answerChoices}`,
+    `Student selected: ${getAnswerChoiceText(question, selectedAnswer)}`,
+  ].join('\n\n');
+
+  const prompts = {
+    mainIdea: 'Return only one polished sentence that states the passage central claim or main idea. Do not mention answer choices and do not reveal the correct answer.',
+    lineByLine: 'Break down the passage in 3-6 concise bullets. Start each bullet with the sentence or chunk role, then explain what it contributes to the author purpose and how it helps the reader understand the question.',
+    choiceAnalysis: 'Analyze every answer choice one by one. Start each line with A., B., C., and D. Label each choice as correct, trap, unsupported, too broad, too narrow, or opposite, then give a concise reason. You may identify the correct answer because the student requested answer-choice analysis.',
+    hint: 'Give one strategic hint in 1-2 concise sentences. Point the student toward the right reasoning path without naming, implying, or eliminating the correct answer choice.',
+    whyWins: 'Explain why the correct answer wins in 2-4 concise bullets. Include why the closest distractors lose. If the student selected an answer, mention whether that selection matches the answer key and what to learn from it.',
+  };
+
+  return `${sharedContext}\n\nTask:\n${prompts[actionType] || prompts.mainIdea}`;
+};
+
+const cleanCoachText = (text = '') => String(text)
+  .replace(/\*\*/g, '')
+  .replace(/`/g, '')
+  .trim();
+
+const getCoachLines = (text = '') => cleanCoachText(text)
+  .split(/\n+/)
+  .map((line) => line.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, '').trim())
+  .filter(Boolean);
+
+const parseChoiceAnalysis = (text = '') => {
+  const cleaned = cleanCoachText(text);
+  const matches = [...cleaned.matchAll(/(?:^|\n)\s*([A-D])[\).:-]\s*([\s\S]*?)(?=(?:\n\s*[A-D][\).:-]\s*)|$)/g)];
+
+  return matches
+    .map((match) => ({
+      label: match[1],
+      text: match[2].replace(/\s+/g, ' ').trim(),
+    }))
+    .filter((item) => item.text);
+};
+
+const COACH_ACTION_LABELS = {
+  mainIdea: 'Main idea in one sentence',
+  lineByLine: 'Line-by-line explanation',
+  choiceAnalysis: 'Choice-by-choice analysis',
+  hint: 'Hint, not answer',
+  whyWins: 'Why this answer wins',
 };
 
 export default function SmartQuiz() {
@@ -106,6 +187,9 @@ export default function SmartQuiz() {
   // Assistant state
   const [assistantHistory, setAssistantHistory] = useState([]);
   const [assistantLoading, setAssistantLoading] = useState(false);
+  const [activeCoachAction, setActiveCoachAction] = useState(null);
+  const [expandedCoachAction, setExpandedCoachAction] = useState(null);
+  const [coachResponses, setCoachResponses] = useState({});
   const [, setAssistantError] = useState(null);
   
   // Helper items state (vocabulary or concepts)
@@ -124,6 +208,7 @@ export default function SmartQuiz() {
   const [selectedVocabularyItem, setSelectedVocabularyItem] = useState(null);
   const [savingVocabularyItem, setSavingVocabularyItem] = useState(false);
   const [savedVocabularyItems, setSavedVocabularyItems] = useState([]);
+  const [newlySavedVocabularyItems, setNewlySavedVocabularyItems] = useState([]);
   const [showMobileVocab, setShowMobileVocab] = useState(false);
   
   // Add state for ProFeatureModal
@@ -132,6 +217,8 @@ export default function SmartQuiz() {
   // Report modal state
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportLoading, setReportLoading] = useState(false);
+  const [studyPlanSaving, setStudyPlanSaving] = useState(false);
+  const [savedStudyPlanItems, setSavedStudyPlanItems] = useState({});
 
   // Load quiz document
   useEffect(() => {
@@ -182,6 +269,19 @@ export default function SmartQuiz() {
   }, [currentUser, quizId, navigate]);
 
   const currentQuestion = quiz?.questions?.[currentIdx];
+
+  const getAssistantQuestionPayload = useCallback((question = currentQuestion) => ({
+    id: question?.id,
+    text: question?.text || '',
+    passage: question?.passage || question?.stimulus || '',
+    prompt: question?.question || question?.prompt || '',
+    options: Array.isArray(question?.options) ? question.options : [],
+    correctAnswer: question?.correctAnswer,
+    explanation: question?.explanation || question?.rationale || '',
+    subcategory: question?.subcategory || quiz?.subcategoryId || '',
+    difficulty: question?.difficulty || quiz?.level || '',
+    questionType: question?.questionType || question?.type || '',
+  }), [currentQuestion, quiz?.level, quiz?.subcategoryId]);
 
   // Load helper items (vocabulary or concepts) based on the current question
   // Memoize function to prevent infinite loops
@@ -340,7 +440,10 @@ export default function SmartQuiz() {
     return 'multiple-choice';
   };
 
-  const handleSelect = (optionIdx) => {
+  const handleSelect = (event, optionIdx) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
     setAnswers((prev) => ({
       ...prev,
       [currentQuestion.id]: {
@@ -473,77 +576,11 @@ export default function SmartQuiz() {
   
   // Direct AI Request Handlers
   const handleDirectTipRequest = async () => {
-    if (assistantLoading || !currentQuestion) return;
-    setAssistantLoading(true);
-    try {
-      // Create the question object with the correct properties
-      const questionObj = {
-        text: currentQuestion.text,
-        options: currentQuestion.options
-      };
-      
-      // Call askAssistant with the correct parameter object format
-      const response = await askAssistant({
-        quizId: quizId,
-        questionId: currentQuestion.id,
-        question: questionObj,
-        history: assistantHistory,
-        tipRequested: true
-      });
-      
-      // The response should now be properly structured
-      if (response.message) {
-        // Add the assistant response to history
-        const updatedHistory = [...assistantHistory, {
-          role: 'assistant',
-          content: response.message
-        }];
-        setAssistantHistory(updatedHistory);
-        setIsAssistantModalOpen(true);
-      }
-    } catch (error) {
-      console.error('Error getting hint:', error);
-      setAssistantError('Failed to get a hint. Please try again.');
-    } finally {
-      setAssistantLoading(false);
-    }
+    await handleCoachAction('hint', { openModal: isMobile });
   };
   
   const handleDirectSummariseText = async () => {
-    if (assistantLoading || !currentQuestion) return;
-    setAssistantLoading(true);
-    try {
-      // Create the question object with the correct properties
-      const questionObj = {
-        text: currentQuestion.text,
-        options: currentQuestion.options
-      };
-      
-      // Call askAssistant with the correct parameter object format
-      const response = await askAssistant({
-        quizId: quizId,
-        questionId: currentQuestion.id,
-        question: questionObj,
-        history: assistantHistory,
-        summariseRequested: true
-      });
-      
-      // The response should now be properly structured
-      if (response.message) {
-        // Add the assistant response to history
-        const updatedHistory = [...assistantHistory, {
-          role: 'assistant',
-          content: response.message
-        }];
-        setAssistantHistory(updatedHistory);
-        setIsAssistantModalOpen(true);
-      }
-    } catch (error) {
-      console.error('Error getting summary:', error);
-      setAssistantError('Failed to get a summary. Please try again.');
-    } finally {
-      setAssistantLoading(false);
-    }
+    await handleCoachAction('mainIdea', { openModal: isMobile });
   };
   
   // Modal AI Assistant Handlers
@@ -551,12 +588,6 @@ export default function SmartQuiz() {
     if (assistantLoading || !currentQuestion) return;
     setAssistantLoading(true);
     try {
-      // Create the question object with the correct properties
-      const questionObj = {
-        text: currentQuestion.text,
-        options: currentQuestion.options
-      };
-      
       // Extract the actual message content from the message object
       const messageContent = typeof message === 'string' ? message : message.content;
       
@@ -570,7 +601,7 @@ export default function SmartQuiz() {
       const response = await askAssistant({
         quizId: quizId,
         questionId: currentQuestion.id,
-        question: questionObj,
+        question: getAssistantQuestionPayload(),
         history: updatedHistoryWithUserMessage
       });
       
@@ -606,7 +637,12 @@ export default function SmartQuiz() {
   };
   
   // Handle saving vocabulary item to word bank
-  const handleSaveVocabularyItem = async (item) => {
+  const handleSaveVocabularyItem = async (item, { explicit = false } = {}) => {
+    if (!explicit) {
+      console.warn('[SmartQuiz Save] Ignored non-explicit vocabulary save request', item);
+      return;
+    }
+
     if (savingVocabularyItem) return;
     
     console.log(`[SmartQuiz Save] Attempting to save vocabulary item:`, item);
@@ -643,7 +679,12 @@ export default function SmartQuiz() {
       console.log(`[SmartQuiz Save] Successfully saved item: ${item.term}`);
       
       // Add to local saved items list
-      setSavedVocabularyItems(prev => [...prev, item.term]);
+      setSavedVocabularyItems(prev => (
+        prev.includes(item.term) ? prev : [...prev, item.term]
+      ));
+      setNewlySavedVocabularyItems(prev => (
+        prev.includes(item.term) ? prev : [...prev, item.term]
+      ));
       
       // Show success message
       toast.success(`${helperType === 'vocabulary' ? 'Word' : 'Concept'} saved to your bank!`);
@@ -665,11 +706,15 @@ export default function SmartQuiz() {
         // Reset assistant state for new question
         setAssistantHistory([]);
         setAssistantError(null);
+        setCoachResponses({});
+        setExpandedCoachAction(null);
+        setActiveCoachAction(null);
         
         // Reset helper items state for new question
         setHelperItems([]);
         setHelperLoading(true);
         setSavedVocabularyItems([]); // Reset saved vocabulary items for new question
+        setNewlySavedVocabularyItems([]);
         
         console.log(`[SmartQuiz] Priming assistant for Q: ${currentQuestion.id}`);
         // Prime the assistant with the current question (non-blocking)
@@ -677,10 +722,7 @@ export default function SmartQuiz() {
         askAssistant({
           quizId: quizId,
           questionId: currentQuestion.id,
-          question: {
-            text: currentQuestion.text,
-            options: currentQuestion.options
-          },
+          question: getAssistantQuestionPayload(currentQuestion),
           history: [],
           priming: true
         }).then(() => {
@@ -702,7 +744,7 @@ export default function SmartQuiz() {
     };
     
     loadQuestionData();
-  }, [quiz, currentQuestion, quizId, aiEnabled, loadHelperItems]);
+  }, [quiz, currentQuestion, quizId, aiEnabled, loadHelperItems, getAssistantQuestionPayload]);
 
   if (!quiz) return <p>Loading quiz…</p>;
 
@@ -754,8 +796,57 @@ export default function SmartQuiz() {
     await handleSendMessage(message);
   };
 
-  const handleStudyPlanClick = () => {
-    toast.success('Added to your study plan.');
+  const handleStudyPlanClick = async () => {
+    if (!currentUser) {
+      toast.info('Sign in to save this to your study plan.');
+      return;
+    }
+    if (!currentQuestion || studyPlanSaving) return;
+
+    const itemId = `${quizId}_${currentQuestion.id}`;
+    if (savedStudyPlanItems[itemId]) {
+      toast.info('Already in your study plan.');
+      return;
+    }
+
+    setStudyPlanSaving(true);
+    try {
+      const skill = getQuestionSkill(currentQuestion, quiz);
+      const answerRecord = answers[currentQuestion.id] || null;
+      const selectedOption = answerRecord?.selectedOption ?? null;
+      const confidence = confidenceLevels[currentQuestion.id] ?? answerRecord?.confidence ?? null;
+
+      await setDoc(doc(db, 'users', currentUser.uid, 'studyPlanItems', itemId), {
+        source: 'smart-quiz',
+        quizId,
+        questionId: currentQuestion.id,
+        title: `${skill} practice`,
+        skill,
+        subcategory: currentQuestion.subcategory || quiz?.subcategoryId || '',
+        difficulty: currentQuestion.difficulty || quiz?.level || '',
+        questionType: currentQuestion.questionType || currentQuestion.type || '',
+        questionText: currentQuestion.text || '',
+        passage: currentQuestion.passage || currentQuestion.stimulus || '',
+        prompt: currentQuestion.question || currentQuestion.prompt || '',
+        options: Array.isArray(currentQuestion.options) ? currentQuestion.options : [],
+        correctAnswer: currentQuestion.correctAnswer ?? null,
+        explanation: currentQuestion.explanation || currentQuestion.rationale || '',
+        selectedAnswer: selectedOption,
+        selectedAnswerText: getAnswerChoiceText(currentQuestion, answerRecord),
+        confidence,
+        status: 'active',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+
+      setSavedStudyPlanItems(prev => ({ ...prev, [itemId]: true }));
+      toast.success('Added to your study plan.');
+    } catch (error) {
+      console.error('Error adding question to study plan:', error);
+      toast.error('Could not add this to your study plan. Please try again.');
+    } finally {
+      setStudyPlanSaving(false);
+    }
   };
 
   const questionTotal = loadedQuestionTotal;
@@ -766,6 +857,202 @@ export default function SmartQuiz() {
   const skillLabel = getQuestionSkill(currentQuestion, quiz);
   const completedCount = Object.keys(answers).length;
   const weeklyAccuracy = questionTotal > 0 ? Math.round((completedCount / questionTotal) * 100) : 0;
+  const studyPlanItemId = currentQuestion ? `${quizId}_${currentQuestion.id}` : '';
+  const isSavedToStudyPlan = Boolean(studyPlanItemId && savedStudyPlanItems[studyPlanItemId]);
+  const coachButtonClass = (actionType, baseClass = '') => [
+    baseClass,
+    activeCoachAction === actionType ? 'loading' : ''
+  ].filter(Boolean).join(' ');
+  const coachButtonSubtitle = (actionType, fallback) => (
+    activeCoachAction === actionType ? 'Working...' : fallback
+  );
+
+  const handleCoachAction = async (actionType, options = {}) => {
+    const {
+      openModal = false,
+      promptOverride = null,
+      responseMode = 'default',
+    } = options;
+
+    if (isFreeOrGuest) {
+      handleProFeatureClick();
+      return;
+    }
+    if (assistantLoading || !currentQuestion) return;
+
+    const prompt = promptOverride || buildCoachPrompt({
+      actionType,
+      question: currentQuestion,
+      selectedAnswer,
+      skillLabel,
+    });
+    const userMessage = {
+      role: 'user',
+      content: COACH_ACTION_LABELS[actionType] || 'AI study coach help',
+      coachAction: actionType
+    };
+    const updatedHistoryWithUserMessage = [...assistantHistory, userMessage];
+
+    setExpandedCoachAction(actionType);
+    setActiveCoachAction(actionType);
+    setAssistantLoading(true);
+    if (openModal) {
+      setIsAssistantModalOpen(true);
+    }
+    setAssistantError(null);
+
+    try {
+      const response = await askAssistant({
+        quizId,
+        questionId: currentQuestion.id,
+        question: getAssistantQuestionPayload(),
+        questionDetails: {
+          coachPrompt: prompt,
+          selectedAnswerText: getAnswerChoiceText(currentQuestion, selectedAnswer),
+          skillLabel,
+        },
+        history: updatedHistoryWithUserMessage,
+        coachAction: actionType,
+        tipRequested: actionType === 'hint',
+        summariseRequested: actionType === 'mainIdea',
+      });
+
+      if (response.message) {
+        setCoachResponses(prev => ({
+          ...prev,
+          [actionType]: {
+            message: response.message,
+            mode: responseMode,
+            updatedAt: new Date().toISOString(),
+          }
+        }));
+        setAssistantHistory([
+          ...updatedHistoryWithUserMessage,
+          { role: 'assistant', content: response.message, coachAction: actionType },
+        ]);
+      }
+    } catch (error) {
+      console.error('Error using AI study coach:', error);
+      setAssistantError('Failed to get coach support. Please try again.');
+      if (!coachResponses[actionType]) {
+        setExpandedCoachAction(null);
+      }
+      toast.error('AI Study Coach could not respond. Please try again.');
+    } finally {
+      setAssistantLoading(false);
+      setActiveCoachAction(null);
+    }
+  };
+
+  const handleCopyCoachResponse = async (actionType) => {
+    const message = coachResponses[actionType]?.message;
+    if (!message) return;
+
+    try {
+      await navigator.clipboard.writeText(cleanCoachText(message));
+      toast.success('Copied coach response.');
+    } catch (error) {
+      console.error('Error copying coach response:', error);
+      toast.error('Could not copy this response.');
+    }
+  };
+
+  const handleSimplifyCoachResponse = async (actionType) => {
+    const existingMessage = coachResponses[actionType]?.message;
+    if (!existingMessage || assistantLoading) return;
+
+    const prompt = [
+      buildCoachPrompt({ actionType, question: currentQuestion, selectedAnswer, skillLabel }),
+      'The current coach response is:',
+      cleanCoachText(existingMessage),
+      'Rewrite the coach response in simpler student-friendly language. Keep it shorter, concrete, and easy to scan.'
+    ].join('\n\n');
+
+    await handleCoachAction(actionType, {
+      promptOverride: prompt,
+      responseMode: 'simplified',
+    });
+  };
+
+  const renderCoachResponseBody = (actionType, message) => {
+    const cleanedMessage = cleanCoachText(message);
+    const lines = getCoachLines(cleanedMessage);
+
+    if (actionType === 'choiceAnalysis') {
+      const choices = parseChoiceAnalysis(cleanedMessage);
+      if (choices.length > 0) {
+        return (
+          <div className="sq-choice-analysis-result">
+            {choices.map((choice) => (
+              <div key={choice.label} className="sq-choice-analysis-row">
+                <span>{choice.label}</span>
+                <p>{choice.text}</p>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    }
+
+    if (actionType === 'lineByLine' || actionType === 'whyWins') {
+      return (
+        <ul className="sq-coach-result-list">
+          {(lines.length ? lines : [cleanedMessage]).map((line, index) => (
+            <li key={`${actionType}-${index}`}>{line}</li>
+          ))}
+        </ul>
+      );
+    }
+
+    return (
+      <blockquote className={`sq-coach-result-quote ${actionType === 'hint' ? 'hint' : ''}`}>
+        {cleanedMessage}
+      </blockquote>
+    );
+  };
+
+  const renderCoachResponsePanel = (actionType) => {
+    const response = coachResponses[actionType];
+    const isLoading = activeCoachAction === actionType;
+    if (expandedCoachAction !== actionType && !response && !isLoading) return null;
+
+    return (
+      <div className={`sq-coach-response ${actionType}`}>
+        <div className="sq-coach-response-head">
+          <h3>{COACH_ACTION_LABELS[actionType]}</h3>
+          <span>
+            <FontAwesomeIcon icon={faWandMagicSparkles} />
+            AI
+          </span>
+        </div>
+
+        {isLoading ? (
+          <div className="sq-coach-response-loading">
+            <i />
+            <i />
+            <i />
+          </div>
+        ) : (
+          <>
+            {response?.mode === 'simplified' && (
+              <small className="sq-coach-response-mode">Simplified version</small>
+            )}
+            {renderCoachResponseBody(actionType, response?.message || '')}
+            <div className="sq-coach-response-actions">
+              <button type="button" onClick={() => handleSimplifyCoachResponse(actionType)} disabled={assistantLoading}>
+                Simplify
+                <FontAwesomeIcon icon={faPen} />
+              </button>
+              <button type="button" onClick={() => handleCopyCoachResponse(actionType)}>
+                Copy
+                <FontAwesomeIcon icon={faCopy} />
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  };
 
   if (currentQuestion) {
     return (
@@ -837,19 +1124,19 @@ export default function SmartQuiz() {
           {aiEnabled && (
             <>
               <div className="mobile-ai-bar">
-                <button onClick={isFreeOrGuest ? handleProFeatureClick : () => setIsAssistantModalOpen(true)}>
+                <button type="button" onClick={isFreeOrGuest ? handleProFeatureClick : () => setIsAssistantModalOpen(true)}>
                   <FontAwesomeIcon icon={faComment} />
                   <span>AI</span>
                 </button>
-                <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest} disabled={assistantLoading}>
+                <button type="button" onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest} disabled={assistantLoading}>
                   <FontAwesomeIcon icon={faLightbulb} />
                   <span>Hint</span>
                 </button>
-                <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText} disabled={assistantLoading}>
+                <button type="button" onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText} disabled={assistantLoading}>
                   <FontAwesomeIcon icon={faFileAlt} />
                   <span>Summary</span>
                 </button>
-                <button onClick={() => setShowMobileVocab(!showMobileVocab)}>
+                <button type="button" onClick={() => setShowMobileVocab(!showMobileVocab)}>
                   <FontAwesomeIcon icon={faBook} />
                   <span>{helperType === 'concept' ? 'Concepts' : 'Words'}</span>
                 </button>
@@ -865,6 +1152,7 @@ export default function SmartQuiz() {
                     <div className="vocabulary-items">
                       {helperItems.map((item, index) => (
                         <button
+                          type="button"
                           key={index}
                           className="vocabulary-item"
                           onClick={() => handleVocabularyItemClick(item)}
@@ -921,10 +1209,12 @@ export default function SmartQuiz() {
                   ) : (
                     helperItems.slice(0, 6).map((item, index) => {
                       const isSaved = savedVocabularyItems.includes(item.term);
+                      const isNewlySaved = newlySavedVocabularyItems.includes(item.term);
+                      const cardSavedClass = isNewlySaved ? 'saved' : (isSaved ? 'already-saved' : '');
                       return (
                         <div
                           key={`${item.term}-${index}`}
-                          className={`sq-vocab-card ${isSaved ? 'saved' : ''}`}
+                          className={`sq-vocab-card ${cardSavedClass}`}
                           onClick={() => handleVocabularyItemClick(item)}
                           onKeyDown={(event) => {
                             if (event.key === 'Enter' || event.key === ' ') {
@@ -941,19 +1231,22 @@ export default function SmartQuiz() {
                             {getDefinitionPreview(item.definition)}
                           </span>
                           <button
+                            type="button"
                             className="sq-vocab-save"
                             onClick={(event) => {
+                              event.preventDefault();
                               event.stopPropagation();
-                              if (!isSaved) handleSaveVocabularyItem(item);
+                              if (!isSaved) handleSaveVocabularyItem(item, { explicit: true });
                             }}
                             onKeyDown={(event) => {
                               if ((event.key === 'Enter' || event.key === ' ') && !isSaved) {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                handleSaveVocabularyItem(item);
+                                handleSaveVocabularyItem(item, { explicit: true });
                               }
                             }}
                             aria-label={isSaved ? `${item.term} saved` : `Save ${item.term}`}
+                            title={isSaved ? 'Already in word bank' : 'Save to word bank'}
                           >
                             <FontAwesomeIcon icon={isSaved ? faCheck : faSave} />
                           </button>
@@ -964,7 +1257,7 @@ export default function SmartQuiz() {
                 </div>
 
                 {helperItems.length > 6 && (
-                  <button className="sq-view-all" onClick={() => setShowMobileVocab(true)}>
+                  <button type="button" className="sq-view-all" onClick={() => setShowMobileVocab(true)}>
                     View all {helperType === 'concept' ? 'concepts' : 'words'}
                     <FontAwesomeIcon icon={faArrowRight} />
                   </button>
@@ -1031,7 +1324,9 @@ export default function SmartQuiz() {
                     return (
                       <li key={idx}>
                         <button
-                          onClick={() => handleSelect(idx)}
+                          type="button"
+                          onPointerDown={(event) => event.stopPropagation()}
+                          onClick={(event) => handleSelect(event, idx)}
                           className={`option-button ${isSelected ? 'selected' : ''}`}
                         >
                           <span className="sq-option-letter">{String.fromCharCode(65 + idx)}</span>
@@ -1128,38 +1423,48 @@ export default function SmartQuiz() {
                 </div>
 
                 <div className="sq-coach-actions">
-                  <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText} disabled={assistantLoading}>
+                  <button
+                    className={coachButtonClass('mainIdea')}
+                    onClick={() => handleCoachAction('mainIdea')}
+                    disabled={assistantLoading}
+                    aria-expanded={expandedCoachAction === 'mainIdea'}
+                  >
                     <span className="sq-action-icon violet"><FontAwesomeIcon icon={faFileLines} /></span>
                     <span>
                       <strong>Main idea in one sentence</strong>
-                      <small>See the passage's central claim</small>
+                      <small>{coachButtonSubtitle('mainIdea', "See the passage's central claim")}</small>
                     </span>
                     <FontAwesomeIcon icon={faArrowRight} />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
+                  {renderCoachResponsePanel('mainIdea')}
 
                   <button
-                    onClick={() => handleCoachMessage('Break down this passage line by line and explain how each sentence contributes to the answer.')}
+                    className={coachButtonClass('lineByLine')}
+                    onClick={() => handleCoachAction('lineByLine')}
                     disabled={assistantLoading}
+                    aria-expanded={expandedCoachAction === 'lineByLine'}
                   >
                     <span className="sq-action-icon blue"><FontAwesomeIcon icon={faList} /></span>
                     <span>
                       <strong>Line-by-line explanation</strong>
-                      <small>Break down the passage</small>
+                      <small>{coachButtonSubtitle('lineByLine', 'Break down the passage')}</small>
                     </span>
                     <FontAwesomeIcon icon={faArrowRight} />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
+                  {renderCoachResponsePanel('lineByLine')}
 
                   <button
-                    className="featured"
-                    onClick={() => handleCoachMessage('Analyze every answer choice and explain why each option is right or wrong.')}
+                    className={coachButtonClass('choiceAnalysis', 'featured')}
+                    onClick={() => handleCoachAction('choiceAnalysis')}
                     disabled={assistantLoading}
+                    aria-expanded={expandedCoachAction === 'choiceAnalysis'}
                   >
                     <span className="sq-action-icon amber"><FontAwesomeIcon icon={faStar} /></span>
                     <span>
                       <strong>Choice-by-choice analysis</strong>
-                      <small>See why each option is right or wrong</small>
+                      <small>{coachButtonSubtitle('choiceAnalysis', 'See why each option is right or wrong')}</small>
                       <span className="sq-choice-chips">
                         {['A', 'B', 'C', 'D'].map((choice) => <em key={choice}>{choice}</em>)}
                       </span>
@@ -1168,35 +1473,49 @@ export default function SmartQuiz() {
                     <b>Top pick</b>
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
+                  {renderCoachResponsePanel('choiceAnalysis')}
 
-                  <button onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest} disabled={assistantLoading}>
+                  <button
+                    className={coachButtonClass('hint')}
+                    onClick={() => handleCoachAction('hint')}
+                    disabled={assistantLoading}
+                    aria-expanded={expandedCoachAction === 'hint'}
+                  >
                     <span className="sq-action-icon gold"><FontAwesomeIcon icon={faLightbulb} /></span>
                     <span>
                       <strong>Hint, not answer</strong>
-                      <small>Get a strategic clue without spoilers</small>
+                      <small>{coachButtonSubtitle('hint', 'Get a strategic clue without spoilers')}</small>
                     </span>
                     <FontAwesomeIcon icon={faArrowRight} />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
+                  {renderCoachResponsePanel('hint')}
 
                   <button
-                    onClick={() => handleCoachMessage('Explain why the best answer is stronger than the other answer choices.')}
+                    className={coachButtonClass('whyWins')}
+                    onClick={() => handleCoachAction('whyWins')}
                     disabled={assistantLoading}
+                    aria-expanded={expandedCoachAction === 'whyWins'}
                   >
                     <span className="sq-action-icon green"><FontAwesomeIcon icon={faTrophy} /></span>
                     <span>
                       <strong>Why this answer wins</strong>
-                      <small>Understand the strongest choice</small>
+                      <small>{coachButtonSubtitle('whyWins', 'Understand the strongest choice')}</small>
                     </span>
                     <FontAwesomeIcon icon={faArrowRight} />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
+                  {renderCoachResponsePanel('whyWins')}
 
-                  <button onClick={handleStudyPlanClick}>
-                    <span className="sq-action-icon pink"><FontAwesomeIcon icon={faBookmark} /></span>
+                  <button
+                    className={studyPlanSaving ? 'loading' : ''}
+                    onClick={handleStudyPlanClick}
+                    disabled={studyPlanSaving}
+                  >
+                    <span className="sq-action-icon pink"><FontAwesomeIcon icon={isSavedToStudyPlan ? faCheck : faBookmark} /></span>
                     <span>
-                      <strong>Add to study plan</strong>
-                      <small>Save this question type to strengthen your skills</small>
+                      <strong>{isSavedToStudyPlan ? 'Added to study plan' : 'Add to study plan'}</strong>
+                      <small>{studyPlanSaving ? 'Saving...' : 'Save this question type to strengthen your skills'}</small>
                     </span>
                     <FontAwesomeIcon icon={faArrowRight} />
                   </button>
@@ -1267,8 +1586,9 @@ export default function SmartQuiz() {
               <div className="vocabulary-definition">
                 <p>{selectedVocabularyItem.definition}</p>
                 <button
+                  type="button"
                   className="sq-modal-save"
-                  onClick={() => handleSaveVocabularyItem(selectedVocabularyItem)}
+                  onClick={() => handleSaveVocabularyItem(selectedVocabularyItem, { explicit: true })}
                   disabled={savingVocabularyItem || savedVocabularyItems.includes(selectedVocabularyItem.term)}
                 >
                   <FontAwesomeIcon icon={savedVocabularyItems.includes(selectedVocabularyItem.term) ? faCheck : faSave} />

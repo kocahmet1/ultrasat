@@ -9,7 +9,7 @@ const { normalizeSubcategoryName } = require('../web/src/utils/subcategoryUtils'
 
 // Default models to use
 const DEFAULT_MODEL = 'o4-mini';
-const DEFAULT_ASSISTANT_MODEL = process.env.OPENAI_ASSISTANT_MODEL || 'gpt-3.5-turbo';
+const DEFAULT_ASSISTANT_MODEL = process.env.OPENAI_ASSISTANT_MODEL || 'gpt-5-mini';
 
 // Default token limits
 const DEFAULT_MAX_TOKENS = parseInt(process.env.OPENAI_ASSISTANT_MAX_TOKENS || '750', 10);

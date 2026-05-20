@@ -1,35 +1,61 @@
 /**
- * Helper service for the API server using Google Gemini
+ * Helper service for the API server using OpenAI
  * Provides functions for vocabulary definitions and concept explanations
  */
 
-const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
+const OpenAI = require('openai');
 
-// Get Gemini API Key from environment variables
+// Get OpenAI API Key from environment variables
 const getApiKey = () => {
-  return process.env.GEMINI_API_KEY || '';
+  return process.env.OPENAI_API_KEY || '';
 };
 
-// Get Gemini Model name
+// Get OpenAI Model name
 const getModelName = () => {
-  return process.env.GEMINI_ASSISTANT_MODEL || 'gemini-pro'; // Default to gemini-pro
+  return process.env.OPENAI_HELPER_MODEL || process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini';
 };
 
-const genAI = new GoogleGenerativeAI(getApiKey());
-
-const modelConfig = {
-  safetySettings: [
-    { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-    { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-    { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-    { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  ],
+const getOpenAIClient = () => {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error('OpenAI API key is required. Set OPENAI_API_KEY in environment variables.');
+  }
+  return new OpenAI({ apiKey });
 };
 
-const getGenerativeModel = (modelName) => genAI.getGenerativeModel({
-  model: modelName,
-  ...modelConfig,
-});
+const extractResponseText = (response) => {
+  if (response?.output_text) return response.output_text;
+
+  if (Array.isArray(response?.output)) {
+    const messageOutput = response.output.find(item => item.type === 'message');
+    const textContent = messageOutput?.content?.find(item => item.type === 'output_text');
+    if (textContent?.text) return textContent.text;
+  }
+
+  return '';
+};
+
+const callHelperModel = async (prompt, { modelName = getModelName(), maxOutputTokens = 2500 } = {}) => {
+  const openai = getOpenAIClient();
+  const response = await openai.responses.create({
+    model: modelName,
+    input: [
+      {
+        role: 'system',
+        content: 'You are an SAT learning helper. Return only valid JSON in the exact shape requested. Do not include markdown fences or extra commentary.'
+      },
+      { role: 'user', content: prompt }
+    ],
+    store: false,
+    max_output_tokens: maxOutputTokens,
+  });
+
+  const responseText = extractResponseText(response).trim();
+  if (!responseText) {
+    throw new Error('No content returned from OpenAI helper response.');
+  }
+  return responseText;
+};
 
 /**
  * Get predefined concepts for a subcategory from Firestore
@@ -79,11 +105,6 @@ const getPredefinedConceptsFromFirestore = async (db, subcategoryId) => {
  * @returns {Promise<Array>} - Array of word objects { term: string, definition: string }
  */
 exports.getVocabularyDefinitions = async ({ questionContent }) => {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error('Gemini API key is required. Set GEMINI_API_KEY in environment variables.');
-  }
-
   const modelName = getModelName();
   
   try {
@@ -112,16 +133,12 @@ For each challenging word, provide the word and its definition as used in this s
 
 VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other text, explanations, or markdown code fences (like those used for 'json' code blocks) before or after the array.`;
 
-    // Get the generative model and generate content
-    const generativeModel = getGenerativeModel(modelName);
-    const result = await generativeModel.generateContent(prompt);
-    const response = await result.response;
-    const responseText = response.text().trim();
+    const responseText = await callHelperModel(prompt, { modelName });
     
     // Extract and parse the JSON array
     return parseHelperResponse(responseText);
   } catch (error) {
-    console.error('Error getting vocabulary definitions from Gemini:', error);
+    console.error('Error getting vocabulary definitions from OpenAI:', error);
     throw new Error('Failed to analyze vocabulary. Please try again.');
   }
 };
@@ -136,11 +153,6 @@ VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other
  * @returns {Promise<Array>} - Array of concept objects { term: string, definition: string, conceptId: string }
  */
 exports.getConceptExplanations = async ({ questionContent, subcategory, db, questionId }) => {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error('Gemini API key is required. Set GEMINI_API_KEY in environment variables.');
-  }
-
   const modelName = getModelName();
   
   try {
@@ -240,11 +252,7 @@ SELECTION CRITERIA:
 
 VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other text, explanations, or markdown code fences.`;
 
-    // Get the generative model and generate content
-    const generativeModel = getGenerativeModel(modelName);
-    const result = await generativeModel.generateContent(prompt);
-    const response = await result.response;
-    const responseText = response.text().trim();
+    const responseText = await callHelperModel(prompt, { modelName });
     
     // Parse the LLM response to get selected concept IDs
     const selectedConcepts = parseConceptSelectionResponse(responseText);
@@ -287,7 +295,7 @@ VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other
     return conceptsForFrontend;
     
   } catch (error) {
-    console.error('Error getting concept explanations from Gemini:', error);
+    console.error('Error getting concept explanations from OpenAI:', error);
     throw new Error('Failed to analyze concepts. Please try again.');
   }
 };
@@ -332,11 +340,7 @@ Format your response as a valid JSON array with objects that have 'term' and 'de
 
 VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other text, explanations, or markdown code fences before or after the array.`;
 
-    // Get the generative model and generate content
-    const generativeModel = getGenerativeModel(modelName);
-    const result = await generativeModel.generateContent(prompt);
-    const response = await result.response;
-    const responseText = response.text().trim();
+    const responseText = await callHelperModel(prompt, { modelName });
     
     // Extract and parse the JSON array
     return parseHelperResponse(responseText);
@@ -363,7 +367,7 @@ const saveConceptAssociation = async (db, questionId, subcategoryId, conceptIds,
       subcategoryId,
       conceptIds,
       selectedAt: db.FieldValue.serverTimestamp(),
-      llmModel: metadata.llmModel || 'gemini-pro',
+      llmModel: metadata.llmModel || getModelName(),
       confidence: metadata.confidence || null,
       selectedConcepts: metadata.selectedConcepts || [],
       reviewedBy: null,

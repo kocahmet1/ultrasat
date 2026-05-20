@@ -181,6 +181,10 @@
   padding: 16px;
 }
 
+.candidate-panel {
+  margin-bottom: 18px;
+}
+
 .panel-header {
   justify-content: space-between;
   margin-bottom: 12px;
@@ -274,6 +278,11 @@
   background: #fbf9ff;
 }
 
+.draft-card.status-deleted_original {
+  border-left: 5px solid #6c757d;
+  background: #f8f9fa;
+}
+
 .draft-card-header {
   display: flex;
   justify-content: space-between;
@@ -286,6 +295,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
+}
+
+.draft-selector input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
 .status-badge {
@@ -314,6 +330,11 @@
 .status-badge.published {
   background: #e9ddff;
   color: #40206d;
+}
+
+.status-badge.deleted_original {
+  background: #e9ecef;
+  color: #343a40;
 }
 
 .draft-meta {
@@ -395,6 +416,11 @@
 }
 
 .issue-line.low {
+  background: #e7f1ff;
+  color: #084298;
+}
+
+.issue-line.publish-blocker {
   background: #e7f1ff;
   color: #084298;
 }

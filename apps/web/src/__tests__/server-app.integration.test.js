@@ -21,6 +21,7 @@ function createEmptyRouters(overrides = {}) {
     reportRouter: empty(),
     questionQualityRouter: empty(),
     questionGenerationRouter: empty(),
+    questionAuditRouter: empty(),
     emailRouter: empty(),
     companionRouter: empty(),
     ingestRouter: empty(),

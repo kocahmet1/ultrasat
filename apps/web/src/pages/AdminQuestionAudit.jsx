@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  createQuestionGenerationRun,
-  deleteGeneratedDraft,
-  getQuestionGenerationPromptPreview,
-  getQuestionGenerationRun,
-  getQuestionGenerationRuns,
-  publishGeneratedDraft,
-  publishGeneratedDrafts,
-  reviseGeneratedDraft,
-  updateGeneratedDraft,
-  verifyGeneratedDraft,
-} from '../api/questionGenerationClient';
+  createQuestionAuditRun,
+  deleteQuestionAuditDraft,
+  deleteQuestionAuditQuestions,
+  getQuestionAuditCandidates,
+  getQuestionAuditRun,
+  getQuestionAuditRuns,
+  publishQuestionAuditDraft,
+  publishQuestionAuditDrafts,
+  reviseQuestionAuditDraft,
+  updateQuestionAuditDraft,
+  verifyQuestionAuditDraft,
+} from '../api/questionAuditClient';
 import { useSubcategories } from '../contexts/SubcategoryContext';
 import {
   getKebabCaseFromAnyFormat,
@@ -25,6 +26,14 @@ const QUALITY_PASS_SCORE = 85;
 
 function formatStatus(status) {
   return String(status || 'unknown').replace(/_/g, ' ');
+}
+
+function normalizeReviewScore(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return null;
+  const normalized = numeric > 0 && numeric <= 10 ? numeric * 10 : numeric;
+  return Math.max(0, Math.min(100, Math.round(normalized)));
 }
 
 function getDraftFlags(draft) {
@@ -42,14 +51,6 @@ function getDraftFlags(draft) {
   });
 }
 
-function normalizeReviewScore(value) {
-  if (value === null || value === undefined || value === '') return null;
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return null;
-  const normalized = numeric > 0 && numeric <= 10 ? numeric * 10 : numeric;
-  return Math.max(0, Math.min(100, Math.round(normalized)));
-}
-
 function getQualityScore(draft) {
   return normalizeReviewScore(draft?.validation?.review?.qualityScore);
 }
@@ -58,13 +59,26 @@ function getStyleScore(draft) {
   return normalizeReviewScore(draft?.validation?.review?.collegeBoardStyleScore);
 }
 
+function getCorrectAnswerIndex(question) {
+  if (Number.isInteger(question?.correctAnswer)) return question.correctAnswer;
+  const value = String(question?.correctAnswer ?? '').trim();
+  if (/^[A-Da-d]$/.test(value)) return value.toUpperCase().charCodeAt(0) - 65;
+  const numeric = Number.parseInt(value, 10);
+  return Number.isInteger(numeric) ? numeric : -1;
+}
+
 function isDraftPublishable(draft) {
   return draft?.status === 'verified';
+}
+
+function isOriginalDeleted(draft) {
+  return draft?.status === 'deleted_original';
 }
 
 function getDraftPublishBlockers(draft) {
   if (!draft) return ['Draft could not be found.'];
   if (draft.status === 'published') return ['This draft has already been published.'];
+  if (isOriginalDeleted(draft)) return ['The original question has been deleted from the database.'];
 
   const validation = draft.validation || {};
   const review = validation.review || {};
@@ -111,8 +125,7 @@ function getDraftPublishBlockers(draft) {
     blockers.push(`Style score ${styleScore} is below ${QUALITY_PASS_SCORE}.`);
   }
 
-  const highFlags = getDraftFlags(draft).filter(flag => flag.severity === 'high');
-  if (highFlags.length > 0) {
+  if (getDraftFlags(draft).some(flag => flag.severity === 'high')) {
     blockers.push('High-severity review flags must be fixed.');
   }
 
@@ -125,13 +138,13 @@ function buildPublishOverrideWarning(blockers, draftCount = 1) {
   const uniqueBlockers = Array.from(new Set(blockers)).filter(Boolean);
   return [
     draftCount === 1
-      ? 'This draft is not verified for normal publishing.'
-      : `${draftCount} selected drafts include at least one draft that is not verified for normal publishing.`,
+      ? 'This existing-question draft is not verified for normal publishing.'
+      : `${draftCount} selected existing-question drafts include at least one draft that is not verified for normal publishing.`,
     '',
     ...uniqueBlockers.slice(0, 8).map(blocker => `- ${blocker}`),
     uniqueBlockers.length > 8 ? `- ${uniqueBlockers.length - 8} more blocker(s)` : '',
     '',
-    'Publish anyway with an admin override?',
+    'Update the original question anyway with an admin override?',
   ].filter(line => line !== '').join('\n');
 }
 
@@ -149,7 +162,16 @@ function buildEditableDraft(draft) {
   };
 }
 
-export default function AdminQuestionCreation() {
+function buildDeleteWarning(questionIds, context = 'database') {
+  const count = questionIds.length;
+  return [
+    `Delete ${count} question${count === 1 ? '' : 's'} from the ${context}?`,
+    '',
+    'This deletes the original question document from Firestore. This cannot be undone from this panel.',
+  ].join('\n');
+}
+
+export default function AdminQuestionAudit() {
   const navigate = useNavigate();
   const { allSubcategories, loading: subcategoriesLoading } = useSubcategories();
 
@@ -163,8 +185,6 @@ export default function AdminQuestionCreation() {
           ...subcategory,
           value,
           label: subcategory.name || subcategory.label || value,
-          section: subcategory.section || '',
-          category: subcategory.category || '',
         };
       })
       .filter(subcategory => subcategory.value)
@@ -173,17 +193,14 @@ export default function AdminQuestionCreation() {
 
   const [subcategory, setSubcategory] = useState('');
   const [difficulty, setDifficulty] = useState('medium');
-  const [quantity, setQuantity] = useState(5);
-  const [promptText, setPromptText] = useState('');
-  const [promptDirty, setPromptDirty] = useState(false);
-  const [promptModalOpen, setPromptModalOpen] = useState(false);
-
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isPromptLoading, setIsPromptLoading] = useState(false);
+  const [quantity, setQuantity] = useState(10);
+  const [isLoadingCandidates, setIsLoadingCandidates] = useState(false);
+  const [isAuditing, setIsAuditing] = useState(false);
   const [actionBusy, setActionBusy] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-
+  const [candidateQuestions, setCandidateQuestions] = useState([]);
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [runs, setRuns] = useState([]);
   const [currentRun, setCurrentRun] = useState(null);
   const [drafts, setDrafts] = useState([]);
@@ -198,10 +215,10 @@ export default function AdminQuestionCreation() {
 
   const loadRuns = useCallback(async () => {
     try {
-      const data = await getQuestionGenerationRuns(20);
+      const data = await getQuestionAuditRuns(20);
       setRuns(Array.isArray(data.runs) ? data.runs : []);
     } catch (loadError) {
-      setError(loadError.message || 'Failed to load recent runs');
+      setError(loadError.message || 'Failed to load recent audit runs');
     }
   }, []);
 
@@ -210,47 +227,11 @@ export default function AdminQuestionCreation() {
   }, [loadRuns]);
 
   useEffect(() => {
-    setPromptText('');
-    setPromptDirty(false);
+    setCandidateQuestions([]);
+    setSelectedQuestionIds([]);
   }, [subcategory, difficulty, quantity]);
 
-  const loadPromptPreview = async () => {
-    if (!subcategory) {
-      setError('Select a subcategory first');
-      return '';
-    }
-
-    try {
-      setIsPromptLoading(true);
-      setError('');
-      const data = await getQuestionGenerationPromptPreview({
-        subcategory,
-        difficulty,
-        quantity,
-      });
-      setPromptText(data.prompt || '');
-      setPromptDirty(false);
-      return data.prompt || '';
-    } catch (previewError) {
-      setError(previewError.message || 'Failed to load prompt preview');
-      return '';
-    } finally {
-      setIsPromptLoading(false);
-    }
-  };
-
-  const openPromptModal = async () => {
-    if (!promptText) {
-      await loadPromptPreview();
-    }
-    setPromptModalOpen(true);
-  };
-
-  const resetPrompt = async () => {
-    await loadPromptPreview();
-  };
-
-  const generateQuestions = async (event) => {
+  const loadCandidateQuestions = async (event) => {
     event.preventDefault();
     if (!subcategory) {
       setError('Select a subcategory');
@@ -258,30 +239,97 @@ export default function AdminQuestionCreation() {
     }
 
     try {
-      setIsGenerating(true);
+      setIsLoadingCandidates(true);
+      setError('');
+      setNotice('');
+      setSelectedQuestionIds([]);
+      const data = await getQuestionAuditCandidates({
+        subcategory,
+        difficulty,
+        limit: quantity,
+      });
+      const questions = Array.isArray(data.questions) ? data.questions : [];
+      setCandidateQuestions(questions);
+      setNotice(`Loaded ${questions.length} matching question(s). Select the ones you want to audit.`);
+    } catch (loadError) {
+      setError(loadError.message || 'Failed to load matching questions');
+    } finally {
+      setIsLoadingCandidates(false);
+    }
+  };
+
+  const toggleQuestionSelection = (questionId) => {
+    setSelectedQuestionIds(previousIds => (
+      previousIds.includes(questionId)
+        ? previousIds.filter(id => id !== questionId)
+        : [...previousIds, questionId]
+    ));
+  };
+
+  const toggleAllCandidateQuestions = () => {
+    setSelectedQuestionIds(previousIds => (
+      previousIds.length === candidateQuestions.length
+        ? []
+        : candidateQuestions.map(question => question.id)
+    ));
+  };
+
+  const deleteCandidateQuestions = async (questionIds) => {
+    const ids = Array.from(new Set(questionIds.filter(Boolean)));
+    if (ids.length === 0) {
+      setError('Select at least one question to delete');
+      return;
+    }
+    if (!window.confirm(buildDeleteWarning(ids, 'question database'))) return;
+
+    try {
+      setActionBusy('delete-candidates');
+      setError('');
+      setNotice('');
+      const data = await deleteQuestionAuditQuestions(ids);
+      const deletedIds = Array.isArray(data.results)
+        ? data.results.filter(result => result.success).map(result => result.questionId)
+        : ids;
+      setCandidateQuestions(previousQuestions =>
+        previousQuestions.filter(question => !deletedIds.includes(question.id)),
+      );
+      setSelectedQuestionIds(previousIds => previousIds.filter(id => !deletedIds.includes(id)));
+      setNotice(`Deleted ${deletedIds.length} question(s) from the database.`);
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to delete questions');
+    } finally {
+      setActionBusy('');
+    }
+  };
+
+  const startAudit = async () => {
+    if (!subcategory) {
+      setError('Select a subcategory');
+      return;
+    }
+    if (selectedQuestionIds.length === 0) {
+      setError('Select at least one question to audit');
+      return;
+    }
+
+    try {
+      setIsAuditing(true);
       setError('');
       setNotice('');
       setSelectedDraftIds([]);
-
-      const payload = {
+      const data = await createQuestionAuditRun({
         subcategory,
         difficulty,
-        quantity,
-      };
-
-      if (promptDirty && promptText.trim()) {
-        payload.promptOverride = promptText.trim();
-      }
-
-      const data = await createQuestionGenerationRun(payload);
+        questionIds: selectedQuestionIds,
+      });
       setCurrentRun(data.run || null);
       setDrafts(Array.isArray(data.drafts) ? data.drafts : []);
-      setNotice('Generation completed. Review verified drafts before publishing.');
+      setNotice(`Audit completed for ${selectedQuestionIds.length} selected question(s). Review drafts before updating originals.`);
       await loadRuns();
-    } catch (generationError) {
-      setError(generationError.message || 'Failed to generate questions');
+    } catch (auditError) {
+      setError(auditError.message || 'Failed to audit existing questions');
     } finally {
-      setIsGenerating(false);
+      setIsAuditing(false);
     }
   };
 
@@ -291,16 +339,14 @@ export default function AdminQuestionCreation() {
       setError('');
       setNotice('');
       setSelectedDraftIds([]);
-      const data = await getQuestionGenerationRun(runId);
+      const data = await getQuestionAuditRun(runId);
       setCurrentRun(data.run || null);
       setDrafts(Array.isArray(data.drafts) ? data.drafts : []);
       if (data.run?.subcategory) setSubcategory(data.run.subcategory);
       if (data.run?.difficulty) setDifficulty(data.run.difficulty);
       if (data.run?.quantity) setQuantity(data.run.quantity);
-      if (data.run?.prompt) setPromptText(data.run.prompt);
-      setPromptDirty(false);
     } catch (loadError) {
-      setError(loadError.message || 'Failed to load generation run');
+      setError(loadError.message || 'Failed to load audit run');
     } finally {
       setActionBusy('');
     }
@@ -312,21 +358,12 @@ export default function AdminQuestionCreation() {
     );
   };
 
-  const removeDraft = async (draftId) => {
-    if (!currentRun?.id) return;
-    if (!window.confirm('Delete this draft question?')) return;
-
-    try {
-      setActionBusy(`delete-${draftId}`);
-      setError('');
-      await deleteGeneratedDraft(currentRun.id, draftId);
-      setDrafts(previousDrafts => previousDrafts.filter(draft => draft.id !== draftId));
-      setSelectedDraftIds(previousIds => previousIds.filter(id => id !== draftId));
-    } catch (deleteError) {
-      setError(deleteError.message || 'Failed to delete draft');
-    } finally {
-      setActionBusy('');
-    }
+  const toggleDraftSelection = (draftId) => {
+    setSelectedDraftIds(previousIds => (
+      previousIds.includes(draftId)
+        ? previousIds.filter(id => id !== draftId)
+        : [...previousIds, draftId]
+    ));
   };
 
   const verifyDraft = async (draftId) => {
@@ -336,10 +373,10 @@ export default function AdminQuestionCreation() {
       setActionBusy(`verify-${draftId}`);
       setError('');
       setNotice('');
-      const data = await verifyGeneratedDraft(currentRun.id, draftId);
+      const data = await verifyQuestionAuditDraft(currentRun.id, draftId);
       if (data.draft) replaceDraft(data.draft);
     } catch (verifyError) {
-      setError(verifyError.message || 'Failed to verify draft');
+      setError(verifyError.message || 'Failed to verify audit draft');
     } finally {
       setActionBusy('');
     }
@@ -352,117 +389,73 @@ export default function AdminQuestionCreation() {
       setActionBusy(`revise-${draftId}`);
       setError('');
       setNotice('');
-      const data = await reviseGeneratedDraft(currentRun.id, draftId);
+      const data = await reviseQuestionAuditDraft(currentRun.id, draftId);
       if (data.draft) replaceDraft(data.draft);
-      setNotice('Draft revised with the review notices and rechecked.');
+      setNotice('Audit draft revised with the review notices and rechecked.');
     } catch (reviseError) {
-      setError(reviseError.message || 'Failed to revise draft');
+      setError(reviseError.message || 'Failed to revise audit draft');
     } finally {
       setActionBusy('');
     }
   };
 
-  const publishDraft = async (draftId) => {
+  const removeDraft = async (draftId) => {
     if (!currentRun?.id) return;
-    const draft = drafts.find(candidate => candidate.id === draftId);
-    const override = !isDraftPublishable(draft);
-    const blockers = override ? getDraftPublishBlockers(draft) : [];
-
-    if (override && !window.confirm(buildPublishOverrideWarning(blockers, 1))) {
-      return;
-    }
+    if (!window.confirm('Remove this question from the audit run? This will not delete the original question.')) return;
 
     try {
-      setActionBusy(`publish-${draftId}`);
+      setActionBusy(`delete-${draftId}`);
       setError('');
-      setNotice('');
-      const data = await publishGeneratedDraft(
-        currentRun.id,
-        draftId,
-        override
-          ? {
-            override: true,
-            overrideReason: blockers.join(' '),
-          }
-          : {},
-      );
-      setNotice(data.override
-        ? `Published question ${data.questionId} with admin override.`
-        : `Published question ${data.questionId}`);
-      await loadRun(currentRun.id);
-    } catch (publishError) {
-      const apiBlockers = Array.isArray(publishError.blockers) && publishError.blockers.length
-        ? ` ${publishError.blockers.join(' ')}`
-        : '';
-      setError(`${publishError.message || 'Failed to publish draft'}${apiBlockers}`);
+      await deleteQuestionAuditDraft(currentRun.id, draftId);
+      setDrafts(previousDrafts => previousDrafts.filter(draft => draft.id !== draftId));
+      setSelectedDraftIds(previousIds => previousIds.filter(id => id !== draftId));
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to remove audit draft');
     } finally {
       setActionBusy('');
     }
   };
 
-  const selectedDrafts = selectedDraftIds
-    .map(id => drafts.find(draft => draft.id === id))
-    .filter(Boolean);
-  const selectedPublishableDraftIds = selectedDrafts
-    .filter(isDraftPublishable)
-    .map(draft => draft.id);
-  const selectedRequiresOverride = selectedDrafts.some(draft => !isDraftPublishable(draft));
+  const deleteOriginalQuestionsFromDrafts = async (draftIds) => {
+    if (!currentRun?.id) return;
+    const selectedDraftsForDelete = draftIds
+      .map(draftId => drafts.find(draft => draft.id === draftId))
+      .filter(draft => draft?.originalQuestionId && !isOriginalDeleted(draft));
+    const questionIds = Array.from(new Set(selectedDraftsForDelete.map(draft => draft.originalQuestionId)));
 
-  const publishSelected = async () => {
-    if (!currentRun?.id || selectedDraftIds.length === 0) return;
-
-    const overrideBlockers = selectedRequiresOverride
-      ? selectedDrafts.flatMap(draft => (isDraftPublishable(draft) ? [] : getDraftPublishBlockers(draft)))
-      : [];
-
-    if (selectedRequiresOverride && !window.confirm(buildPublishOverrideWarning(overrideBlockers, selectedDraftIds.length))) {
+    if (questionIds.length === 0) {
+      setError('No selected audit drafts have an original question to delete');
       return;
     }
+    if (!window.confirm(buildDeleteWarning(questionIds, 'question database'))) return;
 
     try {
-      setActionBusy('publish-selected');
+      setActionBusy('delete-originals');
       setError('');
       setNotice('');
-      const draftIdsToPublish = selectedRequiresOverride ? selectedDraftIds : selectedPublishableDraftIds;
-      const data = await publishGeneratedDrafts(
-        currentRun.id,
-        draftIdsToPublish,
-        selectedRequiresOverride
+      const data = await deleteQuestionAuditQuestions(questionIds, {
+        auditRunId: currentRun.id,
+        draftIds,
+      });
+      const deletedIds = Array.isArray(data.results)
+        ? data.results.filter(result => result.success).map(result => result.questionId)
+        : questionIds;
+      setDrafts(previousDrafts => previousDrafts.map(draft => (
+        deletedIds.includes(draft.originalQuestionId)
           ? {
-            override: true,
-            overrideReason: Array.from(new Set(overrideBlockers)).join(' '),
+            ...draft,
+            status: 'deleted_original',
+            originalQuestionDeletedAt: new Date().toISOString(),
           }
-          : {},
-      );
-      const successCount = Array.isArray(data.results)
-        ? data.results.filter(result => result.success).length
-        : 0;
-      const failedCount = Array.isArray(data.results)
-        ? data.results.filter(result => !result.success).length
-        : 0;
-      const overrideCount = Array.isArray(data.results)
-        ? data.results.filter(result => result.success && result.override).length
-        : 0;
-      setNotice(
-        `Published ${successCount} draft(s).`
-          + `${overrideCount ? ` ${overrideCount} used admin override.` : ''}`
-          + `${failedCount ? ` ${failedCount} failed.` : ''}`,
-      );
-      await loadRun(currentRun.id);
-      setSelectedDraftIds([]);
-    } catch (publishError) {
-      setError(publishError.message || 'Failed to publish selected drafts');
+          : draft
+      )));
+      setSelectedDraftIds(previousIds => previousIds.filter(id => !draftIds.includes(id)));
+      setNotice(`Deleted ${deletedIds.length} original question(s) from the database.`);
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to delete original questions');
     } finally {
       setActionBusy('');
     }
-  };
-
-  const toggleDraftSelection = (draftId) => {
-    setSelectedDraftIds(previousIds => (
-      previousIds.includes(draftId)
-        ? previousIds.filter(id => id !== draftId)
-        : [...previousIds, draftId]
-    ));
   };
 
   const saveDraftEdits = async () => {
@@ -482,17 +475,116 @@ export default function AdminQuestionCreation() {
           .map(tag => tag.trim())
           .filter(Boolean),
       };
-      const data = await updateGeneratedDraft(currentRun.id, editingDraft.id, payload);
+      const data = await updateQuestionAuditDraft(currentRun.id, editingDraft.id, payload);
       if (data.draft) replaceDraft(data.draft);
       setEditingDraft(null);
     } catch (saveError) {
-      setError(saveError.message || 'Failed to save draft edits');
+      setError(saveError.message || 'Failed to save audit draft edits');
     } finally {
       setActionBusy('');
     }
   };
 
-  const publishableSelectedCount = selectedPublishableDraftIds.length;
+  const publishDraft = async (draftId) => {
+    if (!currentRun?.id) return;
+    const draft = drafts.find(candidate => candidate.id === draftId);
+    if (isOriginalDeleted(draft)) {
+      setError('This original question has already been deleted from the database.');
+      return;
+    }
+    const override = !isDraftPublishable(draft);
+    const blockers = override ? getDraftPublishBlockers(draft) : [];
+
+    if (override && !window.confirm(buildPublishOverrideWarning(blockers, 1))) {
+      return;
+    }
+
+    try {
+      setActionBusy(`publish-${draftId}`);
+      setError('');
+      setNotice('');
+      const data = await publishQuestionAuditDraft(
+        currentRun.id,
+        draftId,
+        override
+          ? {
+            override: true,
+            overrideReason: blockers.join(' '),
+          }
+          : {},
+      );
+      setNotice(data.override
+        ? `Updated original question ${data.questionId} with admin override.`
+        : `Updated original question ${data.questionId}`);
+      await loadRun(currentRun.id);
+    } catch (publishError) {
+      const apiBlockers = Array.isArray(publishError.blockers) && publishError.blockers.length
+        ? ` ${publishError.blockers.join(' ')}`
+        : '';
+      setError(`${publishError.message || 'Failed to publish audit draft'}${apiBlockers}`);
+    } finally {
+      setActionBusy('');
+    }
+  };
+
+  const selectedDrafts = selectedDraftIds
+    .map(id => drafts.find(draft => draft.id === id))
+    .filter(Boolean);
+  const selectedRequiresOverride = selectedDrafts.some(draft => !isDraftPublishable(draft));
+
+  const publishSelected = async () => {
+    if (!currentRun?.id || selectedDraftIds.length === 0) return;
+
+    const deletedSelectedCount = selectedDrafts.filter(isOriginalDeleted).length;
+    if (deletedSelectedCount > 0) {
+      setError('One or more selected drafts point to original questions that were already deleted. Clear those selections before publishing.');
+      return;
+    }
+
+    const overrideBlockers = selectedRequiresOverride
+      ? selectedDrafts.flatMap(draft => (isDraftPublishable(draft) ? [] : getDraftPublishBlockers(draft)))
+      : [];
+
+    if (selectedRequiresOverride && !window.confirm(buildPublishOverrideWarning(overrideBlockers, selectedDraftIds.length))) {
+      return;
+    }
+
+    try {
+      setActionBusy('publish-selected');
+      setError('');
+      setNotice('');
+      const data = await publishQuestionAuditDrafts(
+        currentRun.id,
+        selectedDraftIds,
+        selectedRequiresOverride
+          ? {
+            override: true,
+            overrideReason: Array.from(new Set(overrideBlockers)).join(' '),
+          }
+          : {},
+      );
+      const successCount = Array.isArray(data.results)
+        ? data.results.filter(result => result.success).length
+        : 0;
+      const failedCount = Array.isArray(data.results)
+        ? data.results.filter(result => !result.success).length
+        : 0;
+      const overrideCount = Array.isArray(data.results)
+        ? data.results.filter(result => result.success && result.override).length
+        : 0;
+      setNotice(
+        `Updated ${successCount} original question(s).`
+          + `${overrideCount ? ` ${overrideCount} used admin override.` : ''}`
+          + `${failedCount ? ` ${failedCount} failed.` : ''}`,
+      );
+      await loadRun(currentRun.id);
+      setSelectedDraftIds([]);
+    } catch (publishError) {
+      setError(publishError.message || 'Failed to publish selected audit drafts');
+    } finally {
+      setActionBusy('');
+    }
+  };
 
   return (
     <div className="admin-page">
@@ -502,7 +594,7 @@ export default function AdminQuestionCreation() {
             &larr; Back to Admin
           </button>
         </div>
-        <h1>Question Creation</h1>
+        <h1>Existing Question Audit</h1>
         <div className="header-right" />
       </div>
 
@@ -511,14 +603,14 @@ export default function AdminQuestionCreation() {
         {notice && <div className="success-message">{notice}</div>}
 
         <section className="creation-panel">
-          <form className="generation-form" onSubmit={generateQuestions}>
+          <form className="generation-form" onSubmit={loadCandidateQuestions}>
             <div className="field-group">
-              <label htmlFor="subcategory">Subcategory</label>
+              <label htmlFor="audit-subcategory">Subcategory</label>
               <select
-                id="subcategory"
+                id="audit-subcategory"
                 value={subcategory}
                 onChange={(event) => setSubcategory(event.target.value)}
-                disabled={subcategoriesLoading || isGenerating}
+                disabled={subcategoriesLoading || isAuditing || isLoadingCandidates}
               >
                 {subcategoryOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -537,7 +629,7 @@ export default function AdminQuestionCreation() {
                     type="button"
                     className={difficulty === level ? 'active' : ''}
                     onClick={() => setDifficulty(level)}
-                    disabled={isGenerating}
+                    disabled={isAuditing || isLoadingCandidates}
                   >
                     {level}
                   </button>
@@ -546,48 +638,141 @@ export default function AdminQuestionCreation() {
             </div>
 
             <div className="field-group compact-field">
-              <label htmlFor="quantity">Questions</label>
+              <label htmlFor="audit-quantity">Questions</label>
               <input
-                id="quantity"
+                id="audit-quantity"
                 type="number"
                 min="1"
-                max="20"
+                max="50"
                 value={quantity}
                 onChange={(event) => setQuantity(Number.parseInt(event.target.value, 10) || 1)}
-                disabled={isGenerating}
+                disabled={isAuditing || isLoadingCandidates}
               />
             </div>
 
             <div className="generation-actions">
               <button
-                type="button"
+                type="submit"
                 className="button-secondary"
-                onClick={openPromptModal}
-                disabled={isGenerating || isPromptLoading}
+                disabled={isAuditing || isLoadingCandidates || !subcategory}
               >
-                {isPromptLoading ? 'Loading Prompt...' : 'View/Edit Prompt'}
+                {isLoadingCandidates ? 'Loading...' : 'Load Questions'}
               </button>
               <button
-                type="submit"
+                type="button"
                 className="button-primary"
-                disabled={isGenerating || !subcategory}
+                onClick={startAudit}
+                disabled={isAuditing || selectedQuestionIds.length === 0}
               >
-                {isGenerating ? 'Generating...' : 'Generate Drafts'}
+                {isAuditing ? 'Auditing...' : `Audit Selected (${selectedQuestionIds.length})`}
               </button>
             </div>
           </form>
         </section>
 
+        {candidateQuestions.length > 0 && (
+          <section className="drafts-panel candidate-panel">
+            <div className="panel-header drafts-header">
+              <div>
+                <h2>Matching Questions</h2>
+                <div className="run-context">
+                  {candidateQuestions.length} loaded / {selectedQuestionIds.length} selected
+                </div>
+              </div>
+              <div className="draft-actions">
+                <button
+                  className="button-secondary"
+                  onClick={toggleAllCandidateQuestions}
+                  disabled={isAuditing}
+                >
+                  {selectedQuestionIds.length === candidateQuestions.length ? 'Clear Selection' : 'Select All'}
+                </button>
+                <button
+                  className="button-danger"
+                  onClick={() => deleteCandidateQuestions(selectedQuestionIds)}
+                  disabled={selectedQuestionIds.length === 0 || Boolean(actionBusy)}
+                >
+                  Delete Selected ({selectedQuestionIds.length})
+                </button>
+                <button
+                  className="button-primary"
+                  onClick={startAudit}
+                  disabled={isAuditing || selectedQuestionIds.length === 0}
+                >
+                  {isAuditing ? 'Auditing...' : `Audit Selected (${selectedQuestionIds.length})`}
+                </button>
+              </div>
+            </div>
+
+            <div className="draft-list">
+              {candidateQuestions.map(question => {
+                const selected = selectedQuestionIds.includes(question.id);
+                const correctAnswerIndex = getCorrectAnswerIndex(question);
+                return (
+                  <article key={question.id} className="draft-card candidate-card">
+                    <div className="draft-card-header">
+                      <label className="draft-selector" title="Select this existing question for audit">
+                        <input
+                          type="checkbox"
+                          checked={selected}
+                          onChange={() => toggleQuestionSelection(question.id)}
+                          aria-label="Select existing question for audit"
+                        />
+                        <span className="status-badge">Existing</span>
+                      </label>
+                      <div className="draft-meta">
+                        <span>ID: {question.id}</span>
+                        <span>Difficulty: {question.difficulty || '-'}</span>
+                        <span>Usage: {question.usageContext || '-'}</span>
+                        <span>Source: {question.source || '-'}</span>
+                      </div>
+                    </div>
+
+                    <div className="draft-question-text">{question.text}</div>
+
+                    <ol className="draft-options" type="A">
+                      {(question.options || []).map((option, index) => (
+                        <li
+                          key={`${question.id}-${index}`}
+                          className={index === correctAnswerIndex ? 'correct-option' : ''}
+                        >
+                          {option}
+                        </li>
+                      ))}
+                    </ol>
+
+                    {question.explanation && (
+                      <div className="draft-explanation">
+                        <strong>Explanation:</strong> {question.explanation}
+                      </div>
+                    )}
+
+                    <div className="draft-card-actions">
+                      <button
+                        className="button-danger"
+                        onClick={() => deleteCandidateQuestions([question.id])}
+                        disabled={Boolean(actionBusy)}
+                      >
+                        Delete Question
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         <div className="creation-layout">
           <aside className="runs-panel">
             <div className="panel-header">
-              <h2>Recent Runs</h2>
+              <h2>Recent Audits</h2>
               <button className="button-secondary small-button" onClick={loadRuns}>
                 Refresh
               </button>
             </div>
             {runs.length === 0 ? (
-              <div className="empty-state">No generation runs yet.</div>
+              <div className="empty-state">No audit runs yet.</div>
             ) : (
               <div className="runs-list">
                 {runs.map(run => (
@@ -599,7 +784,7 @@ export default function AdminQuestionCreation() {
                   >
                     <span className="run-title">{run.subcategoryDisplayName || run.subcategory}</span>
                     <span className="run-meta">
-                      {run.difficulty} / {run.quantity} / {formatStatus(run.status)}
+                      {run.difficulty} / {run.sourceQuestionCount ?? run.quantity} / {formatStatus(run.status)}
                     </span>
                   </button>
                 ))}
@@ -610,26 +795,25 @@ export default function AdminQuestionCreation() {
           <main className="drafts-panel">
             <div className="panel-header drafts-header">
               <div>
-                <h2>Draft Review</h2>
+                <h2>Audit Review</h2>
                 {currentRun && (
                   <div className="run-context">
-                    {currentRun.subcategoryDisplayName || currentRun.subcategory} / {currentRun.difficulty} / {currentRun.quantity}
+                    {currentRun.subcategoryDisplayName || currentRun.subcategory} / {currentRun.difficulty} / {currentRun.sourceQuestionCount ?? currentRun.quantity}
                   </div>
                 )}
               </div>
               <div className="draft-actions">
                 <button
+                  className="button-danger"
+                  onClick={() => deleteOriginalQuestionsFromDrafts(selectedDraftIds)}
+                  disabled={selectedDraftIds.length === 0 || Boolean(actionBusy)}
+                >
+                  Delete Selected Originals ({selectedDraftIds.length})
+                </button>
+                <button
                   className="button-primary"
                   onClick={publishSelected}
-                  title={
-                    selectedDraftIds.length > 0 && publishableSelectedCount === 0
-                      ? 'Selected drafts must be verified before publishing'
-                      : 'Publish selected verified drafts'
-                  }
-                  disabled={
-                    selectedDraftIds.length === 0 ||
-                    actionBusy === 'publish-selected'
-                  }
+                  disabled={selectedDraftIds.length === 0 || actionBusy === 'publish-selected'}
                 >
                   {actionBusy === 'publish-selected'
                     ? 'Publishing...'
@@ -639,9 +823,9 @@ export default function AdminQuestionCreation() {
             </div>
 
             {!currentRun ? (
-              <div className="empty-state large">Create or open a run to review drafts.</div>
+              <div className="empty-state large">Start or open an audit run to review existing questions.</div>
             ) : drafts.length === 0 ? (
-              <div className="empty-state large">No drafts in this run.</div>
+              <div className="empty-state large">No existing questions matched this audit.</div>
             ) : (
               <div className="draft-list">
                 {drafts.map(draft => {
@@ -652,6 +836,7 @@ export default function AdminQuestionCreation() {
                   const styleScore = getStyleScore(draft);
                   const selected = selectedDraftIds.includes(draft.id);
                   const publishable = isDraftPublishable(draft);
+                  const originalDeleted = isOriginalDeleted(draft);
                   const publishBlockers = publishable ? [] : getDraftPublishBlockers(draft);
                   const publishBlockerText = publishBlockers.slice(0, 3).join(' ');
 
@@ -660,17 +845,18 @@ export default function AdminQuestionCreation() {
                       <div className="draft-card-header">
                         <label
                           className="draft-selector"
-                          title={publishable ? 'Select this verified draft for bulk publishing' : 'Select this draft. It must be verified before publishing.'}
+                          title={publishable ? 'Select this verified audit draft' : 'Select this audit draft. Publishing will require confirmation.'}
                         >
                           <input
                             type="checkbox"
                             checked={selected}
                             onChange={() => toggleDraftSelection(draft.id)}
-                            aria-label={`Select ${formatStatus(draft.status)} draft`}
+                            aria-label={`Select ${formatStatus(draft.status)} audit draft`}
                           />
                           <span className={`status-badge ${draft.status}`}>{formatStatus(draft.status)}</span>
                         </label>
                         <div className="draft-meta">
+                          <span>Original: {draft.originalQuestionId || '-'}</span>
                           <span>Quality: {qualityScore ?? '-'}</span>
                           <span>Style: {styleScore ?? '-'}</span>
                           <span>Calibrated: {draft.validation?.calibratedDifficulty || draft.calibratedDifficulty || '-'}</span>
@@ -744,13 +930,20 @@ export default function AdminQuestionCreation() {
                           onClick={() => removeDraft(draft.id)}
                           disabled={Boolean(actionBusy)}
                         >
-                          Delete
+                          Remove
+                        </button>
+                        <button
+                          className="button-danger"
+                          onClick={() => deleteOriginalQuestionsFromDrafts([draft.id])}
+                          disabled={Boolean(actionBusy) || originalDeleted}
+                        >
+                          Delete Original
                         </button>
                         <button
                           className="button-primary"
                           onClick={() => publishDraft(draft.id)}
-                          title={publishable ? 'Publish this verified draft' : getDraftPublishBlockers(draft).join(' ')}
-                          disabled={draft.status === 'published' || Boolean(actionBusy)}
+                          title={publishable ? 'Update the original question' : getDraftPublishBlockers(draft).join(' ')}
+                          disabled={draft.status === 'published' || originalDeleted || Boolean(actionBusy)}
                         >
                           {actionBusy === `publish-${draft.id}` ? 'Publishing...' : publishable ? 'Publish' : 'Publish Anyway'}
                         </button>
@@ -764,40 +957,11 @@ export default function AdminQuestionCreation() {
         </div>
       </div>
 
-      {promptModalOpen && (
-        <div className="modal-overlay" onClick={() => setPromptModalOpen(false)}>
-          <div className="modal prompt-modal" onClick={(event) => event.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Generation Prompt</h3>
-              <button className="icon-button" onClick={() => setPromptModalOpen(false)}>x</button>
-            </div>
-            <div className="modal-body">
-              <textarea
-                className="prompt-editor"
-                value={promptText}
-                onChange={(event) => {
-                  setPromptText(event.target.value);
-                  setPromptDirty(true);
-                }}
-              />
-            </div>
-            <div className="modal-footer">
-              <button className="button-secondary" onClick={resetPrompt} disabled={isPromptLoading}>
-                Reset
-              </button>
-              <button className="button-primary" onClick={() => setPromptModalOpen(false)}>
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {editingDraft && (
         <div className="modal-overlay" onClick={() => setEditingDraft(null)}>
           <div className="modal edit-draft-modal" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h3>Edit Draft</h3>
+              <h3>Edit Audit Draft</h3>
               <button className="icon-button" onClick={() => setEditingDraft(null)}>x</button>
             </div>
             <div className="modal-body edit-draft-form">

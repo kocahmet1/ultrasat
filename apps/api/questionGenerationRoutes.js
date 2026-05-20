@@ -4,11 +4,15 @@ const {
   PROMPT_VERSION,
   buildQuestionForPublish,
   buildQuestionGenerationPrompt,
+  canOverridePublish,
+  collectRevisionNotices,
   generateQuestionsFromPrompt,
   getGenerationModel,
+  getPublishBlockers,
   isPublishEligible,
   normalizeTextFingerprint,
   resolveSubcategoryOrThrow,
+  reviseDraftQuestion,
   validateDraftQuestion,
   verifyDraftQuestion,
 } = require('./questionGenerationService');
@@ -469,10 +473,124 @@ router.post('/runs/:runId/drafts/:draftId/verify', verifyAdminAccess, async (req
   }
 });
 
-async function publishDraft(req, runRef, draftRef, draft) {
+router.post('/runs/:runId/drafts/:draftId/revise', verifyAdminAccess, async (req, res) => {
+  try {
+    if (!req.db) {
+      return res.status(500).json({ error: 'Firestore not available' });
+    }
+
+    const { customInstruction = '' } = req.body || {};
+    const { runRef, run } = await getRunOr404(req.db, req.params.runId);
+    const { draftRef, draft } = await getDraftOr404(runRef, req.params.draftId);
+    const notices = collectRevisionNotices(draft);
+
+    const revision = await reviseDraftQuestion({
+      draft,
+      subcategory: run.subcategory,
+      requestedDifficulty: run.difficulty,
+      notices,
+      customInstruction,
+    });
+
+    const revisedDraft = {
+      ...draft,
+      ...revision.question,
+      runId: runRef.id,
+      generatedIndex: draft.generatedIndex,
+      revisionCount: (draft.revisionCount || 0) + 1,
+    };
+
+    const deterministic = await buildDraftValidation(req.db, runRef, revisedDraft, {
+      selectedSubcategory: run.subcategory,
+      requestedDifficulty: run.difficulty,
+      draftId: req.params.draftId,
+    });
+
+    let validation = { deterministic };
+    let status = deterministic.valid ? 'needs_revision' : 'format_failed';
+
+    if (deterministic.valid) {
+      validation = await verifyDraftQuestion(revisedDraft, {
+        subcategory: run.subcategory,
+        requestedDifficulty: run.difficulty,
+        deterministic,
+      });
+      status = validation.status;
+    }
+
+    const revisionHistoryEntry = {
+      revisedAt: new Date(),
+      model: revision.model,
+      notices,
+      previous: {
+        text: draft.text,
+        options: draft.options,
+        correctAnswer: draft.correctAnswer,
+        explanation: draft.explanation,
+        difficulty: draft.difficulty,
+        status: draft.status,
+        qualityScore: draft.validation?.review?.qualityScore ?? null,
+        styleScore: draft.validation?.review?.collegeBoardStyleScore ?? null,
+      },
+      usage: revision.usage || null,
+    };
+    const revisionHistory = [
+      revisionHistoryEntry,
+      ...(Array.isArray(draft.revisionHistory) ? draft.revisionHistory : []),
+    ].slice(0, 8);
+
+    const updates = {
+      ...revision.question,
+      status,
+      validation,
+      calibratedDifficulty: validation.calibratedDifficulty || null,
+      revisionCount: revisedDraft.revisionCount,
+      revisionHistory,
+      lastRevisionNotices: notices,
+      lastRevisionModel: revision.model,
+      lastRevisionUsage: revision.usage || null,
+      rawRevisionOutput: revision.rawOutput ? revision.rawOutput.slice(0, 12000) : null,
+      verifiedAt: validation.solver && validation.review ? new Date() : null,
+      updatedAt: new Date(),
+    };
+
+    await draftRef.set(updates, { merge: true });
+    await updateRunStats(runRef);
+
+    res.json({
+      draft: serializeDraft({
+        id: draftRef.id,
+        data: () => ({ ...draft, ...updates }),
+      }),
+    });
+  } catch (error) {
+    console.error('[QuestionGeneration] Failed to revise draft:', error);
+    res.status(error.status || 500).json({ error: error.message || 'Failed to revise draft' });
+  }
+});
+
+async function publishDraft(req, runRef, draftRef, draft, {
+  override = false,
+  overrideReason = '',
+} = {}) {
   const draftWithId = { ...draft, id: draftRef.id, runId: runRef.id };
-  if (!isPublishEligible(draftWithId)) {
-    throw new Error('Draft is not eligible for publishing. Rerun verification and resolve all flags first.');
+  const eligible = isPublishEligible(draftWithId);
+  const blockers = getPublishBlockers(draftWithId);
+
+  if (!eligible) {
+    if (!override) {
+      const error = new Error('Draft is not eligible for publishing. Rerun verification and resolve all flags first.');
+      error.status = 400;
+      error.blockers = blockers;
+      throw error;
+    }
+
+    if (!canOverridePublish(draftWithId)) {
+      const error = new Error('This draft cannot be override-published because format validation or answer-key verification has not passed.');
+      error.status = 400;
+      error.blockers = blockers;
+      throw error;
+    }
   }
 
   const existingQuestionId = await findExistingQuestionByText(req.db, draft.text);
@@ -481,8 +599,17 @@ async function publishDraft(req, runRef, draftRef, draft) {
   }
 
   const questionData = buildQuestionForPublish(draftWithId);
+  const publishOverride = !eligible && override
+    ? {
+      forced: true,
+      reason: String(overrideReason || '').trim() || 'Admin override from question creation review.',
+      blockers,
+    }
+    : null;
+
   const questionRef = await req.db.collection('questions').add({
     ...questionData,
+    ...(publishOverride ? { publishOverride } : {}),
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -491,10 +618,15 @@ async function publishDraft(req, runRef, draftRef, draft) {
     status: 'published',
     publishedQuestionId: questionRef.id,
     publishedAt: new Date(),
+    ...(publishOverride ? { publishOverride } : {}),
     updatedAt: new Date(),
   }, { merge: true });
 
-  return questionRef.id;
+  return {
+    questionId: questionRef.id,
+    override: Boolean(publishOverride),
+    blockers,
+  };
 }
 
 router.post('/runs/:runId/drafts/:draftId/publish', verifyAdminAccess, async (req, res) => {
@@ -505,16 +637,20 @@ router.post('/runs/:runId/drafts/:draftId/publish', verifyAdminAccess, async (re
 
     const { runRef } = await getRunOr404(req.db, req.params.runId);
     const { draftRef, draft } = await getDraftOr404(runRef, req.params.draftId);
-    const questionId = await publishDraft(req, runRef, draftRef, draft);
+    const { override = false, overrideReason = '' } = req.body || {};
+    const result = await publishDraft(req, runRef, draftRef, draft, { override, overrideReason });
     await updateRunStats(runRef);
 
     res.json({
       success: true,
-      questionId,
+      ...result,
     });
   } catch (error) {
     console.error('[QuestionGeneration] Failed to publish draft:', error);
-    res.status(error.status || 400).json({ error: error.message || 'Failed to publish draft' });
+    res.status(error.status || 400).json({
+      error: error.message || 'Failed to publish draft',
+      blockers: error.blockers || undefined,
+    });
   }
 });
 
@@ -524,7 +660,7 @@ router.post('/runs/:runId/publish', verifyAdminAccess, async (req, res) => {
       return res.status(500).json({ error: 'Firestore not available' });
     }
 
-    const { draftIds } = req.body || {};
+    const { draftIds, override = false, overrideReason = '' } = req.body || {};
     if (!Array.isArray(draftIds) || draftIds.length === 0) {
       return res.status(400).json({ error: 'draftIds array is required' });
     }
@@ -535,10 +671,10 @@ router.post('/runs/:runId/publish', verifyAdminAccess, async (req, res) => {
     for (const draftId of draftIds) {
       try {
         const { draftRef, draft } = await getDraftOr404(runRef, String(draftId));
-        const questionId = await publishDraft(req, runRef, draftRef, draft);
-        results.push({ draftId, success: true, questionId });
+        const result = await publishDraft(req, runRef, draftRef, draft, { override, overrideReason });
+        results.push({ draftId, success: true, ...result });
       } catch (error) {
-        results.push({ draftId, success: false, error: error.message });
+        results.push({ draftId, success: false, error: error.message, blockers: error.blockers || [] });
       }
     }
 

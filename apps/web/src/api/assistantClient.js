@@ -145,10 +145,11 @@ const getIdToken = async () => {
  * @param {Array} params.history - The chat history array
  * @param {boolean} params.tipRequested - Whether a tip was requested
  * @param {boolean} params.summariseRequested - Whether a text summary was requested
+ * @param {string} params.coachAction - Optional typed coach action
  * @param {boolean} params.priming - Whether priming is requested
  * @returns {Promise<Object>} The assistant's response
  */
-export async function askAssistant({ quizId, questionId, question, questionDetails, history = [], tipRequested = false, summariseRequested = false, priming = false }) {
+export async function askAssistant({ quizId, questionId, question, questionDetails, history = [], tipRequested = false, summariseRequested = false, coachAction = null, priming = false }) {
   try {
     const apiUrl = getApiUrl();
     const endpoint = `${apiUrl}/api/assistant`;
@@ -161,6 +162,7 @@ export async function askAssistant({ quizId, questionId, question, questionDetai
       historyLength: history.length,
       tipRequested,
       summariseRequested,
+      coachAction,
       priming // Log the priming flag
     });
     
@@ -178,6 +180,7 @@ export async function askAssistant({ quizId, questionId, question, questionDetai
         history,
         tipRequested,
         summariseRequested,
+        coachAction,
         priming // Add priming flag to request body
       })
     });

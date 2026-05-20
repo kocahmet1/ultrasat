@@ -1,23 +1,37 @@
 /**
- * AI Service for the API server using Google Gemini
+ * AI Service for the API server.
  * Provides functions for the SmartQuiz AI assistant and potentially other AI tasks.
  */
 
+const OpenAI = require('openai');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 // Get Gemini API Key from environment variables
-const getApiKey = () => {
+const getGeminiApiKey = () => {
   return process.env.GEMINI_API_KEY || '';
 };
 
-// Get Gemini Model for the assistant
+const getOpenAIClient = () => {
+  const apiKey = process.env.OPENAI_API_KEY || '';
+  if (!apiKey) {
+    throw new Error('OpenAI API key is required. Set OPENAI_API_KEY in environment variables.');
+  }
+  return new OpenAI({ apiKey });
+};
+
+// Get OpenAI model for the SmartQuiz assistant
 const getAssistantModelName = () => {
-  return process.env.GEMINI_ASSISTANT_MODEL || 'gemini-pro'; // Default to gemini-pro
+  return process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini';
+};
+
+// Get Gemini Model for legacy vocabulary helper functions in this file
+const getGeminiModelName = () => {
+  return process.env.GEMINI_ASSISTANT_MODEL || 'gemini-pro';
 };
 
 const MAX_OUTPUT_TOKENS = parseInt(process.env.ASSISTANT_MAX_TOKENS || '1000', 10);
 
-const genAI = new GoogleGenerativeAI(getApiKey());
+const genAI = new GoogleGenerativeAI(getGeminiApiKey());
 
 const modelConfig = {
   // No specific generationConfig here, can be added if needed (e.g., temperature)
@@ -38,37 +52,82 @@ const getGenerativeModel = (modelName) => genAI.getGenerativeModel({
   ...modelConfig,
 });
 
+const getCoachActionInstruction = (coachAction) => {
+  const instructions = {
+    mainIdea: 'Return exactly one sentence that states the passage central claim or main idea. Do not mention answer choices and do not reveal the correct answer.',
+    lineByLine: 'Break down the passage line by line in concise bullets. For each sentence or logical chunk, explain what it contributes to the author purpose and how it helps answer the question.',
+    choiceAnalysis: 'Analyze answer choices A-D one by one. Label each as correct, trap, unsupported, too broad, too narrow, or opposite, then give a concise reason. You may identify the correct answer because the student requested answer-choice analysis.',
+    hint: 'Give one strategic hint that points the student toward the right reasoning path without naming, implying, or eliminating the correct answer choice.',
+    whyWins: 'Explain why the correct answer wins and why the closest distractors lose. If the student selected an answer, mention whether that selection matches the answer key and what to learn from it.',
+  };
+
+  return instructions[coachAction] || instructions.mainIdea;
+};
+
+const extractResponseText = (response) => {
+  if (response?.output_text) return response.output_text;
+
+  if (Array.isArray(response?.output)) {
+    const messageOutput = response.output.find(item => item.type === 'message');
+    const textContent = messageOutput?.content?.find(item => item.type === 'output_text');
+    if (textContent?.text) return textContent.text;
+  }
+
+  return '';
+};
+
+const normalizeOpenAIUsage = (usage = {}) => ({
+  prompt_tokens: usage.prompt_tokens ?? usage.input_tokens ?? 0,
+  completion_tokens: usage.completion_tokens ?? usage.output_tokens ?? 0,
+  total_tokens: usage.total_tokens ?? 0,
+});
+
 /**
- * Chat with the SmartQuiz AI assistant (Gemini) about the current question
+ * Chat with the SmartQuiz AI assistant (OpenAI) about the current question
  * @param {Object} params - Parameters for the assistant
  * @param {Object} params.question - The current question object (text, options, correctAnswer)
  * @param {Array} params.history - The chat history (array of {role: 'user'/'model', parts: [{text: 'message'}]})
  * @param {boolean} params.tipRequested - Whether the user requested a tip
  * @param {boolean} params.summariseRequested - Whether the user requested a text summary
+ * @param {string} params.coachAction - Optional typed study coach action
  * @param {boolean} params.primingCall - Whether this is a priming call for context-setting prompts and responses
  * @returns {Promise<Object>} - Object containing the assistant's response { message: '...', usage: {...} }
  */
-exports.chatWithAssistant = async ({ question: userQuestion, questionDetails, history = [], tipRequested = false, summariseRequested = false, primingCall = false }) => {
+exports.chatWithAssistant = async ({ question: userQuestion, questionDetails = {}, history = [], tipRequested = false, summariseRequested = false, coachAction = null, primingCall = false }) => {
   // Extract question details - might be in question or questionDetails param depending on caller
-  const currentQuestion = typeof userQuestion === 'string' ? (questionDetails || {}) : userQuestion;
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error('Gemini API key is required. Set GEMINI_API_KEY in environment variables.');
+  const currentQuestion = typeof userQuestion === 'string'
+    ? (questionDetails || {})
+    : { ...(questionDetails || {}), ...(userQuestion || {}) };
+
+  if (primingCall) {
+    return {
+      message: 'Assistant context primed.',
+      usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
+    };
   }
 
+  const openai = getOpenAIClient();
   const modelName = getAssistantModelName();
   
   try {
-    // Create a direct prompt without chat history for now to get a basic response working
-    let prompt = `You are a friendly and helpful SAT tutor AI. A student is working on a quiz and has a question or needs a tip. 
-    The current quiz question is: 
-    Text: "${currentQuestion.text || 'No question text provided'}"
-    Options: ${JSON.stringify(currentQuestion.options || ['No options provided'])}
-    The correct answer is: "${currentQuestion.correctAnswer || 'Unknown'}". Do NOT reveal the correct answer unless the student explicitly asks for it or is clearly very stuck and asking for direct help. 
-    Focus on providing conceptual understanding and problem-solving strategies.`;
+    const systemPrompt = `You are a friendly, precise SAT tutor AI.
+Help students understand the current SAT question with concise reasoning and useful strategy.
+Do not reveal the correct answer unless the student explicitly asks for it, the selected coach action allows it, or the student is clearly asking for direct answer analysis.`;
 
-    if (primingCall) {
-      prompt += `\n\nSystem: Context has been set for the current question. Acknowledge if necessary.`;
+    let prompt = `Current quiz question:
+Passage or stimulus: "${currentQuestion.passage || currentQuestion.stimulus || currentQuestion.text || 'No passage text provided'}"
+Question prompt: "${currentQuestion.prompt || currentQuestion.question || currentQuestion.text || 'No question text provided'}"
+Options: ${JSON.stringify(currentQuestion.options || ['No options provided'])}
+Correct answer: "${currentQuestion.correctAnswer ?? 'Unknown'}"
+Explanation from the source, if available: "${currentQuestion.explanation || 'No explanation provided'}"
+Student selected: "${currentQuestion.selectedAnswerText || 'No answer selected yet'}"
+Skill focus: "${currentQuestion.skillLabel || currentQuestion.subcategory || 'General SAT practice'}"`;
+
+    if (coachAction) {
+      prompt += `\n\nCoach action requested: ${coachAction}.\n${getCoachActionInstruction(coachAction)}`;
+      if (currentQuestion.coachPrompt) {
+        prompt += `\n\nDetailed coach context:\n${currentQuestion.coachPrompt}`;
+      }
     } else if (tipRequested) {
       prompt += `\nThe student has specifically requested a tip for this question. Provide a concise, actionable tip without giving away the answer directly.`;
     } else if (summariseRequested) {
@@ -87,29 +146,29 @@ exports.chatWithAssistant = async ({ question: userQuestion, questionDetails, hi
       prompt += `\n\nStudent question: "${lastUserMessage}"`;
     }
 
-    // Create a simple generative model call instead of chat
-    // This avoids the complex history handling that might be causing issues
-    const generativeModel = getGenerativeModel(modelName);
-    
-    const result = await generativeModel.generateContent(prompt);
-    const response = await result.response;
-    const assistantMessage = response.text();
+    const response = await openai.responses.create({
+      model: modelName,
+      input: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt }
+      ],
+      store: false,
+      max_output_tokens: MAX_OUTPUT_TOKENS,
+    });
 
-    if (primingCall) {
-      return {
-        message: "Assistant context primed.", // Generic message for priming success
-        usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 } // Placeholder, update if actuals are available
-      };
+    const assistantMessage = extractResponseText(response);
+    if (!assistantMessage) {
+      throw new Error('No content returned from OpenAI assistant response.');
     }
     
     return {
       message: assistantMessage,
-      usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 } // Placeholder
+      usage: normalizeOpenAIUsage(response.usage)
     };
   } catch (error) {
-    console.error('Error chatting with Gemini assistant:', error);
+    console.error('Error chatting with OpenAI assistant:', error);
     // Provide a more useful error message for debugging
-    let errorMessage = 'Sorry, I encountered an error trying to reach the Gemini assistant.';
+    const errorMessage = 'Sorry, I encountered an error trying to reach the OpenAI assistant.';
     
     if (error.message) {
       console.error('Error message:', error.message);
@@ -122,7 +181,7 @@ exports.chatWithAssistant = async ({ question: userQuestion, questionDetails, hi
     // This block has been moved into the main try-catch above
 };
 
-// --- Stubbed/OpenAI-based functions - these need to be rewritten for Gemini --- 
+// --- Legacy placeholder functions ---
 
 exports.generateConceptAnalysis = async (wrongQuestions, subcategory) => {
   console.warn('generateConceptAnalysis is not yet implemented for Gemini API. Using placeholder.');
@@ -143,12 +202,12 @@ exports.generateConceptDrill = async (conceptId, conceptName, explanation, diffi
  * @returns {Promise<Array>} - Array of word objects { word: string, definition: string }
  */
 exports.getVocabularyDefinitions = async ({ questionContent }) => {
-  const apiKey = getApiKey();
+  const apiKey = getGeminiApiKey();
   if (!apiKey) {
     throw new Error('Gemini API key is required. Set GEMINI_API_KEY in environment variables.');
   }
 
-  const modelName = getAssistantModelName();
+  const modelName = getGeminiModelName();
   
   try {
     // Extract question text and options

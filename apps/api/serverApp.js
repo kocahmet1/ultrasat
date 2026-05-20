@@ -33,6 +33,7 @@ function loadDefaultRouters() {
     reportRouter: require('./reportRoutes'),
     questionQualityRouter: require('./questionQualityRoutes'),
     questionGenerationRouter: require('./questionGenerationRoutes'),
+    questionAuditRouter: require('./questionAuditRoutes'),
     emailRouter: require('./emailRoutes'),
     companionRouter: require('./companionRouter'),
     ingestRouter: require('./ingestRoutes'),
@@ -226,13 +227,16 @@ function createServerApp(options = {}) {
   logger.log(`API Server running in ${process.env.NODE_ENV || 'development'} mode`);
   logger.log(`CORS configured for: ${corsOptions.origin}`);
   logger.log(
-    `Gemini Model: ${process.env.GEMINI_ASSISTANT_MODEL || 'gemini-2.5-pro'}`,
+    `SmartQuiz Assistant Model: ${process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini'}`,
   );
 
   if (process.env.NODE_ENV !== 'production') {
     app.get('/api/debug/env', (req, res) => {
       res.json({
         nodeEnv: process.env.NODE_ENV,
+        hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+        openAIAssistantModel: process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini',
+        openAIHelperModel: process.env.OPENAI_HELPER_MODEL || process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini',
         hasGeminiKey: !!process.env.GEMINI_API_KEY,
         geminiKeyLength: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 0,
         geminiModel: process.env.GEMINI_ASSISTANT_MODEL || 'gemini-pro',
@@ -272,6 +276,9 @@ function createServerApp(options = {}) {
   app.use('/api/question-quality', attachFirebaseAdmin, routers.questionQualityRouter);
   if (routers.questionGenerationRouter) {
     app.use('/api/question-generation', attachFirebaseAdmin, routers.questionGenerationRouter);
+  }
+  if (routers.questionAuditRouter) {
+    app.use('/api/question-audit', attachFirebaseAdmin, routers.questionAuditRouter);
   }
   app.use('/api/email', attachFirebaseAdmin, routers.emailRouter);
   app.use('/api/companion', attachFirebaseAdmin, routers.companionRouter);

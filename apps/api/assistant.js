@@ -215,11 +215,15 @@ async function fetchQuizQuestionDetailsFromFirestore(req, quizId, questionId) {
     return {
       id: questionData.id,
       text: questionData.text,
+      passage: questionData.passage || questionData.stimulus || '',
+      prompt: questionData.question || questionData.prompt || '',
       options: questionData.options,
       correctAnswer: questionData.correctAnswer,
       explanation: questionData.explanation || '',
-      subcategory: quizData.subcategoryId || '',
-      level: quizData.level || 1
+      subcategory: questionData.subcategory || quizData.subcategoryId || '',
+      level: quizData.level || 1,
+      difficulty: questionData.difficulty || quizData.level || '',
+      questionType: questionData.questionType || questionData.type || ''
     };
   } catch (error) {
     console.error(`[Assistant] Error fetching question ${questionId} from quiz ${quizId}:`, error);
@@ -233,7 +237,7 @@ async function fetchQuizQuestionDetailsFromFirestore(req, quizId, questionId) {
  */
 router.post('/', verifyFirebaseToken, async (req, res) => {
   try {
-    const { question: questionObj, history = [], tipRequested = false, summariseRequested = false, quizId, questionId, priming: primingCall = false } = req.body;
+    const { question: questionObj, questionDetails = {}, history = [], tipRequested = false, summariseRequested = false, coachAction = null, quizId, questionId, priming: primingCall = false } = req.body;
     const userId = req.user.uid;
 
     // Get the actual user message text - if it's a question (not a tip request)
@@ -242,14 +246,14 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
       ? questionObj 
       : (history.length > 0 && history[history.length - 1].content) || '';
     
-    console.log(`[Assistant] Processing user message:`, { userChatMessage, tipRequested, summariseRequested, primingCall, quizId, questionId });
+    console.log(`[Assistant] Processing user message:`, { userChatMessage, tipRequested, summariseRequested, coachAction, primingCall, quizId, questionId });
     console.log(`[Assistant] Question object received:`, questionObj);
 
     if (!quizId || !questionId) {
       console.error(`[Assistant] Missing required parameters - quizId: ${quizId}, questionId: ${questionId}`);
       return res.status(400).json({ error: 'Missing quizId or questionId.' });
     }
-    if (!primingCall && tipRequested === false && summariseRequested === false && !userChatMessage) { // Bypass for priming
+    if (!primingCall && !coachAction && tipRequested === false && summariseRequested === false && !userChatMessage) { // Bypass for priming
       console.error(`[Assistant] Missing userChatMessage for regular request`);
       return res.status(400).json({ error: 'Missing userChatMessage for regular request.' });
     }
@@ -273,11 +277,15 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
         const fallbackQuestion = {
           id: questionId,
           text: questionObj.text,
+          passage: questionObj.passage || questionObj.stimulus || '',
+          prompt: questionObj.prompt || questionObj.question || '',
           options: questionObj.options || [],
-          correctAnswer: questionObj.correctAnswer || 0,
+          correctAnswer: questionObj.correctAnswer ?? 0,
           explanation: questionObj.explanation || '',
-          subcategory: 'unknown',
-          level: 1
+          subcategory: questionObj.subcategory || 'unknown',
+          level: questionObj.level || 1,
+          difficulty: questionObj.difficulty || '',
+          questionType: questionObj.questionType || questionObj.type || ''
         };
         
         // Continue with the fallback question data
@@ -296,6 +304,8 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
         let currentMessageContent;
         if (tipRequested) {
           currentMessageContent = "Can I get a tip for this question?";
+        } else if (coachAction) {
+          currentMessageContent = userChatMessage || `Coach action: ${coachAction}`;
         } else if (summariseRequested) {
           currentMessageContent = "Can you summarise the text for me?";
         } else {
@@ -305,9 +315,11 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
 
         const assistantResponseData = await chatWithAssistant({
           question: fallbackQuestion,
+          questionDetails,
           history: serviceHistory,
           tipRequested,
           summariseRequested,
+          coachAction,
           primingCall: false
         });
 
@@ -342,6 +354,8 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
       currentMessageContent = "Can I get a tip for this question?";
     } else if (primingCall) {
       currentMessageContent = "System: Priming assistant context."; // Internal message for priming
+    } else if (coachAction) {
+      currentMessageContent = userChatMessage || `Coach action: ${coachAction}`;
     } else if (summariseRequested) {
       currentMessageContent = "Can you summarise the text for me?";
     } else {
@@ -349,12 +363,14 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
     }
     serviceHistory.push({ role: 'user', content: currentMessageContent });
 
-    // Call the AI service (now Gemini-based)
+    // Call the AI service (OpenAI Responses API)
     const assistantResponseData = await chatWithAssistant({
       question: currentQuizProblem, // Pass the structured quiz problem object
+      questionDetails,
       history: serviceHistory,      // Pass the chat history including the latest user message
       tipRequested,
       summariseRequested,
+      coachAction,
       primingCall // Pass the primingCall flag
     });
 
@@ -382,9 +398,10 @@ router.post('/', verifyFirebaseToken, async (req, res) => {
             [],  // Empty array if no history
         tipRequested,
         summariseRequested,
+        coachAction,
         primingCall, // Log the primingCall status
         usage: assistantResponseData.usage || null,
-        apiVersion: 'gemini'
+        apiVersion: 'openai-responses'
     };
     await interactionRef.set(interactionData);
 

@@ -14,7 +14,7 @@ const getIdToken = async () => {
   return user.getIdToken(true);
 };
 
-async function requestQuestionGeneration(path, {
+async function requestQuestionAudit(path, {
   method = 'GET',
   body,
 } = {}) {
@@ -28,7 +28,7 @@ async function requestQuestionGeneration(path, {
     headers['Content-Type'] = 'application/json';
   }
 
-  const response = await fetch(`${apiUrl}/api/question-generation${path}`, {
+  const response = await fetch(`${apiUrl}/api/question-audit${path}`, {
     method,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -36,37 +36,49 @@ async function requestQuestionGeneration(path, {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const error = new Error(data?.error || 'Question generation request failed');
+    const error = new Error(data?.error || 'Question audit request failed');
     error.blockers = Array.isArray(data?.blockers) ? data.blockers : [];
     throw error;
   }
   return data;
 }
 
-export function getQuestionGenerationPromptPreview(payload) {
-  return requestQuestionGeneration('/prompt-preview', {
+export function createQuestionAuditRun(payload) {
+  return requestQuestionAudit('/runs', {
     method: 'POST',
     body: payload,
   });
 }
 
-export function createQuestionGenerationRun(payload) {
-  return requestQuestionGeneration('/runs', {
-    method: 'POST',
-    body: payload,
+export function getQuestionAuditCandidates({
+  subcategory,
+  difficulty,
+  limit = 25,
+}) {
+  const params = new URLSearchParams();
+  params.set('subcategory', String(subcategory));
+  params.set('difficulty', String(difficulty));
+  params.set('limit', String(limit));
+  return requestQuestionAudit(`/questions?${params.toString()}`);
+}
+
+export function deleteQuestionAuditQuestions(questionIds, options = {}) {
+  return requestQuestionAudit('/questions', {
+    method: 'DELETE',
+    body: { questionIds, ...options },
   });
 }
 
-export function getQuestionGenerationRuns(limit = 20) {
-  return requestQuestionGeneration(`/runs?limit=${encodeURIComponent(String(limit))}`);
+export function getQuestionAuditRuns(limit = 20) {
+  return requestQuestionAudit(`/runs?limit=${encodeURIComponent(String(limit))}`);
 }
 
-export function getQuestionGenerationRun(runId) {
-  return requestQuestionGeneration(`/runs/${encodeURIComponent(String(runId))}`);
+export function getQuestionAuditRun(runId) {
+  return requestQuestionAudit(`/runs/${encodeURIComponent(String(runId))}`);
 }
 
-export function updateGeneratedDraft(runId, draftId, payload) {
-  return requestQuestionGeneration(
+export function updateQuestionAuditDraft(runId, draftId, payload) {
+  return requestQuestionAudit(
     `/runs/${encodeURIComponent(String(runId))}/drafts/${encodeURIComponent(String(draftId))}`,
     {
       method: 'PATCH',
@@ -75,8 +87,8 @@ export function updateGeneratedDraft(runId, draftId, payload) {
   );
 }
 
-export function deleteGeneratedDraft(runId, draftId) {
-  return requestQuestionGeneration(
+export function deleteQuestionAuditDraft(runId, draftId) {
+  return requestQuestionAudit(
     `/runs/${encodeURIComponent(String(runId))}/drafts/${encodeURIComponent(String(draftId))}`,
     {
       method: 'DELETE',
@@ -84,8 +96,8 @@ export function deleteGeneratedDraft(runId, draftId) {
   );
 }
 
-export function verifyGeneratedDraft(runId, draftId) {
-  return requestQuestionGeneration(
+export function verifyQuestionAuditDraft(runId, draftId) {
+  return requestQuestionAudit(
     `/runs/${encodeURIComponent(String(runId))}/drafts/${encodeURIComponent(String(draftId))}/verify`,
     {
       method: 'POST',
@@ -93,8 +105,8 @@ export function verifyGeneratedDraft(runId, draftId) {
   );
 }
 
-export function reviseGeneratedDraft(runId, draftId, customInstruction = '') {
-  return requestQuestionGeneration(
+export function reviseQuestionAuditDraft(runId, draftId, customInstruction = '') {
+  return requestQuestionAudit(
     `/runs/${encodeURIComponent(String(runId))}/drafts/${encodeURIComponent(String(draftId))}/revise`,
     {
       method: 'POST',
@@ -103,8 +115,8 @@ export function reviseGeneratedDraft(runId, draftId, customInstruction = '') {
   );
 }
 
-export function publishGeneratedDraft(runId, draftId, options = {}) {
-  return requestQuestionGeneration(
+export function publishQuestionAuditDraft(runId, draftId, options = {}) {
+  return requestQuestionAudit(
     `/runs/${encodeURIComponent(String(runId))}/drafts/${encodeURIComponent(String(draftId))}/publish`,
     {
       method: 'POST',
@@ -113,8 +125,8 @@ export function publishGeneratedDraft(runId, draftId, options = {}) {
   );
 }
 
-export function publishGeneratedDrafts(runId, draftIds, options = {}) {
-  return requestQuestionGeneration(`/runs/${encodeURIComponent(String(runId))}/publish`, {
+export function publishQuestionAuditDrafts(runId, draftIds, options = {}) {
+  return requestQuestionAudit(`/runs/${encodeURIComponent(String(runId))}/publish`, {
     method: 'POST',
     body: { draftIds, ...options },
   });
