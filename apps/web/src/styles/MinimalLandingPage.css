@@ -1,0 +1,471 @@
+.minimal-landing {
+  min-height: 100vh;
+  width: 100%;
+  color: #191816;
+  background:
+    linear-gradient(90deg, rgba(25, 24, 22, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(25, 24, 22, 0.035) 1px, transparent 1px),
+    #f7f8f5;
+  background-size: 56px 56px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.minimal-landing a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.minimal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1160px, calc(100% - 48px));
+  min-height: 76px;
+  margin: 0 auto;
+  gap: 24px;
+}
+
+.minimal-brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.minimal-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
+  color: #4f4b45;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.minimal-nav-links a {
+  border-bottom: 1px solid transparent;
+  padding: 8px 0;
+}
+
+.minimal-nav-links a:hover {
+  border-bottom-color: #b4873a;
+  color: #191816;
+}
+
+.minimal-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.75fr);
+  align-items: center;
+  gap: 64px;
+  width: min(1160px, calc(100% - 48px));
+  min-height: calc(100vh - 150px);
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.minimal-copy {
+  max-width: 720px;
+}
+
+.minimal-kicker,
+.minimal-panel-eyebrow {
+  margin: 0 0 16px;
+  color: #8a5a1f;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.minimal-copy h1 {
+  max-width: 660px;
+  margin: 0;
+  color: #191816;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 6.2rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.02;
+}
+
+.minimal-lede {
+  max-width: 610px;
+  margin: 28px 0 0;
+  color: #3f3b36;
+  font-size: 2rem;
+  line-height: 1.55;
+}
+
+.minimal-note-list {
+  display: grid;
+  gap: 14px;
+  max-width: 570px;
+  margin: 34px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.minimal-note-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #26231f;
+  font-size: 1.6rem;
+  font-weight: 650;
+}
+
+.minimal-note-list svg {
+  flex: 0 0 auto;
+  color: #2f7668;
+  font-size: 1.4rem;
+}
+
+.minimal-proof-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  width: min(520px, 100%);
+  margin-top: 42px;
+  border: 1px solid rgba(25, 24, 22, 0.12);
+  background: rgba(25, 24, 22, 0.12);
+}
+
+.minimal-proof-strip div {
+  min-height: 78px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.minimal-proof-strip span {
+  display: block;
+  color: #8a5a1f;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.minimal-proof-strip strong {
+  display: block;
+  margin-top: 8px;
+  color: #191816;
+  font-size: 1.8rem;
+}
+
+.minimal-preview {
+  width: min(480px, 100%);
+  margin: 34px 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(25, 24, 22, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 44px rgba(25, 24, 22, 0.09);
+}
+
+.minimal-preview img {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  object-position: top left;
+}
+
+.minimal-auth-panel {
+  width: 100%;
+  max-width: 430px;
+  justify-self: end;
+  padding: 34px;
+  border: 1px solid rgba(25, 24, 22, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 30px 80px rgba(25, 24, 22, 0.14);
+}
+
+.minimal-auth-panel h2 {
+  margin: 0;
+  color: #191816;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3.4rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.08;
+}
+
+.minimal-panel-copy,
+.minimal-signed-in p {
+  margin: 14px 0 0;
+  color: #625d55;
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+.minimal-auth-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 24px;
+  padding: 5px;
+  border: 1px solid rgba(25, 24, 22, 0.12);
+  border-radius: 8px;
+  background: #f1f2ee;
+}
+
+.minimal-auth-tabs button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #625d55;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.minimal-auth-tabs button.active {
+  background: #191816;
+  color: #ffffff;
+  box-shadow: 0 8px 16px rgba(25, 24, 22, 0.14);
+}
+
+.minimal-auth-error {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid rgba(158, 45, 31, 0.25);
+  border-radius: 8px;
+  background: #fff0ed;
+  color: #8a2f24;
+  font-size: 1.35rem;
+  line-height: 1.35;
+}
+
+.minimal-google-button,
+.minimal-primary-button,
+.minimal-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.minimal-google-button {
+  margin-top: 18px;
+  border: 1px solid rgba(25, 24, 22, 0.18);
+  background: #ffffff;
+  color: #191816;
+}
+
+.minimal-google-button:hover:not(:disabled) {
+  border-color: #b4873a;
+  background: #fffaf0;
+}
+
+.minimal-primary-button {
+  border: 1px solid #191816;
+  background: #191816;
+  color: #ffffff;
+}
+
+.minimal-primary-button:hover:not(:disabled) {
+  background: #2f7668;
+  border-color: #2f7668;
+}
+
+.minimal-secondary-button {
+  margin-top: 12px;
+  border: 1px solid rgba(25, 24, 22, 0.18);
+  background: #ffffff;
+  color: #191816;
+}
+
+.minimal-secondary-button:hover:not(:disabled) {
+  border-color: #8a5a1f;
+  color: #8a5a1f;
+}
+
+.minimal-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: #8f8980;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.minimal-divider::before,
+.minimal-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(25, 24, 22, 0.14);
+}
+
+.minimal-auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.minimal-auth-form label {
+  display: grid;
+  gap: 8px;
+  color: #3f3b36;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.minimal-auth-form input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(25, 24, 22, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #191816;
+  font: inherit;
+  font-size: 1.6rem;
+}
+
+.minimal-auth-form input:focus {
+  border-color: #2f7668;
+  box-shadow: 0 0 0 3px rgba(47, 118, 104, 0.14);
+  outline: none;
+}
+
+.minimal-auth-form .minimal-primary-button {
+  margin-top: 4px;
+}
+
+.minimal-signed-in {
+  display: grid;
+  gap: 14px;
+}
+
+.minimal-signed-in .minimal-primary-button {
+  margin-top: 12px;
+}
+
+.minimal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: min(1160px, calc(100% - 48px));
+  min-height: 74px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(25, 24, 22, 0.12);
+  color: #625d55;
+  font-size: 1.3rem;
+  font-weight: 650;
+}
+
+.minimal-footer div {
+  display: flex;
+  gap: 18px;
+}
+
+.minimal-footer a:hover {
+  color: #191816;
+}
+
+@media (max-width: 980px) {
+  .minimal-hero {
+    grid-template-columns: 1fr;
+    gap: 42px;
+    min-height: 0;
+    padding-top: 28px;
+  }
+
+  .minimal-copy {
+    max-width: 760px;
+  }
+
+  .minimal-copy h1 {
+    font-size: 4.8rem;
+  }
+
+  .minimal-lede {
+    font-size: 1.8rem;
+  }
+
+  .minimal-auth-panel {
+    max-width: 560px;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 720px) {
+  .minimal-nav,
+  .minimal-hero,
+  .minimal-footer {
+    width: min(100% - 32px, 1160px);
+  }
+
+  .minimal-nav {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 112px;
+    gap: 6px;
+  }
+
+  .minimal-nav-links {
+    justify-content: flex-start;
+    gap: 14px;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    white-space: nowrap;
+  }
+
+  .minimal-copy h1 {
+    font-size: 4rem;
+    line-height: 1.06;
+  }
+
+  .minimal-lede {
+    margin-top: 22px;
+    font-size: 1.7rem;
+  }
+
+  .minimal-proof-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .minimal-preview img {
+    height: 132px;
+  }
+
+  .minimal-auth-panel {
+    padding: 24px;
+  }
+
+  .minimal-auth-panel h2 {
+    font-size: 3rem;
+  }
+
+  .minimal-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18px 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .minimal-copy h1 {
+    font-size: 3.6rem;
+  }
+
+  .minimal-note-list li {
+    align-items: flex-start;
+  }
+
+  .minimal-auth-panel {
+    padding: 20px;
+  }
+}

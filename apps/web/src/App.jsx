@@ -52,6 +52,7 @@ const PageLoadingSpinner = () => (
 
 // Lazy load all pages for code splitting
 const LandingPage = React.lazy(() => import('./pages/LandingPage'));
+const LegacyLandingPage = React.lazy(() => import('./pages/LegacyLandingPage'));
 const LandingPage2 = React.lazy(() => import('./pages/LandingPage2'));
 const LandingPageAds = React.lazy(() => import('./pages/LandingPageAds'));
 const ExamLandingPage = React.lazy(() => import('./pages/ExamLandingPage'));
@@ -203,6 +204,7 @@ const router = createBrowserRouter([
     errorElement: <RouteErrorBoundary />,
     children: [
       { path: '/', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPage /></Suspense> },
+      { path: '/landing-original', element: <Suspense fallback={<PageLoadingSpinner />}><LegacyLandingPage /></Suspense> },
       { path: '/landing_page', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPageAds /></Suspense> },
       { path: '/landingpage2', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPage2 /></Suspense> },
       { path: '/login', element: <Login /> },
