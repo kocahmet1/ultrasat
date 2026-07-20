@@ -87,6 +87,7 @@ const PracticeExamManagerPage = React.lazy(() => import('./pages/PracticeExamMan
 const QuestionEditor = React.lazy(() => import('./pages/QuestionEditor'));
 const AdminQuestionCreation = React.lazy(() => import('./pages/AdminQuestionCreation'));
 const AdminQuestionAudit = React.lazy(() => import('./pages/AdminQuestionAudit'));
+const AdminExamQualityControl = React.lazy(() => import('./pages/AdminExamQualityControl'));
 const AdminBlogManagement = React.lazy(() => import('./pages/AdminBlogManagement'));
 const AdminLearningContent = React.lazy(() => import('./pages/AdminLearningContent'));
 const MembershipManagement = React.lazy(() => import('./components/admin/MembershipManagement'));
@@ -282,6 +283,7 @@ const router = createBrowserRouter([
       { path: '/admin/practice-exams', element: <AdminSuspenseRoute><PracticeExamManagerPage /></AdminSuspenseRoute> },
       { path: '/admin/question-creation', element: <AdminSuspenseRoute><AdminQuestionCreation /></AdminSuspenseRoute> },
       { path: '/admin/question-audit', element: <AdminSuspenseRoute><AdminQuestionAudit /></AdminSuspenseRoute> },
+      { path: '/admin/exam-quality-control', element: <AdminSuspenseRoute><AdminExamQualityControl /></AdminSuspenseRoute> },
       { path: '/admin/question-editor', element: <AdminSuspenseRoute><QuestionEditor /></AdminSuspenseRoute> },
       { path: '/admin/question-editor/:questionId', element: <AdminSuspenseRoute><QuestionEditor /></AdminSuspenseRoute> },
       { path: '/admin/subcategory-settings', element: <AdminSuspenseRoute><SubcategorySettings /></AdminSuspenseRoute> },

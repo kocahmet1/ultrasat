@@ -52,3 +52,5 @@ prompt.txt
 # Build analysis
 build-analysis.json
 firebase-structure.json
+# Ignore all node_modules directories
+**/node_modules/

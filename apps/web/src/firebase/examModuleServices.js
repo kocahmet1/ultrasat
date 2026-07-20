@@ -10,12 +10,41 @@ import {
   query,
   serverTimestamp,
   updateDoc,
+  writeBatch,
   where
 } from 'firebase/firestore';
 import {
   enrichQuestionWithNewCategories,
   getQuestionsByIds
 } from './questionBankServices';
+
+const invalidatePracticeExamsForModule = async (
+  moduleId,
+  reason,
+) => {
+  const affectedQuery = query(
+    collection(db, 'practiceExams'),
+    where('moduleIds', 'array-contains', moduleId),
+  );
+  const affectedSnapshot = await getDocs(affectedQuery);
+  if (affectedSnapshot.empty) return;
+  const batch = writeBatch(db);
+  affectedSnapshot.docs.forEach(examSnapshot => {
+    const exam = examSnapshot.data();
+    if (exam.isDiagnostic) return;
+    batch.update(examSnapshot.ref, {
+      isPublic: false,
+      qualityControl: {
+        ...(exam.qualityControl || {}),
+        status: 'stale',
+        invalidationReason: reason,
+        invalidatedAt: serverTimestamp(),
+      },
+      updatedAt: serverTimestamp(),
+    });
+  });
+  await batch.commit();
+};
 
 /**
  * Create a new exam module.
@@ -266,6 +295,10 @@ export const updateExamModule = async (moduleId, moduleData) => {
       ...moduleData,
       updatedAt: serverTimestamp()
     });
+    await invalidatePracticeExamsForModule(
+      moduleId,
+      'A referenced module changed after quality control.',
+    );
   } catch (error) {
     console.error('Error updating exam module:', error);
     throw error;
@@ -280,6 +313,10 @@ export const updateExamModule = async (moduleId, moduleData) => {
 export const deleteExamModule = async (moduleId) => {
   try {
     const moduleRef = doc(db, 'examModules', moduleId);
+    await invalidatePracticeExamsForModule(
+      moduleId,
+      'A referenced module was deleted after quality control.',
+    );
     await deleteDoc(moduleRef);
     console.log(`Module ${moduleId} successfully deleted`);
   } catch (error) {

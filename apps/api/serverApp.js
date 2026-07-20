@@ -34,6 +34,7 @@ function loadDefaultRouters() {
     questionQualityRouter: require('./questionQualityRoutes'),
     questionGenerationRouter: require('./questionGenerationRoutes'),
     questionAuditRouter: require('./questionAuditRoutes'),
+    examQualityControlRouter: require('./examQualityControlRoutes'),
     emailRouter: require('./emailRoutes'),
     companionRouter: require('./companionRouter'),
     ingestRouter: require('./ingestRoutes'),
@@ -279,6 +280,13 @@ function createServerApp(options = {}) {
   }
   if (routers.questionAuditRouter) {
     app.use('/api/question-audit', attachFirebaseAdmin, routers.questionAuditRouter);
+  }
+  if (routers.examQualityControlRouter) {
+    app.use(
+      '/api/exam-quality-control',
+      attachFirebaseAdmin,
+      routers.examQualityControlRouter,
+    );
   }
   app.use('/api/email', attachFirebaseAdmin, routers.emailRouter);
   app.use('/api/companion', attachFirebaseAdmin, routers.companionRouter);

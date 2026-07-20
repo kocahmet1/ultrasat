@@ -337,12 +337,13 @@ const PracticeExamList = () => {
       return;
     }
 
-    if (item.status === 'completed' && item.completedResult?.id) {
-      navigate(`/exam/results/${item.completedResult.id}`);
-      return;
-    }
-
     handleStartExam(item.exam, item.isProExam);
+  };
+
+  const getExamActionLabel = (item) => {
+    if (item.status === 'in-progress') return `Resume ${item.displayTitle}`;
+    if (item.status === 'completed') return `Retake ${item.displayTitle}`;
+    return `Start ${item.displayTitle}`;
   };
 
   const progressPercent = getProgressPercent(latestProgress);
@@ -534,6 +535,7 @@ const PracticeExamList = () => {
                         key={item.exam.id}
                         className={`practice-exam-row status-${item.status}`}
                         onClick={() => handleExamRowClick(item)}
+                        aria-label={getExamActionLabel(item)}
                       >
                         <span className="practice-row-document"><FaFileAlt /></span>
                         <span className="practice-row-main">
@@ -550,7 +552,7 @@ const PracticeExamList = () => {
                           <span className="practice-status-pill">
                             {item.status === 'completed' && <FaCheckCircle />}
                             {item.status !== 'completed' && <FaRegCircle />}
-                            {item.status === 'completed' ? 'Completed' : item.status === 'in-progress' ? 'In Progress' : 'Not Started'}
+                            {item.status === 'completed' ? 'Retake' : item.status === 'in-progress' ? 'In Progress' : 'Not Started'}
                           </span>
                         </span>
                         <FaChevronRight className="practice-row-arrow" />

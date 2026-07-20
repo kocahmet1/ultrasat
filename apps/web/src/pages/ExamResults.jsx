@@ -1,14 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useAICompanion } from '../contexts/AICompanionContext';
 import { FaFlag } from 'react-icons/fa';
 import { SUBCATEGORY_SUBJECTS } from '../utils/subcategoryConstants';
 import { processTextMarkup } from '../utils/textProcessing';
+import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
 import ReportQuestionModal from '../components/ReportQuestionModal';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import '../styles/Results.css';
+
+const getSafeProcessedMarkup = (value) => (
+  DOMPurify.sanitize(processTextMarkup(value) || '')
+);
 
 function ExamResults() {
   const navigate = useNavigate();
@@ -586,7 +592,7 @@ function ExamResults() {
                         
                         <div 
                           className="question-text"
-                          dangerouslySetInnerHTML={{ __html: processTextMarkup(question.text) }}
+                          dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.text) }}
                         />
                         
                         {question.graphDescription && (
@@ -594,14 +600,17 @@ function ExamResults() {
                             <h4>Graph Description:</h4>
                             <div 
                               className="graph-description-text"
-                              dangerouslySetInnerHTML={{ __html: processTextMarkup(question.graphDescription) }}
+                              dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.graphDescription) }}
                             />
                           </div>
                         )}
                         
                         {question.graphUrl && (
                           <div className="question-graph">
-                            <img src={question.graphUrl} alt="Question Graph" />
+                            <img
+                              src={question.graphUrl}
+                              alt={question.graphDescription || 'Question graph'}
+                            />
                           </div>
                         )}
                         
@@ -618,7 +627,11 @@ function ExamResults() {
                                   isUserSelectedOption = userAnswer === optionText;
                               }
 
-                              const isCorrectOption = optionIndex === parseInt(question.correctAnswer);
+                              const correctOption = resolveMultipleChoiceKey(
+                                question.correctAnswer,
+                                question.options,
+                              );
+                              const isCorrectOption = optionText === correctOption;
                               
                               let backgroundColor = '#f9f9f9'; // Default for unselected options
 
@@ -717,7 +730,7 @@ function ExamResults() {
                         {isAnswered && showExplanation[question.id] && (
                           <div className="question-explanation">
                             <h4>Explanation</h4>
-                            <p dangerouslySetInnerHTML={{ __html: processTextMarkup(question.explanation || `The correct answer is "${question.correctAnswer}". ${question.reasoning || ''}`) }} />
+                            <p dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.explanation || `The correct answer is "${question.correctAnswer}". ${question.reasoning || ''}`) }} />
                           </div>
                         )}
                       </div>

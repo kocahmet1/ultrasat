@@ -17,8 +17,9 @@
     "firebase-admin": "^13.4.0",
     "multer": "^2.0.0",
     "node-fetch": "^2.6.12",
-    "openai": "^6.16.0",
+    "openai": "^6.48.0",
     "puppeteer": "^24.11.1",
+    "sharp": "^0.34.3",
     "stripe": "^14.21.0"
   }
 }

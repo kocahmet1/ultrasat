@@ -17,8 +17,10 @@ const SUBCATEGORIES = [
   // Reading and Writing — Expression of Ideas
   { id: 7,  kebab: 'rhetorical-synthesis',          name: 'Rhetorical Synthesis',            section: 'Reading and Writing', mainCategory: 'Expression of Ideas' },
   { id: 8,  kebab: 'transitions',                   name: 'Transitions',                     section: 'Reading and Writing', mainCategory: 'Expression of Ideas' },
-  { id: 9,  kebab: 'boundaries',                    name: 'Boundaries',                      section: 'Reading and Writing', mainCategory: 'Expression of Ideas' },
-  { id: 10, kebab: 'form-structure-sense',           name: 'Form, Structure, and Sense',      section: 'Reading and Writing', mainCategory: 'Expression of Ideas' },
+
+  // Reading and Writing — Standard English Conventions
+  { id: 9,  kebab: 'boundaries',                    name: 'Boundaries',                      section: 'Reading and Writing', mainCategory: 'Standard English Conventions' },
+  { id: 10, kebab: 'form-structure-sense',           name: 'Form, Structure, and Sense',      section: 'Reading and Writing', mainCategory: 'Standard English Conventions' },
 
   // Math — Algebra
   { id: 11, kebab: 'linear-equations-one-variable',  name: 'Linear Equations in One Variable',                             section: 'Math', mainCategory: 'Algebra' },
@@ -70,10 +72,18 @@ function resolveSubcategory(input) {
   if (input == null) return null;
 
   // Numeric
-  if (typeof input === 'number') return BY_ID[input] || null;
-  if (!isNaN(parseInt(input, 10))) return BY_ID[parseInt(input, 10)] || null;
+  if (typeof input === 'number') {
+    return Number.isInteger(input)
+      ? BY_ID[input] || null
+      : null;
+  }
+  const text = String(input).trim();
+  if (/^\d+$/.test(text)) {
+    return BY_ID[Number(text)] || null;
+  }
 
-  const lower = String(input).trim().toLowerCase();
+  const lower = text.toLowerCase();
+  if (!lower) return null;
 
   // Exact kebab match
   if (BY_KEBAB[lower]) return BY_KEBAB[lower];
@@ -81,15 +91,16 @@ function resolveSubcategory(input) {
   // Exact name match
   if (BY_NAME_LOWER[lower]) return BY_NAME_LOWER[lower];
 
-  // Fuzzy: kebab in input or input in kebab
+  // Allow a full canonical label embedded in a longer descriptive phrase.
+  // Never match a short/empty prefix against a canonical label.
   for (const sub of SUBCATEGORIES) {
-    if (lower.includes(sub.kebab) || sub.kebab.includes(lower)) return sub;
+    if (lower.includes(sub.kebab)) return sub;
   }
 
-  // Fuzzy: name in input or input in name
+  // Same guarded behavior for human-readable names.
   for (const sub of SUBCATEGORIES) {
     const nameLower = sub.name.toLowerCase();
-    if (lower.includes(nameLower) || nameLower.includes(lower)) return sub;
+    if (lower.includes(nameLower)) return sub;
   }
 
   return null;
