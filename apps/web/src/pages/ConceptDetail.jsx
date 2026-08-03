@@ -1,16 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { FiArrowLeft, FiAlertTriangle, FiHelpCircle, FiBookOpen, FiZap, FiLoader } from 'react-icons/fi';
+// Feather has no puzzle-piece glyph; kept from FontAwesome for the concept icon only.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faArrowLeft, 
-  faPuzzlePiece, 
-  faSpinner, 
-  faExclamationTriangle,
-  faQuestionCircle,
-  faBook,
-  faLightbulb
-} from '@fortawesome/free-solid-svg-icons';
+import { faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import { getConceptDetailedExplanation, getQuestionsByConceptId } from '../api/conceptClient';
 import '../styles/ConceptDetail.css';
@@ -148,9 +142,11 @@ const ConceptDetail = () => {
   if (loading) {
     return (
       <div className="concept-detail-container">
-        <div className="concept-detail-loading">
-          <FontAwesomeIcon icon={faSpinner} spin size="2x" />
-          <p>Loading concept details...</p>
+        <div className="concept-detail-loading" role="status" aria-label="Loading concept details">
+          <div className="ut-skeleton-stack" style={{ width: '100%', maxWidth: 480 }}>
+            <div className="ut-skeleton ut-skeleton--title" style={{ width: 220, margin: '0 auto 16px' }} />
+            <div className="ut-skeleton ut-skeleton--card" />
+          </div>
         </div>
       </div>
     );
@@ -160,11 +156,11 @@ const ConceptDetail = () => {
     return (
       <div className="concept-detail-container">
         <div className="concept-detail-error">
-          <FontAwesomeIcon icon={faExclamationTriangle} size="2x" />
+          <FiAlertTriangle size="2x" />
           <h2>Error</h2>
           <p>{error}</p>
           <button onClick={() => navigate(-1)} className="back-button">
-            <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+            <FiArrowLeft /> Go Back
           </button>
         </div>
       </div>
@@ -175,11 +171,11 @@ const ConceptDetail = () => {
     return (
       <div className="concept-detail-container">
         <div className="concept-detail-error">
-          <FontAwesomeIcon icon={faQuestionCircle} size="2x" />
+          <FiHelpCircle size="2x" />
           <h2>Concept Not Found</h2>
           <p>The requested concept could not be found in your collection.</p>
           <button onClick={() => navigate('/concept-bank')} className="back-button">
-            <FontAwesomeIcon icon={faArrowLeft} /> Back to Concept Bank
+            <FiArrowLeft /> Back to Concept Bank
           </button>
         </div>
       </div>
@@ -191,7 +187,7 @@ const ConceptDetail = () => {
       {/* Header */}
       <div className="concept-detail-header">
         <button onClick={() => navigate('/concept-bank')} className="back-button">
-          <FontAwesomeIcon icon={faArrowLeft} /> Back to Concept Bank
+          <FiArrowLeft /> Back to Concept Bank
         </button>
         
         <div className="concept-header-info">
@@ -210,7 +206,7 @@ const ConceptDetail = () => {
       {/* Basic Definition */}
       <div className="concept-section">
         <h2>
-          <FontAwesomeIcon icon={faBook} />
+          <FiBookOpen />
           Quick Definition
         </h2>
         <div className="concept-basic-definition">
@@ -221,13 +217,13 @@ const ConceptDetail = () => {
       {/* Detailed Explanation */}
       <div className="concept-section">
         <h2>
-          <FontAwesomeIcon icon={faLightbulb} />
+          <FiZap />
           Detailed Explanation
         </h2>
         <div className="concept-detailed-explanation">
           {explanationLoading ? (
             <div className="loading-content">
-              <FontAwesomeIcon icon={faSpinner} spin />
+              <FiLoader />
               <span>Generating detailed explanation...</span>
             </div>
           ) : detailedExplanation ? (
@@ -252,13 +248,13 @@ const ConceptDetail = () => {
       {/* Associated Questions */}
       <div className="concept-section">
         <h2>
-          <FontAwesomeIcon icon={faQuestionCircle} />
+          <FiHelpCircle />
           Practice Questions ({associatedQuestions.length})
         </h2>
         <div className="concept-questions">
           {questionsLoading ? (
             <div className="loading-content">
-              <FontAwesomeIcon icon={faSpinner} spin />
+              <FiLoader />
               <span>Finding related questions...</span>
             </div>
           ) : associatedQuestions.length > 0 ? (

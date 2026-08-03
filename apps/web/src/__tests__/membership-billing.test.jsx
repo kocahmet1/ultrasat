@@ -65,9 +65,9 @@ describe('membership and billing flows', () => {
       },
     );
 
-    expect(screen.getByText(/premium feature/i)).toBeInTheDocument();
+    expect(screen.getByText(/is a pro feature/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /upgrade to plus/i }));
+    fireEvent.click(screen.getByRole('button', { name: /upgrade to pro/i }));
 
     expect(screen.getByText('Upgrade Page')).toBeInTheDocument();
   });
@@ -196,7 +196,7 @@ describe('membership and billing flows', () => {
     expect(getUserMembership).toHaveBeenCalledWith(currentUser);
 
     fireEvent.click(
-      screen.getByRole('button', { name: /start using premium features/i }),
+      screen.getByRole('button', { name: /start using pro/i }),
     );
 
     expect(screen.getByText('Dashboard Page')).toBeInTheDocument();

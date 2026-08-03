@@ -272,7 +272,7 @@ router.get('/status', (req, res) => {
             nextSteps: hasApiKey,
             voice: hasApiKey
         },
-        model: hasApiKey ? (process.env.COMPANION_MODEL || 'gpt-5-mini') : null
+        model: hasApiKey ? require('./config/aiModel').resolveModel('COMPANION_MODEL') : null
     });
 });
 

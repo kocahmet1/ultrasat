@@ -1,63 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
-import {
-  FaBookOpen,
-  FaBookReader,
-  FaCalculator,
-  FaChartBar,
-  FaChartLine,
-  FaCheckCircle,
-  FaChevronDown,
-  FaChevronRight,
-  FaClipboardList,
-  FaCog,
-  FaFileAlt,
-  FaHome,
-  FaLayerGroup,
-  FaMagic,
-  FaRegBell,
-  FaRegCircle,
-  FaRegClock,
-  FaSearch,
-  FaShieldAlt,
-  FaUserCircle,
-} from 'react-icons/fa';
+import { FiChevronRight, FiFileText, FiSearch } from 'react-icons/fi';
 import { getAllPracticeExams } from '../firebase/services';
 import { db as firestore } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/PracticeExamList.css';
-import UpgradeModal from '../components/UpgradeModal';
+import ProUpgradeModal from '../components/membership/ProUpgradeModal';
 
 const TOTAL_EXAM_QUESTIONS = 98;
 const FULL_EXAM_MINUTES = 134;
-
-const practiceTopNavItems = [
-  { label: 'Dashboard', path: '/progress' },
-  { label: 'Practice Exams', path: '/practice-exams' },
-  { label: 'Question Bank', path: '/subject-quizzes' },
-  { label: 'Flashcards', path: '/flashcards' },
-];
-
-const practiceTopTrailingNavItems = [
-  { label: 'Lectures', path: '/lectures' },
-  { label: 'Analytics', path: '/all-results' },
-];
-
-const practiceSideNavItems = [
-  { label: 'Overview', path: '/progress', icon: <FaHome /> },
-  { label: 'Study Plan', path: '/progress', icon: <FaShieldAlt /> },
-  { label: 'Practice Tests', path: '/practice-exams', icon: <FaClipboardList /> },
-  { label: 'Official Exams', path: '/practice-exams', icon: <FaFileAlt /> },
-  { label: 'Question Bank', path: '/subject-quizzes', icon: <FaBookOpen /> },
-  { label: 'Flashcards', path: '/flashcards', icon: <FaLayerGroup /> },
-];
-
-const practiceSideTrailingNavItems = [
-  { label: 'Lectures', path: '/lectures', icon: <FaBookReader /> },
-  { label: 'Analytics', path: '/all-results', icon: <FaChartBar /> },
-  { label: 'Settings', path: '/profile', icon: <FaCog /> },
-];
 
 const getTimestamp = (value) => {
   if (!value) return 0;
@@ -209,10 +161,6 @@ const PracticeExamList = () => {
     navigate('/practice-exam/' + exam.id, { state: { startExam: true } });
   }, [currentUser, navigate, userMembership]);
 
-  const handleAICoach = useCallback(() => {
-    navigate('/ai-coach');
-  }, [navigate]);
-
   useEffect(() => {
     fetchPracticeExams();
   }, [fetchPracticeExams]);
@@ -320,13 +268,18 @@ const PracticeExamList = () => {
       : String(practiceExams.filter((exam) => !exam.isDiagnostic).length);
 
   useEffect(() => {
+    // Overhaul Phase C: index into the DISPLAYED (non-diagnostic, sorted) list —
+    // the old code indexed the unfiltered list, so "Start Practice Test 3" could
+    // launch a different exam — and respect the Pro gate instead of hardcoding
+    // isPro=false (which let free users bypass the paywall via login redirects).
     if (startExamNumber && practiceExams.length > 0) {
+      const visibleExams = practiceExams.filter((exam) => !exam.isDiagnostic);
       const examIndex = startExamNumber - 1;
 
-      if (examIndex >= 0 && examIndex < practiceExams.length) {
-        const exam = practiceExams[examIndex];
+      if (examIndex >= 0 && examIndex < visibleExams.length) {
+        const exam = visibleExams[examIndex];
         window.history.replaceState({}, document.title);
-        handleStartExam(exam, false);
+        handleStartExam(exam, examIndex > 2);
       }
     }
   }, [handleStartExam, practiceExams, startExamNumber]);
@@ -337,245 +290,172 @@ const PracticeExamList = () => {
       return;
     }
 
-    if (item.status === 'completed' && item.completedResult?.id) {
-      navigate(`/exam/results/${item.completedResult.id}`);
-      return;
-    }
-
     handleStartExam(item.exam, item.isProExam);
   };
 
+  const getExamActionLabel = (item) => {
+    if (item.status === 'in-progress') return `Resume ${item.displayTitle}`;
+    if (item.status === 'completed') return `Retake ${item.displayTitle}`;
+    return `Start ${item.displayTitle}`;
+  };
+
   const progressPercent = getProgressPercent(latestProgress);
-  const userFirstName = currentUser?.displayName?.split(' ')[0] || currentUser?.email?.split('@')[0] || 'Alex';
 
   return (
     <>
-      <div className="practice-exam-dashboard">
-        <aside className="practice-shell-sidebar" aria-label="Practice exams navigation">
-          <Link className="practice-brand" to="/progress">
-            <span className="practice-brand-mark">SAT</span>
-            <span className="practice-brand-text">
-              <span>Ultra</span><span>SAT</span><span>Prep</span>
-            </span>
-          </Link>
-
-          <nav className="practice-side-nav">
-            {practiceSideNavItems.map((item) => (
-              <Link
-                key={`${item.label}-${item.path}`}
-                className={`practice-side-link ${item.path === '/practice-exams' && item.label === 'Practice Tests' ? 'active' : ''}`}
-                to={item.path}
-              >
-                <span className="practice-side-icon">{item.icon}</span>
-                <span>{item.label}</span>
-              </Link>
-            ))}
-
-            <button type="button" className="practice-side-link practice-side-link-button" onClick={handleAICoach}>
-              <span className="practice-side-icon"><FaMagic /></span>
-              <span>AI Coach</span>
-              <span className="practice-beta-badge">Beta</span>
-            </button>
-            {practiceSideTrailingNavItems.map((item) => (
-              <Link
-                key={`${item.label}-${item.path}`}
-                className="practice-side-link"
-                to={item.path}
-              >
-                <span className="practice-side-icon">{item.icon}</span>
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </nav>
-
-          <div className="practice-ai-card">
-            <FaMagic className="practice-ai-card-icon" />
-            <p>Unlock your potential with AI Coach</p>
-            <button type="button" onClick={handleAICoach}>Try AI Coach</button>
+      <div className="ut-page">
+        <header className="ut-page-head">
+          <div className="ut-page-head-main">
+            <p className="ut-eyebrow">Practice</p>
+            <h1 className="ut-page-title">Practice Tests</h1>
+            <p className="ut-page-sub">
+              Full-length Digital SAT practice exams under realistic test conditions.
+            </p>
           </div>
-        </aside>
+          <div className="ut-page-head-actions">
+            <span className="ut-chip ut-chip--accent">{officialExamLabel} exams</span>
+            <span className="ut-chip">{TOTAL_EXAM_QUESTIONS} questions &middot; {FULL_EXAM_MINUTES} min</span>
+          </div>
+        </header>
 
-        <div className="practice-shell-content">
-          <header className="practice-topbar">
-            <nav className="practice-top-nav" aria-label="Primary">
-              {practiceTopNavItems.map((item) => (
-                <Link
-                  key={item.path}
-                  className={`practice-top-link ${item.path === '/practice-exams' ? 'active' : ''}`}
-                  to={item.path}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <button type="button" className="practice-top-link practice-top-button" onClick={handleAICoach}>
-                AI Coach <span>Beta</span>
-              </button>
-              {practiceTopTrailingNavItems.map((item) => (
-                <Link
-                  key={item.path}
-                  className="practice-top-link"
-                  to={item.path}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+        {error && <div className="ut-chip ut-chip--hard pel-error" role="alert">{error}</div>}
 
-            <div className="practice-top-actions">
-              <label className="practice-search">
-                <FaSearch aria-hidden="true" />
-                <input
-                  type="search"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Search anything..."
-                  aria-label="Search practice exams"
-                />
-                <span>Ctrl K</span>
-              </label>
-
-              <button type="button" className="practice-notification" aria-label="Notifications">
-                <FaRegBell />
-                <span>3</span>
-              </button>
-
-              <Link className="practice-profile-chip" to="/profile">
-                {currentUser?.photoURL ? (
-                  <img src={currentUser.photoURL} alt="" />
-                ) : (
-                  <FaUserCircle />
-                )}
-                <span>{userFirstName}</span>
-                <FaChevronDown />
-              </Link>
+        {latestProgress && (
+          <section className="ut-panel-ink pel-continue" aria-label="Continue your latest test">
+            <div className="pel-continue-main">
+              <span className="ut-label ut-label--on-ink">Continue where you left off</span>
+              <h2 className="pel-continue-title">
+                {latestProgressExam?.displayTitle || latestProgress.examTitle || 'Practice Test'}
+              </h2>
+              <p className="pel-continue-meta">
+                {getModuleLabel(latestProgress)} &middot; {progressPercent}% complete
+              </p>
+              <div
+                className="ut-progress ut-progress--lg ut-progress--on-ink pel-continue-progress"
+                role="progressbar"
+                aria-valuenow={progressPercent}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
+                <span className="ut-progress-fill" style={{ width: `${progressPercent}%` }} />
+              </div>
             </div>
-          </header>
+            <button
+              type="button"
+              className="ut-btn ut-btn--primary ut-btn--lg"
+              onClick={() => handleContinueExam(latestProgress)}
+            >
+              Resume test
+            </button>
+          </section>
+        )}
 
-          <main className="practice-dashboard-main">
-            {error && <div className="practice-error-message">{error}</div>}
-
-            <section className="practice-hero-row">
-              <div className="practice-title-block">
-                <div className="practice-title-line">
-                  <h1>Practice Exams</h1>
-                  <FaMagic aria-hidden="true" />
-                </div>
-                <p>Take full-length Digital SAT practice exams under realistic test conditions.</p>
-              </div>
-
-              <div className="practice-stats-grid" aria-label="Practice exam stats">
-                <div className="practice-stat-card">
-                  <span className="practice-stat-icon"><FaFileAlt /></span>
-                  <div>
-                    <p>Official Exams</p>
-                    <strong>{officialExamLabel}</strong>
-                    <span>Full-length digital SATs</span>
-                  </div>
-                </div>
-                <div className="practice-stat-card">
-                  <span className="practice-stat-icon"><FaRegClock /></span>
-                  <div>
-                    <p>Completed</p>
-                    <strong>{completedCount}</strong>
-                    <span>Exams finished</span>
-                  </div>
-                </div>
-                <div className="practice-stat-card">
-                  <span className="practice-stat-icon"><FaChartLine /></span>
-                  <div>
-                    <p>Best Score</p>
-                    <strong>{bestScore || '-'}</strong>
-                    <span>Latest personal best</span>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {latestProgress && (
-              <section className="practice-continue-card" aria-label="Continue your latest test">
-                <div className="practice-continue-copy">
-                  <h2>Continue your latest test</h2>
-                  <div className="practice-continue-exam">
-                    <span className="practice-document-icon"><FaFileAlt /></span>
-                    <div>
-                      <strong>{latestProgressExam?.displayTitle || latestProgress.examTitle || 'Practice Test'}</strong>
-                      <p>{getModuleLabel(latestProgress)} - {progressPercent}% complete</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="practice-progress-ring" style={{ '--progress': `${progressPercent}%` }}>
-                  <span>{progressPercent}%</span>
-                </div>
-                <button type="button" className="practice-resume-button" onClick={() => handleContinueExam(latestProgress)}>
-                  Resume Exam
-                </button>
-              </section>
-            )}
-
-            <section className="practice-list-section">
-              <h2>Available Exams</h2>
-
-              {isLoading && !practiceExams.length ? (
-                <div className="practice-loading-state">
-                  <span className="practice-spinner" />
-                  <p>Loading practice exams...</p>
-                </div>
-              ) : filteredExams.length > 0 ? (
-                <div className="practice-exam-table">
-                  {filteredExams.map((item) => {
-                    const scoreDisplay = item.satScore !== null
-                      ? item.satScore
-                      : item.completedResult?.overallScore !== undefined
-                        ? `${item.completedResult.overallScore}%`
-                        : null;
-                    return (
-                      <button
-                        type="button"
-                        key={item.exam.id}
-                        className={`practice-exam-row status-${item.status}`}
-                        onClick={() => handleExamRowClick(item)}
-                      >
-                        <span className="practice-row-document"><FaFileAlt /></span>
-                        <span className="practice-row-main">
-                          <span>
-                            <strong>{item.displayTitle}</strong>
-                            {item.isOfficial && <em>Official</em>}
-                            {item.showPro && <em>Pro</em>}
-                          </span>
-                          <small>Full-length - {Math.floor(FULL_EXAM_MINUTES / 60)}h {FULL_EXAM_MINUTES % 60}m - {TOTAL_EXAM_QUESTIONS} questions</small>
-                        </span>
-
-                        <span className="practice-row-meta">
-                          {scoreDisplay && <strong>{scoreDisplay}</strong>}
-                          <span className="practice-status-pill">
-                            {item.status === 'completed' && <FaCheckCircle />}
-                            {item.status !== 'completed' && <FaRegCircle />}
-                            {item.status === 'completed' ? 'Completed' : item.status === 'in-progress' ? 'In Progress' : 'Not Started'}
-                          </span>
-                        </span>
-                        <FaChevronRight className="practice-row-arrow" />
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="practice-empty-state">
-                  <p>{searchTerm ? 'No practice exams match your search.' : 'No practice exams are currently available.'}</p>
-                </div>
-              )}
-            </section>
-
-            <section className="practice-exam-info-bar" aria-label="Practice exam format">
-              <strong>How practice exams work</strong>
-              <span><FaBookOpen /> 2 Reading & Writing modules</span>
-              <span><FaCalculator /> 2 Math modules</span>
-              <span><FaRegClock /> Built-in break and scoring insights</span>
-            </section>
-          </main>
+        <div className="ut-grid ut-grid--3" aria-label="Practice exam stats">
+          <div className="ut-card">
+            <div className="ut-stat">
+              <span className="ut-stat-value">{officialExamLabel}</span>
+              <span className="ut-stat-label">Official exams available</span>
+            </div>
+          </div>
+          <div className="ut-card">
+            <div className="ut-stat">
+              <span className="ut-stat-value">{completedCount}</span>
+              <span className="ut-stat-label">Completed</span>
+            </div>
+          </div>
+          <div className="ut-card">
+            <div className="ut-stat">
+              <span className="ut-stat-value">{bestScore || '-'}</span>
+              <span className="ut-stat-label">Best score</span>
+            </div>
+          </div>
         </div>
+
+        <section aria-label="Available exams">
+          <div className="ut-section-head">
+            <h2 className="ut-section-title">Available exams</h2>
+          </div>
+
+          <div className="ut-search pel-search">
+            <FiSearch aria-hidden="true" />
+            <input
+              type="search"
+              className="ut-input"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Search exams..."
+              aria-label="Search practice exams"
+            />
+          </div>
+
+          {isLoading && !practiceExams.length ? (
+            <div className="ut-skeleton-stack" role="status" aria-label="Loading practice exams">
+              <div className="ut-skeleton ut-skeleton--row" />
+              <div className="ut-skeleton ut-skeleton--row" />
+              <div className="ut-skeleton ut-skeleton--row" />
+              <div className="ut-skeleton ut-skeleton--row" />
+            </div>
+          ) : filteredExams.length > 0 ? (
+            <div>
+              {filteredExams.map((item) => {
+                const scoreDisplay = item.satScore !== null
+                  ? item.satScore
+                  : item.completedResult?.overallScore !== undefined
+                    ? `${item.completedResult.overallScore}%`
+                    : null;
+                return (
+                  <button
+                    type="button"
+                    key={item.exam.id}
+                    className="ut-row ut-row--hover pel-exam-row"
+                    onClick={() => handleExamRowClick(item)}
+                    aria-label={getExamActionLabel(item)}
+                  >
+                    <span className={item.isOfficial ? 'ut-tile ut-tile--ink' : 'ut-tile'}>
+                      <FiFileText />
+                    </span>
+                    <span className="pel-exam-main">
+                      <strong className="pel-exam-title">{item.displayTitle}</strong>
+                      <span className="ut-card-sub">
+                        {item.isOfficial ? 'Official exam' : 'Full-length practice test'} &middot; 4 modules with break
+                      </span>
+                    </span>
+                    <span className="pel-exam-side">
+                      {item.showPro && <span className="ut-pro">Pro</span>}
+                      {item.status === 'in-progress' && (
+                        <span className="ut-chip ut-chip--accent">In progress</span>
+                      )}
+                      {item.status === 'completed' && (
+                        <span className="ut-chip ut-chip--easy">
+                          Completed{scoreDisplay !== null ? ` · ${scoreDisplay}` : ''}
+                        </span>
+                      )}
+                      {item.status === 'not-started' && (
+                        <span className="ut-chip">Not started</span>
+                      )}
+                      <FiChevronRight className="pel-exam-arrow" aria-hidden="true" />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="ut-empty">
+              <b>{searchTerm ? 'No matching exams' : 'No exams available'}</b>
+              {searchTerm
+                ? 'No practice exams match your search.'
+                : 'No practice exams are currently available.'}
+            </div>
+          )}
+        </section>
       </div>
 
-      <UpgradeModal open={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
+      <ProUpgradeModal
+        open={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        featureName="This exam"
+        description="Free accounts get a taste of the exam library — Pro unlocks every full-length practice exam."
+      />
     </>
   );
 };

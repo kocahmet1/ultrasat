@@ -1,4 +1,4 @@
-/* 
+/*
  * ConceptMastery.css
  * Styling for concept-level mastery display in ProgressDashboard
  */
@@ -18,34 +18,34 @@
 }
 
 .pd-subcategory-header:hover h4 {
-  color: #0d6efd;
+  color: var(--ut-accent-dark);
 }
 
 .chevron {
   transition: transform 0.3s ease;
-  color: #6c757d;
+  color: var(--ut-mono-muted);
   font-size: 0.9rem;
 }
 
 .chevron.expanded {
   transform: rotate(180deg);
-  color: #0d6efd;
+  color: var(--ut-accent-dark);
 }
 
 /* Concept mastery container */
 .concept-mastery-container {
   margin-top: 12px;
-  background-color: #f8f9fa;
-  border-radius: 6px;
+  background-color: var(--ut-card-soft);
+  border-radius: var(--ut-radius-sm);
   padding: 12px;
-  border-left: 3px solid #dee2e6;
+  border-left: 3px solid var(--ut-rule-strong);
 }
 
 .concept-mastery-container h5 {
   margin-top: 0;
   margin-bottom: 10px;
   font-size: 0.95rem;
-  color: #495057;
+  color: var(--ut-text-soft);
 }
 
 /* Concept list styling */
@@ -56,19 +56,19 @@
 }
 
 .concept-item {
-  background-color: white;
-  border-radius: 6px;
+  background-color: var(--ut-card);
+  border-radius: var(--ut-radius-sm);
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  border: 1px solid #e9ecef;
+  box-shadow: var(--ut-shadow-sm);
+  border: 1px solid var(--ut-rule);
 }
 
 .concept-name {
   font-weight: 500;
-  color: #212529;
+  color: var(--ut-text);
 }
 
 /* Status indicators */
@@ -78,26 +78,26 @@
   gap: 6px;
   font-size: 0.85rem;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: var(--ut-radius-sm);
   width: fit-content;
 }
 
 .concept-status.mastered {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--ut-success-soft);
+  color: var(--ut-success-dark);
 }
 
 .concept-status.not-mastered {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: var(--ut-warn-soft);
+  color: var(--ut-warn-dark);
 }
 
 /* Practice button */
 .concept-practice-btn {
-  background-color: #0d6efd;
-  color: white;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--ut-radius-sm);
   padding: 6px 12px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -107,27 +107,27 @@
 }
 
 .concept-practice-btn:hover {
-  background-color: #0b5ed7;
+  background-color: var(--ut-accent-dark);
 }
 
 /* Unified Learning Track elements */
 .unified-track-info {
-  background-color: #e9f7fe;
-  border-radius: 8px;
+  background-color: var(--ut-accent-soft);
+  border-radius: var(--ut-radius);
   padding: 12px 16px;
   margin-bottom: 16px;
-  border-left: 4px solid #0d6efd;
+  border-left: 4px solid var(--ut-accent);
 }
 
 .unified-track-info p {
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #2c3e50;
+  color: var(--ut-text-soft);
 }
 
 .info-icon {
-  color: #0d6efd;
+  color: var(--ut-accent);
   margin-right: 6px;
   font-size: 1.1rem;
   vertical-align: middle;
@@ -135,8 +135,8 @@
 
 /* Unmastered badge */
 .unmastered-badge {
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--ut-danger);
+  color: var(--ut-on-accent);
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -170,32 +170,32 @@
 }
 
 .progress-node.completed {
-  background-color: #28a745;
-  color: white;
+  background-color: var(--ut-success);
+  color: var(--ut-on-accent);
 }
 
 .progress-node.current {
-  background-color: #007bff;
-  color: white;
-  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
+  box-shadow: 0 0 0 4px var(--ut-accent-soft);
 }
 
 .progress-node.upcoming {
-  background-color: #f8f9fa;
-  color: #6c757d;
-  border: 2px solid #dee2e6;
+  background-color: var(--ut-card-soft);
+  color: var(--ut-mono-muted);
+  border: 2px solid var(--ut-rule);
 }
 
 .progress-line {
   flex: 1;
   height: 3px;
-  background-color: #dee2e6;
+  background-color: var(--ut-rule);
   position: relative;
   z-index: 1;
 }
 
 .progress-line.completed {
-  background-color: #28a745;
+  background-color: var(--ut-success);
 }
 
 /* Mobile responsiveness */
@@ -203,7 +203,7 @@
   .concept-item {
     padding: 10px;
   }
-  
+
   .concept-practice-btn {
     align-self: stretch;
     text-align: center;

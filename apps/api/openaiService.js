@@ -5,14 +5,15 @@
  */
 
 const fetch = require('node-fetch');
-const { normalizeSubcategoryName } = require('../web/src/utils/subcategoryUtils');
+const { normalizeSubcategoryName } = require('./subcategoryUtils');
+const {
+  resolveModel,
+  reasoningConfig,
+  outputTokenBudget,
+} = require('./config/aiModel');
 
-// Default models to use
-const DEFAULT_MODEL = 'o4-mini';
-const DEFAULT_ASSISTANT_MODEL = process.env.OPENAI_ASSISTANT_MODEL || 'gpt-5-mini';
-
-// Default token limits
-const DEFAULT_MAX_TOKENS = parseInt(process.env.OPENAI_ASSISTANT_MAX_TOKENS || '750', 10);
+// Default token limits (floored so reasoning tokens can't starve the answer)
+const DEFAULT_MAX_TOKENS = outputTokenBudget(process.env.OPENAI_ASSISTANT_MAX_TOKENS);
 
 /**
  * Get the OpenAI API key from environment variables
@@ -22,18 +23,15 @@ const getApiKey = () => {
 };
 
 /**
- * Get the OpenAI model to use
+ * Get the OpenAI model to use (default: gpt-5.6-luna)
  */
-const getModel = () => {
-  return process.env.OPENAI_MODEL || DEFAULT_MODEL;
-};
+const getModel = () => resolveModel('OPENAI_MODEL');
 
 /**
- * Get the OpenAI model to use for the assistant
+ * Get the OpenAI model to use for the assistant (default: gpt-5.6-luna)
  */
-const getAssistantModel = () => {
-  return process.env.OPENAI_ASSISTANT_MODEL || DEFAULT_ASSISTANT_MODEL;
-};
+const getAssistantModel = () =>
+  resolveModel('OPENAI_ASSISTANT_MODEL', 'OPENAI_MODEL');
 
 /**
  * Analyzes wrong answers and identifies concepts that need improvement
@@ -91,10 +89,7 @@ Return your response as a valid JSON object with this exact format:
       },
       body: JSON.stringify({
         model: model,
-        reasoning: {
-          effort: "high",
-          summary: "auto"
-        },
+        reasoning: reasoningConfig({ summary: 'auto' }),
         input: [
           {
             role: 'system',
@@ -105,7 +100,7 @@ Return your response as a valid JSON object with this exact format:
             content: prompt
           }
         ],
-        max_output_tokens: 100000
+        max_output_tokens: outputTokenBudget(100000)
       })
     });
     
@@ -210,10 +205,7 @@ Return your response as a valid JSON object with this exact format:
       },
       body: JSON.stringify({
         model: model,
-        reasoning: {
-          effort: "high",
-          summary: "auto"
-        },
+        reasoning: reasoningConfig({ summary: 'auto' }),
         input: [
           {
             role: 'system',
@@ -224,7 +216,7 @@ Return your response as a valid JSON object with this exact format:
             content: prompt
           }
         ],
-        max_output_tokens: 100000
+        max_output_tokens: outputTokenBudget(100000)
       })
     });
     
@@ -344,10 +336,7 @@ exports.chatWithAssistant = async ({ question, history = [], tipRequested = fals
       },
       body: JSON.stringify({
         model: model,
-        reasoning: {
-          effort: "high",
-          summary: "auto"
-        },
+        reasoning: reasoningConfig({ summary: 'auto' }),
         input: messages,
         max_output_tokens: maxTokens,
       })

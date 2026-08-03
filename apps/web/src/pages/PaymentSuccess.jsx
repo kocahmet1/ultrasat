@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './PaymentSuccess.css';
+import { FiCheck, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -90,7 +91,7 @@ const PaymentSuccess = () => {
 
   const getTierDisplayName = (tier) => {
     const displayNames = {
-      'plus': 'Plus',
+      'plus': 'Pro',
       'max': 'Max'
     };
     return displayNames[tier] || tier;
@@ -115,7 +116,7 @@ const PaymentSuccess = () => {
     return (
       <div className="payment-success">
         <div className="success-container error">
-          <div className="error-icon">❌</div>
+          <div className="error-icon"><FiXCircle /></div>
           <h2>Payment Verification Failed</h2>
           <p>{error || 'There was an issue verifying your payment.'}</p>
           <div className="action-buttons">
@@ -138,7 +139,7 @@ const PaymentSuccess = () => {
         <div className="success-container">
           <div className="loading-spinner"></div>
           <h2>Setting up your account...</h2>
-          <p>Please wait while we activate your premium features.</p>
+          <p>Please wait while we activate your Pro membership.</p>
           <p className="update-status">This should only take a few seconds.</p>
         </div>
       </div>
@@ -148,7 +149,7 @@ const PaymentSuccess = () => {
   return (
     <div className="payment-success">
       <div className="success-container">
-        <div className="success-icon">🎉</div>
+        <div className="success-icon"><FiCheckCircle /></div>
         <h1>Payment Successful!</h1>
         <p className="success-message">
           Welcome to UltraSAT {getTierDisplayName(sessionData?.session?.metadata?.tier)}!
@@ -177,16 +178,16 @@ const PaymentSuccess = () => {
         <div className="next-steps">
           <h3>What's Next?</h3>
           <ul>
-            <li>✅ Your account has been upgraded automatically</li>
-            <li>✅ You now have access to all premium features</li>
-            <li>✅ Start taking unlimited practice exams</li>
-            <li>✅ Access advanced analytics and study tools</li>
+            <li><FiCheck /> Your account has been upgraded automatically</li>
+            <li><FiCheck /> You now have access to everything in Pro</li>
+            <li><FiCheck /> Start taking unlimited practice exams</li>
+            <li><FiCheck /> Access advanced analytics and study tools</li>
           </ul>
         </div>
 
         <div className="action-buttons">
           <button onClick={handleContinue} className="continue-button">
-            Start Using Premium Features
+            Start Using Pro
           </button>
           <button onClick={() => navigate('/membership/upgrade')} className="manage-button">
             Manage Subscription

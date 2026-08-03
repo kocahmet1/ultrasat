@@ -1,0 +1,103 @@
+/* ExamDateCard.css — set/change SAT test date + target score (Home hero area).
+   V3 design language: tokens from styles/tokens.css composed with ut-kit
+   classes. px units on purpose (kit convention). */
+
+/* ------------------------------------------------------------ setup card -- */
+
+.edc-card {
+  margin-bottom: 22px;
+}
+
+.edc-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.edc-title {
+  margin-bottom: 3px;
+}
+
+.edc-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.edc-form .ut-input {
+  width: auto;
+}
+
+.edc-date {
+  flex: 0 1 180px;
+}
+
+.edc-score {
+  flex: 0 1 196px;
+}
+
+.edc-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edc-error {
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ut-danger-dark);
+}
+
+@media (max-width: 640px) {
+  .edc-form .ut-input {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}
+
+/* ------------------------------- hero inline "Test date · Change" line -- */
+
+/* Column wrapper so the affordance sits right under the hero countdown. */
+.edc-countdown-col {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+
+.edc-inline {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ut-on-ink-muted);
+  white-space: nowrap;
+}
+
+.edc-inline b {
+  font-weight: 500;
+  color: var(--ut-on-ink);
+}
+
+.edc-inline-change {
+  margin-left: 4px;
+  color: var(--ut-accent-bright);
+}
+
+.edc-inline:hover .edc-inline-change,
+.edc-inline:focus-visible .edc-inline-change {
+  text-decoration: underline;
+}
+
+.edc-inline:focus-visible {
+  outline: 2px solid var(--ut-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

@@ -1,0 +1,120 @@
+/* LandingPageLayout — slim header + sticky-footer frame for the public
+   pages (legal, company, blog, auth). "/" renders bare; see the JSX.
+   Tokens from styles/tokens.css (--ut-*). px units only. */
+
+.lpl-frame {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ut-bg);
+}
+
+/* Page content grows so the footer sits at the viewport bottom even on
+   short pages (login, signup). */
+.lpl-main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.lpl-main > * {
+  flex: 1 0 auto;
+}
+
+/* ---- header ---- */
+
+.lpl-header {
+  background: var(--ut-ink);
+  border-bottom: 1px solid var(--ut-rule-on-ink);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.lpl-header-inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.lpl-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ut-on-ink-bright);
+  text-decoration: none;
+}
+
+.lpl-brand:hover {
+  color: var(--ut-on-ink-bright);
+}
+
+.lpl-brand-mark {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--ut-accent);
+  display: block;
+  flex-shrink: 0;
+}
+
+.lpl-brand-word {
+  font-family: var(--ut-font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.lpl-header-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.lpl-login {
+  color: var(--ut-on-ink-muted);
+  text-decoration: none;
+  font-family: var(--ut-font-body);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.lpl-login:hover {
+  color: var(--ut-on-ink-bright);
+}
+
+.lpl-signup {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
+  font-family: var(--ut-font-display);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.lpl-signup:hover {
+  background: var(--ut-accent-bright);
+  color: var(--ut-on-accent);
+}
+
+@media (max-width: 720px) {
+  .lpl-header-inner {
+    padding: 0 20px;
+  }
+
+  .lpl-header-links {
+    gap: 16px;
+  }
+}

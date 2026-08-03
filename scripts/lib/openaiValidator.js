@@ -1,11 +1,12 @@
 /**
- * Stage 2: AI-powered Validation using OpenAI API (gpt-5.4).
+ * Stage 2: AI-powered Validation using OpenAI API (gpt-5.6-luna).
  *
  * Uploads the original PDF to OpenAI's Files API, then uses the Responses API
  * to cross-verify the extracted JSON against the PDF. Provides auto-fix suggestions.
  */
 
 const fs = require('fs');
+const { resolveModel, reasoningConfig, outputTokenBudget } = require('../../apps/api/config/aiModel');
 const path = require('path');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
@@ -155,7 +156,7 @@ RULES:
 async function validateExtraction(pdfPath, extractedData, options = {}) {
   const {
     apiKey,
-    model = 'gpt-5.4',
+    model = resolveModel('OPENAI_INGEST_MODEL'),
     maxRetries = 2,
   } = options;
 
@@ -183,6 +184,7 @@ async function validateExtraction(pdfPath, extractedData, options = {}) {
           },
           body: JSON.stringify({
             model,
+            reasoning: reasoningConfig(),
             input: [
               {
                 role: 'system',
@@ -199,7 +201,7 @@ async function validateExtraction(pdfPath, extractedData, options = {}) {
                 ],
               },
             ],
-            max_output_tokens: 32000,
+            max_output_tokens: outputTokenBudget(32000),
           }),
         });
 

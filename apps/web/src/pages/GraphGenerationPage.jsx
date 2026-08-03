@@ -550,7 +550,7 @@ const GraphGenerationPage = () => {
               <div className="status-details">
                 <p>✓ Plotly.js environment configured</p>
                 <p>✓ Puppeteer available for image rendering</p>
-                <p>✓ Gemini AI integration active</p>
+                <p>✓ OpenAI (GPT-5.6 Luna) integration active</p>
               </div>
             )}
           </div>

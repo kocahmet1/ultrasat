@@ -24,7 +24,7 @@ const PracticeExamManager = () => {
     title: '',
     description: '',
     moduleIds: [],
-    isPublic: true,
+    isPublic: false,
     isDiagnostic: false
   });
   
@@ -166,7 +166,7 @@ const PracticeExamManager = () => {
         title: '',
         description: '',
         moduleIds: [],
-        isPublic: true,
+        isPublic: false,
         isDiagnostic: false
       });
       
@@ -259,7 +259,7 @@ const PracticeExamManager = () => {
       title: '',
       description: '',
       moduleIds: [],
-      isPublic: true,
+      isPublic: false,
       isDiagnostic: false
     });
     setDiagnosticExam({
@@ -551,9 +551,17 @@ const PracticeExamManager = () => {
                 name="isPublic"
                 checked={newExam.isPublic}
                 onChange={handleNewExamChange}
+                disabled={!newExam.isDiagnostic}
               />
-              Make this exam public
+              {newExam.isDiagnostic
+                ? 'Make this diagnostic exam public'
+                : 'Full-length exams publish from Exam Quality Control'}
             </label>
+            {!newExam.isDiagnostic && (
+              <small>
+                Complete a passed full-exam audit, then use “Publish verified exam.”
+              </small>
+            )}
           </div>
           
           <div className="form-actions">

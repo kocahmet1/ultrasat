@@ -251,8 +251,9 @@ const isMathSubcategory = (subcategory) => {
     return true;
   }
 
-  const subjectName = getSubcategorySubject(subcategory?.id) || '';
-  return subjectName.toLowerCase().includes('math');
+  // getSubcategorySubject returns a numeric code (1 = reading/writing, 2 = math,
+  // 0 = unknown) — not a name. Calling .toLowerCase() on it crashed /progress.
+  return getSubcategorySubject(subcategory?.id) === 2;
 };
 
 export const buildCategorizedSubcategories = (

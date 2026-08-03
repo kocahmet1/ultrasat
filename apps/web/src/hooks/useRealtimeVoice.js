@@ -121,7 +121,10 @@ export function useRealtimeVoice() {
                 }
             });
 
-            // Send offer to OpenAI Realtime API
+            // Send offer to OpenAI Realtime API.
+            // NOTE: this is deliberately NOT the site-wide gpt-5.6-luna model.
+            // Luna has no audio modality, so voice must stay on a realtime
+            // audio model. See apps/api/config/aiModel.js.
             const realtimeModel = 'gpt-realtime-mini-2025-12-15';
             const response = await fetch(
                 `https://api.openai.com/v1/realtime?model=${realtimeModel}`,

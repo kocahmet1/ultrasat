@@ -1,16 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faSearch, 
-  faCalendar, 
-  faClock, 
-  faEye, 
-  faTag,
-  faChevronRight,
-  faSpinner,
-  faFilter
-} from '@fortawesome/free-solid-svg-icons';
+import { FiSearch, FiCalendar, FiClock, FiEye, FiTag, FiChevronRight, FiLoader, FiFilter } from 'react-icons/fi';
 import '../styles/Blog.css';
 
 const Blog = () => {
@@ -208,7 +198,7 @@ const Blog = () => {
             {/* Search Bar */}
             <form onSubmit={handleSearchSubmit} className="search-form">
               <div className="search-input-container">
-                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                <FiSearch className="search-icon" />
                 <input
                   type="text"
                   placeholder="Search articles..."
@@ -243,7 +233,7 @@ const Blog = () => {
                     <div className="post-meta">
                       <span className="post-category">{post.category}</span>
                       <span className="post-date">
-                        <FontAwesomeIcon icon={faCalendar} />
+                        <FiCalendar />
                         {formatDate(post.createdAt)}
                       </span>
                     </div>
@@ -254,16 +244,16 @@ const Blog = () => {
                     <div className="post-footer">
                       <div className="post-stats">
                         <span>
-                          <FontAwesomeIcon icon={faClock} />
+                          <FiClock />
                           {post.readTime} min read
                         </span>
                         <span>
-                          <FontAwesomeIcon icon={faEye} />
+                          <FiEye />
                           {post.views || 0} views
                         </span>
                       </div>
                       <Link to={`/blog/${post.id}`} className="read-more-btn">
-                        Read More <FontAwesomeIcon icon={faChevronRight} />
+                        Read More <FiChevronRight />
                       </Link>
                     </div>
                   </div>
@@ -287,7 +277,7 @@ const Blog = () => {
                     className="mobile-filter-toggle"
                     onClick={() => setFilterOpen(!filterOpen)}
                   >
-                    <FontAwesomeIcon icon={faFilter} />
+                    <FiFilter />
                   </button>
                 </div>
                 
@@ -332,7 +322,7 @@ const Blog = () => {
                             className={`tag-button ${selectedTag === tag ? 'active' : ''}`}
                             onClick={() => handleFilterChange('tag', selectedTag === tag ? '' : tag)}
                           >
-                            <FontAwesomeIcon icon={faTag} />
+                            <FiTag />
                             {tag}
                           </button>
                         ))}
@@ -365,7 +355,7 @@ const Blog = () => {
 
               {loading ? (
                 <div className="loading-state">
-                  <FontAwesomeIcon icon={faSpinner} spin />
+                  <FiLoader style={{ animation: 'spin 1s linear infinite' }} />
                   <p>Loading articles...</p>
                 </div>
               ) : blogPosts.length === 0 ? (
@@ -390,7 +380,7 @@ const Blog = () => {
                           <div className="post-meta">
                             <span className="post-category">{post.category}</span>
                             <span className="post-date">
-                              <FontAwesomeIcon icon={faCalendar} />
+                              <FiCalendar />
                               {formatDate(post.createdAt)}
                             </span>
                           </div>
@@ -408,11 +398,11 @@ const Blog = () => {
                           <div className="post-footer">
                             <div className="post-stats">
                               <span>
-                                <FontAwesomeIcon icon={faClock} />
+                                <FiClock />
                                 {post.readTime} min
                               </span>
                               <span>
-                                <FontAwesomeIcon icon={faEye} />
+                                <FiEye />
                                 {post.views || 0}
                               </span>
                             </div>

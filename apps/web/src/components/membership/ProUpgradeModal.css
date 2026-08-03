@@ -1,0 +1,155 @@
+/* ProUpgradeModal — THE shared upgrade modal (UX overhaul P0-A).
+   Same design language as MembershipGate: tokens.css + ut-kit.css. */
+
+.pro-upgrade-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300; /* above the coach dock (1200) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(10, 14, 18, 0.55);
+  backdrop-filter: blur(3px);
+  animation: pro-upgrade-fade 0.16s ease-out;
+}
+
+.pro-upgrade-modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 30px 28px 26px;
+  text-align: center;
+  font-family: var(--ut-font-body);
+  box-shadow: var(--ut-shadow-lg);
+  animation: pro-upgrade-pop 0.18s ease-out;
+}
+
+.pro-upgrade-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--ut-radius-sm);
+  background: transparent;
+  color: var(--ut-mono-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pro-upgrade-close:hover {
+  background: var(--ut-bg-alt);
+  color: var(--ut-text);
+}
+
+.pro-upgrade-badge {
+  width: 54px;
+  height: 54px;
+  margin: 4px auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  color: var(--ut-accent-dark);
+  font-size: 22px;
+}
+
+.pro-upgrade-title {
+  font-family: var(--ut-font-display);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ut-text);
+  margin: 0 0 8px;
+}
+
+.pro-upgrade-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ut-muted);
+  margin: 0 0 16px;
+}
+
+.pro-upgrade-benefits {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 13px 16px;
+  text-align: left;
+  background: var(--ut-card-soft);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
+}
+
+.pro-upgrade-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ut-text-soft);
+}
+
+.pro-upgrade-benefits li svg {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--ut-accent-dark);
+}
+
+.pro-upgrade-price {
+  font-family: var(--ut-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  color: var(--ut-text);
+  margin: 0 0 18px;
+}
+
+.pro-upgrade-price span {
+  color: var(--ut-mono-muted);
+}
+
+.pro-upgrade-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.pro-upgrade-actions .ut-btn {
+  width: 100%;
+}
+
+@keyframes pro-upgrade-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pro-upgrade-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .pro-upgrade-modal {
+    padding: 26px 18px 22px;
+  }
+}

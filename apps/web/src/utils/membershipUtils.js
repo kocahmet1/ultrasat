@@ -30,8 +30,10 @@ export const TIER_INFO = {
     description: 'Get started with basic SAT preparation'
   },
   [MEMBERSHIP_TIERS.PLUS]: {
-    name: 'Plus',
-    displayName: 'Plus Tier',
+    // User-facing name is "Pro" everywhere (Overhaul Phase C). Internal tier id
+    // stays 'plus' — no billing/Stripe changes.
+    name: 'Pro',
+    displayName: 'Pro',
     color: '#3B82F6',
     bgColor: '#EFF6FF',
     features: [
@@ -58,7 +60,7 @@ export const TIER_INFO = {
       'Exclusive content'
     ],
     price: '$19.99/month',
-    description: 'Premium experience with all features'
+    description: 'The ultimate prep experience with every tool'
   }
 };
 

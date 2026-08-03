@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faTimes, 
-  faArrowLeft, 
-  faArrowRight, 
-  faCheck, 
-  faTimes as faTimesCircle,
-  faRotate,
-  faHome
-} from '@fortawesome/free-solid-svg-icons';
+import {
+  FiX,
+  FiArrowLeft,
+  FiArrowRight,
+  FiCheck,
+  FiXCircle,
+  FiRotateCcw,
+  FiHome,
+} from 'react-icons/fi';
 import { getFlashcardDeckWords, updateFlashcardStudyStats } from '../api/helperClient';
 import { toast } from 'react-toastify';
+import { logEvent, EVENT_TYPES } from '../coach/events';
 import '../styles/FlashcardStudy.css';
 
 /**
@@ -32,6 +32,7 @@ const FlashcardStudy = ({
   });
   const [showResults, setShowResults] = useState(false);
   const [sessionWords, setSessionWords] = useState([]);
+  const sessionStartRef = React.useRef(Date.now());
 
   // Swipe gesture state
   const [touchStartX, setTouchStartX] = useState(null);
@@ -109,6 +110,17 @@ const FlashcardStudy = ({
         setIsFlipped(false);
       } else {
         setShowResults(true);
+
+        // AI Coach event stream (Phase 0): flashcard sessions now feed the
+        // student model (previously invisible to tracking — audit §3.4).
+        logEvent(EVENT_TYPES.FLASHCARD_SESSION, {
+          deckId,
+          deckName: deckName || undefined,
+          cardsReviewed: words.length,
+          knownCount: studyStats.correct + (correct ? 1 : 0),
+          unknownCount: studyStats.incorrect + (correct ? 0 : 1),
+          durationMs: Date.now() - sessionStartRef.current,
+        }).catch((e) => console.error('[FlashcardStudy] coach event failed:', e));
       }
     } catch (error) {
       console.error('Error updating study stats:', error);
@@ -117,6 +129,7 @@ const FlashcardStudy = ({
   };
 
   const handleRestart = () => {
+    sessionStartRef.current = Date.now();
     setCurrentIndex(0);
     setIsFlipped(false);
     setShowResults(false);
@@ -251,9 +264,9 @@ const FlashcardStudy = ({
                   <div className="word-result-status">
                     {word.studied ? (
                       word.correct ? (
-                        <FontAwesomeIcon icon={faCheck} className="correct-icon" />
+                        <FiCheck className="correct-icon" />
                       ) : (
-                        <FontAwesomeIcon icon={faTimesCircle} className="incorrect-icon" />
+                        <FiXCircle className="incorrect-icon" />
                       )
                     ) : (
                       <span className="not-studied">-</span>
@@ -266,11 +279,11 @@ const FlashcardStudy = ({
           
           <div className="results-actions">
             <button className="restart-button" onClick={handleRestart}>
-              <FontAwesomeIcon icon={faRotate} />
+              <FiRotateCcw />
               Study Again
             </button>
             <button className="close-button" onClick={onClose}>
-              <FontAwesomeIcon icon={faHome} />
+              <FiHome />
               Back to Word Bank
             </button>
           </div>
@@ -286,7 +299,7 @@ const FlashcardStudy = ({
     <div className="flashcard-study-container">
       <div className="study-header">
         <button className="close-study-button" onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} />
+          <FiX />
         </button>
         <div className="study-info">
           <h2>{deckName}</h2>
@@ -341,7 +354,7 @@ const FlashcardStudy = ({
                       handleAnswer(false);
                     }}
                   >
-                    <FontAwesomeIcon icon={faTimesCircle} />
+                    <FiXCircle />
                     Didn't Know
                   </button>
                   <button 
@@ -351,7 +364,7 @@ const FlashcardStudy = ({
                       handleAnswer(true);
                     }}
                   >
-                    <FontAwesomeIcon icon={faCheck} />
+                    <FiCheck />
                     Got It!
                   </button>
                 </div>
@@ -367,13 +380,13 @@ const FlashcardStudy = ({
           onClick={handlePrevious}
           disabled={currentIndex === 0}
         >
-          <FontAwesomeIcon icon={faArrowLeft} />
+          <FiArrowLeft />
           Previous
         </button>
         
         <div className="flip-button-container">
           <button className="flip-button" onClick={handleFlip}>
-            <FontAwesomeIcon icon={faRotate} />
+            <FiRotateCcw />
             {isFlipped ? 'Show Word' : 'Show Definition'}
           </button>
         </div>
@@ -384,7 +397,7 @@ const FlashcardStudy = ({
           disabled={currentIndex === words.length - 1}
         >
           Next
-          <FontAwesomeIcon icon={faArrowRight} />
+          <FiArrowRight />
         </button>
       </div>
     </div>

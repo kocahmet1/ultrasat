@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FiX } from 'react-icons/fi';
 import '../styles/NewDeckModal.css';
 
 const NewDeckModal = ({ isOpen, onClose, onCreateDeck }) => {
@@ -21,7 +20,7 @@ const NewDeckModal = ({ isOpen, onClose, onCreateDeck }) => {
     <div className="modal-overlay">
       <div className="modal-content">
         <button className="modal-close-button" onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} />
+          <FiX />
         </button>
         <h2>Create New Flashcard Deck</h2>
         <div className="form-group">

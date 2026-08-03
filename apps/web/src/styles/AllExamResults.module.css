@@ -1,42 +1,35 @@
+/* AllExamResults — retinted to the unified design language (styles/tokens.css).
+   Sizes in px on purpose: html { font-size: 62.5% } rem scaling must not warp it. */
+
+/* Element selector escapes CSS-module scoping; keep it aligned with the app bg
+   (same value index.css sets) instead of the old off-brand #ebf2f9. */
 body {
-  background-color: #ebf2f9;
+  background-color: var(--ut-bg);
 }
 
 .container {
     max-width: 900px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.title {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    font-size: 2.2em;
-    font-weight: 600;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 15px;
+    margin: 0 auto;
+    padding: 28px 24px 90px;
+    font-family: var(--ut-font-body);
+    color: var(--ut-text);
 }
 
 .loading,
 .error,
 .noResults {
     text-align: center;
-    font-size: 1.2em;
-    color: #555;
+    font-size: 14px;
+    color: var(--ut-muted);
     padding: 20px;
     margin-top: 20px;
 }
 
 .error {
-    color: #d9534f;
-    background-color: #fdd;
-    border: 1px solid #d9534f;
-    border-radius: 8px;
+    color: var(--ut-danger-dark);
+    background-color: var(--ut-danger-soft);
+    border: 1px solid var(--ut-danger-rule);
+    border-radius: var(--ut-radius);
 }
 
 .examList {
@@ -45,25 +38,26 @@ body {
 }
 
 .examItem {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: var(--ut-card);
+    border: 1px solid var(--ut-rule);
+    border-radius: var(--ut-radius);
+    margin-bottom: 12px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 
 .examItem:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    border-color: var(--ut-accent);
+    box-shadow: var(--ut-shadow-sm);
 }
 
 .examLink {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 25px;
+    padding: 18px 22px;
     text-decoration: none;
-    color: #333;
+    color: var(--ut-text);
 }
 
 .examInfo {
@@ -73,24 +67,31 @@ body {
 }
 
 .examName {
-    font-size: 1.3em;
-    font-weight: 500;
-    color: #007bff; 
-    margin-bottom: 5px;
+    font-family: var(--ut-font-display);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ut-text);
+    margin-bottom: 6px;
 }
 
 .examDate {
-    font-size: 0.95em;
-    color: #777;
+    font-family: var(--ut-font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ut-mono-muted);
 }
 
 .examScore {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #28a745; 
-    background-color: #e9f5ea;
-    padding: 8px 15px;
-    border-radius: 20px;
+    font-family: var(--ut-font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ut-accent-dark);
+    background-color: var(--ut-accent-soft);
+    border: 1px solid var(--ut-accent-rule);
+    padding: 6px 14px;
+    border-radius: 999px;
     white-space: nowrap;
     margin-left: 15px;
 }
@@ -98,12 +99,7 @@ body {
 
 @media (max-width: 768px) {
     .container {
-        margin: 20px;
-        padding: 20px;
-    }
-
-    .title {
-        font-size: 1.8em;
+        padding: 20px 16px 70px;
     }
 
     .examLink {
@@ -118,6 +114,6 @@ body {
     }
 
     .examName {
-        font-size: 1.1em;
+        font-size: 15px;
     }
 }

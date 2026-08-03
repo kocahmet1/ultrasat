@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './ProfileDropdown.css';
-import { FaUserCircle, FaSignOutAlt, FaGem, FaUser, FaChartBar, FaQuestionCircle } from 'react-icons/fa';
-import { MembershipBadge } from './membership';
+import { FiLogOut, FiZap, FiUser, FiHelpCircle, FiChevronDown } from 'react-icons/fi';
+
+const tierLabel = (tier) => {
+  if (!tier || tier === 'free') return 'Free tier';
+  return `${tier.charAt(0).toUpperCase()}${tier.slice(1)} tier`;
+};
 
 const ProfileDropdown = () => {
   const { currentUser, logout, userMembership } = useAuth();
@@ -35,46 +39,57 @@ const ProfileDropdown = () => {
     return null;
   }
 
+  const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Student';
+  const initial = (displayName || 'S').trim().charAt(0);
+
   return (
-    <div className="profile-dropdown-container" ref={dropdownRef}> 
-      <button onClick={toggleDropdown} className="profile-trigger-btn">
-        <FaUserCircle size={32} />
+    <div className="profile-dropdown-container" ref={dropdownRef}>
+      <button
+        onClick={toggleDropdown}
+        className="profile-trigger-btn"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-label="Account menu"
+      >
+        <span className="profile-trigger-avatar">{initial}</span>
+        <FiChevronDown className="profile-trigger-chevron" aria-hidden="true" />
       </button>
 
       {isOpen && (
-        <div className="dropdown-menu">
-          <div className="dropdown-header" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '0.25rem'}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center'}}>
-              <FaUser className="dropdown-icon" />
-              <span>{currentUser.email}</span>
+        <div className="dropdown-menu" role="menu">
+          <div className="dropdown-header">
+            <span className="dropdown-header-avatar">{initial}</span>
+            <div className="dropdown-header-id">
+              <span className="dropdown-header-name">{displayName}</span>
+              <span className="dropdown-header-email">{currentUser.email}</span>
+              {userMembership && (
+                <span className="dropdown-tier">{tierLabel(userMembership.tier)}</span>
+              )}
             </div>
-            {userMembership && (
-              <div className="dropdown-membership-badge" style={{marginTop: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <MembershipBadge tier={userMembership.tier} size="small" showName={false} />
-                <span className="membership-badge-text" style={{marginLeft: 6, fontWeight: 500, fontSize: '0.85em', color: '#555'}}>
-                  {userMembership.tier === 'free' ? 'Free Tier' : userMembership.tier.charAt(0).toUpperCase() + userMembership.tier.slice(1) + ' Tier'}
-                </span>
-              </div>
-            )}
           </div>
-          <Link to="/profile" className="dropdown-item" onClick={() => setIsOpen(false)}>
-            <FaChartBar className="dropdown-icon" />
-            Profile
-          </Link>
 
-          <Link to="/membership/upgrade" className="dropdown-item upgrade-link" onClick={() => setIsOpen(false)}>
-            <FaGem className="dropdown-icon" />
-            Upgrade
-          </Link>
-          <Link to="/help" className="dropdown-item" onClick={() => setIsOpen(false)}>
-            <FaQuestionCircle className="dropdown-icon" />
-            Help
-          </Link>
-          <div className="dropdown-divider"></div>
-          <button onClick={logout} className="dropdown-item-logout">
-            <FaSignOutAlt className="dropdown-icon" />
-            Logout
-          </button>
+          <div className="dropdown-body">
+            <Link to="/profile" className="dropdown-item" onClick={() => setIsOpen(false)}>
+              <FiUser className="dropdown-icon" />
+              Profile
+            </Link>
+            {(!userMembership || userMembership.tier === 'free') && (
+              <Link to="/membership/upgrade" className="dropdown-item upgrade-link" onClick={() => setIsOpen(false)}>
+                <FiZap className="dropdown-icon" />
+                Upgrade
+                <span className="dropdown-item-meta">Pro</span>
+              </Link>
+            )}
+            <Link to="/help" className="dropdown-item" onClick={() => setIsOpen(false)}>
+              <FiHelpCircle className="dropdown-icon" />
+              Help
+            </Link>
+            <div className="dropdown-divider"></div>
+            <button onClick={logout} className="dropdown-item-logout dropdown-item">
+              <FiLogOut className="dropdown-icon" />
+              Log out
+            </button>
+          </div>
         </div>
       )}
     </div>

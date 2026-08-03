@@ -1,9 +1,10 @@
 /**
  * AI Companion Service
- * Provides SAT Coach functionality using OpenAI GPT-5-mini and Realtime API
+ * Provides SAT Coach functionality using OpenAI gpt-5.6-luna and the Realtime API
  */
 
 const OpenAI = require('openai');
+const { resolveModel, reasoningConfig } = require('./config/aiModel');
 
 // Initialize OpenAI client
 const getOpenAIClient = () => {
@@ -15,7 +16,10 @@ const getOpenAIClient = () => {
 };
 
 // Model configuration
-const TEXT_MODEL = process.env.COMPANION_MODEL || 'gpt-5-mini';
+// Text generation runs on the site-wide model (gpt-5.6-luna) via config/aiModel.
+const TEXT_MODEL = resolveModel('COMPANION_MODEL');
+// Realtime voice stays on a realtime-capable audio model: gpt-5.6-luna has no
+// audio modality, so it cannot serve the WebRTC voice companion.
 const REALTIME_MODEL = process.env.REALTIME_MODEL || 'gpt-realtime-mini-2025-12-15';
 const REALTIME_VOICE = process.env.REALTIME_VOICE || 'cedar';
 
@@ -264,6 +268,7 @@ Respond with JSON:
   try {
     const response = await openai.responses.create({
       model: TEXT_MODEL,
+      reasoning: reasoningConfig(),
       input: [
         { role: 'system', content: buildSystemPrompt() },
         { role: 'user', content: prompt }
@@ -329,6 +334,7 @@ Respond with JSON:
   try {
     const response = await openai.responses.create({
       model: TEXT_MODEL,
+      reasoning: reasoningConfig(),
       input: [
         { role: 'system', content: buildSystemPrompt() },
         { role: 'user', content: prompt }
@@ -470,6 +476,7 @@ FIELD RULES:
 
     const response = await openai.responses.create({
       model: TEXT_MODEL,
+      reasoning: reasoningConfig(),
       input: aiMessages,
       text: { format: { type: 'json_object' } }
     });

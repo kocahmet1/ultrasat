@@ -58,14 +58,22 @@ Generate exactly 30 questions in the following JSON format:
     ],
     "correctAnswer": 0,
     "difficulty": "easy",
-    "explanation": [
-      "Step 1: Analyze the relationship between the ideas before and after the blank.",
-      "Step 2: Determine what type of logical connection is needed (contrast, example, conclusion, etc.).",
-      "Step 3: Select the transition word that best signals this logical relationship.",
-      "Option B is incorrect because 'However' signals contrast, but the ideas are not contrasting.",
-      "Option C is incorrect because 'Therefore' signals a conclusion, but the second idea is not a result of the first.",
-      "Option D is incorrect because 'For example' signals an example, but the second idea is not an example of the first."
-    ],
+    "explanation": {
+      "rule": "A transition must match the logical relationship between the idea before the blank and the idea after it.",
+      "steps": [
+        "Step 1: Analyze the relationship between the ideas before and after the blank.",
+        "Step 2: Determine what type of logical connection is needed (contrast, example, conclusion, etc.).",
+        "Step 3: Select the transition word that best signals this logical relationship — here, 'Specifically,' introduces the precise detail the passage goes on to give."
+      ],
+      "choiceRebuttals": {
+        "B": "Option B is incorrect because 'However' signals contrast, but the ideas are not contrasting.",
+        "C": "Option C is incorrect because 'Therefore' signals a conclusion, but the second idea is not a result of the first.",
+        "D": "Option D is incorrect because 'For example' signals an example, but the second idea is not an example of the first."
+      },
+      "thingsToRemember": [
+        "Read the sentences on both sides of the blank before looking at the choices; the relationship between them dictates the transition."
+      ]
+    },
     "subcategory": "[subcategory name]",
     "skillTags": ["relevant-skill-tag-1", "relevant-skill-tag-2"],
     "usageContext": "general"
@@ -142,12 +150,20 @@ Generate exactly 30 questions in the following JSON format:
 - Make distractors represent realistic misinterpretations or partial understandings
 
 **Explanation Requirements:**
-- First array elements: Step-by-step analysis showing how to get the correct answer from the passage
+
+Every explanation must be a structured object with these fields:
+- `rule`: One sentence stating the rule, concept, or skill the question tests — the thing the student should generalize from this question
+- `steps`: Array of strings — step-by-step analysis showing how to get the correct answer from the passage, ending with why the correct choice wins
+- `choiceRebuttals`: Object keyed by the letters of the INCORRECT options (e.g., `"B"`, `"C"`, `"D"`) — a brief, specific explanation of why each incorrect option is wrong (do not include an entry for the correct option; the steps justify it)
+- `thingsToRemember`: Array of 1-2 strings — takeaways, common traps, or shortcuts the student should carry to the next question
+
+Additional guidance:
 - Include relevant textual evidence and reasoning steps
-- Last array elements: Brief explanation of why each incorrect option is wrong
 - Use clear, educational language appropriate for students
 - Keep each step concise and focused
 - Reference specific parts of the passage when relevant
+- Math notation is allowed and encouraged where relevant: write LaTeX inside `$...$` for inline math (e.g., `$3x + 5 = 11$`) or `$$...$$` for display math; do not use any other delimiters
+- Legacy note: an `explanation` given as a flat array of strings (steps first, then "Option B is incorrect because..." lines) is still accepted by the importer, but new generations must emit the structured object above
 
 ### Difficulty Calibration
 
@@ -177,7 +193,7 @@ Generate exactly 30 questions in the following JSON format:
 - `options`: Array of exactly 4 answer choices
 - `correctAnswer`: Index (0-3) of the correct option
 - `difficulty`: Must be "easy", "medium", or "hard"
-- `explanation`: Array of strings with step-by-step solution and option analysis
+- `explanation`: Structured object with `rule` (string), `steps` (array of strings), `choiceRebuttals` (object keyed by incorrect option letters), and `thingsToRemember` (array of strings); LaTeX allowed with `$...$` delimiters
 - `subcategory`: Use the exact subcategory name as specified in the prompt
 - `skillTags`: Array of relevant skill identifiers (use kebab-case format)
 - `usageContext`: Always set to "general"

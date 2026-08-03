@@ -211,7 +211,7 @@ async function runPipeline(job, req) {
 
   // Resolve library paths relative to project root
   const scriptsLib = path.resolve(__dirname, '../../scripts/lib');
-  const aiModel = 'gpt-5.4';
+  const aiModel = require('./config/aiModel').resolveModel('OPENAI_INGEST_MODEL');
 
   // ── Stage 1: EXTRACT ──
   addLog(job, 'info', '📄 Stage 1: Extracting questions from PDF...');

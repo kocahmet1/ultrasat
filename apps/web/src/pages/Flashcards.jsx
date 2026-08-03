@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
 import { useAuth } from '../contexts/AuthContext';
 import { useSidebar } from '../contexts/SidebarContext';
@@ -17,7 +17,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/Flashcards.css';
 import {
-  FiBell,
   FiBookOpen,
   FiCalendar,
   FiChevronDown,
@@ -36,15 +35,6 @@ import {
   FiUpload,
   FiZap,
 } from 'react-icons/fi';
-
-const topNavItems = [
-  { path: '/progress', label: 'Dashboard' },
-  { path: '/practice-exams', label: 'Practice Exams' },
-  { path: '/subject-quizzes', label: 'Question Bank' },
-  { path: '/flashcards', label: 'Flashcards' },
-  { path: '/ai-coach', label: 'AI Coach', badge: 'BETA' },
-  { path: '/progress', label: 'Analytics' },
-];
 
 const topicFilters = ['Vocabulary', 'Reading', 'Writing', 'Math', 'Favorites'];
 const sortOptions = [
@@ -243,20 +233,9 @@ export default function Flashcards() {
   }, [currentUser]);
 
   useEffect(() => {
-    const appContainer = document.querySelector('.app-container');
-    if (appContainer) {
-      appContainer.classList.add('flashcards-shell-active');
-    }
-
     if (!isMobile) {
       setSidebarCollapsed(false);
     }
-
-    return () => {
-      if (appContainer) {
-        appContainer.classList.remove('flashcards-shell-active');
-      }
-    };
   }, [isMobile, setSidebarCollapsed]);
 
   useEffect(() => {
@@ -270,7 +249,8 @@ export default function Flashcards() {
     [flashcardDecks]
   );
 
-  const displayDecks = validDecks.length > 0 ? validDecks : fallbackDecks;
+  // Overhaul Phase B: never present the sample decks as the user's own decks.
+  const displayDecks = validDecks;
   const usingSamples = validDecks.length === 0 && !decksLoading;
 
   const deckCards = useMemo(() => {
@@ -333,9 +313,6 @@ export default function Flashcards() {
       masteryAverage,
     };
   }, [displayDecks]);
-
-  const userName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Alex';
-  const firstInitial = userName.charAt(0).toUpperCase();
 
   const handleStudyDeck = (deck) => {
     if (deck.sample) {
@@ -440,51 +417,12 @@ export default function Flashcards() {
 
   return (
     <div className="flashcards-page">
-      <header className="flashcards-top-nav" aria-label="Flashcards navigation">
-        <nav className="flashcards-top-nav-links">
-          {topNavItems.map((item) => (
-            <Link
-              key={`${item.label}-${item.path}`}
-              to={item.path}
-              className={`flashcards-top-nav-link ${item.path === '/flashcards' ? 'active' : ''}`}
-            >
-              {item.label}
-              {item.badge && <span className="flashcards-beta-badge">{item.badge}</span>}
-            </Link>
-          ))}
-        </nav>
-        <div className="flashcards-top-actions">
-          <label className="flashcards-global-search">
-            <FiSearch aria-hidden="true" />
-            <input
-              type="search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search anything..."
-              aria-label="Search flashcards"
-            />
-            <span className="flashcards-shortcut">Cmd K</span>
-          </label>
-          <button type="button" className="flashcards-icon-button" aria-label="Notifications">
-            <FiBell />
-            <span className="flashcards-notification-dot">3</span>
-          </button>
-          <button type="button" className="flashcards-user-button" aria-label="Open profile">
-            <span className="flashcards-user-avatar">{firstInitial}</span>
-            <span className="flashcards-user-name">{userName}</span>
-            <FiChevronDown />
-          </button>
-        </div>
-      </header>
-
-      <main className="flashcards-content">
+      <main className="flashcards-content ut-page ut-page--wide">
         <section className="flashcards-hero-grid" aria-label="Flashcards overview">
           <div className="flashcards-heading-block">
-            <div className="flashcards-title-row">
-              <h1 className="flashcards-page-title">Flashcards</h1>
-              <FiStar className="flashcards-title-spark" aria-hidden="true" />
-            </div>
-            <p className="flashcards-page-subtitle">
+            <p className="ut-eyebrow">Study</p>
+            <h1 className="ut-page-title">Flashcards</h1>
+            <p className="ut-page-sub">
               Review your decks, track mastery, and create new flashcard sets.
             </p>
           </div>
@@ -658,10 +596,11 @@ export default function Flashcards() {
 
         <section className="flashcards-deck-grid" aria-label="Flashcard decks">
           {decksLoading ? (
-            <div className="flashcards-loading">
-              <FiRefreshCw />
-              Loading flashcard decks...
-            </div>
+            <>
+              <div className="ut-skeleton ut-skeleton--card" role="status" aria-label="Loading flashcard decks" />
+              <div className="ut-skeleton ut-skeleton--card" aria-hidden="true" />
+              <div className="ut-skeleton ut-skeleton--card" aria-hidden="true" />
+            </>
           ) : deckCards.length === 0 ? (
             <div className="flashcards-empty">
               <FiLayers />

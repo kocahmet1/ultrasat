@@ -1,178 +1,140 @@
+/* MembershipGate — the route-level Pro gate (UX overhaul P0-A).
+   Same design language as ProUpgradeModal: tokens.css + ut-kit.css. */
+
 .membership-gate {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border: 2px dashed #cbd5e1;
-  border-radius: 12px;
-  margin: 1rem 0;
+  align-items: flex-start;
+  padding: 56px 20px 90px;
+  font-family: var(--ut-font-body);
 }
 
-.membership-gate-content {
-  text-align: center;
-  max-width: 400px;
+.membership-gate-card {
   width: 100%;
+  max-width: 440px;
+  padding: 34px 32px 28px;
+  text-align: center;
 }
 
-.membership-gate-loading {
+.membership-gate-badge {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 16px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 100px;
-  color: #64748b;
-  font-size: 0.875rem;
-}
-
-.membership-gate-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.7;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  color: var(--ut-accent-dark);
+  font-size: 22px;
 }
 
 .membership-gate-title {
-  font-size: 1.5rem;
+  font-family: var(--ut-font-display);
+  font-size: 22px;
+  line-height: 1.2;
   font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.015em;
+  color: var(--ut-text);
+  margin: 0 0 8px;
 }
 
-.membership-gate-description {
-  color: #64748b;
-  margin: 0 0 1.5rem 0;
-  line-height: 1.5;
-}
-
-.membership-gate-tiers {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-}
-
-.membership-gate-current,
-.membership-gate-required {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.membership-gate-label {
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.membership-gate-sub {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ut-muted);
+  margin: 0 0 18px;
 }
 
 .membership-gate-benefits {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-.membership-gate-benefits h4 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #374151;
-  margin: 0 0 0.75rem 0;
-  text-align: center;
-}
-
-.membership-gate-benefits ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
+  margin: 0 0 16px;
+  padding: 13px 16px;
+  text-align: left;
+  background: var(--ut-card-soft);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
 }
 
 .membership-gate-benefits li {
-  padding: 0.25rem 0;
-  color: #4b5563;
-  font-size: 0.875rem;
-  position: relative;
-  padding-left: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ut-text-soft);
 }
 
-.membership-gate-benefits li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #059669;
-  font-weight: 700;
+.membership-gate-benefits li svg {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--ut-accent-dark);
+}
+
+.membership-gate-price {
+  font-family: var(--ut-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  color: var(--ut-text);
+  margin: 0 0 20px;
+}
+
+.membership-gate-price span {
+  color: var(--ut-mono-muted);
 }
 
 .membership-gate-actions {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
-.membership-gate-upgrade-btn {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.875rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+.membership-gate-actions .ut-btn {
+  width: 100%;
 }
 
-.membership-gate-upgrade-btn:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+/* Loading: tiny local skeleton while the membership doc resolves.
+   (Global skeleton primitives land in a later phase — keep this local.) */
+.membership-gate-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 240px;
+  padding: 48px 20px;
 }
 
-.membership-gate-learn-more-btn {
-  background: transparent;
-  color: #64748b;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.membership-gate-skeleton {
+  width: min(440px, 100%);
+  height: 190px;
+  border-radius: var(--ut-radius-lg);
+  background: linear-gradient(
+    90deg,
+    var(--ut-bg-alt) 25%,
+    var(--ut-card-soft) 50%,
+    var(--ut-bg-alt) 75%
+  );
+  background-size: 200% 100%;
+  animation: membership-gate-pulse 1.4s ease-in-out infinite;
 }
 
-.membership-gate-learn-more-btn:hover {
-  background: #f1f5f9;
-  color: #475569;
-  border-color: #94a3b8;
+@keyframes membership-gate-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .membership-gate {
-    padding: 1rem;
-    min-height: 250px;
+    padding: 32px 14px 70px;
   }
-  
-  .membership-gate-tiers {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .membership-gate-current,
-  .membership-gate-required {
-    width: 100%;
-  }
-  
-  .membership-gate-actions {
-    gap: 0.5rem;
+
+  .membership-gate-card {
+    padding: 28px 20px 24px;
   }
 }

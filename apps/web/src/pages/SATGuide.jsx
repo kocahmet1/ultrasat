@@ -34,27 +34,27 @@ function SATGuide() {
           </p>
           <div className="quick-facts">
             <div className="fact-item">
-              <h3>⏱️ Test Duration</h3>
+              <h3>Test Duration</h3>
               <p>2 hours 14 minutes (with break)</p>
             </div>
             <div className="fact-item">
-              <h3>🎯 Score Range</h3>
+              <h3>Score Range</h3>
               <p>400 - 1600 points</p>
             </div>
             <div className="fact-item">
-              <h3>💻 Format</h3>
+              <h3>Format</h3>
               <p>Digital & Adaptive</p>
             </div>
             <div className="fact-item">
-              <h3>📱 Device</h3>
+              <h3>Device</h3>
               <p>Laptop, tablet, or provided device</p>
             </div>
             <div className="fact-item">
-              <h3>📊 Questions</h3>
+              <h3>Questions</h3>
               <p>98 total questions</p>
             </div>
             <div className="fact-item">
-              <h3>💰 Test Fee</h3>
+              <h3>Test Fee</h3>
               <p>$60 (with fee waivers available)</p>
             </div>
           </div>
@@ -63,13 +63,13 @@ function SATGuide() {
         <section className="structure-section">
           <h2>Digital SAT Structure</h2>
           <p className="digital-note">
-            <strong>🔄 Adaptive Testing:</strong> The Digital SAT uses section-adaptive testing. Your performance on the first module 
+            <strong>Adaptive Testing:</strong> The Digital SAT uses section-adaptive testing. Your performance on the first module 
             determines the difficulty level of the second module in each section.
           </p>
           
           <div className="section-breakdown">
             <div className="test-section">
-              <h3>📖 Reading and Writing Section</h3>
+              <h3>Reading and Writing Section</h3>
               <div className="section-details">
                 <p><strong>Structure:</strong> 2 modules of 32 minutes each</p>
                 <p><strong>Total Time:</strong> 64 minutes</p>
@@ -80,7 +80,7 @@ function SATGuide() {
             </div>
             
             <div className="test-section">
-              <h3>🔢 Math Section</h3>
+              <h3>Math Section</h3>
               <div className="section-details">
                 <p><strong>Structure:</strong> 2 modules of 35 minutes each</p>
                 <p><strong>Total Time:</strong> 70 minutes</p>
@@ -92,7 +92,7 @@ function SATGuide() {
           </div>
           
           <div className="adaptive-explanation">
-            <h3>🧠 How Adaptive Testing Works</h3>
+            <h3>How Adaptive Testing Works</h3>
             <div className="adaptive-steps">
               <div className="adaptive-step">
                 <h4>Module 1</h4>
@@ -116,27 +116,27 @@ function SATGuide() {
           <h2>Digital Testing Features</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <h3>🔖 Mark for Review</h3>
+              <h3>Mark for Review</h3>
               <p>Flag questions to return to later within each module</p>
             </div>
             <div className="feature-card">
-              <h3>📝 Highlighting & Notes</h3>
+              <h3>Highlighting & Notes</h3>
               <p>Highlight text and leave yourself notes on any question</p>
             </div>
             <div className="feature-card">
-              <h3>⏰ Digital Timer</h3>
+              <h3>Digital Timer</h3>
               <p>On-screen countdown with 5-minute warning alerts</p>
             </div>
             <div className="feature-card">
-              <h3>🧮 Built-in Calculator</h3>
+              <h3>Built-in Calculator</h3>
               <p>Desmos graphing calculator available for all math questions</p>
             </div>
             <div className="feature-card">
-              <h3>📋 Reference Sheet</h3>
+              <h3>Reference Sheet</h3>
               <p>Math formulas provided on-screen during the Math section</p>
             </div>
             <div className="feature-card">
-              <h3>🔄 Navigation</h3>
+              <h3>Navigation</h3>
               <p>Move freely between questions within each module</p>
             </div>
           </div>
@@ -206,27 +206,27 @@ function SATGuide() {
           <h2>Digital SAT Study Strategies</h2>
           <div className="strategies-grid">
             <div className="strategy-card">
-              <h3>💻 Master Digital Tools</h3>
+              <h3>Master Digital Tools</h3>
               <p>Practice with the Bluebook app and familiarize yourself with all digital features before test day.</p>
             </div>
             <div className="strategy-card">
-              <h3>🎯 Excel in Module 1</h3>
+              <h3>Excel in Module 1</h3>
               <p>Strong performance on the first module unlocks harder, higher-scoring questions in module 2.</p>
             </div>
             <div className="strategy-card">
-              <h3>📊 Take Adaptive Practice Tests</h3>
+              <h3>Take Adaptive Practice Tests</h3>
               <p>Use College Board's Bluebook app for authentic adaptive practice experience.</p>
             </div>
             <div className="strategy-card">
-              <h3>📚 Focus on Weak Areas</h3>
+              <h3>Focus on Weak Areas</h3>
               <p>Identify gaps early and spend 70% of study time on areas needing improvement.</p>
             </div>
             <div className="strategy-card">
-              <h3>📖 Practice Short Passages</h3>
+              <h3>Practice Short Passages</h3>
               <p>Get comfortable with the new format of many short passages instead of few long ones.</p>
             </div>
             <div className="strategy-card">
-              <h3>🧮 Use Calculator Strategically</h3>
+              <h3>Use Calculator Strategically</h3>
               <p>Practice with both your own calculator and the built-in Desmos graphing calculator.</p>
             </div>
           </div>
@@ -236,7 +236,7 @@ function SATGuide() {
           <h2>Digital SAT Test-Taking Tips</h2>
           <div className="tips-categories">
             <div className="tip-category">
-              <h3>📖 Reading and Writing Tips</h3>
+              <h3>Reading and Writing Tips</h3>
               <ul>
                 <li>Read each short passage carefully - only 1 question per passage</li>
                 <li>Use highlighting feature to mark key information</li>
@@ -248,7 +248,7 @@ function SATGuide() {
             </div>
             
             <div className="tip-category">
-              <h3>🔢 Math Tips</h3>
+              <h3>Math Tips</h3>
               <ul>
                 <li>Use the built-in calculator strategically for all questions</li>
                 <li>Reference the provided formula sheet when needed</li>
@@ -260,7 +260,7 @@ function SATGuide() {
             </div>
             
             <div className="tip-category">
-              <h3>💻 Digital Strategy Tips</h3>
+              <h3>Digital Strategy Tips</h3>
               <ul>
                 <li>Mark questions for review and return to them if time permits</li>
                 <li>Use annotations to leave yourself helpful notes</li>
@@ -323,19 +323,19 @@ function SATGuide() {
           <h2>Digital SAT Resources</h2>
           <div className="resources-grid">
             <div className="resource-item">
-              <h3>💻 College Board Bluebook App</h3>
+              <h3>College Board Bluebook App</h3>
               <p>Official adaptive practice tests and digital testing experience. Essential for Digital SAT preparation.</p>
             </div>
             <div className="resource-item">
-              <h3>📱 UltraSATPrep Platform</h3>
+              <h3>UltraSATPrep Platform</h3>
               <p>Access thousands of Digital SAT practice questions, personalized study plans, and detailed analytics.</p>
             </div>
             <div className="resource-item">
-              <h3>🧮 Desmos Calculator Practice</h3>
+              <h3>Desmos Calculator Practice</h3>
               <p>Familiarize yourself with the built-in graphing calculator used on the Digital SAT.</p>
             </div>
             <div className="resource-item">
-              <h3>📚 Digital SAT Prep Materials</h3>
+              <h3>Digital SAT Prep Materials</h3>
               <p>Official College Board study guide and reputable third-party materials designed for the digital format.</p>
             </div>
           </div>

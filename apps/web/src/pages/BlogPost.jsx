@@ -1,16 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faCalendar, 
-  faClock, 
-  faEye, 
-  faTag,
-  faUser,
-  faArrowLeft,
-  faSpinner,
-  faExclamationTriangle
-} from '@fortawesome/free-solid-svg-icons';
+import { FiCalendar, FiClock, FiEye, FiTag, FiUser, FiArrowLeft, FiLoader, FiAlertTriangle } from 'react-icons/fi';
 import '../styles/BlogPost.css';
 
 const BlogPost = () => {
@@ -78,7 +68,7 @@ const BlogPost = () => {
     return (
       <div className="blog-post-container">
         <div className="blog-post-loading">
-          <FontAwesomeIcon icon={faSpinner} spin className="loading-icon" />
+          <FiLoader style={{ animation: 'spin 1s linear infinite' }} className="loading-icon" />
           <p>Loading blog post...</p>
         </div>
       </div>
@@ -89,11 +79,11 @@ const BlogPost = () => {
     return (
       <div className="blog-post-container">
         <div className="blog-post-error">
-          <FontAwesomeIcon icon={faExclamationTriangle} className="error-icon" />
+          <FiAlertTriangle className="error-icon" />
           <h2>Blog Post Not Found</h2>
           <p>{error || 'The requested blog post could not be found.'}</p>
           <Link to="/blog" className="back-to-blog-btn">
-            <FontAwesomeIcon icon={faArrowLeft} />
+            <FiArrowLeft />
             Back to Blog
           </Link>
         </div>
@@ -106,7 +96,7 @@ const BlogPost = () => {
       {/* Back Navigation */}
       <div className="blog-post-nav">
         <Link to="/blog" className="back-link">
-          <FontAwesomeIcon icon={faArrowLeft} />
+          <FiArrowLeft />
           Back to Blog
         </Link>
       </div>
@@ -132,22 +122,22 @@ const BlogPost = () => {
             
             <div className="blog-post-info">
               <span className="post-author">
-                <FontAwesomeIcon icon={faUser} />
+                <FiUser />
                 {blogPost.author || 'Admin'}
               </span>
-              
+
               <span className="post-date">
-                <FontAwesomeIcon icon={faCalendar} />
+                <FiCalendar />
                 {formatDate(blogPost.createdAt)}
               </span>
-              
+
               <span className="post-read-time">
-                <FontAwesomeIcon icon={faClock} />
+                <FiClock />
                 {blogPost.readTime || 5} min read
               </span>
-              
+
               <span className="post-views">
-                <FontAwesomeIcon icon={faEye} />
+                <FiEye />
                 {blogPost.views || 0} views
               </span>
             </div>
@@ -165,7 +155,7 @@ const BlogPost = () => {
         {/* Tags */}
         {blogPost.tags && blogPost.tags.length > 0 && (
           <div className="blog-post-tags">
-            <FontAwesomeIcon icon={faTag} />
+            <FiTag />
             <div className="tags-list">
               {blogPost.tags.map((tag, index) => (
                 <Link 

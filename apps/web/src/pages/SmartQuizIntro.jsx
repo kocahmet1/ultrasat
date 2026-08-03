@@ -7,7 +7,9 @@ import { db } from '../firebase/config';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { getSubcategoryName } from '../utils/subcategoryConstants';
 import { getSubcategoryProgress } from '../utils/progressUtils';
-import { FaPlay, FaGraduationCap, FaArrowLeft } from 'react-icons/fa';
+import { FiPlay, FiArrowLeft } from 'react-icons/fi';
+// Feather has no graduation-cap glyph; kept from FontAwesome for this icon only.
+import { FaGraduationCap } from 'react-icons/fa';
 import '../styles/SmartQuizIntro.css';
 
 export default function SmartQuizIntro() {
@@ -112,9 +114,13 @@ export default function SmartQuizIntro() {
   
   return (
     <div className="smart-quiz-intro__container">
+      <div className="ut-page-head">
+        <div className="ut-page-head-main">
+          <p className="ut-eyebrow">Practice</p>
+          <h1 className="ut-page-title">{isMeta ? 'Ready for Your Meta SmartQuiz?' : 'Ready for Your SmartQuiz?'}</h1>
+        </div>
+      </div>
       <div className="intro-card">
-        <h1>{isMeta ? 'Ready for Your Meta SmartQuiz?' : 'Ready for Your SmartQuiz?'}</h1>
-
         {isMeta ? (
           <div className="quiz-info-compact">
             <div className="subcategory-info">
@@ -168,11 +174,11 @@ export default function SmartQuizIntro() {
         </div>
         
         <div className="actions">
-          <button className="btn-secondary" onClick={handleGoBack}>
-            <FaArrowLeft /> Back to Dashboard
+          <button className="ut-btn ut-btn--ghost" onClick={handleGoBack}>
+            <FiArrowLeft /> Back to Dashboard
           </button>
-          <button className="btn-primary" onClick={handleStartQuiz}>
-            <FaPlay /> Start Quiz
+          <button className="ut-btn ut-btn--primary" onClick={handleStartQuiz}>
+            <FiPlay /> Start Quiz
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaBookReader, FaInfoCircle } from 'react-icons/fa';
+import { FiArrowLeft, FiBookOpen, FiInfo } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { createSmartQuiz, getUserLevel } from '../utils/smartQuizUtils';
 import '../styles/DynamicQuizGenerator.css';
@@ -87,24 +87,29 @@ function SmartQuizGenerator() {
 
   return (
     <div className="dynamic-quiz-generator__container">
-      <h2>SmartQuiz Generator</h2>
+      <div className="ut-page-head">
+        <div className="ut-page-head-main">
+          <p className="ut-eyebrow">Practice</p>
+          <h1 className="ut-page-title">SmartQuiz Generator</h1>
+        </div>
+      </div>
 
       {status.error ? (
         <div className="quiz-message-container error">
           <div className="quiz-message-icon">
-            <FaInfoCircle />
+            <FiInfo />
           </div>
           <div className="quiz-message-content">
             <p>{status.message}</p>
             <button className="back-button" onClick={handleGoBack} type="button">
-              <FaArrowLeft /> Back to Dashboard
+              <FiArrowLeft /> Back to Dashboard
             </button>
           </div>
         </div>
       ) : (
         <div className="quiz-message-container loading">
           <div className="quiz-message-icon">
-            <FaBookReader />
+            <FiBookOpen />
           </div>
           <div className="quiz-message-content">
             <p>{status.message}</p>

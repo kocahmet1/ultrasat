@@ -29,35 +29,24 @@ import { SidebarProvider } from './contexts/SidebarContext';
 import SidebarVisibility from './contexts/SidebarVisibility';
 import AnalyticsTracker from './components/AnalyticsTracker';
 import CriticalCSS from './components/CriticalCSS';
-import AICompanionPanel from './components/AICompanionPanel';
+import { CoachProvider } from './contexts/CoachContext';
+import CoachDock from './components/coach/CoachDock';
 import RouteErrorBoundary from './components/errors/RouteErrorBoundary';
 import EmailVerificationBanner from './components/EmailVerificationBanner';
+import PageSkeleton from './components/PageSkeleton';
 
 // Styles
 import './styles/App.css';
 
-// Loading component for Suspense fallback
-const PageLoadingSpinner = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '50vh',
-    fontSize: '18px',
-    color: '#666'
-  }}>
-    <div className="loading-spinner">Loading...</div>
-  </div>
-);
+// Loading component for Suspense fallback (P0-D: page-shaped skeleton)
+const PageLoadingSpinner = () => <PageSkeleton />;
 
 // Lazy load all pages for code splitting
-const LandingPage = React.lazy(() => import('./pages/LandingPage'));
-const LandingPage2 = React.lazy(() => import('./pages/LandingPage2'));
-const LandingPageAds = React.lazy(() => import('./pages/LandingPageAds'));
-const ExamLandingPage = React.lazy(() => import('./pages/ExamLandingPage'));
-const ExamController = React.lazy(() => import('./pages/ExamController'));
-const IntermissionController = React.lazy(() => import('./pages/IntermissionController'));
+// (Overhaul Phase A: retired landing variants + the dead legacy exam system
+//  are deleted; their URLs redirect. See SITE_OVERHAUL_PLAN.md.)
+const LandingPageV3 = React.lazy(() => import('./pages/LandingPageV3'));
 const ExamResults = React.lazy(() => import('./pages/ExamResults'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Profile = React.lazy(() => import('./pages/Profile'));
 const WordBank = React.lazy(() => import('./pages/WordBank'));
 const Flashcards = React.lazy(() => import('./pages/Flashcards'));
@@ -68,15 +57,11 @@ const ConceptDetail = React.lazy(() => import('./pages/ConceptDetail'));
 const PracticeExamList = React.lazy(() => import('./pages/PracticeExamList'));
 const PracticeExamController = React.lazy(() => import('./pages/PracticeExamController'));
 const PredictiveExam = React.lazy(() => import('./pages/PredictiveExam'));
-const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'));
 
 // Adaptive Learning Pages
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
-const AICoachPage = React.lazy(() => import('./pages/AICoachPage'));
-const QuizResults = React.lazy(() => import('./pages/QuizResults'));
-const StudyResources = React.lazy(() => import('./pages/StudyResources'));
+const CoachPage = React.lazy(() => import('./pages/CoachPage'));
 const ProgressDashboard = React.lazy(() => import('./pages/ProgressDashboard'));
-const SkillsPractice = React.lazy(() => import('./pages/SkillsPractice'));
 
 // Admin Pages (heavy components that should definitely be code split)
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
@@ -86,6 +71,7 @@ const PracticeExamManagerPage = React.lazy(() => import('./pages/PracticeExamMan
 const QuestionEditor = React.lazy(() => import('./pages/QuestionEditor'));
 const AdminQuestionCreation = React.lazy(() => import('./pages/AdminQuestionCreation'));
 const AdminQuestionAudit = React.lazy(() => import('./pages/AdminQuestionAudit'));
+const AdminExamQualityControl = React.lazy(() => import('./pages/AdminExamQualityControl'));
 const AdminBlogManagement = React.lazy(() => import('./pages/AdminBlogManagement'));
 const AdminLearningContent = React.lazy(() => import('./pages/AdminLearningContent'));
 const MembershipManagement = React.lazy(() => import('./components/admin/MembershipManagement'));
@@ -101,6 +87,9 @@ const AllExamResults = React.lazy(() => import('./pages/AllExamResults'));
 const SmartQuiz = React.lazy(() => import('./pages/SmartQuiz'));
 const SmartQuizGenerator = React.lazy(() => import('./pages/SmartQuizGenerator'));
 const SmartQuizResults = React.lazy(() => import('./pages/SmartQuizResults'));
+const PracticeBuilder = React.lazy(() => import('./pages/PracticeBuilder'));
+const PreviousPractice = React.lazy(() => import('./pages/PreviousPractice'));
+const PlannerPage = React.lazy(() => import('./pages/PlannerPage'));
 const SubjectQuizzes = React.lazy(() => import('./pages/SubjectQuizzes'));
 const LecturesPage = React.lazy(() => import('./pages/LecturesPage'));
 const SmartQuizIntro = React.lazy(() => import('./pages/SmartQuizIntro'));
@@ -131,7 +120,6 @@ const Careers = React.lazy(() => import('./pages/Careers'));
 const Press = React.lazy(() => import('./pages/Press'));
 const SATGuide = React.lazy(() => import('./pages/SATGuide'));
 const ScoreCalculator = React.lazy(() => import('./pages/ScoreCalculator'));
-const GuestQuiz = React.lazy(() => import('./pages/GuestQuiz'));
 const GuestSubjectQuizzes = React.lazy(() => import('./pages/GuestSubjectQuizzes'));
 const GuestSmartQuiz = React.lazy(() => import('./pages/GuestSmartQuiz'));
 
@@ -153,6 +141,18 @@ const PrivateSuspenseRoute = ({ children }) => (
   </PrivateRoute>
 );
 
+// Pro-gated route (Overhaul Phase C): real route-level enforcement — deep links
+// can no longer bypass the link-level gates.
+const ProSuspenseRoute = ({ children }) => (
+  <PrivateRoute>
+    <MembershipGate requiredTier="plus">
+      <Suspense fallback={<PageLoadingSpinner />}>
+        {children}
+      </Suspense>
+    </MembershipGate>
+  </PrivateRoute>
+);
+
 const AdminSuspenseRoute = ({ children }) => (
   <AdminRoute>
     <Suspense fallback={<PageLoadingSpinner />}>
@@ -166,12 +166,10 @@ const RootLayout = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const isExamPage = location.pathname.includes('/practice-exam/') || location.pathname.includes('/exam/');
-  const isPracticeExamListPage = location.pathname === '/practice-exams';
-  const isDashboardPage = location.pathname === '/dashboard';
-  const isAICoachPage = location.pathname === '/ai-coach';
-  const isProgressPage = location.pathname === '/progress';
+  // Only active quiz/exam experiences run without the app shell (focus mode).
+  // Everything else — including /practice-exams — uses the ONE shell.
   const isSmartQuizPage = location.pathname.startsWith('/smart-quiz/');
-  const isCustomShellPage = isPracticeExamListPage || isDashboardPage || isAICoachPage || isSmartQuizPage;
+  const isCustomShellPage = isSmartQuizPage;
   const showProfileDropdown = !isCustomShellPage && (!isMobile || !isExamPage);
 
   return (
@@ -189,7 +187,8 @@ const RootLayout = () => {
           <Outlet />
         </div>
       </div>
-      {isProgressPage && <AICompanionPanel />}
+      {/* AI Coach (Phase 1) — global presence; hides itself during exams and for guests */}
+      <CoachDock />
     </SidebarVisibility>
   );
 };
@@ -202,9 +201,12 @@ const router = createBrowserRouter([
     element: <LandingPageLayout />,
     errorElement: <RouteErrorBoundary />,
     children: [
-      { path: '/', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPage /></Suspense> },
-      { path: '/landing_page', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPageAds /></Suspense> },
-      { path: '/landingpage2', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPage2 /></Suspense> },
+      { path: '/', element: <Suspense fallback={<PageLoadingSpinner />}><LandingPageV3 /></Suspense> },
+      // Retired landing variants — URLs redirect so old links/ads still land
+      { path: '/landing-old', element: <Navigate to="/" replace /> },
+      { path: '/landing-original', element: <Navigate to="/" replace /> },
+      { path: '/landing_page', element: <Navigate to="/" replace /> },
+      { path: '/landingpage2', element: <Navigate to="/" replace /> },
       { path: '/login', element: <Login /> },
       { path: '/signup', element: <Signup /> },
       { path: '/verify-email', element: <VerifyEmail /> },
@@ -225,10 +227,11 @@ const router = createBrowserRouter([
       { path: '/blog/:id', element: <Suspense fallback={<PageLoadingSpinner />}><BlogPost /></Suspense> },
     ],
   },
-  // Onboarding page (standalone, no sidebar)
+  // Retired AI-chat onboarding (Overhaul Phase E): one onboarding path only —
+  // signup → Home first-steps → coach.
   {
     path: '/onboarding',
-    element: <PrivateSuspenseRoute><OnboardingPage /></PrivateSuspenseRoute>,
+    element: <Navigate to="/dashboard" replace />,
     errorElement: <RouteErrorBoundary />,
   },
   // All other routes with standard layout (with sidebar)
@@ -237,41 +240,44 @@ const router = createBrowserRouter([
     errorElement: <RouteErrorBoundary />,
     children: [
       { path: '/profile', element: <PrivateSuspenseRoute><Profile /></PrivateSuspenseRoute> },
-      { path: '/exam/landing', element: <PrivateSuspenseRoute><ExamLandingPage /></PrivateSuspenseRoute> },
+      // Dead legacy exam system removed (Overhaul Phase A) — URLs redirect
+      { path: '/exam/landing', element: <Navigate to="/practice-exams" replace /> },
       { path: '/exam/results/:examId?', element: <PrivateSuspenseRoute><ExamResults /></PrivateSuspenseRoute> },
-      { path: '/exam/:moduleId', element: <PrivateSuspenseRoute><ExamController /></PrivateSuspenseRoute> },
-      { path: '/intermission', element: <PrivateSuspenseRoute><IntermissionController /></PrivateSuspenseRoute> },
-      { path: '/results/:examId?', element: <PrivateSuspenseRoute><ExamResults /></PrivateSuspenseRoute> },
+      { path: '/exam/:moduleId', element: <Navigate to="/practice-exams" replace /> },
+      { path: '/intermission', element: <Navigate to="/practice-exams" replace /> },
+      { path: '/results/:examId?', element: <Navigate to="/all-results" replace /> },
       { path: '/all-results', element: <PrivateSuspenseRoute><AllExamResults /></PrivateSuspenseRoute> },
       { path: '/smart-quiz-generator', element: <PrivateSuspenseRoute><SmartQuizGenerator /></PrivateSuspenseRoute> },
       { path: '/smart-quiz-intro', element: <PrivateSuspenseRoute><SmartQuizIntro /></PrivateSuspenseRoute> },
       { path: '/smart-quiz/:quizId', element: <PrivateSuspenseRoute><SmartQuiz /></PrivateSuspenseRoute> },
       { path: '/smart-quiz-results/:quizId', element: <PrivateSuspenseRoute><SmartQuizResults /></PrivateSuspenseRoute> },
       { path: '/subject-quizzes', element: <PrivateSuspenseRoute><SubjectQuizzes /></PrivateSuspenseRoute> },
-      { path: '/lectures', element: <PrivateSuspenseRoute><LecturesPage /></PrivateSuspenseRoute> },
-      { path: '/quiz-results/:quizId', element: <PrivateSuspenseRoute><QuizResults /></PrivateSuspenseRoute> },
+      { path: '/practice', element: <PrivateSuspenseRoute><PracticeBuilder /></PrivateSuspenseRoute> },
+      { path: '/practice/history', element: <PrivateSuspenseRoute><PreviousPractice /></PrivateSuspenseRoute> },
+      { path: '/planner', element: <PrivateSuspenseRoute><PlannerPage /></PrivateSuspenseRoute> },
+      { path: '/lectures', element: <ProSuspenseRoute><LecturesPage /></ProSuspenseRoute> },
       { path: '/adaptive-quiz/:quizId', element: <PrivateSuspenseRoute><LegacyAdaptiveQuizRedirect /></PrivateSuspenseRoute> },
       { path: '/resources/:resourceId', element: <PrivateSuspenseRoute><LegacyStudyResourceRedirect /></PrivateSuspenseRoute> },
-      { path: '/study-resources', element: <PrivateRoute><MembershipGate requiredTier="plus"><Suspense fallback={<PageLoadingSpinner />}><StudyResources /></Suspense></MembershipGate></PrivateRoute> },
+      { path: '/study-resources', element: <Navigate to="/lectures" replace /> },
       { path: '/dashboard', element: <PrivateSuspenseRoute><Dashboard /></PrivateSuspenseRoute> },
-      { path: '/ai-coach', element: <PrivateSuspenseRoute><AICoachPage /></PrivateSuspenseRoute> },
+      { path: '/ai-coach', element: <PrivateSuspenseRoute><CoachPage /></PrivateSuspenseRoute> },
+      { path: '/coach', element: <PrivateSuspenseRoute><CoachPage /></PrivateSuspenseRoute> },
       { path: '/progress', element: <PrivateSuspenseRoute><ProgressDashboard /></PrivateSuspenseRoute> },
-      { path: '/skills', element: <PrivateSuspenseRoute><SkillsPractice /></PrivateSuspenseRoute> },
+      // Skills Practice absorbed into Question Bank (it also crashed — audit §4)
+      { path: '/skills', element: <Navigate to="/subject-quizzes" replace /> },
       { path: '/subcategory-progress/:subcategoryId', element: <PrivateSuspenseRoute><SubcategoryProgressPage /></PrivateSuspenseRoute> },
       { path: '/word-bank', element: <PrivateSuspenseRoute><WordBank /></PrivateSuspenseRoute> },
-      { path: '/flashcards', element: <PrivateSuspenseRoute><Flashcards /></PrivateSuspenseRoute> },
-      { path: '/concept-bank', element: <PrivateSuspenseRoute><ConceptBank /></PrivateSuspenseRoute> },
+      { path: '/flashcards', element: <ProSuspenseRoute><Flashcards /></ProSuspenseRoute> },
+      { path: '/concept-bank', element: <ProSuspenseRoute><ConceptBank /></ProSuspenseRoute> },
       { path: '/concept-detail/:conceptId', element: <PrivateSuspenseRoute><ConceptDetail /></PrivateSuspenseRoute> },
       { path: '/concept/:conceptId', element: <PrivateSuspenseRoute><ConceptPractice /></PrivateSuspenseRoute> },
-      { path: '/learn/:subcategoryId', element: <PrivateSuspenseRoute><SubcategoryLearnPage /></PrivateSuspenseRoute> },
+      { path: '/learn/:subcategoryId', element: <ProSuspenseRoute><SubcategoryLearnPage /></ProSuspenseRoute> },
       { path: '/lesson/:skillTag', element: <PrivateSuspenseRoute><LegacyLessonRedirect /></PrivateSuspenseRoute> },
       { path: '/skill-drill/:skillTag', element: <PrivateSuspenseRoute><LegacySkillDrillRedirect /></PrivateSuspenseRoute> },
       { path: '/practice-exams', element: <PrivateSuspenseRoute><PracticeExamList /></PrivateSuspenseRoute> },
       { path: '/predictive-exam', element: <PrivateSuspenseRoute><PredictiveExam /></PrivateSuspenseRoute> },
       { path: '/practice-exam/:examId', element: <PrivateSuspenseRoute><PracticeExamController /></PrivateSuspenseRoute> },
-      { path: '/practice-exam/:examId/results', element: <PrivateSuspenseRoute><ExamResults /></PrivateSuspenseRoute> },
-      { path: '/guest-quiz', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
-      { path: '/guest-quiz/:deckKey', element: <Suspense fallback={<PageLoadingSpinner />}><GuestQuiz /></Suspense> },
+      { path: '/practice-exam/:examId/results', element: <Navigate to="/all-results" replace /> },
       { path: '/guest-subject-quizzes', element: <Suspense fallback={<PageLoadingSpinner />}><GuestSubjectQuizzes /></Suspense> },
       { path: '/guest-smart-quiz', element: <Suspense fallback={<PageLoadingSpinner />}><GuestSmartQuiz /></Suspense> },
       { path: '/admin', element: <AdminSuspenseRoute><AdminDashboard /></AdminSuspenseRoute> },
@@ -280,6 +286,7 @@ const router = createBrowserRouter([
       { path: '/admin/practice-exams', element: <AdminSuspenseRoute><PracticeExamManagerPage /></AdminSuspenseRoute> },
       { path: '/admin/question-creation', element: <AdminSuspenseRoute><AdminQuestionCreation /></AdminSuspenseRoute> },
       { path: '/admin/question-audit', element: <AdminSuspenseRoute><AdminQuestionAudit /></AdminSuspenseRoute> },
+      { path: '/admin/exam-quality-control', element: <AdminSuspenseRoute><AdminExamQualityControl /></AdminSuspenseRoute> },
       { path: '/admin/question-editor', element: <AdminSuspenseRoute><QuestionEditor /></AdminSuspenseRoute> },
       { path: '/admin/question-editor/:questionId', element: <AdminSuspenseRoute><QuestionEditor /></AdminSuspenseRoute> },
       { path: '/admin/subcategory-settings', element: <AdminSuspenseRoute><SubcategorySettings /></AdminSuspenseRoute> },
@@ -296,7 +303,8 @@ const router = createBrowserRouter([
       { path: '/membership/upgrade', element: <PrivateSuspenseRoute><MembershipUpgrade /></PrivateSuspenseRoute> },
       { path: '/payment/success', element: <PrivateSuspenseRoute><PaymentSuccess /></PrivateSuspenseRoute> },
       { path: '/payment/cancel', element: <PrivateSuspenseRoute><PaymentCancel /></PrivateSuspenseRoute> },
-      { path: '*', element: <Navigate to="/" /> },
+      // Real 404 instead of a silent dump onto the marketing page
+      { path: '*', element: <Suspense fallback={<PageLoadingSpinner />}><NotFound /></Suspense> },
     ],
   },
 ]);
@@ -305,6 +313,7 @@ function App() {
   return (
     <AuthProvider>
       <AICompanionProvider>
+        <CoachProvider>
         <SubcategoryProvider>
           <ReviewProvider>
             <SidebarProvider>
@@ -313,6 +322,7 @@ function App() {
             </SidebarProvider>
           </ReviewProvider>
         </SubcategoryProvider>
+        </CoachProvider>
       </AICompanionProvider>
     </AuthProvider>
   );

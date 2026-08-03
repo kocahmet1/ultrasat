@@ -2,20 +2,20 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import {
+  FiTrash2,
+  FiSearch,
+  FiBookOpen,
+  FiLayers,
+  FiPlay,
+  FiHelpCircle,
+  FiEdit2,
+  FiPlus,
+  FiInfo,
+} from 'react-icons/fi';
+// Feather has no dedicated "sort" glyph; kept from FontAwesome for the A-Z/Z-A toggle only.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faTrash, 
-  faSearch, 
-  faSort, 
-  faBook, 
-  faLayerGroup, 
-  faPlay,
-  faSpinner,
-  faQuestionCircle,
-  faEdit,
-  faPlus,
-  faInfoCircle
-} from '@fortawesome/free-solid-svg-icons';
+import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { getFlashcardDecks, deleteFlashcardDeck, removeWordFromFlashcardDeck, getFlashcardDeckWords, createFlashcardDeck } from '../api/helperClient';
 import AddToFlashcardsModal from '../components/AddToFlashcardsModal';
 import FlashcardStudy from '../components/FlashcardStudy';
@@ -27,8 +27,7 @@ import FeatureHelpModal from '../components/FeatureHelpModal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/WordBank.css';
-import WordBankUpgradeModal from '../components/WordBankUpgradeModal';
-import '../components/WordBankUpgradeModal.css';
+import ProUpgradeModal from '../components/membership/ProUpgradeModal';
 
 /**
  * WordBank component - displays all saved vocabulary words with flashcard functionality
@@ -392,16 +391,16 @@ export default function WordBank() {
   }
 
   return (
-    <div className="word-bank-container">
-      <div className="word-bank-header">
-        <div className="word-bank-title">
-          <FontAwesomeIcon icon={faBook} className="word-bank-icon" />
-          <h1>My Word Bank</h1>
+    <div className="ut-page word-bank-container">
+      <header className="ut-page-head">
+        <div className="ut-page-head-main">
+          <p className="ut-eyebrow">Vocabulary</p>
+          <h1 className="ut-page-title">My Word Bank</h1>
+          <p className="ut-page-sub">
+            Your personal collection of saved vocabulary words from SAT practice questions.
+          </p>
         </div>
-        <p className="word-bank-description">
-          Your personal collection of saved vocabulary words from SAT practice questions.
-        </p>
-      </div>
+      </header>
 
       {/* Tab Navigation */}
       <div className="tab-navigation">
@@ -409,14 +408,14 @@ export default function WordBank() {
           className={`tab-button ${activeTab === 'words' ? 'active' : ''}`}
           onClick={() => handleTabClick('words')}
         >
-          <FontAwesomeIcon icon={faBook} />
+          <FiBookOpen />
           Word Bank ({words.length})
         </button>
         <button 
           className={`tab-button ${activeTab === 'flashcards' ? 'active' : ''}`}
-          onClick={() => handleTabClick('flashcards', 'Flashcard Decks')}
+          onClick={() => handleTabClick('flashcards', 'Flashcard practice')}
         >
-          <FontAwesomeIcon icon={faLayerGroup} />
+          <FiLayers />
           Flashcard Decks ({flashcardDecks.length})
           {!hasFeatureAccess('plus') && <span className="pro-badge">PRO</span>}
           <button 
@@ -427,19 +426,19 @@ export default function WordBank() {
             }}
             title="Learn how to use flashcard decks"
           >
-            <FontAwesomeIcon icon={faInfoCircle} />
+            <FiInfo />
           </button>
         </button>
         {activeTab === 'flashcards' && (
           <button className="new-deck-button" onClick={() => setShowNewDeckModal(true)}>
-            <FontAwesomeIcon icon={faPlus} /> New Deck
+            <FiPlus /> New Deck
           </button>
         )}
         <button 
           className={`tab-button ${activeTab === 'quizzes' ? 'active' : ''}`}
-          onClick={() => handleTabClick('quizzes', 'Word Quizzes')}
+          onClick={() => handleTabClick('quizzes', 'Word quiz practice')}
         >
-          <FontAwesomeIcon icon={faQuestionCircle} />
+          <FiHelpCircle />
           Word Quizzes ({flashcardDecks.filter(deck => deck.wordCount >= 4).length})
           {!hasFeatureAccess('plus') && <span className="pro-badge">PRO</span>}
           <button 
@@ -450,7 +449,7 @@ export default function WordBank() {
             }}
             title="Learn how to use word quizzes"
           >
-            <FontAwesomeIcon icon={faInfoCircle} />
+            <FiInfo />
           </button>
         </button>
       </div>
@@ -459,7 +458,7 @@ export default function WordBank() {
         <>
           <div className="word-bank-controls">
             <div className="search-container">
-              <FontAwesomeIcon icon={faSearch} className="search-icon" />
+              <FiSearch className="search-icon" />
               <input
                 type="text"
                 placeholder="Search words or definitions..."
@@ -478,7 +477,11 @@ export default function WordBank() {
           </div>
 
           {loading ? (
-            <div className="word-bank-loading">Loading your word bank...</div>
+            <div className="word-list" role="status" aria-label="Loading your word bank">
+              <div className="ut-skeleton ut-skeleton--card" />
+              <div className="ut-skeleton ut-skeleton--card" />
+              <div className="ut-skeleton ut-skeleton--card" />
+            </div>
           ) : error ? (
             <div className="word-bank-error">{error}</div>
           ) : filteredWords.length === 0 ? (
@@ -499,15 +502,15 @@ export default function WordBank() {
                         onClick={() => handleAddToFlashcards(word)}
                         title="Add to flashcards"
                       >
-                        <FontAwesomeIcon icon={faLayerGroup} />
+                        <FiLayers />
                         Add to Flashcards
                       </button>
-                      <button 
+                      <button
                         className="remove-word-button"
                         onClick={() => handleRemoveWord(word.id)}
                         title="Remove from word bank"
                       >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FiTrash2 />
                       </button>
                     </div>
                   </div>
@@ -526,20 +529,21 @@ export default function WordBank() {
         /* Flashcard Decks Tab */
         <div className="flashcards-section">
           {decksLoading ? (
-            <div className="word-bank-loading">
-              <FontAwesomeIcon icon={faSpinner} spin />
-              Loading flashcard decks...
+            <div className="flashcard-decks-grid" role="status" aria-label="Loading flashcard decks">
+              <div className="ut-skeleton ut-skeleton--card" />
+              <div className="ut-skeleton ut-skeleton--card" />
+              <div className="ut-skeleton ut-skeleton--card" />
             </div>
           ) : flashcardDecks.length === 0 ? (
             <div className="word-bank-empty">
-              <FontAwesomeIcon icon={faLayerGroup} className="empty-icon" />
+              <FiLayers className="empty-icon" />
               <h3>No flashcard decks yet</h3>
               <p>Start by adding words to flashcards from your word bank!</p>
-              <button 
+              <button
                 className="switch-tab-button"
                 onClick={() => setActiveTab('words')}
               >
-                <FontAwesomeIcon icon={faBook} />
+                <FiBookOpen />
                 Go to Word Bank
               </button>
             </div>
@@ -551,7 +555,7 @@ export default function WordBank() {
                 <div key={deck.id} className="flashcard-deck-card">
                   <div className="deck-header">
                     <div className="deck-icon">
-                      <FontAwesomeIcon icon={faLayerGroup} />
+                      <FiLayers />
                     </div>
                     <div className="deck-info">
                       <h3 className="deck-name">{deck.name}</h3>
@@ -581,7 +585,7 @@ export default function WordBank() {
                       onClick={() => handleStudyDeck(deck)}
                       disabled={deck.wordCount === 0}
                     >
-                      <FontAwesomeIcon icon={faPlay} />
+                      <FiPlay />
                       {deck.wordCount === 0 ? 'No Words' : 'Study'}
                     </button>
                     {deck.name !== 'Deck 1' && (
@@ -590,7 +594,7 @@ export default function WordBank() {
                         onClick={() => handleEditDeck(deck)}
                         title="Edit deck"
                       >
-                        <FontAwesomeIcon icon={faEdit} />
+                        <FiEdit2 />
                         Edit
                       </button>
                     )}
@@ -600,7 +604,7 @@ export default function WordBank() {
                         onClick={() => handleDeleteDeck(deck)}
                         title="Delete deck"
                       >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FiTrash2 />
                       </button>
                     )}
                   </div>
@@ -652,7 +656,7 @@ export default function WordBank() {
       <ToastContainer position="bottom-right" autoClose={3000} />
 
       {/* Upgrade Modal */}
-      <WordBankUpgradeModal
+      <ProUpgradeModal
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
         featureName={featureName}

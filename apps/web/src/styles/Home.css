@@ -1,0 +1,354 @@
+/* Home.css — the logged-in Home page (pages/Dashboard.jsx).
+   V3 landing design language via tokens.css + ut-kit.css. px units only. */
+
+/* ------------------------------------------------------------------ hero -- */
+
+.hm-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 640px 360px at 92% -20%, rgba(43, 89, 216, 0.2), transparent 62%),
+    radial-gradient(ellipse 480px 300px at -10% 120%, rgba(43, 89, 216, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--ut-panel) 0%, var(--ut-panel-top) 100%);
+  border: 1px solid rgba(43, 89, 216, 0.18);
+  border-radius: var(--ut-radius-lg);
+  color: var(--ut-on-ink);
+  padding: 30px 32px 0;
+  margin-bottom: 22px;
+}
+
+.hm-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 26px;
+}
+
+.hm-hero-greeting {
+  font-family: var(--ut-font-display);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ut-on-ink-bright);
+  margin: 10px 0 8px;
+  line-height: 1.1;
+}
+
+.hm-hero-sub {
+  font-size: 14px;
+  color: var(--ut-on-ink-muted);
+  max-width: 460px;
+  line-height: 1.55;
+}
+
+.hm-hero-sub b {
+  color: var(--ut-accent-bright);
+  font-weight: 600;
+}
+
+.hm-hero-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+/* Countdown block (right side of hero) */
+.hm-countdown {
+  flex-shrink: 0;
+  text-align: center;
+  border: 1px solid var(--ut-rule-on-ink);
+  border-radius: var(--ut-radius);
+  padding: 16px 22px 14px;
+  background: rgba(237, 240, 241, 0.04);
+  min-width: 132px;
+}
+
+.hm-countdown-num {
+  font-family: var(--ut-font-display);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ut-accent-bright);
+  text-shadow: 0 0 22px rgba(43, 89, 216, 0.45);
+}
+
+.hm-countdown-label {
+  font-family: var(--ut-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ut-on-ink-muted);
+  margin-top: 7px;
+}
+
+/* Stat rack along the hero bottom (landing "proof chips" pattern) */
+.hm-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--ut-rule-on-ink);
+  margin: 0 -32px;
+  padding: 0 12px;
+}
+
+.hm-hero-stat {
+  padding: 16px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hm-hero-stat + .hm-hero-stat {
+  border-left: 1px solid var(--ut-rule-on-ink);
+}
+
+.hm-hero-stat-value {
+  font-family: var(--ut-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ut-on-ink-bright);
+  line-height: 1;
+}
+
+.hm-hero-stat-value em {
+  font-style: normal;
+  color: var(--ut-accent-bright);
+}
+
+.hm-hero-stat-label {
+  font-family: var(--ut-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ut-on-ink-muted);
+}
+
+/* ------------------------------------------------------------ first steps -- */
+
+.hm-steps {
+  counter-reset: hm-step;
+}
+
+.hm-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+}
+
+.hm-step + .hm-step {
+  border-top: 1px solid var(--ut-rule);
+}
+
+.hm-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--ut-ink);
+  color: var(--ut-accent-bright);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ut-font-display);
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.hm-step-text {
+  flex: 1;
+  color: var(--ut-text-soft);
+  font-size: 14px;
+}
+
+/* ------------------------------------------------------------- main cards -- */
+
+.hm-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 16px;
+  margin-bottom: 22px;
+  align-items: start;
+}
+
+.hm-focus-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 11px 2px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  border-radius: 6px;
+  transition: background 0.12s ease;
+}
+
+.hm-focus-row:hover {
+  background: var(--ut-card-soft);
+}
+
+.hm-focus-row + .hm-focus-row {
+  border-top: 1px solid var(--ut-rule);
+}
+
+.hm-focus-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hm-focus-meter {
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.hm-focus-acc {
+  font-family: var(--ut-font-mono);
+  font-size: 11.5px;
+  color: var(--ut-mono-muted);
+  min-width: 40px;
+  text-align: right;
+}
+
+.hm-focus-arrow {
+  color: var(--ut-accent);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Coach card */
+.hm-coach {
+  position: relative;
+  overflow: hidden;
+}
+
+.hm-coach-glyph {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ut-radius);
+  background: var(--ut-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 0 18px rgba(43, 89, 216, 0.28);
+}
+
+/* --------------------------------------------------------------- launchers -- */
+
+.hm-launchers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.hm-launcher {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  padding: 18px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hm-launcher:hover {
+  border-color: var(--ut-accent);
+  transform: translateY(-2px);
+  box-shadow: var(--ut-shadow);
+}
+
+.hm-launcher-label {
+  display: block;
+  font-family: var(--ut-font-display);
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+}
+
+.hm-launcher-sub {
+  display: block;
+  color: var(--ut-muted);
+  font-size: 12.5px;
+  margin-top: 3px;
+}
+
+.hm-launcher-go {
+  margin-top: 2px;
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ut-accent-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.hm-launcher:hover .hm-launcher-go {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ------------------------------------------------------------- responsive -- */
+
+@media (max-width: 1024px) {
+  .hm-launchers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hm-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hm-hero {
+    padding: 22px 20px 0;
+  }
+
+  .hm-hero-top {
+    flex-direction: column;
+  }
+
+  .hm-hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0 -20px;
+  }
+
+  .hm-hero-stat:nth-child(3) {
+    border-left: none;
+  }
+
+  .hm-hero-stat {
+    border-top: 1px solid var(--ut-rule-on-ink);
+  }
+
+  .hm-hero-stat:first-child,
+  .hm-hero-stat:nth-child(2) {
+    border-top: none;
+  }
+
+  .hm-launchers {
+    grid-template-columns: 1fr;
+  }
+}

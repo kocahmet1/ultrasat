@@ -1,21 +1,21 @@
 .cookie-policy-page {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--ut-bg);
   padding: 2rem 1rem;
 }
 
 .cookie-policy-container {
   max-width: 800px;
   margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  background: var(--ut-card);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
   padding: 3rem;
   line-height: 1.7;
 }
 
 .cookie-policy-page h1 {
-  color: #1a202c;
+  color: var(--ut-text);
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
@@ -24,11 +24,11 @@
 
 .last-updated {
   text-align: center;
-  color: #6b7280;
+  color: var(--ut-muted);
   font-style: italic;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--ut-rule);
 }
 
 .cookie-policy-page section {
@@ -36,7 +36,7 @@
 }
 
 .cookie-policy-page h2 {
-  color: #2563eb;
+  color: var(--ut-accent-dark);
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -44,7 +44,7 @@
 }
 
 .cookie-policy-page h3 {
-  color: #374151;
+  color: var(--ut-text-soft);
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
@@ -52,23 +52,26 @@
 }
 
 .cookie-policy-page h4 {
-  color: #4b5563;
+  color: var(--ut-muted);
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   margin-top: 1rem;
 }
 
+/* Long-form legal body copy reads as document prose, not app chrome. */
 .cookie-policy-page p {
-  color: #4b5563;
+  color: var(--ut-muted);
   margin-bottom: 1rem;
   text-align: justify;
+  font-family: var(--ut-font-serif);
 }
 
 .cookie-policy-page ul {
-  color: #4b5563;
+  color: var(--ut-muted);
   margin-bottom: 1rem;
   padding-left: 1.5rem;
+  font-family: var(--ut-font-serif);
 }
 
 .cookie-policy-page li {
@@ -76,34 +79,35 @@
 }
 
 .browser-instructions {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background-color: var(--ut-card-soft);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
   padding: 1.5rem;
   margin: 1rem 0;
 }
 
 .browser-instructions h4 {
-  color: #2563eb;
+  color: var(--ut-accent-dark);
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
 
+/* Browser menu paths read as literal UI instructions, not prose -- keep monospace, not serif. */
 .browser-instructions p {
   margin-bottom: 1rem;
-  font-family: 'Courier New', monospace;
+  font-family: var(--ut-font-mono);
   font-size: 0.9rem;
-  background-color: #f3f4f6;
+  background-color: var(--ut-bg-alt);
   padding: 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--ut-radius-sm);
   text-align: left;
 }
 
 .contact-info {
-  background-color: #f3f4f6;
-  border-left: 4px solid #2563eb;
+  background-color: var(--ut-bg-alt);
+  border-left: 4px solid var(--ut-accent);
   padding: 1.5rem;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--ut-radius) var(--ut-radius) 0;
   margin-top: 1rem;
 }
 
@@ -113,7 +117,7 @@
 }
 
 .contact-info strong {
-  color: #374151;
+  color: var(--ut-text-soft);
 }
 
 /* Mobile Responsiveness */
@@ -121,34 +125,34 @@
   .cookie-policy-page {
     padding: 1rem 0.5rem;
   }
-  
+
   .cookie-policy-container {
     padding: 2rem 1.5rem;
     margin: 0 0.5rem;
   }
-  
+
   .cookie-policy-page h1 {
     font-size: 2rem;
   }
-  
+
   .cookie-policy-page h2 {
     font-size: 1.3rem;
   }
-  
+
   .cookie-policy-page h3 {
     font-size: 1.1rem;
   }
-  
+
   .cookie-policy-page h4 {
     font-size: 1rem;
   }
-  
+
   .cookie-policy-page p,
   .cookie-policy-page ul {
     text-align: left;
   }
-  
+
   .browser-instructions {
     padding: 1rem;
   }
-} 
+}

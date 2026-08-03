@@ -13,9 +13,13 @@ function Login() {
   const location = useLocation();
 
   const handlePostLogin = () => {
-    // Check if coming from a protected route (PrivateRoute redirect)
-    if (location.state?.from && location.state.from !== '/login') {
-      navigate(location.state.from);
+    // Check if coming from a protected route (PrivateRoute redirect).
+    // Only treat `from` as a destination when it's a real path — the auth
+    // modals pass intent sentinels ('quiz'/'exam'/'questionBank') here, which
+    // previously got swallowed by this branch as a relative navigate → 404.
+    const from = location.state?.from;
+    if (typeof from === 'string' && from.startsWith('/') && from !== '/login') {
+      navigate(from);
       return;
     }
 

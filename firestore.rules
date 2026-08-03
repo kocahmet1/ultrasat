@@ -288,6 +288,42 @@ service cloud.firestore {
       match /studyPlanItems/{itemId} {
         allow read, write: if isSignedIn() && (isOwner(userId) || isAdmin());
       }
+
+      // Lesson completion state for the Lectures catalog (P1-D):
+      // { status, completedAt, lastViewedAt, updatedAt } per subcategory
+      match /lessonProgress/{subcategoryId} {
+        allow read, write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+
+      // Study planner (P2-A): generated day-by-day plan
+      // users/{uid}/studyPlan/current = { examDate, minutesPerDay, restDays, tasks[], ... }
+      match /studyPlan/{planId} {
+        allow read, write: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+
+      // === AI Coach Tier-2 derived state (Phase 0) ===
+      // Mechanically derived from activityEvents; rebuildable at any time.
+      // Percents are integers by construction (coach/tier2.js).
+      match /skillState/{subcategoryId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow create, update: if isSignedIn() && isOwner(userId);
+        allow delete: if isAdmin(); // rebuild tooling only
+      }
+      match /conceptState/{conceptId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow create, update: if isSignedIn() && isOwner(userId);
+        allow delete: if isAdmin();
+      }
+      match /habits/{docId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow create, update: if isSignedIn() && isOwner(userId);
+        allow delete: if isAdmin();
+      }
+      match /vocabState/{docId} {
+        allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+        allow create, update: if isSignedIn() && isOwner(userId);
+        allow delete: if isAdmin();
+      }
     }
     
     // User specific collections - allow users to read/write their own data
@@ -433,6 +469,14 @@ service cloud.firestore {
       allow read: if isSignedIn();
       allow write: if isSignedIn() && isAdmin();
     }
+
+    // Peer statistics aggregates (P2-B): incremented client-side on quiz completion.
+    // { attempts, correct, totalTimeMs, optionCounts: {0..3} } per question.
+    match /questionStats/{questionId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
     
     match /examModules/{moduleId} {
       allow read: if isSignedIn();
@@ -528,6 +572,26 @@ service cloud.firestore {
       allow write: if false;
     }
     
+    // === AI Coach Tier-1 activity event stream (Phase 0) ===
+    // Append-only ground truth of student activity. Events are immutable:
+    // no update, no delete (admin cleanup happens via backend tooling).
+    match /activityEvents/{eventId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() &&
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.v is int &&
+                       request.resource.data.type is string &&
+                       request.resource.data.type in [
+                         'question_attempt', 'quiz_completed', 'exam_completed',
+                         'drill_completed', 'lesson_viewed', 'flashcard_session',
+                         'word_saved', 'concept_saved', 'coach_interaction', 'session_start'
+                       ] &&
+                       request.resource.data.payload is map &&
+                       request.resource.data.clientTs is int;
+      allow update: if false;
+      allow delete: if false;
+    }
+
     // Catch-all rule - deny everything else
     match /{document=**} {
       allow read, write: if false;

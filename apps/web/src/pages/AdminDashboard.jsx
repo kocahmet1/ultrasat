@@ -146,6 +146,13 @@ function AdminDashboard() {
             Question Audit
           </button>
           <button
+            className="tab-button"
+            type="button"
+            onClick={() => navigate('/admin/exam-quality-control')}
+          >
+            Exam Quality Control
+          </button>
+          <button
             className={activeTab === 'quizzes' ? 'active' : ''}
             onClick={() => setActiveTab('quizzes')}
           >
@@ -336,6 +343,7 @@ function AdminDashboard() {
         {/* Practice Exam Management Tab */}
         {activeTab === 'practiceExams' && (
           <AdminPracticeExamsSection
+            onGoToExamQualityControl={() => navigate('/admin/exam-quality-control')}
             onRepairPracticeExamData={handleRepairPracticeExamData}
           />
         )}

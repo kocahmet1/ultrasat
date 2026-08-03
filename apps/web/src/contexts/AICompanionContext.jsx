@@ -304,16 +304,11 @@ export const AICompanionProvider = ({ children }) => {
         checkFirstTimeUser();
     }, [currentUser]);
 
-    // Auto-fetch greeting when user logs in (only for returning users)
-    useEffect(() => {
-        if (currentUser && isAvailable && isFirstTimeUser === false) {
-            // Small delay to let other auth processes complete
-            const timer = setTimeout(() => {
-                fetchGreeting(true);
-            }, 1500);
-            return () => clearTimeout(timer);
-        }
-    }, [currentUser, isAvailable, isFirstTimeUser, fetchGreeting]);
+    // DECOMMISSIONED (AI Coach Phase 2): the auto-greeting fired an LLM call on
+    // every login while its panel (AICompanionPanel) is no longer mounted — pure
+    // cost with no UI. The coach Observer now owns the session-start moment.
+    // This context remains only for isFirstTimeUser (onboarding redirect) until
+    // the onboarding flow is migrated to the coach.
 
     const value = {
         // State

@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FiX } from 'react-icons/fi';
 import '../styles/Modal.css';
 
 const ExamAuthModal = ({ 
@@ -91,7 +90,7 @@ const ExamAuthModal = ({
         <div className="modal-header">
           <h3>Login to Continue</h3>
           <button className="modal-close-button" onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} />
+            <FiX />
           </button>
         </div>
         <div className="modal-content">
@@ -111,10 +110,10 @@ const ExamAuthModal = ({
                   justifyContent: 'center',
                   gap: '10px',
                   padding: '12px 20px',
-                  border: '1px solid #ddd',
+                  border: '1px solid var(--ut-rule)',
                   borderRadius: '8px',
-                  backgroundColor: 'white',
-                  color: '#333',
+                  backgroundColor: 'var(--ut-card)',
+                  color: 'var(--ut-text)',
                   fontSize: '16px',
                   cursor: 'pointer',
                   transition: 'all 0.2s'
@@ -139,10 +138,10 @@ const ExamAuthModal = ({
               textAlign: 'center', 
               margin: '20px 0',
               position: 'relative',
-              color: '#666'
+              color: 'var(--ut-muted)'
             }}>
               <span style={{
-                backgroundColor: 'white',
+                backgroundColor: 'var(--ut-card)',
                 padding: '0 15px',
                 position: 'relative',
                 zIndex: 1
@@ -153,7 +152,7 @@ const ExamAuthModal = ({
                 left: 0,
                 right: 0,
                 height: '1px',
-                backgroundColor: '#ddd',
+                backgroundColor: 'var(--ut-rule)',
                 zIndex: 0
               }}></div>
             </div>
@@ -168,8 +167,8 @@ const ExamAuthModal = ({
                 style={{
                   flex: 1,
                   padding: '12px 20px',
-                  backgroundColor: '#4a90e2',
-                  color: 'white',
+                  backgroundColor: 'var(--ut-accent-soft)',
+                  color: 'var(--ut-accent-dark)',
                   border: 'none',
                   borderRadius: '8px',
                   fontSize: '16px',
@@ -185,8 +184,8 @@ const ExamAuthModal = ({
                 style={{
                   flex: 1,
                   padding: '12px 20px',
-                  backgroundColor: '#2ecc71',
-                  color: 'white',
+                  backgroundColor: 'var(--ut-accent)',
+                  color: 'var(--ut-on-accent)',
                   border: 'none',
                   borderRadius: '8px',
                   fontSize: '16px',

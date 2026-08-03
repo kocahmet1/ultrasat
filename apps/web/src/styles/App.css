@@ -1,20 +1,21 @@
 /* App.css - Main styling for the application */
 
-/* General app layout */
+/* General app layout (Overhaul Phase F: V3 design language via tokens.css) */
 .app {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  font-family: 'Times New Roman', serif;
-  background-color: #ffffff;
-  color: #333333;
+  font-family: var(--ut-font-body);
+  background-color: var(--ut-bg);
+  color: var(--ut-text);
   font-size: 18px;
   overflow: hidden;
 }
 
-/* Ensure Times New Roman is applied to all elements */
+/* Base font for all elements (pages with intentional typography — e.g. the
+   exam interface's serif passages — override this in their own stylesheets) */
 *, button, input, select, textarea {
-  font-family: 'Times New Roman', serif;
+  font-family: var(--ut-font-body, 'Schibsted Grotesk', system-ui, sans-serif);
 }
 
 /* Main content area */
@@ -26,26 +27,10 @@
   position: relative;
 }
 
-/* Add borders with wide dashed styling */
+/* Phase F: the old dashed-black page borders are gone — clean V3 surfaces */
 .main-content::before,
 .main-content::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background-image: linear-gradient(to right, #000 8px, transparent 8px);
-  background-size: 16px 3px;
-  background-repeat: repeat-x;
-}
-
-/* Remove the top border from main content as it will be above the banner */
-.main-content::before {
   display: none;
-}
-
-.main-content::after {
-  bottom: 0;
 }
 
 /* Main content - full width for exam pages */
@@ -127,11 +112,12 @@
 .top-bar {
   display: flex;
   justify-content: flex-end;
-  padding: 10px;
+  padding: 14px 20px;
   position: absolute;
   top: 0;
   right: 0;
   width: auto;
+  z-index: 60;
 }
 
 /* Add these styles for the sidebar layout */

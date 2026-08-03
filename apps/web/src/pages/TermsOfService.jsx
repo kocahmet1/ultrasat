@@ -6,7 +6,7 @@ function TermsOfService() {
     <div className="terms-page">
       <div className="terms-container">
         <h1>Terms of Service</h1>
-        <p className="last-updated">Last updated: {new Date().toLocaleDateString()}</p>
+        <p className="last-updated">Last updated: July 30, 2026</p>
         
         <section>
           <h2>1. Acceptance of Terms</h2>

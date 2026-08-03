@@ -18,8 +18,10 @@ import {
   Legend,
 } from 'chart.js';
 import '../styles/SubcategoryProgress.css'; // Import the new CSS
+import { FiTarget, FiZap, FiTrendingUp, FiCheckSquare, FiChevronRight, FiArrowLeft } from 'react-icons/fi';
+// Feather has no brain / graduation-cap glyphs; kept from FontAwesome for these two only.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBrain, faChartLine, faListCheck, faLightbulb, faSpinner, faChevronRight, faGraduationCap, faBullseye, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faBrain, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 
 // Register ChartJS components
 ChartJS.register(
@@ -161,13 +163,16 @@ const SubcategoryProgressPage = () => {
     navigate('/smart-quiz-generator', { state });
   };
 
-  const handleLearn = () => navigate(`/concept/${normalizedSubcategoryId}`);
+  const handleLearn = () => navigate(`/learn/${normalizedSubcategoryId}`);
 
   if (isLoading || subcategoriesLoading) {
     return (
-      <div className="subcategory-page flex flex-col items-center justify-center p-4 min-h-screen">
-        <FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-purple-500" />
-        <span className="ml-3 mt-4 text-xl text-gray-600">Loading Progress Details...</span>
+      <div className="subcategory-page flex flex-col items-center justify-center p-4 min-h-screen" role="status" aria-label="Loading progress details">
+        <div className="ut-skeleton-stack" style={{ width: '100%', maxWidth: 480 }}>
+          <div className="ut-skeleton ut-skeleton--title" style={{ width: 220, margin: '0 auto 16px' }} />
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
+        </div>
       </div>
     );
   }
@@ -178,10 +183,10 @@ const SubcategoryProgressPage = () => {
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Oops!</h2>
         <p className="text-gray-600 text-center mb-6">We couldn't load the progress data for {subcategoryName || 'this subcategory'}.<br/>This might be due to a temporary issue or if no progress has been recorded yet.</p>
         <button 
-          onClick={() => navigate('/my-progress')}
+          onClick={() => navigate('/progress')}
           className="action-button bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-2 px-5 rounded-lg shadow-md flex items-center"
         >
-          <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> Back to My Progress
+          <FiArrowLeft className="mr-2" /> Back to My Progress
         </button>
       </div>
     );
@@ -202,11 +207,11 @@ const SubcategoryProgressPage = () => {
       {/* Smaller Header Section */}
       <div className="page-header-compact mb-6 md:mb-8 md:rounded-xl">
         <button 
-          onClick={() => navigate('/my-progress')}
+          onClick={() => navigate('/progress')}
           className="absolute top-2 left-3 text-gray-600 hover:text-gray-800 transition-colors z-10 bg-white/60 hover:bg-white/80 p-2 rounded-full shadow-sm"
           aria-label="Back to My Progress"
         >
-          <FontAwesomeIcon icon={faArrowLeft} size="sm"/>
+          <FiArrowLeft size="sm"/>
         </button>
         <div className="flex flex-col items-center justify-center text-center pt-2">
           <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 drop-shadow-sm">{subcategoryName}</h1>
@@ -232,7 +237,7 @@ const SubcategoryProgressPage = () => {
             {/* Title and Icon at the top */}
             <div className="snapshot-header">
               <h2 className="snapshot-title">
-                <FontAwesomeIcon icon={faBullseye} className="snapshot-icon" /> 
+                <FiTarget className="snapshot-icon" />
                 Performance Snapshot
               </h2>
             </div>
@@ -261,7 +266,7 @@ const SubcategoryProgressPage = () => {
                 onClick={handlePractice}
                 className="snapshot-button practice-button"
               >
-                <FontAwesomeIcon icon={faBrain} className="button-icon" /> 
+                <FontAwesomeIcon icon={faBrain} className="button-icon" />
                 Practice Now
               </button>
               <button 
@@ -269,7 +274,7 @@ const SubcategoryProgressPage = () => {
                 disabled={relatedConcepts.length === 0}
                 className={`snapshot-button learn-button ${relatedConcepts.length === 0 ? 'disabled' : ''}`}
               >
-                <FontAwesomeIcon icon={faLightbulb} className="button-icon" /> Learn Concepts
+                <FiZap className="button-icon" /> Learn Concepts
               </button>
             </div>
           </div>
@@ -280,7 +285,7 @@ const SubcategoryProgressPage = () => {
               <>
                 <div className="stat-card-header pb-3 mb-4">
                   <h2 className="text-xl font-semibold text-gray-700 flex items-center">
-                    <FontAwesomeIcon icon={faChartLine} className="mr-3 text-green-500" /> Accuracy Trend
+                    <FiTrendingUp className="mr-3 text-green-500" /> Accuracy Trend
                   </h2>
                 </div>
                 <div className="chart-wrapper">
@@ -329,7 +334,7 @@ const SubcategoryProgressPage = () => {
               </>
             ) : (
                <div className="text-center flex flex-col justify-center items-center h-full">
-                  <FontAwesomeIcon icon={faChartLine} size="2x" className="text-gray-300 mb-3" />
+                  <FiTrendingUp size="2x" className="text-gray-300 mb-3" />
                   <h3 className="text-lg font-medium text-gray-600 mb-1">Accuracy Trend</h3>
                   <p className="text-gray-500 text-sm">Complete a few quizzes in this subcategory to see your accuracy trend over time!</p>
                </div>
@@ -341,7 +346,7 @@ const SubcategoryProgressPage = () => {
         <div className="stat-card p-5 md:p-6 h-full"> 
           <div className="stat-card-header pb-3 mb-4">
             <h2 className="text-xl font-semibold text-gray-700 flex items-center">
-              <FontAwesomeIcon icon={faListCheck} className="mr-3 text-sky-500" /> Related Concepts
+              <FiCheckSquare className="mr-3 text-sky-500" /> Related Concepts
             </h2>
           </div>
           {relatedConcepts.length > 0 ? (
@@ -350,19 +355,19 @@ const SubcategoryProgressPage = () => {
                 <li 
                   key={concept.id} 
                   className="concept-item p-3 rounded-md bg-gray-50 hover:bg-sky-50 text-gray-700 hover:text-sky-700 flex justify-between items-center shadow-sm hover:shadow-md transition-all duration-200 border-l-4 border-transparent hover:border-sky-500"
-                  onClick={() => navigate(`/concept/${normalizedSubcategoryId}/${concept.id}`)} 
+                  onClick={() => navigate(`/concept/${concept.id}`)} 
                   role="button"
                   tabIndex={0}
-                  onKeyPress={(e) => e.key === 'Enter' && navigate(`/concept/${normalizedSubcategoryId}/${concept.id}`)}
+                  onKeyPress={(e) => e.key === 'Enter' && navigate(`/concept/${concept.id}`)}
                 >
                   <span className="font-medium">{concept.name}</span>
-                  <FontAwesomeIcon icon={faChevronRight} className="text-gray-400 group-hover:text-sky-600" />
+                  <FiChevronRight className="text-gray-400 group-hover:text-sky-600" />
                 </li>
               ))} 
             </ul>
           ) : (
             <div className="text-center text-gray-500 py-6">
-              <FontAwesomeIcon icon={faLightbulb} size="2x" className="text-gray-300 mb-3" />
+              <FiZap size="2x" className="text-gray-300 mb-3" />
               <p className="italic text-sm">No specific concepts listed for this subcategory yet. Check back later or explore other resources!</p>
             </div>
           )}

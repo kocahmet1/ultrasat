@@ -1,0 +1,534 @@
+/* LessonBlocks.css — P2-D lesson block template kit.
+   UWorld-grade structural blocks for lesson pages: rule boxes, annotated
+   examples, check/cross contrast pairs, worked steps, things-to-remember.
+
+   Tokens come from styles/tokens.css (--ut-*). The token kit has no
+   danger/error palette yet, so the four --lb-danger-* tokens are declared
+   ONCE below (values match the app's existing incorrect-answer state colors
+   in SubcategoryLearnPage.css .learn-option.incorrect). Every rule in this
+   file consumes var() tokens only. */
+
+.lesson-blocks {
+  --lb-danger: #dc2626;
+  --lb-danger-dark: #b91c1c;
+  --lb-danger-soft: #fef2f2;
+  --lb-danger-rule: #fca5a5;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-family: var(--ut-font-body);
+  color: var(--ut-text);
+}
+
+/* Shared eyebrow label (mono kicker) */
+.lb-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ut-accent-dark);
+  margin: 0 0 8px;
+}
+
+.lb-eyebrow svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.lb-title {
+  font-family: var(--ut-font-display);
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ut-text);
+  margin: 0 0 6px;
+}
+
+/* ------------------------------------------------------------- RuleBox -- */
+.lb-rule {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-left: 3px solid var(--ut-accent);
+  border-radius: var(--ut-radius);
+  padding: 14px 18px 15px;
+  box-shadow: var(--ut-shadow-sm);
+}
+
+.lb-rule-text {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ut-text-soft);
+  margin: 0;
+}
+
+.lb-rule-text + .lb-rule-text {
+  margin-top: 8px;
+}
+
+.lb-rule-text strong {
+  color: var(--ut-text);
+}
+
+/* ---------------------------------------------------- AnnotatedExample -- */
+.lb-annotated {
+  background: var(--ut-card-soft);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
+  padding: 14px 18px 15px;
+}
+
+.lb-annotated-intro {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ut-muted);
+  margin: 0 0 10px;
+}
+
+.lb-annotated-specimen {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+  padding: 14px 16px;
+  font-size: 15.5px;
+  line-height: 2;
+  color: var(--ut-text);
+}
+
+/* Inline highlighted segment. Pure inline spans — wraps naturally, and the
+   numbered marker dot lives INSIDE the span so it wraps with the last word. */
+.lb-seg-mark {
+  border-radius: 3px;
+  padding: 1px 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.lb-seg-mark.lb-tone-accent {
+  background: var(--ut-accent-soft);
+  box-shadow: inset 0 -2px 0 var(--ut-accent);
+}
+
+.lb-seg-mark.lb-tone-warn {
+  background: var(--lb-danger-soft);
+  box-shadow: inset 0 -2px 0 var(--lb-danger-rule);
+}
+
+.lb-seg-mark.lb-tone-plain {
+  background: var(--ut-bg-alt);
+  box-shadow: inset 0 -2px 0 var(--ut-rule-strong);
+}
+
+.lb-marker-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
+  font-family: var(--ut-font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  line-height: 1;
+  vertical-align: super;
+  margin-left: 3px;
+  user-select: none;
+}
+
+.lb-tone-warn .lb-marker-dot {
+  background: var(--lb-danger);
+  color: var(--ut-on-ink-bright);
+}
+
+.lb-tone-plain .lb-marker-dot {
+  background: var(--ut-panel);
+  color: var(--ut-on-ink-bright);
+}
+
+/* Caption list: marker number -> label */
+.lb-annotated-captions {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.lb-annotated-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ut-text-soft);
+}
+
+.lb-annotated-caption .lb-marker-dot {
+  vertical-align: baseline;
+  margin-left: 0;
+  flex-shrink: 0;
+  transform: translateY(2px);
+}
+
+.lb-annotated-note {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--ut-rule);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ut-muted);
+}
+
+/* ------------------------------------------------------ CheckCrossPair -- */
+.lb-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lb-pair-item {
+  border-radius: var(--ut-radius);
+  border: 1px solid var(--ut-rule);
+  padding: 12px 16px 13px;
+}
+
+.lb-pair-item.lb-pair-wrong {
+  background: var(--lb-danger-soft);
+  border-color: var(--lb-danger-rule);
+}
+
+.lb-pair-item.lb-pair-correct {
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+}
+
+.lb-pair-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.lb-pair-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.lb-pair-chip svg {
+  width: 12px;
+  height: 12px;
+  stroke-width: 3;
+}
+
+.lb-pair-wrong .lb-pair-chip {
+  background: var(--lb-danger);
+  color: var(--ut-on-ink-bright);
+}
+
+.lb-pair-correct .lb-pair-chip {
+  background: var(--ut-success);
+  color: var(--ut-on-ink-bright);
+}
+
+.lb-pair-tag {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.lb-pair-wrong .lb-pair-tag {
+  color: var(--lb-danger-dark);
+}
+
+.lb-pair-correct .lb-pair-tag {
+  color: var(--ut-success-dark);
+}
+
+.lb-pair-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ut-text);
+  margin: 0 0 7px;
+}
+
+.lb-pair-why {
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin: 0;
+  padding-left: 10px;
+}
+
+.lb-pair-wrong .lb-pair-why {
+  color: var(--lb-danger-dark);
+  border-left: 2px solid var(--lb-danger-rule);
+}
+
+.lb-pair-correct .lb-pair-why {
+  color: var(--ut-success-dark);
+  border-left: 2px solid var(--ut-success-rule);
+}
+
+/* --------------------------------------------------------- WorkedSteps -- */
+.lb-steps {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
+  padding: 14px 18px 16px;
+  box-shadow: var(--ut-shadow-sm);
+}
+
+.lb-steps-intro {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ut-text-soft);
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: var(--ut-card-soft);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+}
+
+.lb-steps-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lb-step {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 0 0 14px;
+}
+
+/* connector line between step number bubbles */
+.lb-step::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  bottom: 0;
+  width: 2px;
+  background: var(--ut-rule);
+}
+
+.lb-step:last-child {
+  padding-bottom: 0;
+}
+
+.lb-step:last-child::before {
+  display: none;
+}
+
+.lb-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: var(--ut-bg-alt);
+  border: 1px solid var(--ut-rule-strong);
+  color: var(--ut-text-soft);
+  font-family: var(--ut-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.lb-step-body {
+  min-width: 0;
+  flex: 1;
+  padding-top: 2px;
+}
+
+.lb-step-label {
+  display: block;
+  font-family: var(--ut-font-display);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ut-text);
+  margin: 0 0 3px;
+}
+
+.lb-step-content {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ut-text-soft);
+  margin: 0;
+}
+
+.lb-step-note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ut-muted);
+  margin: 5px 0 0;
+  padding-left: 9px;
+  border-left: 2px solid var(--ut-rule);
+}
+
+/* Final step = the answer: accent emphasis */
+.lb-step.lb-step-final .lb-step-num {
+  background: var(--ut-accent);
+  border-color: var(--ut-accent);
+  color: var(--ut-on-accent);
+}
+
+.lb-step.lb-step-final .lb-step-body {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius-sm);
+  padding: 9px 12px 10px;
+  margin-top: -2px;
+}
+
+.lb-step.lb-step-final .lb-step-label {
+  color: var(--ut-accent-dark);
+}
+
+.lb-step.lb-step-final .lb-step-content {
+  color: var(--ut-text);
+}
+
+.lb-step.lb-step-final .lb-step-note {
+  border-left-color: var(--ut-accent-rule);
+  color: var(--ut-accent-dark);
+}
+
+/* ---------------------------------------------------- ThingsToRemember -- */
+.lb-remember {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius-lg);
+  padding: 15px 18px 16px;
+}
+
+.lb-remember .lb-eyebrow {
+  color: var(--ut-accent-dark);
+}
+
+.lb-remember-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lb-remember-item {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ut-text);
+}
+
+.lb-remember-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--ut-accent);
+}
+
+/* --------------------------------------------------------- html block -- */
+.lb-html {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ut-text-soft);
+}
+
+.lb-html p {
+  margin: 0 0 10px;
+}
+
+.lb-html p:last-child {
+  margin-bottom: 0;
+}
+
+.lb-html h3,
+.lb-html h4 {
+  font-family: var(--ut-font-display);
+  color: var(--ut-text);
+  margin: 0 0 8px;
+}
+
+/* ------------------------------------------------- dev preview notice -- */
+.lb-preview-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  background: var(--ut-bg-alt);
+  border: 1px dashed var(--ut-rule-strong);
+  border-radius: var(--ut-radius-sm);
+  padding: 5px 10px;
+}
+
+/* ---------------------------------------------------------- responsive -- */
+@media (max-width: 640px) {
+  .lesson-blocks {
+    gap: 14px;
+  }
+
+  .lb-rule,
+  .lb-annotated,
+  .lb-steps,
+  .lb-remember {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .lb-annotated-specimen {
+    font-size: 14.5px;
+    padding: 12px 12px;
+  }
+
+  .lb-pair-item {
+    padding: 11px 12px 12px;
+  }
+}
+
+/* --------------------------------------------------------------- print -- */
+@media print {
+  .lb-rule,
+  .lb-annotated,
+  .lb-pair-item,
+  .lb-steps,
+  .lb-remember {
+    box-shadow: none;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .lb-preview-notice {
+    display: none;
+  }
+}

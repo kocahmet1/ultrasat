@@ -1,6 +1,5 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faLayerGroup, faPlay, faTrophy, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FiHelpCircle, FiLayers, FiPlay, FiAward, FiTrash2, FiLoader } from 'react-icons/fi';
 import '../styles/WordQuizzes.css';
 
 /**
@@ -10,7 +9,7 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDe
   if (loading) {
     return (
       <div className="word-quizzes-loading">
-        <FontAwesomeIcon icon={faQuestionCircle} spin />
+        <FiLoader style={{ animation: 'spin 1s linear infinite' }} />
         Loading word quizzes...
       </div>
     );
@@ -19,7 +18,7 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDe
   if (flashcardDecks.length === 0) {
     return (
       <div className="word-quizzes-empty">
-        <FontAwesomeIcon icon={faQuestionCircle} className="empty-icon" />
+        <FiHelpCircle className="empty-icon" />
         <h3>No quizzes available</h3>
         <p>Create flashcard decks with words to enable quizzes!</p>
       </div>
@@ -34,7 +33,7 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDe
     <div className="word-quizzes-container">
       <div className="quiz-section">
         <h2 className="quiz-section-title">
-          <FontAwesomeIcon icon={faTrophy} />
+          <FiAward />
           Available Quizzes
         </h2>
         
@@ -48,7 +47,7 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDe
               <div key={deck.id} className="quiz-deck-card">
                 <div className="quiz-deck-header">
                   <div className="quiz-deck-icon">
-                    <FontAwesomeIcon icon={faQuestionCircle} />
+                    <FiHelpCircle />
                   </div>
                   <div className="quiz-deck-info">
                     <h3 className="quiz-deck-name">{deck.name} Quiz</h3>
@@ -74,7 +73,7 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDe
                     className="start-quiz-button"
                     onClick={() => onStartQuiz(deck)}
                   >
-                    <FontAwesomeIcon icon={faPlay} />
+                    <FiPlay />
                     Start Quiz
                   </button>
                   {deck.name !== 'Deck 1' && onDeleteDeck && (
@@ -83,7 +82,7 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDe
                       onClick={() => onDeleteDeck(deck)}
                       title="Delete deck"
                     >
-                      <FontAwesomeIcon icon={faTrash} />
+                      <FiTrash2 />
                     </button>
                   )}
                 </div>
@@ -96,7 +95,7 @@ export default function WordQuizzes({ flashcardDecks, loading, onStartQuiz, onDe
       {unavailableDecks.length > 0 && (
         <div className="quiz-section">
           <h2 className="quiz-section-title unavailable">
-            <FontAwesomeIcon icon={faLayerGroup} />
+            <FiLayers />
             Decks Need More Words
           </h2>
           <div className="unavailable-decks">

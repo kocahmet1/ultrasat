@@ -1,0 +1,148 @@
+/* SiteFooter — global footer on the V3 dark ink surface.
+   Tokens from styles/tokens.css (--ut-*). px units only: the app's
+   html { font-size: 62.5% } rem scaling must not warp this. */
+
+.site-footer {
+  background: var(--ut-ink);
+  color: var(--ut-on-ink-muted);
+  border-top: 1px solid var(--ut-rule-on-ink);
+  font-family: var(--ut-font-body);
+}
+
+.site-footer-shell {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+}
+
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.5fr) repeat(3, 1fr);
+  gap: 40px;
+  padding: 52px 0 44px;
+}
+
+/* ---- brand ---- */
+
+.site-footer-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ut-on-ink-bright);
+  text-decoration: none;
+  font-family: var(--ut-font-display);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.site-footer-wordmark:hover {
+  color: var(--ut-on-ink-bright);
+}
+
+.site-footer-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--ut-accent);
+  display: block;
+  flex-shrink: 0;
+}
+
+.site-footer-tagline {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ut-on-ink-muted);
+  max-width: 280px;
+}
+
+/* ---- link columns ---- */
+
+.site-footer-heading {
+  margin: 0 0 14px;
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  font-weight: 500;
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-on-ink-muted);
+}
+
+.site-footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.site-footer-col a {
+  color: var(--ut-on-ink-muted);
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: color 0.15s ease;
+}
+
+.site-footer-col a:hover {
+  color: var(--ut-on-ink-bright);
+}
+
+/* ---- bottom bar ---- */
+
+.site-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 32px;
+  flex-wrap: wrap;
+  padding: 22px 0 26px;
+  border-top: 1px solid var(--ut-rule-on-ink);
+}
+
+.site-footer-copyright,
+.site-footer-trademark {
+  margin: 0;
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+}
+
+/* ---- responsive ---- */
+
+@media (max-width: 1024px) {
+  .site-footer-shell {
+    padding: 0 28px;
+  }
+
+  .site-footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .site-footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-footer-shell {
+    padding: 0 20px;
+  }
+
+  .site-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 40px 0 36px;
+  }
+
+  .site-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

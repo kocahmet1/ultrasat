@@ -1,16 +1,15 @@
 import React from 'react';
-import {
-  FaBook,
-  FaBolt,
-  FaBullseye,
-  FaCheck,
-  FaExclamationTriangle,
-} from 'react-icons/fa';
+import { FiZap, FiBookOpen, FiCheck } from 'react-icons/fi';
 import { getPerformanceCategoryForLast10 } from '../../utils/progressDashboardUtils';
+
+const PERFORMANCE_CHIP_CLASS = {
+  strong: 'ut-chip--easy',
+  moderate: 'ut-chip--medium',
+  weak: 'ut-chip--hard',
+};
 
 function SubcategoryProgressCard({
   subcategory,
-  buttonClassName,
   detailedProgress,
   concepts = [],
   conceptMastery = {},
@@ -28,127 +27,103 @@ function SubcategoryProgressCard({
     stats.last10QuestionResultsCount || 0,
   );
   const hasAttempts = (stats.totalQuestionsAnswered || 0) > 0 || (stats.last10QuestionResultsCount || 0) > 0;
+  const coveragePercent = Math.min(100, (answeredCount / 10) * 100);
+  const accuracyLabel = stats.accuracyLast10 !== undefined
+    ? `${stats.accuracyLast10.toFixed(0)}%`
+    : 'N/A';
 
   return (
-    <div className="pd-subcategory-item">
-      <div className="pd-subcategory-info">
-        <div className="pd-minimal-view">
-          <div className="pd-title-row">
-            <div className="pd-subcategory-header">
-              <button
-                className={`subcategory-name-btn ${buttonClassName}`}
-                onClick={() => onOpenSubcategory(subcategory.id)}
-                type="button"
-              >
-                {subcategory.name}
-              </button>
-            </div>
-            <div className="single-level-indicator">
-              <div className="current-level-box">Level {level}</div>
-            </div>
-          </div>
-
-          <div className="subcategory-progress-container">
-            <div className="progress-bar-container">
-              <div className="progress-bar-background">
-                <div
-                  className={`progress-bar-fill ${performanceClass}`}
-                  style={{ width: `${Math.min(100, (answeredCount / 10) * 100)}%` }}
-                ></div>
-              </div>
-              <div className="progress-status">
-                <span>{answeredCount}/10</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="pd-expanded-view">
-          <div className="level-up-message">
-            {10 - answeredCount} more questions left to cover this topic. Take a{' '}
-            <span className="emphasis">SmartQuiz</span> to level up and fully master the topic.
-          </div>
-
-          <div className="level-indicator-container">
-            <div className={`level-box ${level === 1 ? 'active' : ''}`}>Level 1</div>
-            <div className={`level-box ${level === 2 ? 'active' : ''}`}>Level 2</div>
-            <div className={`level-box ${level === 3 ? 'active' : ''}`}>Level 3</div>
-          </div>
-
+    <article className="ut-card pg-skill">
+      <div className="pg-skill-top">
+        <button
+          type="button"
+          className="pg-skill-name"
+          onClick={() => onOpenSubcategory(subcategory.id)}
+          title={`Open ${subcategory.name} progress details`}
+        >
+          {subcategory.name}
+        </button>
+        <div className="pg-skill-chips">
+          <span className="ut-chip">Lvl {level}</span>
           {hasAttempts ? (
-            <div className="pd-subcategory-stats">
-              <p className={`accuracy-display ${performanceClass}`}>
-                <FaBullseye />
-                {' '}
-                Accuracy (Last 10 questions):{' '}
-                {stats.accuracyLast10 !== undefined ? `${stats.accuracyLast10.toFixed(0)}%` : 'N/A'}
-              </p>
-              <p className="total-answered-display">
-                Total # of questions answered: {stats.totalQuestionsAnswered || 0}
-              </p>
-            </div>
+            <span className={`ut-chip ${PERFORMANCE_CHIP_CLASS[performanceClass] || ''}`}>
+              {accuracyLabel} last 10
+            </span>
           ) : (
-            <p className="accuracy-display">No attempts yet</p>
+            <span className="ut-chip">No attempts</span>
           )}
         </div>
+      </div>
 
-        {concepts.length > 0 && (
-          <div className="concept-mastery-container">
-            <h5>Concept Mastery</h5>
-            <div className="concept-list">
-              {concepts.map((concept) => {
-                const isMastered = conceptMastery[concept.id] === true;
+      <div className="pg-skill-bar">
+        <div
+          className="ut-progress"
+          role="progressbar"
+          aria-valuenow={answeredCount}
+          aria-valuemin={0}
+          aria-valuemax={10}
+          aria-label={`${subcategory.name}: ${answeredCount} of the last 10 questions covered`}
+        >
+          <span className="ut-progress-fill" style={{ width: `${coveragePercent}%` }} />
+        </div>
+        <span className="ut-label pg-skill-count">{answeredCount}/10</span>
+      </div>
 
+      <div className="pg-skill-foot">
+        <span className="ut-label pg-skill-total">
+          {stats.totalQuestionsAnswered || 0} answered
+        </span>
+        <div className="pg-skill-actions">
+          <button
+            type="button"
+            className="ut-btn ut-btn--soft ut-btn--sm"
+            onClick={() => onStartPractice(subcategory.id)}
+            disabled={!subcategory.id}
+          >
+            <FiZap aria-hidden="true" /> Practice
+          </button>
+          <button
+            type="button"
+            className="ut-btn ut-btn--ghost ut-btn--sm"
+            onClick={() => onLearn(subcategory.id)}
+          >
+            <FiBookOpen aria-hidden="true" /> Learn
+            {isFreeTier && <span className="ut-pro">Pro</span>}
+          </button>
+        </div>
+      </div>
+
+      {concepts.length > 0 && (
+        <div className="pg-skill-concepts">
+          <p className="ut-label pg-concepts-label">Concept mastery</p>
+          <div className="pg-concepts-list">
+            {concepts.map((concept) => {
+              const isMastered = conceptMastery[concept.id] === true;
+
+              if (isMastered) {
                 return (
-                  <div key={concept.id} className="concept-item">
-                    <div className="concept-name">{concept.name}</div>
-                    <div className={`concept-status ${isMastered ? 'mastered' : 'not-mastered'}`}>
-                      {isMastered ? (
-                        <>
-                          <FaCheck /> Mastered
-                        </>
-                      ) : (
-                        <>
-                          <FaExclamationTriangle /> Practice Needed
-                        </>
-                      )}
-                    </div>
-                    {!isMastered && (
-                      <button
-                        className="concept-practice-btn"
-                        onClick={() => onPracticeConcept(concept.id)}
-                        type="button"
-                      >
-                        Practice This Concept
-                      </button>
-                    )}
-                  </div>
+                  <span key={concept.id} className="ut-chip ut-chip--easy">
+                    <FiCheck aria-hidden="true" /> {concept.name}
+                  </span>
                 );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="pd-subcategory-actions">
-        <button
-          className="action-button practice minimal-action"
-          onClick={() => onStartPractice(subcategory.id)}
-          disabled={!subcategory.id}
-          type="button"
-        >
-          <FaBolt /> Practice
-        </button>
+              }
 
-        <button
-          className="action-button learn expanded-action"
-          onClick={() => onLearn(subcategory.id)}
-          type="button"
-        >
-          <FaBook /> Learn
-          {isFreeTier && <span className="pd-learn-pro-badge">PRO</span>}
-        </button>
-      </div>
-    </div>
+              return (
+                <button
+                  key={concept.id}
+                  type="button"
+                  className="ut-chip pg-concept-btn"
+                  onClick={() => onPracticeConcept(concept.id)}
+                  title={`Practice ${concept.name}`}
+                >
+                  {concept.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </article>
   );
 }
 

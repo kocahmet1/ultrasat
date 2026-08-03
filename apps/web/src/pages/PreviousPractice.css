@@ -1,0 +1,100 @@
+/* PreviousPractice.css — My Practice page (P1-B).
+   Composed from ut-kit classes; only page-specific layout lives here.
+   Tokens throughout (destructive/error states use --ut-danger family). */
+
+.pp-history-list,
+.pp-saved-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.pp-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pp-row-title {
+  font-family: var(--ut-font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ut-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pp-row-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pp-saved-text {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ut-text-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pp-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--ut-rule-strong);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card);
+  color: var(--ut-mono-muted);
+  cursor: pointer;
+  font-size: 13px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pp-remove-btn:hover:not(:disabled) {
+  border-color: var(--ut-danger-rule);
+  color: var(--ut-danger-dark);
+}
+
+.pp-remove-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pp-saved-error {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--ut-danger-dark);
+}
+
+.pp-empty-action {
+  margin-top: 14px;
+}
+
+@media (max-width: 720px) {
+  .pp-row,
+  .pp-saved-row {
+    flex-wrap: wrap;
+  }
+
+  .pp-row-main {
+    flex-basis: calc(100% - 54px);
+  }
+
+  .pp-row-side {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 54px;
+  }
+}

@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faTimes, 
-  faTrash, 
-  faLayerGroup, 
-  faSpinner,
-  faExclamationTriangle,
-  faPlus
-} from '@fortawesome/free-solid-svg-icons';
+import { FiX, FiTrash2, FiLayers, FiLoader, FiAlertTriangle, FiPlus } from 'react-icons/fi';
 import { getFlashcardDeckWords, removeWordFromFlashcardDeck } from '../api/helperClient';
 import { toast } from 'react-toastify';
 import AddWordsToDeck from './AddWordsToDeck';
@@ -95,18 +87,18 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
       <div className="edit-deck-modal" onClick={e => e.stopPropagation()}>
         <div className="edit-deck-modal-header">
           <div className="modal-title-section">
-            <FontAwesomeIcon icon={faLayerGroup} className="modal-title-icon" />
+            <FiLayers className="modal-title-icon" />
             <h2>Edit Deck: {deck?.name}</h2>
           </div>
           <button className="modal-close-btn" onClick={handleClose}>
-            <FontAwesomeIcon icon={faTimes} />
+            <FiX />
           </button>
         </div>
 
         <div className="edit-deck-modal-content">
           {loading ? (
             <div className="modal-loading">
-              <FontAwesomeIcon icon={faSpinner} className="spinner" />
+              <FiLoader className="spinner" />
               <p>Loading deck words...</p>
             </div>
           ) : (
@@ -118,7 +110,7 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
 
               {words.length === 0 && !isAddingWords ? (
                 <div className="empty-deck-message">
-                  <FontAwesomeIcon icon={faExclamationTriangle} className="empty-icon" />
+                  <FiAlertTriangle className="empty-icon" />
                   <h3>This deck is empty</h3>
                   <p>Add some words to this deck to start studying!</p>
                 </div>
@@ -137,9 +129,9 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
                         title="Remove from deck"
                       >
                         {removingWordIds.has(word.id) ? (
-                          <FontAwesomeIcon icon={faSpinner} className="spinner" />
+                          <FiLoader className="spinner" />
                         ) : (
-                          <FontAwesomeIcon icon={faTrash} />
+                          <FiTrash2 />
                         )}
                       </button>
                     </div>
@@ -152,7 +144,7 @@ const EditDeckModal = ({ deck, isOpen, onClose, onDeckUpdated }) => {
                   className="toggle-add-words-btn"
                   onClick={() => setIsAddingWords(!isAddingWords)}
                 >
-                  <FontAwesomeIcon icon={faPlus} />
+                  <FiPlus />
                   {isAddingWords ? 'Cancel Adding' : 'Add Words to Deck'}
                 </button>
 

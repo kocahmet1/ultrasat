@@ -60,7 +60,8 @@ export const repairPracticeExamData = async () => {
             title: 'Example Practice Exam',
             description: 'This is an example practice exam created by the system repair function',
             moduleIds: [moduleRef.id],
-            isPublic: true,
+            isPublic: false,
+            qualityControl: { status: 'not_checked' },
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           };
@@ -80,7 +81,8 @@ export const repairPracticeExamData = async () => {
           title: 'Example Practice Exam',
           description: 'This is an example practice exam created by the system repair function',
           moduleIds: [firstModule.id],
-          isPublic: true,
+          isPublic: false,
+          qualityControl: { status: 'not_checked' },
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         };
@@ -123,13 +125,23 @@ export const createPracticeExam = async (examData) => {
       }
     }
 
+    const isDiagnostic = Boolean(examData.isDiagnostic);
     const validatedData = {
       ...examData,
       title: examData.title || 'Untitled Practice Exam',
       description: examData.description || 'No description provided',
       moduleIds,
-      isPublic: examData.isPublic !== undefined ? examData.isPublic : true,
-      isDiagnostic: examData.isDiagnostic || false,
+      isPublic: isDiagnostic
+        ? Boolean(examData.isPublic)
+        : false,
+      isDiagnostic,
+      qualityControl: isDiagnostic
+        ? examData.qualityControl || null
+        : {
+            status: 'not_checked',
+            invalidationReason:
+              'New full-length exams require quality control before publication.',
+          },
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
@@ -283,8 +295,53 @@ export const getPracticeExamModules = async (examId) => {
 export const updatePracticeExam = async (examId, examData) => {
   try {
     const examRef = doc(db, 'practiceExams', examId);
+    const existingSnapshot = await getDoc(examRef);
+    if (!existingSnapshot.exists()) {
+      throw new Error(`Practice exam with ID ${examId} not found`);
+    }
+    const existing = existingSnapshot.data();
+    const nextIsDiagnostic =
+      examData.isDiagnostic !== undefined
+        ? Boolean(examData.isDiagnostic)
+        : Boolean(existing.isDiagnostic);
+    const previousModuleIds = Array.isArray(existing.moduleIds)
+      ? existing.moduleIds.map(String)
+      : [];
+    const nextModuleIds = Array.isArray(examData.moduleIds)
+      ? examData.moduleIds.map(String)
+      : previousModuleIds;
+    const moduleIdsChanged =
+      previousModuleIds.length !== nextModuleIds.length ||
+      previousModuleIds.some(
+        (moduleId, index) =>
+          moduleId !== nextModuleIds[index],
+      );
+    if (
+      !nextIsDiagnostic &&
+      examData.isPublic === true &&
+      !existing.isPublic &&
+      existing.qualityControl?.status !== 'passed'
+    ) {
+      throw new Error(
+        'Run Exam Quality Control and use its verified Publish action before making a full-length exam public.',
+      );
+    }
+    const qualityInvalidation =
+      !nextIsDiagnostic && moduleIdsChanged
+        ? {
+            qualityControl: {
+              ...(existing.qualityControl || {}),
+              status: 'stale',
+              invalidationReason:
+                'The exam module selection changed after quality control.',
+              invalidatedAt: serverTimestamp(),
+            },
+            isPublic: false,
+          }
+        : {};
     await updateDoc(examRef, {
       ...examData,
+      ...qualityInvalidation,
       updatedAt: serverTimestamp()
     });
   } catch (error) {

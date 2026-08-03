@@ -1,27 +1,21 @@
 /**
  * Graph Generation API using Plotly.js
  * Pure JavaScript solution - no Python dependencies required
- * Uses Google Gemini API for AI-powered graph generation
+ * Uses the OpenAI API (gpt-5.6-luna) for AI-powered graph generation
  */
 
 const express = require('express');
 const router = express.Router();
 const admin = require('firebase-admin');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const fs = require('fs').promises;
 const path = require('path');
 const { requireAuth } = require('./middleware/auth');
+const { resolveModel, reasoningConfig, outputTokenBudget } = require('./config/aiModel');
 
 // Alternative: Use puppeteer for image generation
 const puppeteer = require('puppeteer');
 
-// Initialize Gemini AI
-let genAI;
-try {
-  genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-} catch (error) {
-  console.warn('Gemini AI initialization warning:', error.message);
-}
+const GRAPH_MODEL = resolveModel('OPENAI_GRAPH_GENERATION_MODEL');
 
 const authenticateUser = requireAuth({
   missingTokenMessage: 'Unauthorized - Missing or invalid token',
@@ -82,7 +76,8 @@ Example for a bar chart:
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-5.4',
+        model: GRAPH_MODEL,
+        reasoning: reasoningConfig(),
         input: [
           {
             role: 'system',
@@ -90,7 +85,7 @@ Example for a bar chart:
           },
           { role: 'user', content: prompt }
         ],
-        max_output_tokens: 16384,
+        max_output_tokens: outputTokenBudget(16384),
       }),
     });
 

@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import { processTextMarkup } from '../utils/textProcessing';
 import useIsMobile from '../hooks/useIsMobile';
 import '../styles/Question.css';
+
+const getSafeProcessedMarkup = (text) => (
+  DOMPurify.sanitize(processTextMarkup(text) || '')
+);
+
+const getVisualAltText = (description) => {
+  if (typeof description !== 'string' || !description.trim()) {
+    return 'Visual for this question';
+  }
+
+  return DOMPurify.sanitize(description, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
+  }).trim() || 'Visual for this question';
+};
 
 const Question = ({ 
   moduleNumber,
@@ -122,7 +138,7 @@ const Question = ({
         <div className="question-graph-container">
           <img 
             src={graphUrl} 
-            alt="Graph for question" 
+            alt={getVisualAltText(graphDescription)}
             className="question-graph mb-4 max-h-72 mx-auto" 
           />
         </div>
@@ -135,14 +151,14 @@ const Question = ({
           lineHeight: '1.8',
           marginBottom: '1.6rem',
           paddingBottom: '1.2rem',
-          borderBottom: '1px solid #e0e0e0',
+          borderBottom: '1px solid var(--ut-rule)',
           whiteSpace: 'pre-wrap',
         }}>
-          <div dangerouslySetInnerHTML={{ __html: processTextMarkup(passage) }} />
+          <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(passage) }} />
         </div>
       )}
       
-      <div dangerouslySetInnerHTML={{ __html: processTextMarkup(questionText) }} />
+      <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(questionText) }} />
       
       {/* Graph description removed - no longer displayed */}
     </div>
@@ -169,8 +185,8 @@ const Question = ({
               className={`cross-out-toggle ${showCrossOut ? 'active' : ''}`}
               onClick={toggleCrossOut}
               style={{
-                backgroundColor: showCrossOut ? '#133B8F' : '#1A4AAB',
-                color: 'white',
+                backgroundColor: showCrossOut ? 'var(--ut-accent-dark)' : 'var(--ut-accent)',
+                color: 'var(--ut-on-accent)',
                 border: 'none'
               }}
             >

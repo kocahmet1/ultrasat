@@ -71,7 +71,7 @@ Options:
   --no-upload             Extract + validate + normalize, but skip upload
   --upload-only <json>    Skip extraction, upload from a previously generated _final.json
   --skip-validation       Skip Stage 2 (AI validation)
-  --model <model>         OpenAI model to use (default: gpt-5.4)
+  --model <model>         OpenAI model to use (default: gpt-5.6-luna)
   --help, -h              Show this help
 
 Examples:
@@ -169,7 +169,7 @@ async function main() {
 
   const examSlug = slugify(args.examName);
   const apiKey = getApiKey();
-  const aiModel = args.model || 'gpt-5.4';
+  const aiModel = args.model || require('../apps/api/config/aiModel').resolveModel('OPENAI_INGEST_MODEL');
 
   console.log(`\n📄 PDF Ingestion Pipeline: ${args.examName}`);
   console.log(`═══════════════════════════════════════════════════\n`);

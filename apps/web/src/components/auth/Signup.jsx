@@ -15,6 +15,15 @@ function Signup() {
   const location = useLocation();
 
   const handlePostSignup = () => {
+    // Coming from a protected route (PrivateRoute / auth-notice): honor the
+    // intended destination. Sentinel intents ('quiz'/'exam'/'questionBank')
+    // are handled below — only real paths are navigated directly.
+    const from = location.state?.from;
+    if (typeof from === 'string' && from.startsWith('/') && from !== '/signup' && from !== '/login') {
+      navigate(from);
+      return;
+    }
+
     // Check if coming from Quiz gating
     if (location.state?.from === 'quiz') {
       // Prefer a navigation object if provided

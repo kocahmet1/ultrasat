@@ -65,7 +65,12 @@ const AllExamResults = () => {
     if (examHistory.length === 0) {
         return (
             <div className={styles.container}>
-                <h1 className={styles.title}>All Exam Results</h1>
+                <div className="ut-page-head">
+                    <div className="ut-page-head-main">
+                        <p className="ut-eyebrow">Results</p>
+                        <h1 className="ut-page-title">All Exam Results</h1>
+                    </div>
+                </div>
                 <p className={styles.noResults}>You haven't completed any exams yet.</p>
             </div>
         );
@@ -73,7 +78,12 @@ const AllExamResults = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>All Exam Results</h1>
+            <div className="ut-page-head">
+                <div className="ut-page-head-main">
+                    <p className="ut-eyebrow">Results</p>
+                    <h1 className="ut-page-title">All Exam Results</h1>
+                </div>
+            </div>
             <ul className={styles.examList}>
                 {examHistory.map((exam) => (
                     <li key={exam.id} className={styles.examItem}>

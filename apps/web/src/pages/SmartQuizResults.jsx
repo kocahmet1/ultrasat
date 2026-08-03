@@ -2,22 +2,42 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useAICompanion } from '../contexts/AICompanionContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
-import { getSubcategoryName } from '../utils/subcategoryConstants';
+import { getSubcategoryName, getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import { processTextMarkup } from '../utils/textProcessing';
-import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaFlag } from 'react-icons/fa';
+import { FiArrowLeft, FiRefreshCw, FiCheckCircle, FiXCircle, FiArrowUp, FiAward, FiFlag } from 'react-icons/fi';
+import { FiChevronDown, FiChevronUp, FiMinusCircle, FiBookOpen, FiUsers } from 'react-icons/fi';
+import { getStatsForQuestions, formatStats, formatPeerSeconds } from '../firebase/questionStatsServices';
+import ExplanationCard from '../components/ExplanationCard';
 import ReportQuestionModal from '../components/ReportQuestionModal';
+import CoachDebrief from '../components/coach/CoachDebrief';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import '../styles/SmartQuizResults.css';
 
+// P2-B: defensive correct-option resolution for peer-stat chips (numeric,
+// option-text, or numeric-string correctAnswer). Mirrors SmartQuiz.jsx.
+const resolveCorrectOptionIndex = (question) => {
+  const options = Array.isArray(question?.options) ? question.options : [];
+  if (options.length === 0) return null;
+  const { correctAnswer } = question;
+  if (typeof correctAnswer === 'number' && options[correctAnswer] !== undefined) return correctAnswer;
+  if (typeof correctAnswer === 'string') {
+    const idx = options.indexOf(correctAnswer);
+    if (idx >= 0) return idx;
+    if (/^[0-9]+$/.test(correctAnswer.trim())) {
+      const n = parseInt(correctAnswer.trim(), 10);
+      if (options[n] !== undefined) return n;
+    }
+  }
+  return null;
+};
+
 export default function SmartQuizResults() {
   const { quizId } = useParams();
   const { currentUser } = useAuth();
-  const { refreshGreeting } = useAICompanion();
   const navigate = useNavigate();
   
   const [quiz, setQuiz] = useState(null);
@@ -28,6 +48,22 @@ export default function SmartQuizResults() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportLoading, setReportLoading] = useState(false);
   const [selectedQuestionForReport, setSelectedQuestionForReport] = useState(null);
+
+  // P2-B peer statistics: questionId -> formatStats() output (null while the
+  // sample is below MIN_SAMPLE). Fetched once per quiz, in parallel with the
+  // question fetches; empty until resolved, and null rows render nothing.
+  const [peerStats, setPeerStats] = useState({});
+
+  // Per-question explanation visibility. Keyed by question id; when a key is
+  // absent the default applies (expanded for wrong/omitted, collapsed for
+  // correct — see explanationDefaultOpen below).
+  const [explanationOpen, setExplanationOpen] = useState({});
+  const toggleExplanation = (questionId, defaultOpen) => {
+    setExplanationOpen((prev) => ({
+      ...prev,
+      [questionId]: !(prev[questionId] ?? defaultOpen),
+    }));
+  };
 
   useEffect(() => {
     const fetchQuizResults = async () => {
@@ -54,6 +90,24 @@ export default function SmartQuizResults() {
           return;
         }
         
+        // P2-B: kick off the peer-stats read here so it runs in parallel with
+        // the question fetches below. Fire-and-forget — it never blocks or
+        // fails the results render; rows simply gain their stats on resolve.
+        const statIds = (Array.isArray(data.questionIds) && data.questionIds.length > 0)
+          ? data.questionIds
+          : (Array.isArray(data.questions) ? data.questions.map((q) => q?.id).filter(Boolean) : []);
+        if (statIds.length > 0) {
+          getStatsForQuestions(statIds)
+            .then((statsMap) => {
+              const derived = {};
+              statIds.forEach((id) => { derived[id] = formatStats(statsMap[id]); });
+              setPeerStats(derived);
+            })
+            .catch((statsError) => {
+              console.warn('[SmartQuizResults] Peer stats unavailable (non-critical):', statsError?.message);
+            });
+        }
+
         let questionsData = [];
         if (data.questionIds && data.questionIds.length > 0) {
           const questionPromises = data.questionIds.map(async (questionId) => {
@@ -70,8 +124,8 @@ export default function SmartQuizResults() {
         setLoading(false);
         // Scroll to top when results are loaded
         window.scrollTo(0, 0);
-        // Refresh AI companion greeting to reflect this completed quiz
-        refreshGreeting();
+        // (Old companion greeting refresh removed — the CoachDebrief block below
+        // is the coach's post-quiz moment now.)
       } catch (err) {
         console.error('Error fetching quiz results:', err);
         setError('Failed to load quiz results');
@@ -132,7 +186,7 @@ export default function SmartQuizResults() {
   if (!quiz) return null;
 
   const { score, level, passed, subcategoryId, questionCount, userAnswers = {}, questions = [] } = quiz;
-  const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+  const correctCount = Object.values(userAnswers).filter(a => a && a.isCorrect).length;
   const levelName = DIFFICULTY_FOR_LEVEL[level] || 'Unknown';
   const wasPromoted = passed && level < 3;
   const hasMastered = passed && level === 3;
@@ -143,6 +197,7 @@ export default function SmartQuizResults() {
       <div className="results-content split-view">
         {/* Left Column: Summary Card */}
         <div className="results-card results-summary">
+          <p className="ut-eyebrow">Results</p>
           <h1>{hasMastered ? 'Skill Mastered!' : 'Quiz Results'}</h1>
           
           <div className="score-circle" style={{ '--pct': `${score}%` }}>
@@ -158,13 +213,13 @@ export default function SmartQuizResults() {
             <div className="summary-section status-indicator">
               {passed ? (
                 <div className="status-passed">
-                  <FaCheckCircle />
-                  <span>Passed!</span>
+                  <FiCheckCircle />
+  <span>Passed!</span>
                 </div>
               ) : (
                 <div className="status-failed">
-                  <FaTimesCircle />
-                  <span>Needs Improvement</span>
+                  <FiXCircle />
+  <span>Needs Improvement</span>
                 </div>
               )}
             </div>
@@ -172,24 +227,27 @@ export default function SmartQuizResults() {
 
           {wasPromoted && (
             <div className="summary-section promotion-banner">
-              <FaArrowUp />
+              <FiArrowUp />
               <p>Promoted to Level {level + 1}!</p>
             </div>
           )}
           {hasMastered && (
             <div className="summary-section mastery-banner">
-              <FaTrophy />
+              <FiAward />
               <p>You've mastered this skill!</p>
             </div>
           )}
+
+          {/* AI Coach (Phase 1): grounded post-quiz debrief with one-tap actions */}
+          <CoachDebrief quizId={quizId} />
 
           <hr className="card-divider" />
 
           <div className="action-buttons-container">
             <button className="primary-button" onClick={() => handlePracticeAgain(wasPromoted ? level + 1 : level)}>
-              {wasPromoted ? <><FaArrowUp /> Go to Level {level + 1}</> : <><FaRedo /> Practice Again</>}
+              {wasPromoted ? <><FiArrowUp /> Go to Level {level + 1}</> : <><FiRefreshCw /> Practice Again</>}
             </button>
-            <button className="secondary-button" onClick={() => handleNavigation('/progress')}><FaArrowLeft /> Back to Dashboard</button>
+            <button className="secondary-button" onClick={() => handleNavigation('/progress')}><FiArrowLeft /> Back to Dashboard</button>
           </div>
         </div>
 
@@ -199,9 +257,48 @@ export default function SmartQuizResults() {
           <div className="questions-list">
             {questions.map((q, index) => {
               const answer = userAnswers[q.id];
-              const isCorrect = answer?.isCorrect;
+              // Defensive: an entry may be missing entirely, flagged
+              // { omitted: true }, or hold an empty response — all of those
+              // are the neutral "Omitted" state, not an incorrect answer.
+              const hasResponse = !!answer
+                && answer.selectedOption !== null
+                && answer.selectedOption !== undefined
+                && answer.selectedOption !== '';
+              const omitted = !hasResponse || answer?.omitted === true;
+              const isCorrect = !omitted && !!answer?.isCorrect;
+              const statusKey = omitted ? 'omitted' : (isCorrect ? 'correct' : 'incorrect');
+              const explanationDefaultOpen = !isCorrect; // wrong + omitted start expanded
+              const isExplanationOpen = explanationOpen[q.id] ?? explanationDefaultOpen;
+              // Kebab-case lesson id, same normalization the rest of the app
+              // uses; chip is skipped when the id is not a known subcategory.
+              const lessonCandidate = getKebabCaseFromAnyFormat(
+                q.subcategory || q.subCategory || q.subcategoryId || subcategoryId
+              );
+              const lessonSubcategoryId =
+                lessonCandidate && getSubcategoryName(lessonCandidate) !== 'Unknown Subcategory'
+                  ? lessonCandidate
+                  : null;
+              // P2-B peer statistics for this question. formatStats() already
+              // returned null below the MIN_SAMPLE floor, so a truthy entry
+              // means "enough attempts to show" — everything below is hidden
+              // otherwise (no placeholder).
+              const qPeer = peerStats[q.id];
+              const showPeer = !!qPeer;
+              const peerCorrectIdx = showPeer ? resolveCorrectOptionIndex(q) : null;
+              const peerSelectedIdx = showPeer && hasResponse && typeof answer?.selectedOption === 'number'
+                ? answer.selectedOption
+                : null;
+              const peerSelectedPct = peerSelectedIdx !== null && typeof qPeer.optionPcts[peerSelectedIdx] === 'number'
+                ? qPeer.optionPcts[peerSelectedIdx]
+                : null;
+              const peerCorrectPct = peerCorrectIdx !== null && typeof qPeer?.optionPcts[peerCorrectIdx] === 'number'
+                ? qPeer.optionPcts[peerCorrectIdx]
+                : null;
+              const yourTimeSec = !omitted && typeof answer?.timeSpent === 'number' && Number.isFinite(answer.timeSpent)
+                ? Math.max(0, Math.round(answer.timeSpent))
+                : null;
               return (
-                <div key={q.id} className={`question-container-review ${isCorrect ? 'correct' : 'incorrect'}`}>
+                <div key={q.id} className={`question-container-review ${statusKey}`}>
                   <div className="question-review-header">
                     <div className="question-review-left">
                       <h3>Question {index + 1}</h3>
@@ -212,17 +309,30 @@ export default function SmartQuizResults() {
                         onClick={() => openReportModal(q)}
                         title="Report this question"
                       >
-                        <FaFlag />
+                        <FiFlag />
                       </button>
                     </div>
                     <div className="question-review-right">
-                      <span className={`status-tag ${isCorrect ? 'status-correct' : 'status-incorrect'}`}>
-                        {isCorrect ? <FaCheckCircle /> : <FaTimesCircle />}
-                        {isCorrect ? 'Correct' : 'Incorrect'}
+                      <span className={`status-tag status-${statusKey}`}>
+                        {statusKey === 'correct' && <><FiCheckCircle /> Correct</>}
+                        {statusKey === 'incorrect' && <><FiXCircle /> Incorrect</>}
+                        {statusKey === 'omitted' && <><FiMinusCircle /> Omitted</>}
                       </span>
                     </div>
                   </div>
-                  <p 
+                  {/* P2-B: quiet peer-stats line (UWorld-style restraint). */}
+                  {showPeer && (
+                    <p className="peer-stats-line">
+                      <FiUsers aria-hidden="true" />
+                      <span>{qPeer.pctCorrect}% of students answer this correctly</span>
+                      {yourTimeSec !== null && qPeer.avgTimeSec !== null && (
+                        <span className="peer-stats-time">
+                          Your time: {formatPeerSeconds(yourTimeSec)} &middot; class average: {formatPeerSeconds(qPeer.avgTimeSec)}
+                        </span>
+                      )}
+                    </p>
+                  )}
+                  <p
                     className="question-text"
                     dangerouslySetInnerHTML={{ __html: processTextMarkup(q.text) }}
                   />
@@ -244,14 +354,24 @@ export default function SmartQuizResults() {
                         // Multiple choice question display
                         return (
                           <>
-                            <div className={`answer-item ${isCorrect ? 'correct-answer' : 'your-answer'}`}>
+                            <div className={`answer-item ${isCorrect ? 'correct-answer' : (omitted ? 'omitted-answer' : 'your-answer')}`}>
                               <strong>Your Answer:</strong>
-                              <span>{q.options[answer.selectedOption] || 'Not Answered'}</span>
+                              <span>{hasResponse ? (q.options?.[answer.selectedOption] ?? 'Not Answered') : 'Omitted'}</span>
+                              {peerSelectedPct !== null && (
+                                <span className="peer-choice-note" title={`${peerSelectedPct}% of students chose this option`}>
+                                  {peerSelectedPct}% chose this
+                                </span>
+                              )}
                             </div>
                             {!isCorrect && (
                               <div className="answer-item correct-answer">
                                 <strong>Correct Answer:</strong>
-                                <span>{q.options[q.correctAnswer]}</span>
+                                <span>{q.options?.[q.correctAnswer]}</span>
+                                {peerCorrectPct !== null && (
+                                  <span className="peer-choice-note" title={`${peerCorrectPct}% of students chose this option`}>
+                                    {peerCorrectPct}% chose this
+                                  </span>
+                                )}
                               </div>
                             )}
                           </>
@@ -260,9 +380,9 @@ export default function SmartQuizResults() {
                         // User input question display
                         return (
                           <>
-                            <div className={`answer-item ${isCorrect ? 'correct-answer' : 'your-answer'}`}>
+                            <div className={`answer-item ${isCorrect ? 'correct-answer' : (omitted ? 'omitted-answer' : 'your-answer')}`}>
                               <strong>Your Answer:</strong>
-                              <span>{answer.selectedOption || 'Not Answered'}</span>
+                              <span>{hasResponse ? answer.selectedOption : 'Omitted'}</span>
                             </div>
                             {!isCorrect && (
                               <div className="answer-item correct-answer">
@@ -282,11 +402,37 @@ export default function SmartQuizResults() {
                     })()}
                   </div>
 
-                  {!isCorrect && q.explanation && (
-                    <div className="question-explanation">
-                      <h4>Explanation</h4>
-                      <p dangerouslySetInnerHTML={{ __html: processTextMarkup(q.explanation) }} />
-                    </div>
+                  {/* Explanation for EVERY question (correct answers included),
+                      collapsed behind a toggle — expanded by default for
+                      wrong/omitted, collapsed for correct. */}
+                  <div className="explanation-controls">
+                    <button
+                      type="button"
+                      className="explanation-toggle"
+                      onClick={() => toggleExplanation(q.id, explanationDefaultOpen)}
+                      aria-expanded={isExplanationOpen}
+                    >
+                      {isExplanationOpen ? <FiChevronUp /> : <FiChevronDown />}
+                      {isExplanationOpen ? 'Hide explanation' : 'Show explanation'}
+                    </button>
+                    {lessonSubcategoryId && (
+                      <button
+                        type="button"
+                        className="review-lesson-chip"
+                        onClick={() => handleNavigation(`/learn/${lessonSubcategoryId}`)}
+                        title="Open the lesson for this skill"
+                      >
+                        <FiBookOpen /> Review lesson
+                      </button>
+                    )}
+                  </div>
+                  {isExplanationOpen && (
+                    <ExplanationCard
+                      question={q}
+                      selectedOption={hasResponse ? answer.selectedOption : null}
+                      isCorrect={omitted ? null : isCorrect}
+                      omitted={omitted}
+                    />
                   )}
                 </div>
               );

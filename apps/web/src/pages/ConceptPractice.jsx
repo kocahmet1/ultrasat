@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { Container, Button, Alert, Spinner } from 'react-bootstrap';
 import { getConceptById, updateConceptMastery } from '../firebase/conceptServices';
 import { getConceptDrill, generateConceptDrill } from '../utils/apiClient';
+import { logQuestionAttempts, EVENT_TYPES, ATTEMPT_SOURCES } from '../coach/events';
+import { toCanonicalSubcategoryId } from '../utils/subcategoryTaxonomy';
 import '../styles/ConceptPractice.css';
 
 /**
@@ -149,6 +151,38 @@ const ConceptPractice = () => {
       const totalQuestions = questions.length;
       const score = Math.round((correctCount / totalQuestions) * 100);
       const passed = score >= 80; // Pass threshold is 80%
+
+      // === AI Coach event stream (Phase 0): drills now feed the student model ===
+      // (Previously concept practice was invisible to progress tracking — audit §3.4.)
+      try {
+        const subcategoryId = toCanonicalSubcategoryId(concept?.subcategoryId) || null;
+        const attemptEvents = Object.entries(finalAnswers).map(([qId, a]) => ({
+          source: ATTEMPT_SOURCES.DRILL,
+          questionId: `${conceptId}:${qId}`,
+          subcategoryId,
+          conceptIds: [conceptId],
+          correct: !!a.isCorrect,
+          timeSpentMs: typeof a.timeSpent === 'number' ? a.timeSpent * 1000 : undefined,
+          parentId: conceptId,
+        })).filter(a => !!a.subcategoryId);
+        const completion = {
+          type: EVENT_TYPES.DRILL_COMPLETED,
+          payload: {
+            conceptId,
+            subcategoryId,
+            questionCount: totalQuestions,
+            correctCount,
+            scorePct: score,
+            difficulty,
+          },
+        };
+        logQuestionAttempts(attemptEvents, completion).catch(e =>
+          console.error('[ConceptPractice] coach event emission failed:', e)
+        );
+      } catch (coachEventError) {
+        console.error('[ConceptPractice] coach event build failed:', coachEventError);
+      }
+      // === END coach events ===
       
       // Update user's concept mastery if they passed
       if (concept && passed) {
@@ -274,7 +308,7 @@ const ConceptPractice = () => {
                 <div className="score-number">{results.score}%</div>
               </div>
               <div className="score-text">
-                <p>You answered <strong>{results.correctAnswers}</strong> out of <strong>{results.totalQuestions}</strong> questions correctly.</p>
+                <p>You answered <strong>{results.correctCount}</strong> out of <strong>{results.totalQuestions}</strong> questions correctly.</p>
                 {results.passed ? (
                   <div className="success-message">
                     <p className="concept-mastered">

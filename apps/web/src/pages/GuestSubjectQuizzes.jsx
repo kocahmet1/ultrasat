@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getSubcategoriesArray } from '../utils/subcategoryConstants';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FiBookOpen, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+// Feather has no calculator glyph; kept from FontAwesome for the math topic icon only.
+import { FaCalculator } from 'react-icons/fa';
 import '../styles/SubjectQuizzes.css';
 import GuestMetaQuizModal from '../components/GuestMetaQuizModal';
 
@@ -83,106 +85,94 @@ const GuestSubjectQuizzes = () => {
     }
   };
 
+  const renderGuestRow = (sub, section) => {
+    const expanded = expandedSubcategory === sub.id;
+    const Icon = section === 'math' ? FaCalculator : FiBookOpen;
+
+    return (
+      <li key={sub.id} className={`qb-guest-row ${expanded ? 'is-open' : ''}`}>
+        <div className="qb-guest-row-head" onClick={() => handleSubcategoryClick(sub)}>
+          <span className="ut-tile ut-tile--neutral qb-topic-tile">
+            <Icon />
+          </span>
+          <span className="qb-topic-name">{sub.name}</span>
+          <span className="qb-guest-row-meta">
+            <span className="ut-label">{getCurrentLevelText()}</span>
+            {expanded ? <FiChevronUp /> : <FiChevronDown />}
+          </span>
+        </div>
+        {expanded && (
+          <div className="qb-guest-levels">
+            <button
+              className="ut-btn ut-btn--soft ut-btn--sm"
+              type="button"
+              onClick={(e) => handleLevelClick(sub, 1, e)}
+            >
+              Level 1 - Easy
+            </button>
+            <button
+              className="ut-btn ut-btn--soft ut-btn--sm"
+              type="button"
+              onClick={(e) => handleLevelClick(sub, 2, e)}
+            >
+              Level 2 - Medium
+            </button>
+            <button
+              className="ut-btn ut-btn--soft ut-btn--sm"
+              type="button"
+              onClick={(e) => handleLevelClick(sub, 3, e)}
+            >
+              Level 3 - Hard
+            </button>
+          </div>
+        )}
+      </li>
+    );
+  };
+
   return (
-    <div className="subject-quizzes-container">
-      <h1 className="subject-quizzes-title">Subject Quizzes (Guest)</h1>
-
-      <div className="quiz-selection-container">
-        <div className="quiz-category-card reading-writing-card">
-          <h2>Reading & Writing</h2>
-          <ul className="subcategory-list-inline">
-            {readingWritingSubcategories.map(sub => (
-              <li key={sub.id} className={`subcategory-item ${expandedSubcategory === sub.id ? 'expanded' : ''}`}>
-                <div className="subcategory-header" onClick={() => handleSubcategoryClick(sub)}>
-                  <span className="subcategory-name">{sub.name}</span>
-                  <div className="subcategory-controls">
-                    <span className="current-level">
-                      {getCurrentLevelText()}
-                    </span>
-                    {expandedSubcategory === sub.id ? <FaChevronUp /> : <FaChevronDown />}
-                  </div>
-                </div>
-                {expandedSubcategory === sub.id && (
-                  <div className="level-selection-menu">
-                    <div className="level-buttons">
-                      <button 
-                        className={`level-btn available`}
-                        onClick={(e) => handleLevelClick(sub, 1, e)}
-                        disabled={false}
-                      >
-                        Level 1 - Easy
-                      </button>
-                      <button 
-                        className={`level-btn available`}
-                        onClick={(e) => handleLevelClick(sub, 2, e)}
-                        disabled={false}
-                      >
-                        Level 2 - Medium
-                      </button>
-                      <button 
-                        className={`level-btn available`}
-                        onClick={(e) => handleLevelClick(sub, 3, e)}
-                        disabled={false}
-                      >
-                        Level 3 - Hard
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+    <div className="ut-page ut-page--wide qb-page">
+      <header className="ut-page-head">
+        <div className="ut-page-head-main">
+          <p className="ut-eyebrow">Practice</p>
+          <h1 className="ut-page-title">Question Bank</h1>
+          <p className="ut-page-sub">
+            Pick a topic and a difficulty to try a sample quiz as a guest.
+          </p>
         </div>
-
-        <div className="quiz-category-card math-card">
-          <h2>Math</h2>
-          <ul className="subcategory-list-inline">
-            {mathSubcategories.map(sub => (
-              <li key={sub.id} className={`subcategory-item ${expandedSubcategory === sub.id ? 'expanded' : ''}`}>
-                <div className="subcategory-header" onClick={() => handleSubcategoryClick(sub)}>
-                  <span className="subcategory-name">{sub.name}</span>
-                  <div className="subcategory-controls">
-                    <span className="current-level">
-                      {getCurrentLevelText()}
-                    </span>
-                    {expandedSubcategory === sub.id ? <FaChevronUp /> : <FaChevronDown />}
-                  </div>
-                </div>
-                {expandedSubcategory === sub.id && (
-                  <div className="level-selection-menu">
-                    <div className="level-buttons">
-                      <button 
-                        className={`level-btn available`}
-                        onClick={(e) => handleLevelClick(sub, 1, e)}
-                        disabled={false}
-                      >
-                        Level 1 - Easy
-                      </button>
-                      <button 
-                        className={`level-btn available`}
-                        onClick={(e) => handleLevelClick(sub, 2, e)}
-                        disabled={false}
-                      >
-                        Level 2 - Medium
-                      </button>
-                      <button 
-                        className={`level-btn available`}
-                        onClick={(e) => handleLevelClick(sub, 3, e)}
-                        disabled={false}
-                      >
-                        Level 3 - Hard
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+        <div className="ut-page-head-actions">
+          <button className="ut-btn ut-btn--primary" type="button" onClick={openMetaModal}>
+            Create Mini Test
+          </button>
         </div>
+      </header>
+
+      <div className="qb-columns ut-grid ut-grid--2">
+        <section className="qb-column">
+          <div className="ut-section-head">
+            <h2 className="ut-section-title">Reading &amp; Writing</h2>
+          </div>
+          <ul className="qb-guest-list">
+            {readingWritingSubcategories.map(sub => renderGuestRow(sub, 'reading'))}
+          </ul>
+        </section>
+
+        <section className="qb-column">
+          <div className="ut-section-head">
+            <h2 className="ut-section-title">Math</h2>
+          </div>
+          <ul className="qb-guest-list">
+            {mathSubcategories.map(sub => renderGuestRow(sub, 'math'))}
+          </ul>
+        </section>
       </div>
 
-      <div className="meta-quiz-actions">
-        <button className="meta-quiz-btn" onClick={openMetaModal}>
+      <div className="ut-card ut-card--accent qb-mixed-card qb-guest-cta">
+        <div>
+          <h2 className="ut-card-title">Create a mixed mini test</h2>
+          <p className="ut-card-sub">Combine topics from both sections into one short quiz.</p>
+        </div>
+        <button className="ut-btn ut-btn--soft ut-btn--sm" type="button" onClick={openMetaModal}>
           Create Mini Test
         </button>
       </div>

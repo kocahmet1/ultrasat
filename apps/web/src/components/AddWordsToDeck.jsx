@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSpinner, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FiPlus, FiLoader, FiSearch } from 'react-icons/fi';
 import { getAllWords, addWordToFlashcardDeck } from '../api/helperClient';
 import { toast } from 'react-toastify';
 import '../styles/AddWordsToDeck.css';
@@ -62,7 +61,7 @@ const AddWordsToDeck = ({ deck, existingWordIds, onWordAdded }) => {
       <div className="add-words-header">
         <h3>Add Words to "{deck.name}"</h3>
         <div className="search-bar">
-          <FontAwesomeIcon icon={faSearch} />
+          <FiSearch />
           <input
             type="text"
             placeholder="Search your word bank..."
@@ -74,7 +73,7 @@ const AddWordsToDeck = ({ deck, existingWordIds, onWordAdded }) => {
 
       {loading ? (
         <div className="loading-words">
-          <FontAwesomeIcon icon={faSpinner} className="spinner" />
+          <FiLoader className="spinner" />
           <p>Loading your word bank...</p>
         </div>
       ) : (
@@ -94,9 +93,9 @@ const AddWordsToDeck = ({ deck, existingWordIds, onWordAdded }) => {
                   disabled={addingWordIds.has(word.id)}
                 >
                   {addingWordIds.has(word.id) ? (
-                    <FontAwesomeIcon icon={faSpinner} className="spinner" />
+                    <FiLoader className="spinner" />
                   ) : (
-                    <FontAwesomeIcon icon={faPlus} />
+                    <FiPlus />
                   )}
                 </button>
               </div>

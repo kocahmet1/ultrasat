@@ -1,21 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useAICompanion } from '../contexts/AICompanionContext';
-import { FaFlag } from 'react-icons/fa';
-import { SUBCATEGORY_SUBJECTS } from '../utils/subcategoryConstants';
+import { useCoach } from '../contexts/CoachContext';
+import { FiFlag } from 'react-icons/fi';
+import { examScores } from '../utils/scoring';
 import { processTextMarkup } from '../utils/textProcessing';
+import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
 import ReportQuestionModal from '../components/ReportQuestionModal';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import '../styles/Results.css';
+
+const getSafeProcessedMarkup = (value) => (
+  DOMPurify.sanitize(processTextMarkup(value) || '')
+);
 
 function ExamResults() {
   const navigate = useNavigate();
   const location = useLocation();
   const { examId } = useParams();
   const { currentUser, getExamResultById, getLatestExamResult } = useAuth();
-  const { refreshGreeting } = useAICompanion();
+  const coach = useCoach();
   
   const [examDetails, setExamDetails] = useState(null);
   const [, setScore] = useState(0);
@@ -124,66 +130,25 @@ function ExamResults() {
     return resultModuleData;
   }, []);
 
-  const calculateScoresFromExamData = useCallback((modules) => {
-    const subcategoryWeights = {
-      'reading-writing': 4.0,
-      'math': 2.1,
-    };
-
-    let readingWritingScore = 0;
-    let mathScore = 0;
-    let readingWritingWeight = 0;
-    let mathWeight = 0;
-
-    const subcategoryPerformance = {};
-
-    modules.forEach(module => {
-      if (module.responses) {
-        module.responses.forEach(response => {
-          const subcategoryId = response.subcategoryId || (response.question && response.question.subcategoryId);
-          if (subcategoryId) {
-            if (!subcategoryPerformance[subcategoryId]) {
-              subcategoryPerformance[subcategoryId] = { correct: 0, total: 0 };
-            }
-            if (response.isCorrect) {
-              subcategoryPerformance[subcategoryId].correct++;
-            }
-            subcategoryPerformance[subcategoryId].total++;
-          }
-        });
-      }
-    });
-
-    Object.keys(subcategoryPerformance).forEach(subcategoryId => {
-      const performance = subcategoryPerformance[subcategoryId];
-      if (performance.total > 0) {
-        const accuracy = (performance.correct / performance.total) * 100;
-        const subject = SUBCATEGORY_SUBJECTS[subcategoryId] === 1 ? 'reading-writing' : 'math';
-        const weight = subcategoryWeights[subject];
-        const scoreContribution = (accuracy / 100) * weight;
-
-        if (subject === 'reading-writing') {
-          readingWritingScore += scoreContribution;
-          readingWritingWeight += weight;
-        } else {
-          mathScore += scoreContribution;
-          mathWeight += weight;
-        }
-      }
-    });
-
-    const readingWritingEstimate = readingWritingWeight > 0
-      ? Math.round((200 + (readingWritingScore / readingWritingWeight) * 600) / 10) * 10
-      : 200;
-
-    const mathEstimate = mathWeight > 0
-      ? Math.round((200 + (mathScore / mathWeight) * 600) / 10) * 10
-      : 200;
-
+  // Overhaul Phase D: ONE scoring implementation (utils/scoring.js).
+  // Prefer the scores the exam was SAVED with (so this page can never disagree
+  // with the exam list); recompute through the canonical module only when a
+  // legacy result has no stored scores. The old weighted recompute also broke
+  // kebab-tagged questions into the wrong section — the module fixes that.
+  const calculateScoresFromExamData = useCallback((modules, storedScores) => {
+    if (storedScores && (storedScores.readingWriting || storedScores.math)) {
+      return {
+        readingWritingScore: storedScores.readingWriting || 200,
+        mathScore: storedScores.math || 200,
+        totalScore: (storedScores.readingWriting || 200) + (storedScores.math || 200),
+      };
+    }
+    const allResponses = modules.flatMap((m) => m.responses || []);
+    const scores = examScores(allResponses);
     return {
-      readingWritingScore: readingWritingEstimate,
-      mathScore: mathEstimate,
-      totalScore: readingWritingEstimate + mathEstimate
+      readingWritingScore: scores.readingWriting,
+      mathScore: scores.math,
+      totalScore: scores.total,
     };
   }, []);
 
@@ -201,7 +166,7 @@ function ExamResults() {
     const processedModuleData = processModuleData(examModules, examResponses);
     setModuleData(processedModuleData);
 
-    const { readingWritingScore, mathScore, totalScore } = calculateScoresFromExamData(processedModuleData);
+    const { readingWritingScore, mathScore, totalScore } = calculateScoresFromExamData(processedModuleData, data.scores || data.examSummary?.scores);
     setReadingWritingScore(readingWritingScore);
     setMathScore(mathScore);
     setScore(totalScore);
@@ -256,8 +221,9 @@ function ExamResults() {
             setSavedToFirebase(true);
             // Scroll to top when results are loaded
             window.scrollTo(0, 0);
-            // Refresh AI companion greeting to reflect this completed exam
-            refreshGreeting();
+            // AI Coach (Phase 2): exam-completed boundary — the Observer decides
+            // whether to speak; the note lands in the coach panel with a badge.
+            if (coach?.observe) coach.observe('exam_completed', examId || null);
         } else {
             setPageError("No exam data found to display.");
         }
@@ -330,7 +296,23 @@ function ExamResults() {
   };
 
   if (isLoading) {
-    return <div className="loading-container"><div className="spinner"></div><p>Loading results...</p></div>;
+    return (
+      <div className="ut-page" role="status" aria-label="Loading results">
+        <div className="ut-skeleton ut-skeleton--text" style={{ width: 110, marginBottom: 12 }} />
+        <div className="ut-skeleton ut-skeleton--title" style={{ width: 240, marginBottom: 26 }} />
+        <div className="ut-grid ut-grid--4" style={{ marginBottom: 22 }}>
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+        </div>
+        <div className="ut-skeleton-stack">
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
+        </div>
+      </div>
+    );
   }
 
   if (pageError) {
@@ -350,7 +332,13 @@ function ExamResults() {
         onReport={handleReportQuestion}
         loading={reportLoading}
       />
-      
+
+      <header className="results-page-head">
+        <span className="ut-eyebrow">Results</span>
+        <h1 className="ut-page-title">Exam Results</h1>
+        <p className="ut-page-sub">Section scores plus a question-by-question review of every module.</p>
+      </header>
+
       <div className={`results-content ${splitView ? 'split-view' : ''}`}>
         {savingError ? (
           <div className="error-message">
@@ -435,7 +423,7 @@ function ExamResults() {
                   )}
                 </div>
                 {moduleData && moduleData.length === 0 && (
-                  <p style={{ color: '#6c757d', fontStyle: 'italic', marginTop: '1rem' }}>
+                  <p style={{ color: 'var(--ut-muted)', fontStyle: 'italic', marginTop: '1rem' }}>
                     Module review is not available for this exam. This may be due to missing question data.
                   </p>
                 )}
@@ -574,7 +562,7 @@ function ExamResults() {
                               onClick={() => openReportModal(question)}
                               title="Report this question"
                             >
-                              <FaFlag />
+                              <FiFlag />
                             </button>
                           </div>
                           <div className="question-review-right">
@@ -586,7 +574,7 @@ function ExamResults() {
                         
                         <div 
                           className="question-text"
-                          dangerouslySetInnerHTML={{ __html: processTextMarkup(question.text) }}
+                          dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.text) }}
                         />
                         
                         {question.graphDescription && (
@@ -594,14 +582,17 @@ function ExamResults() {
                             <h4>Graph Description:</h4>
                             <div 
                               className="graph-description-text"
-                              dangerouslySetInnerHTML={{ __html: processTextMarkup(question.graphDescription) }}
+                              dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.graphDescription) }}
                             />
                           </div>
                         )}
                         
                         {question.graphUrl && (
                           <div className="question-graph">
-                            <img src={question.graphUrl} alt="Question Graph" />
+                            <img
+                              src={question.graphUrl}
+                              alt={question.graphDescription || 'Question graph'}
+                            />
                           </div>
                         )}
                         
@@ -618,13 +609,17 @@ function ExamResults() {
                                   isUserSelectedOption = userAnswer === optionText;
                               }
 
-                              const isCorrectOption = optionIndex === parseInt(question.correctAnswer);
+                              const correctOption = resolveMultipleChoiceKey(
+                                question.correctAnswer,
+                                question.options,
+                              );
+                              const isCorrectOption = optionText === correctOption;
                               
-                              let backgroundColor = '#f9f9f9'; // Default for unselected options
+                              let backgroundColor = 'var(--ut-card-soft)'; // Default for unselected options
 
                               if (isCorrectOption) {
                                 // Highlight the correct answer regardless of user selection
-                                backgroundColor = '#e0ffe0'; // Light green for correct option
+                                backgroundColor = 'var(--ut-accent-soft)'; // Green tint for correct option
                               }
                               
                               if (isUserSelectedOption) {
@@ -632,7 +627,7 @@ function ExamResults() {
                                   // User selected the correct answer (already light green)
                                 } else {
                                   // User selected an incorrect answer
-                                  backgroundColor = '#ffdddd'; // Light red for user's incorrect selection
+                                  backgroundColor = 'var(--ut-danger-soft)'; // Danger tint for user's incorrect selection
                                 }
                               }
                               
@@ -643,7 +638,7 @@ function ExamResults() {
                                 alignItems: 'center',
                                 marginBottom: '8px',
                                 backgroundColor: backgroundColor,
-                                border: '1px solid #ddd'
+                                border: '1px solid var(--ut-rule)'
                               };
                               
                               return (
@@ -663,8 +658,8 @@ function ExamResults() {
                               <div style={{
                                 padding: '10px 15px',
                                 borderRadius: '4px',
-                                backgroundColor: isAnswered ? (isCorrect ? '#e0ffe0' : '#ffdddd') : '#f9f9f9',
-                                border: '1px solid #ddd',
+                                backgroundColor: isAnswered ? (isCorrect ? 'var(--ut-accent-soft)' : 'var(--ut-danger-soft)') : 'var(--ut-card-soft)',
+                                border: '1px solid var(--ut-rule)',
                                 marginBottom: '8px'
                               }}>
                                 <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Your Answer:</div>
@@ -676,8 +671,8 @@ function ExamResults() {
                               <div style={{
                                 padding: '10px 15px',
                                 borderRadius: '4px',
-                                backgroundColor: '#e0ffe0', // Always green for correct answer
-                                border: '1px solid #ddd'
+                                backgroundColor: 'var(--ut-accent-soft)', // Always green for correct answer
+                                border: '1px solid var(--ut-rule)'
                               }}>
                                 <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Correct Answer:</div>
                                 <div style={{fontSize: '16px'}}>
@@ -689,12 +684,12 @@ function ExamResults() {
                                 <div style={{
                                   padding: '10px 15px',
                                   borderRadius: '4px',
-                                  backgroundColor: '#f0f8ff',
-                                  border: '1px solid #ddd',
+                                  backgroundColor: 'var(--ut-card-soft)',
+                                  border: '1px solid var(--ut-accent-rule)',
                                   marginTop: '8px'
                                 }}>
                                   <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Also Accepted:</div>
-                                  <div style={{fontSize: '14px', color: '#666'}}>
+                                  <div style={{fontSize: '14px', color: 'var(--ut-muted)'}}>
                                     {question.acceptedAnswers.join(', ')}
                                   </div>
                                 </div>
@@ -717,7 +712,7 @@ function ExamResults() {
                         {isAnswered && showExplanation[question.id] && (
                           <div className="question-explanation">
                             <h4>Explanation</h4>
-                            <p dangerouslySetInnerHTML={{ __html: processTextMarkup(question.explanation || `The correct answer is "${question.correctAnswer}". ${question.reasoning || ''}`) }} />
+                            <p dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.explanation || `The correct answer is "${question.correctAnswer}". ${question.reasoning || ''}`) }} />
                           </div>
                         )}
                       </div>

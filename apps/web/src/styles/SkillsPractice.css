@@ -1,13 +1,12 @@
 /* Skills Practice Page Styles */
 
+/* --primary-color / --secondary-color / --border-color come from the
+   legacy aliases in styles/tokens.css — not re-declared here. */
 :root {
-  --primary-color: #4A90E2; /* A modern, friendly blue */
-  --secondary-color: #50E3C2; /* A complementary teal/mint */
   --text-color-dark: #333333;
   --text-color-light: #555555;
   --background-color: #f7f9fc; /* Light, clean background */
   --card-background: #ffffff;
-  --border-color: #e0e6ed;
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 

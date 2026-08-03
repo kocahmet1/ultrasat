@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FiX } from 'react-icons/fi';
 import '../styles/Modal.css';
 
 /**
@@ -51,7 +50,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'default', className =
         <div className="modal-header">
           <h3>{title}</h3>
           <button className="modal-close-button" onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} />
+            <FiX />
           </button>
         </div>
         <div className="modal-content">

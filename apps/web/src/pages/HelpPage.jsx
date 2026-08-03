@@ -123,7 +123,7 @@ function HelpPage() {
         placeholder="Search questions or answers..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        style={{marginBottom: 32, padding: '10px 16px', fontSize: '1rem', borderRadius: 8, border: '1px solid #ddd', width: '100%'}}
+        style={{marginBottom: 32, padding: '10px 16px', fontSize: '1rem', borderRadius: 8, border: '1px solid var(--ut-rule)', width: '100%'}}
       />
       {filteredData.length > 0 ? (
         filteredData.map((section, sectionIdx) => (
@@ -149,7 +149,7 @@ function HelpPage() {
           </div>
         ))
       ) : (
-        <div style={{textAlign: 'center', color: '#888', marginTop: 40}}>No results found.</div>
+        <div style={{textAlign: 'center', color: 'var(--ut-muted)', marginTop: 40}}>No results found.</div>
       )}
     </div>
   );

@@ -1,44 +1,62 @@
-
 .auth-notice-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f7f6;
-  }
-  
-  .auth-notice-card {
-    background: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-  }
-  
-  .auth-notice-card h2 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .auth-notice-card p {
-    margin-bottom: 30px;
-    color: #666;
-    line-height: 1.6;
-  }
-  
-  .login-button {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .login-button:hover {
-    background-color: #0056b3;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--ut-bg);
+}
+
+.auth-notice-card {
+  background: var(--ut-card);
+  padding: 40px;
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+.auth-notice-card h2 {
+  margin-bottom: 20px;
+  color: var(--ut-text);
+}
+
+.auth-notice-card p {
+  margin-bottom: 30px;
+  color: var(--ut-muted);
+  line-height: 1.6;
+}
+
+.login-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
+  text-decoration: none;
+  border-radius: var(--ut-radius-sm);
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: var(--ut-accent-dark);
+}
+
+.login-button:focus-visible {
+  outline: 2px solid var(--ut-accent);
+  outline-offset: 2px;
+}
+
+.auth-notice-signup {
+  margin: 20px 0 0 !important;
+  font-size: 0.95rem;
+}
+
+.auth-notice-signup a {
+  color: var(--ut-accent-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-notice-signup a:hover {
+  text-decoration: underline;
+}

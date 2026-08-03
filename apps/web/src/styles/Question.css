@@ -80,7 +80,7 @@
 
 .separator-line {
   width: 2px;
-  background-color: #888;
+  background-color: var(--ut-rule-strong);
   height: 100%;
   position: absolute;
   top: 0;
@@ -92,7 +92,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  background-color: #f5f5f5;
+  background-color: var(--ut-bg-alt);
   padding: 8px 12px;
   border-bottom: none;
   position: relative;
@@ -112,7 +112,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background-image: linear-gradient(to right, #000 8px, transparent 8px);
+  background-image: linear-gradient(to right, var(--ut-text) 8px, transparent 8px);
   background-size: 16px 3px;
   background-repeat: repeat-x;
 }
@@ -123,8 +123,8 @@
 }
 
 .question-number {
-  background-color: #000000 !important; /* Black background */
-  color: #ffffff !important; /* White text */
+  background-color: var(--ut-ink) !important; /* Black background */
+  color: var(--ut-on-ink) !important; /* White text */
   font-weight: bold;
   font-size: 1.8rem; /* 18px */
   width: 35px;
@@ -136,7 +136,7 @@
 }
 
 .question-text {
-  font-family: 'Times New Roman', serif;
+  font-family: var(--ut-font-serif);
   font-size: 1.8rem; /* 18px */
   line-height: 1.6;
   text-align: left;
@@ -144,7 +144,7 @@
 }
 
 .question-instructions {
-  font-family: 'Times New Roman', serif;
+  font-family: var(--ut-font-body);
   font-size: 1.8rem; /* 18px */
   line-height: 1.6;
   margin-bottom: 20px;
@@ -163,14 +163,14 @@
   border: none;
   cursor: pointer;
   font-size: 1.4rem; /* 14px */
-  color: #333;
+  color: var(--ut-text-soft);
 }
 
 .cross-out-toggle {
   font-size: 1.2rem; /* 12px */
   padding: 5px 10px;
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
+  background-color: var(--ut-card);
+  border: 1px solid var(--ut-rule-strong);
   cursor: pointer;
   border-radius: 4px;
   position: relative;
@@ -178,8 +178,8 @@
 }
 
 .cross-out-toggle.active {
-  background-color: #e6ecff;
-  border-color: #0066cc;
+  background-color: var(--ut-accent-soft);
+  border-color: var(--ut-accent);
 }
 
 /* Adding the diagonal line through the ABC button */
@@ -189,14 +189,14 @@
   left: 0;
   top: 50%;
   right: 0;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--ut-text-soft);
   transform: rotate(-25deg);
 }
 
 .bookmark-icon {
   margin-right: 5px;
   font-size: 1.8rem; /* 18px */
-  color: #f0ad4e;
+  color: var(--ut-warn);
 }
 
 .option-letter {
@@ -224,15 +224,15 @@
 .option {
   flex: 1; /* Make option take available space */
   padding: 15px;
-  border: 1.5px solid #333;
+  border: 1.5px solid var(--ut-text-soft);
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: var(--ut-card);
   transition: all 0.2s ease;
   margin-bottom: 0;
 }
 
 .option:hover {
-  background-color: #f9f9f9;
+  background-color: var(--ut-card-soft);
 }
 
 .option.crossed-out {
@@ -240,7 +240,7 @@
 }
 
 .option.crossed-out .option-text {
-  color: #999;
+  color: var(--ut-muted);
 }
 
 .option-text {
@@ -254,7 +254,7 @@
   left: 15px;
   right: 15px;
   top: 50%;
-  border-top: 2px solid #333; /* Darker color and thicker line */
+  border-top: 2px solid var(--ut-text-soft); /* Darker color and thicker line */
   z-index: 1;
 }
 
@@ -280,13 +280,13 @@
 }
 
 .option-text {
-  font-family: 'Times New Roman', serif;
+  font-family: var(--ut-font-body);
   font-size: 1.7rem !important; /* 17px */
 }
 
 .cross-out-btn {
-  background-color: #ffffff;
-  border: 1px solid #333;
+  background-color: var(--ut-card);
+  border: 1px solid var(--ut-text-soft);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -305,13 +305,13 @@
   left: 5px;
   right: 5px;
   top: 50%;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--ut-text-soft);
   transform: translateY(-50%);
 }
 
 .cross-out-btn.active {
-  background-color: #ffffff;
-  border-color: #333;
+  background-color: var(--ut-card);
+  border-color: var(--ut-text-soft);
 }
 
 /* Responsive design */
@@ -330,20 +330,20 @@
 .question-graph-description {
   margin: 1rem 0;
   padding: 1rem;
-  background-color: #f8f9fa;
-  border-left: 4px solid #007bff;
+  background-color: var(--ut-card-soft);
+  border-left: 4px solid var(--ut-accent);
   border-radius: 4px;
 }
 
 .graph-description-label {
   font-weight: 600;
-  color: #495057;
+  color: var(--ut-text-soft);
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
 
 .graph-description-content {
-  color: #6c757d;
+  color: var(--ut-muted);
   line-height: 1.5;
   font-size: 0.9rem;
 }
@@ -370,29 +370,29 @@
   width: 180px;
   height: 40px;
   font-size: 1.6rem; /* 16px */
-  font-family: 'Times New Roman', serif;
+  font-family: var(--ut-font-body);
   text-align: center;
-  border: 2px solid #333;
+  border: 2px solid var(--ut-text-soft);
   border-radius: 4px;
   padding: 8px;
-  background-color: #ffffff;
+  background-color: var(--ut-card);
   transition: border-color 0.2s ease;
 }
 
 .user-answer-input:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+  border-color: var(--ut-accent);
+  box-shadow: 0 0 5px var(--ut-accent-rule);
 }
 
 .user-answer-input::placeholder {
-  color: #999;
+  color: var(--ut-muted);
   font-style: italic;
 }
 
 .input-hint {
   font-size: 1.4rem; /* 14px */
-  color: #666;
+  color: var(--ut-muted);
   text-align: center;
   font-style: italic;
   margin-top: 10px;
@@ -420,7 +420,7 @@ Math Module Layout Styles
 .question-container.math-layout {
   justify-content: flex-start;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--ut-card);
   padding-top: 20px;
   padding-bottom: 20px;
   height: 100%;
@@ -440,7 +440,7 @@ Math Module Layout Styles
   background-color: transparent;
   padding: 0;
   margin-bottom: 25px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--ut-rule);
   padding-bottom: 15px;
 }
 
@@ -453,6 +453,7 @@ Math Module Layout Styles
   margin-bottom: 30px;
   font-size: 1.9rem;
   line-height: 1.7;
+  font-family: var(--ut-font-body); /* math stems are not reading-passage prose */
 }
 
 .math-layout .options-container {
@@ -461,24 +462,24 @@ Math Module Layout Styles
 
 .math-layout .option {
   border-width: 2px;
-  border-color: #ccc;
-  background-color: #fafafa;
+  border-color: var(--ut-rule-strong);
+  background-color: var(--ut-card-soft);
 }
 
 .math-layout .option:hover {
-  background-color: #f0f0f0;
+  background-color: var(--ut-bg-alt);
 }
 
 .math-layout .option-label.selected .option {
-  border-color: #007bff;
-  background-color: #e9f5ff;
+  border-color: var(--ut-accent);
+  background-color: var(--ut-accent-soft);
 }
 
 .math-layout .user-input-container {
   margin-top: 20px;
   padding: 20px;
-  background-color: #f8f9fa;
-  border-top: 1px solid #dee2e6;
+  background-color: var(--ut-card-soft);
+  border-top: 1px solid var(--ut-rule);
 }
 
 .math-layout .question-body {

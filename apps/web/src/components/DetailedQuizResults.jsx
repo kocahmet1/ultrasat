@@ -1,6 +1,6 @@
 // components/DetailedQuizResults.jsx
 import React, { useEffect } from 'react';
-import { FaArrowLeft, FaRedo, FaCheckCircle, FaTimesCircle, FaArrowUp, FaTrophy, FaFlag } from 'react-icons/fa';
+import { FiArrowLeft, FiRefreshCw, FiCheckCircle, FiXCircle, FiArrowUp, FiAward, FiFlag } from 'react-icons/fi';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
 import { getSubcategoryName } from '../utils/subcategoryConstants';
 import { processTextMarkup } from '../utils/textProcessing';
@@ -23,6 +23,9 @@ import '../styles/SmartQuizResults.css';
  * - onSecondaryAction?: () => void
  * - primaryButtonContent?: React.ReactNode (default: Practice Again)
  * - secondaryButtonContent?: React.ReactNode (default: Back)
+ * - showProgressionBanners: boolean (default true) -> promotion/mastery banners
+ *   only make sense when progress is actually saved (authed flow); guests pass false
+ * - ctaSlot?: React.ReactNode -> rendered above the action buttons (e.g. guest signup CTA)
  */
 export default function DetailedQuizResults({
   score = 0,
@@ -38,6 +41,8 @@ export default function DetailedQuizResults({
   onSecondaryAction,
   primaryButtonContent,
   secondaryButtonContent,
+  showProgressionBanners = true,
+  ctaSlot = null,
 }) {
   // Scroll to top when results load
   useEffect(() => {
@@ -70,41 +75,43 @@ export default function DetailedQuizResults({
             <div className="summary-section status-indicator">
               {passed ? (
                 <div className="status-passed">
-                  <FaCheckCircle />
+                  <FiCheckCircle />
                   <span>Passed!</span>
                 </div>
               ) : (
                 <div className="status-failed">
-                  <FaTimesCircle />
+                  <FiXCircle />
                   <span>Needs Improvement</span>
                 </div>
               )}
             </div>
           </div>
 
-          {wasPromoted && (
+          {showProgressionBanners && wasPromoted && (
             <div className="summary-section promotion-banner">
-              <FaArrowUp />
+              <FiArrowUp />
               <p>Promoted to Level {level + 1}!</p>
             </div>
           )}
-          {hasMastered && (
+          {showProgressionBanners && hasMastered && (
             <div className="summary-section mastery-banner">
-              <FaTrophy />
+              <FiAward />
               <p>You've mastered this skill!</p>
             </div>
           )}
 
           <hr className="card-divider" />
 
+          {ctaSlot}
+
           <div className="action-buttons-container">
             {onPrimaryAction && (
               <button className="primary-button" onClick={onPrimaryAction}>
-                {primaryButtonContent || (<><FaRedo /> Practice Again</>)}
+                {primaryButtonContent || (<><FiRefreshCw /> Practice Again</>)}
               </button>
             )}
             {onSecondaryAction && (
-              <button className="secondary-button" onClick={onSecondaryAction}><FaArrowLeft /> {secondaryButtonContent || 'Back'}</button>
+              <button className="secondary-button" onClick={onSecondaryAction}><FiArrowLeft /> {secondaryButtonContent || 'Back'}</button>
             )}
           </div>
         </div>
@@ -140,13 +147,13 @@ export default function DetailedQuizResults({
                           onClick={() => onRequestReport && onRequestReport(q)}
                           title="Report this question"
                         >
-                          <FaFlag />
+                          <FiFlag />
                         </button>
                       )}
                     </div>
                     <div className="question-review-right">
                       <span className={`status-tag ${isCorrect ? 'status-correct' : 'status-incorrect'}`}>
-                        {isCorrect ? <FaCheckCircle /> : <FaTimesCircle />}
+                        {isCorrect ? <FiCheckCircle /> : <FiXCircle />}
                         {isCorrect ? 'Correct' : 'Incorrect'}
                       </span>
                     </div>

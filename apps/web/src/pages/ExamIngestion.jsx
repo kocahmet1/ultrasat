@@ -10,7 +10,7 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
   : 'http://localhost:3001/api';
 
 const STAGE_META = {
-  extract:   { label: 'Extract',   icon: '📄', desc: 'Extracting questions from PDF via Gemini AI' },
+  extract:   { label: 'Extract',   icon: '📄', desc: 'Extracting questions from PDF via OpenAI GPT-5.6 Luna' },
   validate:  { label: 'Validate',  icon: '🔍', desc: 'Cross-verifying extraction against original PDF' },
   normalize: { label: 'Normalize', icon: '🔧', desc: 'Mapping to Firestore schema & subcategories' },
   upload:    { label: 'Upload',    icon: '🔥', desc: 'Writing questions, modules, and exam to Firestore' },

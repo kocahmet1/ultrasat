@@ -4,9 +4,8 @@ import { getPublicQuestionsBySubcategory } from '../api/questionsClient';
 import { DIFFICULTY_FOR_LEVEL, QUESTIONS_PER_QUIZ } from '../utils/smartQuizUtils';
 import { getPublicHelperCache } from '../api/assistantClient';
 import '../styles/SmartQuiz.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faLightbulb, faFileAlt, faBook } from '@fortawesome/free-solid-svg-icons';
-import ProFeatureModal from '../components/ProFeatureModal';
+import { FiMessageSquare, FiZap, FiFileText, FiBookOpen } from 'react-icons/fi';
+import ProUpgradeModal from '../components/membership/ProUpgradeModal';
 import './SmartQuizProBadge.css';
 import DetailedQuizResults from '../components/DetailedQuizResults';
 
@@ -260,7 +259,7 @@ function GuestSmartQuiz() {
     <div className="smart-quiz__container">
       <div className="quiz-complete">
         <h2>Unable to start quiz</h2>
-        <p style={{ color: '#b00020' }}>{error}</p>
+        <p style={{ color: 'var(--ut-danger-dark)' }}>{error}</p>
         <button onClick={() => navigate('/guest-subject-quizzes')}>Back</button>
       </div>
     </div>
@@ -280,6 +279,27 @@ function GuestSmartQuiz() {
         userAnswers={answers}
         questions={questions}
         showReport={false}
+        showProgressionBanners={false}
+        ctaSlot={
+          <div className="guest-results-cta">
+            <p className="guest-results-cta-title">This result isn&rsquo;t saved</p>
+            <p className="guest-results-cta-copy">
+              Create a free account to keep your progress, track every skill, and get
+              practice built from what you miss.
+            </p>
+            <button
+              type="button"
+              className="guest-results-cta-button"
+              onClick={() => navigate('/signup')}
+            >
+              Create free account
+            </button>
+            <p className="guest-results-cta-login">
+              Already have one?{' '}
+              <button type="button" onClick={() => navigate('/login')}>Log in</button>
+            </p>
+          </div>
+        }
         onPrimaryAction={() => navigate('/guest-subject-quizzes')}
         onSecondaryAction={() => navigate(-1)}
         primaryButtonContent="Try Another Quiz"
@@ -294,16 +314,16 @@ function GuestSmartQuiz() {
     <div className="smart-quiz__container">
       {/* AI Features Toggle - pill style */}
       <div className="ai-toggle-container" style={{ display: 'flex', justifyContent: 'center', margin: '1rem auto', alignItems: 'center' }}>
-        <div style={{ display: 'flex', position: 'relative', backgroundColor: '#f0f4f8', borderRadius: '30px', padding: '4px', width: '200px', boxShadow: '0 1px 5px rgba(0,0,0,0.15)' }}>
+        <div style={{ display: 'flex', position: 'relative', backgroundColor: 'var(--ut-bg-alt)', borderRadius: '30px', padding: '4px', width: '200px', boxShadow: 'var(--ut-shadow-sm)' }}>
           <div
             onClick={() => setAiEnabled(false)}
-            style={{ flex: 1, textAlign: 'center', padding: '6px 8px', borderRadius: '25px', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', color: !aiEnabled ? '#333' : 'rgba(0, 0, 0, 0.6)', backgroundColor: !aiEnabled ? '#d1eaff' : 'transparent', transition: 'all 0.3s ease', zIndex: 1 }}
+            style={{ flex: 1, textAlign: 'center', padding: '6px 8px', borderRadius: '25px', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', color: !aiEnabled ? 'var(--ut-text)' : 'var(--ut-muted)', backgroundColor: !aiEnabled ? 'var(--ut-accent-soft)' : 'transparent', transition: 'all 0.3s ease', zIndex: 1 }}
           >
             Basic Mode
           </div>
           <div
             onClick={() => setAiEnabled(true)}
-            style={{ flex: 1, textAlign: 'center', padding: '6px 8px', borderRadius: '25px', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', color: aiEnabled ? '#333' : 'rgba(0, 0, 0, 0.6)', backgroundColor: aiEnabled ? '#c9f0e1' : 'transparent', transition: 'all 0.3s ease', zIndex: 1 }}
+            style={{ flex: 1, textAlign: 'center', padding: '6px 8px', borderRadius: '25px', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', color: aiEnabled ? 'var(--ut-text)' : 'var(--ut-muted)', backgroundColor: aiEnabled ? 'var(--ut-success-soft)' : 'transparent', transition: 'all 0.3s ease', zIndex: 1 }}
           >
             AI Mode
           </div>
@@ -315,26 +335,26 @@ function GuestSmartQuiz() {
           {/* Mobile quick AI bar */}
           <div className="mobile-ai-bar" style={{ display: isMobile ? 'flex' : 'none', gap: '8px', justifyContent: 'space-around', padding: '8px 12px' }}>
             <button onClick={() => setShowProModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <FontAwesomeIcon icon={faComment} />
+              <FiMessageSquare />
               <span>AI</span>
             </button>
             <button onClick={() => setShowProModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <FontAwesomeIcon icon={faLightbulb} />
+              <FiZap />
               <span>Tip</span>
             </button>
             <button onClick={() => setShowProModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <FontAwesomeIcon icon={faFileAlt} />
+              <FiFileText />
               <span>Summary</span>
             </button>
             <button onClick={() => setShowMobileVocab((v) => !v)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <FontAwesomeIcon icon={faBook} />
+              <FiBookOpen />
               <span>Words</span>
             </button>
           </div>
           {isMobile && showMobileVocab && (
             <div className="mobile-vocab-dropdown" style={{ padding: '8px 12px' }}>
               {vocabLoading ? (
-                <p style={{ color: '#6c757d', margin: 0 }}>Loading vocabulary…</p>
+                <p style={{ color: 'var(--ut-muted)', margin: 0 }}>Loading vocabulary…</p>
               ) : (Array.isArray(vocabCache[currentQuestionId]) && vocabCache[currentQuestionId].length > 0 ? (
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                   {vocabCache[currentQuestionId].map((it, idx) => {
@@ -343,13 +363,13 @@ function GuestSmartQuiz() {
                     return (
                       <li key={idx} style={{ marginBottom: '8px' }}>
                         <div style={{ fontWeight: 600 }}>{term}</div>
-                        <div style={{ color: '#555' }}>{def}</div>
+                        <div style={{ color: 'var(--ut-text-soft)' }}>{def}</div>
                       </li>
                     );
                   })}
                 </ul>
               ) : (
-                <p style={{ color: '#6c757d', fontStyle: 'italic', margin: 0 }}>Available to loged-in users. Create a free account.</p>
+                <p style={{ color: 'var(--ut-muted)', fontStyle: 'italic', margin: 0 }}>Available to logged-in users. Create a free account.</p>
               ))}
             </div>
           )}
@@ -359,16 +379,16 @@ function GuestSmartQuiz() {
       <div className="quiz-main-area" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', gap: '20px', padding: '0 20px', maxWidth: '1400px', margin: '20px auto' }}>
         {/* Left: Vocabulary (placeholder for guests) */}
         {aiEnabled && !isMobile && (
-          <div className="vocabulary-column" style={{ width: '200px', flexShrink: 0, backgroundColor: '#f8f9fa', borderRadius: '12px', padding: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', marginTop: '60px', maxHeight: '500px', overflowY: 'auto' }}>
-            <div className="vocabulary-header" style={{ marginBottom: '16px', paddingBottom: '8px', borderBottom: '2px solid #4e73df' }}>
-              <h3 style={{ margin: 0, fontSize: '16px', color: '#4e73df', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <FontAwesomeIcon icon={faBook} />
+          <div className="vocabulary-column" style={{ width: '200px', flexShrink: 0, backgroundColor: 'var(--ut-card-soft)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--ut-shadow)', marginTop: '60px', maxHeight: '500px', overflowY: 'auto' }}>
+            <div className="vocabulary-header" style={{ marginBottom: '16px', paddingBottom: '8px', borderBottom: '2px solid var(--ut-accent)' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', color: 'var(--ut-accent)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FiBookOpen />
                 Key Vocabulary
               </h3>
             </div>
             <div className="vocabulary-content">
               {vocabLoading ? (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60px', fontSize: '14px', color: '#6c757d' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60px', fontSize: '14px', color: 'var(--ut-muted)' }}>
                   <p>Loading vocabulary…</p>
                 </div>
               ) : (Array.isArray(vocabCache[currentQuestionId]) && vocabCache[currentQuestionId].length > 0 ? (
@@ -378,15 +398,15 @@ function GuestSmartQuiz() {
                     const def = it.definition || it.meaning || '';
                     return (
                       <li key={idx} style={{ marginBottom: '12px' }}>
-                        <div style={{ fontWeight: 600, color: '#333' }}>{term}</div>
-                        <div style={{ color: '#555', fontSize: '0.9rem' }}>{def}</div>
+                        <div style={{ fontWeight: 600, color: 'var(--ut-text)' }}>{term}</div>
+                        <div style={{ color: 'var(--ut-text-soft)', fontSize: '0.9rem' }}>{def}</div>
                       </li>
                     );
                   })}
                 </ul>
               ) : (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60px', fontSize: '14px', color: '#6c757d', fontStyle: 'italic' }}>
-                  <p>Available to loged-in users. Create a free account.</p>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60px', fontSize: '14px', color: 'var(--ut-muted)', fontStyle: 'italic' }}>
+                  <p>Available to logged-in users. Create a free account.</p>
                 </div>
               ))}
             </div>
@@ -394,7 +414,7 @@ function GuestSmartQuiz() {
         )}
 
         {/* Middle: Question panel */}
-        <div className="question-panel" style={{ flexGrow: 1, maxWidth: '700px', backgroundColor: '#ffffff', borderRadius: '12px', padding: '25px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', position: 'relative' }}>
+        <div className="question-panel" style={{ flexGrow: 1, maxWidth: '700px', backgroundColor: 'var(--ut-card)', borderRadius: '12px', padding: '25px', boxShadow: 'var(--ut-shadow)', position: 'relative' }}>
           <div className="quiz-header">
             <div className="quiz-header-left">
               <div className="quiz-title">SmartQuiz – Question {currentIdx + 1} / {questions.length}</div>
@@ -459,30 +479,30 @@ function GuestSmartQuiz() {
             <button
               className="assistant-action-button assistant-button"
               onClick={() => setShowProModal(true)}
-              style={{ backgroundColor: '#e0f2f7', color: '#333', padding: '15px 10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'relative' }}
+              style={{ backgroundColor: 'var(--ut-accent-soft)', color: 'var(--ut-text)', padding: '15px 10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px', boxShadow: 'var(--ut-shadow-sm)', position: 'relative' }}
             >
               <span className="sq-pro-badge">PRO</span>
-              <FontAwesomeIcon icon={faComment} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
+              <FiMessageSquare style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
               <span>AI Assistant</span>
             </button>
 
             <button
               className="assistant-action-button tip-button"
               onClick={() => setShowProModal(true)}
-              style={{ backgroundColor: '#e0f7f7', color: '#333', padding: '15px 10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'relative' }}
+              style={{ backgroundColor: 'var(--ut-accent-soft)', color: 'var(--ut-text)', padding: '15px 10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px', boxShadow: 'var(--ut-shadow-sm)', position: 'relative' }}
             >
               <span className="sq-pro-badge">PRO</span>
-              <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
+              <FiZap style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
               <span>Get a Tip</span>
             </button>
 
             <button
               className="assistant-action-button summarise-button"
               onClick={() => setShowProModal(true)}
-              style={{ backgroundColor: '#f0e6f7', color: '#333', padding: '15px 10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'relative' }}
+              style={{ backgroundColor: 'var(--ut-accent-soft)', color: 'var(--ut-text)', padding: '15px 10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px', boxShadow: 'var(--ut-shadow-sm)', position: 'relative' }}
             >
               <span className="sq-pro-badge">PRO</span>
-              <FontAwesomeIcon icon={faFileAlt} style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
+              <FiFileText style={{ fontSize: '1.5rem', marginBottom: '8px' }} />
               <span>Summarize</span>
             </button>
           </div>
@@ -490,10 +510,10 @@ function GuestSmartQuiz() {
       </div>
 
       {/* Upgrade modal */}
-      <ProFeatureModal
+      <ProUpgradeModal
         isOpen={showProModal}
         onClose={() => setShowProModal(false)}
-        position={{ x: window.innerWidth / 2 - 200, y: window.innerHeight / 2 - 150 }}
+        featureName="AI question help"
       />
     </div>
   );
