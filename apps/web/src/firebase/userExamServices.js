@@ -15,6 +15,8 @@ import {
 } from 'firebase/firestore';
 import { getPracticeExamModules } from './practiceExamCatalogServices';
 import { updateUserStatsCache } from './rankingServices';
+import { logQuestionAttempts, EVENT_TYPES, ATTEMPT_SOURCES } from '../coach/events';
+import { toCanonicalSubcategoryId } from '../utils/subcategoryTaxonomy';
 
 const MAX_RESPONSE_BATCH_SIZE = 200;
 
@@ -239,6 +241,46 @@ export const saveComprehensiveExamResult = async (userId, examSummary, responses
     } catch (cacheError) {
       console.error('[saveComprehensiveExamResult] Error updating stats cache:', cacheError);
     }
+
+    // === AI Coach event stream (Phase 0): canonical Tier-1 record of this exam ===
+    // Subcategories are normalized at this boundary (numeric ids, names, kebab all
+    // resolve through the canonical taxonomy). Fire-and-forget: never blocks saving.
+    try {
+      const attemptEvents = safeResponses
+        .map((r) => ({
+          source: ATTEMPT_SOURCES.EXAM,
+          questionId: r.questionId || r.question?.id,
+          subcategoryId:
+            toCanonicalSubcategoryId(r.subcategoryId) ||
+            toCanonicalSubcategoryId(r.subcategory) ||
+            null,
+          correct: !!r.isCorrect,
+          // NOTE: r.timeSpent is a placeholder value in the exam controller today —
+          // deliberately NOT emitted so Tier-2 timing stats stay honest.
+          parentId: examDocRef.id,
+        }))
+        .filter((a) => a.questionId && a.subcategoryId);
+
+      const correctCount = safeResponses.filter((r) => r.isCorrect).length;
+      const completion = {
+        type: EVENT_TYPES.EXAM_COMPLETED,
+        payload: {
+          examId: examSummary?.practiceExamId || examSummary?.examId || 'unknown',
+          resultId: examDocRef.id,
+          isDiagnostic: !!examSummary?.isDiagnostic,
+          questionCount: safeResponses.length,
+          correctCount,
+          scores: examSummary?.scores || null,
+        },
+      };
+
+      logQuestionAttempts(attemptEvents, completion).catch((e) =>
+        console.error('[saveComprehensiveExamResult] coach event emission failed:', e)
+      );
+    } catch (coachEventError) {
+      console.error('[saveComprehensiveExamResult] coach event build failed:', coachEventError);
+    }
+    // === END coach events ===
 
     return {
       id: examDocRef.id,

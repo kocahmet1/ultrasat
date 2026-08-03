@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, where, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { FiCheck, FiTrash2, FiEdit2, FiSearch, FiFilter, FiInfo } from 'react-icons/fi';
+// Feather has no "sort amount" glyph; kept from FontAwesome for the sort-order control only.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTrash, faEdit, faPuzzlePiece, faSearch, faFilter, faSortAmountDown, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSortAmountDown } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import FeatureHelpModal from '../components/FeatureHelpModal';
 import '../styles/BankItem.css';
@@ -177,21 +179,24 @@ const ConceptBank = () => {
       <ToastContainer position="bottom-right" autoClose={3000} />
       
       <div className="bank-header">
-        <h1>
-          <FontAwesomeIcon icon={faPuzzlePiece} /> Concept Bank
-          <button 
-            className="help-icon-button"
-            onClick={handleShowHelp}
-            title="Learn how to use the Concept Bank"
-          >
-            <FontAwesomeIcon icon={faInfoCircle} />
-          </button>
-        </h1>
+        <div className="bank-header-main">
+          <p className="ut-eyebrow">Learn</p>
+          <h1>
+            Concept Bank
+            <button
+              className="help-icon-button"
+              onClick={handleShowHelp}
+              title="Learn how to use the Concept Bank"
+            >
+              <FiInfo />
+            </button>
+          </h1>
+        </div>
       </div>
       
       <div className="bank-controls">
         <div className="search-box">
-          <FontAwesomeIcon icon={faSearch} />
+          <FiSearch />
           <input
             type="text"
             placeholder="Search concepts..."
@@ -202,7 +207,7 @@ const ConceptBank = () => {
         
         <div className="filter-controls">
           <div className="subcategory-filter">
-            <FontAwesomeIcon icon={faFilter} />
+            <FiFilter />
             <select 
               value={subcategoryFilter} 
               onChange={(e) => setSubcategoryFilter(e.target.value)}
@@ -233,7 +238,12 @@ const ConceptBank = () => {
       </div>
       
       {loading ? (
-        <div className="loading-message">Loading your concept bank...</div>
+        <div className="bank-items-grid" role="status" aria-label="Loading your concept bank">
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
+        </div>
       ) : filteredAndSortedConcepts.length === 0 ? (
         <div className="empty-message">
           {searchTerm || subcategoryFilter !== 'all'
@@ -256,14 +266,14 @@ const ConceptBank = () => {
                     onClick={() => handleToggleMastered(concept.id, concept.mastered)}
                     title={concept.mastered ? 'Mark as not mastered' : 'Mark as mastered'}
                   >
-                    <FontAwesomeIcon icon={faCheck} />
+                    <FiCheck />
                   </button>
-                  <button 
+                  <button
                     className="delete-button"
                     onClick={() => handleDeleteConcept(concept.id)}
                     title="Delete concept"
                   >
-                    <FontAwesomeIcon icon={faTrash} />
+                    <FiTrash2 />
                   </button>
                 </div>
               </div>
@@ -298,7 +308,7 @@ const ConceptBank = () => {
                         className="edit-notes-button"
                         onClick={() => handleEditStart(concept)}
                       >
-                        <FontAwesomeIcon icon={faEdit} /> Edit Notes
+                        <FiEdit2 /> Edit Notes
                       </button>
                     </>
                   ) : (
@@ -306,7 +316,7 @@ const ConceptBank = () => {
                       className="add-notes-button"
                       onClick={() => handleEditStart(concept)}
                     >
-                      <FontAwesomeIcon icon={faEdit} /> Add Notes
+                      <FiEdit2 /> Add Notes
                     </button>
                   )}
                 </div>

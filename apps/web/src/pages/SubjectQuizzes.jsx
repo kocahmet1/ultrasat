@@ -1,24 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getSubcategoriesArray } from '../utils/subcategoryConstants';
 import { getSubcategoryProgress } from '../utils/progressUtils';
-import {
-  FaBell,
-  FaBookOpen,
-  FaBookmark,
-  FaCalculator,
-  FaChartLine,
-  FaCheck,
-  FaCheckCircle,
-  FaChevronRight,
-  FaLayerGroup,
-  FaMagic,
-  FaRegBookmark,
-  FaSearch,
-  FaSlidersH,
-  FaUserCircle,
-} from 'react-icons/fa';
+import { FiBookOpen, FiBookmark, FiCheck, FiCheckCircle, FiChevronRight, FiSearch } from 'react-icons/fi';
+// Feather has no calculator / magic-wand glyphs; kept from FontAwesome for these icons only.
+import { FaCalculator, FaMagic } from 'react-icons/fa';
 import '../styles/SubjectQuizzes.css';
 import Modal from '../components/Modal';
 import { createMetaSmartQuiz } from '../utils/smartQuizUtils';
@@ -29,9 +16,11 @@ const LEVEL_OPTIONS = [
   { value: 3, label: 'Hard', tone: 'hard' },
 ];
 
-const COMPLETED_TOPIC_IDS = new Set([3, 4, 8, 11, 13, 15, 18, 19, 22, 27, 28, 29]);
-const POPULAR_TOPIC_IDS = new Set([8, 18, 23]);
-const DEFAULT_FAVORITES = [5, 14, 25];
+// Overhaul Phase B: these were hardcoded fake sets shown to every user as
+// their own progress. Now empty — real completion comes from live level data.
+const COMPLETED_TOPIC_IDS = new Set([]);
+const POPULAR_TOPIC_IDS = new Set([]);
+const DEFAULT_FAVORITES = [];
 
 const getDefaultLevel = (subcategoryId) => {
   if ([4, 9, 11, 19, 20, 26].includes(subcategoryId)) return 1;
@@ -72,8 +61,6 @@ const SubjectQuizzes = () => {
   const completedCount = allSubcategories.filter((subcategory) =>
     COMPLETED_TOPIC_IDS.has(subcategory.id) || (userLevels[subcategory.id] || 0) > 1
   ).length;
-
-  const accountLabel = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Student';
 
   const getSelectedLevel = (subcategoryId) => (
     topicLevels[subcategoryId] || getDefaultLevel(subcategoryId)
@@ -224,12 +211,12 @@ const SubjectQuizzes = () => {
     const favorite = favoriteTopicIds.includes(topic.id);
     const complete = isCompleted(topic.id);
     const launching = launchingTopicId === topic.id;
-    const Icon = section === 'math' ? FaCalculator : FaBookOpen;
+    const Icon = section === 'math' ? FaCalculator : FiBookOpen;
 
     return (
-      <li key={topic.id} className="quiz-topic-row">
+      <li key={topic.id}>
         <div
-          className={`quiz-topic-launch ${launching ? 'is-launching' : ''}`}
+          className={`ut-row ut-row--hover qb-topic-row ${launching ? 'is-launching' : ''}`}
           role="button"
           tabIndex={0}
           onClick={() => {
@@ -244,16 +231,21 @@ const SubjectQuizzes = () => {
           aria-label={`Start ${topic.name} quiz`}
           aria-disabled={launching}
         >
-          <span className={`quiz-topic-icon quiz-topic-icon--${section}`}>
+          <span className="ut-tile ut-tile--neutral qb-topic-tile">
             <Icon />
           </span>
-          <span className="quiz-topic-main">
-            <span className="quiz-topic-name">{topic.name}</span>
-            <span className="quiz-topic-mobile-meta">{levelMeta.label}</span>
+          <span className="qb-topic-main">
+            <span className="qb-topic-name">{topic.name}</span>
+            <span className={`ut-chip ut-chip--${levelMeta.tone} qb-topic-mobile-chip`}>
+              {levelMeta.label}
+            </span>
           </span>
-          <span className="quiz-topic-actions" onClick={(event) => event.stopPropagation()}>
+          <span className="qb-topic-actions" onClick={(event) => event.stopPropagation()}>
+            {POPULAR_TOPIC_IDS.has(topic.id) && (
+              <span className="ut-chip ut-chip--accent">Popular</span>
+            )}
             <select
-              className={`quiz-level-select quiz-level-select--${levelMeta.tone}`}
+              className="ut-select qb-level-select"
               value={selectedLevel}
               onChange={(event) => handleLevelChange(topic.id, event.target.value)}
               onClick={(event) => event.stopPropagation()}
@@ -265,14 +257,11 @@ const SubjectQuizzes = () => {
                 </option>
               ))}
             </select>
-            {POPULAR_TOPIC_IDS.has(topic.id) && (
-              <span className="quiz-topic-badge">Popular</span>
-            )}
-            <span className={`quiz-complete-indicator ${complete ? 'is-complete' : ''}`} aria-label={complete ? 'Completed' : 'Not completed'}>
-              {complete && <FaCheck />}
+            <span className={`qb-complete ${complete ? 'is-complete' : ''}`} aria-label={complete ? 'Completed' : 'Not completed'}>
+              {complete && <FiCheck />}
             </span>
             <button
-              className={`quiz-favorite-btn ${favorite ? 'is-favorite' : ''}`}
+              className={`qb-fav ${favorite ? 'is-favorite' : ''}`}
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
@@ -280,232 +269,163 @@ const SubjectQuizzes = () => {
               }}
               aria-label={favorite ? `Remove ${topic.name} from favorites` : `Add ${topic.name} to favorites`}
             >
-              {favorite ? <FaBookmark /> : <FaRegBookmark />}
+              <FiBookmark />
             </button>
           </span>
-          <span className="quiz-topic-row-arrow">
-            <FaChevronRight />
+          <span className="qb-topic-arrow" aria-hidden="true">
+            <FiChevronRight />
           </span>
         </div>
       </li>
     );
   };
 
-  const renderTopicCard = ({ title, subtitle, icon, section, topics }) => (
-    <section className={`quiz-category-card quiz-category-card--${section}`}>
-      <div className="quiz-card-header">
-        <span className={`quiz-card-icon quiz-card-icon--${section}`}>
-          {icon}
-        </span>
-        <div>
-          <h2>{title}</h2>
-          <p>{subtitle}</p>
-        </div>
+  const renderTopicSection = ({ title, section, topics }) => (
+    <section className="qb-column">
+      <div className="ut-section-head">
+        <h2 className="ut-section-title">{title}</h2>
       </div>
       {topics.length > 0 ? (
-        <ul className="quiz-topic-list">
+        <ul className="qb-topic-list">
           {topics.map((topic) => renderTopicRow(topic, section))}
         </ul>
       ) : (
-        <div className="quiz-empty-state">
+        <div className="ut-empty">
+          <b>No matching topics</b>
           No topics match the current filters.
         </div>
       )}
       <button
-        className="quiz-card-footer-link"
+        className="ut-link qb-view-all"
         type="button"
         onClick={() => setSectionFilter(section)}
       >
-        View all {title} quizzes <FaChevronRight />
+        View all {title} quizzes <FiChevronRight />
       </button>
     </section>
   );
 
+  const showBothSections = sectionFilter !== 'math' && sectionFilter !== 'reading';
+
   return (
-    <div className="subject-quizzes-container">
-      <header className="quiz-bank-topbar">
-        <nav className="quiz-bank-tabs" aria-label="Primary navigation">
-          <Link to="/progress">Dashboard</Link>
-          <Link to="/practice-exams">Practice Exams</Link>
-          <Link to="/subject-quizzes" className="is-active">Question Bank</Link>
-          <Link to="/flashcards">Flashcards</Link>
-          <Link to="/dashboard">
-            AI Coach <span className="quiz-beta-badge">Beta</span>
-          </Link>
-          <Link to="/lectures">Lectures</Link>
-          <Link to="/progress">Analytics</Link>
-        </nav>
-        <div className="quiz-bank-toolbar">
-          <label className="quiz-global-search">
-            <FaSearch />
-            <input type="search" placeholder="Search anything..." aria-label="Search anything" />
-            <span className="quiz-shortcut">Ctrl K</span>
-          </label>
-          <button className="quiz-icon-button" type="button" aria-label="Notifications">
-            <FaBell />
-            <span className="quiz-notification-dot">3</span>
-          </button>
-          <button className="quiz-account-button" type="button">
-            <FaUserCircle />
-            <span>{accountLabel}</span>
+    <div className="ut-page ut-page--wide qb-page">
+      <header className="ut-page-head">
+        <div className="ut-page-head-main">
+          <p className="ut-eyebrow">Practice</p>
+          <h1 className="ut-page-title">Question Bank</h1>
+          <p className="ut-page-sub">
+            Choose a topic, set the difficulty, and start a focused quiz.
+          </p>
+        </div>
+        <div className="ut-page-head-actions">
+          <button className="ut-btn ut-btn--primary" type="button" onClick={openMetaModal}>
+            <FaMagic /> Build mixed quiz
           </button>
         </div>
       </header>
 
-      <main className="quiz-bank-main">
-        <section className="quiz-bank-hero">
-          <div className="quiz-hero-copy">
-            <div className="quiz-title-row">
-              <h1 className="subject-quizzes-title">Subject Quizzes</h1>
-              <span className="quiz-title-spark">
-                <FaMagic />
-              </span>
-            </div>
-            <p>Choose a topic, set the difficulty, and start focused SAT practice.</p>
+      <div className="ut-grid ut-grid--3 qb-stats">
+        <div className="ut-card qb-stat-card">
+          <div className="ut-stat">
+            <span className="ut-stat-value">{allSubcategories.length}</span>
+            <span className="ut-stat-label">Topics available</span>
           </div>
-
-          <div className="quiz-stat-grid">
-            <article className="quiz-stat-card">
-              <span className="quiz-stat-icon">
-                <FaLayerGroup />
-              </span>
-              <div>
-                <span className="quiz-stat-label">Topics Available</span>
-                <strong>{allSubcategories.length}</strong>
-                <span>Across R&W and Math</span>
-              </div>
-            </article>
-            <article className="quiz-stat-card">
-              <span className="quiz-stat-icon">
-                <FaCheckCircle />
-              </span>
-              <div>
-                <span className="quiz-stat-label">Completed</span>
-                <strong>{completedCount}</strong>
-                <span>Quizzes finished</span>
-              </div>
-            </article>
-            <article className="quiz-stat-card">
-              <span className="quiz-stat-icon">
-                <FaChartLine />
-              </span>
-              <div>
-                <span className="quiz-stat-label">Average Accuracy</span>
-                <strong>78%</strong>
-                <span>Across completed</span>
-              </div>
-            </article>
-            <article className="quiz-mixed-card">
-              <span className="quiz-mixed-icon">
-                <FaMagic />
-              </span>
-              <div>
-                <h2>Create Mixed Quiz</h2>
-                <p>Combine topics from Reading & Writing and Math.</p>
-                <button className="quiz-primary-btn" type="button" onClick={openMetaModal}>
-                  Build Mixed Quiz
-                </button>
-              </div>
-            </article>
+        </div>
+        <div className="ut-card qb-stat-card">
+          <div className="ut-stat">
+            <span className="ut-stat-value">{completedCount}</span>
+            <span className="ut-stat-label">Quizzes finished</span>
           </div>
-        </section>
-
-        <section className="quiz-filter-bar" aria-label="Quiz filters">
-          <label className="quiz-topic-search">
-            <FaSearch />
-            <input
-              type="search"
-              placeholder="Search topics..."
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-            />
-          </label>
-
-          <div className="quiz-filter-chips">
-            {[
-              { value: 'all', label: 'All' },
-              { value: 'reading', label: 'Reading & Writing' },
-              { value: 'math', label: 'Math' },
-            ].map((filter) => (
-              <button
-                key={filter.value}
-                className={`quiz-filter-chip ${sectionFilter === filter.value ? 'is-active' : ''}`}
-                type="button"
-                onClick={() => setSectionFilter(filter.value)}
-              >
-                {filter.label}
-              </button>
-            ))}
+        </div>
+        <div className="ut-card ut-card--accent qb-mixed-card">
+          <div>
+            <h2 className="ut-card-title">Create a mixed quiz</h2>
+            <p className="ut-card-sub">Combine topics from Reading &amp; Writing and Math in one session.</p>
           </div>
+          <button className="ut-btn ut-btn--soft ut-btn--sm" type="button" onClick={openMetaModal}>
+            Build mixed quiz
+          </button>
+        </div>
+      </div>
 
-          <div className="quiz-secondary-filters">
-            <button
-              className={`quiz-filter-chip quiz-filter-chip--icon ${completedOnly ? 'is-active' : ''}`}
-              type="button"
-              onClick={() => setCompletedOnly((value) => !value)}
-            >
-              <FaCheckCircle /> Completed
-            </button>
-            <button
-              className={`quiz-filter-chip quiz-filter-chip--icon ${favoritesOnly ? 'is-active' : ''}`}
-              type="button"
-              onClick={() => setFavoritesOnly((value) => !value)}
-            >
-              <FaRegBookmark /> Favorites
-            </button>
-          </div>
-        </section>
-
-        <div className={`quiz-selection-container ${sectionFilter !== 'all' ? 'is-single-column' : ''}`}>
-          {sectionFilter !== 'math' && renderTopicCard({
-            title: 'Reading & Writing',
-            subtitle: 'Topic quizzes for every reading and writing skill.',
-            icon: <FaBookOpen />,
-            section: 'reading',
-            topics: filteredReadingTopics,
-          })}
-          {sectionFilter !== 'reading' && renderTopicCard({
-            title: 'Math',
-            subtitle: 'Skill-based quizzes across algebra, data, and geometry.',
-            icon: <FaCalculator />,
-            section: 'math',
-            topics: filteredMathTopics,
-          })}
+      <section className="qb-controls" aria-label="Quiz filters">
+        <div className="ut-search qb-search">
+          <FiSearch />
+          <input
+            className="ut-input"
+            type="search"
+            placeholder="Search topics…"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            aria-label="Search topics"
+          />
         </div>
 
-        <section className="quiz-adaptive-strip">
-          <span className="quiz-adaptive-icon">
-            <FaSlidersH />
-          </span>
-          <div>
-            <h2>Adaptive Quiz Builder <span>Beta</span></h2>
-            <p>Build a personalized quiz that adapts to your strengths and weaknesses.</p>
-          </div>
-          <button className="quiz-strip-action" type="button" onClick={openMetaModal}>
-            Launch Adaptive Builder <FaChevronRight />
+        <div className="qb-chip-row">
+          {[
+            { value: 'all', label: 'All' },
+            { value: 'reading', label: 'Reading & Writing' },
+            { value: 'math', label: 'Math' },
+          ].map((filter) => (
+            <button
+              key={filter.value}
+              className={`ut-chip qb-chip ${sectionFilter === filter.value ? 'is-active' : ''}`}
+              type="button"
+              onClick={() => setSectionFilter(filter.value)}
+            >
+              {filter.label}
+            </button>
+          ))}
+          <span className="qb-chip-divider" aria-hidden="true" />
+          <button
+            className={`ut-chip qb-chip ${completedOnly ? 'is-active' : ''}`}
+            type="button"
+            onClick={() => setCompletedOnly((value) => !value)}
+          >
+            <FiCheckCircle /> Completed
           </button>
-        </section>
-      </main>
+          <button
+            className={`ut-chip qb-chip ${favoritesOnly ? 'is-active' : ''}`}
+            type="button"
+            onClick={() => setFavoritesOnly((value) => !value)}
+          >
+            <FiBookmark /> Favorites
+          </button>
+        </div>
+      </section>
+
+      <div className={`qb-columns ${showBothSections ? 'ut-grid ut-grid--2' : ''}`}>
+        {sectionFilter !== 'math' && renderTopicSection({
+          title: 'Reading & Writing',
+          section: 'reading',
+          topics: filteredReadingTopics,
+        })}
+        {sectionFilter !== 'reading' && renderTopicSection({
+          title: 'Math',
+          section: 'math',
+          topics: filteredMathTopics,
+        })}
+      </div>
 
       <Modal
         isOpen={isMetaOpen}
         onClose={closeMetaModal}
         title="Create Mixed Quiz"
         size="large"
-        className="meta-quiz-modal"
+        className="qb-meta-modal"
       >
-        <div className="meta-modal-content">
-          <div className="meta-section meta-section--wide">
-            <div className="meta-section-header">
+        <div className="qb-meta-layout">
+          <div className="qb-meta-section qb-meta-section--wide">
+            <div className="qb-meta-section-head">
               <h3>Select Topics</h3>
-              <span>{selectedSubcats.length} selected</span>
+              <span className="ut-chip ut-chip--accent">{selectedSubcats.length} selected</span>
             </div>
-            <div className="meta-subcat-groups">
-              <div className="meta-group">
-                <h4>Reading & Writing</h4>
-                <div className="meta-subcat-list">
+            <div className="qb-meta-groups">
+              <div className="qb-meta-group">
+                <h4 className="ut-label">Reading &amp; Writing</h4>
+                <div className="qb-meta-list">
                   {readingWritingSubcategories.map((sc) => (
-                    <label key={sc.id} className="meta-subcat-item">
+                    <label key={sc.id} className="qb-meta-item">
                       <input
                         type="checkbox"
                         checked={selectedSubcats.includes(sc.id)}
@@ -516,11 +436,11 @@ const SubjectQuizzes = () => {
                   ))}
                 </div>
               </div>
-              <div className="meta-group">
-                <h4>Math</h4>
-                <div className="meta-subcat-list">
+              <div className="qb-meta-group">
+                <h4 className="ut-label">Math</h4>
+                <div className="qb-meta-list">
                   {mathSubcategories.map((sc) => (
-                    <label key={sc.id} className="meta-subcat-item">
+                    <label key={sc.id} className="qb-meta-item">
                       <input
                         type="checkbox"
                         checked={selectedSubcats.includes(sc.id)}
@@ -534,12 +454,12 @@ const SubjectQuizzes = () => {
             </div>
           </div>
 
-          <div className="meta-builder-panel">
-            <div className="meta-section">
+          <div className="qb-meta-panel">
+            <div className="qb-meta-section">
               <h3>Difficulty</h3>
-              <div className="meta-levels">
+              <div className="qb-meta-levels">
                 {LEVEL_OPTIONS.map((option) => (
-                  <label key={option.value} className={`meta-level-option ${metaLevel === option.value ? 'active' : ''}`}>
+                  <label key={option.value} className={`qb-meta-level ${metaLevel === option.value ? 'is-active' : ''}`}>
                     <input
                       type="radio"
                       name="meta-level"
@@ -553,10 +473,10 @@ const SubjectQuizzes = () => {
               </div>
             </div>
 
-            <div className="meta-section">
+            <div className="qb-meta-section">
               <h3>Question Count</h3>
               <input
-                className="meta-number-input"
+                className="ut-input qb-meta-count"
                 type="number"
                 min={1}
                 max={30}
@@ -565,13 +485,13 @@ const SubjectQuizzes = () => {
               />
             </div>
 
-            {metaError && <div className="meta-error">{metaError}</div>}
-            <div className="meta-actions">
-              <button className="btn-secondary" type="button" onClick={closeMetaModal} disabled={creating}>
+            {metaError && <div className="ut-chip ut-chip--hard qb-meta-error">{metaError}</div>}
+            <div className="qb-meta-actions">
+              <button className="ut-btn ut-btn--ghost" type="button" onClick={closeMetaModal} disabled={creating}>
                 Cancel
               </button>
               <button
-                className="btn-primary"
+                className="ut-btn ut-btn--primary"
                 type="button"
                 onClick={handleCreateMeta}
                 disabled={creating || selectedSubcats.length === 0}

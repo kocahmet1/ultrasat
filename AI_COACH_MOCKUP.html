@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UltraSAT — AI Coach Interface Mockup</title>
+<style>
+  :root{
+    --ink:#1e293b; --ink-soft:#475569; --ink-faint:#94a3b8;
+    --bg:#f1f5f9; --card:#ffffff; --line:#e2e8f0;
+    --brand:#4f46e5; --brand-soft:#eef2ff; --brand-line:#c7d2fe;
+    --coach:#7c3aed; --coach-2:#4f46e5;
+    --good:#059669; --good-soft:#ecfdf5;
+    --bad:#dc2626; --bad-soft:#fef2f2;
+    --warn:#d97706; --warn-soft:#fffbeb;
+    --r:14px; --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.55}
+  button{font:inherit;cursor:pointer;border:none;background:none}
+
+  /* ===== mockup chrome ===== */
+  .mock-header{background:#0f172a;color:#e2e8f0;padding:10px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .mock-header .t{font-weight:700}
+  .mock-header .s{color:#94a3b8;font-size:12.5px}
+  .tabs{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+  .tabs button{padding:7px 14px;border-radius:999px;background:#1e293b;color:#cbd5e1;font-size:13px;font-weight:600}
+  .tabs button.on{background:var(--brand);color:#fff}
+  .rules{background:#0f172a;color:#64748b;font-size:12px;padding:0 22px 10px}
+  .view{display:none}
+  .view.on{display:block}
+
+  /* ===== fake site chrome ===== */
+  .site{max-width:1280px;margin:0 auto;padding:0 20px}
+  .sitenav{display:flex;align-items:center;gap:26px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .logo{font-weight:800;font-size:17px;color:var(--ink)}
+  .logo span{color:var(--brand)}
+  .sitenav a{color:var(--ink-soft);text-decoration:none;font-size:13.5px;font-weight:500}
+  .sitenav a.on{color:var(--brand);font-weight:700}
+  .avatar-sm{width:30px;height:30px;border-radius:50%;background:#cbd5e1;margin-left:auto;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#475569}
+
+  /* ===== layout with pushable panel ===== */
+  .stage{display:flex;gap:0;align-items:flex-start;min-height:640px;position:relative}
+  .content{flex:1;min-width:0;padding:26px 8px 80px 0;transition:margin .25s}
+  .coachpanel{width:0;overflow:hidden;transition:width .25s ease;flex-shrink:0}
+  .stage.open .coachpanel{width:404px}
+  .panel-inner{width:404px;padding:26px 0 26px 22px}
+
+  /* ===== cards & shared ===== */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+  .chip{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600}
+  .chip.ev{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line);cursor:pointer}
+  .chip.warn{background:var(--warn-soft);color:var(--warn)}
+  .chip.good{background:var(--good-soft);color:var(--good)}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;font-weight:600;font-size:13.5px}
+  .btn.primary{background:var(--brand);color:#fff}
+  .btn.primary:hover{background:#4338ca}
+  .btn.ghost{background:var(--brand-soft);color:var(--brand)}
+  .btn.ghost:hover{background:#e0e7ff}
+  .btn.tiny{padding:6px 11px;font-size:12.5px;border-radius:8px}
+
+  /* ===== coach identity ===== */
+  .cavatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--coach),var(--coach-2));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cavatar svg{width:18px;height:18px}
+  .cname{font-weight:700;font-size:13px;color:var(--ink)}
+  .cmeta{font-size:11.5px;color:var(--ink-faint)}
+
+  /* ===== dock ===== */
+  .dock{position:fixed;right:26px;bottom:26px;z-index:60;display:flex;align-items:center;gap:10px}
+  .dock-peek{background:#0f172a;color:#e2e8f0;padding:9px 14px;border-radius:12px;font-size:13px;box-shadow:var(--shadow);opacity:0;transform:translateX(8px);transition:all .3s;pointer-events:none;white-space:nowrap}
+  .dock-peek.show{opacity:1;transform:none}
+  .dock-btn{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--coach),var(--coach-2));box-shadow:0 4px 18px rgba(79,70,229,.4);display:flex;align-items:center;justify-content:center;position:relative;transition:transform .15s}
+  .dock-btn:hover{transform:scale(1.06)}
+  .dock-btn svg{width:26px;height:26px}
+  .dock-badge{position:absolute;top:-2px;right:-2px;min-width:19px;height:19px;border-radius:999px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+
+  /* ===== results page mock ===== */
+  .pg-title{font-size:21px;font-weight:800;margin-bottom:3px}
+  .pg-sub{color:var(--ink-faint);font-size:13px;margin-bottom:20px}
+  .score-row{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .score-tile{flex:1;min-width:130px;padding:16px 18px;text-align:left}
+  .score-tile .n{font-size:26px;font-weight:800}
+  .score-tile .l{font-size:12px;color:var(--ink-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+  /* coach's read inline block */
+  .coach-read{border:1px solid var(--brand-line);background:linear-gradient(180deg,#fbfaff, #f6f5ff);border-radius:var(--r);padding:18px 20px;margin-bottom:20px}
+  .coach-read .head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .coach-read p{color:#312e81;font-size:14.5px;margin-bottom:12px}
+  .coach-read p b{color:#1e1b4b}
+  .evi{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+
+  .qlist{margin-top:6px}
+  .qrow{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line)}
+  .qrow:last-child{border-bottom:none}
+  .qmark{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+  .qmark.ok{background:var(--good-soft);color:var(--good)}
+  .qmark.no{background:var(--bad-soft);color:var(--bad)}
+  .qtext{flex:1;font-size:13.5px;color:var(--ink-soft)}
+  .qtag{font-size:11.5px;color:var(--ink-faint)}
+
+  /* ===== panel feed ===== */
+  .pf-head{display:flex;align-items:center;gap:10px;padding-bottom:13px;border-bottom:1px solid var(--line);margin-bottom:13px}
+  .ctx-chip{margin-left:auto;background:#f8fafc;border:1px solid var(--line);color:var(--ink-faint);font-size:11px;padding:3px 9px;border-radius:999px}
+  .feed{display:flex;flex-direction:column;gap:12px;max-height:430px;overflow-y:auto;padding-right:4px}
+  .note{padding:15px 16px}
+  .note .when{font-size:11px;color:var(--ink-faint);font-weight:600;margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
+  .note p{font-size:13.5px;color:var(--ink-soft);margin-bottom:10px}
+  .note p b{color:var(--ink)}
+  .mini-lesson .ml-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .ml-body{display:none;margin-top:11px;border-top:1px dashed var(--line);padding-top:11px}
+  .mini-lesson.expanded .ml-body{display:block}
+  .ml-body h4{font-size:13px;margin:10px 0 5px;color:var(--ink)}
+  .ml-body p{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+  .contrast{display:flex;gap:8px;margin:8px 0}
+  .contrast div{flex:1;border-radius:10px;padding:9px 11px;font-size:12.5px}
+  .contrast .a{background:var(--good-soft);border:1px solid #a7f3d0}
+  .contrast .b{background:var(--warn-soft);border:1px solid #fde68a}
+  .check{margin-top:8px}
+  .check .opt{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:12.5px;margin-bottom:6px;background:#fff}
+  .check .opt:hover{border-color:var(--brand-line);background:var(--brand-soft)}
+  .check .opt.right{border-color:var(--good);background:var(--good-soft)}
+  .check .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .check .fb{font-size:12.5px;font-weight:600;display:none;margin-top:4px}
+
+  /* chat */
+  .chatline{display:flex;gap:9px;margin-top:14px}
+  .chatline input{flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 13px;font:inherit;font-size:13.5px;outline:none}
+  .chatline input:focus{border-color:var(--brand-line);box-shadow:0 0 0 3px var(--brand-soft)}
+  .chatline button{background:var(--brand);color:#fff;border-radius:11px;padding:0 15px;font-weight:700}
+  .msg{display:flex;gap:9px;margin-bottom:10px}
+  .msg .bub{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-size:13px;color:var(--ink-soft);max-width:85%}
+  .msg.me{justify-content:flex-end}
+  .msg.me .bub{background:var(--brand);border-color:var(--brand);color:#fff}
+
+  /* ===== dashboard view ===== */
+  .dash-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin-top:22px}
+  .brief{padding:20px 22px}
+  .brief .head{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .brief p{color:var(--ink-soft);margin-bottom:13px}
+  .planbar{height:9px;border-radius:999px;background:#e2e8f0;overflow:hidden;margin:6px 0 4px}
+  .planbar i{display:block;height:100%;width:60%;background:linear-gradient(90deg,var(--coach),var(--coach-2));border-radius:999px}
+  .plansub{font-size:12px;color:var(--ink-faint);margin-bottom:14px}
+  .statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .stat{padding:15px 17px}
+  .stat .n{font-size:21px;font-weight:800}
+  .stat .l{font-size:11.5px;color:var(--ink-faint);font-weight:600}
+
+  /* ===== coach page view ===== */
+  .cp-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;margin-top:22px;align-items:start}
+  .thread{padding:20px;display:flex;flex-direction:column;gap:12px;min-height:480px}
+  .daymark{text-align:center;font-size:11px;color:var(--ink-faint);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .side{display:flex;flex-direction:column;gap:14px}
+  .side .card{padding:17px 18px}
+  .side h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:11px}
+  .goalrow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;font-size:13.5px}
+  .goalrow b{font-size:16px}
+  .focus{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .focus:last-child{border:none}
+  .focus .nm{flex:1;font-weight:600;color:var(--ink-soft)}
+  .spark{width:74px;height:22px}
+  .commit{font-size:12.5px;color:var(--ink-soft);padding:6px 0 6px 10px;border-left:3px solid var(--brand-line);margin-bottom:7px}
+  .dial{display:flex;gap:7px}
+  .dial button{flex:1;padding:7px 4px;border-radius:9px;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink-faint);background:#fff}
+  .dial button.on{background:var(--brand-soft);border-color:var(--brand-line);color:var(--brand)}
+
+  /* ===== mobile view ===== */
+  .phone-wrap{display:flex;justify-content:center;padding:30px 0 60px;gap:40px;flex-wrap:wrap}
+  .phone{width:360px;height:700px;border-radius:38px;background:#0f172a;padding:12px;box-shadow:0 24px 60px rgba(15,23,42,.35);position:relative}
+  .screen{background:var(--bg);border-radius:28px;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .m-top{background:#fff;padding:14px 16px 12px;border-bottom:1px solid var(--line)}
+  .m-body{flex:1;overflow-y:auto;padding:14px 14px 120px}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -8px 30px rgba(15,23,42,.18);transition:transform .3s ease;transform:translateY(calc(100% - 64px));max-height:86%;display:flex;flex-direction:column}
+  .sheet.up{transform:translateY(0)}
+  .grab{padding:9px 16px 8px;cursor:pointer}
+  .grab .bar{width:42px;height:4px;background:#cbd5e1;border-radius:999px;margin:0 auto 9px}
+  .grab .row{display:flex;align-items:center;gap:9px}
+  .sheet-body{overflow-y:auto;padding:4px 16px 18px;display:none}
+  .sheet.up .sheet-body{display:block}
+  .phone-cap{text-align:center;font-size:12.5px;color:var(--ink-faint);margin-top:12px}
+
+  .footer-note{max-width:1280px;margin:0 auto;padding:18px 20px 40px;color:var(--ink-faint);font-size:12.5px}
+</style>
+</head>
+<body>
+
+<!-- ============ MOCKUP CHROME ============ -->
+<div class="mock-header">
+  <div>
+    <div class="t">AI Coach — interface mockup</div>
+    <div class="s">Interactive · uses the "plural possessives" scenario from the design doc</div>
+  </div>
+  <div class="tabs">
+    <button class="on" data-v="v-results">1 · Quiz results + panel</button>
+    <button data-v="v-dash">2 · Dashboard briefing</button>
+    <button data-v="v-coach">3 · Coach page</button>
+    <button data-v="v-mobile">4 · Mobile</button>
+  </div>
+</div>
+<div class="rules">Behavior rules shown here: dock never auto-opens · proactive speech only at boundaries · every observation has evidence chips + a one-tap action · hidden entirely during timed exam modules.</div>
+
+<!-- ============ VIEW 1 · RESULTS + PANEL ============ -->
+<div class="view on" id="v-results">
+  <div class="site">
+    <div class="sitenav">
+      <div class="logo">Ultra<span>SAT</span></div>
+      <a href="#">Dashboard</a><a href="#">Practice Exams</a><a href="#" class="on">Question Bank</a><a href="#">Progress</a>
+      <div class="avatar-sm">EM</div>
+    </div>
+
+    <div class="stage" id="stage1">
+      <div class="content">
+        <div class="pg-title">Quiz results — Boundaries</div>
+        <div class="pg-sub">SmartQuiz · Level 2 · completed just now</div>
+
+        <div class="score-row">
+          <div class="card score-tile"><div class="n">3<span style="color:var(--ink-faint);font-size:16px">/5</span></div><div class="l">Correct</div></div>
+          <div class="card score-tile"><div class="n">60%</div><div class="l">Accuracy</div></div>
+          <div class="card score-tile"><div class="n">4:12</div><div class="l">Time</div></div>
+          <div class="card score-tile"><div class="n">Lv 2</div><div class="l">Level kept</div></div>
+        </div>
+
+        <!-- INLINE COACH MOMENT -->
+        <div class="coach-read">
+          <div class="head">
+            <div class="cavatar"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/><circle cx="18.5" cy="17" r="2.2" fill="#fff" opacity=".85"/></svg></div>
+            <div><div class="cname">Coach's read</div><div class="cmeta">grounded in this quiz + your history</div></div>
+          </div>
+          <p>You're still not 100% on <b>singular vs. plural possessives</b>. You were missing these in late June, had them down by July 10 — and today both misses are the same pattern again: <b>apostrophe before the ‑s on a plural noun</b>. Let's fix this one for good.</p>
+          <div class="evi">
+            <span class="chip ev" title="Opens the question you missed">Q2 · your answer</span>
+            <span class="chip ev">Q5 · your answer</span>
+            <span class="chip ev">Jun 30 quiz · 2 similar misses</span>
+            <span class="chip warn">pattern: regressing</span>
+          </div>
+          <div class="actions">
+            <button class="btn primary" onclick="openPanelAndLesson()">Read the 60‑second fix</button>
+            <button class="btn ghost">Start 5‑question possessives drill</button>
+          </div>
+        </div>
+
+        <div class="card qlist">
+          <div class="qrow"><div class="qmark ok">✓</div><div class="qtext">The committee announced its decision after the vote…</div><div class="qtag">boundaries</div></div>
+          <div class="qrow"><div class="qmark no">✕</div><div class="qtext">The three visitors' badges were printed at the front desk…</div><div class="qtag">plural possessive</div></div>
+          <div class="qrow"><div class="qmark ok">✓</div><div class="qtext">Because the storm intensified, the launch was delayed…</div><div class="qtag">clause boundaries</div></div>
+          <div class="qrow"><div class="qmark ok">✓</div><div class="qtext">The researcher's findings, published in 2024, suggest…</div><div class="qtag">singular possessive</div></div>
+          <div class="qrow"><div class="qmark no">✕</div><div class="qtext">Several senators' offices released statements…</div><div class="qtag">plural possessive</div></div>
+        </div>
+      </div>
+
+      <!-- COACH PANEL (pushes content) -->
+      <div class="coachpanel">
+        <div class="panel-inner">
+          <div class="card" style="padding:16px 16px 14px">
+            <div class="pf-head">
+              <div class="cavatar"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/><circle cx="18.5" cy="17" r="2.2" fill="#fff" opacity=".85"/></svg></div>
+              <div><div class="cname">Coach</div><div class="cmeta">remembers everything you practice</div></div>
+              <div class="ctx-chip">Boundaries · quiz just finished</div>
+            </div>
+
+            <div class="feed" id="feed1">
+              <div class="card note">
+                <div class="when">Just now · after this quiz</div>
+                <p>Same slip as June — <b>apostrophe before the ‑s on plural nouns</b> (Q2, Q5). You recovered once already, so this is a quick fix, not a weak skill. One focused drill should lock it in.</p>
+                <div class="evi"><span class="chip ev">Q2</span><span class="chip ev">Q5</span><span class="chip warn">regression</span></div>
+                <div class="actions"><button class="btn tiny primary" onclick="expandLesson()">60‑second lesson</button><button class="btn tiny ghost">5‑question drill</button></div>
+              </div>
+
+              <div class="card note mini-lesson" id="mlesson">
+                <div class="ml-head">
+                  <div><div class="when">Micro‑lesson · written for you</div><b style="font-size:13.5px">Singular vs. plural possessives — the 60‑second version</b></div>
+                  <button class="btn tiny ghost" onclick="expandLesson()" id="mlBtn">Expand</button>
+                </div>
+                <div class="ml-body">
+                  <p><b>Why now:</b> twice today (and twice on Jun 30) you placed the apostrophe before the ‑s on a <i>plural</i> noun. This is one small rule, and it keeps costing you points in Boundaries — currently one of your two focus areas.</p>
+                  <h4>The rule</h4>
+                  <p>Form the noun first. Then add the possessive. If the plural already ends in ‑s, the apostrophe goes <b>after</b> it.</p>
+                  <div class="contrast">
+                    <div class="a"><b>the student's book</b><br>one student → student + 's</div>
+                    <div class="a"><b>the students' books</b><br>many students → students + '</div>
+                  </div>
+                  <h4>Your sentence, fixed</h4>
+                  <p>You chose <i>"the three visitor's badges."</i> Three visitors → plural first (<i>visitors</i>), then the apostrophe: <b>"the three visitors' badges."</b></p>
+                  <h4>Quick check</h4>
+                  <div class="check" id="chk">
+                    <button class="opt" data-ok="0">Both <i>senator's</i> offices released statements.</button>
+                    <button class="opt" data-ok="1">Both <i>senators'</i> offices released statements.</button>
+                    <div class="fb"></div>
+                  </div>
+                  <div class="actions" style="margin-top:10px"><button class="btn tiny primary">Lock it in: 5‑question drill</button><button class="btn tiny ghost">Save to my notes</button></div>
+                </div>
+              </div>
+
+              <div id="chatlog"></div>
+            </div>
+
+            <div class="chatline">
+              <input id="chatin" placeholder="Ask your coach anything…" onkeydown="if(event.key==='Enter')sendChat()">
+              <button onclick="sendChat()">➤</button>
+            </div>
+          </div>
+          <div style="font-size:11.5px;color:var(--ink-faint);margin-top:9px;text-align:center">Same conversation continues on every page and on /coach</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCK -->
+  <div class="dock">
+    <div class="dock-peek show" id="peek1">I noticed something in that quiz →</div>
+    <button class="dock-btn" onclick="togglePanel()" title="Open Coach">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/><circle cx="18.5" cy="17" r="2.2" fill="#fff" opacity=".85"/></svg>
+      <span class="dock-badge" id="badge1">1</span>
+    </button>
+  </div>
+</div>
+
+<!-- ============ VIEW 2 · DASHBOARD ============ -->
+<div class="view" id="v-dash">
+  <div class="site">
+    <div class="sitenav">
+      <div class="logo">Ultra<span>SAT</span></div>
+      <a href="#" class="on">Dashboard</a><a href="#">Practice Exams</a><a href="#">Question Bank</a><a href="#">Progress</a>
+      <div class="avatar-sm">EM</div>
+    </div>
+
+    <div style="padding:26px 0 90px">
+      <div class="pg-title">Good evening, Emre</div>
+      <div class="pg-sub">Tuesday, July 28 · 67 days to your exam</div>
+
+      <div class="dash-grid">
+        <!-- INLINE COACH MOMENT: session-start briefing -->
+        <div class="card brief" style="border-color:var(--brand-line)">
+          <div class="head">
+            <div class="cavatar"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/><circle cx="18.5" cy="17" r="2.2" fill="#fff" opacity=".85"/></svg></div>
+            <div><div class="cname">Today, from your coach</div><div class="cmeta">based on yesterday's session + your weekly plan</div></div>
+          </div>
+          <p>Solid week so far — <b>6 of 10</b> plan items done. Two things today: possessives slipped again in yesterday's Boundaries quiz (quick fix, 10 minutes), and you haven't touched <b>Linear Functions</b> in 9 days — it starts to fade around now.</p>
+          <div class="planbar"><i></i></div>
+          <div class="plansub">Weekly plan · 6/10 · on pace for Saturday</div>
+          <div class="actions">
+            <button class="btn primary">Fix possessives (10 min)</button>
+            <button class="btn ghost">Linear Functions refresher</button>
+            <button class="btn ghost" style="background:#f8fafc;color:var(--ink-soft)">Show full plan</button>
+          </div>
+        </div>
+
+        <div class="statgrid">
+          <div class="card stat"><div class="n">1310</div><div class="l">Estimated score · target 1450</div></div>
+          <div class="card stat"><div class="n">12 <span style="font-size:13px;color:var(--good)">▲</span></div><div class="l">Day streak</div></div>
+          <div class="card stat"><div class="n">4h 20m</div><div class="l">This week</div></div>
+          <div class="card stat"><div class="n">2</div><div class="l">Focus areas open</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="dock-btn" title="Coach — idle, quiet">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/><circle cx="18.5" cy="17" r="2.2" fill="#fff" opacity=".85"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ============ VIEW 3 · COACH PAGE ============ -->
+<div class="view" id="v-coach">
+  <div class="site">
+    <div class="sitenav">
+      <div class="logo">Ultra<span>SAT</span></div>
+      <a href="#">Dashboard</a><a href="#">Practice Exams</a><a href="#">Question Bank</a><a href="#">Progress</a><a href="#" class="on">Coach</a>
+      <div class="avatar-sm">EM</div>
+    </div>
+
+    <div class="cp-grid" style="padding-bottom:80px">
+      <!-- conversation -->
+      <div class="card thread">
+        <div class="daymark">July 25</div>
+        <div class="msg"><div class="cavatar" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg></div>
+          <div class="bub">Boundaries quiz: 3/5. Both misses were plural possessives — same pattern as June. You fixed it once; let's make it permanent this time. <b>[60‑second lesson] [5‑question drill]</b></div></div>
+        <div class="msg me"><div class="bub">why is it "senators'" and not "senator's" there?</div></div>
+        <div class="msg"><div class="cavatar" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg></div>
+          <div class="bub">Because there are several senators. Build the noun first — <i>senators</i> — then add the possessive. Plural already ends in ‑s, so just the apostrophe: <i>senators'</i>. One senator would be <i>senator's</i>.</div></div>
+        <div class="daymark">July 28 · today</div>
+        <div class="msg"><div class="cavatar" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg></div>
+          <div class="bub">Nice — 5/5 on the possessives drill. I'll re‑check this around Aug 4 to make sure it stuck. Next on your plan: Linear Functions refresher (9 days untouched).</div></div>
+        <div style="margin-top:auto" class="chatline">
+          <input placeholder="Ask your coach anything…">
+          <button>➤</button>
+        </div>
+      </div>
+
+      <!-- what I know about you -->
+      <div class="side">
+        <div class="card">
+          <h3>Your goal</h3>
+          <div class="goalrow"><span>Target score</span><b>1450</b></div>
+          <div class="goalrow"><span>Current estimate</span><b style="color:var(--brand)">1310</b></div>
+          <div class="goalrow"><span>Exam date</span><b>Oct 3 · 67 days</b></div>
+        </div>
+
+        <div class="card">
+          <h3>Current focus <span style="float:right;font-weight:500;text-transform:none;letter-spacing:0">from your last 3 weeks</span></h3>
+          <div class="focus"><span class="chip warn">fix</span><span class="nm">Plural possessives</span>
+            <svg class="spark" viewBox="0 0 74 22"><polyline points="2,16 14,14 26,6 38,4 50,5 62,14 72,12" fill="none" stroke="#d97706" stroke-width="2"/></svg></div>
+          <div class="focus"><span class="chip good">rising</span><span class="nm">Comma splices</span>
+            <svg class="spark" viewBox="0 0 74 22"><polyline points="2,18 14,17 26,14 38,12 50,8 62,6 72,4" fill="none" stroke="#059669" stroke-width="2"/></svg></div>
+          <div class="focus"><span class="chip" style="background:#f1f5f9;color:#64748b">fading</span><span class="nm">Linear functions</span>
+            <svg class="spark" viewBox="0 0 74 22"><polyline points="2,6 14,5 26,7 38,8 50,10 62,12 72,13" fill="none" stroke="#94a3b8" stroke-width="2"/></svg></div>
+        </div>
+
+        <div class="card">
+          <h3>Commitments</h3>
+          <div class="commit">Re‑check possessives around <b>Aug 4</b></div>
+          <div class="commit">Full practice exam scheduled <b>this Saturday</b></div>
+          <div class="commit">Flashcards: 14 of 120 saved words reviewed this week — 15 min would clear the backlog</div>
+        </div>
+
+        <div class="card">
+          <h3>Coach style</h3>
+          <div class="dial">
+            <button>Quiet</button><button class="on">Normal</button><button>Chatty</button>
+          </div>
+          <div style="font-size:11.5px;color:var(--ink-faint);margin-top:9px">Never interrupts practice. <a href="#" style="color:var(--brand)">See everything I know about you →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VIEW 4 · MOBILE ============ -->
+<div class="view" id="v-mobile">
+  <div class="phone-wrap">
+    <div>
+      <div class="phone"><div class="screen">
+        <div class="m-top">
+          <div style="font-weight:800;font-size:15px">Quiz results — Boundaries</div>
+          <div style="font-size:11.5px;color:var(--ink-faint)">3/5 · 60% · Level 2 kept</div>
+        </div>
+        <div class="m-body">
+          <div class="coach-read" style="padding:14px 15px">
+            <div class="head" style="margin-bottom:8px">
+              <div class="cavatar" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg></div>
+              <div class="cname" style="font-size:12.5px">Coach's read</div>
+            </div>
+            <p style="font-size:13px">Both misses = <b>plural possessives</b> — the June pattern is back. Quick fix available.</p>
+            <div class="actions"><button class="btn tiny primary">60‑sec fix</button><button class="btn tiny ghost">Drill</button></div>
+          </div>
+          <div class="card qlist">
+            <div class="qrow"><div class="qmark ok">✓</div><div class="qtext" style="font-size:12.5px">The committee announced its…</div></div>
+            <div class="qrow"><div class="qmark no">✕</div><div class="qtext" style="font-size:12.5px">The three visitors' badges…</div></div>
+            <div class="qrow"><div class="qmark ok">✓</div><div class="qtext" style="font-size:12.5px">Because the storm intensified…</div></div>
+            <div class="qrow"><div class="qmark ok">✓</div><div class="qtext" style="font-size:12.5px">The researcher's findings…</div></div>
+            <div class="qrow"><div class="qmark no">✕</div><div class="qtext" style="font-size:12.5px">Several senators' offices…</div></div>
+          </div>
+        </div>
+
+        <!-- bottom sheet -->
+        <div class="sheet" id="sheet">
+          <div class="grab" onclick="toggleSheet()">
+            <div class="bar"></div>
+            <div class="row">
+              <div class="cavatar" style="width:26px;height:26px"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg></div>
+              <div style="font-size:12.5px;font-weight:700">Coach <span style="color:var(--bad)">·</span> <span style="font-weight:500;color:var(--ink-faint)">1 note about this quiz</span></div>
+              <div style="margin-left:auto;font-size:11px;color:var(--ink-faint)" id="sheetHint">tap to open ▲</div>
+            </div>
+          </div>
+          <div class="sheet-body">
+            <div class="card note" style="box-shadow:none">
+              <div class="when">Just now</div>
+              <p>You're still not 100% on <b>singular vs. plural possessives</b> — missing in June, fixed by July 10, slipping again today. Both misses: apostrophe before the ‑s on a plural noun.</p>
+              <div class="evi"><span class="chip ev">Q2</span><span class="chip ev">Q5</span><span class="chip warn">regressing</span></div>
+              <div class="actions"><button class="btn tiny primary">60‑second lesson</button><button class="btn tiny ghost">5‑question drill</button></div>
+            </div>
+            <div class="chatline" style="margin-top:10px"><input placeholder="Ask your coach…"><button>➤</button></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="phone-cap">Bottom sheet: collapsed 64px handle by default → drag/tap to open. Hidden during exam modules.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  <b>Interaction rules demonstrated:</b> the dock never opens itself — the peek line slides out once and retracts · proactive notes appear only at boundaries (results page, session start) · every coach claim carries evidence chips linking to real questions/quizzes · every observation ends in a one-tap action · one conversation thread shared across the panel, inline moments, mobile sheet, and /coach page.
+</div>
+
+<script>
+  // tabs
+  document.querySelectorAll('.tabs button').forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+      document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      document.getElementById(b.dataset.v).classList.add('on');
+      window.scrollTo(0,0);
+    };
+  });
+
+  // dock / panel
+  function togglePanel(){
+    const st=document.getElementById('stage1');
+    st.classList.toggle('open');
+    document.getElementById('peek1').classList.remove('show');
+    const bd=document.getElementById('badge1');
+    if(st.classList.contains('open')&&bd)bd.remove();
+  }
+  function openPanelAndLesson(){
+    const st=document.getElementById('stage1');
+    if(!st.classList.contains('open'))togglePanel();
+    setTimeout(expandLesson,280);
+  }
+  // auto-retract peek after 6s (rule: never nags)
+  setTimeout(()=>document.getElementById('peek1').classList.remove('show'),6000);
+
+  // micro-lesson expand
+  function expandLesson(){
+    const m=document.getElementById('mlesson');
+    m.classList.toggle('expanded');
+    document.getElementById('mlBtn').textContent=m.classList.contains('expanded')?'Collapse':'Expand';
+    if(m.classList.contains('expanded'))m.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  // check question
+  document.querySelectorAll('#chk .opt').forEach(o=>{
+    o.onclick=()=>{
+      const fb=document.querySelector('#chk .fb');
+      document.querySelectorAll('#chk .opt').forEach(x=>x.classList.remove('right','wrong'));
+      if(o.dataset.ok==='1'){o.classList.add('right');fb.style.display='block';fb.style.color='var(--good)';fb.textContent='✓ Exactly — plural first (senators), then the apostrophe.';}
+      else{o.classList.add('wrong');fb.style.display='block';fb.style.color='var(--bad)';fb.textContent='Not quite — "both" means more than one senator. Build the plural first.';}
+    };
+  });
+
+  // canned chat
+  function sendChat(){
+    const inp=document.getElementById('chatin');
+    if(!inp.value.trim())return;
+    const log=document.getElementById('chatlog');
+    log.insertAdjacentHTML('beforeend',`<div class="msg me"><div class="bub">${inp.value.replace(/</g,'&lt;')}</div></div>`);
+    inp.value='';
+    setTimeout(()=>{
+      log.insertAdjacentHTML('beforeend',`<div class="msg"><div class="cavatar" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg></div><div class="bub">(mock reply) Quick rule of thumb: build the noun first, then add the possessive. Plural ending in ‑s → apostrophe goes after: <i>the senators' offices</i>. Want three quick questions on it?</div></div>`);
+      log.lastElementChild.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },500);
+  }
+
+  // mobile sheet
+  function toggleSheet(){
+    const s=document.getElementById('sheet');
+    s.classList.toggle('up');
+    document.getElementById('sheetHint').textContent=s.classList.contains('up')?'tap to close ▼':'tap to open ▲';
+  }
+</script>
+</body>
+</html>

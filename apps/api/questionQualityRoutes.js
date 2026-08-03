@@ -1,11 +1,17 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const { requireAdmin, requireAuth } = require('./middleware/auth');
+const {
+  resolveModel,
+  resolveReasoningEffort,
+  reasoningConfig,
+  outputTokenBudget,
+} = require('./config/aiModel');
 
 const router = express.Router();
 
-const DEFAULT_QC_MODEL = process.env.OPENAI_QC_MODEL || process.env.OPENAI_MODEL || 'o4-mini';
-const OPENAI_QC_MAX_OUTPUT_TOKENS = parseInt(process.env.OPENAI_QC_MAX_OUTPUT_TOKENS || '6000', 10);
+const DEFAULT_QC_MODEL = resolveModel('OPENAI_QC_MODEL', 'OPENAI_MODEL');
+const OPENAI_QC_MAX_OUTPUT_TOKENS = outputTokenBudget(process.env.OPENAI_QC_MAX_OUTPUT_TOKENS || '6000');
 
 const KNOWN_FLAG_TYPES = [
   'missing_information',
@@ -167,11 +173,12 @@ No extra commentary.`;
     },
     body: JSON.stringify({
       model,
+      reasoning: reasoningConfig(),
       input: [
         { role: 'system', content: 'You are an expert SAT item writer. Always output strict JSON with keys rewritten and notes.' },
         { role: 'user', content: prompt }
       ],
-      max_output_tokens: 1200
+      max_output_tokens: outputTokenBudget(1200)
     })
   });
 
@@ -419,9 +426,9 @@ ${formatQuestionForPrompt(questionId, questionData)}
     },
     body: JSON.stringify({
       model,
-      reasoning: {
-        effort: 'medium'
-      },
+      reasoning: reasoningConfig({
+        effort: resolveReasoningEffort('OPENAI_QC_REASONING_EFFORT'),
+      }),
       input: [
         {
           role: 'system',

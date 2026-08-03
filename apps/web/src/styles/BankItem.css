@@ -1,30 +1,46 @@
+/* BankItem — Concept Bank styles, retinted to the unified design language
+   (styles/tokens.css + styles/ut-kit.css). Layout unchanged; colors/fonts/
+   radii come from the --ut-* tokens. */
+
 .bank-container {
   max-width: 1200px;
   margin: -20px auto 0;
   padding: 30px 45px;
-  background-color: #ebf2f9;
+  background-color: var(--ut-bg);
+  font-family: var(--ut-font-body);
+  color: var(--ut-text);
   min-height: 100vh;
 }
 
 .bank-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.bank-header-main {
+  min-width: 0;
 }
 
 .bank-header h1 {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.8rem;
-  color: #333;
+  font-family: var(--ut-font-display);
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ut-text);
+  margin: 0;
 }
 
 .bank-header .help-icon-button {
   background: transparent;
   border: none;
-  color: #666;
+  color: var(--ut-muted);
   cursor: pointer;
   padding: 6px;
   margin-left: 12px;
@@ -38,8 +54,8 @@
 }
 
 .bank-header .help-icon-button:hover {
-  background: rgba(99, 102, 241, 0.1);
-  color: #6366f1;
+  background: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
   opacity: 1;
   transform: scale(1.1);
 }
@@ -59,11 +75,19 @@
 .search-box {
   display: flex;
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: var(--ut-card);
+  border: 1px solid var(--ut-rule-strong);
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: var(--ut-radius-sm);
+  color: var(--ut-mono-muted);
   flex: 1;
   max-width: 400px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-box:focus-within {
+  border-color: var(--ut-accent);
+  box-shadow: 0 0 0 3px rgba(43, 89, 216, 0.16);
 }
 
 .search-box input {
@@ -72,7 +96,13 @@
   margin-left: 8px;
   flex: 1;
   font-size: 14px;
+  font-family: var(--ut-font-body);
+  color: var(--ut-text);
   outline: none;
+}
+
+.search-box input::placeholder {
+  color: var(--ut-mono-muted);
 }
 
 .filter-controls {
@@ -84,15 +114,19 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #f5f5f5;
+  background-color: var(--ut-card);
+  border: 1px solid var(--ut-rule-strong);
+  color: var(--ut-mono-muted);
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: var(--ut-radius-sm);
 }
 
 .subcategory-filter select, .sort-control select {
   border: none;
   background: transparent;
   font-size: 14px;
+  font-family: var(--ut-font-body);
+  color: var(--ut-text);
   outline: none;
   cursor: pointer;
 }
@@ -104,31 +138,33 @@
 }
 
 .bank-item {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
   padding: 20px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  border-left: 4px solid #4285f4; /* Default color for concept items */
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border-left: 4px solid var(--ut-rule-strong); /* Default tone for concept items */
 }
 
 .bank-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--ut-accent);
+  box-shadow: var(--ut-shadow);
 }
 
 .bank-item.mastered {
-  border-left-color: #34a853; /* Green for mastered items */
+  border-left-color: var(--ut-success); /* Green for mastered items */
 }
 
 .bank-item.clickable {
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .bank-item.clickable:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--ut-shadow);
 }
 
 .bank-item-header {
@@ -140,8 +176,11 @@
 
 .bank-item-header h3 {
   margin: 0;
+  font-family: var(--ut-font-display);
   font-size: 1.2rem;
-  color: #333;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ut-text);
 }
 
 .bank-item-actions {
@@ -158,50 +197,55 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: var(--ut-muted);
   transition: background-color 0.2s, color 0.2s;
 }
 
 .bank-item-actions button:hover {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: var(--ut-bg-alt);
+  color: var(--ut-text);
 }
 
 .mastery-toggle {
-  color: #ccc !important;
+  color: var(--ut-rule-strong) !important;
 }
 
 .mastery-toggle.mastered {
-  color: #34a853 !important;
+  color: var(--ut-success-dark) !important;
 }
 
 .delete-button:hover {
-  color: #ea4335 !important;
+  color: var(--ut-danger-dark) !important;
 }
 
 .bank-item-subcategory {
-  font-size: 0.8rem;
-  color: #666;
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ut-accent-dark);
   margin-bottom: 12px;
-  padding: 4px 8px;
-  background-color: #f0f0f0;
-  border-radius: 4px;
+  padding: 4px 11px;
+  background-color: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: 999px;
   display: inline-block;
 }
 
 .bank-item-definition {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #333;
+  color: var(--ut-text-soft);
   margin-bottom: 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--ut-rule);
   padding-bottom: 16px;
 }
 
 .bank-item-notes {
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #666;
+  color: var(--ut-muted);
   margin-bottom: 16px;
   min-height: 80px;
 }
@@ -209,10 +253,10 @@
 .notes-content {
   font-style: italic;
   margin-bottom: 8px;
-  background-color: #f9f9f9;
+  background-color: var(--ut-card-soft);
   padding: 8px;
   border-radius: 4px;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid var(--ut-rule-strong);
 }
 
 .bank-item-notes-edit {
@@ -221,12 +265,21 @@
 
 .bank-item-notes-edit textarea {
   width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--ut-rule-strong);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card);
+  color: var(--ut-text);
+  font-family: var(--ut-font-body);
   padding: 8px;
   font-size: 0.9rem;
   resize: vertical;
   margin-bottom: 8px;
+}
+
+.bank-item-notes-edit textarea:focus {
+  outline: none;
+  border-color: var(--ut-accent);
+  box-shadow: 0 0 0 3px rgba(43, 89, 216, 0.16);
 }
 
 .edit-actions {
@@ -238,45 +291,54 @@
 .edit-actions button {
   padding: 6px 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--ut-radius-sm);
   cursor: pointer;
+  font-family: var(--ut-font-body);
   font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .edit-actions button:first-child {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: var(--ut-bg-alt);
+  color: var(--ut-text-soft);
 }
 
 .edit-actions button:last-child {
-  background-color: #4285f4;
-  color: white;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
+}
+
+.edit-actions button:last-child:hover {
+  background-color: var(--ut-accent-bright);
 }
 
 .edit-notes-button, .add-notes-button {
   background: none;
-  border: 1px solid #ddd;
+  border: 1px solid var(--ut-rule-strong);
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: var(--ut-radius-sm);
   cursor: pointer;
+  font-family: var(--ut-font-body);
   font-size: 0.85rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #666;
-  transition: background-color 0.2s, color 0.2s;
+  color: var(--ut-muted);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .edit-notes-button:hover, .add-notes-button:hover {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: var(--ut-bg-alt);
+  border-color: var(--ut-text-soft);
+  color: var(--ut-text);
 }
 
 .bank-item-footer {
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
-  color: #888;
+  color: var(--ut-mono-muted);
 }
 
 .bank-item-dates {
@@ -285,11 +347,15 @@
   gap: 4px;
 }
 
+/* Empty/loading states follow the ut-empty look */
 .loading-message, .empty-message {
+  border: 1px dashed var(--ut-rule-strong);
+  border-radius: var(--ut-radius-lg);
+  background: var(--ut-card-soft);
   text-align: center;
-  padding: 40px 0;
-  color: #666;
-  font-style: italic;
+  padding: 34px 24px;
+  color: var(--ut-muted);
+  font-size: 13.5px;
 }
 
 /* Responsive adjustments */
@@ -305,15 +371,15 @@
     padding: 4px;
     font-size: 0.9rem;
   }
-  
+
   .bank-controls {
     flex-direction: column;
   }
-  
+
   .search-box {
     max-width: 100%;
   }
-  
+
   .bank-items-grid {
     grid-template-columns: 1fr;
   }

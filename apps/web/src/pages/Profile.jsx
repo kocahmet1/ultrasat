@@ -1,66 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CountUp from 'react-countup';
 import {
-  FaArrowRight,
-  FaBell,
-  FaBook,
-  FaBookOpen,
-  FaBookReader,
-  FaBullseye,
-  FaCalendarAlt,
-  FaCamera,
-  FaChartBar,
-  FaChartLine,
-  FaCheck,
-  FaChevronDown,
-  FaClipboardCheck,
-  FaClipboardList,
-  FaCog,
-  FaCrown,
-  FaEdit,
-  FaFire,
-  FaGem,
-  FaHome,
-  FaLayerGroup,
-  FaQuestionCircle,
-  FaRobot,
-  FaSearch,
-  FaShieldAlt,
-  FaSpinner,
-  FaStar,
-  FaTrophy,
-  FaUser,
-} from 'react-icons/fa';
+  FiArrowRight,
+  FiBookOpen,
+  FiCheckSquare,
+  FiHelpCircle,
+  FiCheck,
+} from 'react-icons/fi';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebase/config';
 import { getUserRankings } from '../firebase/rankingServices';
 import { getTierInfo, MEMBERSHIP_TIERS } from '../utils/membershipUtils';
 import '../styles/Profile.css';
-
-const shellNavItems = [
-  { label: 'Overview', path: '/profile', icon: <FaHome /> },
-  { label: 'Study Plan', path: '/progress', icon: <FaBookOpen /> },
-  { label: 'Practice Tests', path: '/practice-exams', icon: <FaClipboardList /> },
-  { label: 'Official Exams', path: '/all-results', icon: <FaCalendarAlt /> },
-  { label: 'Question Bank', path: '/subject-quizzes', icon: <FaQuestionCircle /> },
-  { label: 'Flashcards', path: '/flashcards', icon: <FaLayerGroup /> },
-  { label: 'AI Coach', path: '/ai-coach', icon: <FaRobot />, badge: 'BETA' },
-  { label: 'Lectures', path: '/lectures', icon: <FaBookReader /> },
-  { label: 'Analytics', path: '/progress', icon: <FaChartBar /> },
-  { label: 'Settings', path: '/profile', icon: <FaCog />, active: true },
-];
-
-const topNavItems = [
-  { label: 'Dashboard', path: '/progress' },
-  { label: 'Practice Exams', path: '/practice-exams' },
-  { label: 'Question Bank', path: '/subject-quizzes' },
-  { label: 'Flashcards', path: '/flashcards' },
-  { label: 'AI Coach', path: '/ai-coach', badge: 'BETA' },
-  { label: 'Lectures', path: '/lectures' },
-  { label: 'Analytics', path: '/progress' },
-];
 
 const membershipBenefits = [
   'Unlimited practice tests',
@@ -95,8 +48,6 @@ function Profile() {
     userMembership,
     loading,
     error: authError,
-    notificationsEnabled,
-    toggleNotifications,
   } = useAuth();
   const [stats, setStats] = useState({
     totalQuestions: 0,
@@ -115,11 +66,6 @@ function Profile() {
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [rankingsLoaded, setRankingsLoaded] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    document.body.classList.add('profile-redesign-active');
-    return () => document.body.classList.remove('profile-redesign-active');
-  }, []);
 
   const fetchUserRankings = useCallback(async () => {
     if (!currentUser) {
@@ -211,111 +157,59 @@ function Profile() {
     }
   }, [currentUser, fetchUserRankings, fetchUserStatistics]);
 
-  useEffect(() => {
-    if ((loading || !userMembership) && typeof window !== 'undefined') {
-      const alreadyReloaded = sessionStorage.getItem('profile_auto_reloaded');
-      const timeout = setTimeout(() => {
-        if (!userMembership && !alreadyReloaded) {
-          sessionStorage.setItem('profile_auto_reloaded', 'true');
-          window.location.reload();
-        }
-      }, 2000);
-      return () => clearTimeout(timeout);
-    }
-  }, [loading, userMembership]);
-
   const displayName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Student';
   const userInitial = displayName.trim().charAt(0).toUpperCase() || 'S';
   const tierInfo = getTierInfo(userMembership?.tier || MEMBERSHIP_TIERS.FREE);
   const isFree = (userMembership?.tier || MEMBERSHIP_TIERS.FREE) === MEMBERSHIP_TIERS.FREE;
   const joinDate = formatDate(currentUser?.metadata?.creationTime || userMembership?.startDate);
   const studyGoal = stats.practiceExamsCompleted > 0 || stats.averageAccuracy > 0 ? '1600+ on SAT' : 'Build SAT foundations';
-  const scoreProjection = Math.min(1550, Math.max(1160, 1120 + stats.averageAccuracy * 5 + stats.practiceExamsCompleted * 18));
-  const performanceScores = useMemo(() => {
-    const finalScore = Math.round(scoreProjection / 10) * 10;
-    const start = Math.max(1080, finalScore - 300);
-    return [start, start + 80, start + 140, start + 210, finalScore - 50, finalScore];
-  }, [scoreProjection]);
+
+  // Rank footnotes only when real ranking data came back (total > 0) — never
+  // fabricated from the empty-state defaults.
+  const questionsRankNote = rankingsLoaded && rankings.questionsRanking?.total > 0
+    ? `Top ${getTopPercent(rankings.questionsRanking)}% of users`
+    : null;
+  const accuracyRankNote = rankingsLoaded && rankings.accuracyRanking?.total > 0
+    ? `Top ${getTopPercent(rankings.accuracyRanking)}% of users`
+    : null;
 
   const statCards = [
-    {
-      label: 'Questions Solved',
-      value: stats.totalQuestions,
-      icon: <FaClipboardCheck />,
-      tone: 'green',
-      footerIcon: <FaTrophy />,
-      footer: rankingsLoaded
-        ? `Top ${getTopPercent(rankings.questionsRanking)}% of users`
-        : 'Calculating rank',
-    },
-    {
-      label: 'Average Accuracy',
-      value: stats.averageAccuracy,
-      suffix: '%',
-      icon: <FaBullseye />,
-      tone: 'mint',
-      footerIcon: <FaChartLine />,
-      footer: rankingsLoaded
-        ? `Top ${getTopPercent(rankings.accuracyRanking)}% of users`
-        : 'Calculating rank',
-    },
-    {
-      label: 'Practice Exams',
-      value: stats.practiceExamsCompleted,
-      icon: <FaBook />,
-      tone: 'blue',
-      footer: 'All practice tests',
-    },
-    {
-      label: 'Quizzes Completed',
-      value: stats.quizzesCompleted,
-      icon: <FaQuestionCircle />,
-      tone: 'purple',
-      footer: stats.quizzesCompleted > 0 ? 'Keep it up!' : 'Start your first quiz',
-    },
-    {
-      label: 'Topics Mastered',
-      value: stats.topicsMastered,
-      icon: <FaTrophy />,
-      tone: 'pink',
-      footer: stats.topicsMastered > 0 ? 'Great progress!' : 'Master topics next',
-    },
+    { label: 'Questions solved', value: stats.totalQuestions, note: questionsRankNote },
+    { label: 'Average accuracy', value: stats.averageAccuracy, suffix: '%', note: accuracyRankNote },
+    { label: 'Practice exams', value: stats.practiceExamsCompleted, note: null },
+    { label: 'Quizzes completed', value: stats.quizzesCompleted, note: null },
   ];
 
-  const recentActivity = [
-    {
-      icon: <FaClipboardCheck />,
-      tone: 'green',
-      title: stats.practiceExamsCompleted > 0 ? `Completed Practice Test ${stats.practiceExamsCompleted}` : 'Ready for Practice Test 1',
-      meta: stats.practiceExamsCompleted > 0 ? `Projected score ${Math.round(scoreProjection)}` : 'Start a timed baseline',
-      time: stats.practiceExamsCompleted > 0 ? '2h ago' : 'Today',
-    },
-    {
-      icon: <FaLayerGroup />,
-      tone: 'mint',
-      title: stats.quizzesCompleted > 0 ? `Reviewed ${Math.min(20, stats.quizzesCompleted * 2)} flashcards` : 'Build a flashcard review set',
-      meta: stats.quizzesCompleted > 0 ? 'Writing & Language' : 'Save missed words and concepts',
-      time: stats.quizzesCompleted > 0 ? '5h ago' : 'Next step',
-    },
-    {
-      icon: <FaBookReader />,
-      tone: 'green',
-      title: stats.topicsMastered > 0 ? 'Started Transitions lecture' : 'Pick a priority lecture',
-      meta: stats.topicsMastered > 0 ? 'Writing: Transitions' : 'Lessons unlock faster practice',
-      time: stats.topicsMastered > 0 ? 'Yesterday' : 'Suggested',
-    },
-    {
-      icon: <FaQuestionCircle />,
-      tone: 'purple',
-      title: stats.quizzesCompleted > 0 ? 'Completed Quiz: Algebra Basics' : 'Complete Quiz: Algebra Basics',
-      meta: stats.averageAccuracy > 0 ? `Score: ${stats.averageAccuracy}%` : 'Recommended starter quiz',
-      time: stats.quizzesCompleted > 0 ? '2 days ago' : 'Suggested',
-    },
-  ];
+  // Honest totals only — entries appear once the underlying stat is real.
+  const recentActivity = [];
+  if (stats.practiceExamsCompleted > 0) {
+    recentActivity.push({
+      icon: <FiCheckSquare />,
+      title: `${stats.practiceExamsCompleted} practice ${stats.practiceExamsCompleted === 1 ? 'test' : 'tests'} completed`,
+      meta: 'See details in Results',
+      time: '',
+    });
+  }
+  if (stats.quizzesCompleted > 0) {
+    recentActivity.push({
+      icon: <FiHelpCircle />,
+      title: `${stats.quizzesCompleted} skill ${stats.quizzesCompleted === 1 ? 'quiz' : 'quizzes'} completed`,
+      meta: `Lifetime accuracy: ${stats.averageAccuracy}%`,
+      time: '',
+    });
+  }
+  if (stats.topicsMastered > 0) {
+    recentActivity.push({
+      icon: <FiBookOpen />,
+      title: `${stats.topicsMastered} ${stats.topicsMastered === 1 ? 'skill' : 'skills'} mastered`,
+      meta: 'Keep leveling up',
+      time: '',
+    });
+  }
 
   const renderAnimatedValue = (value, suffix = '') => {
     if (!statsLoaded) {
-      return <FaSpinner className="profile-v2-spin" />;
+      return <span className="ut-skeleton ut-skeleton--text pf-stat-skeleton" aria-hidden="true" />;
     }
 
     return (
@@ -332,308 +226,169 @@ function Profile() {
 
   if (loading || !userMembership) {
     return (
-      <div className="profile-v2 profile-v2-loading-screen">
-        <div className="profile-v2-loading-card">
-          <FaSpinner className="profile-v2-spin" />
-          <p>Loading membership information...</p>
+      <div className="ut-page" role="status" aria-label="Loading profile">
+        <div className="ut-skeleton ut-skeleton--text" style={{ width: 110, marginBottom: 12 }} />
+        <div className="ut-skeleton ut-skeleton--title" style={{ width: 220, marginBottom: 26 }} />
+        <div className="ut-grid ut-grid--4" style={{ marginBottom: 22 }}>
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+        </div>
+        <div className="ut-skeleton-stack">
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="profile-v2">
-      <aside className="profile-v2-sidebar" aria-label="Profile navigation">
-        <Link to="/progress" className="profile-v2-brand" aria-label="UltraSATPrep dashboard">
-          <span className="profile-v2-brand-mark">SAT</span>
-          <span className="profile-v2-brand-text">Ultra<span>SAT</span>Prep</span>
-        </Link>
+    <div className="ut-page">
+      <header className="ut-page-head">
+        <div className="ut-page-head-main">
+          <p className="ut-eyebrow">Account</p>
+          <h1 className="ut-page-title">Profile</h1>
+          <p className="ut-page-sub">Track your progress, manage your account, and view your plan.</p>
+        </div>
+      </header>
 
-        <nav className="profile-v2-side-nav">
-          {shellNavItems.map(item => (
-            <Link
-              key={`${item.label}-${item.path}`}
-              to={item.path}
-              className={`profile-v2-side-link ${item.active ? 'is-active' : ''}`}
-            >
-              <span className="profile-v2-side-icon">{item.icon}</span>
-              <span>{item.label}</span>
-              {item.badge && <span className="profile-v2-beta">{item.badge}</span>}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="profile-v2-upgrade-card">
-          <div className="profile-v2-upgrade-title">
-            <FaGem />
-            <span>Unlock More with Plus Tier</span>
+      <section className="ut-card pf-identity" aria-label="Account overview">
+        <div className="pf-identity-main">
+          <div className="pf-avatar" aria-hidden="true">
+            {currentUser?.photoURL ? (
+              <img src={currentUser.photoURL} alt="" />
+            ) : (
+              <span>{userInitial}</span>
+            )}
           </div>
-          <p>Get unlimited practice questions, detailed analytics, flashcards, and email support.</p>
-          <button type="button" onClick={() => navigate('/membership/upgrade')}>
-            Upgrade Now
+          <div className="pf-identity-info">
+            <div className="pf-identity-name-row">
+              <h2 className="pf-identity-name">{displayName}</h2>
+              <span className="ut-chip ut-chip--accent">{tierInfo.displayName}</span>
+            </div>
+            <p className="pf-identity-email">{currentUser?.email}</p>
+          </div>
+        </div>
+
+        <div className="ut-page-head-actions pf-identity-actions">
+          <button type="button" className="ut-btn ut-btn--ghost" onClick={handleEditProfile}>
+            Edit profile
+          </button>
+          <button
+            type="button"
+            className={`ut-btn ${isFree ? 'ut-btn--primary' : 'ut-btn--ghost'}`}
+            onClick={() => navigate('/membership/upgrade')}
+          >
+            Manage plan
           </button>
         </div>
-      </aside>
+      </section>
 
-      <div className="profile-v2-main">
-        <header className="profile-v2-topbar">
-          <nav className="profile-v2-topnav" aria-label="Primary navigation">
-            {topNavItems.map(item => (
-              <Link key={item.label} to={item.path}>
-                <span>{item.label}</span>
-                {item.badge && <span className="profile-v2-beta">{item.badge}</span>}
-              </Link>
-            ))}
-          </nav>
+      <section className="ut-grid ut-grid--4 pf-stats" aria-label="Learning statistics">
+        {statCards.map(card => (
+          <article key={card.label} className="ut-card">
+            <div className="ut-stat">
+              <span className="ut-stat-value">{renderAnimatedValue(card.value, card.suffix)}</span>
+              <span className="ut-stat-label">{card.label}</span>
+            </div>
+            {card.note && <p className="pf-stat-note">{card.note}</p>}
+          </article>
+        ))}
+      </section>
 
-          <div className="profile-v2-actions">
-            <label className="profile-v2-search">
-              <FaSearch aria-hidden="true" />
-              <input type="search" placeholder="Search anything..." aria-label="Search anything" />
-              <span>Ctrl K</span>
-            </label>
+      {authError && (
+        <div className="ut-chip ut-chip--hard pf-error" role="alert">
+          {authError}
+        </div>
+      )}
 
+      <div className="ut-grid ut-grid--2 pf-columns">
+        <div className="pf-col">
+          <section className="ut-panel-ink" aria-label="Current membership">
+            <p className="ut-label ut-label--on-ink pf-membership-label">Current membership</p>
+            <h2 className="pf-membership-tier">{tierInfo.displayName}</h2>
+            <p className="pf-membership-copy">
+              {isFree
+                ? 'Start with the essentials, then unlock advanced SAT prep when you are ready.'
+                : 'Unlimited practice questions, detailed analytics, flashcards, and priority support.'}
+            </p>
+            <ul className="pf-benefits">
+              {membershipBenefits.map(benefit => (
+                <li key={benefit}>
+                  <FiCheck aria-hidden="true" />
+                  <span>{benefit}</span>
+                </li>
+              ))}
+            </ul>
             <button
               type="button"
-              className={`profile-v2-icon-button ${notificationsEnabled ? 'is-on' : ''}`}
-              aria-label="Notifications"
-              onClick={toggleNotifications}
+              className={`ut-btn ${isFree ? 'ut-btn--primary' : 'ut-btn--soft'}`}
+              onClick={() => navigate('/membership/upgrade')}
             >
-              <FaBell />
-              <span className="profile-v2-notification-dot">3</span>
+              {isFree ? 'Upgrade Subscription' : 'Manage Subscription'}
             </button>
-
-            <button type="button" className="profile-v2-user-menu" aria-label="User menu">
-              {currentUser?.photoURL ? (
-                <img src={currentUser.photoURL} alt="" />
-              ) : (
-                <span className="profile-v2-user-initial">{userInitial}</span>
-              )}
-              <span>{displayName.split(' ')[0]}</span>
-              <FaChevronDown />
-            </button>
-          </div>
-        </header>
-
-        <main className="profile-v2-content">
-          <section className="profile-v2-page-heading">
-            <h1>My Profile</h1>
-            <p>Track your progress, manage your account, and view your plan.</p>
           </section>
 
-          <section className="profile-v2-hero-card">
-            <div className="profile-v2-identity">
-              <div className="profile-v2-avatar">
-                {currentUser?.photoURL ? (
-                  <img src={currentUser.photoURL} alt="" />
-                ) : (
-                  <span>{userInitial}</span>
-                )}
-                <button type="button" aria-label="Change profile photo">
-                  <FaCamera />
-                </button>
+          <section className="ut-card" id="profile-account-details" aria-label="Account details">
+            <h2 className="ut-card-title">Account details</h2>
+            <dl className="pf-details">
+              <div className="pf-detail-row">
+                <dt className="ut-label">Full name</dt>
+                <dd>{displayName}</dd>
               </div>
+              <div className="pf-detail-row">
+                <dt className="ut-label">Email</dt>
+                <dd>{currentUser?.email}</dd>
+              </div>
+              <div className="pf-detail-row">
+                <dt className="ut-label">Plan</dt>
+                <dd>{tierInfo.displayName}</dd>
+              </div>
+              <div className="pf-detail-row">
+                <dt className="ut-label">Join date</dt>
+                <dd>{joinDate}</dd>
+              </div>
+              <div className="pf-detail-row">
+                <dt className="ut-label">Study goal</dt>
+                <dd>{studyGoal}</dd>
+              </div>
+            </dl>
+            <button type="button" className="ut-btn ut-btn--ghost" onClick={handleEditProfile}>
+              Update Information
+            </button>
+          </section>
+        </div>
+
+        <div className="pf-col">
+          <section className="ut-card" aria-label="Recent activity">
+            <div className="pf-activity-head">
+              <h2 className="ut-card-title">Recent activity</h2>
+              <Link className="ut-link pf-activity-link" to="/progress">
+                View All <FiArrowRight aria-hidden="true" />
+              </Link>
+            </div>
+            {recentActivity.length > 0 ? (
               <div>
-                <div className="profile-v2-name-row">
-                  <h2>{displayName}</h2>
-                  <span className={`profile-v2-tier-pill profile-v2-tier-${userMembership.tier}`}>
-                    <FaGem />
-                    {tierInfo.displayName}
-                  </span>
-                </div>
-                <p className="profile-v2-email">{currentUser?.email}</p>
-                <p className="profile-v2-hero-copy">Track your progress, manage your account, and view your plan.</p>
-              </div>
-            </div>
-
-            <div className="profile-v2-hero-actions">
-              <button type="button" className="profile-v2-button profile-v2-button-secondary" onClick={handleEditProfile}>
-                <FaEdit />
-                Edit Profile
-              </button>
-              <button type="button" className="profile-v2-button profile-v2-button-primary" onClick={() => navigate('/membership/upgrade')}>
-                <FaCrown />
-                Manage Plan
-              </button>
-            </div>
-          </section>
-
-          <section className="profile-v2-stat-grid" aria-label="Learning statistics">
-            {statCards.map(card => (
-              <article key={card.label} className={`profile-v2-stat-card profile-v2-tone-${card.tone}`}>
-                <div className="profile-v2-stat-top">
-                  <span className="profile-v2-stat-icon">{card.icon}</span>
-                  <div>
-                    <p>{card.label}</p>
-                    <strong>{renderAnimatedValue(card.value, card.suffix)}</strong>
-                  </div>
-                </div>
-                <div className="profile-v2-stat-footer">
-                  {card.footerIcon && card.footerIcon}
-                  <span>{card.footer}</span>
-                </div>
-              </article>
-            ))}
-          </section>
-
-          {authError && <div className="profile-v2-error">{authError}</div>}
-
-          <section className="profile-v2-panel-grid">
-            <article className="profile-v2-panel profile-v2-membership-panel">
-              <span className="profile-v2-panel-eyebrow">Current Membership</span>
-              <h2><FaGem /> {tierInfo.displayName}</h2>
-              <p>{isFree ? 'Start with the essentials, then unlock advanced SAT prep when you are ready.' : 'Unlimited practice questions, detailed analytics, flashcards, and priority support.'}</p>
-              <ul>
-                {membershipBenefits.map(benefit => (
-                  <li key={benefit}>
-                    <FaCheck />
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-              <button type="button" onClick={() => navigate('/membership/upgrade')}>
-                {isFree ? 'Upgrade Subscription' : 'Manage Subscription'}
-              </button>
-              <div className="profile-v2-gem-illustration" aria-hidden="true">
-                <FaGem />
-              </div>
-            </article>
-
-            <article className="profile-v2-panel" id="profile-account-details">
-              <div className="profile-v2-panel-title">
-                <FaUser />
-                <h2>Account Details</h2>
-              </div>
-              <dl className="profile-v2-detail-list">
-                <div>
-                  <dt>Full Name</dt>
-                  <dd>{displayName}</dd>
-                </div>
-                <div>
-                  <dt>Email</dt>
-                  <dd>{currentUser?.email}</dd>
-                </div>
-                <div>
-                  <dt>Plan</dt>
-                  <dd className="profile-v2-detail-tier"><FaGem /> {tierInfo.displayName}</dd>
-                </div>
-                <div>
-                  <dt>Join Date</dt>
-                  <dd>{joinDate}</dd>
-                </div>
-                <div>
-                  <dt>Study Goal</dt>
-                  <dd>{studyGoal}</dd>
-                </div>
-              </dl>
-              <button type="button" onClick={handleEditProfile}>Update Information</button>
-            </article>
-
-            <article className="profile-v2-panel">
-              <div className="profile-v2-panel-title profile-v2-panel-title-spread">
-                <span>
-                  <FaCalendarAlt />
-                  <h2>Recent Activity</h2>
-                </span>
-                <Link to="/progress">View All <FaArrowRight /></Link>
-              </div>
-              <div className="profile-v2-activity-list">
                 {recentActivity.map(activity => (
-                  <div key={activity.title} className="profile-v2-activity-item">
-                    <span className={`profile-v2-activity-icon profile-v2-tone-${activity.tone}`}>{activity.icon}</span>
-                    <div>
+                  <div key={activity.title} className="ut-row">
+                    <span className="ut-tile">{activity.icon}</span>
+                    <div className="pf-activity-text">
                       <strong>{activity.title}</strong>
                       <p>{activity.meta}</p>
                     </div>
-                    <time>{activity.time}</time>
+                    {activity.time ? <time className="pf-activity-time">{activity.time}</time> : null}
                   </div>
                 ))}
               </div>
-              <Link className="profile-v2-panel-link" to="/progress">
-                View All Activity <FaArrowRight />
-              </Link>
-            </article>
+            ) : (
+              <div className="ut-empty">
+                <b>No activity yet</b>
+                Complete a practice test or a skill quiz and your progress will show up here.
+              </div>
+            )}
           </section>
-
-          <section className="profile-v2-bottom-grid">
-            <article className="profile-v2-panel profile-v2-performance-card">
-              <div className="profile-v2-panel-title profile-v2-panel-title-spread">
-                <span>
-                  <FaChartLine />
-                  <h2>Performance Snapshot</h2>
-                </span>
-                <button type="button">
-                  Last 6 Tests <FaChevronDown />
-                </button>
-              </div>
-              <div className="profile-v2-chart" aria-label="Performance scores over six tests">
-                <div className="profile-v2-chart-y">
-                  <span>1600</span>
-                  <span>1500</span>
-                  <span>1400</span>
-                  <span>1300</span>
-                  <span>1200</span>
-                  <span>1100</span>
-                </div>
-                <svg viewBox="0 0 720 220" role="img" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="profileChartFill" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="#0aa35f" stopOpacity="0.22" />
-                      <stop offset="100%" stopColor="#0aa35f" stopOpacity="0.02" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M35 150 L165 132 L295 112 L425 92 L555 72 L685 58 L685 195 L35 195 Z" fill="url(#profileChartFill)" />
-                  <polyline points="35,150 165,132 295,112 425,92 555,72 685,58" fill="none" stroke="#0aa35f" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                  {performanceScores.map((score, index) => {
-                    const x = 35 + index * 130;
-                    const y = [150, 132, 112, 92, 72, 58][index];
-                    return (
-                      <g key={`score-${index}`}>
-                        <circle cx={x} cy={y} r="8" fill="#ffffff" stroke="#0aa35f" strokeWidth="4" />
-                        <text x={x} y={y - 18} textAnchor="middle">{score}</text>
-                      </g>
-                    );
-                  })}
-                  <rect x="660" y="26" width="48" height="22" rx="7" fill="#0aa35f" />
-                  <text x="684" y="42" textAnchor="middle" fill="#ffffff">{performanceScores[5]}</text>
-                </svg>
-                <div className="profile-v2-chart-x">
-                  {performanceScores.map((_, index) => <span key={`test-${index}`}>Test {index + 1}</span>)}
-                </div>
-              </div>
-            </article>
-
-            <article className="profile-v2-panel profile-v2-achievements-card">
-              <div className="profile-v2-panel-title">
-                <FaTrophy />
-                <h2>Achievements</h2>
-              </div>
-              <div className="profile-v2-achievements">
-                <div>
-                  <span className="profile-v2-achievement-icon profile-v2-tone-green"><FaFire /></span>
-                  <strong>7</strong>
-                  <p>Day Streak</p>
-                  <small>Keep it going!</small>
-                </div>
-                <div>
-                  <span className="profile-v2-achievement-icon profile-v2-tone-purple"><FaStar /></span>
-                  <strong>{stats.averageAccuracy >= 50 ? 'Math' : 'Reading'}</strong>
-                  <p>Favorite Subject</p>
-                  <small>You excel here!</small>
-                </div>
-                <div>
-                  <span className="profile-v2-achievement-icon profile-v2-tone-orange"><FaShieldAlt /></span>
-                  <strong>Top {rankingsLoaded ? getTopPercent(rankings.questionsRanking) : 25}%</strong>
-                  <p>Among All Users</p>
-                  <small>Great job!</small>
-                </div>
-              </div>
-              <Link className="profile-v2-panel-link" to="/progress">
-                View All Achievements <FaArrowRight />
-              </Link>
-            </article>
-          </section>
-        </main>
+        </div>
       </div>
     </div>
   );

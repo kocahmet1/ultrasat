@@ -35,27 +35,27 @@ function AboutUs() {
           <h2>Our Values</h2>
           <div className="values-grid">
             <div className="value-item">
-              <h3>🎯 Personalization</h3>
+              <h3>Personalization</h3>
               <p>Every student learns differently. Our adaptive technology tailors the learning experience to individual needs and learning patterns.</p>
             </div>
             <div className="value-item">
-              <h3>📊 Data-Driven</h3>
+              <h3>Data-Driven</h3>
               <p>We use analytics and performance data to continuously improve our platform and help students make informed study decisions.</p>
             </div>
             <div className="value-item">
-              <h3>🌟 Excellence</h3>
+              <h3>Excellence</h3>
               <p>We're committed to providing the highest quality content and user experience to help students achieve their best possible scores.</p>
             </div>
             <div className="value-item">
-              <h3>🤝 Accessibility</h3>
+              <h3>Accessibility</h3>
               <p>Quality test preparation should be available to all students, regardless of their background or financial circumstances.</p>
             </div>
             <div className="value-item">
-              <h3>🚀 Innovation</h3>
+              <h3>Innovation</h3>
               <p>We continuously evolve our platform using the latest educational technology and learning science research.</p>
             </div>
             <div className="value-item">
-              <h3>💡 Empowerment</h3>
+              <h3>Empowerment</h3>
               <p>We empower students with the tools, knowledge, and confidence they need to succeed on the SAT and beyond.</p>
             </div>
           </div>

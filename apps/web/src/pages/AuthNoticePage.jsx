@@ -33,15 +33,23 @@ const AuthNoticePage = () => {
     title: 'Authentication Required',
     message: 'Please log in to access this page.',
   };
+  // Carry the intended destination through login/signup so the user lands
+  // where they were headed instead of the default /dashboard.
+  const destination = from?.pathname && from.pathname !== '/' ? from.pathname : null;
+  const authState = destination ? { from: destination } : undefined;
 
   return (
     <div className="auth-notice-container">
       <div className="auth-notice-card">
         <h2>{info.title}</h2>
         <p>{info.message}</p>
-        <Link to="/login" className="login-button">
+        <Link to="/login" state={authState} className="login-button">
           Log In
         </Link>
+        <p className="auth-notice-signup">
+          New here?{' '}
+          <Link to="/signup" state={authState}>Create a free account</Link>
+        </p>
       </div>
     </div>
   );

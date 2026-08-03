@@ -1,5 +1,5 @@
 /**
- * Stage 1: PDF Extraction using OpenAI API (gpt-5.4).
+ * Stage 1: PDF Extraction using OpenAI API (gpt-5.6-luna).
  *
  * Uploads the PDF to OpenAI's Files API, then uses the Responses API
  * with file_id reference for vision-capable PDF parsing.
@@ -13,6 +13,7 @@
  */
 
 const fs = require('fs');
+const { resolveModel, reasoningConfig, outputTokenBudget } = require('../../apps/api/config/aiModel');
 const path = require('path');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
@@ -224,7 +225,7 @@ CRITICAL RULES:
 async function extractFromPdf(pdfPath, options = {}) {
   const {
     apiKey,
-    model = 'gpt-5.4',
+    model = resolveModel('OPENAI_INGEST_MODEL'),
     maxRetries = 3,
   } = options;
 
@@ -255,6 +256,7 @@ async function extractFromPdf(pdfPath, options = {}) {
           },
           body: JSON.stringify({
             model,
+            reasoning: reasoningConfig(),
             input: [
               {
                 role: 'system',
@@ -268,8 +270,8 @@ async function extractFromPdf(pdfPath, options = {}) {
                 ],
               },
             ],
-            temperature: 0,
-            max_output_tokens: 100000,
+            // NOTE: reasoning models (gpt-5.6-*) reject `temperature`.
+            max_output_tokens: outputTokenBudget(100000),
           }),
         });
 

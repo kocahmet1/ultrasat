@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  getPracticeExamById, 
-  getPracticeExamModules 
+import {
+  getPracticeExamById,
+  getPracticeExamModules
 } from '../firebase/services';
+import { getAllPracticeExams } from '../firebase/practiceExamCatalogServices';
 import { useAuth } from '../contexts/AuthContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import ExamModule from '../components/ExamModule';
 import '../styles/PracticeExamController.css';
+import { FiLock } from 'react-icons/fi';
 import { getSubcategoryProgress, updateSubcategoryProgress } from '../utils/progressUtils';
 import { inferLevelFromAccuracy } from '../utils/smartQuizUtils';
 import { isPracticeExamAnswerCorrect } from '../utils/practiceExamScoring';
+import { scaledSectionScore } from '../utils/scoring';
 import IntermissionScreen from '../components/IntermissionScreen';
 import ModuleLoadingScreen from '../components/ModuleLoadingScreen';
 
@@ -21,13 +24,15 @@ const PracticeExamController = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { 
-    currentUser, 
+  const {
+    currentUser,
+    userMembership,
     saveComprehensiveExamResult,
     saveOrUpdateExamProgress,
     getExamProgress,
     clearExamProgress
   } = useAuth();
+  const [paywalled, setPaywalled] = useState(false);
   const { setForceSidebarCollapsed, setSidebarHidden } = useSidebar();
   const shouldResumeExam = location.state?.resume === true;
   const shouldStartExam = location.state?.startExam === true;
@@ -42,6 +47,26 @@ const PracticeExamController = () => {
   
   // Track if the exam is in progress or completed
   const [examStatus, setExamStatus] = useState('loading'); // loading, intro, in-progress, intermission, completed
+
+  // Pro paywall, late-membership case: membership often resolves AFTER the exam
+  // loads. Re-check before the student starts (never interrupts an exam already
+  // in progress).
+  useEffect(() => {
+    const recheck = async () => {
+      if (!exam || exam.isDiagnostic || paywalled) return;
+      if (!['intro', 'loading'].includes(examStatus)) return;
+      if (!userMembership || userMembership.tier !== 'free') return;
+      try {
+        const allExams = await getAllPracticeExams(true);
+        const nonDiagnostic = allExams
+          .filter((e) => !e.isDiagnostic)
+          .sort((a, b) => (parseInt((a.title || '').match(/\d+/)?.[0] || '999', 10)) - (parseInt((b.title || '').match(/\d+/)?.[0] || '999', 10)));
+        if (nonDiagnostic.findIndex((e) => e.id === examId) > 2) setPaywalled(true);
+      } catch (e) { /* fail open */ }
+    };
+    recheck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userMembership, exam, examStatus]);
 
   const createInitialModuleResponses = useCallback((examModules) => {
     const initialResponses = {};
@@ -80,7 +105,27 @@ const PracticeExamController = () => {
         }
         
         setExam(examData);
-        
+
+        // Pro paywall (Overhaul Phase C): the first 3 full-length exams are free;
+        // the rest are Pro. Enforced HERE so deep links can't bypass the list.
+        // Diagnostics are always free.
+        if (!examData?.isDiagnostic && userMembership && userMembership.tier === 'free') {
+          try {
+            const allExams = await getAllPracticeExams(true);
+            const nonDiagnostic = allExams
+              .filter((e) => !e.isDiagnostic)
+              .sort((a, b) => (parseInt((a.title || '').match(/\d+/)?.[0] || '999', 10)) - (parseInt((b.title || '').match(/\d+/)?.[0] || '999', 10)));
+            const examIndex = nonDiagnostic.findIndex((e) => e.id === examId);
+            if (examIndex > 2) {
+              setPaywalled(true);
+              setIsLoading(false);
+              return;
+            }
+          } catch (gateErr) {
+            console.error('Paywall check failed (allowing exam):', gateErr);
+          }
+        }
+
         // Fetch the modules for this exam
         const examModules = await getPracticeExamModules(examId);
 
@@ -539,9 +584,9 @@ const PracticeExamController = () => {
     // Calculate score as percentage
     const percentageScore = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
     
-    // Calculate scaled section scores (for SAT-like 800 scale per section)
-    const readingWritingScore = Math.round((200 + (readingWritingCorrect / (readingWritingTotal || 1)) * 600) / 10) * 10;
-    const mathScore = Math.round((200 + (mathCorrect / (mathTotal || 1)) * 600) / 10) * 10;
+    // Canonical scaled section scores (Overhaul Phase D: utils/scoring.js)
+    const readingWritingScore = scaledSectionScore(readingWritingCorrect, readingWritingTotal);
+    const mathScore = scaledSectionScore(mathCorrect, mathTotal);
     
     console.log('Calculated scores:', {
       percentageScore, 
@@ -699,6 +744,27 @@ const PracticeExamController = () => {
     );
   }
   
+  // Pro paywall screen (Overhaul Phase C)
+  if (paywalled) {
+    return (
+      <div style={{ maxWidth: 520, margin: '80px auto', padding: '0 24px', textAlign: 'center' }}>
+        <div style={{ fontSize: 40, marginBottom: 10 }}><FiLock /></div>
+        <h1 style={{ fontSize: 22, color: 'var(--ut-text)', marginBottom: 8 }}>This practice test is a Pro exam</h1>
+        <p style={{ color: 'var(--ut-muted)', marginBottom: 22 }}>
+          Your first three full-length tests are free. Upgrade to Pro to unlock the complete exam library — or take the free diagnostic anytime.
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button onClick={() => navigate('/membership/upgrade')} style={{ border: 'none', cursor: 'pointer', background: 'var(--ut-accent)', color: 'var(--ut-on-accent)', borderRadius: 10, padding: '11px 22px', fontWeight: 700, fontSize: 14 }}>
+            Upgrade to Pro
+          </button>
+          <button onClick={() => navigate('/practice-exams')} style={{ border: 'none', cursor: 'pointer', background: 'var(--ut-accent-soft)', color: 'var(--ut-accent-dark)', borderRadius: 10, padding: '11px 22px', fontWeight: 700, fontSize: 14 }}>
+            See free tests
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Render exam intro
   if (examStatus === 'intro' && exam) {
     const { totalQuestions, totalTime } = calculateExamStats();

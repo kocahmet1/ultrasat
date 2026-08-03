@@ -7,7 +7,6 @@
     "dev": "cross-env PORT=3001 node server.js"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
     "@sendgrid/mail": "^8.1.6",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",

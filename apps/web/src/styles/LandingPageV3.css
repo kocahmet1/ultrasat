@@ -1,0 +1,1691 @@
+/* LandingPageV3.css — official-exams-first landing page.
+   All values in px so the global html { font-size: 62.5% } does not affect it. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+.lp3 {
+  /* Scholar Blue re-hue: the --lp3-* custom properties are kept (this file has
+     hundreds of var(--lp3-*) call sites) but now alias the shared --ut-* tokens
+     from styles/tokens.css, so the landing page matches the app exactly. */
+  --lp3-ink: var(--ut-ink);
+  --lp3-panel: var(--ut-panel);
+  --lp3-panel-top: var(--ut-panel-top);
+  --lp3-light: var(--ut-bg);
+  --lp3-light-alt: var(--ut-bg-alt);
+  --lp3-card: var(--ut-card);
+  --lp3-text: var(--ut-text);
+  --lp3-text-soft: var(--ut-text-soft);
+  --lp3-muted: var(--ut-muted);
+  --lp3-mono-muted: var(--ut-mono-muted);
+  --lp3-rule: var(--ut-rule);
+  --lp3-rule-strong: var(--ut-rule-strong);
+  --lp3-accent: var(--ut-accent);
+  --lp3-accent-bright: var(--ut-accent-bright);
+  --lp3-accent-dark: var(--ut-accent-dark);
+  --lp3-on-accent: var(--ut-on-accent);
+  --lp3-success: var(--ut-success);
+  --lp3-success-dark: var(--ut-success-dark);
+  --lp3-success-bright: var(--ut-success-bright);
+  --lp3-on-ink: var(--ut-on-ink);
+  --lp3-on-ink-bright: var(--ut-on-ink-bright);
+  --lp3-display: var(--ut-font-display);
+  --lp3-body: var(--ut-font-body);
+  --lp3-mono: var(--ut-font-mono);
+
+  background: var(--lp3-light);
+  color: var(--lp3-text);
+  font-family: var(--lp3-body);
+  overflow-x: hidden;
+}
+
+.lp3 *,
+.lp3 *::before,
+.lp3 *::after {
+  box-sizing: border-box;
+}
+
+/* The design is a fixed 1440px canvas. --lp3-canvas-zoom (set from the component
+   on mount + resize) scales that canvas up to the viewport on wider screens, so
+   the hero keeps the designed text-to-panel proportions and the screenshot still
+   bleeds toward the right edge instead of stopping short of it.
+   zoom rather than transform: layout, the sticky nav and the 3D perspective all
+   scale together, and text stays crisp. The auth modal is rendered outside this
+   element so its fixed positioning is unaffected. */
+.lp3-canvas {
+  zoom: var(--lp3-canvas-zoom, 1);
+  /* no overflow here on purpose: any non-visible overflow on this wrapper stops
+     the sticky nav from sticking. */
+}
+
+/* The design was composed on a 1440px canvas with content-box sizing, so the
+   shell's *content* is 1280px wide and the 40px gutters sit outside it. This app
+   applies a global border-box reset, so the cap has to be 1280 + 80 to land on
+   the same 1280px content width — otherwise the hero's 1fr copy column loses
+   80px and the headline collides with the exam rack. */
+.lp3 .lp3-shell {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+}
+
+/* ---------- nav ---------- */
+
+.lp3-nav {
+  background: var(--lp3-ink);
+  border-bottom: 1px solid rgba(237, 240, 241, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.lp3-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.lp3-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--lp3-on-ink);
+  text-decoration: none;
+}
+
+.lp3-brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--lp3-accent);
+  display: block;
+}
+
+.lp3-brand-mark-sm {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.lp3-brand-word {
+  font-family: var(--lp3-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.lp3-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.lp3-nav-links a {
+  color: rgba(242, 245, 245, 0.74);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.lp3-nav-links a:hover {
+  color: var(--lp3-on-ink-bright);
+}
+
+.lp3-nav-rule {
+  width: 1px;
+  height: 18px;
+  background: rgba(237, 240, 241, 0.16);
+}
+
+.lp3-nav-ghost {
+  border: 1px solid rgba(237, 240, 241, 0.22);
+  background: transparent;
+  color: var(--lp3-on-ink);
+  font-family: var(--lp3-display);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.lp3-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--lp3-accent);
+  color: var(--lp3-on-accent);
+  font-family: var(--lp3-display);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* the CTA is a Link, so it has to out-specify `.lp3-nav-links a` */
+.lp3-nav-links a.lp3-nav-cta,
+.lp3-nav-links a.lp3-nav-cta:hover {
+  color: var(--lp3-on-accent);
+  text-decoration: none;
+}
+
+.lp3-nav-cta:hover {
+  background: var(--lp3-accent-bright);
+}
+
+.lp3-nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(237, 240, 241, 0.22);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.lp3-nav-toggle span {
+  display: block;
+  height: 1.5px;
+  background: var(--lp3-on-ink);
+  margin: 0 auto;
+  width: 18px;
+}
+
+/* ---------- hero ---------- */
+
+.lp3-hero {
+  background: var(--lp3-ink);
+  color: var(--lp3-on-ink);
+  padding: 66px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* wireframe node lattice behind the hero */
+.lp3-lattice {
+  position: absolute;
+  inset: 0;
+  /* The net is drawn on the same 1440 grid as the rest of the design. Capping it
+     there keeps lines, nodes and routes at the size they were drawn instead of
+     letting `slice` blow them up; past the canvas-scale ceiling the outer edges
+     simply stay plain dark. */
+  left: 50%;
+  right: auto;
+  width: min(100% - 80px, 1280px);
+  transform: translateX(-50%);
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  /* fades out behind the copy, full strength behind the panels */
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.16) 24%, rgba(0, 0, 0, 0.52) 44%, #000 64%, #000 100%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.16) 24%, rgba(0, 0, 0, 0.52) 44%, #000 64%, #000 100%);
+}
+
+.lp3-lattice-base {
+  fill: none;
+  stroke: #EDF0F1;
+  stroke-opacity: 0.11;
+  stroke-width: 1;
+}
+
+.lp3-lattice-live {
+  fill: none;
+  stroke: var(--lp3-accent);
+  stroke-opacity: 0.5;
+  stroke-width: 1.2;
+  stroke-dasharray: 90 620;
+  stroke-dashoffset: 620;
+  animation: lp3-dash 7s linear infinite;
+}
+
+.lp3-lattice-nodes { fill: #EDF0F1; fill-opacity: 0.3; }
+
+.lp3-lattice-hot circle {
+  fill: var(--lp3-accent);
+  animation: lp3-node 4.5s ease-in-out infinite;
+}
+
+.lp3-hero > .lp3-shell {
+  position: relative;
+  z-index: 2;
+}
+
+.lp3-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 512px;
+  gap: 36px;
+  align-items: center;
+}
+
+.lp3-eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(43, 89, 216, 0.34);
+  border-radius: 999px;
+  padding: 7px 14px 7px 11px;
+  margin: 0 0 30px;
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-accent-bright);
+}
+
+.lp3-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lp3-accent);
+  display: block;
+  animation: lp3-blink 2.4s steps(1, end) infinite;
+}
+
+.lp3-dot-fast {
+  width: 6px;
+  height: 6px;
+  animation-duration: 1.6s;
+}
+
+.lp3-h1 {
+  font-family: var(--lp3-display);
+  font-weight: 700;
+  /* 58 rather than the handoff's 66: the copy block reads lighter against the
+     panels and leaves a wider gap between the two halves of the hero. */
+  font-size: 58px;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  margin: 0 0 24px;
+  color: var(--lp3-on-ink-bright);
+  text-wrap: pretty;
+}
+
+.lp3-lede {
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(242, 245, 245, 0.68);
+  margin: 0 0 34px;
+  max-width: 440px;
+  text-wrap: pretty;
+}
+
+.lp3-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.lp3-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 54px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--lp3-accent);
+  color: var(--lp3-on-accent);
+  font-family: var(--lp3-display);
+  font-size: 15.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.lp3-btn-primary:hover {
+  background: var(--lp3-accent-bright);
+}
+
+.lp3-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  height: 54px;
+  padding: 0 22px;
+  border: 1px solid rgba(237, 240, 241, 0.22);
+  border-radius: 6px;
+  color: var(--lp3-on-ink);
+  font-family: var(--lp3-display);
+  font-size: 15.5px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.lp3-btn-ghost:hover {
+  border-color: rgba(237, 240, 241, 0.42);
+  color: var(--lp3-on-ink-bright);
+}
+
+.lp3-btn-wide {
+  justify-content: space-between;
+  height: 56px;
+  width: 100%;
+}
+
+.lp3-arrow {
+  font-family: var(--lp3-mono);
+  font-size: 14px;
+}
+
+.lp3-arrow-muted {
+  color: rgba(242, 245, 245, 0.6);
+}
+
+.lp3-micro {
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+  margin: 0;
+}
+
+/* ---------- exam rack ---------- */
+
+/* exam rack pivots on its vertical axis, near edge toward the viewer */
+.lp3-rack-stage {
+  perspective: 1600px;
+  perspective-origin: 70% 50%;
+  position: relative;
+  left: -144px;
+  transform-style: preserve-3d;
+  /* the stage's own flat box would otherwise swallow hover over the exposed strip */
+  pointer-events: none;
+}
+
+.lp3-rack-shot,
+.lp3-rack {
+  pointer-events: auto;
+}
+
+/* real exam screenshot, stacked on a plane behind the rack */
+.lp3-rack-shot {
+  position: absolute;
+  left: -65px;
+  top: 50%;
+  width: 830px;
+  /* index.css sets a global `* { max-width: 100% }`; the shot is intentionally
+     wider than its 512px stage, so opt out or the hero geometry collapses. */
+  max-width: none;
+  height: 478px;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: #F4F5F7;
+  transform: translateY(-50%) translateZ(-160px) rotateY(-30deg);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 62px 130px -34px rgba(43, 89, 216, 0.28),
+    0 110px 220px -70px rgba(43, 89, 216, 0.2), -30px 44px 110px rgba(0, 0, 0, 0.66),
+    -8px 14px 30px rgba(0, 0, 0, 0.4);
+  filter: brightness(0.88) saturate(0.92);
+  z-index: 0;
+  transition: transform 460ms cubic-bezier(0.2, 0.7, 0.2, 1), left 460ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 460ms ease, box-shadow 460ms ease, border-color 460ms ease;
+}
+
+/* a strip just inside the rack's near edge arms the swap too */
+.lp3-rack-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 54px;
+  z-index: 4;
+}
+
+/* hovering either target swaps the two planes: shot forward, rack back */
+.lp3-rack-stage:has(.lp3-rack-shot:hover) .lp3-rack-shot,
+.lp3-rack-stage:has(.lp3-rack-edge:hover) .lp3-rack-shot {
+  left: -125px;
+  transform: translateY(-50%) translateZ(20px) rotateY(-30deg);
+  border-color: rgba(255, 255, 255, 0.42);
+  filter: brightness(1) saturate(1);
+  z-index: 3;
+}
+
+.lp3-rack-stage:has(.lp3-rack-shot:hover) .lp3-rack,
+.lp3-rack-stage:has(.lp3-rack-edge:hover) .lp3-rack {
+  transform: translateZ(-300px) rotateY(-30deg) scale(1.05);
+  filter: brightness(0.55);
+}
+
+/* one unprompted pass 5s after load: 3.4s out, 2s held, 3.4s back.
+   fill: none, so hover still owns the resting state. */
+.lp3-rack-shot { animation: lp3-peek-shot 8.8s cubic-bezier(0.4, 0, 0.3, 1) 5s 1; }
+.lp3-rack { animation: lp3-peek-rack 8.8s cubic-bezier(0.4, 0, 0.3, 1) 5s 1; }
+
+@keyframes lp3-peek-shot {
+  0% {
+    left: -65px;
+    transform: translateY(-50%) translateZ(-160px) rotateY(-30deg);
+    filter: brightness(0.88) saturate(0.92);
+  }
+  38.6%, 61.4% {
+    left: -125px;
+    transform: translateY(-50%) translateZ(20px) rotateY(-30deg);
+    filter: brightness(1) saturate(1);
+  }
+  100% {
+    left: -65px;
+    transform: translateY(-50%) translateZ(-160px) rotateY(-30deg);
+    filter: brightness(0.88) saturate(0.92);
+  }
+}
+
+@keyframes lp3-peek-rack {
+  0% { transform: translateZ(0) rotateY(-30deg) scale(1.05); filter: brightness(1); }
+  38.6%, 61.4% { transform: translateZ(-300px) rotateY(-30deg) scale(1.05); filter: brightness(0.55); }
+  100% { transform: translateZ(0) rotateY(-30deg) scale(1.05); filter: brightness(1); }
+}
+
+.lp3-rack-shot img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 849px;
+  max-width: none; /* see note on .lp3-rack-shot */
+  height: auto;
+  display: block;
+}
+
+.lp3-rack {
+  position: relative;
+  z-index: 1;
+  left: -152px;
+  border: 1px solid rgba(237, 240, 241, 0.14);
+  border-radius: 10px;
+  background: var(--lp3-panel);
+  overflow: hidden;
+  transform: translateZ(0) rotateY(-30deg) scale(1.05);
+  box-shadow: 46px 34px 90px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(43, 89, 216, 0.06);
+  transition: transform 460ms cubic-bezier(0.2, 0.7, 0.2, 1), filter 460ms ease;
+}
+
+.lp3-rack-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(237, 240, 241, 0.12);
+  background: var(--lp3-panel-top);
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lp3-rack-badge {
+  color: var(--lp3-accent-bright);
+}
+
+.lp3-rack-state {
+  color: rgba(242, 245, 245, 0.56);
+}
+
+.lp3-rack-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 15px 18px;
+  border: 0;
+  border-bottom: 1px solid rgba(237, 240, 241, 0.09);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.lp3-rack-row:hover {
+  background: rgba(43, 89, 216, 0.06);
+}
+
+.lp3-rack-num {
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  color: rgba(242, 245, 245, 0.56);
+}
+
+.lp3-rack-name {
+  display: block;
+  font-family: var(--lp3-display);
+  font-size: 15.5px;
+  font-weight: 500;
+  color: var(--lp3-on-ink-bright);
+}
+
+.lp3-rack-meta {
+  display: block;
+  font-family: var(--lp3-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+  margin-top: 4px;
+}
+
+.lp3-rack-action {
+  font-family: var(--lp3-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+  white-space: nowrap;
+}
+
+.lp3-rack-action-lead {
+  color: var(--lp3-accent-bright); /* text on the dark rack panel */
+}
+
+.lp3-rack-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.6);
+}
+
+.lp3-rack-foot a {
+  color: var(--lp3-accent-bright); /* text on the dark rack panel */
+  text-decoration: none;
+}
+
+/* ---------- stats rail ---------- */
+
+.lp3-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(237, 240, 241, 0.14);
+  margin-top: 62px;
+}
+
+.lp3-stat {
+  padding: 24px 28px 34px;
+  border-left: 1px solid rgba(237, 240, 241, 0.14);
+}
+
+.lp3-stat:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.lp3-stat-num {
+  display: block;
+  font-family: var(--lp3-display);
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--lp3-on-ink-bright);
+  margin-bottom: 10px;
+}
+
+.lp3-stat-accent {
+  color: var(--lp3-accent-bright); /* text on the dark hero */
+}
+
+.lp3-stat-label {
+  display: block;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+}
+
+/* ---------- shared type ---------- */
+
+.lp3-eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+  margin: 0 0 22px;
+}
+
+.lp3-eyebrow-num {
+  color: var(--lp3-accent-dark);
+}
+
+.lp3-eyebrow-dark {
+  color: rgba(242, 245, 245, 0.56);
+}
+
+.lp3-eyebrow-num-dark {
+  color: var(--lp3-accent-bright); /* text on the dark engine section */
+}
+
+.lp3-h2 {
+  font-family: var(--lp3-display);
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  margin: 0 0 22px;
+  color: var(--lp3-text);
+  text-wrap: pretty;
+}
+
+.lp3-h2-dark {
+  color: var(--lp3-on-ink-bright);
+  margin-bottom: 0;
+}
+
+.lp3-h2-wide {
+  max-width: 700px;
+  margin-bottom: 52px;
+}
+
+.lp3-body {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--lp3-muted);
+  margin: 0 0 34px;
+  max-width: 470px;
+  text-wrap: pretty;
+}
+
+.lp3-body-dark {
+  color: rgba(242, 245, 245, 0.68);
+  max-width: 640px;
+}
+
+/* ---------- section 01 ---------- */
+
+.lp3-inside {
+  background: var(--lp3-light);
+  padding: 96px 0;
+}
+
+.lp3-inside-grid {
+  display: grid;
+  grid-template-columns: 1fr 560px;
+  gap: 80px;
+  align-items: start;
+}
+
+.lp3-facts {
+  border-top: 1px solid var(--lp3-rule);
+  margin: 0;
+}
+
+.lp3-facts > div {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--lp3-rule);
+}
+
+.lp3-facts dt {
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-accent-dark);
+}
+
+.lp3-facts dd {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--lp3-text-soft);
+}
+
+/* exam preview panel */
+
+.lp3-exam-panel {
+  border: 1px solid var(--lp3-rule);
+  border-radius: 10px;
+  background: var(--lp3-card);
+  overflow: hidden;
+}
+
+.lp3-exam-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--lp3-rule);
+  background: var(--lp3-light);
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+}
+
+.lp3-exam-top-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lp3-exam-top-right strong {
+  color: var(--lp3-text);
+  font-weight: 500;
+}
+
+.lp3-exam-progress {
+  display: grid;
+  grid-template-columns: repeat(27, 1fr);
+  gap: 3px;
+  padding: 14px 18px 0;
+}
+
+.lp3-cell {
+  height: 3px;
+  background: var(--lp3-rule);
+}
+
+.lp3-cell-done { background: var(--lp3-success-dark); } /* answered/completed question cell — success family */
+.lp3-cell-flag { background: #A8B0B5; }
+.lp3-cell-current { background: var(--lp3-text); }
+
+.lp3-exam-body {
+  padding: 24px 18px 20px;
+}
+
+.lp3-exam-qhead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.lp3-exam-qnum {
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  color: var(--lp3-card);
+  background: var(--lp3-text);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.lp3-exam-qmark {
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+}
+
+.lp3-passage {
+  font-size: 13.5px;
+  line-height: 1.72;
+  color: var(--lp3-muted);
+  margin: 0 0 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--lp3-rule);
+}
+
+.lp3-underlined {
+  color: var(--lp3-text);
+  border-bottom: 1.5px solid var(--lp3-accent);
+  padding-bottom: 2px;
+}
+
+.lp3-stem {
+  font-family: var(--lp3-display);
+  font-size: 16px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--lp3-text);
+  margin: 0 0 16px;
+}
+
+.lp3-choices {
+  display: grid;
+  gap: 8px;
+}
+
+.lp3-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--lp3-rule);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: #FFFFFF;
+  font-size: 13.5px;
+  color: var(--lp3-text-soft);
+}
+
+.lp3-choice-selected {
+  border: 1.5px solid var(--lp3-accent-dark);
+  padding: 11.5px 13.5px;
+  background: rgba(43, 89, 216, 0.1);
+  color: var(--lp3-text);
+}
+
+.lp3-choice-letter {
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  color: var(--lp3-mono-muted);
+  width: 18px;
+  flex: 0 0 18px;
+}
+
+.lp3-choice-selected .lp3-choice-letter {
+  color: var(--lp3-accent-dark);
+}
+
+.lp3-exam-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--lp3-rule);
+  background: var(--lp3-light);
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+}
+
+.lp3-exam-foot strong {
+  color: var(--lp3-accent-dark);
+  font-weight: 500;
+}
+
+/* ---------- section 02: engine ---------- */
+
+.lp3-engine {
+  background: var(--lp3-ink);
+  color: var(--lp3-on-ink);
+  padding: 96px 0;
+}
+
+.lp3-engine-top {
+  display: grid;
+  grid-template-columns: 1fr 470px;
+  gap: 56px;
+  align-items: start;
+  margin-bottom: 26px;
+}
+
+.lp3-engine-top .lp3-body-dark {
+  margin: 22px 0 0;
+}
+
+.lp3-routing {
+  border: 1px solid rgba(237, 240, 241, 0.14);
+  border-radius: 10px;
+  background: var(--lp3-panel);
+  padding: 22px 24px 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.lp3-routing-head,
+.lp3-routing-state {
+  display: flex;
+  align-items: center;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lp3-routing-head {
+  justify-content: space-between;
+  color: rgba(242, 245, 245, 0.56);
+  margin-bottom: 26px;
+}
+
+.lp3-routing-state {
+  gap: 8px;
+  color: var(--lp3-accent-bright);
+}
+
+.lp3-routing-rows {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  row-gap: 22px;
+}
+
+.lp3-routing-q {
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  color: rgba(242, 245, 245, 0.74);
+}
+
+.lp3-routing-wire {
+  position: relative;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.lp3-wire-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(237, 240, 241, 0.16);
+}
+
+.lp3-wire-dot {
+  position: absolute;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lp3-accent);
+  box-shadow: 0 0 8px rgba(43, 89, 216, 0.9);
+  animation: lp3-travel 2.6s linear infinite;
+}
+
+.lp3-wire-target {
+  position: absolute;
+  right: 0;
+  font-family: var(--lp3-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+  background: var(--lp3-panel);
+  padding-left: 8px;
+}
+
+.lp3-updating {
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(237, 240, 241, 0.12);
+}
+
+.lp3-updating-title {
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+  margin: 0 0 16px;
+}
+
+.lp3-updating-row {
+  display: grid;
+  grid-template-columns: 132px 1fr 30px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.lp3-updating-row:last-child {
+  margin-bottom: 0;
+}
+
+.lp3-updating-name {
+  font-size: 12.5px;
+  color: rgba(242, 245, 245, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lp3-updating-track {
+  height: 4px;
+  background: rgba(237, 240, 241, 0.14);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.lp3-updating-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--lp3-accent);
+  border-radius: 2px;
+  transform-origin: left;
+  animation: lp3-hit 2.6s linear infinite;
+}
+
+.lp3-updating-val {
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  color: rgba(242, 245, 245, 0.6);
+  text-align: right;
+}
+
+/* skill map */
+
+.lp3-map {
+  border: 1px solid rgba(237, 240, 241, 0.14);
+  border-radius: 10px;
+  background: var(--lp3-panel);
+  padding: 22px 28px 26px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 24px;
+}
+
+.lp3-map-scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 130px;
+  background: linear-gradient(90deg, rgba(43, 89, 216, 0) 0%, rgba(43, 89, 216, 0.1) 55%, rgba(43, 89, 216, 0) 100%);
+  animation: lp3-scan 7s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+}
+
+.lp3-map-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(237, 240, 241, 0.12);
+  margin-bottom: 18px;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+}
+
+.lp3-legend {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.lp3-legend > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lp3-key {
+  width: 16px;
+  height: 3px;
+  display: block;
+}
+
+.lp3-key-strong { background: var(--lp3-success); } /* skill mastery legend — success family */
+.lp3-key-low { background: rgba(237, 240, 241, 0.32); }
+
+.lp3-map-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(10, auto);
+  grid-auto-flow: column;
+  column-gap: 56px;
+}
+
+.lp3-map-row {
+  display: grid;
+  grid-template-columns: 1fr 84px 28px;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 0;
+}
+
+.lp3-map-name {
+  font-size: 12px;
+  color: rgba(242, 245, 245, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lp3-map-track {
+  height: 3px;
+  background: rgba(237, 240, 241, 0.14);
+  position: relative;
+  overflow: hidden;
+}
+
+.lp3-map-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transform-origin: left;
+  animation: lp3-bar 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.lp3-map-fill-strong { background: var(--lp3-success); } /* skill mastery — success family */
+.lp3-map-fill-mid { background: rgba(23, 164, 92, 0.55); }
+.lp3-map-fill-low { background: rgba(237, 240, 241, 0.32); }
+
+.lp3-map-val {
+  font-family: var(--lp3-mono);
+  font-size: 10px;
+  color: rgba(242, 245, 245, 0.6);
+  text-align: right;
+}
+
+/* ---------- section 03: loop ---------- */
+
+.lp3-loop {
+  background: var(--lp3-light);
+  padding: 96px 0;
+}
+
+.lp3-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--lp3-text);
+}
+
+.lp3-step {
+  padding: 28px 32px 0;
+  border-left: 1px solid var(--lp3-rule);
+}
+
+.lp3-step:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.lp3-step:last-child {
+  padding-right: 0;
+}
+
+.lp3-step-num {
+  display: block;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  color: var(--lp3-accent-dark);
+  margin-bottom: 18px;
+}
+
+.lp3-step h3 {
+  font-family: var(--lp3-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: var(--lp3-text);
+}
+
+.lp3-step p {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--lp3-muted);
+  margin: 0;
+}
+
+/* ---------- section 04: surfaces ---------- */
+
+.lp3-surfaces {
+  background: var(--lp3-light-alt);
+  padding: 96px 0;
+  border-top: 1px solid var(--lp3-rule);
+}
+
+.lp3-surface-list {
+  border-top: 1px solid var(--lp3-rule-strong);
+}
+
+.lp3-surface {
+  display: grid;
+  grid-template-columns: 300px 1fr 190px;
+  align-items: baseline;
+  gap: 40px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--lp3-rule-strong);
+}
+
+.lp3-surface h3 {
+  font-family: var(--lp3-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--lp3-text);
+}
+
+.lp3-surface p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--lp3-muted);
+  margin: 0;
+  max-width: 520px;
+}
+
+.lp3-surface-tag {
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+  text-align: right;
+}
+
+.lp3-surface-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 30px;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.lp3-surface-links a {
+  color: var(--lp3-accent-dark);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(29, 63, 168, 0.35);
+  padding-bottom: 3px;
+}
+
+/* ---------- pricing (Overhaul Phase E: public pricing, "Pricing" no longer
+   just a signup link) ---------- */
+
+.lp3-pricing {
+  background: var(--lp3-light);
+  padding: 96px 0;
+  border-top: 1px solid var(--lp3-rule);
+  scroll-margin-top: 72px; /* clear the sticky nav on #pricing jumps */
+}
+
+.lp3-pricing-lede {
+  max-width: 560px;
+  margin-top: 18px;
+}
+
+.lp3-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 960px;
+  margin-top: 48px;
+}
+
+.lp3-price-card {
+  background: var(--lp3-card);
+  border: 1px solid var(--lp3-rule-strong);
+  border-radius: 10px;
+  padding: 32px 32px 34px;
+  display: flex;
+  flex-direction: column;
+}
+
+.lp3-price-card-pro {
+  background: var(--lp3-panel);
+  border-color: var(--lp3-panel);
+  color: var(--lp3-on-ink);
+}
+
+.lp3-price-head h3 {
+  font-family: var(--lp3-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  color: var(--lp3-mono-muted);
+}
+
+.lp3-price-card-pro .lp3-price-head h3 {
+  color: var(--lp3-accent-bright); /* text on the dark pro card */
+}
+
+.lp3-price-num {
+  font-family: var(--lp3-display);
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--lp3-text);
+}
+
+.lp3-price-card-pro .lp3-price-num {
+  color: var(--lp3-on-ink-bright);
+}
+
+.lp3-price-period {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--lp3-muted);
+}
+
+.lp3-price-card-pro .lp3-price-period {
+  color: rgba(242, 245, 245, 0.62);
+}
+
+.lp3-price-sub {
+  font-size: 13.5px;
+  margin: 6px 0 0;
+  color: var(--lp3-muted);
+}
+
+.lp3-price-card-pro .lp3-price-sub {
+  color: rgba(242, 245, 245, 0.62);
+}
+
+.lp3-price-list {
+  list-style: none;
+  margin: 26px 0 30px;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.lp3-price-list li {
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 9px 0 9px 26px;
+  position: relative;
+  border-top: 1px solid var(--lp3-rule);
+  color: var(--lp3-text-soft);
+}
+
+.lp3-price-list li:first-child {
+  border-top: 0;
+}
+
+.lp3-price-list li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  color: var(--lp3-success-dark); /* included-feature checkmark — success family */
+  font-weight: 700;
+}
+
+.lp3-price-card-pro .lp3-price-list li {
+  border-top-color: rgba(237, 240, 241, 0.12);
+  color: rgba(242, 245, 245, 0.85);
+}
+
+.lp3-price-card-pro .lp3-price-list li::before {
+  color: var(--lp3-success-bright); /* checkmark on the dark pro card — success family */
+}
+
+.lp3-price-btn {
+  justify-content: center;
+  width: 100%;
+}
+
+/* ---------- final CTA + footer ---------- */
+
+.lp3-final {
+  background: var(--lp3-ink);
+  color: var(--lp3-on-ink);
+  padding: 100px 0 88px;
+}
+
+.lp3-final-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 80px;
+  align-items: end;
+}
+
+.lp3-h2-final {
+  font-family: var(--lp3-display);
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin: 0 0 22px;
+  color: var(--lp3-on-ink-bright);
+  max-width: 620px;
+  text-wrap: pretty;
+}
+
+.lp3-final-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp3-footer {
+  background: var(--lp3-ink);
+  color: rgba(242, 245, 245, 0.62);
+  padding: 40px 0;
+  border-top: 1px solid rgba(237, 240, 241, 0.1);
+}
+
+.lp3-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.lp3-brand-footer .lp3-brand-word {
+  font-size: 17px;
+}
+
+.lp3-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
+
+.lp3-footer-links a {
+  color: rgba(242, 245, 245, 0.62);
+  text-decoration: none;
+}
+
+.lp3-footer-links a:hover {
+  color: var(--lp3-on-ink-bright);
+}
+
+.lp3-trademark {
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 245, 0.56);
+  margin: 0;
+}
+
+/* ---------- motion ---------- */
+
+@keyframes lp3-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes lp3-travel {
+  0% { transform: translateX(0); opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translateX(210px); opacity: 0; }
+}
+
+@keyframes lp3-hit {
+  0%, 62% { transform: scaleX(var(--lp3-a, 0.5)); }
+  72% { transform: scaleX(var(--lp3-b, 0.62)); }
+  100% { transform: scaleX(var(--lp3-b, 0.62)); }
+}
+
+@keyframes lp3-scan {
+  0% { transform: translateX(-6%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(106%); opacity: 0; }
+}
+
+@keyframes lp3-dash {
+  from { stroke-dashoffset: 620; }
+  to { stroke-dashoffset: -140; }
+}
+
+@keyframes lp3-node {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.95; }
+}
+
+@keyframes lp3-blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp3 .lp3-map-scan,
+  .lp3 .lp3-wire-dot,
+  .lp3 .lp3-dot,
+  .lp3 .lp3-lattice-live,
+  .lp3 .lp3-lattice-hot circle {
+    animation: none;
+  }
+
+  .lp3 .lp3-rack-shot,
+  .lp3 .lp3-rack {
+    animation: none;
+    transition: none;
+  }
+
+  .lp3 .lp3-lattice-live { stroke-opacity: 0.22; stroke-dasharray: none; }
+
+  .lp3 .lp3-map-fill,
+  .lp3 .lp3-updating-fill {
+    animation: none;
+    transform: scaleX(var(--lp3-b, 1));
+  }
+}
+
+/* Pull the panel cluster back inside the content column. Left as-authored, the
+   screenshot's projected right edge lands ~64px past the column, so it doesn't
+   line up with the nav, the stat rail or the sections below. Scaling the whole
+   stage (rather than editing the interlocked rack/shot offsets) shrinks it and
+   right-aligns it in one move, and widens the gap to the copy as a side effect.
+   Only above the compact breakpoint — below it the rack column is 440px and the
+   3D flattens anyway. */
+@media (min-width: 1361px) {
+  .lp3-rack-stage {
+    transform: translateX(-43px) scale(0.9);
+    transform-origin: right center;
+  }
+}
+
+/* ---------- responsive ---------- */
+
+/* Below the design's 1440px canvas the shell can no longer reach its full 1280px
+   content width, so the hero switches to the compact composition rather than
+   letting the rack ride up against the headline. */
+@media (max-width: 1360px) {
+  .lp3-hero-grid { grid-template-columns: 1fr 440px; gap: 48px; }
+  .lp3-inside-grid { grid-template-columns: 1fr 480px; gap: 56px; }
+  .lp3-engine-top { grid-template-columns: 1fr 420px; gap: 40px; }
+  .lp3-h1 { font-size: 58px; }
+  .lp3-map-grid { column-gap: 40px; }
+}
+
+@media (max-width: 1024px) {
+  .lp3 .lp3-shell { padding: 0 28px; }
+  .lp3-nav-toggle { display: flex; }
+
+  .lp3-nav-links {
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 24px 28px 30px;
+    background: var(--lp3-panel);
+    border-bottom: 1px solid rgba(237, 240, 241, 0.12);
+    display: none;
+  }
+
+  .lp3-nav-links.lp3-nav-open { display: flex; }
+  .lp3-nav-rule { display: none; }
+
+  .lp3-hero { padding-top: 48px; }
+  .lp3-hero-grid,
+  .lp3-inside-grid,
+  .lp3-engine-top,
+  .lp3-final-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .lp3-engine-top { margin-bottom: 0; }
+  .lp3-rack-stage { perspective: none; left: 0; }
+  .lp3-rack { transform: none; box-shadow: none; left: 0; }
+  .lp3-rack-shot,
+  .lp3-rack-shot:hover { display: none; }
+  .lp3-hero-grid { gap: 40px; }
+  .lp3-stats { grid-template-columns: repeat(2, 1fr); margin-top: 48px; }
+  .lp3-stat { padding: 22px 24px 26px; }
+  .lp3-stat:nth-child(3) { border-left: 0; padding-left: 0; }
+  .lp3-stat:nth-child(3),
+  .lp3-stat:nth-child(4) { border-top: 1px solid rgba(237, 240, 241, 0.14); }
+
+  .lp3-map-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(15, auto); }
+  .lp3-steps { grid-template-columns: repeat(2, 1fr); row-gap: 30px; }
+  .lp3-step:nth-child(3) { border-left: 0; padding-left: 0; }
+  .lp3-surface { grid-template-columns: 240px 1fr; }
+  .lp3-surface-tag { grid-column: 2; text-align: left; }
+  .lp3-pricing-grid { grid-template-columns: 1fr; max-width: 560px; }
+  .lp3-final-actions { max-width: 420px; }
+}
+
+@media (max-width: 720px) {
+  .lp3 .lp3-shell { padding: 0 20px; }
+  .lp3-h1 { font-size: 42px; }
+  .lp3-h2 { font-size: 32px; }
+  .lp3-h2-final { font-size: 34px; }
+  .lp3-lede { font-size: 16px; }
+
+  .lp3-hero-actions { flex-direction: column; align-items: stretch; }
+  .lp3-btn-primary,
+  .lp3-btn-ghost { justify-content: center; width: 100%; }
+
+  .lp3-stats { grid-template-columns: 1fr; }
+  .lp3-stat { border-left: 0; padding: 20px 0; border-top: 1px solid rgba(237, 240, 241, 0.14); }
+  .lp3-stat:first-child { border-top: 0; }
+
+  .lp3-inside,
+  .lp3-engine,
+  .lp3-loop,
+  .lp3-surfaces,
+  .lp3-pricing { padding: 64px 0; }
+  .lp3-price-card { padding: 26px 22px 28px; }
+
+  .lp3-routing-rows { grid-template-columns: 76px 1fr; }
+  .lp3-wire-target { display: none; }
+  .lp3-map { padding: 20px 18px 22px; }
+  .lp3-map-grid { grid-template-columns: 1fr; grid-template-rows: auto; grid-auto-flow: row; }
+  .lp3-map-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  .lp3-steps { grid-template-columns: 1fr; }
+  .lp3-step { border-left: 0; padding: 22px 0 0; }
+  .lp3-facts > div { grid-template-columns: 1fr; gap: 8px; }
+  .lp3-surface { grid-template-columns: 1fr; gap: 10px; }
+  .lp3-surface-tag { grid-column: 1; }
+  .lp3-footer-inner { flex-direction: column; align-items: flex-start; gap: 22px; }
+}

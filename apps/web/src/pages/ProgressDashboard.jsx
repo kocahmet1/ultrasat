@@ -1,17 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import {
-  FaBookOpen,
-  FaCalculator,
-  FaGraduationCap,
-  FaInfoCircle,
-  FaRocket,
-} from 'react-icons/fa';
-import LearnUpgradeModal from '../components/LearnUpgradeModal';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { FiBookOpen, FiInfo } from 'react-icons/fi';
+// Feather (react-icons/fi) has no calculator or rocket glyph; kept from
+// react-icons/fa for these two only (see icon-consolidation notes).
+import { FaCalculator, FaRocket } from 'react-icons/fa';
+import ProUpgradeModal from '../components/membership/ProUpgradeModal';
 import FeatureHelpModal from '../components/FeatureHelpModal';
 import SubcategoryProgressSection from '../components/progress/SubcategoryProgressSection';
 import { useAuth } from '../contexts/AuthContext';
-import { useAICompanion } from '../contexts/AICompanionContext';
 import { useSubcategories } from '../contexts/SubcategoryContext';
 import {
   getConceptsForSubcategories,
@@ -20,19 +16,17 @@ import {
 } from '../firebase/progressDashboardServices';
 import {
   buildCategorizedSubcategories,
-  calculateSATScoreFromDetailedProgress,
   getProgressDashboardSummary,
 } from '../utils/progressDashboardUtils';
-import { calculateEstimatedSATScore } from '../utils/progressUtils';
+import { estimatedSATFromSkillState } from '../utils/scoring';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase/config';
 import '../styles/ProgressDashboard.new.css';
-import '../styles/ConceptMastery.css';
-import '../styles/LevelIndicator.css';
 
 function ProgressDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, userMembership } = useAuth();
-  const { isFirstTimeUser } = useAICompanion();
   const {
     loading: subcategoriesLoading,
     allSubcategories,
@@ -46,30 +40,8 @@ function ProgressDashboard() {
   const [unmasteredCount, setUnmasteredCount] = useState(0);
   const [detailedProgress, setDetailedProgress] = useState({});
   const [satScoreEstimate, setSatScoreEstimate] = useState(null);
-  const [isSatCardExpanded, setIsSatCardExpanded] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
-  const [noticeClosed, setNoticeClosed] = useState(false);
   const [showLearnUpgradeModal, setShowLearnUpgradeModal] = useState(false);
-  const satCardHoverTimeoutRef = useRef(null);
-
-  const clearSatCardHoverTimeout = () => {
-    if (satCardHoverTimeoutRef.current) {
-      clearTimeout(satCardHoverTimeoutRef.current);
-      satCardHoverTimeoutRef.current = null;
-    }
-  };
-
-  const handleSatCardMouseEnter = () => {
-    clearSatCardHoverTimeout();
-    satCardHoverTimeoutRef.current = setTimeout(() => {
-      setIsSatCardExpanded(true);
-    }, 1000);
-  };
-
-  const handleSatCardMouseLeave = () => {
-    clearSatCardHoverTimeout();
-    setIsSatCardExpanded(false);
-  };
 
   const handleShowHelp = () => {
     setShowHelpModal(true);
@@ -99,10 +71,8 @@ function ProgressDashboard() {
       return;
     }
 
-    navigate(`/lessons/${subcategoryId}`);
+    navigate(`/learn/${subcategoryId}`);
   };
-
-  useEffect(() => () => clearSatCardHoverTimeout(), []);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -175,20 +145,28 @@ function ProgressDashboard() {
 
         setDetailedProgress(nextDetailedProgress);
 
+        // Overhaul Phase D: ONE estimate formula (utils/scoring.js), fed by
+        // Tier-2 skillState — no more two-formula race where taking an exam
+        // silently switched which number you saw.
         try {
-          const scoreEstimate = await calculateEstimatedSATScore(currentUser.uid);
+          const skillSnap = await getDocs(collection(db, 'users', currentUser.uid, 'skillState'));
           if (cancelled) {
             return;
           }
-
-          if (scoreEstimate.subcategoriesWithData === 0) {
-            const fallbackEstimate = calculateSATScoreFromDetailedProgress(nextDetailedProgress);
-            setSatScoreEstimate(
-              fallbackEstimate.subcategoriesWithData > 0 ? fallbackEstimate : scoreEstimate,
-            );
-          } else {
-            setSatScoreEstimate(scoreEstimate);
-          }
+          const skillStates = skillSnap.docs.map((d) => ({ subcategoryId: d.id, ...d.data() }));
+          const est = estimatedSATFromSkillState(skillStates);
+          const withData = skillStates.filter((s) => s.attempts > 0).length;
+          setSatScoreEstimate({
+            estimatedScore: est ? est.total : 0,
+            subcategoriesWithData: est ? withData : 0,
+            confidence: est ? est.coverage : 0,
+            breakdown: est
+              ? {
+                  readingWriting: { score: est.readingWriting },
+                  math: { score: est.math },
+                }
+              : null,
+          });
         } catch (error) {
           console.error('Error calculating SAT score estimate:', error);
         }
@@ -218,206 +196,187 @@ function ProgressDashboard() {
     [detailedProgress],
   );
 
-  if (isFirstTimeUser === true) {
-    return <Navigate to="/onboarding" replace />;
-  }
+  // Overhaul Phase E: the parallel AI-chat onboarding (/onboarding) is retired.
+  // The one onboarding path is signup → Home first-steps → coach; new users who
+  // visit Progress just see their (empty) progress page.
 
   if (loading || subcategoriesLoading) {
-    return <div className="pd-loading-placeholder">Loading your progress dashboard...</div>;
+    return (
+      <div className="ut-page ut-page--wide" role="status" aria-label="Loading progress">
+        <div className="ut-skeleton ut-skeleton--text" style={{ width: 110, marginBottom: 12 }} />
+        <div className="ut-skeleton ut-skeleton--title" style={{ width: 220, marginBottom: 26 }} />
+        <div className="ut-grid ut-grid--4" style={{ marginBottom: 22 }}>
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+          <div className="ut-skeleton ut-skeleton--stat" />
+        </div>
+        <div className="ut-skeleton-stack">
+          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--card" />
+        </div>
+      </div>
+    );
   }
 
+  const totalSkills = allSubcategories?.length || 0;
+  const countSkills = (categories) => Object.values(categories || {}).reduce(
+    (sum, category) => sum + (category.subcategories?.length || 0),
+    0,
+  );
+  const rwSkillCount = countSkills(categorizedSubcategories['reading-writing'].categories);
+  const mathSkillCount = countSkills(categorizedSubcategories.math.categories);
+  const hasSkillRows = rwSkillCount + mathSkillCount > 0;
+  const hasPracticeData = totalQuestionsAnswered > 0;
+  const satReady = Boolean(satScoreEstimate && satScoreEstimate.subcategoriesWithData > 0);
+
   return (
-    <div className="progress-dashboard-page">
-      <div className="pd-header">
-        <h1>
-          Your Performance Progress
+    <div className="ut-page ut-page--wide">
+      <header className="ut-page-head">
+        <div className="ut-page-head-main">
+          <p className="ut-eyebrow">Analytics</p>
+          <h1 className="ut-page-title">Progress</h1>
+          <p className="ut-page-sub">Skill-by-skill mastery from your real practice.</p>
+        </div>
+        <div className="ut-page-head-actions">
           <button
-            className="help-icon-button"
+            type="button"
+            className="ut-btn ut-btn--ghost ut-btn--sm"
             onClick={handleShowHelp}
             title="Learn how to use performance tracking"
-            type="button"
           >
-            <FaInfoCircle />
+            <FiInfo aria-hidden="true" /> How this works
           </button>
-        </h1>
+        </div>
+      </header>
+
+      <div className="ut-grid ut-grid--4 pg-summary" aria-label="Progress summary">
+        <div className="ut-panel-ink pg-sat-panel">
+          <div className="ut-stat">
+            <span className="ut-stat-value">
+              {satReady ? satScoreEstimate.estimatedScore : '—'}
+              <small> / 1600</small>
+            </span>
+            <span className="ut-stat-label">Est. SAT score</span>
+          </div>
+          {satReady ? (
+            <p className="ut-label ut-label--on-ink pg-sat-note">
+              RW {satScoreEstimate.breakdown?.readingWriting?.score || 400}
+              {' · '}
+              Math {satScoreEstimate.breakdown?.math?.score || 400}
+              {' · '}
+              {satScoreEstimate.confidence}% confidence
+            </p>
+          ) : (
+            <p className="ut-label ut-label--on-ink pg-sat-note">
+              Take a <Link to="/practice-exams" className="pg-sat-link">practice test</Link> to unlock
+            </p>
+          )}
+        </div>
+        <div className="ut-card">
+          <div className="ut-stat">
+            <span className="ut-stat-value">
+              {overallAccuracy}
+              <small>%</small>
+            </span>
+            <span className="ut-stat-label">Overall accuracy</span>
+          </div>
+        </div>
+        <div className="ut-card">
+          <div className="ut-stat">
+            <span className="ut-stat-value">{totalQuestionsAnswered}</span>
+            <span className="ut-stat-label">Questions answered</span>
+          </div>
+        </div>
+        <div className="ut-card">
+          <div className="ut-stat">
+            <span className="ut-stat-value">
+              {subcategoriesCovered}
+              <small> / {totalSkills}</small>
+            </span>
+            <span className="ut-stat-label">Skills practiced</span>
+          </div>
+        </div>
       </div>
 
-      {satScoreEstimate && (
-        <div
-          className={`pd-card sat-score-estimate-card ${isSatCardExpanded ? 'expanded' : 'collapsed'}`}
-          onMouseEnter={handleSatCardMouseEnter}
-          onMouseLeave={handleSatCardMouseLeave}
-        >
-          <div className="sat-score-header">
-            <div className="sat-score-title">
-              <FaGraduationCap className="sat-icon" />
-              <h2>Estimated Digital SAT Score</h2>
-            </div>
-            <div className="confidence-badge">{satScoreEstimate.confidence}% confidence</div>
-          </div>
-
-          <div className="sat-score-collapsed-view">
-            <span className="collapsed-title">Estimated Digital SAT Score</span>
-            <span className="collapsed-score">
-              {satScoreEstimate.subcategoriesWithData > 0 ? satScoreEstimate.estimatedScore : '---'}
-              <span className="collapsed-max">/1600</span>
-            </span>
-            {satScoreEstimate.subcategoriesWithData > 0 && (
-              <span className="collapsed-notice">
-                (Based on {satScoreEstimate.subcategoriesWithData} subcategories with practice data)
-              </span>
-            )}
-            <span className="collapsed-confidence">{satScoreEstimate.confidence}% confidence</span>
-          </div>
-
-          {!satScoreEstimate.subcategoriesWithData && !noticeClosed && (
-            <div className="sat-score-horizontal-notice always-visible">
-              <button
-                className="sat-notice-close-btn"
-                onClick={() => setNoticeClosed(true)}
-                title="Close"
-                type="button"
-              >
-                x
-              </button>
-              Complete an{' '}
-              <Link to="/practice-exams" className="notice-link">
-                SAT Practice test
-              </Link>{' '}
-              or a{' '}
-              <Link to="/practice-exams" className="notice-link">
-                Predictive Test
-              </Link>{' '}
-              to see your estimated digital SAT score below
-            </div>
-          )}
-
-          <div className="sat-score-display">
-            <div className="score-value">
-              {satScoreEstimate.subcategoriesWithData > 0 ? satScoreEstimate.estimatedScore : '---'}
-            </div>
-            <div className="score-max">/ 1600</div>
-          </div>
-
-          <div className="sat-progress-bar">
-            <div
-              className="sat-progress-fill"
-              style={{
-                width: satScoreEstimate.subcategoriesWithData > 0
-                  ? `${((satScoreEstimate.estimatedScore - 400) / 1200) * 100}%`
-                  : '0%',
-                backgroundColor: satScoreEstimate.estimatedScore >= 1200
-                  ? '#34A853'
-                  : satScoreEstimate.estimatedScore >= 1000
-                    ? '#FBBC05'
-                    : '#EA4335',
-              }}
-            ></div>
-          </div>
-
-          <div className="sat-breakdown">
-            <div className="section-score">
-              <span className="section-name">Reading & Writing:</span>
-              <span className="section-value">
-                {satScoreEstimate.breakdown?.readingWriting?.score || 400}
-              </span>
-            </div>
-            <div className="section-score">
-              <span className="section-name">Math:</span>
-              <span className="section-value">{satScoreEstimate.breakdown?.math?.score || 400}</span>
-            </div>
-          </div>
-
-          <div className="sat-stats-integrated">
-            <div className="sat-stat-item">
-              <div className="sat-stat-value">{totalQuestionsAnswered}</div>
-              <div className="sat-stat-label">Total Questions Answered</div>
-            </div>
-            <div className="sat-stat-item">
-              <div className="sat-stat-value">{overallAccuracy}%</div>
-              <div className="sat-stat-label">Overall Accuracy</div>
-            </div>
-            <div className="sat-stat-item">
-              <div className="sat-stat-value">
-                {subcategoriesCovered} / {allSubcategories?.length || 0}
-              </div>
-              <div className="sat-stat-label">Subcategories Covered</div>
-            </div>
-          </div>
-
-          <div className="sat-footer">
-            <small>
-              {satScoreEstimate.subcategoriesWithData > 0
-                ? `Based on ${satScoreEstimate.subcategoriesWithData} subcategories with practice data`
-                : 'Complete some practice questions to see your estimated SAT score!'}
-            </small>
+      {!hasPracticeData && (
+        <div className="ut-empty pg-empty">
+          <b>No practice yet</b>
+          Answer a few questions and every skill below starts tracking coverage and accuracy.
+          <div className="pg-empty-actions">
+            <Link to="/subject-quizzes" className="ut-btn ut-btn--primary">
+              Open the Question Bank
+            </Link>
           </div>
         </div>
       )}
 
-      <p className="pd-page-subtitle">Track your development and identify areas for improvement.</p>
+      {hasSkillRows && (
+        <>
+          <SubcategoryProgressSection
+            title="Reading & Writing"
+            Icon={FiBookOpen}
+            categories={categorizedSubcategories['reading-writing'].categories}
+            detailedProgress={detailedProgress}
+            conceptsBySubcategory={conceptsBySubcategory}
+            userConceptMastery={userConceptMastery}
+            onOpenSubcategory={(subcategoryId) => navigate(`/subcategory-progress/${subcategoryId}`)}
+            onStartPractice={handleStartPractice}
+            onLearn={handleLearnClick}
+            onPracticeConcept={(conceptId) => navigate(`/concept/${conceptId}`)}
+            isFreeTier={userMembership?.tier === 'free'}
+          />
+          <SubcategoryProgressSection
+            title="Math"
+            Icon={FaCalculator}
+            categories={categorizedSubcategories.math.categories}
+            detailedProgress={detailedProgress}
+            conceptsBySubcategory={conceptsBySubcategory}
+            userConceptMastery={userConceptMastery}
+            onOpenSubcategory={(subcategoryId) => navigate(`/subcategory-progress/${subcategoryId}`)}
+            onStartPractice={handleStartPractice}
+            onLearn={handleLearnClick}
+            onPracticeConcept={(conceptId) => navigate(`/concept/${conceptId}`)}
+            isFreeTier={userMembership?.tier === 'free'}
+          />
+        </>
+      )}
 
-      <div className="pd-split-view">
-        <SubcategoryProgressSection
-          title="Reading & Writing"
-          Icon={FaBookOpen}
-          buttonClassName="rw-subcategory-btn"
-          categories={categorizedSubcategories['reading-writing'].categories}
-          detailedProgress={detailedProgress}
-          conceptsBySubcategory={conceptsBySubcategory}
-          userConceptMastery={userConceptMastery}
-          onOpenSubcategory={(subcategoryId) => navigate(`/subcategory-progress/${subcategoryId}`)}
-          onStartPractice={handleStartPractice}
-          onLearn={handleLearnClick}
-          onPracticeConcept={(conceptId) => navigate(`/concept/${conceptId}`)}
-          isFreeTier={userMembership?.tier === 'free'}
-        />
-        <SubcategoryProgressSection
-          title="Math"
-          Icon={FaCalculator}
-          buttonClassName="math-subcategory-btn"
-          categories={categorizedSubcategories.math.categories}
-          detailedProgress={detailedProgress}
-          conceptsBySubcategory={conceptsBySubcategory}
-          userConceptMastery={userConceptMastery}
-          onOpenSubcategory={(subcategoryId) => navigate(`/subcategory-progress/${subcategoryId}`)}
-          onStartPractice={handleStartPractice}
-          onLearn={handleLearnClick}
-          onPracticeConcept={(conceptId) => navigate(`/concept/${conceptId}`)}
-          isFreeTier={userMembership?.tier === 'free'}
-        />
-      </div>
-
-      <div className="pd-card pd-practice-hub">
-        <h3>
-          <FaRocket /> Your Learning Path
-          {unmasteredCount > 0 && (
-            <span
-              className="unmastered-badge"
-              title={`${unmasteredCount} concept${unmasteredCount !== 1 ? 's' : ''} need practice`}
-            >
-              {unmasteredCount}
-            </span>
-          )}
-        </h3>
-        <div className="unified-track-info">
-          <p>
-            <FaGraduationCap className="info-icon" /> Our adaptive learning system identifies concepts
-            you need to improve and creates a personalized learning path for you. Complete
-            SmartQuizzes to get concept recommendations.
+      <section className="ut-card ut-card--soft pg-path" aria-label="Your learning path">
+        <span className="ut-tile">
+          <FaRocket aria-hidden="true" />
+        </span>
+        <div className="pg-path-main">
+          <h3 className="ut-card-title">Your learning path</h3>
+          <p className="ut-card-sub">
+            Our adaptive system flags the concepts you miss and builds a personalized review
+            queue. Complete SmartQuizzes to get concept recommendations.
           </p>
         </div>
-        <div className="actions"></div>
-      </div>
+        {unmasteredCount > 0 && (
+          <span
+            className="ut-chip ut-chip--accent"
+            title={`${unmasteredCount} concept${unmasteredCount !== 1 ? 's' : ''} need practice`}
+          >
+            {unmasteredCount} concept{unmasteredCount !== 1 ? 's' : ''} to review
+          </span>
+        )}
+      </section>
 
       {showToast && (
-        <div className={`toast-notification ${toastMessage.includes('Error') ? 'error' : 'success'}`}>
-          <div className="toast-content">
-            <span>{toastMessage}</span>
-            <button className="toast-close" onClick={() => setShowToast(false)} type="button">
-              x
-            </button>
-          </div>
+        <div
+          className={`pg-toast ${toastMessage.includes('Error') ? 'pg-toast--error' : ''}`}
+          role="status"
+        >
+          <span>{toastMessage}</span>
+          <button
+            type="button"
+            className="pg-toast-close"
+            onClick={() => setShowToast(false)}
+            aria-label="Dismiss notification"
+          >
+            ×
+          </button>
         </div>
       )}
 
@@ -427,9 +386,11 @@ function ProgressDashboard() {
         feature="progress"
       />
 
-      <LearnUpgradeModal
+      <ProUpgradeModal
         isOpen={showLearnUpgradeModal}
         onClose={() => setShowLearnUpgradeModal(false)}
+        featureName="The lesson library"
+        description="In-depth lessons for every SAT skill — walkthroughs, worked examples, and the strategy behind each answer."
       />
     </div>
   );

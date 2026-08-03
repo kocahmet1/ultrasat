@@ -6,7 +6,7 @@ function CookiePolicy() {
     <div className="cookie-policy-page">
       <div className="cookie-policy-container">
         <h1>Cookie Policy</h1>
-        <p className="last-updated">Last updated: {new Date().toLocaleDateString()}</p>
+        <p className="last-updated">Last updated: July 30, 2026</p>
         
         <section>
           <h2>1. What Are Cookies?</h2>

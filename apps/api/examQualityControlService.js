@@ -3,12 +3,19 @@ const OpenAI = require('openai');
 const {
   resolveSubcategory,
 } = require('../../scripts/lib/subcategoryMap');
+const {
+  resolveModel,
+  resolveReasoningEffort,
+} = require('./config/aiModel');
 
-const DEFAULT_MODEL = process.env.OPENAI_EXAM_QUALITY_MODEL || 'gpt-5.6-sol';
-const DEFAULT_REASONING_EFFORT =
-  process.env.OPENAI_EXAM_QUALITY_REASONING_EFFORT || 'max';
+const DEFAULT_MODEL = resolveModel('OPENAI_EXAM_QUALITY_MODEL');
+const DEFAULT_REASONING_EFFORT = resolveReasoningEffort(
+  'OPENAI_EXAM_QUALITY_REASONING_EFFORT'
+);
+// `pro` reasoning mode is a gpt-5.6-sol capability; gpt-5.6-luna does not accept
+// it. Leave it unset unless an operator explicitly re-enables it for a sol run.
 const DEFAULT_REASONING_MODE =
-  process.env.OPENAI_EXAM_QUALITY_REASONING_MODE || 'pro';
+  process.env.OPENAI_EXAM_QUALITY_REASONING_MODE || '';
 const parsedMaxOutputTokens = Number.parseInt(
   process.env.OPENAI_EXAM_QUALITY_MAX_OUTPUT_TOKENS || '',
   10,
@@ -464,15 +471,9 @@ function getModel() {
 }
 
 function getReasoningEffort() {
-  const configured = (
-    process.env.OPENAI_EXAM_QUALITY_REASONING_EFFORT ||
-    DEFAULT_REASONING_EFFORT
-  ).toLowerCase();
-  return ['none', 'low', 'medium', 'high', 'xhigh', 'max'].includes(
-    configured,
-  )
-    ? configured
-    : 'max';
+  // gpt-5.6-luna accepts minimal | low | medium | high. The sol-era values
+  // ('xhigh', 'max') are folded down to 'high' by resolveReasoningEffort.
+  return resolveReasoningEffort('OPENAI_EXAM_QUALITY_REASONING_EFFORT');
 }
 
 function getReasoningMode() {

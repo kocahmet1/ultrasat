@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faQuestionCircle, 
-  faArrowLeft, 
-  faArrowRight, 
-  faTimes,
-  faTrophy,
-  faCheck,
-  faXmark
-} from '@fortawesome/free-solid-svg-icons';
+import {
+  FiHelpCircle,
+  FiArrowLeft,
+  FiArrowRight,
+  FiX,
+  FiAward,
+  FiCheck,
+  FiLoader,
+} from 'react-icons/fi';
 import { getFlashcardDeckWords } from '../api/helperClient';
 import '../styles/Quiz.css';
 
@@ -183,7 +182,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
     return (
       <div className="quiz-container">
         <div className="quiz-loading">
-          <FontAwesomeIcon icon={faQuestionCircle} spin />
+          <FiLoader />
           <p>Generating your quiz...</p>
         </div>
       </div>
@@ -194,11 +193,11 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
     return (
       <div className="quiz-container">
         <div className="quiz-error">
-          <FontAwesomeIcon icon={faTimes} />
+          <FiX />
           <h3>Quiz Error</h3>
           <p>{error}</p>
           <button className="back-button" onClick={onClose}>
-            <FontAwesomeIcon icon={faArrowLeft} />
+            <FiArrowLeft />
             Back to Quizzes
           </button>
         </div>
@@ -214,7 +213,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
       <div className="quiz-container">
         <div className="quiz-results">
           <div className="results-header">
-            <FontAwesomeIcon icon={faTrophy} className="trophy-icon" />
+            <FiAward className="trophy-icon" />
             <h2>Quiz Complete!</h2>
           </div>
           
@@ -237,11 +236,11 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
           
           <div className="results-actions">
             <button className="retake-button" onClick={() => window.location.reload()}>
-              <FontAwesomeIcon icon={faQuestionCircle} />
+              <FiHelpCircle />
               Retake Quiz
             </button>
             <button className="back-button" onClick={onClose}>
-              <FontAwesomeIcon icon={faArrowLeft} />
+              <FiArrowLeft />
               Back to Quizzes
             </button>
           </div>
@@ -257,7 +256,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
     <div className="quiz-container">
       <div className="quiz-header">
         <button className="quiz-close-button" onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} />
+          <FiX />
         </button>
         <div className="quiz-title">
           <h2>{deckName} Quiz</h2>
@@ -302,10 +301,10 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
                 <span className="option-letter">{String.fromCharCode(65 + index)}</span>
                 <span className="option-text">{option}</span>
                 {showResult && index === currentQuestion.correctIndex && (
-                  <FontAwesomeIcon icon={faCheck} className="correct-icon" />
+                  <FiCheck className="correct-icon" />
                 )}
                 {showResult && selectedAnswer === index && index !== currentQuestion.correctIndex && (
-                  <FontAwesomeIcon icon={faXmark} className="incorrect-icon" />
+                  <FiX className="incorrect-icon" />
                 )}
               </button>
             ))}
@@ -316,12 +315,12 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
           <div className={`result-feedback ${isCorrect ? 'correct' : 'incorrect'}`}>
             {isCorrect ? (
               <div className="feedback-content">
-                <FontAwesomeIcon icon={faCheck} />
+                <FiCheck />
                 <span>Correct!</span>
               </div>
             ) : (
               <div className="feedback-content">
-                <FontAwesomeIcon icon={faXmark} />
+                <FiX />
                 <span>Incorrect. The correct answer is: {currentQuestion.correctAnswer}</span>
               </div>
             )}
@@ -334,7 +333,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
             onClick={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0 || showResult}
           >
-            <FontAwesomeIcon icon={faArrowLeft} />
+            <FiArrowLeft />
             Previous
           </button>
           
@@ -345,7 +344,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
               disabled={selectedAnswer === null || !answerChecked}
             >
               {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next'}
-              <FontAwesomeIcon icon={faArrowRight} />
+              <FiArrowRight />
             </button>
           ) : (
             <button 
@@ -357,7 +356,7 @@ export default function Quiz({ deckId, deckName, onClose, allWords = [], provide
               disabled={selectedAnswer === null}
             >
               Check
-              <FontAwesomeIcon icon={faCheck} />
+              <FiCheck />
             </button>
           )}
         </div>

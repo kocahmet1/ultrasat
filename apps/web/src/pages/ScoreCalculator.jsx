@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import QuizAuthModal from '../components/QuizAuthModal';
 import '../styles/ScoreCalculator.css';
+import { FiBookOpen, FiClock, FiGrid, FiMapPin, FiRefreshCw, FiZap } from 'react-icons/fi';
 import collegeScorecard from '../api/collegeScorecard';
 
 const PERCENTILE_MAP = {
@@ -57,12 +58,12 @@ function ScoreCalculator() {
   });
 
   const getCollegeAdmissionInfo = (score) => {
-    if (score >= 1500) return { level: 'Elite', color: '#059669', description: 'Ivy League and top-tier universities' };
-    if (score >= 1400) return { level: 'Highly Competitive', color: '#2563eb', description: 'Top state schools and competitive private colleges' };
-    if (score >= 1300) return { level: 'Competitive', color: '#7c3aed', description: 'Good state schools and many private colleges' };
-    if (score >= 1200) return { level: 'Moderately Competitive', color: '#ea580c', description: 'State schools and regional universities' };
-    if (score >= 1000) return { level: 'Less Competitive', color: '#dc2626', description: 'Community colleges and less selective institutions' };
-    return { level: 'Below Average', color: '#6b7280', description: 'May need additional preparation' };
+    if (score >= 1500) return { level: 'Elite', color: 'var(--ut-success)', description: 'Ivy League and top-tier universities' };
+    if (score >= 1400) return { level: 'Highly Competitive', color: 'var(--ut-accent)', description: 'Top state schools and competitive private colleges' };
+    if (score >= 1300) return { level: 'Competitive', color: 'var(--ut-accent-dark)', description: 'Good state schools and many private colleges' };
+    if (score >= 1200) return { level: 'Moderately Competitive', color: 'var(--ut-warn)', description: 'State schools and regional universities' };
+    if (score >= 1000) return { level: 'Less Competitive', color: 'var(--ut-danger)', description: 'Community colleges and less selective institutions' };
+    return { level: 'Below Average', color: 'var(--ut-muted)', description: 'May need additional preparation' };
   };
 
   useEffect(() => {
@@ -146,7 +147,7 @@ function ScoreCalculator() {
         
         <div className="digital-sat-info">
           <div className="info-badge">
-            <span className="badge-icon">🔄</span>
+            <span className="badge-icon"><FiRefreshCw /></span>
             <div className="badge-text">
               <h4>New Digital SAT Format</h4>
               <p>Adaptive testing • Shorter format • Calculator allowed for all Math</p>
@@ -268,22 +269,22 @@ function ScoreCalculator() {
           <h2>Digital SAT Key Features</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">⚡</div>
+              <div className="feature-icon"><FiZap /></div>
               <h3>Adaptive Testing</h3>
               <p>Module 2 difficulty adapts based on your Module 1 performance, providing a more accurate assessment of your abilities.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">⏱️</div>
+              <div className="feature-icon"><FiClock /></div>
               <h3>Shorter Format</h3>
               <p>Just 2 hours 24 minutes total (including break) compared to 3+ hours for the old paper SAT.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🧮</div>
+              <div className="feature-icon"><FiGrid /></div>
               <h3>Calculator Allowed</h3>
               <p>Use a calculator for ALL math questions, including the built-in Desmos graphing calculator.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">📖</div>
+              <div className="feature-icon"><FiBookOpen /></div>
               <h3>Shorter Passages</h3>
               <p>Reading passages are 25-150 words with just 1 question each, making them more manageable.</p>
             </div>
@@ -363,9 +364,9 @@ function ScoreCalculator() {
                 <div className="results-header">
                   <h3>Your College Matches ({colleges.length} found)</h3>
                   <div className="match-legend">
-                    <span className="legend-item safety">🟢 Safety</span>
-                    <span className="legend-item match">🟡 Match</span>
-                    <span className="legend-item reach">🔴 Reach</span>
+                    <span className="legend-item safety">Safety</span>
+                    <span className="legend-item match">Match</span>
+                    <span className="legend-item reach">Reach</span>
                   </div>
                 </div>
                 <div className="colleges-grid">
@@ -382,7 +383,7 @@ function ScoreCalculator() {
                       </div>
                       
                       <div className="college-location">
-                        📍 {college.city}, {college.state}
+                        <FiMapPin /> {college.city}, {college.state}
                       </div>
                       
                       <div className="college-stats">
@@ -442,11 +443,11 @@ function ScoreCalculator() {
           <h2>Score Improvement Tips</h2>
           <div className="tips-grid">
             <div className="tip-card">
-              <h3>🎯 Set Target Scores</h3>
+              <h3>Set Target Scores</h3>
               <p>Aim for section scores that align with your target colleges' averages. A 50-100 point increase is achievable with focused practice.</p>
             </div>
             <div className="tip-card">
-              <h3>📊 Focus on Weaker Section</h3>
+              <h3>Focus on Weaker Section</h3>
               <p>
                 {mathScore < readingWritingScore ? 
                   'Your math score could use improvement. Focus on algebra, geometry, and data analysis practice.' :
@@ -457,11 +458,11 @@ function ScoreCalculator() {
               </p>
             </div>
             <div className="tip-card">
-              <h3>⏰ Time Management</h3>
+              <h3>Time Management</h3>
               <p>Practice with official timing. Most students can improve scores by 50-100 points through better pacing and strategy.</p>
             </div>
             <div className="tip-card">
-              <h3>📚 Use UltraSATPrep</h3>
+              <h3>Use UltraSATPrep</h3>
               <p>Our adaptive practice system mirrors the Digital SAT format and identifies your weak areas with personalized recommendations.</p>
             </div>
           </div>

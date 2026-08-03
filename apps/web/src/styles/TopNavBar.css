@@ -53,7 +53,7 @@
 }
 
 .top-navbar li.active a {
-  color: var(--text-color-on-primary);
+  color: var(--ut-accent-bright, #86A4F5);
 }
 
 .nav-icon {
@@ -164,8 +164,8 @@
 
 .more-menu-item:hover,
 .more-menu-item.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-color-on-primary);
+  background: rgba(43, 89, 216, 0.1);
+  color: var(--ut-accent-bright, #86A4F5);
 }
 
 .more-menu-item .nav-icon {

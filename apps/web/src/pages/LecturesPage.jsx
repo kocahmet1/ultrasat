@@ -1,31 +1,30 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getSubcategoriesArray, getKebabCaseFromAnyFormat } from '../utils/subcategoryConstants';
 import { useAuth } from '../contexts/AuthContext';
 import { useSidebar } from '../contexts/SidebarContext';
+import { getAllLessonProgress } from '../firebase/lessonProgressServices';
 import '../styles/LecturesPage.css';
 import {
   FiArrowRight,
-  FiBell,
   FiBookOpen,
   FiBookmark,
-  FiCheck,
   FiCheckCircle,
-  FiChevronDown,
   FiChevronRight,
-  FiClock,
-  FiFileText,
   FiFlag,
   FiMonitor,
   FiPlayCircle,
   FiSearch,
   FiStar,
 } from 'react-icons/fi';
+// Feather has no square-root glyph; kept from FontAwesome for the math icon only.
 import { FaSquareRootAlt } from 'react-icons/fa';
 
-const COMPLETED_SUBCATEGORY_IDS = new Set([1, 3, 4, 7, 9, 11, 13, 15, 18, 21, 25, 26]);
-const IN_PROGRESS_SUBCATEGORY_IDS = new Set([2, 5, 8, 10, 12, 22]);
-const SAVED_SUBCATEGORY_IDS = new Set([4, 6, 7, 14, 16, 17, 19, 20, 23, 24, 27, 28, 29]);
+// P1-D: completed / in-progress now come from real per-user data
+// (users/{uid}/lessonProgress via getAllLessonProgress) — see the component.
+// There is no lesson save/bookmark mechanism yet, so the Saved filter stays
+// wired but empty-tolerant until one lands.
+const SAVED_SUBCATEGORY_IDS = new Set([]);
 
 const filterOptions = [
   { id: 'all', label: 'All' },
@@ -35,23 +34,50 @@ const filterOptions = [
   { id: 'saved', label: 'Saved', icon: <FiBookmark /> },
 ];
 
-const topNavItems = [
-  { path: '/progress', label: 'Dashboard' },
-  { path: '/practice-exams', label: 'Practice Exams' },
-  { path: '/subject-quizzes', label: 'Question Bank' },
-  { path: '/flashcards', label: 'Flashcards' },
-  { path: '/ai-coach', label: 'AI Coach', badge: 'BETA' },
-  { path: '/lectures', label: 'Lectures' },
-  { path: '/progress', label: 'Analytics' },
-];
-
 const LecturesPage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { isMobile, setSidebarCollapsed } = useSidebar();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  // null = still loading; {} or a map of subcategoryId -> doc once resolved.
+  const [lessonProgress, setLessonProgress] = useState(null);
   const allSubcategories = getSubcategoriesArray();
+
+  // P1-D: exactly one Firestore query per page load — every lessonProgress
+  // doc for the signed-in user (at most 29). Drives the progress summary,
+  // the Completed filter, per-card chips, and the resume target.
+  useEffect(() => {
+    let cancelled = false;
+    if (!currentUser) {
+      setLessonProgress({});
+      return undefined;
+    }
+    setLessonProgress(null);
+    getAllLessonProgress(currentUser.uid)
+      .then((progress) => {
+        if (!cancelled) setLessonProgress(progress || {});
+      })
+      .catch((error) => {
+        console.error('Error loading lesson progress:', error);
+        if (!cancelled) setLessonProgress({});
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUser]);
+
+  const progressLoading = lessonProgress === null;
+
+  const { completedLessonIds, inProgressLessonIds } = useMemo(() => {
+    const completed = new Set();
+    const inProgress = new Set();
+    Object.entries(lessonProgress || {}).forEach(([lessonId, entry]) => {
+      if (entry?.status === 'completed') completed.add(lessonId);
+      else if (entry?.status === 'in_progress') inProgress.add(lessonId);
+    });
+    return { completedLessonIds: completed, inProgressLessonIds: inProgress };
+  }, [lessonProgress]);
 
   useEffect(() => {
     const appContainer = document.querySelector('.app-container');
@@ -75,11 +101,59 @@ const LecturesPage = () => {
     navigate(`/learn/${slug}`);
   };
 
-  const getTopicStatus = (subcategory) => {
-    if (COMPLETED_SUBCATEGORY_IDS.has(subcategory.id)) return 'completed';
-    if (IN_PROGRESS_SUBCATEGORY_IDS.has(subcategory.id)) return 'progress';
+  const getTopicStatus = useCallback((subcategory) => {
+    const lessonId = getKebabCaseFromAnyFormat(subcategory.id);
+    if (lessonId && completedLessonIds.has(lessonId)) return 'completed';
+    if (lessonId && inProgressLessonIds.has(lessonId)) return 'progress';
     return 'available';
-  };
+  }, [completedLessonIds, inProgressLessonIds]);
+
+  const totalLessons = allSubcategories.length;
+  const completedCount = useMemo(
+    () => allSubcategories.reduce(
+      (count, subcategory) => (getTopicStatus(subcategory) === 'completed' ? count + 1 : count),
+      0,
+    ),
+    [allSubcategories, getTopicStatus],
+  );
+  const completedPercent = totalLessons > 0
+    ? Math.round((completedCount / totalLessons) * 100)
+    : 0;
+
+  // Resume target for "Continue where you left off": the not-completed lesson
+  // with the most recent lastViewedAt; fallback: the first not-completed
+  // lesson in catalog order; when everything is done, a course-complete state.
+  const resumeTarget = useMemo(() => {
+    if (!lessonProgress) return null;
+
+    const toMillis = (value) => {
+      if (!value) return 0;
+      if (typeof value.toMillis === 'function') return value.toMillis();
+      const parsed = new Date(value).getTime();
+      return Number.isNaN(parsed) ? 0 : parsed;
+    };
+
+    let mostRecent = null;
+    let mostRecentViewedAt = -1;
+    allSubcategories.forEach((subcategory) => {
+      const lessonId = getKebabCaseFromAnyFormat(subcategory.id);
+      const entry = lessonId ? lessonProgress[lessonId] : null;
+      if (!entry || entry.status === 'completed') return;
+      const viewedAt = toMillis(entry.lastViewedAt);
+      if (viewedAt > mostRecentViewedAt) {
+        mostRecentViewedAt = viewedAt;
+        mostRecent = subcategory;
+      }
+    });
+    if (mostRecent) return { mode: 'resume', subcategory: mostRecent };
+
+    const nextUp = allSubcategories.find(
+      (subcategory) => getTopicStatus(subcategory) !== 'completed',
+    );
+    if (nextUp) return { mode: 'next', subcategory: nextUp };
+
+    return { mode: 'done', subcategory: null };
+  }, [lessonProgress, allSubcategories, getTopicStatus]);
 
   const filteredSubcategories = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -95,22 +169,17 @@ const LecturesPage = () => {
 
       return matchesSearch && matchesFilter;
     });
-  }, [activeFilter, allSubcategories, searchTerm]);
+  }, [activeFilter, allSubcategories, searchTerm, getTopicStatus]);
 
   const readingWritingSubcategories = filteredSubcategories.filter(sc => sc.section === 'reading');
   const mathSubcategories = filteredSubcategories.filter(sc => sc.section === 'math');
-  const userName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Alex';
-  const firstInitial = userName.charAt(0).toUpperCase();
 
   const renderStatusIcon = (subcategory) => {
     const status = getTopicStatus(subcategory);
 
+    // Completed lessons carry the FiCheckCircle chip instead (renderTopicButton).
     if (status === 'completed') {
-      return (
-        <span className="lecture-status lecture-status-completed" aria-label="Completed">
-          <FiCheck />
-        </span>
-      );
+      return null;
     }
 
     if (status === 'progress') {
@@ -143,6 +212,12 @@ const LecturesPage = () => {
         </span>
         <span className="lecture-topic-name">{subcategory.name}</span>
         {status === 'progress' && <span className="lecture-topic-progress-label">In Progress</span>}
+        {status === 'completed' && (
+          <span className="lecture-topic-completed-chip" aria-label="Completed">
+            <FiCheckCircle aria-hidden="true" />
+            Completed
+          </span>
+        )}
         {renderStatusIcon(subcategory)}
       </button>
     );
@@ -150,52 +225,13 @@ const LecturesPage = () => {
 
   return (
     <div className="lectures-page-container lectures-dashboard">
-      <header className="lectures-top-nav" aria-label="Lectures navigation">
-        <nav className="lectures-top-nav-links">
-          {topNavItems.map((item) => (
-            <Link
-              key={`${item.label}-${item.path}`}
-              to={item.path}
-              className={`lectures-top-nav-link ${item.path === '/lectures' ? 'active' : ''}`}
-            >
-              {item.label}
-              {item.badge && <span className="lecture-beta-badge">{item.badge}</span>}
-            </Link>
-          ))}
-        </nav>
-        <div className="lectures-top-actions">
-          <label className="lectures-global-search">
-            <FiSearch />
-            <input
-              type="search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search anything..."
-              aria-label="Search lectures"
-            />
-            <span className="lectures-shortcut">Cmd K</span>
-          </label>
-          <button type="button" className="lectures-icon-button" aria-label="Notifications">
-            <FiBell />
-            <span className="lecture-notification-dot">3</span>
-          </button>
-          <button type="button" className="lectures-user-button" aria-label="Open profile">
-            <span className="lectures-user-avatar">{firstInitial}</span>
-            <span className="lectures-user-name">{userName}</span>
-            <FiChevronDown />
-          </button>
-        </div>
-      </header>
-
       <main className="lectures-content">
         <section className="lectures-hero-grid" aria-label="Lectures overview">
           <div className="lectures-heading-block">
-            <div className="lectures-title-row">
-              <h1 className="lectures-page-title">Lectures</h1>
-              <FiStar className="lectures-title-spark" aria-hidden="true" />
-            </div>
-            <p className="lectures-page-subtitle">
-              Learn every Digital SAT topic with structured video lessons and concept walkthroughs.
+            <p className="ut-eyebrow">Learn</p>
+            <h1 className="ut-page-title">Lectures</h1>
+            <p className="ut-page-sub">
+              Learn every Digital SAT skill with illustrated lessons, worked examples, and embedded practice.
             </p>
           </div>
 
@@ -203,81 +239,97 @@ const LecturesPage = () => {
             <span className="lecture-stat-icon"><FiMonitor /></span>
             <div>
               <span className="lecture-stat-label">Topics Available</span>
-              <strong>30+</strong>
+              <strong>29</strong>
               <span className="lecture-stat-note">Across R&W and Math</span>
             </div>
           </div>
-          <div className="lecture-stat-card">
-            <span className="lecture-stat-icon"><FiClock /></span>
-            <div>
-              <span className="lecture-stat-label">Hours of Lessons</span>
-              <strong>40+</strong>
-              <span className="lecture-stat-note">On-demand content</span>
+
+          {/* P1-D: real course progress (replaces the fake "Completed 12" card
+              removed in Phase B) — fed by users/{uid}/lessonProgress. */}
+          {progressLoading ? (
+            <div className="ut-skeleton lecture-progress-skeleton" aria-hidden="true" />
+          ) : (
+            <div className="lecture-stat-card lecture-progress-card">
+              <span className="lecture-stat-icon"><FiCheckCircle /></span>
+              <div className="lecture-progress-body">
+                <span className="lecture-stat-label">Course Progress</span>
+                <strong>{completedCount} of {totalLessons}</strong>
+                <span className="lecture-stat-note">lessons complete</span>
+                <div
+                  className="ut-progress lecture-progress-bar"
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={totalLessons}
+                  aria-valuenow={completedCount}
+                  aria-label={`${completedCount} of ${totalLessons} lessons complete`}
+                >
+                  {completedCount > 0 && (
+                    <div className="ut-progress-fill" style={{ width: `${completedPercent}%` }} />
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="lecture-stat-card">
-            <span className="lecture-stat-icon"><FiCheckCircle /></span>
-            <div>
-              <span className="lecture-stat-label">Completed</span>
-              <strong>12</strong>
-              <span className="lecture-stat-note">Lectures finished</span>
-            </div>
-          </div>
+          )}
         </section>
 
-        <section className="lectures-feature-grid" aria-label="Current lecture and recommendation">
-          <article className="lectures-panel lectures-continue-panel">
-            <div className="lectures-panel-title">
-              <FiStar aria-hidden="true" />
-              <h2>Continue Learning</h2>
-            </div>
-            <div className="lecture-continue-body">
-              <div className="lecture-current-icon">
-                <FiFileText />
-              </div>
-              <div className="lecture-current-copy">
-                <h3>Transitions</h3>
-                <span>Reading & Writing</span>
-                <p>7 of 10 lessons completed</p>
-                <div className="lecture-mini-progress" aria-hidden="true">
-                  <span style={{ width: '70%' }} />
-                </div>
-              </div>
-              <div className="lecture-progress-ring" aria-label="70 percent complete">
-                <span>70%</span>
-              </div>
-              <button
-                type="button"
-                className="lecture-primary-button"
-                onClick={() => handleSubcategoryClick({ id: 8, name: 'Transitions' })}
-              >
-                Resume Lecture
-              </button>
-            </div>
-          </article>
-
+        <section className="lectures-feature-grid" aria-label="Recommendation">
+          {/* P1-D: the fake identical "Continue Learning" card (removed in
+              Phase B) is now a real resume card — most recent lastViewedAt on
+              a not-completed lesson, else the first not-completed lesson. */}
           <article className="lectures-panel lectures-path-panel">
             <div className="lectures-panel-title">
-              <FiStar aria-hidden="true" />
-              <h2>Recommended Path</h2>
+              {resumeTarget?.mode === 'resume' ? <FiPlayCircle aria-hidden="true" /> : <FiStar aria-hidden="true" />}
+              <h2>{resumeTarget?.mode === 'resume' ? 'Continue Learning' : 'Recommended Path'}</h2>
             </div>
-            <div className="lecture-path-card">
-              <div className="lecture-path-highlight">
-                <span className="lecture-path-icon"><FiFlag /></span>
-                <div>
-                  <h3>Start with Reading & Writing Fundamentals</h3>
-                  <p>Build a strong foundation with key reading and writing skills.</p>
+            {progressLoading ? (
+              <div className="ut-skeleton lecture-path-skeleton" aria-hidden="true" />
+            ) : resumeTarget?.mode === 'done' ? (
+              <div className="lecture-path-card">
+                <div className="lecture-path-highlight">
+                  <span className="lecture-path-icon"><FiCheckCircle /></span>
+                  <div>
+                    <h3>All {totalLessons} lessons complete</h3>
+                    <p>You have finished every lesson in the course. Revisit any topic below to review.</p>
+                  </div>
                 </div>
               </div>
-              <button
-                type="button"
-                className="lecture-next-button"
-                onClick={() => handleSubcategoryClick({ id: 1, name: 'Central Ideas and Details' })}
-              >
-                <span>Next up: Central Ideas and Details</span>
-                <FiChevronRight />
-              </button>
-            </div>
+            ) : (
+              <div className="lecture-path-card">
+                <div className="lecture-path-highlight">
+                  <span className="lecture-path-icon">
+                    {resumeTarget?.mode === 'resume' ? <FiPlayCircle /> : <FiFlag />}
+                  </span>
+                  <div>
+                    <h3>
+                      {resumeTarget?.mode === 'resume'
+                        ? 'Continue where you left off'
+                        : completedCount > 0
+                          ? 'Keep your path moving'
+                          : 'Start with Reading & Writing Fundamentals'}
+                    </h3>
+                    <p>
+                      {resumeTarget?.mode === 'resume'
+                        ? `Pick up ${resumeTarget.subcategory.name} right where you stopped.`
+                        : completedCount > 0
+                          ? `${completedCount} of ${totalLessons} lessons complete — your next lesson is ready.`
+                          : 'Build a strong foundation with key reading and writing skills.'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="lecture-next-button"
+                  onClick={() => handleSubcategoryClick(resumeTarget.subcategory)}
+                >
+                  <span>
+                    {resumeTarget?.mode === 'resume'
+                      ? `Continue: ${resumeTarget.subcategory.name}`
+                      : `Next up: ${resumeTarget.subcategory.name}`}
+                  </span>
+                  <FiChevronRight />
+                </button>
+              </div>
+            )}
           </article>
         </section>
 

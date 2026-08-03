@@ -8,6 +8,7 @@ const multer = require('multer');
 const admin = require('firebase-admin');
 const router = express.Router();
 const { requireAdmin } = require('./middleware/auth');
+const { normalizeExplanationParts } = require('./explanationParser');
 
 // Subcategory constants and utilities (Node.js compatible)
 const SUBCATEGORY_NAMES = {
@@ -321,12 +322,19 @@ function validateQuestion(question, index) {
     }
   }
 
-  // Validate explanation if present
+  // Validate explanation if present.
+  // Accepted shapes: string blob, array of lines, or the structured object
+  // from docs/question_generation_prompt.md ({ rule, steps, choiceRebuttals,
+  // thingsToRemember }). Anything else is coerced with a warning.
   if (question.explanation !== undefined && question.explanation !== null) {
-    if (typeof question.explanation !== 'string' && !Array.isArray(question.explanation)) {
-      warnings.push(`explanation should be a string or array, got ${typeof question.explanation}`);
+    if (typeof question.explanation !== 'string' && !Array.isArray(question.explanation) && typeof question.explanation !== 'object') {
+      warnings.push(`explanation should be a string, array, or structured object, got ${typeof question.explanation}`);
     }
   }
+
+  // Produce BOTH the legacy joined explanation string (back-compat) and the
+  // structured explanation object when the source material supports it.
+  const explanationParts = normalizeExplanationParts(question.explanation, question.explanationStructured);
 
   // Normalize question data
   const normalizedQuestion = {
@@ -337,7 +345,8 @@ function validateQuestion(question, index) {
     acceptedAnswers: question.acceptedAnswers || null,
     inputType: question.inputType || 'number',
     answerFormat: question.answerFormat || null,
-    explanation: normalizeExplanation(question.explanation),
+    explanation: explanationParts.explanation,
+    explanationStructured: explanationParts.explanationStructured,
     difficulty: question.difficulty || 'medium',
     subcategory: normalizedSubcategory,
     subCategory: normalizedSubcategory, // For backward compatibility
@@ -350,7 +359,7 @@ function validateQuestion(question, index) {
     passage: question.passage?.trim() || null,
     // Add any other fields that should be preserved
     ...Object.keys(question).reduce((acc, key) => {
-      if (!['text', 'questionType', 'options', 'correctAnswer', 'acceptedAnswers', 'inputType', 'answerFormat', 'explanation', 'difficulty', 'subcategory', 'subCategory', 'subcategoryId', 'source', 'usageContext', 'skillTags', 'graphUrl', 'graphDescription', 'passage'].includes(key)) {
+      if (!['text', 'questionType', 'options', 'correctAnswer', 'acceptedAnswers', 'inputType', 'answerFormat', 'explanation', 'explanationStructured', 'difficulty', 'subcategory', 'subCategory', 'subcategoryId', 'source', 'usageContext', 'skillTags', 'graphUrl', 'graphDescription', 'passage'].includes(key)) {
         acc[key] = question[key];
       }
       return acc;
@@ -365,28 +374,9 @@ function validateQuestion(question, index) {
   };
 }
 
-/**
- * Normalizes explanation field to handle both string and array formats
- * @param {string|Array} explanation - The explanation to normalize
- * @returns {string} Normalized explanation string
- */
-function normalizeExplanation(explanation) {
-  if (!explanation) {
-    return '';
-  }
-  
-  if (Array.isArray(explanation)) {
-    // Convert array to string with newlines
-    return explanation.join('\n').trim();
-  }
-  
-  if (typeof explanation === 'string') {
-    return explanation.trim();
-  }
-  
-  // Fallback for other types
-  return String(explanation).trim();
-}
+// Explanation normalization lives in ./explanationParser.js
+// (normalizeExplanationParts): it flattens string/array/object explanations to
+// the legacy string AND derives the structured object in one pass.
 
 /**
  * Checks if a question already exists in the database
@@ -708,6 +698,10 @@ function normalizeQuestionForResponse(raw) {
     difficulty = 'medium';
   }
 
+  // Legacy string + structured object (derived on the fly for old docs that
+  // still store an array or a parseable blob)
+  const explanationParts = normalizeExplanationParts(raw.explanation, raw.explanationStructured);
+
   return {
     id: raw.id,
     text: (raw.text || '').trim(),
@@ -717,7 +711,8 @@ function normalizeQuestionForResponse(raw) {
     acceptedAnswers: Array.isArray(raw.acceptedAnswers) && raw.acceptedAnswers.length > 0 ? raw.acceptedAnswers : null,
     inputType: raw.inputType || 'number',
     answerFormat: raw.answerFormat || null,
-    explanation: normalizeExplanation(raw.explanation),
+    explanation: explanationParts.explanation,
+    explanationStructured: explanationParts.explanationStructured,
     difficulty,
     subcategory: normalizedSubcategory,
     subCategory: normalizedSubcategory, // back-compat

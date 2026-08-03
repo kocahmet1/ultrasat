@@ -1,6 +1,6 @@
 /* Scope all styles under the modal container className we pass from the component */
 .guest-meta-modal .modal-content {
-  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+  background: var(--ut-bg);
   padding: 0; /* We'll manage spacing inside */
 }
 
@@ -13,10 +13,10 @@
 
 /* Left column */
 .gmm-left {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.06);
+  background: var(--ut-card);
+  border-radius: var(--ut-radius-lg);
+  border: 1px solid var(--ut-rule);
+  box-shadow: var(--ut-shadow);
   display: flex;
   flex-direction: column;
   min-height: 420px;
@@ -30,7 +30,7 @@
   margin: 0 0 10px 0;
   font-size: 16px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--ut-text);
 }
 
 .gmm-controls-row {
@@ -42,8 +42,8 @@
 
 .gmm-tabs {
   display: inline-flex;
-  border: 1px solid #e5e7eb;
-  background: #f1f5f9;
+  border: 1px solid var(--ut-rule);
+  background: var(--ut-bg-alt);
   border-radius: 999px;
   padding: 4px;
 }
@@ -55,19 +55,19 @@
   background: transparent;
   cursor: pointer;
   font-weight: 600;
-  color: #334155;
+  color: var(--ut-text-soft);
 }
 
 .gmm-tabs .tab.active {
-  background: #4f46e5;
-  color: #ffffff;
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
+  box-shadow: var(--ut-shadow);
 }
 
 .gmm-search input {
-  border: 1px solid #e2e8f0;
-  background: #fff;
-  border-radius: 12px;
+  border: 1px solid var(--ut-rule);
+  background: var(--ut-card);
+  border-radius: var(--ut-radius);
   padding: 10px 12px;
   width: 220px;
   outline: none;
@@ -75,8 +75,8 @@
 }
 
 .gmm-search input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  border-color: var(--ut-accent);
+  box-shadow: 0 0 0 4px var(--ut-accent-soft);
 }
 
 .gmm-chip-grid {
@@ -92,42 +92,43 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  border-radius: var(--ut-radius);
+  border: 1px solid var(--ut-rule);
+  background: var(--ut-card);
   cursor: pointer;
   user-select: none;
   transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
-/* Section accents */
+/* Section accents -- Reading and Math are both brand-accent, one shade darker
+   to distinguish the two without introducing a third hue. */
 .chip--reading {
-  border-left: 4px solid #4f46e5;
+  border-left: 4px solid var(--ut-accent);
 }
 .chip--math {
-  border-left: 4px solid #06b6d4;
+  border-left: 4px solid var(--ut-accent-dark);
 }
 
 .chip:hover {
   transform: translateY(-1px);
-  border-color: #c7d2fe;
-  background: #f8fafc;
+  border-color: var(--ut-accent-rule);
+  background: var(--ut-card-soft);
 }
 
 .chip input {
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid #cbd5e1;
-  border-radius: 6px;
+  border: 2px solid var(--ut-rule-strong);
+  border-radius: var(--ut-radius-sm);
   display: inline-block;
   position: relative;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .chip input:checked {
-  border-color: #4f46e5;
-  background: #4f46e5;
+  border-color: var(--ut-accent);
+  background: var(--ut-accent);
 }
 
 .chip input:checked::after {
@@ -137,24 +138,24 @@
   top: 0px;
   width: 5px;
   height: 10px;
-  border: solid #fff;
+  border: solid var(--ut-on-accent);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
 
 .chip .chip-label {
-  color: #0f172a;
+  color: var(--ut-text);
   font-size: 14px;
   font-weight: 600;
 }
 
 .chip--selected {
-  border-color: #a5b4fc;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-color: var(--ut-accent-rule);
+  background: linear-gradient(180deg, var(--ut-card) 0%, var(--ut-card-soft) 100%);
 }
 
 .gmm-empty {
-  color: #64748b;
+  color: var(--ut-muted);
   padding: 28px 12px 8px 12px;
 }
 
@@ -164,17 +165,17 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--ut-rule);
   margin-top: auto;
-  background: #fbfbff;
-  border-radius: 0 0 16px 16px;
+  background: var(--ut-card-soft);
+  border-radius: 0 0 var(--ut-radius-lg) var(--ut-radius-lg);
 }
 
 .gmm-selection-info {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #334155;
+  color: var(--ut-text-soft);
   font-weight: 600;
 }
 
@@ -182,21 +183,21 @@
   display: inline-block;
   width: 8px;
   height: 8px;
-  background: #22c55e;
+  background: var(--ut-success);
   border-radius: 999px;
 }
 
 .gmm-selection-actions .link {
   background: transparent;
   border: none;
-  color: #4f46e5;
+  color: var(--ut-accent-dark);
   font-weight: 700;
   cursor: pointer;
   padding: 6px 8px;
 }
 
 .gmm-selection-actions .link.danger {
-  color: #ef4444;
+  color: var(--ut-danger);
 }
 
 /* Right column */
@@ -207,11 +208,11 @@
 }
 
 .gmm-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
   padding: 16px;
-  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.06);
+  box-shadow: var(--ut-shadow);
 }
 
 .gmm-segmented {
@@ -221,11 +222,11 @@
 }
 
 .gmm-segmented .seg {
-  background: #f1f5f9;
-  border: 1px solid #e5e7eb;
-  color: #0f172a;
+  background: var(--ut-bg-alt);
+  border: 1px solid var(--ut-rule);
+  color: var(--ut-text);
   padding: 12px;
-  border-radius: 12px;
+  border-radius: var(--ut-radius);
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
@@ -238,18 +239,18 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: #94a3b8;
+  background: var(--ut-mono-muted);
 }
 
 .gmm-segmented .seg.active {
-  background: #4f46e5;
-  border-color: #4f46e5;
-  color: #fff;
-  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.35);
+  background: var(--ut-accent);
+  border-color: var(--ut-accent);
+  color: var(--ut-on-accent);
+  box-shadow: var(--ut-shadow);
 }
 
 .gmm-segmented .seg.active .seg-dot {
-  background: #a5b4fc;
+  background: var(--ut-accent-bright);
 }
 
 /* Presets */
@@ -259,16 +260,16 @@
   flex-wrap: wrap;
 }
 .gmm-presets .preset {
-  background: #eef2ff;
-  border: 1px solid #c7d2fe;
-  color: #1e293b;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  color: var(--ut-accent-dark);
   padding: 10px 12px;
-  border-radius: 12px;
+  border-radius: var(--ut-radius);
   font-weight: 700;
   cursor: pointer;
 }
 .gmm-presets .preset:hover {
-  background: #e0e7ff;
+  background: var(--ut-accent-rule);
 }
 
 .gmm-slider-row {
@@ -279,28 +280,28 @@
 }
 
 .gmm-slider-row input[type="range"] {
-  accent-color: #4f46e5;
+  accent-color: var(--ut-accent);
 }
 
 .gmm-number {
-  border: 1px solid #e2e8f0;
-  background: #fff;
-  border-radius: 10px;
+  border: 1px solid var(--ut-rule);
+  background: var(--ut-card);
+  border-radius: var(--ut-radius);
   padding: 10px 8px;
 }
 
 .gmm-hint {
   font-size: 12px;
-  color: #64748b;
+  color: var(--ut-muted);
   margin-top: 8px;
 }
 
 .gmm-error {
-  color: #ef4444;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  color: var(--ut-danger-dark);
+  background: var(--ut-danger-soft);
+  border: 1px solid var(--ut-danger-rule);
   padding: 10px 12px;
-  border-radius: 12px;
+  border-radius: var(--ut-radius);
 }
 
 .gmm-actions {
@@ -311,22 +312,22 @@
 
 .guest-meta-modal .btn {
   border: none;
-  border-radius: 12px;
+  border-radius: var(--ut-radius);
   padding: 12px 16px;
   font-weight: 800;
   cursor: pointer;
 }
 
 .guest-meta-modal .btn.btn--ghost {
-  background: #f1f5f9;
-  color: #0f172a;
-  border: 1px solid #e5e7eb;
+  background: var(--ut-bg-alt);
+  color: var(--ut-text);
+  border: 1px solid var(--ut-rule);
 }
 
 .guest-meta-modal .btn.btn--primary {
-  background: #16a34a;
-  color: #fff;
-  box-shadow: 0 12px 24px rgba(22, 163, 74, 0.3);
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
+  box-shadow: var(--ut-shadow);
 }
 
 .guest-meta-modal .btn:disabled {
@@ -358,11 +359,11 @@
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--ut-bg-alt);
+  color: var(--ut-text);
 }
-.sel-chip--reading { background: #eef2ff; color: #1e1b4b; }
-.sel-chip--math { background: #ecfeff; color: #0e7490; }
+.sel-chip--reading { background: var(--ut-accent-soft); color: var(--ut-accent-dark); }
+.sel-chip--math { background: var(--ut-accent-soft); color: var(--ut-accent-dark); }
 .sel-chip .remove {
   border: none;
   background: transparent;

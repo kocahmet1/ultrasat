@@ -1,30 +1,27 @@
-/* Blog.css - Modern, Sleek Blog Page Styling */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+/* Blog.css - Blog listing page styling, re-themed to Scholar Blue tokens */
 
 :root {
-  --primary-green: #5FCF7F;
-  --primary-green-dark: #4CAF6C;
-  --primary-green-light: #7FE59F;
-  --secondary-blue: #4A90E2;
-  --accent-purple: #9B59B6;
-  --dark-text: #2C3E50;
-  --medium-text: #5A6C7D;
-  --light-text: #7F8C8D;
-  --white: #FFFFFF;
-  --off-white: #F8F9FA;
-  --light-gray: #F5F7FA;
-  --border-color: #E8ECEF;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.15);
-  --border-radius: 12px;
-  --border-radius-sm: 8px;
+  /* Local aliases kept so the rest of this file doesn't need touching --
+     they now resolve to the shared brand tokens instead of the old
+     green/blue/purple palette. */
+  --primary-green: var(--ut-accent);
+  --primary-green-dark: var(--ut-accent-dark);
+  --primary-green-light: var(--ut-accent-soft);
+  --secondary-blue: var(--ut-accent);
+  --dark-text: var(--ut-text);
+  --medium-text: var(--ut-muted);
+  --light-text: var(--ut-mono-muted);
+  --white: var(--ut-card);
+  --off-white: var(--ut-bg);
+  --light-gray: var(--ut-card-soft);
+  /* --border-color / --shadow-sm/md/lg / --border-radius-sm come from the
+     legacy aliases in styles/tokens.css — not re-declared here. */
+  --shadow-hover: var(--ut-shadow-lg);
+  --border-radius: var(--ut-radius-lg);
   --max-width: 1200px;
 }
 
 .blog-page {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--dark-text);
   line-height: 1.6;
 }
@@ -37,8 +34,8 @@
 
 /* Hero Section */
 .blog-hero {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-blue) 100%);
-  color: white;
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
   padding: 4rem 0;
   text-align: center;
   position: relative;
@@ -62,7 +59,6 @@
 }
 
 .blog-hero h1 {
-  font-family: 'Poppins', sans-serif;
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -83,7 +79,7 @@
 
 .search-input-container {
   display: flex;
-  background: white;
+  background: var(--ut-card);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
@@ -91,14 +87,14 @@
 }
 
 .search-input-container:focus-within {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--ut-shadow-lg);
   transform: translateY(-2px);
 }
 
 .search-icon {
   padding: 1rem 1.25rem;
   color: var(--medium-text);
-  background: white;
+  background: var(--ut-card);
 }
 
 .search-input {
@@ -120,7 +116,7 @@
 
 .search-button {
   background: var(--primary-green);
-  color: white;
+  color: var(--ut-on-accent);
   border: none;
   padding: 1rem 2rem;
   font-weight: 600;
@@ -139,7 +135,6 @@
 }
 
 .section-title {
-  font-family: 'Poppins', sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
@@ -154,7 +149,7 @@
 }
 
 .featured-post-card {
-  background: white;
+  background: var(--ut-card);
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-md);
@@ -188,8 +183,8 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: var(--accent-purple);
-  color: white;
+  background: var(--ut-accent-dark);
+  color: var(--ut-on-accent);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -217,7 +212,7 @@
 }
 
 .sidebar-content {
-  background: white;
+  background: var(--ut-card);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-md);
   overflow: hidden;
@@ -233,7 +228,6 @@
 }
 
 .filter-header h3 {
-  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   color: var(--dark-text);
 }
@@ -325,24 +319,25 @@
 .tag-button.active {
   background: var(--primary-green);
   border-color: var(--primary-green);
-  color: white;
+  color: var(--ut-on-accent);
 }
 
 .clear-filters-btn {
-  background: var(--accent-purple);
-  color: white;
-  border: none;
+  background: var(--ut-card-soft);
+  color: var(--ut-text-soft);
+  border: 1px solid var(--ut-rule);
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius-sm);
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
   width: 100%;
   margin-top: 1rem;
 }
 
 .clear-filters-btn:hover {
-  background: #8E44AD;
+  background: var(--ut-bg-alt);
+  border-color: var(--ut-rule-strong);
 }
 
 /* Main Blog Content */
@@ -360,7 +355,6 @@
 }
 
 .posts-header h2 {
-  font-family: 'Poppins', sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
   color: var(--dark-text);
@@ -404,7 +398,7 @@
 }
 
 .post-card {
-  background: white;
+  background: var(--ut-card);
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-md);
@@ -551,7 +545,7 @@
 }
 
 .pagination-btn {
-  background: white;
+  background: var(--ut-card);
   border: 1px solid var(--border-color);
   color: var(--medium-text);
   padding: 0.75rem 1rem;
@@ -564,13 +558,13 @@
 .pagination-btn:hover:not(:disabled) {
   background: var(--primary-green);
   border-color: var(--primary-green);
-  color: white;
+  color: var(--ut-on-accent);
 }
 
 .pagination-btn.active {
   background: var(--primary-green);
   border-color: var(--primary-green);
-  color: white;
+  color: var(--ut-on-accent);
 }
 
 .pagination-btn:disabled {
@@ -589,20 +583,20 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .blog-sidebar {
     position: static;
     order: -1;
   }
-  
+
   .mobile-filter-toggle {
     display: block;
   }
-  
+
   .filters {
     display: none;
   }
-  
+
   .filters.filters-open {
     display: block;
   }
@@ -612,43 +606,43 @@
   .container {
     padding: 0 1rem;
   }
-  
+
   .blog-hero {
     padding: 3rem 0;
   }
-  
+
   .blog-hero h1 {
     font-size: 2.5rem;
   }
-  
+
   .search-input-container {
     flex-direction: column;
   }
-  
+
   .search-button {
     border-radius: 0;
   }
-  
+
   .featured-posts-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .posts-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .posts-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-  
+
   .post-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .pagination {
     flex-wrap: wrap;
   }
@@ -658,21 +652,21 @@
   .blog-hero h1 {
     font-size: 2rem;
   }
-  
+
   .blog-hero p {
     font-size: 1rem;
   }
-  
+
   .section-title {
     font-size: 2rem;
   }
-  
+
   .post-content {
     padding: 1rem;
   }
-  
+
   .pagination-btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.9rem;
   }
-} 
+}

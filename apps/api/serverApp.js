@@ -16,6 +16,7 @@ const {
   logger: defaultLogger,
   normalizeLogger,
 } = require('./logger');
+const { AI_MODEL, AI_REASONING_EFFORT, resolveModel } = require('./config/aiModel');
 
 function loadDefaultRouters() {
   return {
@@ -37,6 +38,7 @@ function loadDefaultRouters() {
     examQualityControlRouter: require('./examQualityControlRoutes'),
     emailRouter: require('./emailRoutes'),
     companionRouter: require('./companionRouter'),
+    coachRouter: require('./coach/coachRoutes'),
     ingestRouter: require('./ingestRoutes'),
   };
 }
@@ -48,12 +50,11 @@ function resolveGraphGeneration({ graphGeneration, logger }) {
 
   logger.log('--- ENV VARS FOR GRAPH GENERATION ---');
   logger.log(`ENABLE_GRAPH_GENERATION: ${process.env.ENABLE_GRAPH_GENERATION}`);
-  logger.log(`GEMINI_API_KEY set: ${!!process.env.GEMINI_API_KEY}`);
   logger.log(`OPENAI_API_KEY set: ${!!process.env.OPENAI_API_KEY}`);
 
+  // Graph generation runs entirely on OpenAI now (gpt-5.6-luna).
   const enabledByEnv =
-    process.env.ENABLE_GRAPH_GENERATION === 'true' &&
-    (process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY);
+    process.env.ENABLE_GRAPH_GENERATION === 'true' && !!process.env.OPENAI_API_KEY;
 
   let router = null;
 
@@ -228,7 +229,7 @@ function createServerApp(options = {}) {
   logger.log(`API Server running in ${process.env.NODE_ENV || 'development'} mode`);
   logger.log(`CORS configured for: ${corsOptions.origin}`);
   logger.log(
-    `SmartQuiz Assistant Model: ${process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini'}`,
+    `SmartQuiz Assistant Model: ${resolveModel('OPENAI_ASSISTANT_MODEL', 'COMPANION_MODEL')}`,
   );
 
   if (process.env.NODE_ENV !== 'production') {
@@ -236,11 +237,11 @@ function createServerApp(options = {}) {
       res.json({
         nodeEnv: process.env.NODE_ENV,
         hasOpenAIKey: !!process.env.OPENAI_API_KEY,
-        openAIAssistantModel: process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini',
-        openAIHelperModel: process.env.OPENAI_HELPER_MODEL || process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini',
-        hasGeminiKey: !!process.env.GEMINI_API_KEY,
-        geminiKeyLength: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 0,
-        geminiModel: process.env.GEMINI_ASSISTANT_MODEL || 'gemini-pro',
+        openAIAssistantModel: resolveModel('OPENAI_ASSISTANT_MODEL', 'COMPANION_MODEL'),
+        openAIHelperModel: resolveModel('OPENAI_HELPER_MODEL', 'OPENAI_ASSISTANT_MODEL', 'COMPANION_MODEL'),
+        siteWideModel: AI_MODEL,
+        siteWideReasoningEffort: AI_REASONING_EFFORT,
+
         timestamp: new Date().toISOString(),
         firebaseInitialized: !!firebaseAdmin,
       });
@@ -290,6 +291,7 @@ function createServerApp(options = {}) {
   }
   app.use('/api/email', attachFirebaseAdmin, routers.emailRouter);
   app.use('/api/companion', attachFirebaseAdmin, routers.companionRouter);
+  app.use('/api/coach', attachFirebaseAdmin, routers.coachRouter);
   app.use('/api/ingest', attachFirebaseAdmin, routers.ingestRouter);
 
   logger.log(

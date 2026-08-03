@@ -1,38 +1,34 @@
 .careers-page {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--ut-bg);
   padding: 2rem 1rem;
 }
 
 .careers-container {
   max-width: 1200px;
   margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  background: var(--ut-card);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
   padding: 3rem;
   line-height: 1.7;
 }
 
 .careers-page h1 {
-  color: #1a202c;
+  color: var(--ut-accent-dark);
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
   text-align: center;
-  background: linear-gradient(135deg, #2563eb, #059669);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .careers-subtitle {
   text-align: center;
-  color: #6b7280;
+  color: var(--ut-muted);
   font-size: 1.25rem;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--ut-rule);
   font-weight: 500;
 }
 
@@ -41,7 +37,7 @@
 }
 
 .careers-page h2 {
-  color: #2563eb;
+  color: var(--ut-accent-dark);
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -49,7 +45,7 @@
 }
 
 .careers-page h3 {
-  color: #374151;
+  color: var(--ut-text-soft);
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -57,7 +53,7 @@
 }
 
 .careers-page p {
-  color: #4b5563;
+  color: var(--ut-muted);
   margin-bottom: 1rem;
   font-size: 1.1rem;
   line-height: 1.6;
@@ -72,28 +68,28 @@
 }
 
 .culture-value {
-  background: #f8fafc;
-  border-radius: 12px;
+  background: var(--ut-card-soft);
+  border-radius: var(--ut-radius-lg);
   padding: 2rem;
   text-align: center;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--ut-rule);
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 .culture-value:hover {
-  border-color: #2563eb;
+  border-color: var(--ut-accent);
   transform: translateY(-2px);
 }
 
 .culture-value h3 {
-  color: #2563eb;
+  color: var(--ut-accent-dark);
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
 
 .culture-value p {
-  color: #6b7280;
+  color: var(--ut-muted);
   font-size: 1rem;
   margin: 0;
   text-align: center;
@@ -108,14 +104,14 @@
 }
 
 .benefit-category {
-  background: #f8fafc;
-  border-radius: 12px;
+  background: var(--ut-card-soft);
+  border-radius: var(--ut-radius-lg);
   padding: 2rem;
-  border-left: 4px solid #2563eb;
+  border-left: 4px solid var(--ut-accent);
 }
 
 .benefit-category h3 {
-  color: #2563eb;
+  color: var(--ut-accent-dark);
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -128,9 +124,9 @@
 }
 
 .benefit-category li {
-  color: #4b5563;
+  color: var(--ut-muted);
   padding: 0.5rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--ut-rule);
   position: relative;
   padding-left: 1.5rem;
 }
@@ -140,8 +136,8 @@
 }
 
 .benefit-category li:before {
-  content: "✓";
-  color: #059669;
+  content: "\2713";
+  color: var(--ut-success);
   font-weight: bold;
   position: absolute;
   left: 0;
@@ -149,7 +145,7 @@
 
 /* Positions Section */
 .positions-intro {
-  color: #6b7280;
+  color: var(--ut-muted);
   font-size: 1.1rem;
   margin-bottom: 2rem;
 }
@@ -161,16 +157,16 @@
 }
 
 .position-card {
-  background: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  background: var(--ut-card);
+  border: 2px solid var(--ut-rule-strong);
+  border-radius: var(--ut-radius-lg);
   padding: 2rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .position-card:hover {
-  border-color: #2563eb;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+  border-color: var(--ut-accent);
+  box-shadow: var(--ut-shadow);
 }
 
 .position-header {
@@ -178,7 +174,7 @@
 }
 
 .position-header h3 {
-  color: #1a202c;
+  color: var(--ut-text);
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -191,8 +187,8 @@
 }
 
 .position-meta span {
-  background: #f3f4f6;
-  color: #4b5563;
+  background: var(--ut-bg-alt);
+  color: var(--ut-muted);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -200,36 +196,36 @@
 }
 
 .department {
-  background: #dbeafe !important;
-  color: #2563eb !important;
+  background: var(--ut-accent-soft) !important;
+  color: var(--ut-accent-dark) !important;
 }
 
 .location {
-  background: #d1fae5 !important;
-  color: #059669 !important;
+  background: var(--ut-bg-alt) !important;
+  color: var(--ut-text-soft) !important;
 }
 
 .type {
-  background: #fef3c7 !important;
-  color: #d97706 !important;
+  background: var(--ut-warn-soft) !important;
+  color: var(--ut-warn-dark) !important;
 }
 
 .position-description {
-  color: #6b7280;
+  color: var(--ut-muted);
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
 
 .position-requirements h4 {
-  color: #374151;
+  color: var(--ut-text-soft);
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
 }
 
 .position-requirements ul {
-  color: #4b5563;
+  color: var(--ut-muted);
   padding-left: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -239,11 +235,11 @@
 }
 
 .apply-btn {
-  background: linear-gradient(135deg, #2563eb, #059669);
-  color: white;
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--ut-radius);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -252,7 +248,7 @@
 
 .apply-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: var(--ut-shadow-lg);
 }
 
 /* Diversity Section */
@@ -261,8 +257,8 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
-  background: #f0f9ff;
-  border-radius: 12px;
+  background: var(--ut-accent-soft);
+  border-radius: var(--ut-radius-lg);
   padding: 2rem;
 }
 
@@ -271,14 +267,14 @@
 }
 
 .diversity-stat h3 {
-  color: #2563eb;
+  color: var(--ut-accent-dark);
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .diversity-stat p {
-  color: #374151;
+  color: var(--ut-text-soft);
   font-weight: 600;
   margin: 0;
 }
@@ -299,8 +295,8 @@
 .step-number {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #2563eb, #059669);
-  color: white;
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -311,27 +307,27 @@
 }
 
 .process-step h3 {
-  color: #374151;
+  color: var(--ut-text-soft);
   font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 
 .process-step p {
-  color: #6b7280;
+  color: var(--ut-muted);
   font-size: 1rem;
   margin: 0;
 }
 
 /* Internship Section */
 .internship-benefits {
-  background: #fef7ed;
-  border-radius: 12px;
+  background: var(--ut-warn-soft);
+  border-radius: var(--ut-radius-lg);
   padding: 2rem;
   margin-top: 1rem;
 }
 
 .internship-benefits ul {
-  color: #4b5563;
+  color: var(--ut-muted);
   padding-left: 1.5rem;
   margin: 0;
 }
@@ -352,11 +348,11 @@
 }
 
 .contact-btn {
-  background: linear-gradient(135deg, #2563eb, #059669);
-  color: white;
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
   border: none;
   padding: 1rem 2rem;
-  border-radius: 8px;
+  border-radius: var(--ut-radius);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -365,22 +361,22 @@
 
 .contact-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+  box-shadow: var(--ut-shadow-lg);
 }
 
 .general-contact {
-  color: #2563eb;
+  color: var(--ut-accent-dark);
   text-decoration: none;
   font-weight: 600;
   padding: 1rem 1.5rem;
-  border: 2px solid #2563eb;
-  border-radius: 8px;
+  border: 2px solid var(--ut-accent);
+  border-radius: var(--ut-radius);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .general-contact:hover {
-  background-color: #2563eb;
-  color: white;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
 }
 
 /* Mobile Responsiveness */
@@ -388,54 +384,54 @@
   .careers-page {
     padding: 1rem 0.5rem;
   }
-  
+
   .careers-container {
     padding: 2rem 1.5rem;
     margin: 0 0.5rem;
   }
-  
+
   .careers-page h1 {
     font-size: 2.5rem;
   }
-  
+
   .careers-subtitle {
     font-size: 1.1rem;
   }
-  
+
   .careers-page h2 {
     font-size: 1.6rem;
   }
-  
+
   .culture-values {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .benefits-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .position-meta {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .process-steps {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .diversity-stats {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .recruiting-cta {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .contact-btn,
   .general-contact {
     width: 100%;
@@ -447,28 +443,28 @@
   .careers-page h1 {
     font-size: 2rem;
   }
-  
+
   .careers-subtitle {
     font-size: 1rem;
   }
-  
+
   .careers-container {
     padding: 1.5rem 1rem;
   }
-  
+
   .culture-value {
     padding: 1.5rem;
   }
-  
+
   .benefit-category {
     padding: 1.5rem;
   }
-  
+
   .position-card {
     padding: 1.5rem;
   }
-  
+
   .diversity-stat h3 {
     font-size: 2rem;
   }
-} 
+}

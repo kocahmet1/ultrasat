@@ -103,7 +103,8 @@ function formatLabel(value, fallback = 'Unknown') {
 
 function formatModelName(value) {
   const model = String(value || '').trim();
-  if (!model) return 'GPT-5.6 Sol';
+  if (!model) return 'GPT-5.6 Luna';
+  if (normalizeToken(model) === 'gpt_5_6_luna') return 'GPT-5.6 Luna';
   if (normalizeToken(model) === 'gpt_5_6_sol') return 'GPT-5.6 Sol';
   return model;
 }
@@ -361,7 +362,7 @@ function AdminExamQualityControl() {
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [catalogRefreshing, setCatalogRefreshing] = useState(false);
   const [modelSettings, setModelSettings] = useState({
-    model: 'gpt-5.6-sol',
+    model: 'gpt-5.6-luna',
     reasoningEffort: 'max',
     reasoningMode: 'pro',
   });
@@ -472,7 +473,7 @@ function AdminExamQualityControl() {
       setReferences(Array.isArray(data.references) ? data.references : []);
       setRuns(Array.isArray(data.runs) ? data.runs : []);
       setModelSettings({
-        model: data.model || 'gpt-5.6-sol',
+        model: data.model || 'gpt-5.6-luna',
         reasoningEffort: data.reasoningEffort || 'max',
         reasoningMode: data.reasoningMode || 'pro',
       });
@@ -1181,7 +1182,7 @@ function AdminExamQualityControl() {
                         {formatLabel(activeRun.status)}
                       </span>
                       <span>{formatLabel(activeRun.phase, 'Audit')} phase</span>
-                      <span>{activeRun.model || 'GPT-5.6 Sol'}</span>
+                      <span>{activeRun.model || 'GPT-5.6 Luna'}</span>
                       <span>{activeRun.reasoningEffort || 'max'} reasoning</span>
                       <span>
                         {activeRun.reasoningMode || modelSettings.reasoningMode || 'standard'} mode

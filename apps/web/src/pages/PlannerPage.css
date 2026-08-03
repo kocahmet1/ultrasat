@@ -1,0 +1,477 @@
+/* PlannerPage.css — P2-A Study Planner (/planner).
+   Composed from ut-kit classes; only page-specific layout lives here.
+   Tokens (--ut-*) throughout — no raw hex. Red states reuse the kit's
+   .ut-chip--hard tone via class composition in the JSX. */
+
+/* ------------------------------------------------------------------ setup */
+
+.pl-setup-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.pl-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.pl-setup-card {
+  max-width: 720px;
+}
+
+.pl-setup-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.pl-setup-date {
+  margin: 0 0 18px;
+}
+
+.pl-change-date {
+  font-size: 12.5px;
+}
+
+.pl-field {
+  margin-bottom: 16px;
+}
+
+.pl-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.pl-opt {
+  border: 1px solid var(--ut-rule-strong);
+  border-radius: 999px;
+  background: var(--ut-card);
+  color: var(--ut-text-soft);
+  font-family: var(--ut-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.pl-opt:hover {
+  border-color: var(--ut-accent);
+}
+
+.pl-opt--on {
+  border-color: var(--ut-accent);
+  background: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+}
+
+.pl-opt--day {
+  min-width: 52px;
+  text-align: center;
+  font-family: var(--ut-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pl-hint {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: var(--ut-mono-muted);
+}
+
+.pl-error {
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ut-text);
+  border: 1px solid var(--ut-rule-strong);
+  border-left: 3px solid var(--ut-danger);
+  background: var(--ut-card-soft);
+  border-radius: var(--ut-radius-sm);
+  padding: 10px 12px;
+}
+
+.pl-setup-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* ----------------------------------------------------------------- banner */
+
+.pl-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  border: 1px solid var(--ut-rule-strong);
+  border-left: 3px solid var(--ut-accent);
+  background: var(--ut-card);
+  border-radius: var(--ut-radius);
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+}
+
+.pl-banner > svg {
+  flex-shrink: 0;
+  color: var(--ut-accent-dark);
+}
+
+.pl-banner-text {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* --------------------------------------------------------------- head row */
+
+.pl-header-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(0, 1.6fr) minmax(190px, 0.9fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.pl-head-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pl-head-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ut-muted);
+}
+
+.pl-head-sub svg {
+  color: var(--ut-accent-dark);
+}
+
+.pl-progress-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pl-progress-pct {
+  font-family: var(--ut-font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+.pl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pl-note {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ut-mono-muted);
+}
+
+.pl-replan-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pl-replan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------------- all done */
+
+.pl-alldone {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pl-alldone-icon {
+  font-size: 30px;
+  color: var(--ut-success);
+  flex-shrink: 0;
+}
+
+.pl-alldone > div {
+  flex: 1;
+  min-width: 220px;
+}
+
+.pl-alldone-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------------------------- tabs */
+
+.pl-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--ut-rule);
+  margin-bottom: 16px;
+}
+
+.pl-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-family: var(--ut-font-body);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ut-muted);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.pl-tab:hover {
+  color: var(--ut-text);
+}
+
+.pl-tab--on {
+  color: var(--ut-text);
+  border-bottom-color: var(--ut-accent);
+}
+
+/* Count pill: shape here, red tone from .ut-chip--hard composition. */
+.pl-tab-badge {
+  padding: 1px 8px;
+  font-size: 10px;
+}
+
+/* -------------------------------------------------------------- day groups */
+
+.pl-day {
+  margin-bottom: 18px;
+}
+
+.pl-day-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.pl-day-name {
+  font-family: var(--ut-font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ut-text);
+}
+
+.pl-day-line {
+  flex: 1;
+  height: 1px;
+  background: var(--ut-rule);
+}
+
+.pl-day-total {
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  white-space: nowrap;
+}
+
+.pl-day-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* -------------------------------------------------------------- task rows */
+
+.pl-task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
+  padding: 11px 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.pl-task:hover {
+  border-color: var(--ut-rule-strong);
+  box-shadow: var(--ut-shadow-sm);
+}
+
+.pl-task--done {
+  background: var(--ut-card-soft);
+  border-style: dashed;
+}
+
+.pl-task-check {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  accent-color: var(--ut-success);
+  cursor: pointer;
+}
+
+/* Type chips: lesson = accent (kit), practice = the ink hue, review = neutral. */
+.pl-type {
+  min-width: 76px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pl-chip--practice {
+  border-color: var(--ut-ink);
+  background: var(--ut-ink);
+  color: var(--ut-accent-bright);
+}
+
+.pl-task-label {
+  flex: 1;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ut-text);
+  overflow: hidden;
+}
+
+.pl-task-label > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-task-done-icon {
+  color: var(--ut-success);
+  flex-shrink: 0;
+}
+
+.pl-task--done .pl-task-strike {
+  text-decoration: line-through;
+  color: var(--ut-mono-muted);
+}
+
+.pl-task-min {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--ut-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ut-mono-muted);
+  white-space: nowrap;
+}
+
+.pl-task-date {
+  font-family: var(--ut-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ut-mono-muted);
+  white-space: nowrap;
+}
+
+.pl-task-start {
+  flex-shrink: 0;
+}
+
+.pl-spinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  display: inline-block;
+  animation: pl-spin 0.8s linear infinite;
+}
+
+@keyframes pl-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-spinner {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------- footers */
+
+.pl-showall {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: 1px dashed var(--ut-rule-strong);
+  border-radius: var(--ut-radius-sm);
+  width: 100%;
+  justify-content: center;
+  padding: 11px 14px;
+  cursor: pointer;
+  font-family: var(--ut-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ut-text-soft);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pl-showall:hover {
+  border-color: var(--ut-accent);
+  color: var(--ut-accent-dark);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 900px) {
+  .pl-header-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .pl-task {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .pl-task-label {
+    flex-basis: calc(100% - 120px);
+  }
+
+  .pl-task-min {
+    margin-left: 29px;
+  }
+
+  .pl-task-start {
+    margin-left: auto;
+  }
+}

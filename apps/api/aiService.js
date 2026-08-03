@@ -4,12 +4,11 @@
  */
 
 const OpenAI = require('openai');
-const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
-
-// Get Gemini API Key from environment variables
-const getGeminiApiKey = () => {
-  return process.env.GEMINI_API_KEY || '';
-};
+const {
+  resolveModel,
+  reasoningConfig,
+  outputTokenBudget,
+} = require('./config/aiModel');
 
 const getOpenAIClient = () => {
   const apiKey = process.env.OPENAI_API_KEY || '';
@@ -19,38 +18,16 @@ const getOpenAIClient = () => {
   return new OpenAI({ apiKey });
 };
 
-// Get OpenAI model for the SmartQuiz assistant
-const getAssistantModelName = () => {
-  return process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini';
-};
+// Get OpenAI model for the SmartQuiz assistant (default: gpt-5.6-luna)
+const getAssistantModelName = () =>
+  resolveModel('OPENAI_ASSISTANT_MODEL', 'COMPANION_MODEL');
 
-// Get Gemini Model for legacy vocabulary helper functions in this file
-const getGeminiModelName = () => {
-  return process.env.GEMINI_ASSISTANT_MODEL || 'gemini-pro';
-};
+// Vocabulary helpers previously ran on Gemini; they now use the same OpenAI
+// model as everything else on the site.
+const getVocabularyModelName = () =>
+  resolveModel('OPENAI_VOCABULARY_MODEL', 'OPENAI_ASSISTANT_MODEL', 'COMPANION_MODEL');
 
-const MAX_OUTPUT_TOKENS = parseInt(process.env.ASSISTANT_MAX_TOKENS || '1000', 10);
-
-const genAI = new GoogleGenerativeAI(getGeminiApiKey());
-
-const modelConfig = {
-  // No specific generationConfig here, can be added if needed (e.g., temperature)
-  // safetySettings can be configured here if default blocking is too aggressive
-  safetySettings: [
-    { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-    { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-    { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-    { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  ],
-};
-
-const getGenerativeModel = (modelName) => genAI.getGenerativeModel({
-  model: modelName,
-  generationConfig: {
-    maxOutputTokens: MAX_OUTPUT_TOKENS,
-  },
-  ...modelConfig,
-});
+const MAX_OUTPUT_TOKENS = outputTokenBudget(process.env.ASSISTANT_MAX_TOKENS);
 
 const getCoachActionInstruction = (coachAction) => {
   const instructions = {
@@ -148,6 +125,7 @@ Skill focus: "${currentQuestion.skillLabel || currentQuestion.subcategory || 'Ge
 
     const response = await openai.responses.create({
       model: modelName,
+      reasoning: reasoningConfig(),
       input: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
@@ -184,15 +162,15 @@ Skill focus: "${currentQuestion.skillLabel || currentQuestion.subcategory || 'Ge
 // --- Legacy placeholder functions ---
 
 exports.generateConceptAnalysis = async (wrongQuestions, subcategory) => {
-  console.warn('generateConceptAnalysis is not yet implemented for Gemini API. Using placeholder.');
-  // TODO: Implement with Gemini, requires careful prompt engineering for JSON output
-  return { concepts: [{ name: 'Placeholder Concept (Gemini)', explanation: 'This function needs to be updated for Gemini.' }] };
+  console.warn('generateConceptAnalysis placeholder in aiService; the live implementation lives in openaiService.js.');
+
+  return { concepts: [{ name: 'Placeholder Concept', explanation: 'This placeholder is superseded by openaiService.js.' }] };
 };
 
 exports.generateConceptDrill = async (conceptId, conceptName, explanation, difficulty, subcategory) => {
-  console.warn('generateConceptDrill is not yet implemented for Gemini API. Using placeholder.');
-  // TODO: Implement with Gemini, requires careful prompt engineering for JSON output
-  return { questions: [{ text: 'Placeholder Question (Gemini)', options: ['A', 'B'], correctAnswer: 'A', explanation: 'This function needs to be updated for Gemini.' }] };
+  console.warn('generateConceptDrill placeholder in aiService; the live implementation lives in openaiService.js.');
+
+  return { questions: [{ text: 'Placeholder Question', options: ['A', 'B'], correctAnswer: 'A', explanation: 'This placeholder is superseded by openaiService.js.' }] };
 };
 
 /**
@@ -202,13 +180,9 @@ exports.generateConceptDrill = async (conceptId, conceptName, explanation, diffi
  * @returns {Promise<Array>} - Array of word objects { word: string, definition: string }
  */
 exports.getVocabularyDefinitions = async ({ questionContent }) => {
-  const apiKey = getGeminiApiKey();
-  if (!apiKey) {
-    throw new Error('Gemini API key is required. Set GEMINI_API_KEY in environment variables.');
-  }
+  const openai = getOpenAIClient();
+  const modelName = getVocabularyModelName();
 
-  const modelName = getGeminiModelName();
-  
   try {
     // Extract question text and options
     const questionText = questionContent.text || '';
@@ -235,16 +209,27 @@ For each challenging word, provide the word and its definition as used in this s
 
 VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other text, explanations, or markdown code fences (like those used for 'json' code blocks) before or after the array.`;
 
-    console.log('Requesting vocabulary analysis from Gemini');
-    
-    // Get the generative model
-    const generativeModel = getGenerativeModel(modelName);
-    
-    // Generate content
-    const result = await generativeModel.generateContent(prompt);
-    const response = await result.response;
-    const responseText = response.text().trim();
-    
+    console.log(`Requesting vocabulary analysis from OpenAI (${modelName})`);
+
+    const response = await openai.responses.create({
+      model: modelName,
+      reasoning: reasoningConfig(),
+      input: [
+        {
+          role: 'system',
+          content: 'You are an SAT vocabulary assistant. Return only a valid JSON array. No markdown fences, no commentary.'
+        },
+        { role: 'user', content: prompt }
+      ],
+      store: false,
+      max_output_tokens: MAX_OUTPUT_TOKENS,
+    });
+
+    const responseText = extractResponseText(response).trim();
+    if (!responseText) {
+      throw new Error('No content returned from OpenAI vocabulary response.');
+    }
+
     // Extract the JSON array from the response
     let vocabularyWords = [];
     try {
@@ -286,7 +271,7 @@ VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other
     
     return vocabularyWords;
   } catch (error) {
-    console.error('Error getting vocabulary definitions from Gemini:', error);
+    console.error('Error getting vocabulary definitions from OpenAI:', error);
     throw new Error('Failed to analyze vocabulary. Please try again.');
   }
 };

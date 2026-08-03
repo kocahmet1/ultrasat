@@ -138,7 +138,7 @@ const MembershipUpgrade = () => {
 
   const plans = {
     plus: {
-      name: 'Plus',
+      name: 'Pro',
       prices: { monthly: 9.99, yearly: 99.99 },
       description: 'Unlock detailed analytics and unlimited practice.',
       features: [

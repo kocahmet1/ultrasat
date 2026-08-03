@@ -140,7 +140,7 @@ export const associateConceptsWithQuestion = async (questionId, subcategoryId, c
       subcategoryId,
       conceptIds,
       selectedAt: serverTimestamp(),
-      llmModel: metadata.llmModel || 'gemini-pro',
+      llmModel: metadata.llmModel || 'gpt-5.6-luna',
       confidence: metadata.confidence || null,
       reviewedBy: metadata.reviewedBy || null,
       lastUpdated: serverTimestamp()

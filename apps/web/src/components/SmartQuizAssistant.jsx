@@ -1,7 +1,6 @@
 // src/components/SmartQuizAssistant.jsx
 import React, { useState, useRef, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane, faLightbulb, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FiSend, FiZap, FiX } from 'react-icons/fi';
 import '../styles/SmartQuizAssistant.css';
 
 /**
@@ -85,14 +84,14 @@ const SmartQuizAssistant = ({
     <div className={`smart-quiz-assistant ${showAssistant ? 'expanded' : 'collapsed'}`}>
       <div className="assistant-header">
         <h3>
-          <FontAwesomeIcon icon={faLightbulb} /> Study Helper
+          <FiZap /> Study Helper
         </h3>
         <div className="assistant-header-buttons">
           <button className="toggle-button" onClick={toggleAssistant}>
             {showAssistant ? '−' : '+'}
           </button>
           <button className="close-button" onClick={handleClose}>
-            <FontAwesomeIcon icon={faTimes} />
+            <FiX />
           </button>
         </div>
       </div>
@@ -102,7 +101,7 @@ const SmartQuizAssistant = ({
           <div className="chat-container">
             {history.length === 0 ? (
               <div className="empty-chat">
-                <FontAwesomeIcon icon={faLightbulb} size="2x" />
+                <FiZap size={32} />
                 <p>Ask any question about this problem or request a tip!</p>
               </div>
             ) : (
@@ -144,7 +143,7 @@ const SmartQuizAssistant = ({
                 type="submit" 
                 disabled={!input.trim() || loading}
               >
-                <FontAwesomeIcon icon={faPaperPlane} />
+                <FiSend />
               </button>
             </form>
           </div>

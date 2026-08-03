@@ -19,19 +19,19 @@ function Careers() {
           
           <div className="culture-values">
             <div className="culture-value">
-              <h3>🤝 Collaborative</h3>
+              <h3>Collaborative</h3>
               <p>We believe the best solutions come from diverse perspectives working together.</p>
             </div>
             <div className="culture-value">
-              <h3>🚀 Innovative</h3>
+              <h3>Innovative</h3>
               <p>We're always exploring new ways to improve education through technology.</p>
             </div>
             <div className="culture-value">
-              <h3>🎯 Student-Focused</h3>
+              <h3>Student-Focused</h3>
               <p>Everything we do is centered around helping students succeed.</p>
             </div>
             <div className="culture-value">
-              <h3>📈 Growth-Minded</h3>
+              <h3>Growth-Minded</h3>
               <p>We support each other's professional and personal development.</p>
             </div>
           </div>

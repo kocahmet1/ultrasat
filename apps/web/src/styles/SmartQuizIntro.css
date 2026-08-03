@@ -1,23 +1,20 @@
+/* SmartQuizIntro — retinted to the unified design language (styles/tokens.css).
+   Sizes in px on purpose: html { font-size: 62.5% } rem scaling must not warp it. */
+
 .smart-quiz-intro__container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 28px 20px 60px;
+  font-family: var(--ut-font-body);
+  color: var(--ut-text);
 }
 
 .intro-card {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background-color: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
   padding: 30px;
-  margin-top: 30px;
-}
-
-.intro-card h1 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #2c3e50;
-  font-size: 2rem;
 }
 
 /* Compact quiz info layout */
@@ -25,9 +22,10 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
-  background-color: #f8f9fa;
+  background-color: var(--ut-card-soft);
+  border: 1px solid var(--ut-rule);
   padding: 18px;
-  border-radius: 8px;
+  border-radius: var(--ut-radius);
 }
 
 .subcategory-info, .level-info-combined {
@@ -40,7 +38,7 @@
 
 .subcategory-info {
   padding-right: 15px;
-  border-right: 1px solid #e9ecef;
+  border-right: 1px solid var(--ut-rule);
 }
 
 .level-info-combined {
@@ -62,46 +60,50 @@
   gap: 8px;
 }
 
-.label {
-  font-size: 0.85rem;
-  color: #6c757d;
+/* Mono caption (kit label recipe), scoped so it cannot leak to other pages */
+.quiz-info-compact .label {
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
   font-weight: 500;
 }
 
 .badge-mini {
   display: inline-block;
   padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.85rem;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 600;
   text-align: center;
 }
 
 .badge-mini.current {
-  background-color: #e3f2fd;
-  color: #1976d2;
-  border: 1px solid #bbdefb;
+  background-color: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+  border: 1px solid var(--ut-accent-rule);
 }
 
 .badge-mini.quiz {
-  background-color: #4c6ef5;
-  color: white;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
   text-transform: capitalize;
 }
 
 .current-level-display {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #5b86e5, #36d1dc);
-  color: white;
+  background: var(--ut-panel);
+  color: var(--ut-on-ink);
   padding: 20px;
-  border-radius: 10px;
+  border-radius: var(--ut-radius);
   margin-bottom: 25px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--ut-shadow);
 }
 
 .level-icon {
-  font-size: 2.5rem;
+  font-size: 25px;
   margin-right: 25px;
   background: rgba(255, 255, 255, 0.2);
   height: 70px;
@@ -118,7 +120,8 @@
 }
 
 .level-content h3 {
-  font-size: 1.5rem;
+  font-family: var(--ut-font-display);
+  font-size: 18px;
   margin: 0 0 5px 0;
   font-weight: 600;
 }
@@ -132,50 +135,53 @@
   display: inline-block;
   background-color: rgba(255, 255, 255, 0.25);
   padding: 8px 20px;
-  font-size: 1.3rem;
+  font-size: 14px;
   font-weight: 700;
-  border-radius: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  box-shadow: var(--ut-shadow-sm);
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .quiz-info h2, .quiz-info-compact h2 {
-  font-size: 1.1rem;
-  color: #6c757d;
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ut-mono-muted);
   margin-bottom: 10px;
   text-align: center;
 }
 
 .subcategory-badge {
   display: inline-block;
-  background-color: #3498db;
-  color: white;
-  font-weight: bold;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-size: 16px;
+  background-color: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+  border: 1px solid var(--ut-accent-rule);
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
   margin-top: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   text-align: center;
   letter-spacing: 0.3px;
 }
 
 .level-badge {
   display: inline-block;
-  background-color: #4c6ef5;
-  color: white;
-  font-weight: bold;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
+  font-weight: 600;
   padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 16px;
+  border-radius: 999px;
+  font-size: 14px;
   text-transform: capitalize;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .quiz-description {
-  background-color: #f0f7ff;
-  border: 1px solid #cce5ff;
-  border-radius: 8px;
+  background-color: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius);
   padding: 18px;
   margin-bottom: 25px;
 }
@@ -183,9 +189,11 @@
 .quiz-description h2 {
   display: flex;
   align-items: center;
-  color: #0056b3;
+  color: var(--ut-accent-dark);
   margin-bottom: 12px;
-  font-size: 1.2rem;
+  font-family: var(--ut-font-display);
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .quiz-description h2 svg {
@@ -196,6 +204,7 @@
   padding-left: 20px;
   line-height: 1.5;
   margin: 0;
+  color: var(--ut-text-soft);
 }
 
 .quiz-description li {
@@ -214,35 +223,27 @@
   margin-top: 25px;
 }
 
+/* Buttons are kit classes (.ut-btn) in the JSX now; keep only layout here */
 .actions button {
   flex: 1;
-  padding: 12px 20px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  border: none;
 }
 
+/* Legacy button classes kept retinted for safety (other pages share these names) */
 .btn-primary {
-  background-color: #0d6efd;
-  color: white;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
 }
 
 .btn-primary:hover {
-  background-color: #0b5ed7;
+  background-color: var(--ut-accent-bright);
 }
 
 .btn-secondary {
-  background-color: #f8f9fa;
-  color: #2c3e50;
-  border: 1px solid #dee2e6;
+  background-color: var(--ut-card-soft);
+  color: var(--ut-text-soft);
+  border: 1px solid var(--ut-rule-strong);
 }
 
 .btn-secondary:hover {
-  background-color: #e9ecef;
+  background-color: var(--ut-bg-alt);
 }

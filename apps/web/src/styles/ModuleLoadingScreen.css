@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: #f7f8fa;
+  background: var(--ut-bg);
 }
 
 .module-loading-animation {
@@ -17,7 +17,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #ffd600;
+  background: var(--ut-accent);
   animation: loading-bounce 1.4s infinite both;
 }
 
@@ -41,7 +41,7 @@
 
 .module-loading-text {
   font-size: 1.3rem;
-  color: #222;
+  color: var(--ut-text);
   font-weight: 500;
   letter-spacing: 0.04em;
 }

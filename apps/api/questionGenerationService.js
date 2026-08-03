@@ -2,16 +2,21 @@ const fetch = require('node-fetch');
 const {
   resolveSubcategory,
 } = require('../../scripts/lib/subcategoryMap');
+const {
+  resolveModel,
+  resolveReasoningEffort,
+  outputTokenBudget,
+} = require('./config/aiModel');
 
-const DEFAULT_GENERATION_MODEL = process.env.OPENAI_QUESTION_GENERATION_MODEL || 'gpt-5.5';
-const DEFAULT_REVIEW_MODEL =
-  process.env.OPENAI_QUESTION_REVIEW_MODEL ||
-  process.env.OPENAI_QUESTION_GENERATION_MODEL ||
-  'gpt-5.5';
+const DEFAULT_GENERATION_MODEL = resolveModel('OPENAI_QUESTION_GENERATION_MODEL');
+const DEFAULT_REVIEW_MODEL = resolveModel(
+  'OPENAI_QUESTION_REVIEW_MODEL',
+  'OPENAI_QUESTION_GENERATION_MODEL'
+);
 
 const PROMPT_VERSION = 'sat-question-creation-v1';
-const DEFAULT_MAX_OUTPUT_TOKENS = parseInt(process.env.OPENAI_QUESTION_GENERATION_MAX_OUTPUT_TOKENS || '12000', 10);
-const DEFAULT_REVIEW_MAX_OUTPUT_TOKENS = parseInt(process.env.OPENAI_QUESTION_REVIEW_MAX_OUTPUT_TOKENS || '5000', 10);
+const DEFAULT_MAX_OUTPUT_TOKENS = outputTokenBudget(process.env.OPENAI_QUESTION_GENERATION_MAX_OUTPUT_TOKENS || '12000');
+const DEFAULT_REVIEW_MAX_OUTPUT_TOKENS = outputTokenBudget(process.env.OPENAI_QUESTION_REVIEW_MAX_OUTPUT_TOKENS || '5000');
 
 const QUALITY_PASS_SCORE = 85;
 
@@ -351,7 +356,7 @@ async function callOpenAIJson({
   schema,
   schemaName,
   maxOutputTokens,
-  reasoningEffort = 'high',
+  reasoningEffort = resolveReasoningEffort('OPENAI_QUESTION_GENERATION_REASONING_EFFORT'),
 }) {
   const apiKey = getApiKey();
   if (!apiKey) {
@@ -382,7 +387,7 @@ async function callOpenAIJson({
         },
       },
       store: false,
-      max_output_tokens: maxOutputTokens,
+      max_output_tokens: outputTokenBudget(maxOutputTokens),
     }),
   });
 

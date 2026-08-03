@@ -30,7 +30,20 @@
   difficulty: number,        // 1-5 scale of difficulty
   module: string,            // Which exam module this belongs to (e.g., "Module 1", "Algebra Quiz 1")
   moduleType: string,        // "full-exam" or "targeted-quiz"
-  explanation: string,       // Explanation of the answer (shown after completion)
+  explanation: string,       // Legacy flat explanation of the answer (shown after completion).
+                             // Kept on every question as the fallback when
+                             // explanationStructured is absent.
+  explanationStructured: {   // OPTIONAL structured explanation (UWorld-style).
+                             // Rendered by components/ExplanationCard.jsx; any
+                             // subset of the fields may be present. Text fields
+                             // may contain LaTeX using $...$ / \( \) delimiters.
+    rule: string,            //   (optional) The rule/concept being tested, one line
+    steps: array,            //   (optional) string[] — step-by-step walkthrough to the answer
+    choiceRebuttals: object, //   (optional) { A?: string, B?: string, C?: string, D?: string }
+                             //     — why each incorrect option fails (keys may also
+                             //     arrive as option indices; ingestion normalizes to letters)
+    thingsToRemember: array  //   (optional) string[] — takeaways / traps to avoid next time
+  },
   inputType: string,         // For user-input questions: "number", "text", "fraction" (default: "number")
   answerFormat: string,      // For user-input questions: format hint like "Enter as decimal" or "Simplify fraction"
   createdAt: timestamp,      // When this question was added

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFlag, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FiFlag, FiLoader } from 'react-icons/fi';
 import '../styles/ReportQuestionModal.css';
 
 const ReportQuestionModal = ({ isOpen, onClose, onReport, loading = false }) => {
@@ -23,7 +22,7 @@ const ReportQuestionModal = ({ isOpen, onClose, onReport, loading = false }) => 
     <Modal isOpen={isOpen} onClose={handleClose} title="Report Question">
       <div className="report-question-modal">
         <div className="report-icon">
-          <FontAwesomeIcon icon={faFlag} />
+          <FiFlag />
         </div>
         
         <div className="report-description">
@@ -63,7 +62,7 @@ const ReportQuestionModal = ({ isOpen, onClose, onReport, loading = false }) => 
             >
               {loading ? (
                 <>
-                  <FontAwesomeIcon icon={faSpinner} spin />
+                  <FiLoader style={{ animation: 'spin 1s linear infinite' }} />
                   <span>Reporting...</span>
                 </>
               ) : (

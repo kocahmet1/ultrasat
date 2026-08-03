@@ -1,0 +1,290 @@
+/* ExplanationCard — shared UWorld-style explanation renderer.
+   V3 design language: tokens from styles/tokens.css (--ut-*), chip classes
+   from styles/ut-kit.css. px units on purpose (rem scaling must not warp it).
+   Local --exp-bad aliases now point at the semantic danger family. */
+
+.exp-card {
+  --exp-bad: var(--ut-danger-dark);
+  --exp-bad-soft: var(--ut-danger-soft);
+  --exp-bad-rule: var(--ut-danger-rule);
+
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: var(--ut-font-body);
+  color: var(--ut-text);
+  text-align: left;
+}
+
+.exp-card--compact {
+  padding: 14px 16px;
+  gap: 12px;
+  box-shadow: none;
+  background: var(--ut-card-soft);
+}
+
+/* ---------------------------------------------------------- status strip -- */
+
+.exp-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ut-rule);
+}
+
+.exp-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 4px 11px;
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.exp-status-chip svg {
+  font-size: 13px;
+}
+
+.exp-status-chip--correct {
+  border: 1px solid var(--ut-success-rule);
+  background: var(--ut-success-soft);
+  color: var(--ut-success-dark);
+}
+
+.exp-status-chip--incorrect {
+  border: 1px solid var(--exp-bad-rule);
+  background: var(--exp-bad-soft);
+  color: var(--exp-bad);
+}
+
+.exp-status-chip--omitted {
+  border: 1px solid var(--ut-rule-strong);
+  background: var(--ut-card-soft);
+  color: var(--ut-text-soft);
+}
+
+.exp-status-answer {
+  font-size: 13px;
+  color: var(--ut-muted);
+}
+
+.exp-status-answer strong {
+  color: var(--ut-text);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- rule line -- */
+
+.exp-rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--ut-card-soft);
+  border: 1px solid var(--ut-rule);
+  border-left: 3px solid var(--ut-accent);
+  border-radius: var(--ut-radius-sm);
+}
+
+.exp-rule-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--ut-accent-dark);
+}
+
+.exp-rule-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  font-weight: 600;
+  color: var(--ut-text);
+}
+
+/* ------------------------------------------------------------ walkthrough -- */
+
+.exp-section-label {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ut-mono-muted);
+  margin-bottom: 8px;
+}
+
+.exp-steps .exp-step {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ut-text-soft);
+  margin: 0 0 8px;
+  white-space: pre-line;
+}
+
+.exp-steps .exp-step:last-child {
+  margin-bottom: 0;
+}
+
+/* -------------------------------------------------------------- rebuttals -- */
+
+.exp-rebuttal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exp-rebuttal {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card-soft);
+}
+
+.exp-rebuttal--picked {
+  border-color: var(--exp-bad-rule);
+  background: var(--exp-bad-soft);
+}
+
+.exp-rebuttal-letter {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ut-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--ut-rule-strong);
+  background: var(--ut-card);
+  color: var(--ut-text-soft);
+  margin-top: 1px;
+}
+
+.exp-rebuttal--picked .exp-rebuttal-letter {
+  border-color: var(--exp-bad-rule);
+  color: var(--exp-bad);
+}
+
+.exp-rebuttal-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.exp-rebuttal-badge {
+  display: inline-block;
+  font-family: var(--ut-font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--exp-bad);
+  border: 1px solid var(--exp-bad-rule);
+  background: var(--ut-card);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-bottom: 4px;
+}
+
+.exp-rebuttal-text {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ut-text-soft);
+}
+
+/* ----------------------------------------------------- things to remember -- */
+
+.exp-remember {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius);
+  padding: 12px 14px;
+}
+
+.exp-remember-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ut-accent-dark);
+  margin-bottom: 8px;
+}
+
+.exp-remember-head svg {
+  font-size: 13px;
+}
+
+.exp-remember-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.exp-remember-list li {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ut-text);
+}
+
+/* ------------------------------------------------------- fallback + tags -- */
+
+.exp-prose {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ut-text-soft);
+  white-space: pre-line;
+}
+
+.exp-empty-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ut-mono-muted);
+  font-style: italic;
+}
+
+.exp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+/* KaTeX sizing inside explanations: keep math close to body size */
+.exp-card .katex {
+  font-size: 1.05em;
+}
+
+@media (max-width: 640px) {
+  .exp-card {
+    padding: 14px;
+  }
+
+  .exp-status {
+    gap: 8px;
+  }
+}

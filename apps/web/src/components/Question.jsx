@@ -151,7 +151,7 @@ const Question = ({
           lineHeight: '1.8',
           marginBottom: '1.6rem',
           paddingBottom: '1.2rem',
-          borderBottom: '1px solid #e0e0e0',
+          borderBottom: '1px solid var(--ut-rule)',
           whiteSpace: 'pre-wrap',
         }}>
           <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(passage) }} />
@@ -185,8 +185,8 @@ const Question = ({
               className={`cross-out-toggle ${showCrossOut ? 'active' : ''}`}
               onClick={toggleCrossOut}
               style={{
-                backgroundColor: showCrossOut ? '#133B8F' : '#1A4AAB',
-                color: 'white',
+                backgroundColor: showCrossOut ? 'var(--ut-accent-dark)' : 'var(--ut-accent)',
+                color: 'var(--ut-on-accent)',
                 border: 'none'
               }}
             >

@@ -6,7 +6,7 @@ function Accessibility() {
     <div className="accessibility-page">
       <div className="accessibility-container">
         <h1>Accessibility Statement</h1>
-        <p className="last-updated">Last updated: {new Date().toLocaleDateString()}</p>
+        <p className="last-updated">Last updated: July 30, 2026</p>
         
         <section>
           <h2>1. Our Commitment to Accessibility</h2>

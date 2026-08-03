@@ -1,7 +1,7 @@
 .practice-exam-controller {
   min-height: 100vh;
-  background-color: #f5f7fa;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--ut-bg);
+  font-family: var(--ut-font-body);
   width: 100%;
   margin: 0;
   padding: 0;
@@ -21,17 +21,17 @@
   align-items: center;
   text-align: center;
   padding: 40px;
-  background-color: white;
+  background-color: var(--ut-card);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--ut-shadow);
   max-width: 300px;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #e3f2fd;
-  border-top: 4px solid #1976d2;
+  border: 4px solid var(--ut-accent-soft);
+  border-top: 4px solid var(--ut-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -52,21 +52,21 @@
 
 .error-container {
   padding: 40px;
-  background-color: white;
+  background-color: var(--ut-card);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--ut-shadow);
   max-width: 500px;
   text-align: center;
 }
 
 .error-container h1 {
-  color: #d32f2f;
+  color: var(--ut-danger-dark);
   margin-bottom: 20px;
 }
 
 .error-message {
   margin-bottom: 30px;
-  color: #616161;
+  color: var(--ut-muted);
 }
 
 /* Intro State */
@@ -77,16 +77,16 @@
 }
 
 .intro-container {
-  background-color: white;
+  background-color: var(--ut-card);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--ut-shadow);
   padding: 40px;
   max-width: 900px;
   width: 100%;
 }
 
 .intro-container h1 {
-  color: #1976d2;
+  color: var(--ut-accent-dark);
   font-size: 30px;
   margin-top: 0;
   margin-bottom: 20px;
@@ -94,7 +94,7 @@
 }
 
 .exam-description {
-  color: #616161;
+  color: var(--ut-muted);
   text-align: center;
   max-width: 700px;
   margin: 0 auto 30px;
@@ -109,7 +109,7 @@
 .overview-stats {
   display: flex;
   justify-content: space-around;
-  background-color: #e3f2fd;
+  background-color: var(--ut-accent-soft);
   padding: 25px;
   border-radius: 12px;
   margin-top: 20px;
@@ -125,13 +125,13 @@
 .stat-value {
   font-size: 28px;
   font-weight: 700;
-  color: #1976d2;
+  color: var(--ut-accent-dark);
   margin-bottom: 5px;
 }
 
 .stat-label {
   font-size: 14px;
-  color: #546e7a;
+  color: var(--ut-mono-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -141,11 +141,11 @@
 }
 
 .modules-preview h2 {
-  color: #333;
+  color: var(--ut-text);
   font-size: 22px;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--ut-rule);
 }
 
 .module-list {
@@ -157,17 +157,17 @@
 .module-preview-item {
   display: flex;
   align-items: center;
-  background-color: #f8f9fa;
+  background-color: var(--ut-card-soft);
   border-radius: 10px;
   padding: 20px;
-  border-left: 3px solid #90caf9;
+  border-left: 3px solid var(--ut-accent-rule);
 }
 
 .module-number {
   width: 40px;
   height: 40px;
-  background-color: #1976d2;
-  color: white;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -184,7 +184,7 @@
 
 .module-info h3 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: var(--ut-text);
   font-size: 18px;
 }
 
@@ -195,28 +195,28 @@
 }
 
 .module-details span {
-  background-color: #eeeeee;
+  background-color: var(--ut-bg-alt);
   padding: 5px 10px;
   border-radius: 4px;
   font-size: 14px;
-  color: #616161;
+  color: var(--ut-muted);
 }
 
 .exam-instructions {
   margin-bottom: 40px;
-  background-color: #fff9c4;
+  background-color: var(--ut-warn-soft);
   padding: 20px;
   border-radius: 10px;
-  border-left: 4px solid #ffd600;
+  border-left: 4px solid var(--ut-warn);
 }
 
 .exam-instructions h2 {
-  color: #333;
+  color: var(--ut-text);
   font-size: 20px;
   margin-top: 0;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--ut-warn-rule);
 }
 
 .exam-instructions ul {
@@ -226,7 +226,7 @@
 
 .exam-instructions li {
   margin-bottom: 10px;
-  color: #616161;
+  color: var(--ut-muted);
 }
 
 .intro-actions {
@@ -248,14 +248,14 @@
   width: 100%;
   margin: 0;
   padding: 15px 20px;
-  background-color: white;
+  background-color: var(--ut-card);
   border-radius: 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid #e0e0e0;
+  box-shadow: var(--ut-shadow-sm);
+  border-bottom: 1px solid var(--ut-rule);
 }
 
 .module-header h1 {
-  color: #1976d2;
+  color: var(--ut-accent-dark);
   margin: 0;
   font-size: 24px;
   text-align: center;
@@ -269,20 +269,20 @@
 
 .module-progress span {
   font-size: 14px;
-  color: #616161;
+  color: var(--ut-muted);
   margin-bottom: 5px;
 }
 
 .progress-bar {
   height: 8px;
-  background-color: #e0e0e0;
+  background-color: var(--ut-rule);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background-color: #1976d2;
+  background-color: var(--ut-accent);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -297,9 +297,9 @@
 }
 
 .completion-container {
-  background-color: white;
+  background-color: var(--ut-card);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--ut-shadow);
   padding: 40px;
   max-width: 700px;
   width: 100%;
@@ -313,8 +313,8 @@
 .completion-icon {
   width: 80px;
   height: 80px;
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--ut-success);
+  color: var(--ut-on-accent);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -324,13 +324,13 @@
 }
 
 .completion-header h1 {
-  color: #4caf50;
+  color: var(--ut-success-dark);
   margin-bottom: 10px;
   font-size: 28px;
 }
 
 .completion-header p {
-  color: #616161;
+  color: var(--ut-muted);
   font-size: 16px;
 }
 
@@ -364,28 +364,28 @@
 }
 
 .primary-button {
-  background-color: #2196f3;
-  color: white;
+  background-color: var(--ut-accent);
+  color: var(--ut-on-accent);
   border: none;
-  box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
+  box-shadow: 0 2px 5px var(--ut-accent-rule);
 }
 
 .primary-button:hover {
-  background-color: #1976d2;
+  background-color: var(--ut-accent-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
+  box-shadow: 0 4px 8px var(--ut-accent-rule);
 }
 
 .secondary-button {
-  background-color: #f5f5f5;
-  color: #424242;
-  border: 1px solid #ddd;
+  background-color: var(--ut-card-soft);
+  color: var(--ut-text-soft);
+  border: 1px solid var(--ut-rule-strong);
 }
 
 .secondary-button:hover {
-  background-color: #e0e0e0;
+  background-color: var(--ut-bg-alt);
   transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--ut-shadow-sm);
 }
 
 /* Responsive styles */

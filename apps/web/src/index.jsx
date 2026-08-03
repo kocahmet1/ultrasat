@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './styles/tokens.css'; // V3 design tokens (Overhaul Phase F) — before all other styles
+import './styles/ut-kit.css'; // shared UI kit built on the tokens (Phase G)
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';

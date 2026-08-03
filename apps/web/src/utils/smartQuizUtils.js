@@ -13,8 +13,14 @@ import {
   doc,
   addDoc,
   getDoc,
+  getDocs,
   updateDoc,
+  query,
+  where,
+  limit,
   serverTimestamp,
+  writeBatch,
+  increment,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { getQuestionsBySubcategory, getQuestionsByIds } from '../firebase/services';
@@ -29,6 +35,7 @@ import {
   updateConceptMastery 
 } from '../firebase/predefinedConceptsServices';
 import { quizQueue, monitoredOperation } from './concurrencyUtils';
+import { logQuestionAttempts, EVENT_TYPES, ATTEMPT_SOURCES } from '../coach/events';
 
 // COLLECTION CONSTANTS --------------------------------------------------------
 export const SMARTQUIZ_COLLECTION = 'smartQuizzes';
@@ -384,6 +391,14 @@ export const recordSmartQuizResult = async (quizId, answers) => {
 
   const quiz = snap.data();
   const isMetaQuiz = !!quiz.meta || (Array.isArray(quiz.metaSubcategoryIds) && quiz.metaSubcategoryIds.length > 0);
+
+  // P2-B double-record guard: capture the status BEFORE this function flips it
+  // to 'completed' below. recordSmartQuizResult has a single caller
+  // (SmartQuiz handleFinish), but that call can fire twice for one quiz
+  // (render-path finish + StrictMode double render, or a retry after a partial
+  // failure). Peer-stat increments below only run on the first
+  // created->completed transition so no completion ever counts twice.
+  const wasAlreadyCompleted = quiz.status === 'completed';
   
   // Handle both new format (questionIds) and legacy format (questions)
   let questionIds;
@@ -564,9 +579,10 @@ export const recordSmartQuizResult = async (quizId, answers) => {
   }
 
   // === ADDITION: Update concept mastery for each question ===
+  const conceptIdsByQuestion = {}; // also feeds the coach event stream below
+  let qSubcatMap = {};
   try {
     console.log(`[recordSmartQuizResult] Updating concept mastery for quiz ${quizId}`);
-    let qSubcatMap = {};
     if (isMetaQuiz) {
       try {
         const details = await getQuestionsByIds(questionIds);
@@ -586,6 +602,7 @@ export const recordSmartQuizResult = async (quizId, answers) => {
         const conceptAssociation = await getConceptAssociationForQuestion(questionId);
         
         if (conceptAssociation && conceptAssociation.conceptIds && conceptAssociation.conceptIds.length > 0) {
+          conceptIdsByQuestion[questionId] = conceptAssociation.conceptIds;
           const isCorrect = answers[questionId]?.isCorrect || false;
           
           // Update mastery for each concept associated with this question
@@ -614,10 +631,289 @@ export const recordSmartQuizResult = async (quizId, answers) => {
   }
   // === END ADDITION ===
 
+  // === AI Coach event stream (Phase 0): canonical Tier-1 record of this quiz ===
+  // Fire-and-forget by design — must never affect the quiz result the student sees.
+  try {
+    const attemptEvents = questionIds.map((id) => ({
+      source: ATTEMPT_SOURCES.SMARTQUIZ,
+      questionId: id,
+      subcategoryId: isMetaQuiz ? (qSubcatMap[id] || quiz.subcategoryId || null) : quiz.subcategoryId,
+      conceptIds: conceptIdsByQuestion[id] || [],
+      difficulty: quiz.level,
+      correct: !!answers[id]?.isCorrect,
+      timeSpentMs: typeof answers[id]?.timeSpent === 'number' ? Math.round(answers[id].timeSpent * 1000) : undefined,
+      parentId: quizId,
+    })).filter((a) => !!a.subcategoryId);
+
+    const completion = {
+      type: EVENT_TYPES.QUIZ_COMPLETED,
+      payload: {
+        quizId,
+        kind: isMetaQuiz ? 'meta' : 'single',
+        subcategoryIds: isMetaQuiz
+          ? Array.from(new Set(Object.values(qSubcatMap)))
+          : [quiz.subcategoryId].filter(Boolean),
+        questionCount: questionIds.length,
+        correctCount: correct,
+        scorePct,
+        level: quiz.level,
+        passed,
+      },
+    };
+
+    logQuestionAttempts(attemptEvents, completion).catch((e) =>
+      console.error('[recordSmartQuizResult] coach event emission failed:', e)
+    );
+  } catch (coachEventError) {
+    console.error('[recordSmartQuizResult] coach event build failed:', coachEventError);
+  }
+  // === END coach events ===
+
+  // === P2-B: peer statistics aggregation ==================================
+  // One anonymous aggregate doc per question (questionStats/{questionId}):
+  //   { attempts, correct, totalTimeMs, optionCounts: { "0".."3" }, updatedAt }
+  // Incremented once per NON-OMITTED answer via a single writeBatch, after
+  // every existing write above has succeeded. Every real response counts
+  // toward attempts / correct / totalTimeMs; optionCounts additionally
+  // records the picked index for standard multiple-choice answers only
+  // (grid-in answers store a string selectedOption, so they skip the option
+  // distribution but still feed "% correct" and average time).
+  // answers[id].timeSpent is SECONDS (see the 1s interval in SmartQuiz.jsx);
+  // the aggregate stores milliseconds.
+  // Guarded by wasAlreadyCompleted (captured at the top, before the status
+  // flip) so a duplicate call for one quiz never double-counts, and wrapped
+  // in try/catch — a stats failure must never break quiz completion.
+  if (!wasAlreadyCompleted) {
+    try {
+      const statsBatch = writeBatch(db);
+      let statsOps = 0;
+      questionIds.forEach((questionId) => {
+        const answer = answers[questionId];
+        if (!answer || answer.omitted === true) return; // omissions are not attempts
+        const selected = answer.selectedOption;
+        if (selected === null || selected === undefined || selected === '') return; // no real response
+
+        const timeSpentSec = typeof answer.timeSpent === 'number' && Number.isFinite(answer.timeSpent)
+          ? Math.max(0, answer.timeSpent)
+          : 0;
+
+        const statsUpdate = {
+          attempts: increment(1),
+          correct: increment(answer.isCorrect ? 1 : 0),
+          totalTimeMs: increment(Math.round(timeSpentSec * 1000)),
+          updatedAt: serverTimestamp(),
+        };
+        // Option distribution: standard 4-option multiple choice only. A
+        // set-with-merge deep-merges the optionCounts map, so incrementing
+        // one key never clobbers the others.
+        if (typeof selected === 'number' && Number.isInteger(selected) && selected >= 0 && selected <= 3) {
+          statsUpdate.optionCounts = { [selected]: increment(1) };
+        }
+
+        statsBatch.set(doc(db, 'questionStats', questionId), statsUpdate, { merge: true });
+        statsOps += 1;
+      });
+      if (statsOps > 0) {
+        await statsBatch.commit();
+        console.log(`[recordSmartQuizResult] Peer stats updated for ${statsOps} question(s).`);
+      }
+    } catch (statsError) {
+      console.warn('[recordSmartQuizResult] Peer stats update failed (non-critical):', statsError?.message);
+    }
+  } else {
+    console.warn(`[recordSmartQuizResult] Quiz ${quizId} was already completed — skipping peer-stat increments.`);
+  }
+  // === END P2-B ===
+
   // Return summary
   return {
     score: scorePct,
     correct,
     passed,
   };
+};
+
+// CUSTOM BUILDER API (P1-B) ---------------------------------------------------
+// Practice Builder quizzes: user-configured question count, pool, difficulty
+// and topic filters. Written as meta quizzes so recordSmartQuizResult updates
+// progress per subcategory. CONTRACT fields for SmartQuiz.jsx: `tutorMode`
+// (bool), `timerMode` ('untimed'|'timed'), `questionCount` (number),
+// `configSource: 'builder'`.
+
+export const BUILDER_MAX_QUESTIONS = 30;
+export const BUILDER_POOLS = ['unused', 'incorrect', 'marked', 'all'];
+export const BUILDER_DIFFICULTIES = ['easy', 'medium', 'hard'];
+
+const LEVEL_FOR_DIFFICULTY = Object.fromEntries(
+  Object.entries(DIFFICULTY_FOR_LEVEL).map(([lvl, diff]) => [diff, Number(lvl)]),
+);
+
+/** Questions flagged for exam-only use never enter practice quizzes. */
+const isGeneralUseQuestion = (q) => !q?.usageContext || q.usageContext === 'general';
+
+/** Canonical kebab subcategory of a question doc, tolerating field variants. */
+const getQuestionSubcategoryId = (q) =>
+  getKebabCaseFromAnyFormat(q?.subcategory || q?.subCategory || q?.subcategoryId || '') || null;
+
+/**
+ * Fallback pool exclusion when the caller cannot supply seen-question ids:
+ * union of `askedQuestions` across the user's progress docs.
+ */
+async function getAskedQuestionUnion(userId) {
+  const asked = new Set();
+  try {
+    const snap = await getDocs(collection(db, 'users', userId, 'progress'));
+    snap.forEach((d) => {
+      ((d.data() || {}).askedQuestions || []).forEach((id) => asked.add(id));
+    });
+  } catch (e) {
+    console.warn('[createCustomSmartQuiz] Could not derive asked questions:', e?.message);
+  }
+  return asked;
+}
+
+/**
+ * Create a SmartQuiz from a Practice Builder configuration.
+ *
+ * @param {string} userId
+ * @param {Object} config
+ * @param {number}   [config.questionCount=10]      1..BUILDER_MAX_QUESTIONS
+ * @param {boolean}  [config.tutorMode=true]        show explanations as you go
+ * @param {string}   [config.timerMode='untimed']   'untimed' | 'timed'
+ * @param {string}   [config.pool='all']            'unused'|'incorrect'|'marked'|'all'
+ * @param {string[]} [config.difficulties=[]]       subset of easy/medium/hard; empty = any
+ * @param {string[]} [config.subcategoryIds=[]]     kebab ids; empty = all topics
+ * @param {string[]} [config.excludeQuestionIds]    seen ids (pool 'unused'); derived from
+ *                                                  progress docs when omitted
+ * @param {string[]} [config.restrictToQuestionIds] candidate ids (pools 'incorrect'/'marked')
+ * @returns {Promise<{quizId: string, requestedCount: number, createdCount: number}>}
+ */
+export const createCustomSmartQuiz = async (userId, config = {}) => {
+  return quizQueue.add(async () => {
+    return monitoredOperation(createCustomSmartQuizInternal, 'createCustomSmartQuiz')(userId, config);
+  });
+};
+
+const createCustomSmartQuizInternal = async (userId, config = {}) => {
+  if (!userId) throw new Error('Custom practice requires a signed-in user');
+
+  const requestedCount = Math.max(
+    1,
+    Math.min(BUILDER_MAX_QUESTIONS, Math.round(Number(config.questionCount)) || 10),
+  );
+  const pool = BUILDER_POOLS.includes(config.pool) ? config.pool : 'all';
+  const difficulties = (config.difficulties || []).filter((d) => BUILDER_DIFFICULTIES.includes(d));
+  const subcategoryIds = Array.from(new Set(
+    (config.subcategoryIds || []).map((s) => getKebabCaseFromAnyFormat(s)).filter(Boolean),
+  ));
+  const difficultySet = new Set(difficulties);
+  const subcatSet = new Set(subcategoryIds);
+
+  // Filters are honored exactly — we never silently widen them.
+  const matchesFilters = (q) => {
+    if (!q?.id || !isGeneralUseQuestion(q)) return false;
+    if (difficultySet.size > 0 && !difficultySet.has(q.difficulty)) return false;
+    if (subcatSet.size > 0) {
+      const sc = getQuestionSubcategoryId(q);
+      if (!sc || !subcatSet.has(sc)) return false;
+    }
+    return true;
+  };
+
+  let candidates = [];
+
+  if (pool === 'incorrect' || pool === 'marked') {
+    // Pool IS the candidate list; topic/difficulty filters narrow it.
+    const restrictIds = Array.from(new Set(config.restrictToQuestionIds || []));
+    if (restrictIds.length === 0) {
+      throw new Error(
+        pool === 'incorrect'
+          ? 'No incorrect questions to practice yet. Complete a few quizzes first.'
+          : 'No saved questions yet. Save questions during practice to build this pool.',
+      );
+    }
+    const fetched = await getQuestionsByIds(restrictIds.slice(0, 300));
+    candidates = fetched.filter(matchesFilters);
+  } else {
+    if (subcategoryIds.length > 0 && subcategoryIds.length <= 8) {
+      // Narrow topic selection: reuse the resilient per-subcategory fetcher
+      // (handles legacy subcategory field variants).
+      const diffList = difficulties.length > 0 ? difficulties : [null];
+      for (const sc of subcategoryIds) {
+        for (const diff of diffList) {
+          const items = await getQuestionsBySubcategory(sc, diff, 60);
+          candidates.push(...items);
+        }
+      }
+      candidates = candidates.filter(matchesFilters);
+    } else {
+      // All topics (or a very wide selection): pull bounded windows straight
+      // from the questions collection and filter client-side.
+      const windows = difficulties.length > 0
+        ? difficulties.map((d) => query(collection(db, 'questions'), where('difficulty', '==', d), limit(160)))
+        : [query(collection(db, 'questions'), limit(400))];
+      for (const w of windows) {
+        const snap = await getDocs(w);
+        snap.forEach((d) => candidates.push({ id: d.id, ...d.data() }));
+      }
+      candidates = candidates.filter(matchesFilters);
+    }
+
+    if (pool === 'unused') {
+      const excluded = Array.isArray(config.excludeQuestionIds)
+        ? new Set(config.excludeQuestionIds)
+        : await getAskedQuestionUnion(userId);
+      candidates = candidates.filter((q) => !excluded.has(q.id));
+    }
+  }
+
+  // Dedupe (windows and subcategory fetches can overlap).
+  const seenIds = new Set();
+  const uniqueCandidates = [];
+  for (const q of candidates) {
+    if (!q?.id || seenIds.has(q.id)) continue;
+    seenIds.add(q.id);
+    uniqueCandidates.push(q);
+  }
+
+  if (uniqueCandidates.length === 0) {
+    throw new Error('No questions match these filters. Widen the pool, difficulty, or topics and try again.');
+  }
+
+  const selected = sampleN(uniqueCandidates, Math.min(requestedCount, uniqueCandidates.length));
+  const metaSubcategoryIds = Array.from(new Set(
+    selected.map(getQuestionSubcategoryId).filter(Boolean),
+  ));
+  const level = difficulties.length === 1 ? (LEVEL_FOR_DIFFICULTY[difficulties[0]] || 2) : 2;
+
+  const quizData = {
+    userId,
+    meta: true,
+    metaSubcategoryIds,
+    level,
+    questionIds: selected.map((q) => q.id),
+    questionCount: selected.length, // CONTRACT
+    currentQuestionIndex: 0,
+    score: 0,
+    status: 'created',
+    createdAt: serverTimestamp(),
+    // CONTRACT fields (P1-B) — SmartQuiz.jsx reads these to run the session.
+    tutorMode: config.tutorMode !== false,
+    timerMode: config.timerMode === 'timed' ? 'timed' : 'untimed',
+    configSource: 'builder',
+    // For history display and re-runs; not part of the session contract.
+    builderConfig: {
+      pool,
+      difficulties,
+      subcategoryIds,
+      requestedCount,
+    },
+  };
+
+  const ref = await addDoc(collection(db, SMARTQUIZ_COLLECTION), quizData);
+  console.log(
+    `Created custom SmartQuiz ${ref.id}: ${selected.length}/${requestedCount} questions, ` +
+      `pool=${pool}, difficulties=[${difficulties.join(',')}], topics=${subcategoryIds.length || 'all'}`,
+  );
+  return { quizId: ref.id, requestedCount, createdCount: selected.length };
 };

@@ -1,6 +1,6 @@
 .payment-cancel {
   min-height: 100vh;
-  background: linear-gradient(135deg, #FF6B6B 0%, #ee5a52 100%);
+  background: #fbeeee;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8,21 +8,21 @@
 }
 
 .cancel-container {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--ut-card);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 3rem;
   max-width: 600px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--ut-shadow-lg);
+  border: 1px solid var(--ut-rule);
 }
 
 .cancel-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
-  color: #f44336;
+  color: #a03434;
   animation: shake 0.5s ease-in-out;
 }
 
@@ -33,21 +33,21 @@
 }
 
 .cancel-container h1 {
-  color: #2c3e50;
+  color: var(--ut-text);
   font-size: 2.5rem;
   margin-bottom: 1rem;
   font-weight: 700;
 }
 
 .cancel-message {
-  color: #34495e;
+  color: var(--ut-text-soft);
   font-size: 1.2rem;
   margin-bottom: 2rem;
   font-weight: 500;
 }
 
 .cancel-info {
-  background: #f8f9fa;
+  background: var(--ut-card-soft);
   border-radius: 10px;
   padding: 1.5rem;
   margin: 2rem 0;
@@ -55,21 +55,21 @@
 }
 
 .cancel-info h3 {
-  color: #2c3e50;
+  color: var(--ut-text);
   margin-bottom: 1rem;
   font-size: 1.3rem;
   text-align: center;
 }
 
 .cancel-info p {
-  color: #495057;
+  color: var(--ut-muted);
   line-height: 1.6;
   margin: 0;
 }
 
 .benefits-reminder {
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
+  background: #faf3df;
+  border: 1px solid #ead9b0;
   border-radius: 10px;
   padding: 1.5rem;
   margin: 2rem 0;
@@ -77,7 +77,7 @@
 }
 
 .benefits-reminder h3 {
-  color: #856404;
+  color: #8a6d1d;
   margin-bottom: 1rem;
   font-size: 1.3rem;
   text-align: center;
@@ -89,7 +89,7 @@
 }
 
 .benefits-reminder li {
-  color: #856404;
+  color: #8a6d1d;
   margin: 0.5rem 0;
   font-size: 1rem;
   font-weight: 500;
@@ -104,8 +104,8 @@
 }
 
 .retry-button {
-  background: linear-gradient(45deg, #4CAF50, #45a049);
-  color: white;
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
   border: none;
   padding: 1rem 2rem;
   font-size: 1.1rem;
@@ -113,17 +113,17 @@
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  box-shadow: var(--ut-shadow);
 }
 
 .retry-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow: var(--ut-shadow-lg);
 }
 
 .continue-button {
-  background: linear-gradient(45deg, #6c757d, #5a6268);
-  color: white;
+  background: var(--ut-ink);
+  color: var(--ut-on-ink-bright);
   border: none;
   padding: 1rem 2rem;
   font-size: 1.1rem;
@@ -131,24 +131,24 @@
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+  box-shadow: var(--ut-shadow);
 }
 
 .continue-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+  box-shadow: var(--ut-shadow-lg);
 }
 
 .support-info {
   margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
-  color: #6c757d;
+  border-top: 1px solid var(--ut-rule);
+  color: var(--ut-muted);
   font-size: 0.9rem;
 }
 
 .support-info a {
-  color: #FF6B6B;
+  color: #a03434;
   text-decoration: none;
   font-weight: 600;
 }

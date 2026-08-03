@@ -4,16 +4,20 @@
  */
 
 const OpenAI = require('openai');
+const {
+  resolveModel,
+  reasoningConfig,
+  outputTokenBudget,
+} = require('./config/aiModel');
 
 // Get OpenAI API Key from environment variables
 const getApiKey = () => {
   return process.env.OPENAI_API_KEY || '';
 };
 
-// Get OpenAI Model name
-const getModelName = () => {
-  return process.env.OPENAI_HELPER_MODEL || process.env.OPENAI_ASSISTANT_MODEL || process.env.COMPANION_MODEL || 'gpt-5-mini';
-};
+// Get OpenAI Model name (default: gpt-5.6-luna)
+const getModelName = () =>
+  resolveModel('OPENAI_HELPER_MODEL', 'OPENAI_ASSISTANT_MODEL', 'COMPANION_MODEL');
 
 const getOpenAIClient = () => {
   const apiKey = getApiKey();
@@ -39,6 +43,7 @@ const callHelperModel = async (prompt, { modelName = getModelName(), maxOutputTo
   const openai = getOpenAIClient();
   const response = await openai.responses.create({
     model: modelName,
+    reasoning: reasoningConfig(),
     input: [
       {
         role: 'system',
@@ -47,7 +52,7 @@ const callHelperModel = async (prompt, { modelName = getModelName(), maxOutputTo
       { role: 'user', content: prompt }
     ],
     store: false,
-    max_output_tokens: maxOutputTokens,
+    max_output_tokens: outputTokenBudget(maxOutputTokens),
   });
 
   const responseText = extractResponseText(response).trim();

@@ -2,46 +2,48 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import { normalizeSubcategoryName } from '../utils/subcategoryUtils';
 import { processTextMarkup } from '../utils/textProcessing';
 import { db } from '../firebase/config';
 import { recordSmartQuizResult, DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getQuestionStats, formatStats, formatPeerSeconds } from '../firebase/questionStatsServices';
 import {
-  faArrowLeft,
-  faArrowRight,
-  faLightbulb,
-  faFileAlt,
-  faBook,
-  faComment,
-  faSave,
-  faCheck,
-  faFlag,
-  faBookmark,
-  faBullseye,
-  faList,
-  faStar,
-  faTrophy,
-  faBell,
-  faChartBar,
-  faClipboardList,
-  faBookOpen,
-  faChevronDown,
-  faClock,
-  faSignal,
-  faWandMagicSparkles,
-  faFileLines,
-  faCopy,
-  faPen,
-} from '@fortawesome/free-solid-svg-icons';
+  FiArrowLeft,
+  FiArrowRight,
+  FiZap,
+  FiFileText,
+  FiBookOpen,
+  FiMessageSquare,
+  FiSave,
+  FiCheck,
+  FiFlag,
+  FiBookmark,
+  FiList,
+  FiStar,
+  FiAward,
+  FiClock,
+  FiActivity,
+  FiCopy,
+  FiEdit2,
+  FiCheckCircle,
+  FiXCircle,
+  FiMinusCircle,
+  FiUsers,
+} from 'react-icons/fi';
+// Feather (react-icons/fi) has no "magic wand" glyph; kept from FontAwesome
+// for the AI-generated sparkle affordance only.
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import SmartQuizAssistant from '../components/SmartQuizAssistant';
+import ExplanationCard from '../components/ExplanationCard';
 import Modal from '../components/Modal';
 import ReportQuestionModal from '../components/ReportQuestionModal';
 import { askAssistant } from '../api/assistantClient';
 import { getHelperData } from '../api/helperClient';
 import { checkMultipleBankItems } from '../utils/wordBankUtils';
 import { saveBankItem } from '../api/helperClient';
+import { logEvent, EVENT_TYPES } from '../coach/events';
 import { reportQuestion } from '../api/reportClient';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -49,7 +51,7 @@ import '../styles/SmartQuiz.css';
 import '../styles/SmartQuizAssistant.css';
 import '../styles/Modal.css';
 import './SmartQuizProBadge.css';
-import ProFeatureModal from '../components/ProFeatureModal';
+import ProUpgradeModal from '../components/membership/ProUpgradeModal';
 
 const formatElapsedTime = (seconds = 0) => {
   const safeSeconds = Math.max(0, Number(seconds) || 0);
@@ -72,6 +74,27 @@ const getQuestionSkill = (question, quiz) => {
 };
 
 const getChoiceLabel = (index) => String.fromCharCode(65 + index);
+
+// Tutor-mode reveal: resolve the correct option index defensively (numeric,
+// option-text, or numeric-string correctAnswer). Mirrors ExplanationCard.
+const resolveCorrectOptionIndex = (question) => {
+  const options = Array.isArray(question?.options) ? question.options : [];
+  if (options.length === 0) return null;
+  const { correctAnswer } = question;
+  if (typeof correctAnswer === 'number' && options[correctAnswer] !== undefined) return correctAnswer;
+  if (typeof correctAnswer === 'string') {
+    const idx = options.indexOf(correctAnswer);
+    if (idx >= 0) return idx;
+    if (/^[0-9]+$/.test(correctAnswer.trim())) {
+      const n = parseInt(correctAnswer.trim(), 10);
+      if (options[n] !== undefined) return n;
+    }
+  }
+  return null;
+};
+
+// Seconds allotted per question in timed mode (UWorld-style budget).
+const TIMED_SECONDS_PER_QUESTION = 95;
 
 const getAnswerChoiceText = (question, answer) => {
   if (answer === undefined || answer === null || answer === '') return 'No answer selected yet';
@@ -211,7 +234,7 @@ export default function SmartQuiz() {
   const [newlySavedVocabularyItems, setNewlySavedVocabularyItems] = useState([]);
   const [showMobileVocab, setShowMobileVocab] = useState(false);
   
-  // Add state for ProFeatureModal
+  // Add state for the shared Pro upgrade modal
   const [showProModal, setShowProModal] = useState(false);
   
   // Report modal state
@@ -219,6 +242,24 @@ export default function SmartQuiz() {
   const [reportLoading, setReportLoading] = useState(false);
   const [studyPlanSaving, setStudyPlanSaving] = useState(false);
   const [savedStudyPlanItems, setSavedStudyPlanItems] = useState({});
+  const [bookmarkSaving, setBookmarkSaving] = useState(false);
+
+  // P1-C tutor/timed session state.
+  // checkedQuestions: questionId -> true once the answer is locked (tutor mode).
+  const [checkedQuestions, setCheckedQuestions] = useState({});
+  // Countdown seconds for timed mode; null until the quiz doc loads (or untimed).
+  const [timedRemaining, setTimedRemaining] = useState(null);
+  // Mirrors "current question is locked" for the 1s interval (freezes timeSpent).
+  const currentLockedRef = useRef(false);
+  // Guards the timed-expiry auto-finish so it fires exactly once.
+  const timeExpiredRef = useRef(false);
+
+  // P2-B peer statistics: questionId -> formatStats() output (null when the
+  // sample is below MIN_SAMPLE), fetched lazily when a question is first
+  // revealed (tutor mode). The ref is the once-per-question guard so a
+  // revisit never re-reads Firestore.
+  const [peerStats, setPeerStats] = useState({});
+  const peerStatsRequestedRef = useRef({});
 
   // Load quiz document
   useEffect(() => {
@@ -444,6 +485,9 @@ export default function SmartQuiz() {
     event?.preventDefault();
     event?.stopPropagation();
 
+    // Tutor mode: once checked, the answer is locked.
+    if (quiz?.tutorMode !== false && checkedQuestions[currentQuestion?.id]) return;
+
     setAnswers((prev) => ({
       ...prev,
       [currentQuestion.id]: {
@@ -457,8 +501,11 @@ export default function SmartQuiz() {
   };
 
   const handleUserInput = (value) => {
+    // Tutor mode: once checked, the answer is locked.
+    if (quiz?.tutorMode !== false && checkedQuestions[currentQuestion?.id]) return;
+
     setUserInput(value);
-    
+
     // For user input questions, check correctness
     let isCorrect = false;
     
@@ -502,6 +549,9 @@ export default function SmartQuiz() {
 
   const handleConfidenceSelect = (level) => {
     if (!currentQuestion) return;
+    // Tutor mode: confidence is part of the pre-check answer; locked afterwards
+    // (also keeps timeSpent frozen at the lock value).
+    if (quiz?.tutorMode !== false && checkedQuestions[currentQuestion.id]) return;
 
     setConfidenceLevels((prev) => ({
       ...prev,
@@ -539,6 +589,76 @@ export default function SmartQuiz() {
     }
   };
 
+  // ---- P1-C tutor mode / omit flow -----------------------------------------
+  // "Response" means a real selection: null/undefined/'' (cleared grid-in) are
+  // all no-response — the same predicate SmartQuizResults uses for "Omitted".
+  const questionHasResponse = (questionId) => {
+    const record = answers[questionId];
+    return !!record
+      && record.selectedOption !== null
+      && record.selectedOption !== undefined
+      && record.selectedOption !== '';
+  };
+
+  // Canonical omitted answer shape — SmartQuizResults keys off omitted:true and
+  // recordSmartQuizResult scores isCorrect:false. Keep the fields in lockstep.
+  const buildOmittedAnswer = () => ({
+    omitted: true,
+    selectedOption: null,
+    isCorrect: false,
+    timeSpent: timerRef.current ?? 0,
+    confidence: null,
+  });
+
+  const advanceToNext = () => {
+    setCurrentIdx((prev) => prev + 1);
+    timerRef.current = 0;
+    setElapsedSeconds(0);
+  };
+
+  // Tutor mode "Check": freeze timeSpent at the lock moment and reveal.
+  const handleCheck = () => {
+    if (!currentQuestion || checkedQuestions[currentQuestion.id]) return;
+    if (!questionHasResponse(currentQuestion.id)) return;
+    const frozenTime = timerRef.current ?? 0;
+    setAnswers((prev) => {
+      const existing = prev[currentQuestion.id];
+      if (!existing) return prev;
+      return {
+        ...prev,
+        [currentQuestion.id]: { ...existing, timeSpent: frozenTime },
+      };
+    });
+    setCheckedQuestions((prev) => ({ ...prev, [currentQuestion.id]: true }));
+  };
+
+  // Tutor mode "Skip (omit)": record the omission, then reveal the explanation
+  // (UWorld shows omitted questions' explanations too).
+  const handleSkipOmit = () => {
+    if (!currentQuestion || checkedQuestions[currentQuestion.id]) return;
+    setAnswers((prev) => ({ ...prev, [currentQuestion.id]: buildOmittedAnswer() }));
+    setCheckedQuestions((prev) => ({ ...prev, [currentQuestion.id]: true }));
+  };
+
+  // The single primary control: Check -> Next question (tutor) or Next (classic,
+  // where advancing without a selection is a silent omit).
+  const handlePrimaryAction = () => {
+    if (!currentQuestion) return;
+    const tutorActive = quiz?.tutorMode !== false;
+    if (tutorActive) {
+      if (!checkedQuestions[currentQuestion.id]) {
+        handleCheck();
+        return;
+      }
+      advanceToNext();
+      return;
+    }
+    if (!questionHasResponse(currentQuestion.id)) {
+      setAnswers((prev) => ({ ...prev, [currentQuestion.id]: buildOmittedAnswer() }));
+    }
+    advanceToNext();
+  };
+
   // Sync userInput with current question's answer when navigating
   useEffect(() => {
     if (currentQuestion) {
@@ -552,26 +672,148 @@ export default function SmartQuiz() {
     }
   }, [currentIdx, currentQuestion, answers]);
 
-  // Simple timer per question
+  // Simple timer per question. Frozen while the current question is locked
+  // (tutor mode post-check) so reading the explanation never inflates timeSpent.
   useEffect(() => {
     const interval = setInterval(() => {
+      if (currentLockedRef.current) return;
       timerRef.current = (timerRef.current || 0) + 1;
       setElapsedSeconds(timerRef.current);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const handleFinish = async () => {
+  // Keep the lock mirror in sync for the interval above (covers every
+  // navigation path, including revisiting an already-checked question).
+  useEffect(() => {
+    const tutorActive = !!quiz && quiz.tutorMode !== false;
+    currentLockedRef.current = tutorActive && !!(currentQuestion && checkedQuestions[currentQuestion.id]);
+  }, [quiz, currentQuestion, checkedQuestions]);
+
+  // P2-B: fetch peer stats the first time a question is revealed. Non-blocking
+  // (the reveal renders immediately; the strip appears when the read resolves)
+  // and at most one Firestore read per question per session. The student's own
+  // just-checked answer is not in the aggregate yet — it lands at completion.
+  useEffect(() => {
+    const questionId = currentQuestion?.id;
+    if (!questionId || !checkedQuestions[questionId]) return;
+    if (peerStatsRequestedRef.current[questionId]) return;
+    peerStatsRequestedRef.current[questionId] = true;
+    getQuestionStats(questionId)
+      .then((raw) => {
+        setPeerStats((prev) => ({ ...prev, [questionId]: formatStats(raw) }));
+      })
+      .catch((error) => {
+        console.warn('[SmartQuiz] Peer stats unavailable (non-critical):', error?.message);
+      });
+  }, [checkedQuestions, currentQuestion]);
+
+  const handleFinish = async (finalAnswers = answers) => {
     if (submitting) return;
     setSubmitting(true);
     try {
-      await recordSmartQuizResult(quizId, answers);
+      await recordSmartQuizResult(quizId, finalAnswers);
       // Navigate to results page instead of progress page
       navigate(`/smart-quiz-results/${quizId}`, { replace: true });
     } catch (err) {
       console.error(err);
       setSubmitting(false);
     }
+  };
+
+  // ---- P1-C timed mode ------------------------------------------------------
+  // Total budget = 95s per question; starts once the quiz doc (with questions)
+  // has loaded. Untimed quizzes never touch this state.
+  useEffect(() => {
+    if (!quiz || quiz.timerMode !== 'timed') return;
+    const total = (quiz.questions?.length || quiz.questionCount || 0) * TIMED_SECONDS_PER_QUESTION;
+    if (total > 0) {
+      setTimedRemaining((prev) => (prev === null ? total : prev));
+    }
+  }, [quiz]);
+
+  // Countdown tick (independent of the per-question timer, which can freeze).
+  useEffect(() => {
+    if (!quiz || quiz.timerMode !== 'timed') return undefined;
+    const interval = setInterval(() => {
+      setTimedRemaining((prev) => {
+        if (prev === null) return prev;
+        return prev > 0 ? prev - 1 : 0;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [quiz]);
+
+  // Expiry: record every unanswered question as omitted, then finish through
+  // the normal completion path so results/progress work exactly as usual.
+  useEffect(() => {
+    if (!quiz || quiz.timerMode !== 'timed') return;
+    if (timedRemaining !== 0 || timeExpiredRef.current) return;
+    if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) return;
+    timeExpiredRef.current = true;
+
+    const merged = { ...answers };
+    quiz.questions.forEach((q) => {
+      const record = merged[q.id];
+      const hasResponse = !!record
+        && record.selectedOption !== null
+        && record.selectedOption !== undefined
+        && record.selectedOption !== '';
+      if (!hasResponse) {
+        merged[q.id] = {
+          omitted: true,
+          selectedOption: null,
+          isCorrect: false,
+          timeSpent: q.id === currentQuestion?.id ? (timerRef.current ?? 0) : (record?.timeSpent ?? 0),
+          confidence: record?.confidence ?? null,
+        };
+      }
+    });
+
+    setAnswers(merged);
+    toast.info('Time is up. Submitting your quiz...');
+    handleFinish(merged);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quiz, timedRemaining, answers, currentQuestion]);
+
+  // ---- P1-C bookmark hydration ---------------------------------------------
+  // One fetch per quiz: which of this quiz's questions are already saved to
+  // users/{uid}/studyPlanItems (doc ids are `${quizId}_${questionId}`).
+  useEffect(() => {
+    if (!currentUser || !quiz || !quizId) return undefined;
+    let cancelled = false;
+    const loadSavedItems = async () => {
+      try {
+        const snap = await getDocs(query(
+          collection(db, 'users', currentUser.uid, 'studyPlanItems'),
+          where('quizId', '==', quizId),
+        ));
+        if (cancelled) return;
+        const saved = {};
+        snap.forEach((d) => { saved[d.id] = true; });
+        if (Object.keys(saved).length > 0) {
+          setSavedStudyPlanItems((prev) => ({ ...prev, ...saved }));
+        }
+      } catch (error) {
+        console.warn('[SmartQuiz] Could not load saved-question bookmarks:', error?.message);
+      }
+    };
+    loadSavedItems();
+    return () => { cancelled = true; };
+  }, [currentUser, quiz, quizId]);
+
+  // Focus-mode header exit: answers only persist on finish (recordSmartQuizResult),
+  // so confirm before leaving mid-quiz instead of dropping progress silently.
+  const handleExit = (destination) => {
+    if (submitting) return;
+    const hasUnsavedProgress = Object.keys(answers).length > 0;
+    if (
+      hasUnsavedProgress &&
+      !window.confirm('Leave this quiz? Your answers from this session will not be saved.')
+    ) {
+      return;
+    }
+    navigate(destination);
   };
   
   // Direct AI Request Handlers
@@ -677,7 +919,17 @@ export default function SmartQuiz() {
       );
       
       console.log(`[SmartQuiz Save] Successfully saved item: ${item.term}`);
-      
+
+      // AI Coach event stream: vocab/concept saves feed the student model.
+      logEvent(
+        helperType === 'vocabulary' ? EVENT_TYPES.WORD_SAVED : EVENT_TYPES.CONCEPT_SAVED,
+        {
+          term: item.term,
+          subcategoryId: currentQuestion?.subcategory || currentQuestion?.subcategoryId || undefined,
+          sourceQuestionId: currentQuestion?.id,
+        }
+      ).catch(() => {});
+
       // Add to local saved items list
       setSavedVocabularyItems(prev => (
         prev.includes(item.term) ? prev : [...prev, item.term]
@@ -849,16 +1101,84 @@ export default function SmartQuiz() {
     }
   };
 
+  // Real bookmark toggle. Shares the studyPlanItems collection (and the
+  // `${quizId}_${questionId}` doc id) with the coach "Add to study plan"
+  // action, so the two controls reflect one saved item — no duplicates.
+  const handleBookmarkToggle = async () => {
+    if (!currentUser) {
+      toast.info('Sign in to save questions to your practice list.');
+      return;
+    }
+    if (!currentQuestion || bookmarkSaving) return;
+
+    const itemId = `${quizId}_${currentQuestion.id}`;
+    const alreadySaved = !!savedStudyPlanItems[itemId];
+    setBookmarkSaving(true);
+    try {
+      const itemRef = doc(db, 'users', currentUser.uid, 'studyPlanItems', itemId);
+      if (alreadySaved) {
+        await deleteDoc(itemRef);
+        setSavedStudyPlanItems((prev) => {
+          const next = { ...prev };
+          delete next[itemId];
+          return next;
+        });
+        toast.success('Removed from your practice list.');
+      } else {
+        const rawText = currentQuestion.text || '';
+        await setDoc(itemRef, {
+          source: 'bookmark',
+          quizId,
+          questionId: currentQuestion.id,
+          subcategory: currentQuestion.subcategory || quiz?.subcategoryId || '',
+          skill: getQuestionSkill(currentQuestion, quiz),
+          questionText: rawText.length > 280 ? `${rawText.slice(0, 277)}...` : rawText,
+          status: 'active',
+          savedAt: serverTimestamp(),
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+        setSavedStudyPlanItems((prev) => ({ ...prev, [itemId]: true }));
+        toast.success('Saved to your practice list.');
+      }
+    } catch (error) {
+      console.error('Error toggling question bookmark:', error);
+      toast.error('Could not update your practice list. Please try again.');
+    } finally {
+      setBookmarkSaving(false);
+    }
+  };
+
   const questionTotal = loadedQuestionTotal;
-  const progressPct = questionTotal > 0 ? ((currentIdx + 1) / questionTotal) * 100 : 0;
   const selectedAnswer = currentQuestion ? answers[currentQuestion.id] : null;
   const selectedConfidence = currentQuestion ? (confidenceLevels[currentQuestion.id] ?? selectedAnswer?.confidence ?? 3) : 3;
   const difficultyLabel = DIFFICULTY_FOR_LEVEL[quiz.level] || currentQuestion?.difficulty || 'medium';
   const skillLabel = getQuestionSkill(currentQuestion, quiz);
   const completedCount = Object.keys(answers).length;
+  const answeredPct = questionTotal > 0 ? (completedCount / questionTotal) * 100 : 0;
   const weeklyAccuracy = questionTotal > 0 ? Math.round((completedCount / questionTotal) * 100) : 0;
   const studyPlanItemId = currentQuestion ? `${quizId}_${currentQuestion.id}` : '';
   const isSavedToStudyPlan = Boolean(studyPlanItemId && savedStudyPlanItems[studyPlanItemId]);
+
+  // P1-C session config. tutorMode defaults TRUE when absent, so legacy quiz
+  // docs get the tutor experience; timerMode defaults 'untimed'.
+  const tutorModeActive = quiz.tutorMode !== false;
+  const isTimed = quiz.timerMode === 'timed';
+  const isCurrentChecked = tutorModeActive && !!(currentQuestion && checkedQuestions[currentQuestion.id]);
+  const hasCurrentResponse = currentQuestion ? questionHasResponse(currentQuestion.id) : false;
+  const revealCorrectIndex = isCurrentChecked ? resolveCorrectOptionIndex(currentQuestion) : null;
+  // P2-B: peer stats render only post-check and only with enough attempts —
+  // formatStats() returns null below MIN_SAMPLE, so a small sample renders
+  // nothing at all (no "not enough data" placeholder).
+  const currentPeerStats = currentQuestion ? peerStats[currentQuestion.id] : null;
+  const showPeerStats = isCurrentChecked && !!currentPeerStats;
+  const isLastQuestion = currentIdx + 1 >= questionTotal;
+  const primaryActionLabel = tutorModeActive
+    ? (!isCurrentChecked ? 'Check' : (isLastQuestion ? 'Finish' : 'Next question'))
+    : (isLastQuestion ? 'Finish' : 'Next');
+  const primaryActionDisabled = tutorModeActive && !isCurrentChecked && !hasCurrentResponse;
+  const timedTotalSeconds = (quiz.questions?.length || quiz.questionCount || 0) * TIMED_SECONDS_PER_QUESTION;
+  const timedLow = isTimed && timedRemaining !== null && timedRemaining < 60;
   const coachButtonClass = (actionType, baseClass = '') => [
     baseClass,
     activeCoachAction === actionType ? 'loading' : ''
@@ -1041,11 +1361,11 @@ export default function SmartQuiz() {
             <div className="sq-coach-response-actions">
               <button type="button" onClick={() => handleSimplifyCoachResponse(actionType)} disabled={assistantLoading}>
                 Simplify
-                <FontAwesomeIcon icon={faPen} />
+                <FiEdit2 />
               </button>
               <button type="button" onClick={() => handleCopyCoachResponse(actionType)}>
                 Copy
-                <FontAwesomeIcon icon={faCopy} />
+                <FiCopy />
               </button>
             </div>
           </>
@@ -1058,86 +1378,81 @@ export default function SmartQuiz() {
     return (
       <div className="smart-quiz__container">
         <header className="sq-top-nav">
-          <button className="sq-brand" onClick={() => navigate('/dashboard')}>
-            <span className="sq-brand-mark">U</span>
-            <span className="sq-brand-name">UltraSAT <strong>Prep</strong></span>
+          <button className="sq-brand" onClick={() => handleExit('/dashboard')} title="Back to dashboard">
+            <span className="sq-brand-mark" aria-hidden="true" />
+            <span className="sq-brand-name">UltraSATPrep</span>
           </button>
 
-          <nav className="sq-primary-nav" aria-label="Smart quiz navigation">
-            <button className="active" onClick={() => navigate('/subject-quizzes')}>
-              <FontAwesomeIcon icon={faWandMagicSparkles} />
-              Practice
-            </button>
-            <button onClick={() => navigate('/progress')}>
-              <FontAwesomeIcon icon={faClipboardList} />
-              Review
-            </button>
-            <button onClick={() => navigate('/smart-quiz-intro')}>
-              <FontAwesomeIcon icon={faBookOpen} />
-              Study Plan
-            </button>
-            <button onClick={() => navigate('/progress')}>
-              <FontAwesomeIcon icon={faChartBar} />
-              Analytics
-            </button>
-          </nav>
+          <div className="sq-nav-context">
+            <div className="sq-nav-context-line">
+              <span className="sq-nav-skill">{skillLabel}</span>
+              <span className="sq-nav-count">Question {currentIdx + 1} of {questionTotal}</span>
+            </div>
+            <div
+              className="ut-progress ut-progress--on-ink sq-nav-progress"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={questionTotal}
+              aria-valuenow={completedCount}
+              aria-label={`${completedCount} of ${questionTotal} questions answered`}
+            >
+              <div className="ut-progress-fill" style={{ width: `${answeredPct}%` }} />
+            </div>
+          </div>
 
           <div className="sq-top-actions">
+            {isTimed ? (
+              <span
+                className={`ut-chip ut-chip--ink sq-nav-timer ${timedLow ? 'sq-timer--low' : ''}`}
+                title="Time remaining"
+                role="timer"
+                aria-live="off"
+              >
+                <FiClock />
+                {formatElapsedTime(timedRemaining ?? timedTotalSeconds)}
+              </span>
+            ) : (
+              <span className="ut-chip ut-chip--ink sq-nav-timer" title="Time on this question">
+                <FiClock />
+                {formatElapsedTime(elapsedSeconds)}
+              </span>
+            )}
             <button
-              className={`sq-ai-mode ${aiEnabled ? 'enabled' : ''}`}
+              className={`ut-chip sq-ai-toggle ${aiEnabled ? 'ut-chip--glow' : 'ut-chip--ink'}`}
               onClick={() => setAiEnabled((enabled) => !enabled)}
               aria-pressed={aiEnabled}
+              title={aiEnabled ? 'AI assistant panels on' : 'AI assistant panels off'}
             >
               <FontAwesomeIcon icon={faWandMagicSparkles} />
               {aiEnabled ? 'AI Mode' : 'Basic Mode'}
             </button>
-            <span className="sq-top-divider" />
-            <button className="sq-icon-button" title="Notifications">
-              <FontAwesomeIcon icon={faBell} />
-            </button>
-            <button className="sq-user-menu" title="Profile">
-              <span>{currentUser?.displayName?.[0] || currentUser?.email?.[0] || 'A'}</span>
-              <FontAwesomeIcon icon={faChevronDown} />
+            <button
+              className="ut-btn ut-btn--ghost ut-btn--sm sq-exit-btn"
+              onClick={() => handleExit('/subject-quizzes')}
+            >
+              Exit
             </button>
           </div>
         </header>
 
         <main className="sq-page">
-          <section className="sq-session-bar" aria-label="Quiz progress">
-            <button className="sq-skill-select">
-              {skillLabel}
-              <FontAwesomeIcon icon={faChevronDown} />
-            </button>
-            <div className="sq-progress-wrap" aria-label={`Question ${currentIdx + 1} of ${questionTotal}`}>
-              <div className="sq-progress-track">
-                <div className="sq-progress-fill" style={{ width: `${progressPct}%` }} />
-              </div>
-              <span>{currentIdx + 1} of {questionTotal}</span>
-            </div>
-            <div className="sq-timer">
-              <span>Time Elapsed</span>
-              <FontAwesomeIcon icon={faClock} />
-              <strong>{formatElapsedTime(elapsedSeconds)}</strong>
-            </div>
-          </section>
-
           {aiEnabled && (
             <>
               <div className="mobile-ai-bar">
                 <button type="button" onClick={isFreeOrGuest ? handleProFeatureClick : () => setIsAssistantModalOpen(true)}>
-                  <FontAwesomeIcon icon={faComment} />
+                  <FiMessageSquare />
                   <span>AI</span>
                 </button>
                 <button type="button" onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectTipRequest} disabled={assistantLoading}>
-                  <FontAwesomeIcon icon={faLightbulb} />
+                  <FiZap />
                   <span>Hint</span>
                 </button>
                 <button type="button" onClick={isFreeOrGuest ? handleProFeatureClick : handleDirectSummariseText} disabled={assistantLoading}>
-                  <FontAwesomeIcon icon={faFileAlt} />
+                  <FiFileText />
                   <span>Summary</span>
                 </button>
                 <button type="button" onClick={() => setShowMobileVocab(!showMobileVocab)}>
-                  <FontAwesomeIcon icon={faBook} />
+                  <FiBookOpen />
                   <span>{helperType === 'concept' ? 'Concepts' : 'Words'}</span>
                 </button>
               </div>
@@ -1159,7 +1474,7 @@ export default function SmartQuiz() {
                         >
                           <span>{item.term}</span>
                           {savedVocabularyItems.includes(item.term) && (
-                            <FontAwesomeIcon icon={faCheck} />
+                            <FiCheck />
                           )}
                         </button>
                       ))}
@@ -1192,7 +1507,7 @@ export default function SmartQuiz() {
               <aside className="sq-vocab-panel">
                 <div className="sq-panel-title">
                   <span className="sq-panel-icon blue">
-                    <FontAwesomeIcon icon={faBook} />
+                    <FiBookOpen />
                   </span>
                   <div>
                     <h2>{helperType === 'concept' ? 'Key Concepts' : 'Key Vocabulary'}</h2>
@@ -1248,7 +1563,7 @@ export default function SmartQuiz() {
                             aria-label={isSaved ? `${item.term} saved` : `Save ${item.term}`}
                             title={isSaved ? 'Already in word bank' : 'Save to word bank'}
                           >
-                            <FontAwesomeIcon icon={isSaved ? faCheck : faSave} />
+                            {isSaved ? <FiCheck /> : <FiSave />}
                           </button>
                         </div>
                       );
@@ -1259,7 +1574,7 @@ export default function SmartQuiz() {
                 {helperItems.length > 6 && (
                   <button type="button" className="sq-view-all" onClick={() => setShowMobileVocab(true)}>
                     View all {helperType === 'concept' ? 'concepts' : 'words'}
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FiArrowRight />
                   </button>
                 )}
               </aside>
@@ -1273,22 +1588,26 @@ export default function SmartQuiz() {
                 </div>
                 <div className="sq-question-tools">
                   <button
-                    className="sq-icon-button"
-                    onClick={() => toast.success('Question bookmarked.')}
-                    title="Bookmark this question"
+                    className={`sq-icon-button ${isSavedToStudyPlan ? 'sq-icon-button--active' : ''}`}
+                    onClick={handleBookmarkToggle}
+                    disabled={bookmarkSaving}
+                    aria-pressed={isSavedToStudyPlan}
+                    title={isSavedToStudyPlan
+                      ? 'Saved to your practice list. Click to remove.'
+                      : 'Save this question to your practice list'}
                   >
-                    <FontAwesomeIcon icon={faBookmark} />
+                    <FiBookmark />
                   </button>
                   <button
                     className="sq-icon-button"
                     onClick={() => setIsReportModalOpen(true)}
                     title="Report this question"
                   >
-                    <FontAwesomeIcon icon={faFlag} />
+                    <FiFlag />
                   </button>
                   <span className={`sq-difficulty ${String(difficultyLabel).toLowerCase()}`}>
                     {difficultyLabel}
-                    <FontAwesomeIcon icon={faSignal} />
+                    <FiActivity />
                   </span>
                 </div>
               </div>
@@ -1318,19 +1637,46 @@ export default function SmartQuiz() {
               </div>
 
               {getQuestionType(currentQuestion) === 'multiple-choice' ? (
-                <ul className="options-list">
+                <ul className={`options-list ${isCurrentChecked ? 'options-list--revealed' : ''}`}>
                   {currentQuestion.options.map((opt, idx) => {
                     const isSelected = selectedAnswer?.selectedOption === idx;
+                    const isRevealedCorrect = isCurrentChecked && idx === revealCorrectIndex;
+                    const isRevealedIncorrect = isCurrentChecked && isSelected && !isRevealedCorrect;
+                    const revealClass = isCurrentChecked
+                      ? (isRevealedCorrect
+                        ? 'reveal-correct'
+                        : (isRevealedIncorrect ? 'reveal-incorrect' : 'reveal-muted'))
+                      : '';
+                    // P2-B: "% of students chose this" mini-chip, post-check only.
+                    const peerPct = showPeerStats && typeof currentPeerStats.optionPcts[idx] === 'number'
+                      ? currentPeerStats.optionPcts[idx]
+                      : null;
                     return (
                       <li key={idx}>
                         <button
                           type="button"
                           onPointerDown={(event) => event.stopPropagation()}
                           onClick={(event) => handleSelect(event, idx)}
-                          className={`option-button ${isSelected ? 'selected' : ''}`}
+                          className={`option-button ${isSelected ? 'selected' : ''} ${revealClass} ${peerPct !== null ? 'sq-has-peer' : ''}`}
+                          disabled={isCurrentChecked}
+                          aria-pressed={isSelected}
                         >
                           <span className="sq-option-letter">{String.fromCharCode(65 + idx)}</span>
                           <span className="sq-option-copy">{opt}</span>
+                          {peerPct !== null && (
+                            <span
+                              className="sq-option-peer"
+                              title={`${peerPct}% of students chose this option`}
+                            >
+                              {peerPct}%
+                            </span>
+                          )}
+                          {isRevealedCorrect && (
+                            <span className="sq-option-verdict" aria-hidden="true"><FiCheckCircle /></span>
+                          )}
+                          {isRevealedIncorrect && (
+                            <span className="sq-option-verdict" aria-hidden="true"><FiXCircle /></span>
+                          )}
                         </button>
                       </li>
                     );
@@ -1346,7 +1692,12 @@ export default function SmartQuiz() {
                       type="text"
                       value={userInput}
                       onChange={(e) => handleUserInput(e.target.value)}
-                      className="user-answer-input"
+                      className={`user-answer-input ${isCurrentChecked
+                        ? (selectedAnswer?.omitted
+                          ? 'user-answer-input--locked'
+                          : (selectedAnswer?.isCorrect ? 'user-answer-input--correct' : 'user-answer-input--incorrect'))
+                        : ''}`}
+                      disabled={isCurrentChecked}
                       placeholder={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? 'Enter a number' : 'Enter your answer'}
                       pattern={currentQuestion.inputType === 'number' || !currentQuestion.inputType ? '[0-9]*[.]?[0-9]*' : undefined}
                     />
@@ -1359,13 +1710,58 @@ export default function SmartQuiz() {
                 </div>
               )}
 
+              {/* Tutor mode: the moment of truth. Answer locks, options get
+                  verdict styling above, and the full explanation renders here
+                  while the AI coach panel stays live alongside it. */}
+              {isCurrentChecked && (
+                <div className="sq-tutor-reveal">
+                  {/* P2-B: quiet peer-stats strip; renders only once stats
+                      resolve AND the question has enough attempts. */}
+                  {showPeerStats && (
+                    <div className="sq-peer-strip">
+                      <FiUsers aria-hidden="true" />
+                      <span>{currentPeerStats.pctCorrect}% of students answer this correctly</span>
+                      {currentPeerStats.avgTimeSec !== null && (
+                        <span className="sq-peer-time">
+                          {selectedAnswer?.omitted !== true && typeof selectedAnswer?.timeSpent === 'number' ? (
+                            <>
+                              Your time: {formatPeerSeconds(selectedAnswer.timeSpent)}
+                              {' '}&middot; average: {formatPeerSeconds(currentPeerStats.avgTimeSec)}
+                            </>
+                          ) : (
+                            <>Average time: {formatPeerSeconds(currentPeerStats.avgTimeSec)}</>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  <ExplanationCard
+                    compact
+                    question={currentQuestion}
+                    selectedOption={selectedAnswer?.omitted ? null : (selectedAnswer?.selectedOption ?? null)}
+                    isCorrect={selectedAnswer?.omitted ? null : !!selectedAnswer?.isCorrect}
+                    omitted={selectedAnswer?.omitted === true}
+                  />
+                </div>
+              )}
+
+              {/* Tutor mode: explicit omit path when nothing is selected. */}
+              {tutorModeActive && !isCurrentChecked && !hasCurrentResponse && (
+                <div className="sq-skip-row">
+                  <button type="button" className="sq-skip-btn" onClick={handleSkipOmit}>
+                    <FiMinusCircle aria-hidden="true" />
+                    Skip (omit)
+                  </button>
+                </div>
+              )}
+
               <div className="quiz-navigation">
                 <button
                   className="nav-button prev"
                   onClick={() => handleNavigation('prev')}
                   disabled={currentIdx === 0}
                 >
-                  <FontAwesomeIcon icon={faArrowLeft} />
+                  <FiArrowLeft />
                   Previous
                 </button>
 
@@ -1377,6 +1773,7 @@ export default function SmartQuiz() {
                         key={level}
                         className={selectedConfidence === level ? 'selected' : ''}
                         onClick={() => handleConfidenceSelect(level)}
+                        disabled={isCurrentChecked}
                         aria-label={`Confidence ${level}`}
                       >
                         {level}
@@ -1391,11 +1788,11 @@ export default function SmartQuiz() {
 
                 <button
                   className="nav-button next"
-                  onClick={() => handleNavigation('next')}
-                  disabled={!selectedAnswer}
+                  onClick={handlePrimaryAction}
+                  disabled={primaryActionDisabled}
                 >
-                  {currentIdx + 1 >= questionTotal ? 'Finish' : 'Next'}
-                  <FontAwesomeIcon icon={faArrowRight} />
+                  {primaryActionLabel}
+                  {tutorModeActive && !isCurrentChecked ? <FiCheck /> : <FiArrowRight />}
                 </button>
               </div>
             </section>
@@ -1413,14 +1810,8 @@ export default function SmartQuiz() {
                 </div>
                 <p className="sq-coach-subtitle">Personalized, step-by-step support.</p>
 
-                <div className="sq-focus-card">
-                  <FontAwesomeIcon icon={faBullseye} />
-                  <div>
-                    <span>Focus for you</span>
-                    <strong>Main idea & central claim</strong>
-                    <small>Based on your recent performance</small>
-                  </div>
-                </div>
+                {/* (Overhaul Phase B: removed the hardcoded "Focus for you" card that
+                    claimed to be based on recent performance — it was static text.) */}
 
                 <div className="sq-coach-actions">
                   <button
@@ -1429,12 +1820,12 @@ export default function SmartQuiz() {
                     disabled={assistantLoading}
                     aria-expanded={expandedCoachAction === 'mainIdea'}
                   >
-                    <span className="sq-action-icon violet"><FontAwesomeIcon icon={faFileLines} /></span>
+                    <span className="sq-action-icon violet"><FiFileText /></span>
                     <span>
                       <strong>Main idea in one sentence</strong>
                       <small>{coachButtonSubtitle('mainIdea', "See the passage's central claim")}</small>
                     </span>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FiArrowRight />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
                   {renderCoachResponsePanel('mainIdea')}
@@ -1445,12 +1836,12 @@ export default function SmartQuiz() {
                     disabled={assistantLoading}
                     aria-expanded={expandedCoachAction === 'lineByLine'}
                   >
-                    <span className="sq-action-icon blue"><FontAwesomeIcon icon={faList} /></span>
+                    <span className="sq-action-icon blue"><FiList /></span>
                     <span>
                       <strong>Line-by-line explanation</strong>
                       <small>{coachButtonSubtitle('lineByLine', 'Break down the passage')}</small>
                     </span>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FiArrowRight />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
                   {renderCoachResponsePanel('lineByLine')}
@@ -1461,7 +1852,7 @@ export default function SmartQuiz() {
                     disabled={assistantLoading}
                     aria-expanded={expandedCoachAction === 'choiceAnalysis'}
                   >
-                    <span className="sq-action-icon amber"><FontAwesomeIcon icon={faStar} /></span>
+                    <span className="sq-action-icon amber"><FiStar /></span>
                     <span>
                       <strong>Choice-by-choice analysis</strong>
                       <small>{coachButtonSubtitle('choiceAnalysis', 'See why each option is right or wrong')}</small>
@@ -1469,7 +1860,7 @@ export default function SmartQuiz() {
                         {['A', 'B', 'C', 'D'].map((choice) => <em key={choice}>{choice}</em>)}
                       </span>
                     </span>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FiArrowRight />
                     <b>Top pick</b>
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
@@ -1481,12 +1872,12 @@ export default function SmartQuiz() {
                     disabled={assistantLoading}
                     aria-expanded={expandedCoachAction === 'hint'}
                   >
-                    <span className="sq-action-icon gold"><FontAwesomeIcon icon={faLightbulb} /></span>
+                    <span className="sq-action-icon gold"><FiZap /></span>
                     <span>
                       <strong>Hint, not answer</strong>
                       <small>{coachButtonSubtitle('hint', 'Get a strategic clue without spoilers')}</small>
                     </span>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FiArrowRight />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
                   {renderCoachResponsePanel('hint')}
@@ -1497,12 +1888,12 @@ export default function SmartQuiz() {
                     disabled={assistantLoading}
                     aria-expanded={expandedCoachAction === 'whyWins'}
                   >
-                    <span className="sq-action-icon green"><FontAwesomeIcon icon={faTrophy} /></span>
+                    <span className="sq-action-icon green"><FiAward /></span>
                     <span>
                       <strong>Why this answer wins</strong>
                       <small>{coachButtonSubtitle('whyWins', 'Understand the strongest choice')}</small>
                     </span>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FiArrowRight />
                     {isFreeOrGuest && <span className="sq-pro-badge">PRO</span>}
                   </button>
                   {renderCoachResponsePanel('whyWins')}
@@ -1512,19 +1903,19 @@ export default function SmartQuiz() {
                     onClick={handleStudyPlanClick}
                     disabled={studyPlanSaving}
                   >
-                    <span className="sq-action-icon pink"><FontAwesomeIcon icon={isSavedToStudyPlan ? faCheck : faBookmark} /></span>
+                    <span className="sq-action-icon pink">{isSavedToStudyPlan ? <FiCheck /> : <FiBookmark />}</span>
                     <span>
                       <strong>{isSavedToStudyPlan ? 'Added to study plan' : 'Add to study plan'}</strong>
                       <small>{studyPlanSaving ? 'Saving...' : 'Save this question type to strengthen your skills'}</small>
                     </span>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FiArrowRight />
                   </button>
                 </div>
 
                 <div className="sq-weekly-card">
                   <div>
-                    <h3>Your progress this week</h3>
-                    <FontAwesomeIcon icon={faClock} />
+                    <h3>This quiz</h3>
+                    <FiClock />
                   </div>
                   <div className="sq-weekly-grid">
                     <span>
@@ -1536,18 +1927,14 @@ export default function SmartQuiz() {
                       <strong>{weeklyAccuracy}%</strong>
                     </span>
                   </div>
-                  <div className="sq-sparkline" aria-hidden="true">
-                    {[34, 48, 46, 63, 58, 68, 61, 78].map((height, index) => (
-                      <i key={index} style={{ height: `${height}%` }} />
-                    ))}
-                  </div>
+                  {/* (Overhaul Phase B: removed the hardcoded fake weekly sparkline) */}
                 </div>
               </aside>
             )}
           </div>
 
           <p className="sq-bottom-tip">
-            <FontAwesomeIcon icon={faLightbulb} />
+            <FiZap />
             Tip: Main idea questions ask for the overall point. Look for the sentence that best represents the whole paragraph.
           </p>
         </main>
@@ -1591,7 +1978,7 @@ export default function SmartQuiz() {
                   onClick={() => handleSaveVocabularyItem(selectedVocabularyItem, { explicit: true })}
                   disabled={savingVocabularyItem || savedVocabularyItems.includes(selectedVocabularyItem.term)}
                 >
-                  <FontAwesomeIcon icon={savedVocabularyItems.includes(selectedVocabularyItem.term) ? faCheck : faSave} />
+                  {savedVocabularyItems.includes(selectedVocabularyItem.term) ? <FiCheck /> : <FiSave />}
                   {savedVocabularyItems.includes(selectedVocabularyItem.term)
                     ? (helperType === 'concept' ? 'Saved to My Concepts' : 'Saved to My Words')
                     : (savingVocabularyItem
@@ -1605,10 +1992,10 @@ export default function SmartQuiz() {
 
         <ToastContainer position="bottom-right" autoClose={3000} />
 
-        <ProFeatureModal
+        <ProUpgradeModal
           isOpen={showProModal}
           onClose={() => setShowProModal(false)}
-          position={{ x: window.innerWidth / 2 - 200, y: window.innerHeight / 2 - 150 }}
+          featureName="AI question help"
         />
       </div>
     );

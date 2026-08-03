@@ -73,7 +73,7 @@ function Contact() {
             <h2>Send us a Message</h2>
             {submitted ? (
               <div className="success-message">
-                <h3>✅ Message Sent Successfully!</h3>
+                <h3>Message Sent Successfully!</h3>
                 <p>Thank you for contacting us. We'll get back to you within 24 hours.</p>
                 <button 
                   className="send-another-btn"
@@ -173,7 +173,7 @@ function Contact() {
             
             <div className="contact-methods">
               <div className="contact-method">
-                <h3>📧 Email Support</h3>
+                <h3>Email Support</h3>
                 <p><strong>General Inquiries:</strong> <a href="mailto:hello@ultrasatprep.com">hello@ultrasatprep.com</a></p>
                 <p><strong>Technical Support:</strong> <a href="mailto:support@ultrasatprep.com">support@ultrasatprep.com</a></p>
                 <p><strong>Billing Questions:</strong> <a href="mailto:billing@ultrasatprep.com">billing@ultrasatprep.com</a></p>
@@ -181,7 +181,7 @@ function Contact() {
               </div>
               
               <div className="contact-method">
-                <h3>💬 Alternative Contact</h3>
+                <h3>Alternative Contact</h3>
                 <p>If the form above doesn't work, you can always reach us directly at:</p>
                 <p><strong><a href="mailto:hello@ultrasatprep.com?subject=Contact%20from%20UltraSAT%20User">hello@ultrasatprep.com</a></strong></p>
                 <p>We typically respond within 24 hours.</p>

@@ -230,7 +230,7 @@ export function AuthProvider({ children }) {
   function getMembershipDisplayName(tier) {
     const displayNames = {
       free: 'Free',
-      plus: 'Plus',
+      plus: 'Pro',
       max: 'Max',
     };
 

@@ -31,7 +31,7 @@ const PaymentCancel = () => {
         </div>
 
         <div className="benefits-reminder">
-          <h3>Don't miss out on premium features:</h3>
+          <h3>Here's what Pro includes:</h3>
           <ul>
             <li>Unlimited practice exams</li>
             <li>Detailed progress analytics</li>

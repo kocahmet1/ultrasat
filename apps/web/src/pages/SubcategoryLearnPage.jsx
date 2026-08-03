@@ -2,35 +2,40 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faBook,
-  faArrowLeft,
-  faLightbulb,
-  faQuestion,
-  faPlayCircle,
-  faBrain,
-  faCheckCircle,
-  faSpinner,
-  faClock,
-  faSignal,
-  faLayerGroup,
-  faChevronRight,
-  faListUl,
-  faTimes,
-  faCheck,
-  faRocket,
-  faExclamationTriangle,
-  faGraduationCap,
-  faBullseye
-} from '@fortawesome/free-solid-svg-icons';
+  FiAlertTriangle,
+  FiCheckCircle,
+  FiKey,
+  FiZap,
+  FiBookOpen,
+  FiArrowLeft,
+  FiHelpCircle,
+  FiPlayCircle,
+  FiClock,
+  FiActivity,
+  FiLayers,
+  FiChevronRight,
+  FiList,
+  FiX,
+  FiCheck,
+  FiTarget,
+  FiLoader,
+} from 'react-icons/fi';
+// Feather has no brain / rocket / graduation-cap glyphs; kept from FontAwesome
+// for these three only.
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBrain, faRocket, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { getConceptsBySubcategory } from '../firebase/conceptServices';
 import { getLearningContent } from '../firebase/learningContentServices';
 import { getDiverseSampleQuestions } from '../firebase/questionServices';
-import { getSubcategoryName, getSubcategoryIdFromString, SUBCATEGORY_SUBJECTS, SUBCATEGORY_MAIN_CATEGORIES } from '../utils/subcategoryConstants';
+import { markLessonComplete, touchLessonViewed, unmarkLessonComplete } from '../firebase/lessonProgressServices';
+import { getSubcategoryProgress } from '../utils/progressUtils';
+import { getSubcategoryName, getSubcategoryIdFromString, getKebabCaseFromAnyFormat, SUBCATEGORY_SUBJECTS, SUBCATEGORY_MAIN_CATEGORIES } from '../utils/subcategoryConstants';
 import { processTextMarkup } from '../utils/textProcessing';
+import { logEvent, EVENT_TYPES } from '../coach/events';
 import { ToastContainer } from 'react-toastify';
 import EMBEDDED_QUIZ_QUESTIONS from '../data/embeddedQuizQuestions';
+import LessonBlockRenderer from '../components/lesson/LessonBlockRenderer';
 import '../styles/SubcategoryLearnPage.css';
 
 // ─── Reading Progress Bar ─────────────────────────────────────
@@ -83,7 +88,7 @@ const MobileTOC = ({ sections, activeSection, isOpen, onClose }) => (
     {isOpen && <div className="learn-mobile-toc-overlay open" onClick={onClose} />}
     <div className={`learn-mobile-toc-panel ${isOpen ? 'open' : ''}`}>
       <button className="learn-mobile-toc-close" onClick={onClose}>
-        <FontAwesomeIcon icon={faTimes} />
+        <FiX />
       </button>
       <div className="toc-label">On this page</div>
       <ul className="toc-list">
@@ -110,9 +115,9 @@ const MobileTOC = ({ sections, activeSection, isOpen, onClose }) => (
 // ─── Callout Box ──────────────────────────────────────────────
 const CalloutBox = ({ type = 'tip', title, children }) => {
   const icons = {
-    tip: '💡',
-    warning: '⚠️',
-    insight: '🔑'
+    tip: <FiZap />,
+    warning: <FiAlertTriangle />,
+    insight: <FiKey />
   };
   return (
     <div className={`learn-callout ${type}`}>
@@ -133,7 +138,7 @@ const TextStructurePurposeInfographic = () => {
   const steps = [
     {
       id: 'shift',
-      icon: faLightbulb,
+      icon: FiZap,
       label: 'Find the shift',
       command: 'Pivot scan',
       text: 'The shift is where setup turns into the author\'s real move.',
@@ -143,7 +148,7 @@ const TextStructurePurposeInfographic = () => {
     },
     {
       id: 'map',
-      icon: faLayerGroup,
+      icon: FiLayers,
       label: 'Map the halves',
       command: 'Structure trace',
       text: 'Name what the first part does, then verify what the ending does.',
@@ -153,7 +158,7 @@ const TextStructurePurposeInfographic = () => {
     },
     {
       id: 'verb',
-      icon: faBullseye,
+      icon: FiTarget,
       label: 'Match the verb',
       command: 'Verb filter',
       text: 'Purpose answers live or die on verbs like explain, argue, refute.',
@@ -234,7 +239,7 @@ const TextStructurePurposeInfographic = () => {
               <React.Fragment key={item}>
                 <span>{item}</span>
                 {index < active.map.length - 1 && (
-                  <FontAwesomeIcon icon={faChevronRight} />
+                  <FiChevronRight />
                 )}
               </React.Fragment>
             ))}
@@ -254,7 +259,7 @@ const TextStructurePurposeInfographic = () => {
                 key={step.id}
               >
                 <span className="tsp-step-tab-icon">
-                  <FontAwesomeIcon icon={step.icon} />
+                  <step.icon />
                 </span>
                 <span>
                   <small>0{index + 1}</small>
@@ -278,7 +283,7 @@ const TextStructurePurposeInfographic = () => {
 
       <div className="tsp-trap-console">
         <div className="tsp-trap-heading">
-          <FontAwesomeIcon icon={faExclamationTriangle} />
+          <FiAlertTriangle />
           <div>
             <h3>Trap console</h3>
             <p>See the bait pattern and the countermove before choosing an answer.</p>
@@ -322,7 +327,7 @@ const WordsInContextInfographic = () => {
   const steps = [
     {
       id: 'blind',
-      icon: faTimes,
+      icon: FiX,
       label: 'Blind the options',
       command: 'Choice shield',
       text: 'Define the blank before the answer choices implant a meaning.',
@@ -331,7 +336,7 @@ const WordsInContextInfographic = () => {
     },
     {
       id: 'perimeter',
-      icon: faLayerGroup,
+      icon: FiLayers,
       label: 'Read the perimeter',
       command: 'Clue scan',
       text: 'Tone markers and transition anchors tell you the word polarity.',
@@ -340,7 +345,7 @@ const WordsInContextInfographic = () => {
     },
     {
       id: 'match',
-      icon: faBullseye,
+      icon: FiTarget,
       label: 'Guess and match',
       command: 'Fit test',
       text: 'Use a plain word first, then choose the closest SAT-level match.',
@@ -423,7 +428,7 @@ const WordsInContextInfographic = () => {
               <React.Fragment key={item}>
                 <span>{item}</span>
                 {index < active.map.length - 1 && (
-                  <FontAwesomeIcon icon={faChevronRight} />
+                  <FiChevronRight />
                 )}
               </React.Fragment>
             ))}
@@ -443,7 +448,7 @@ const WordsInContextInfographic = () => {
                 key={step.id}
               >
                 <span className="tsp-step-tab-icon">
-                  <FontAwesomeIcon icon={step.icon} />
+                  <step.icon />
                 </span>
                 <span>
                   <small>0{index + 1}</small>
@@ -467,7 +472,7 @@ const WordsInContextInfographic = () => {
 
       <div className="tsp-trap-console">
         <div className="tsp-trap-heading">
-          <FontAwesomeIcon icon={faExclamationTriangle} />
+          <FiAlertTriangle />
           <div>
             <h3>Trap console</h3>
             <p>Separate logical fit from familiar, fancy, or smooth-sounding bait.</p>
@@ -1480,7 +1485,7 @@ const ProbabilityInfographic = () => {
           </motion.div>
         </div>
         <div className="prob-product-note">
-          <FontAwesomeIcon icon={faCheckCircle} />
+          <FiCheckCircle />
           <span>Both selected students are girls, so the fractions multiply.</span>
         </div>
       </div>
@@ -2272,7 +2277,7 @@ const EmbeddedSampleQuiz = ({ question }) => {
                 </span>
                 <span className="eq-option-text">{option}</span>
                 {isCorrect && correctRevealed && (
-                  <FontAwesomeIcon icon={faCheckCircle} className="eq-correct-icon" />
+                  <FiCheckCircle className="eq-correct-icon" />
                 )}
               </div>
             );
@@ -2282,7 +2287,7 @@ const EmbeddedSampleQuiz = ({ question }) => {
         {/* Explanation (appears when correct is revealed) */}
         {correctRevealed && question.explanation && (
           <div className="embedded-quiz-explanation">
-            <strong>💡 Explanation:</strong>{' '}
+            <strong>Explanation:</strong>{' '}
             <span dangerouslySetInnerHTML={{ __html: processTextMarkup(question.explanation) }} />
           </div>
         )}
@@ -2338,7 +2343,7 @@ const SampleQuestionsSection = ({ questions, onPracticeClick }) => {
   if (displayQuestions.length === 0) {
     return (
       <div className="learn-questions-empty">
-        <FontAwesomeIcon icon={faQuestion} />
+        <FiHelpCircle />
         <p>Sample questions will be available soon for this subcategory.</p>
       </div>
     );
@@ -2412,7 +2417,7 @@ const SampleQuestionsSection = ({ questions, onPracticeClick }) => {
                 <span className="learn-option-letter">{String.fromCharCode(65 + index)}</span>
                 <span className="learn-option-text">{option}</span>
                 {showAnswer && isCorrect && (
-                  <FontAwesomeIcon icon={faCheckCircle} className="learn-option-check" />
+                  <FiCheckCircle className="learn-option-check" />
                 )}
               </div>
             );
@@ -2440,7 +2445,7 @@ const SampleQuestionsSection = ({ questions, onPracticeClick }) => {
 
       <div className="learn-practice-cta">
         <button className="learn-practice-btn" onClick={onPracticeClick}>
-          <FontAwesomeIcon icon={faPlayCircle} />
+          <FiPlayCircle />
           Practice More Questions Like This
         </button>
       </div>
@@ -2476,8 +2481,118 @@ export default function SubcategoryLearnPage() {
   const [learningContent, setLearningContent] = useState(null);
   const [activeSection, setActiveSection] = useState('overview');
   const [mobileTocOpen, setMobileTocOpen] = useState(false);
+  const [lessonCompleted, setLessonCompleted] = useState(false);
+  const [completionSaving, setCompletionSaving] = useState(false);
+  const [previewBlocks, setPreviewBlocks] = useState(null);
 
   const contentRef = useRef(null);
+
+  // === P2-D dev-only lesson-block preview ===
+  // ?previewBlocks=<sampleId> loads components/lesson/samples/<sampleId>.sample.json
+  // so authored block drafts can be previewed without touching Firestore.
+  // DEV-guarded: the whole branch (and the sample glob) is dead-code-eliminated
+  // from production builds.
+  useEffect(() => {
+    if (!import.meta.env.DEV) return undefined;
+    const sampleId = new URLSearchParams(window.location.search).get('previewBlocks');
+    if (!sampleId || !/^[a-z0-9-]{1,64}$/.test(sampleId)) return undefined;
+    let cancelled = false;
+    import(`../components/lesson/samples/${sampleId}.sample.json`)
+      .then((mod) => {
+        if (cancelled) return;
+        const blocks = mod?.default?.blocks;
+        if (Array.isArray(blocks) && blocks.length > 0) {
+          setPreviewBlocks(blocks);
+        } else {
+          console.warn(`[lesson-blocks] sample "${sampleId}" has no blocks array`);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) console.warn(`[lesson-blocks] no preview sample named "${sampleId}"`);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [subcategoryId]);
+  // === END dev preview ===
+
+  // === AI Coach event stream (Phase 0): lesson dwell tracking ===
+  // Emits one lesson_viewed event when the student leaves the page (or tab),
+  // with total visible dwell time. Lessons were previously invisible to tracking.
+  const dwellRef = useRef({ start: Date.now(), accumulated: 0, sent: false, maxSection: 'overview' });
+  useEffect(() => {
+    dwellRef.current.maxSection = activeSection;
+  }, [activeSection]);
+  useEffect(() => {
+    const d = dwellRef.current;
+    d.start = Date.now();
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') {
+        d.accumulated += Date.now() - d.start;
+      } else {
+        d.start = Date.now();
+      }
+    };
+    const send = () => {
+      if (d.sent) return;
+      const dwellSeconds = Math.round((d.accumulated + (document.visibilityState === 'hidden' ? 0 : Date.now() - d.start)) / 1000);
+      if (dwellSeconds < 5) return; // ignore bounces
+      d.sent = true;
+      logEvent(EVENT_TYPES.LESSON_VIEWED, {
+        subcategoryId,
+        dwellSeconds,
+        sectionsViewed: [d.maxSection],
+      }).catch(() => {});
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', send);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', send);
+      send(); // SPA navigation away
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subcategoryId]);
+  // === END coach events ===
+
+  // === P1-D lesson completion loop ===
+  // Records the visit at users/{uid}/lessonProgress/{subcategoryId} (the
+  // write is throttled to one per page visit inside the service) and uses
+  // the same read to hydrate the end-of-lesson "Have you mastered this
+  // lesson?" band.
+  const canonicalLessonId = getKebabCaseFromAnyFormat(subcategoryId) || subcategoryId;
+  useEffect(() => {
+    let cancelled = false;
+    setLessonCompleted(false);
+    if (!currentUser || !canonicalLessonId) return undefined;
+    touchLessonViewed(currentUser.uid, canonicalLessonId).then((existing) => {
+      if (!cancelled && existing?.status === 'completed') {
+        setLessonCompleted(true);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUser, canonicalLessonId]);
+
+  const handleToggleLessonComplete = async () => {
+    if (!currentUser || completionSaving) return;
+    const nextCompleted = !lessonCompleted;
+    setCompletionSaving(true);
+    try {
+      if (nextCompleted) {
+        await markLessonComplete(currentUser.uid, canonicalLessonId);
+      } else {
+        await unmarkLessonComplete(currentUser.uid, canonicalLessonId);
+      }
+      setLessonCompleted(nextCompleted);
+    } catch (err) {
+      console.error('Error updating lesson completion:', err);
+    } finally {
+      setCompletionSaving(false);
+    }
+  };
+  // === END lesson completion ===
 
   const subcategoryName = getSubcategoryName(subcategoryId) || subcategoryId?.replace(/-/g, ' ');
 
@@ -2582,7 +2697,7 @@ export default function SubcategoryLearnPage() {
       <p>These questions typically appear 2-4 times per section and test your ability to analyze, interpret, and apply knowledge effectively. Mastering this question type can significantly boost your overall score.</p>
 
       <div class="highlight-box">
-        <strong>💡 Pro Tip:</strong> The digital format allows you to flag questions and return to them, making strategic time management even more important.
+        <strong>Pro Tip:</strong> The digital format allows you to flag questions and return to them, making strategic time management even more important.
       </div>
     `,
     keyStrategies: [
@@ -2615,12 +2730,23 @@ export default function SubcategoryLearnPage() {
     navigate(`/concept/${conceptId}`);
   };
 
-  const handlePracticeQuestions = () => {
-    navigate('/smart-quiz-generator', {
-      state: {
-        subcategoryId: subcategoryId,
-        autoDifficultyParams: { accuracyRate: 0, totalAttempted: 0 }
+  const handlePracticeQuestions = async () => {
+    // P1-D: pass the student's real accuracy for this subcategory (same
+    // pattern as SubcategoryProgressPage.handlePractice) instead of the old
+    // hardcoded accuracyRate: 0, so SmartQuizGenerator's getUserLevel can
+    // start the quiz at the right level. The old autoDifficultyParams shape
+    // was ignored by SmartQuizGenerator entirely.
+    let accuracyRate = 0;
+    if (currentUser) {
+      try {
+        const progressData = await getSubcategoryProgress(currentUser.uid, subcategoryId);
+        accuracyRate = progressData ? (progressData.accuracyLast10 || 0) : 0;
+      } catch (err) {
+        console.error('Error loading subcategory accuracy:', err);
       }
+    }
+    navigate('/smart-quiz-generator', {
+      state: { subcategoryId, accuracyRate }
     });
   };
 
@@ -2628,7 +2754,7 @@ export default function SubcategoryLearnPage() {
   if (loading) {
     return (
       <div className="subcategory-learn-loading">
-        <FontAwesomeIcon icon={faSpinner} spin className="loading-icon" />
+        <FiLoader className="loading-icon" />
         <div className="loading-text">Loading learning content...</div>
       </div>
     );
@@ -2661,24 +2787,24 @@ export default function SubcategoryLearnPage() {
           <header className="learn-hero">
             <div className="learn-breadcrumb">
               <button className="learn-breadcrumb-link" onClick={() => navigate('/progress')}>
-                <FontAwesomeIcon icon={faArrowLeft} />
+                <FiArrowLeft />
                 Progress
               </button>
               <span className="learn-breadcrumb-sep">
-                <FontAwesomeIcon icon={faChevronRight} />
+                <FiChevronRight />
               </span>
               <button className="learn-breadcrumb-link" onClick={() => navigate('/lectures')}>
                 Lectures
               </button>
               <span className="learn-breadcrumb-sep">
-                <FontAwesomeIcon icon={faChevronRight} />
+                <FiChevronRight />
               </span>
               <span className="learn-breadcrumb-current">{subcategoryName}</span>
             </div>
 
             {sectionLabel && (
               <div className={`learn-category-badge ${subjectId === 1 ? 'reading-writing' : 'math'}`}>
-                <FontAwesomeIcon icon={faBook} />
+                <FiBookOpen />
                 {sectionLabel} · {categoryLabel}
               </div>
             )}
@@ -2688,20 +2814,20 @@ export default function SubcategoryLearnPage() {
             <div className="learn-meta-row">
               {learningContent?.estimatedStudyTime && (
                 <span className="learn-meta-item">
-                  <FontAwesomeIcon icon={faClock} />
+                  <FiClock />
                   {learningContent.estimatedStudyTime}
                 </span>
               )}
               <div className="learn-meta-divider" />
               {learningContent?.difficulty && (
                 <span className="learn-meta-item">
-                  <FontAwesomeIcon icon={faSignal} />
+                  <FiActivity />
                   Difficulty: {learningContent.difficulty}
                 </span>
               )}
               <div className="learn-meta-divider" />
               <span className="learn-meta-item">
-                <FontAwesomeIcon icon={faLayerGroup} />
+                <FiLayers />
                 {concepts.length} concept{concepts.length !== 1 ? 's' : ''}
               </span>
             </div>
@@ -2734,24 +2860,24 @@ export default function SubcategoryLearnPage() {
           {/* ─── "What You'll Learn" Box ─── */}
           <div className="learn-objectives">
             <div className="learn-objectives-title">
-              <FontAwesomeIcon icon={faBullseye} />
+              <FiTarget />
               What you&apos;ll learn
             </div>
             <ul className="learn-objectives-list">
               <li>
-                <FontAwesomeIcon icon={faCheck} />
+                <FiCheck />
                 How to identify and approach {subcategoryName} questions
               </li>
               <li>
-                <FontAwesomeIcon icon={faCheck} />
+                <FiCheck />
                 Proven strategies to solve them quickly and accurately
               </li>
               <li>
-                <FontAwesomeIcon icon={faCheck} />
+                <FiCheck />
                 Common traps and mistakes to avoid on test day
               </li>
               <li>
-                <FontAwesomeIcon icon={faCheck} />
+                <FiCheck />
                 Practice with real SAT-style sample questions
               </li>
             </ul>
@@ -2770,14 +2896,37 @@ export default function SubcategoryLearnPage() {
           />
 
           {/* ─── Section: Overview ─── */}
+          {/* P2-D: lessons whose content doc carries a `blocks` array render the
+              structured block kit; legacy lessons (no blocks) render the
+              original overview HTML exactly as before. previewBlocks is the
+              dev-only ?previewBlocks= override (null in production). */}
           <section id="overview" className="learn-section-block">
             <h2>Overview & Key Concepts</h2>
-            {learningContent?.overview && (
-              <div
-                className="learn-prose"
-                dangerouslySetInnerHTML={{ __html: learningContent.overview }}
-              />
-            )}
+            {(() => {
+              const contentBlocks =
+                Array.isArray(learningContent?.blocks) && learningContent.blocks.length > 0
+                  ? learningContent.blocks
+                  : null;
+              const activeBlocks = previewBlocks || contentBlocks;
+              if (activeBlocks) {
+                return (
+                  <>
+                    {previewBlocks && (
+                      <p className="lb-preview-notice">Dev preview — sample blocks (not saved content)</p>
+                    )}
+                    <LessonBlockRenderer blocks={activeBlocks} />
+                  </>
+                );
+              }
+              return (
+                learningContent?.overview && (
+                  <div
+                    className="learn-prose"
+                    dangerouslySetInnerHTML={{ __html: learningContent.overview }}
+                  />
+                )
+              );
+            })()}
           </section>
 
           {/* ─── Section: Strategies & Tips ─── */}
@@ -2805,7 +2954,7 @@ export default function SubcategoryLearnPage() {
                   {learningContent.commonMistakes?.length > 0 && (
                     <div className="learn-strategy-block common-mistakes">
                       <h4>
-                        <span className="strategy-icon"><FontAwesomeIcon icon={faExclamationTriangle} /></span>
+                        <span className="strategy-icon"><FiAlertTriangle /></span>
                         Common Mistakes to Avoid
                       </h4>
                       <ul className="learn-strategy-list">
@@ -2835,10 +2984,10 @@ export default function SubcategoryLearnPage() {
                 {/* Study Metadata */}
                 <div className="learn-study-meta">
                   <div className="learn-study-meta-item">
-                    <strong>📊 Difficulty:</strong> {learningContent.difficulty}
+                    <strong>Difficulty:</strong> {learningContent.difficulty}
                   </div>
                   <div className="learn-study-meta-item">
-                    <strong>⏱️ Estimated Study Time:</strong> {learningContent.estimatedStudyTime}
+                    <strong>Estimated Study Time:</strong> {learningContent.estimatedStudyTime}
                   </div>
                 </div>
               </>
@@ -2860,7 +3009,7 @@ export default function SubcategoryLearnPage() {
               </div>
             ) : (
               <div className="learn-no-concepts">
-                <FontAwesomeIcon icon={faLightbulb} />
+                <FiZap />
                 <h3>Concepts Coming Soon</h3>
                 <p>Detailed concept breakdowns for this subcategory will be available soon. In the meantime, practice with sample questions below.</p>
               </div>
@@ -2881,10 +3030,53 @@ export default function SubcategoryLearnPage() {
             <h3>Ready to Practice?</h3>
             <p>Put your knowledge to the test with adaptive practice questions.</p>
             <button className="learn-cta-btn" onClick={handlePracticeQuestions}>
-              <FontAwesomeIcon icon={faPlayCircle} />
+              <FiPlayCircle />
               Start Practicing Questions
             </button>
           </div>
+
+          {/* ─── Lesson Completion Band (P1-D) ─── */}
+          {currentUser && (
+            <section
+              className="ut-card ut-card--accent learn-mastery-band"
+              aria-label="Lesson completion"
+            >
+              <div className="learn-mastery-copy">
+                <h3>Have you mastered this lesson?</h3>
+                <p>
+                  {lessonCompleted
+                    ? 'This lesson counts toward your course progress on the Lectures page.'
+                    : 'Mark it complete to track your course progress on the Lectures page.'}
+                </p>
+              </div>
+              {lessonCompleted ? (
+                <div className="learn-mastery-done">
+                  <span className="learn-mastery-completed">
+                    <FiCheckCircle aria-hidden="true" />
+                    Completed
+                  </span>
+                  <button
+                    type="button"
+                    className="ut-link learn-mastery-unmark"
+                    onClick={handleToggleLessonComplete}
+                    disabled={completionSaving}
+                  >
+                    Mark as not complete
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="ut-btn ut-btn--primary learn-mastery-mark"
+                  onClick={handleToggleLessonComplete}
+                  disabled={completionSaving}
+                >
+                  <FiCheckCircle aria-hidden="true" />
+                  Mark as Complete
+                </button>
+              )}
+            </section>
+          )}
         </main>
       </div>
 
@@ -2894,7 +3086,7 @@ export default function SubcategoryLearnPage() {
         onClick={() => setMobileTocOpen(true)}
         aria-label="Open table of contents"
       >
-        <FontAwesomeIcon icon={faListUl} />
+        <FiList />
       </button>
 
       {/* ─── Mobile TOC Panel ─── */}

@@ -100,10 +100,10 @@ const QuizAuthModal = ({ isOpen, onClose, quizPath, quizLabel, quizState }) => {
                   justifyContent: 'center',
                   gap: '10px',
                   padding: '12px 20px',
-                  border: '1px solid #ddd',
+                  border: '1px solid var(--ut-rule)',
                   borderRadius: '8px',
-                  backgroundColor: 'white',
-                  color: '#333',
+                  backgroundColor: 'var(--ut-card)',
+                  color: 'var(--ut-text)',
                   fontSize: '16px',
                   cursor: 'pointer',
                   transition: 'all 0.2s'
@@ -128,10 +128,10 @@ const QuizAuthModal = ({ isOpen, onClose, quizPath, quizLabel, quizState }) => {
               textAlign: 'center', 
               margin: '20px 0',
               position: 'relative',
-              color: '#666'
+              color: 'var(--ut-muted)'
             }}>
               <span style={{
-                backgroundColor: 'white',
+                backgroundColor: 'var(--ut-card)',
                 padding: '0 15px',
                 position: 'relative',
                 zIndex: 1
@@ -142,7 +142,7 @@ const QuizAuthModal = ({ isOpen, onClose, quizPath, quizLabel, quizState }) => {
                 left: 0,
                 right: 0,
                 height: '1px',
-                backgroundColor: '#ddd',
+                backgroundColor: 'var(--ut-rule)',
                 zIndex: 0
               }}></div>
             </div>
@@ -154,8 +154,8 @@ const QuizAuthModal = ({ isOpen, onClose, quizPath, quizLabel, quizState }) => {
                 style={{
                   flex: 1,
                   padding: '12px 20px',
-                  backgroundColor: '#4a90e2',
-                  color: 'white',
+                  backgroundColor: 'var(--ut-accent)',
+                  color: 'var(--ut-on-accent)',
                   border: 'none',
                   borderRadius: '8px',
                   fontSize: '16px',
@@ -171,8 +171,8 @@ const QuizAuthModal = ({ isOpen, onClose, quizPath, quizLabel, quizState }) => {
                 style={{
                   flex: 1,
                   padding: '12px 20px',
-                  backgroundColor: '#2ecc71',
-                  color: 'white',
+                  backgroundColor: 'var(--ut-accent-dark)',
+                  color: 'var(--ut-on-accent)',
                   border: 'none',
                   borderRadius: '8px',
                   fontSize: '16px',

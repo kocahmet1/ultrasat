@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faLayerGroup, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FiX, FiPlus, FiLayers, FiLoader } from 'react-icons/fi';
 import { getFlashcardDecks, createFlashcardDeck, addWordToFlashcardDeck } from '../api/helperClient';
 import { toast } from 'react-toastify';
 import '../styles/AddToFlashcardsModal.css';
@@ -142,7 +141,7 @@ const AddToFlashcardsModal = ({
         <div className="flashcards-modal-header">
           <h3>Add to Flashcards</h3>
           <button className="close-button" onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} />
+            <FiX />
           </button>
         </div>
         
@@ -154,7 +153,7 @@ const AddToFlashcardsModal = ({
 
           {loading ? (
             <div className="loading-state">
-              <FontAwesomeIcon icon={faSpinner} spin />
+              <FiLoader style={{ animation: 'spin 1s linear infinite' }} />
               Loading decks...
             </div>
           ) : (
@@ -170,7 +169,7 @@ const AddToFlashcardsModal = ({
                     >
                       <div className="deck-info">
                         <div className="deck-name">
-                          <FontAwesomeIcon icon={faLayerGroup} />
+                          <FiLayers />
                           {deck.name}
                         </div>
                         <div className="deck-meta">
@@ -182,9 +181,9 @@ const AddToFlashcardsModal = ({
                       </div>
                       <div className="deck-action">
                         {adding ? (
-                          <FontAwesomeIcon icon={faSpinner} spin className="loading-icon" />
+                          <FiLoader className="loading-icon" style={{ animation: 'spin 1s linear infinite' }} />
                         ) : (
-                          <FontAwesomeIcon icon={faPlus} className="add-to-deck-button" />
+                          <FiPlus className="add-to-deck-button" />
                         )}
                       </div>
                     </div>
@@ -198,7 +197,7 @@ const AddToFlashcardsModal = ({
                     className="create-new-button"
                     onClick={() => setShowCreateNew(true)}
                   >
-                    <FontAwesomeIcon icon={faPlus} />
+                    <FiPlus />
                     Create New Deck
                   </button>
                 ) : (
@@ -226,12 +225,12 @@ const AddToFlashcardsModal = ({
                       >
                         {adding ? (
                           <>
-                            <FontAwesomeIcon icon={faSpinner} spin />
+                            <FiLoader style={{ animation: 'spin 1s linear infinite' }} />
                             Creating...
                           </>
                         ) : (
                           <>
-                            <FontAwesomeIcon icon={faPlus} />
+                            <FiPlus />
                             Create & Add Word
                           </>
                         )}

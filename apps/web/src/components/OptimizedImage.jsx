@@ -85,21 +85,21 @@ const OptimizedImage = ({
         className={`image-placeholder ${className}`}
         style={{
           ...style,
-          backgroundColor: '#f8f9fa',
+          backgroundColor: 'var(--ut-card-soft)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           minHeight: style.height || '100px',
-          border: '1px solid #e9ecef',
+          border: '1px solid var(--ut-rule)',
           borderRadius: '8px'
         }}
         {...props}
       >
-        <div style={{ 
-          width: '20px', 
-          height: '20px', 
-          border: '2px solid #dee2e6',
-          borderTop: '2px solid #6c757d',
+        <div style={{
+          width: '20px',
+          height: '20px',
+          border: '2px solid var(--ut-rule)',
+          borderTop: '2px solid var(--ut-muted)',
           borderRadius: '50%',
           animation: 'spin 1s linear infinite'
         }} />
