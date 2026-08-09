@@ -185,6 +185,30 @@ export const getQuestionsBySubcategory = async (subcategory, difficulty = null, 
 
     const queryObjects = [];
 
+    // Primary query. `usageContext` is constrained server-side rather than after the fetch:
+    // retired and exam-only questions would otherwise consume slots inside the limit(N)
+    // window and starve the live pool whenever a large batch of questions is retired.
+    // Requires every question doc to carry usageContext — run
+    //   node scripts/retireAndRefreshWordsInContext.js --backfill-usage-context --apply
+    // once before relying on it. If the composite index is missing the query throws, and
+    // the un-narrowed fallbacks below still return a (client-filtered) pool.
+    const generalQuery = difficulty ?
+      query(
+        collection(db, 'questions'),
+        where('subcategory', '==', kebabSubcategory),
+        where('difficulty', '==', difficulty),
+        where('usageContext', '==', 'general'),
+        limit(limitCount)
+      ) :
+      query(
+        collection(db, 'questions'),
+        where('subcategory', '==', kebabSubcategory),
+        where('usageContext', '==', 'general'),
+        limit(limitCount)
+      );
+
+    queryObjects.push({ type: 'kebab-case+general', query: generalQuery });
+
     const baseQuery = difficulty ?
       query(
         collection(db, 'questions'),
@@ -268,7 +292,15 @@ export const getQuestionsBySubcategory = async (subcategory, difficulty = null, 
     for (const queryObject of queryObjects) {
       if (foundResults) break;
 
-      const querySnapshot = await getDocs(queryObject.query);
+      let querySnapshot;
+      try {
+        querySnapshot = await getDocs(queryObject.query);
+      } catch (queryError) {
+        // Most likely a missing composite index for the narrowed query. Fall through to the
+        // next candidate rather than failing the whole fetch.
+        console.warn(`[getQuestionsBySubcategory] ${queryObject.type} query failed, trying next:`, queryError?.message);
+        continue;
+      }
 
       if (!querySnapshot.empty) {
         querySnapshot.docs.forEach(doc => {
@@ -284,9 +316,16 @@ export const getQuestionsBySubcategory = async (subcategory, difficulty = null, 
 
     let questions = normalizeQuestions(Object.values(resultsMap));
 
-    questions = questions.filter(q => !q.usageContext || q.usageContext === 'general');
+    // Exam-only content never enters practice quizzes, and retired content never enters any
+    // new quiz. Retired questions are left in the collection so past attempts and
+    // `questionStats` stay intact — see `scripts/retireQuestions.js`.
+    const beforeEligibility = questions.length;
+    questions = questions.filter(
+      q => (!q.usageContext || q.usageContext === 'general') && q.retired !== true
+    );
+    const withheld = beforeEligibility - questions.length;
 
-    console.log(`[getQuestionsBySubcategory] Returning ${questions.length} questions (filtered for general use)`);
+    console.log(`[getQuestionsBySubcategory] Returning ${questions.length} questions (withheld ${withheld} as exam-only or retired)`);
     if (questions.length > 0) {
       console.log(
         '[getQuestionsBySubcategory] Sample question contexts:',

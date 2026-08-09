@@ -272,7 +272,9 @@ const PlannerPage = () => {
     if (!currentUser || startingTaskId) return;
     setActionError('');
     if (task.type === 'lesson' && task.subcategoryId) {
-      navigate(`/learn/${task.subcategoryId}`);
+      // from=planner lets the lesson page offer a "Back to Planner" return
+      // path once the lesson is marked complete.
+      navigate(`/learn/${task.subcategoryId}?from=planner`);
       return;
     }
     setStartingTaskId(task.id);

@@ -106,6 +106,10 @@ export default function ExplanationCard({
   isCorrect = null,
   omitted = false,
   compact = false,
+  // SmartQuiz redesign: the runner shows each rebuttal inline under its option,
+  // so it hides this card's duplicate rebuttal section. Additive & default-off —
+  // every other surface (results page, review) is unaffected.
+  hideRebuttals = false,
 }) {
   if (!question) return null;
 
@@ -199,7 +203,7 @@ export default function ExplanationCard({
       )}
 
       {/* Per-choice rebuttals */}
-      {rebuttalLetters.length > 0 && (
+      {!hideRebuttals && rebuttalLetters.length > 0 && (
         <div className="exp-rebuttals">
           <div className="exp-section-label">Why the other choices fail</div>
           <ul className="exp-rebuttal-list">

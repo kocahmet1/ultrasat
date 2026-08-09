@@ -1,0 +1,721 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "area-volume",
+  "title": "Area and Volume",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Area and Volume",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{blue|Area} counts the square units inside a flat figure; {teal|volume} counts the cubic units inside a solid. The SAT provides a reference sheet with every formula—but the students who *know* the short list below solve these questions in half the time."
+        },
+        {
+          "type": "table",
+          "headers": ["Figure", "Area", "Perimeter / Circumference"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["Rectangle", "$A = \\ell w$", "$P = 2\\ell + 2w$"],
+            ["Triangle", "$A = \\frac{1}{2}bh$", "sum of the sides"],
+            ["Circle", "$A = \\pi r^2$", "$C = 2\\pi r$"]
+          ]
+        },
+        {
+          "type": "table",
+          "headers": ["Solid", "Volume"],
+          "align": ["left", "center"],
+          "rows": [
+            ["Prism or cylinder (uniform cross-section)", "$V = \\blue{B}h$ — {blue|area of the base} $\\times$ height"],
+            ["Rectangular box", "$V = \\ell w h$"],
+            ["Cylinder", "$V = \\pi r^2 h$"],
+            ["Cone", "$V = \\frac{1}{3}\\pi r^2 h$"],
+            ["Pyramid", "$V = \\frac{1}{3}\\ell w h$"],
+            ["Sphere", "$V = \\frac{4}{3}\\pi r^3$"]
+          ],
+          "caption": "A cone is one-third of its cylinder; a pyramid is one-third of its box."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Height means perpendicular height**—the right-angle distance to the base, never a slanted side.",
+            "**Composite figures:** split into pieces you know, then **add**—or take a big figure and **subtract** the holes.",
+            "**Working backward:** plug in what's known and solve the formula for the missing dimension.",
+            "**Scaling:** multiply every length by $k$ → perimeter $\\times k$, area $\\times k^2$, volume $\\times k^3$.",
+            "**Units are a free check:** area answers in units$^2$, volume in units$^3$."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Given a **diameter**? Halve it before anything else—the circle formulas run on the radius, and the diameter-as-radius slip is this domain's most common wrong answer."
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "title": "Area of Common Figures",
+      "blocks": [
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Rectangle: $A = \\ell w$",
+              "blocks": [
+                {
+                  "type": "geometry",
+                  "width": 200,
+                  "height": 145,
+                  "elements": [
+                    { "kind": "polygon", "points": [[35, 28], [165, 28], [165, 105], [35, 105]], "tone": "blue", "fill": true },
+                    { "kind": "label", "x": 100, "y": 125, "text": "ℓ" },
+                    { "kind": "label", "x": 23, "y": 71, "text": "w" }
+                  ],
+                  "alt": "A rectangle with length ℓ and width w"
+                }
+              ]
+            },
+            {
+              "title": "Triangle: $A = \\frac{1}{2}bh$",
+              "blocks": [
+                {
+                  "type": "geometry",
+                  "width": 200,
+                  "height": 145,
+                  "elements": [
+                    { "kind": "polygon", "points": [[25, 110], [175, 110], [125, 25]], "tone": "teal", "fill": true },
+                    { "kind": "segment", "x1": 125, "y1": 25, "x2": 125, "y2": 110, "dashed": true },
+                    { "kind": "rightangle", "x": 125, "y": 110, "size": 9, "rotate": 0 },
+                    { "kind": "label", "x": 100, "y": 130, "text": "b" },
+                    { "kind": "label", "x": 134, "y": 72, "text": "h" }
+                  ],
+                  "alt": "A triangle with base b and dashed perpendicular height h"
+                }
+              ]
+            },
+            {
+              "title": "Circle: $A = \\pi r^2$",
+              "blocks": [
+                {
+                  "type": "geometry",
+                  "width": 200,
+                  "height": 145,
+                  "elements": [
+                    { "kind": "circle", "cx": 100, "cy": 72, "r": 52, "tone": "purple", "fill": true },
+                    { "kind": "point", "x": 100, "y": 72 },
+                    { "kind": "segment", "x1": 100, "y1": 72, "x2": 152, "y2": 72 },
+                    { "kind": "label", "x": 124, "y": 64, "text": "r" }
+                  ],
+                  "alt": "A circle with radius r drawn from the center"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Height Is Perpendicular — Always"
+        },
+        {
+          "type": "p",
+          "text": "In $A = \\frac{1}{2}bh$, the height is the **right-angle** distance from the base to the opposite vertex. Test writers love to hand you a slanted side you don't need:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 300,
+              "height": 165,
+              "elements": [
+                { "kind": "polygon", "points": [[30, 135], [255, 135], [195, 40]], "tone": "teal", "fill": true },
+                { "kind": "segment", "x1": 195, "y1": 40, "x2": 195, "y2": 135, "dashed": true },
+                { "kind": "rightangle", "x": 195, "y": 135, "size": 9, "rotate": 0 },
+                { "kind": "label", "x": 142, "y": 153, "text": "12" },
+                { "kind": "label", "x": 204, "y": 92, "text": "7" },
+                { "kind": "label", "x": 98, "y": 80, "text": "9" }
+              ],
+              "alt": "A triangle with base 12, dashed height 7, and slanted side 9"
+            },
+            {
+              "type": "question",
+              "stem": "What is the area of the triangle shown?",
+              "choices": ["$42$", "$54$", "$84$", "$108$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$A = \\frac{1}{2}(12)(7) = 42$. The $7$ is the dashed **perpendicular** height—the right-angle mark says so."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{1}{2}(12)(9) = 54$ uses the slanted side $9$ as the height. Slants are longer than heights—and never in the formula."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$12 \\times 7 = 84$ forgets the $\\frac{1}{2}$—that's the area of the surrounding rectangle."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$12 \\times 9 = 108$: both mistakes at once."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A circle has a **diameter** of $12$ centimeters. What is its area?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "r = \\frac{12}{2} = 6", "note": "Diameter to radius **first**" },
+                { "math": "A = \\pi (6)^2 = 36\\pi \\approx 113.1 \\text{ cm}^2", "note": "$\\pi r^2$ — with the radius, not the diameter" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Using $12$ directly would give $144\\pi$—four times too big, since the radius got squared."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Two reflexes worth training: see a slanted side → ask “is this the height?”; see a diameter → halve it before it touches a formula."
+        }
+      ]
+    },
+    {
+      "id": "composite-figures",
+      "title": "Composite Figures",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Odd-shaped figures are ordinary figures in disguise. **Split and add**, or **enclose and subtract**—both work, so use one to solve and the other to check."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 290,
+              "height": 185,
+              "elements": [
+                { "kind": "polygon", "points": [[35, 30], [119, 30], [119, 72], [175, 72], [175, 142], [35, 142]], "tone": "blue", "fill": true },
+                { "kind": "label", "x": 105, "y": 160, "text": "10" },
+                { "kind": "label", "x": 23, "y": 90, "text": "8" },
+                { "kind": "label", "x": 147, "y": 64, "text": "4" },
+                { "kind": "label", "x": 109, "y": 51, "text": "3", "anchor": "end" }
+              ],
+              "caption": "An L-shaped patio: a $10 \\times 8$ rectangle with a $4 \\times 3$ corner removed.",
+              "alt": "An L-shaped figure, 10 units wide and 8 tall, with a 4 by 3 notch cut from the top right corner"
+            },
+            {
+              "type": "p",
+              "text": "What is the area of the figure? Two routes:"
+            },
+            {
+              "type": "columns",
+              "items": [
+                {
+                  "title": "Enclose and subtract",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "10 \\times 8 = 80", "note": "The full rectangle" },
+                        { "math": "80 - (4 \\times 3) = 68", "note": "Remove the notch" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "title": "Split and add",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "10 \\times 5 = 50", "note": "Bottom rectangle ($8 - 3 = 5$ tall)" },
+                        { "math": "50 + (6 \\times 3) = 68", "note": "Plus the top-left piece ($10 - 4 = 6$ wide)" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Same $68$ square units both ways—agreement is the check."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 230,
+              "height": 215,
+              "elements": [
+                { "kind": "polygon", "points": [[65, 75], [145, 75], [145, 190], [65, 190]], "tone": "teal", "fill": true },
+                { "kind": "arc", "x1": 65, "y1": 75, "x2": 145, "y2": 75, "r": 40, "sweep": 1, "tone": "teal" },
+                { "kind": "segment", "x1": 105, "y1": 75, "x2": 105, "y2": 35, "dashed": true },
+                { "kind": "label", "x": 114, "y": 58, "text": "2" },
+                { "kind": "label", "x": 105, "y": 207, "text": "4" },
+                { "kind": "label", "x": 53, "y": 136, "text": "6" }
+              ],
+              "caption": "A window: a $4 \\times 6$ rectangle topped by a semicircle of radius $2$.",
+              "alt": "A rectangle 4 wide and 6 tall with a semicircular top of radius 2"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "A_{\\text{rect}} = 4 \\times 6 = 24", "note": "The rectangle" },
+                { "math": "A_{\\text{semi}} = \\tfrac{1}{2}\\pi(2)^2 = 2\\pi", "note": "Half a circle of radius $2$ — half the width" },
+                { "math": "A = 24 + 2\\pi \\approx 30.3", "note": "Add the pieces" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Shaded-region questions are subtraction in costume: **whole figure $-$ unshaded part**. Find the two easy areas; the hard-looking one is their difference."
+        }
+      ]
+    },
+    {
+      "id": "volume",
+      "title": "Volume",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Any solid with the same cross-section all the way up—prism, cylinder—has volume $V = Bh$: the {blue|area of the base} times the height. The box ($\\ell w \\cdot h$) and cylinder ($\\pi r^2 \\cdot h$) formulas are just this rule with the base filled in."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 240,
+              "height": 210,
+              "elements": [
+                { "kind": "ellipse", "cx": 120, "cy": 50, "rx": 55, "ry": 16, "tone": "blue" },
+                { "kind": "segment", "x1": 65, "y1": 50, "x2": 65, "y2": 165, "tone": "blue" },
+                { "kind": "segment", "x1": 175, "y1": 50, "x2": 175, "y2": 165, "tone": "blue" },
+                { "kind": "arc", "x1": 65, "y1": 165, "x2": 175, "y2": 165, "r": 55, "ry": 16, "sweep": 0, "tone": "blue" },
+                { "kind": "arc", "x1": 65, "y1": 165, "x2": 175, "y2": 165, "r": 55, "ry": 16, "sweep": 1, "tone": "blue", "dashed": true },
+                { "kind": "segment", "x1": 120, "y1": 50, "x2": 175, "y2": 50, "dashed": true },
+                { "kind": "point", "x": 120, "y": 50 },
+                { "kind": "label", "x": 146, "y": 42, "text": "3" },
+                { "kind": "label", "x": 187, "y": 112, "text": "10" }
+              ],
+              "caption": "A cylinder with radius $3$ and height $10$.",
+              "alt": "A cylinder with radius 3 marked on the top face and height 10 marked on the side"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "B = \\pi(3)^2 = 9\\pi", "note": "Area of the circular base" },
+                { "math": "V = Bh = 9\\pi \\times 10 = 90\\pi \\approx 282.7", "note": "Base area times height" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Working Backward"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A rectangular storage box has a volume of $240$ cubic feet. Its base is $8$ feet long and $5$ feet wide. What is the height of the box?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "240 = 8 \\times 5 \\times h", "note": "Fill the formula with what's known" },
+                { "math": "h = \\frac{240}{40} = 6 \\text{ ft}", "note": "Divide by the base area" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The One-Third Family"
+        },
+        {
+          "type": "p",
+          "text": "A cone is $\\frac{1}{3}$ of the cylinder that shares its base and height; a pyramid is $\\frac{1}{3}$ of the matching box. One fraction, remembered once, prices all four solids."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A cylinder and a cone have the same radius and the same height. The volume of the cylinder is $54$ cubic inches. What is the volume of the cone?",
+              "choices": ["$18$", "$54$", "$27$", "$162$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Cone $= \\frac{1}{3} \\times$ cylinder $= \\frac{54}{3} = 18$ cubic inches."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Equal only if the $\\frac{1}{3}$ never existed—the cone tapers to a point and loses two-thirds of the space."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$27$ halves the cylinder—the factor is a third, not a half."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$162$ multiplies by $3$—the relationship run in the wrong direction."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scaling",
+      "title": "Scaling: What Doubling Really Does",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Scale every length of a figure by the same factor $k$, and the measures grow by their **dimension**:"
+        },
+        {
+          "type": "table",
+          "headers": ["Measure", "Dimension", "Multiplied by"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["Perimeter, circumference (lengths)", "$1$D", "$k$"],
+            ["Area, surface area", "$2$D", "$k^2$"],
+            ["Volume", "$3$D", "$k^3$"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 300,
+              "height": 165,
+              "elements": [
+                { "kind": "polygon", "points": [[30, 90], [78, 90], [78, 138], [30, 138]], "tone": "blue", "fill": true },
+                { "kind": "label", "x": 54, "y": 155, "text": "3" },
+                { "kind": "label", "x": 54, "y": 118, "text": "A = 9", "size": 11, "italic": false },
+                { "kind": "polygon", "points": [[140, 42], [236, 42], [236, 138], [140, 138]], "tone": "teal", "fill": true },
+                { "kind": "label", "x": 188, "y": 155, "text": "6" },
+                { "kind": "label", "x": 188, "y": 94, "text": "A = 36", "size": 11, "italic": false }
+              ],
+              "caption": "Double the side ($\\times 2$) and the area goes up $\\times 4$ — four copies of the small square fit in the big one.",
+              "alt": "A 3 by 3 square with area 9 next to a 6 by 6 square with area 36"
+            },
+            {
+              "type": "p",
+              "text": "The side doubled, but area is **two-dimensional**—it picks up the factor once per dimension: $2 \\times 2 = 4$. Volume, with three dimensions, would pick it up three times: $2^3 = 8$."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "The radius of a sphere is tripled. The volume of the new sphere is how many times the volume of the original?",
+              "choices": ["$27$", "$3$", "$9$", "$81$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Volume is $3$-dimensional: $k^3 = 3^3 = 27$. (Or watch it in the formula: $\\frac{4}{3}\\pi(3r)^3 = 27 \\cdot \\frac{4}{3}\\pi r^3$.)"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$3$ is the length factor—volume compounds it across all three dimensions."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$9 = 3^2$ is the **surface area** factor—one dimension short."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$81 = 3^4$—one dimension too many."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "The exponent on $k$ always equals the exponent in the units: cm → $k$, cm$^2$ → $k^2$, cm$^3$ → $k^3$. Units and scaling are the same fact."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Before computing: Is the height perpendicular? Is that a radius or a diameter? Add pieces or subtract holes? And what dimension is the question living in?"
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "geometry",
+                  "width": 290,
+                  "height": 160,
+                  "elements": [
+                    { "kind": "polygon", "points": [[35, 130], [245, 130], [190, 40]], "tone": "teal", "fill": true },
+                    { "kind": "segment", "x1": 190, "y1": 40, "x2": 190, "y2": 130, "dashed": true },
+                    { "kind": "rightangle", "x": 190, "y": 130, "size": 9, "rotate": 0 },
+                    { "kind": "label", "x": 140, "y": 148, "text": "10" },
+                    { "kind": "label", "x": 199, "y": 90, "text": "6" },
+                    { "kind": "label", "x": 100, "y": 76, "text": "8" }
+                  ],
+                  "alt": "A triangle with base 10, dashed perpendicular height 6, and slanted side 8"
+                },
+                {
+                  "type": "question",
+                  "stem": "What is the area of the triangle shown?",
+                  "choices": ["$30$", "$40$", "$60$", "$24$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** $A = \\frac{1}{2}bh = \\frac{1}{2}(10)(6) = 30$. The $8$ is a slanted side—scenery, not an ingredient."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Base $10$, perpendicular height $6$ (the one with the right-angle mark). {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{1}{2}(10)(8) = 40$ promotes the slant to a height."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$10 \\times 6 = 60$ skips the $\\frac{1}{2}$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{1}{2}(8)(6) = 24$ builds the formula from the two sides that aren't a base–height pair."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A rectangular patio measures $12$ feet by $9$ feet. A square flower bed with sides of $3$ feet is built into one corner, and the rest of the patio is paved. What is the paved area, in square feet?",
+                  "choices": ["$99$", "$108$", "$105$", "$117$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Enclose and subtract:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "12 \\times 9 = 108", "note": "The whole patio" },
+                    { "math": "108 - 3^2 = 99", "note": "Remove the $3 \\times 3$ flower bed" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Whole minus hole. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$108$ paves right over the flower bed—the subtraction never happened."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$105$ subtracts $3$—the bed's *side length*—instead of its $9$-square-foot area."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$117$ **adds** the bed's area; holes subtract."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A cylinder has a volume of $72\\pi$ cubic centimeters and a radius of $3$ centimeters. What is the height of the cylinder, in centimeters?",
+                  "choices": ["$2$", "$8$", "$12$", "$24$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.**"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "72\\pi = \\pi(3)^2 h", "note": "$V = \\pi r^2 h$ with the knowns filled in" },
+                    { "math": "h = \\frac{72\\pi}{9\\pi} = 8", "note": "Divide by the base area $9\\pi$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$2$ divides by $36$—that's using $6$ (the diameter) as the radius."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Check: $\\pi(9)(8) = 72\\pi$. {green|✓}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$12$ divides $72$ by $6$—by the diameter itself, not the base area."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$24$ divides $72$ by $3$—by the radius unsquared."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Every dimension of a rectangular box is doubled. The volume of the new box is how many times the volume of the original box?",
+                  "choices": ["$8$", "$2$", "$4$", "$6$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Volume lives in three dimensions, and each one doubles: $2 \\times 2 \\times 2 = 8$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$V = (2\\ell)(2w)(2h) = 8\\,\\ell wh$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$2$ is the length factor—only one dimension's worth."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$4 = 2^2$ is the **area** factor—faces quadruple; the inside octuples."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$6$ *adds* the three doublings ($2+2+2$); scaling factors multiply."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Rectangle $\\ell w$ · triangle $\\frac{1}{2}bh$ · circle $\\pi r^2$, circumference $2\\pi r$. **Height is perpendicular**—ignore slanted sides.",
+            "See a **diameter**? Halve it before it enters any formula.",
+            "Composite figures: split and add, or enclose and subtract—do both to check. Shaded region $=$ whole $-$ unshaded.",
+            "$V = Bh$ for prisms and cylinders; cones and pyramids are $\\frac{1}{3}$ of their full-height partners; sphere $= \\frac{4}{3}\\pi r^3$.",
+            "Backward problems: fill the formula with knowns, solve for the missing dimension.",
+            "Scale lengths by $k$: perimeter $\\times k$, area $\\times k^2$, volume $\\times k^3$—the exponent matches the units."
+          ]
+        }
+      ]
+    }
+  ]
+}

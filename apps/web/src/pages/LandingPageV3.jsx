@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ExamAuthModal from '../components/ExamAuthModal';
@@ -38,12 +38,19 @@ const MATH_IDS = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26
 
 const FALLBACK_EXAM_COUNT = 5;
 
-// The page is a fixed 1440px design canvas. On wider viewports the whole canvas
-// is scaled up (see the --lp3-canvas-zoom effect below) so the hero keeps its
+// The page is a fixed 1440px design canvas. The --lp3-canvas-zoom effect below
+// scales that canvas BOTH ways: up on wider viewports (so the hero keeps its
 // proportions and still reaches the viewport edges instead of sitting in a
-// 1280px column with dead gutters either side.
+// 1280px column with dead gutters either side) and DOWN on mid-size viewports
+// (1200–1439px — e.g. a 1920×1080 laptop at 125–150% OS scaling, whose CSS
+// viewport is only 1280–1536px). Every screen from 1200px up therefore renders
+// the same composition, just proportionally sized; there is no squeezed
+// in-between state where the hero's 3D cluster floods past the right edge.
+// Below CANVAS_MIN_WIDTH the compact CSS breakpoints take over instead —
+// scaling further down would shrink body text below ~13px.
 const DESIGN_WIDTH = 1440;
 const MAX_CANVAS_SCALE = 1.5;
+const CANVAS_MIN_WIDTH = 1200;
 
 // Node positions for the hero wireframe lattice (viewBox 1440x820).
 const LATTICE_NODES = [
@@ -87,7 +94,7 @@ const SURFACES = [
   },
   {
     title: 'Adaptive quizzes',
-    copy: 'Short sets assembled from your weakest skills, timed or untimed, ten minutes at a time.',
+    copy: 'Short sets assembled from your weakest skills — or built by the coach from a single note. Timed or untimed, ten minutes at a time.',
     tag: 'Built from your map',
   },
   {
@@ -105,8 +112,35 @@ const SURFACES = [
 const STEPS = [
   { n: '01', title: 'Sit a full test', copy: 'Official past exam or full-length practice, real interface, real timing.' },
   { n: '02', title: 'Answers route to skills', copy: 'Each response scores against its tagged skill, with time-per-question read alongside accuracy.' },
-  { n: '03', title: 'A set is built for you', copy: 'Targeted questions, worked explanations and flashcards drawn from your weakest skills first.' },
-  { n: '04', title: 'Retest and compare', copy: "Mastery moves on the map, or it doesn't. Either way you know before test day." },
+  { n: '03', title: 'The coach reads the change', copy: 'A debrief on the spot: what slipped, what recovered, and the drill or 60-second lesson that fixes it.' },
+  { n: '04', title: 'The plan reroutes', copy: "Tomorrow's tasks lean toward whatever needs work now. Retest, compare, repeat." },
+];
+
+// Sample coach note — the possessives scenario the coach system is built around.
+const COACH_TRAIL = [
+  { date: 'Jun 30', label: 'missed 2 of 3', state: 'past' },
+  { date: 'Jul 10', label: '5 / 5 — recovered', state: 'good' },
+  { date: 'Today', label: 'missed 2 again', state: 'now' },
+];
+
+const COACH_EVIDENCE = ['Q7 · Jun 30', 'Q12 · today', 'Q19 · today'];
+
+// Sample planner days — mirrors the real /planner task shapes.
+const PLAN_DAYS = [
+  {
+    day: 'Mon · Aug 10',
+    tasks: [
+      { type: 'lesson', label: 'Lesson', name: 'Boundaries — commas between clauses', meta: '20 min', done: true },
+      { type: 'practice', label: 'Practice', name: '10 questions · Nonlinear functions', meta: '15 min', done: false },
+    ],
+  },
+  {
+    day: 'Tue · Aug 11',
+    tasks: [
+      { type: 'review', label: 'Review', name: "Yesterday's misses · Inferences", meta: '10 min', done: false },
+      { type: 'practice', label: 'Practice', name: '10 questions · Text structure', meta: '15 min', done: false },
+    ],
+  },
 ];
 
 const masteryTone = (value) => {
@@ -129,7 +163,8 @@ const LandingPageV3 = () => {
   const questionBankHref = currentUser ? '/subject-quizzes' : '/guest-subject-quizzes';
   const flashcardsHref = currentUser ? '/flashcards' : '/signup';
   const practiceExamsHref = currentUser ? '/practice-exams' : '/signup';
-  const aiCoachHref = currentUser ? '/ai-coach' : '/signup';
+  const coachHref = currentUser ? '/coach' : '/signup';
+  const plannerHref = currentUser ? '/planner' : '/signup';
 
   const closeMobileNav = () => setMobileNavOpen(false);
 
@@ -137,19 +172,44 @@ const LandingPageV3 = () => {
 
   // Scale the design canvas to the viewport. zoom (not transform) so layout,
   // the sticky nav and the hero's 3D perspective all scale together.
-  useEffect(() => {
+  // useLayoutEffect, not useEffect: the scale must be set before first paint,
+  // or a 1280px laptop flashes the unscaled 1440 composition for a frame.
+  useLayoutEffect(() => {
     const node = rootRef.current;
     if (!node) return undefined;
 
     const applyCanvasScale = () => {
-      const width = document.documentElement.clientWidth;
-      const scale = Math.min(Math.max(width / DESIGN_WIDTH, 1), MAX_CANVAS_SCALE);
-      node.style.setProperty('--lp3-canvas-zoom', String(Math.round(scale * 1000) / 1000));
+      // Regime decision by window.innerWidth: media queries measure the
+      // viewport INCLUDING the scrollbar, and the CSS breakpoints at 1200
+      // must flip in the same instant as this branch or a scrollbar-wide
+      // band of window sizes gets the pullback transform without the scale.
+      // The ratio itself uses clientWidth (the real layout width, scrollbar
+      // excluded) so the canvas maps exactly onto the space it renders in.
+      // >=1200: scaled canvas mode (down to ~0.83, up to 1.5).
+      // <1200: zoom 1, the compact CSS breakpoints own the layout.
+      const scale = window.innerWidth >= CANVAS_MIN_WIDTH
+        ? Math.min(document.documentElement.clientWidth / DESIGN_WIDTH, MAX_CANVAS_SCALE)
+        : 1;
+      // floor, not round: rounding up could push the canvas a hair past the
+      // viewport on browsers with pre-standard zoom layout semantics.
+      node.style.setProperty('--lp3-canvas-zoom', String(Math.floor(scale * 1000) / 1000));
     };
 
     applyCanvasScale();
+    // ResizeObserver on <html> catches what window resize alone misses: the
+    // vertical scrollbar appearing/disappearing (clientWidth changes without a
+    // window resize) and DPI changes when the window moves between monitors
+    // with different OS scaling.
     window.addEventListener('resize', applyCanvasScale);
-    return () => window.removeEventListener('resize', applyCanvasScale);
+    let observer;
+    if (typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(applyCanvasScale);
+      observer.observe(document.documentElement);
+    }
+    return () => {
+      window.removeEventListener('resize', applyCanvasScale);
+      if (observer) observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -265,7 +325,7 @@ const LandingPageV3 = () => {
               <Link to={practiceExamsHref} onClick={closeMobileNav}>Practice Exams</Link>
               <Link to={questionBankHref} onClick={closeMobileNav}>Question Bank</Link>
               <Link to={flashcardsHref} onClick={closeMobileNav}>Flashcards</Link>
-              <Link to={aiCoachHref} onClick={closeMobileNav}>AI Coach</Link>
+              <Link to={coachHref} onClick={closeMobileNav}>Coach</Link>
               <a href="#pricing" onClick={closeMobileNav}>Pricing</a>
               <span className="lp3-nav-rule" aria-hidden="true"></span>
               {currentUser ? (
@@ -318,7 +378,8 @@ const LandingPageV3 = () => {
 
               <p className="lp3-lede">
                 Full length, real timing, real adaptive second module. Then every answer you gave is filed
-                under one of the 29 skills the test measures &mdash; so you finish with a map, not a number.
+                under one of the 29 skills the test measures &mdash; so you finish with a map, not a number,
+                and a coach who remembers it.
               </p>
 
               <div className="lp3-hero-actions">
@@ -387,8 +448,12 @@ const LandingPageV3 = () => {
                 <span className="lp3-stat-label">Questions in the bank</span>
               </div>
               <div className="lp3-stat">
-                <span className="lp3-stat-num lp3-stat-accent">29</span>
+                <span className="lp3-stat-num">29</span>
                 <span className="lp3-stat-label">Skills tracked per answer</span>
+              </div>
+              <div className="lp3-stat">
+                <span className="lp3-stat-num lp3-stat-accent">1</span>
+                <span className="lp3-stat-label">Coach that remembers all of it</span>
               </div>
             </div>
           </div>
@@ -484,8 +549,8 @@ const LandingPageV3 = () => {
                 <h2 className="lp3-h2 lp3-h2-dark">Every answer routes to a skill. That&rsquo;s what you study from.</h2>
                 <p className="lp3-body lp3-body-dark">
                   A score out of 1600 tells you nothing you can act on. Ours resolves each response
-                  &mdash; right, wrong, and how long you took &mdash; into mastery per skill, then builds
-                  your next set from the bottom of the list.
+                  &mdash; right, wrong, and how long you took &mdash; into mastery per skill. That map
+                  is what everything else runs on: your coach reads it, your plan is built from it.
                 </p>
               </div>
 
@@ -568,9 +633,157 @@ const LandingPageV3 = () => {
           </div>
         </section>
 
+        <section className="lp3-coach" id="coach">
+          <div className="lp3-shell lp3-inside-grid">
+            <div>
+              <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">03</span>The coach</p>
+              <h2 className="lp3-h2">A coach that remembers every answer you&rsquo;ve ever given.</h2>
+              <p className="lp3-body">
+                Every quiz, exam, drill, flashcard session and lesson feeds one memory. When something
+                slips &mdash; a skill you&rsquo;d fixed starts missing again &mdash; the coach says so,
+                shows its evidence, and hands you the fix: a 60-second lesson or a five-question drill,
+                one tap away.
+              </p>
+
+              <dl className="lp3-facts">
+                <div>
+                  <dt>Grounded</dt>
+                  <dd>Every claim traces to logged work &mdash; dated, tied to the actual questions you got wrong. Nothing invented.</dd>
+                </div>
+                <div>
+                  <dt>Quiet</dt>
+                  <dd>Speaks after a quiz, at session start, or when you ask. Hidden entirely during timed modules.</dd>
+                </div>
+                <div>
+                  <dt>Yours to read</dt>
+                  <dd>Open &ldquo;What my coach knows about me&rdquo; and read the notebook it works from &mdash; goals, trajectory, every observation.</dd>
+                </div>
+              </dl>
+
+              <div className="lp3-surface-links lp3-links-tight">
+                <Link to={coachHref}>Meet the coach &rarr;</Link>
+              </div>
+            </div>
+
+            <div className="lp3-exam-panel lp3-note-panel" aria-label="Sample coach note">
+              <div className="lp3-exam-top">
+                <span>Coach&rsquo;s read &middot; Boundaries quiz</span>
+                <span className="lp3-exam-top-right"><strong>Just finished</strong></span>
+              </div>
+
+              <div className="lp3-exam-body">
+                <div className="lp3-note-head">
+                  <span className="lp3-note-avatar" aria-hidden="true">C</span>
+                  <span className="lp3-note-who">Coach</span>
+                </div>
+
+                <p className="lp3-note-text">
+                  You&rsquo;re not 100% on plural possessives yet. You had these beaten by July 10 &mdash;
+                  today both misses were the same pattern again: apostrophe before the <em>-s</em> on a
+                  plural noun. Want to fix it for good?
+                </p>
+
+                <p className="lp3-note-label">Memory</p>
+                <div className="lp3-trail" aria-hidden="true">
+                  {COACH_TRAIL.map((node) => (
+                    <div className={`lp3-trail-node lp3-trail-${node.state}`} key={node.date}>
+                      <span className="lp3-trail-date">{node.date}</span>
+                      <span className="lp3-trail-what">{node.label}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="lp3-note-label">Evidence</p>
+                <div className="lp3-chips">
+                  {COACH_EVIDENCE.map((chip) => (
+                    <span className="lp3-chip" key={chip}>{chip}</span>
+                  ))}
+                </div>
+
+                <div className="lp3-note-actions">
+                  <span className="lp3-note-btn lp3-note-btn-primary">Read the 60-second lesson</span>
+                  <span className="lp3-note-btn lp3-note-btn-ghost">5-question drill</span>
+                </div>
+              </div>
+
+              <div className="lp3-exam-foot">
+                <span>Free with an account &middot; <strong>daily caps</strong></span>
+                <span>Sample note</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="lp3-plan" id="planner">
+          <div className="lp3-shell lp3-plan-grid">
+            <div className="lp3-plan-copy">
+              <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">04</span>The plan</p>
+              <h2 className="lp3-h2">A plan to test day that rewrites itself around what you actually do.</h2>
+              <p className="lp3-body">
+                Give it a test date, minutes per day and your rest days. It schedules lessons, practice
+                and review from your weakest skills forward &mdash; and when life happens, it reconciles
+                instead of nagging.
+              </p>
+
+              <dl className="lp3-facts">
+                <div>
+                  <dt>Built from</dt>
+                  <dd>Your skill map, weakest first, plus lesson progress and recent quizzes.</dd>
+                </div>
+                <div>
+                  <dt>Reconciles</dt>
+                  <dd>Work done anywhere on the site counts toward the matching task automatically.</dd>
+                </div>
+                <div>
+                  <dt>Replan</dt>
+                  <dd>One tap re-lays the remaining days. Completed work never loses its credit.</dd>
+                </div>
+              </dl>
+
+              <div className="lp3-surface-links lp3-links-tight">
+                <Link to={plannerHref}>Set your test date &rarr;</Link>
+              </div>
+            </div>
+
+            <div className="lp3-exam-panel lp3-plan-panel" aria-label="Sample study plan">
+              <div className="lp3-exam-top">
+                <span>Study plan &middot; 34 days to test day</span>
+                <span className="lp3-exam-top-right"><strong>Replan</strong></span>
+              </div>
+
+              <div className="lp3-plan-progresswrap">
+                <div className="lp3-plan-track" aria-hidden="true"><span className="lp3-plan-fill"></span></div>
+                <p className="lp3-plan-counts">18 done &middot; 2 overdue &middot; 41 remaining</p>
+              </div>
+
+              {PLAN_DAYS.map((group) => (
+                <React.Fragment key={group.day}>
+                  <p className="lp3-plan-day">{group.day}</p>
+                  {group.tasks.map((task) => (
+                    <div className={`lp3-plan-row${task.done ? ' lp3-plan-row-done' : ''}`} key={task.name}>
+                      <span className="lp3-plan-check" aria-hidden="true">{task.done ? '✓' : ''}</span>
+                      <span className={`lp3-plan-type lp3-plan-type-${task.type}`}>{task.label}</span>
+                      <span className="lp3-plan-name">
+                        {task.name}
+                        <span className="lp3-plan-meta"> &middot; {task.meta}</span>
+                      </span>
+                      <span className="lp3-plan-start">{task.done ? 'Done' : 'Start'}</span>
+                    </div>
+                  ))}
+                </React.Fragment>
+              ))}
+
+              <div className="lp3-exam-foot">
+                <span>Skipped a day? It reconciles &mdash; <strong>credit kept</strong></span>
+                <span>Sample plan</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="lp3-loop">
           <div className="lp3-shell">
-            <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">03</span>How the loop runs</p>
+            <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">05</span>How the loop runs</p>
             <h2 className="lp3-h2 lp3-h2-wide">Four steps, repeated until the weak column is empty.</h2>
 
             <div className="lp3-steps">
@@ -587,7 +800,7 @@ const LandingPageV3 = () => {
 
         <section className="lp3-surfaces" id="platform">
           <div className="lp3-shell">
-            <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">04</span>Between the tests</p>
+            <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">06</span>Between the tests</p>
             <h2 className="lp3-h2 lp3-h2-wide">Four ways to work on one skill at a time.</h2>
 
             <div className="lp3-surface-list">
@@ -610,11 +823,12 @@ const LandingPageV3 = () => {
 
         <section className="lp3-pricing" id="pricing">
           <div className="lp3-shell">
-            <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">05</span>Pricing</p>
+            <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">07</span>Pricing</p>
             <h2 className="lp3-h2 lp3-h2-wide">Free to start. One plan for everything else.</h2>
             <p className="lp3-body lp3-pricing-lede">
-              The diagnostic, three full-length tests and the question bank cost nothing.
-              Pro unlocks the rest. Cancel anytime.
+              The diagnostic, three full-length tests, the question bank and the study planner cost
+              nothing &mdash; and the coach comes with every account, with daily caps. Pro unlocks
+              the rest. Cancel anytime.
             </p>
 
             <div className="lp3-pricing-grid">
@@ -629,6 +843,8 @@ const LandingPageV3 = () => {
                   <li>3 full-length practice tests</li>
                   <li>8,000+ question bank, worked explanations</li>
                   <li>Skill-by-skill progress tracking</li>
+                  <li>Coach debriefs &amp; chat &mdash; daily caps</li>
+                  <li>Day-by-day study planner</li>
                   <li>Word bank</li>
                 </ul>
                 {!currentUser && (
@@ -647,6 +863,7 @@ const LandingPageV3 = () => {
                 <ul className="lp3-price-list">
                   <li>Everything in Free</li>
                   <li>Unlimited full-length practice tests</li>
+                  <li>Coach at full strength &mdash; briefings, micro-lessons, coach-built drills</li>
                   <li>Lectures for all 29 skills</li>
                   <li>Flashcards with spaced review</li>
                   <li>Concept bank</li>

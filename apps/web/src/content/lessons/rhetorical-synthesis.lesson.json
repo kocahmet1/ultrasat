@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "rhetorical-synthesis",
+  "title": "Rhetorical Synthesis",
+  "estimatedMinutes": 25,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Rhetorical Synthesis",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Rhetorical Synthesis questions look different from everything else in Reading and Writing: instead of a passage, you get a **bulleted list of notes** a hypothetical student has taken, followed by a {blue|writing goal} the student wants to achieve. The question is always the same: ==Which choice most effectively uses relevant information from the notes to accomplish this goal?=="
+        },
+        {
+          "type": "p",
+          "text": "Here is the secret that makes these questions fast: **all four choices are usually accurate** to the notes. Truth doesn't separate them—only the {blue|goal} does. Three choices state perfectly correct information that does the *wrong job*; one choice does the job the goal assigns. That means these are writing questions, not reading questions: you are choosing the most **rhetorically effective** sentence, not the most factual one."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Read the goal first.** It sits right after the notes (“The student wants to…”). The goal—not the notes—is the question.",
+            "**Identify the key words in the goal**: the task verb (*compare*, *emphasize*, *introduce*), the content it names, and any audience cue.",
+            "**Eliminate choices that don't perform the goal**, no matter how accurate they are.",
+            "**Read the notes only if necessary**—to break a tie or verify a detail. Elimination by goal usually leaves exactly one choice standing."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "This is the one question type where reading the “passage” (the notes) first is usually a waste of time. Goal first, choices second, notes last—and often never."
+        }
+      ]
+    },
+    {
+      "id": "keywords-in-the-goal",
+      "title": "Identify Key Words in the Goal",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The goal sentence is short, but every word in it constrains the answer. Take the goal apart: *“The student wants to ==compare== the ==diets== of the ==two species==.”* Three constraints: the task verb ({blue|compare} → both items, with comparative language), the content ({teal|diets}—not habitats, not lifespans), and the items ({purple|both species}—one is not enough)."
+        },
+        {
+          "type": "table",
+          "headers": ["Goal category", "Common key words", "The answer must…"],
+          "rows": [
+            ["{blue|Comparing}", "*compare*, emphasize a **similarity**, emphasize a **difference**, “[X] **relative to** [Y]”", "mention **both** items and connect them with comparative language (*while*, *whereas*, *both*, *more than*)"],
+            ["{blue|Emphasizing}", "*emphasize*, *stress*, *highlight* [something specific]", "make that thing the **main point** of the sentence—not a passing detail"],
+            ["{blue|Presenting}", "*introduce*, *describe*, *explain*, *provide an example of*, *summarize*", "actually perform that act: an explanation for *explain*, a specific instance for *provide an example*"],
+            ["{blue|Recommending}", "*persuade*, *recommend*, *encourage readers to*", "urge the action—informing isn't urging"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Two Small Words with Big Consequences"
+        },
+        {
+          "type": "p",
+          "text": "**“And.”** Goals like *“introduce the researcher **and** describe her discovery”* have **two parts**, and the correct answer must satisfy **both**. A choice that nails one part and skips the other is the format's favorite trap."
+        },
+        {
+          "type": "p",
+          "text": "**“Audience.”** If the goal says the audience is ==unfamiliar== with a person or thing, the answer must include identifying background (*“geologist Marie Tharp”*, *“Kindred, a 1979 novel”*). If the audience is ==familiar==, background is dead weight—the answer gets straight to the point."
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Underline (mentally) the task verb, the named content, every “and,” and any audience phrase. Four seconds of goal analysis replaces four rereadings of the notes."
+        }
+      ]
+    },
+    {
+      "id": "eliminate-by-the-goal",
+      "title": "Eliminate by the Goal",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "For each choice, ask one question: **“Does this sentence *do* the goal?”**—never “Is this sentence true?” The eliminations follow predictable patterns:"
+        },
+        {
+          "type": "table",
+          "headers": ["If the goal says…", "Eliminate choices that…"],
+          "compact": true,
+          "rows": [
+            ["compare / similarity / difference", "mention only **one** of the items, or list facts about both with **no comparative language**"],
+            ["emphasize [X]", "bury X in a subordinate clause—or never mention X at all"],
+            ["introduce [X] to an unfamiliar audience", "refer to X without saying **who or what X is**"],
+            ["explain / provide an example", "merely assert, without the explanation or the instance"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "While researching a topic, a student has taken the following notes:"
+            },
+            {
+              "type": "list",
+              "style": "bullet",
+              "items": [
+                "The Hubble Space Telescope launched in 1990 and orbits Earth.",
+                "Hubble observes primarily visible and ultraviolet light.",
+                "The James Webb Space Telescope (JWST) launched in 2021.",
+                "JWST orbits the Sun about 1.5 million kilometers from Earth.",
+                "JWST observes primarily infrared light."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The student wants to ==emphasize a difference== in the ==kinds of light== the ==two telescopes== observe."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+              "choices": [
+                "Launched in 1990, the Hubble Space Telescope observes primarily visible and ultraviolet light.",
+                "The James Webb Space Telescope, which launched in 2021, orbits the Sun about 1.5 million kilometers from Earth.",
+                "While the Hubble Space Telescope observes primarily visible and ultraviolet light, JWST observes primarily infrared light.",
+                "Hubble and JWST are both space telescopes that have given astronomers new views of the universe."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Goal analysis: {blue|difference} + {teal|kinds of light} + {purple|both telescopes}. Every choice is accurate. Only one does all three jobs:"
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Right content (light), wrong scope—only **one** telescope appears, so nothing is compared. {rose|One item only.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Accurate orbit trivia about one telescope—no second telescope, and no light at all. {rose|Wrong content, one item.}"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "Both telescopes ✓, kinds of light ✓, and *while* draws the difference explicitly ✓. Three constraints, three checks."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Both telescopes appear—but as a **similarity**, and light is never mentioned. The exact opposite of “emphasize a difference.” {rose|Wrong direction.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Read the Notes, If Necessary"
+        },
+        {
+          "type": "p",
+          "text": "Notice what you never needed above: the notes. Goal-based elimination usually leaves one survivor, because the test builds wrong answers out of *accurate-but-off-goal* sentences far more often than out of factual errors. Save the notes for the rare tie—when two choices both seem to perform the goal, one of them typically misstates or misassembles a detail, and thirty seconds in the notes settles it."
+        }
+      ]
+    },
+    {
+      "id": "two-part-goals",
+      "title": "Two-Part Goals and Audience",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The hardest Synthesis questions stack constraints: a two-part goal joined by **and**, plus an audience cue. The method doesn't change—it just runs twice. Check part one. Check part two. A choice that performs half the goal earns zero credit."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Every part of the goal is mandatory. “Introduce X and explain Y” fails on a perfect introduction that never explains, and on a perfect explanation that never introduces."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "While researching a topic, a student has taken the following notes:"
+            },
+            {
+              "type": "list",
+              "style": "bullet",
+              "items": [
+                "Marie Tharp (1920–2006) was an American geologist and cartographer.",
+                "Working with Bruce Heezen, she created the first comprehensive maps of the ocean floor.",
+                "Her maps revealed a deep rift valley running along the Mid-Atlantic Ridge.",
+                "The rift valley provided key physical evidence for the theory of plate tectonics."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The student wants to ==introduce Marie Tharp to an audience unfamiliar with her== **and** ==explain the significance of her mapping work==."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+              "choices": [
+                "Marie Tharp's maps revealed a deep rift valley running along the Mid-Atlantic Ridge.",
+                "Geologist and cartographer Marie Tharp co-created the first comprehensive maps of the ocean floor—maps whose revelation of a rift valley in the Mid-Atlantic Ridge helped confirm the theory of plate tectonics.",
+                "The Mid-Atlantic Ridge contains a rift valley that provided key physical evidence for the theory of plate tectonics.",
+                "Marie Tharp, who lived from 1920 to 2006, worked alongside Bruce Heezen for much of her scientific career."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Two boxes to tick: {blue|① identify who Tharp was} (unfamiliar audience) and {teal|② explain why her mapping mattered}."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Names a finding but never says **who Tharp was**—an unfamiliar reader meets a stranger. {blue|①} unticked, and the finding's significance goes unexplained, so {teal|②} is thin too."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "“Geologist and cartographer Marie Tharp” ticks {blue|①}; “helped confirm the theory of plate tectonics” ticks {teal|②}. Both parts, one sentence."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Significance without the scientist—**Tharp has vanished from her own introduction**. {rose|Half the goal.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Introduces Tharp (dates, collaborator) but says nothing about what her work revealed or why it mattered. {rose|The other half of the goal.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Choices C and D above are the classic pairing: each performs exactly one half of a two-part goal, and each feels satisfying if you only remember half. Tick the parts **separately**—on your fingers if you have to."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Goal first, key words second, eliminate third, notes only for ties. Commit to a choice before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "p",
+                  "text": "While researching a topic, a student has taken the following notes:"
+                },
+                {
+                  "type": "list",
+                  "style": "bullet",
+                  "items": [
+                    "The Great Green Wall is an African-led land-restoration initiative launched in 2007.",
+                    "It aims to restore degraded land across the Sahel, a semi-arid region just south of the Sahara.",
+                    "The initiative's target is to restore 100 million hectares of land by 2030.",
+                    "Restored land can improve food security for millions of people."
+                  ]
+                },
+                {
+                  "type": "p",
+                  "text": "The student wants to ==emphasize the scale== of the initiative's restoration target."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+                  "choices": [
+                    "The Great Green Wall, launched in 2007, is an African-led land-restoration initiative.",
+                    "The Sahel is a semi-arid region located just south of the Sahara.",
+                    "Land restored by the Great Green Wall can improve food security for millions of people.",
+                    "The Great Green Wall aims to restore a vast area of degraded land—100 million hectares—by 2030."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is D.** Key words: {blue|emphasize} + {teal|scale} + {purple|the restoration target}. The answer must put the target's size at the center of the sentence."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Introduces the initiative—launch date and leadership, no size. {rose|Wrong job} (an introduction, not an emphasis)."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Pure geography; the initiative and its target never appear. {rose|Wrong content.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Tempting—“millions of people” sounds like scale. But it measures the *benefit*, not the *restoration target* the goal names. Right flavor, {rose|wrong object}."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "correct",
+                      "text": "The target is the sentence's whole point, sized twice over—“a vast area” and the figure itself, 100 million hectares."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "p",
+                  "text": "While researching a topic, a student has taken the following notes:"
+                },
+                {
+                  "type": "list",
+                  "style": "bullet",
+                  "items": [
+                    "Bats are mammals that navigate in darkness using echolocation.",
+                    "Bats emit high-frequency calls and interpret the returning echoes.",
+                    "Dolphins are marine mammals that hunt in murky water, where vision is limited.",
+                    "Dolphins locate prey by producing rapid clicks and interpreting the echoes."
+                  ]
+                },
+                {
+                  "type": "p",
+                  "text": "The student wants to ==emphasize a similarity== in how bats and dolphins locate objects."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+                  "choices": [
+                    "Bats emit high-frequency calls, whereas dolphins produce rapid clicks.",
+                    "Both bats and dolphins locate objects by producing sounds and interpreting the returning echoes.",
+                    "Bats are mammals that use echolocation to navigate in darkness.",
+                    "Dolphins hunt in murky water, where vision is of limited use."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Key words: {blue|similarity} + {teal|how they locate objects} + {purple|both animals}. Watch choice A—it contains both animals and their sounds, but *whereas* frames a **difference**."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Both animals, right topic—but *whereas* is difference language, pointing at what distinguishes their sounds. The goal asked for common ground. {rose|Wrong direction.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "*Both* + the shared mechanism (produce sound, read the echoes) = a similarity in how they locate objects, stated as the sentence's point."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Bats alone. With one animal, no similarity can exist. {rose|One item only.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Dolphins alone—and their hunting conditions, not their locating method. {rose|One item, wrong content.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "p",
+                  "text": "While researching a topic, a student has taken the following notes:"
+                },
+                {
+                  "type": "list",
+                  "style": "bullet",
+                  "items": [
+                    "Octavia Butler (1947–2006) was an American science fiction writer.",
+                    "Her 1979 novel *Kindred* follows Dana, a Black woman repeatedly pulled from her home in 1976 Los Angeles into the antebellum South.",
+                    "Butler described *Kindred* as “a grim fantasy” rather than science fiction.",
+                    "*Kindred* is often taught in history courses as well as literature courses."
+                  ]
+                },
+                {
+                  "type": "p",
+                  "text": "The student wants to ==describe the premise of *Kindred*== **and** ==note how Butler herself categorized the novel==."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+                  "choices": [
+                    "*Kindred* follows Dana, a Black woman repeatedly pulled from 1976 Los Angeles into the antebellum South—a novel its author, Octavia Butler, called not science fiction but “a grim fantasy.”",
+                    "Octavia Butler, an American science fiction writer, lived from 1947 to 2006.",
+                    "*Kindred* is often taught in history courses as well as literature courses.",
+                    "Octavia Butler's novel *Kindred*, published in 1979, follows Dana, a Black woman repeatedly pulled from her home in 1976 Los Angeles into the antebellum South."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Two parts: {blue|① the premise} and {teal|② Butler's own label}. Choice D is the trap to study—a flawless premise with the second part missing entirely."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Premise (Dana, 1976 Los Angeles, antebellum South) ✓ and Butler's categorization (“a grim fantasy,” not science fiction) ✓. Both boxes ticked."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Biography only—no premise, no categorization. {rose|Zero parts.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Where the novel is taught answers a goal nobody set. {rose|Zero parts.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "A complete, accurate premise—and nothing about how Butler categorized the book. {rose|Half the goal}, which scores the same as none of it."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Read the {blue|goal} first—these are writing questions, and the goal is the assignment.",
+            "All four choices are usually **accurate**; only one **performs the goal**. Truth is not the test—the job is.",
+            "Mark the goal's key words: the task verb, the named content, every **and**, and any **audience** cue.",
+            "Comparison goals need **both items plus comparative language**; emphasis goals need the emphasized thing as the sentence's **main point**; two-part goals need **every part**.",
+            "*Unfamiliar audience* → identify the person or thing; *familiar audience* → skip the background.",
+            "Read the notes only to break a tie. Goal-based elimination usually leaves one choice standing."
+          ]
+        }
+      ]
+    }
+  ]
+}

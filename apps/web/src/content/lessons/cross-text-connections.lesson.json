@@ -1,0 +1,467 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "cross-text-connections",
+  "title": "Cross-Text Connections",
+  "estimatedMinutes": 25,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Cross-Text Connections",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Cross-Text Connections is the only question type in Reading and Writing built on **two** texts. Text 1 and Text 2 address the same topic from different angles, and the question asks you to connect them: how would one author {blue|respond} to the other's claim, or what would both authors {teal|agree} on? To answer, you must hold each text's view clearly—and separately—in mind."
+        },
+        {
+          "type": "table",
+          "headers": ["Language in the question", "What to find"],
+          "align": ["left", "center"],
+          "rows": [
+            ["“Based on the texts, how would the author of Text 2 most likely **respond to** the claim in Text 1?”", "Text 2's stance, aimed at Text 1's claim"],
+            ["“Based on the texts, both authors would most likely **agree** with which statement?”", "the overlap both texts support"],
+            ["“How would [the researchers in Text 2] most likely **describe the view** in Text 1?”", "the named party's stance toward that view"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "A useful pattern: Text 2 usually engages Text 1 in some way—extending it, qualifying it, or pushing back—often because Text 2 presents a newer perspective or additional evidence. Your job is to name that relationship precisely."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Read the question first.** It tells you whose voice must respond to which claim—so you know your job before reading a word of either text.",
+            "**Summarize each text in one sentence**, stance included, before touching the choices.",
+            "**Pin the exact claim under discussion.** Response questions target one specific assertion in Text 1, not its general topic.",
+            "**Name the relationship**—agree, agree-with-a-caveat, qualify, challenge—before you predict the answer.",
+            "**Eliminate by voice, direction, and strength.** Wrong answers swap the authors, reverse the stance, or overstate it."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "The two texts always genuinely engage each other—the SAT never pairs texts that simply talk past one another. If you can't see the point of contact, reread the last sentence of each text; stances tend to sharpen at the end."
+        }
+      ]
+    },
+    {
+      "id": "summarize-each-text",
+      "title": "Summarize Each Text",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Everything in this question type flows from two one-sentence summaries. Each summary needs the text's {blue|subject}, its {teal|claim about that subject}, and its {purple|attitude}—confident, cautious, critical, admiring. Watch the method on a compact pair:"
+        },
+        {
+          "type": "passage",
+          "label": "Text 1",
+          "text": "When studios began digitally colorizing classic black-and-white films in the 1980s, critics called the practice vandalism. A film's photography, they argued, is composed *for* black and white—its lighting, contrast, and mood are inseparable from it. Painting color onto those images doesn't update a film; it defaces it."
+        },
+        {
+          "type": "passage",
+          "label": "Text 2",
+          "text": "Purists overstate the damage of colorization. The original prints survive untouched, available to anyone who seeks them out, while colorized versions have drawn audiences—especially younger ones—who would never have chosen a black-and-white film. A practice that widens a classic's audience without destroying the original is hard to call vandalism."
+        },
+        {
+          "type": "p",
+          "text": "**Summary of Text 1:** colorization *damages* films, because their artistry depends on black and white. **Summary of Text 2:** colorization is *defensible*—originals survive, and new audiences are gained. Text 2 directly engages Text 1's charge (“hard to call vandalism”) while conceding nothing about the artistry argument: this is a {rose|direct challenge}, with a hint of dismissiveness (“purists overstate”)."
+        },
+        {
+          "type": "h3",
+          "text": "Name the Relationship"
+        },
+        {
+          "type": "p",
+          "text": "Relationships between the texts fall on a spectrum. Learn to place each pair before predicting anything:"
+        },
+        {
+          "type": "table",
+          "headers": ["Relationship", "Text 2 sounds like…"],
+          "compact": true,
+          "rows": [
+            ["{green|Full agreement}", "“Indeed—and further evidence confirms it.”"],
+            ["{green|Agreement with a caveat}", "“True, **but** only under certain conditions.”"],
+            ["{amber|Qualification}", "“It's more complicated than that.”"],
+            ["{rose|Direct challenge}", "“**However**, the evidence points the other way.”"],
+            ["{blue|Different emphasis}", "“The more important factor is something else.”"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Stance words in Text 2 do half your work: *overstate*, *overlook*, *however*, *more recent findings*, *rightly*, *to be sure*. Circle them as you read—they are the relationship, announced."
+        }
+      ]
+    },
+    {
+      "id": "response-questions",
+      "title": "Response Questions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The most common stem asks how one author would **respond** to something specific in the other text. Choices usually begin *“By …”*—*by agreeing that*, *by pointing out that*, *by conceding that*—so read them **verb-first**, exactly as you do on purpose questions: the opening verb states the direction of the response, and a wrong direction kills a choice before you finish its sentence."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Attribute carefully. The correct answer is what THIS author would say about THAT claim—not what the other author would say, and not this author's whole thesis restated."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "label": "Text 1",
+              "text": "Nineteenth-century paleontologists classed dinosaurs with living reptiles and assumed they were ectotherms—“cold-blooded” animals whose body temperature tracks their surroundings. On this assumption, dinosaurs must have been slow-moving creatures, active only when their environments were warm enough to power them."
+            },
+            {
+              "type": "passage",
+              "label": "Text 2",
+              "text": "Growth rings and other microscopic structures preserved in fossilized bone indicate that many dinosaurs grew at rates faster than those of modern reptiles yet slower than those of modern mammals and birds. Some researchers therefore propose that these dinosaurs were mesotherms, maintaining metabolisms between the familiar “cold-blooded” and “warm-blooded” extremes."
+            },
+            {
+              "type": "question",
+              "stem": "Based on the texts, how would the researchers described in Text 2 most likely respond to the assumption about dinosaurs presented in Text 1?",
+              "choices": [
+                "By agreeing that dinosaurs' body temperatures simply tracked the temperature of their surroundings",
+                "By arguing that dinosaurs were fully warm-blooded, like modern mammals and birds",
+                "By suggesting that the choice between “cold-blooded” and “warm-blooded” may be a false one, since many dinosaurs likely fell between the two extremes",
+                "By denying that fossilized bone can reveal anything about how quickly dinosaurs grew"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Summaries first. **Text 1:** dinosaurs were assumed to be ectotherms, hence sluggish. **Text 2:** bone evidence suggests something *in between*—mesothermy. Relationship: {amber|qualification}—Text 2 doesn't flip the claim; it dissolves the either/or behind it."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "*By agreeing* runs the wrong direction—this is Text 1's own assumption, handed to the wrong voice. {rose|Reversed voices.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Text 2's researchers place dinosaurs *between* reptiles and mammals—claiming full warm-bloodedness overshoots their view exactly as far as Text 1 undershoots it. {rose|Too extreme.}"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "Matches the relationship precisely: the growth-rate evidence undercuts the binary itself, and the hedge (*may*, *likely*) matches Text 2's “some researchers propose.”"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Bone microstructure is Text 2's **own evidence**—its researchers would hardly reject their own method. {rose|Self-contradiction.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "On response questions, one trap is nearly always the *reversed-voices* choice—Text 1's position dressed as Text 2's response. If a choice feels instantly familiar, check which text it actually came from."
+        }
+      ]
+    },
+    {
+      "id": "agreement-questions",
+      "title": "Agreement Questions and Traps",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Agreement questions ask what **both** authors would accept. Think of the two texts as overlapping circles: each author's full view is a circle, and the correct answer lives only in the {green|overlap}. The statement must be supported by Text 1 *and* by Text 2—support from one is elimination, not evidence."
+        },
+        {
+          "type": "strip",
+          "alt": "Text 1's view overlapping Text 2's view; the correct answer sits in the overlap",
+          "segments": [
+            { "text": "Text 1's view", "tone": "blue" },
+            { "text": "∩", "tone": "op" },
+            { "text": "Text 2's view", "tone": "teal" },
+            { "text": "=", "tone": "op" },
+            { "text": "What both would accept", "tone": "green" }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Because authors in these pairs usually disagree about something, the overlap is typically a **shared premise**—the ground the debate stands on—rather than either author's conclusion. Expect the correct answer to sound more modest than either text."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "label": "Text 1",
+              "text": "Populations of wild bees have fallen sharply in recent decades, and a substantial body of research implicates neonicotinoid pesticides, which impair bees' navigation and foraging even at sublethal doses. Restricting these chemicals should be the centerpiece of any serious effort to halt the decline."
+            },
+            {
+              "type": "passage",
+              "label": "Text 2",
+              "text": "Pesticides harm bees, but focusing on them obscures the larger driver: the disappearance of the flowering meadows, hedgerows, and nesting grounds that agriculture has steadily consumed. Restrictions alone will not restore bee populations; without habitat, even a pesticide-free landscape is a desert to a bee."
+            },
+            {
+              "type": "question",
+              "stem": "Based on the texts, both authors would most likely agree with which statement?",
+              "choices": [
+                "Restricting pesticides would, by itself, reverse the decline of wild bees.",
+                "Human agricultural practices have contributed to the decline of wild bee populations.",
+                "Habitat loss plays a larger role in bee declines than pesticides do.",
+                "Wild bee populations are likely to recover without any intervention."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Text 1:** pesticides are the key driver—restrict them. **Text 2:** habitat loss matters more—restrictions alone won't work. They disagree about the *primary* cause, but both circles contain one premise: human agriculture is hurting bees."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Text 2 rejects this outright (“restrictions alone will not restore”)—and even Text 1 calls restriction a *centerpiece*, not a complete cure. {rose|Outside the overlap}, and stronger than either text."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "Text 1: agricultural pesticides impair bees. Text 2: agriculture consumed bee habitat. Different mechanisms, same premise—this sits squarely in the overlap."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "This is Text 2's **conclusion**, the very point Text 1 disputes by making pesticides the centerpiece. {rose|One-text support.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Both authors propose interventions precisely because neither expects recovery without them. {rose|Neither text.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Four Traps"
+        },
+        {
+          "type": "table",
+          "headers": ["Trap", "What it does"],
+          "compact": true,
+          "rows": [
+            ["{rose|Reversed voices}", "attributes Text 1's view to Text 2, or vice versa"],
+            ["{rose|Too extreme}", "turns a qualification into total rejection, or partial agreement into full endorsement"],
+            ["{rose|One-text support}", "a statement only one author backs—fatal on “both agree” questions"],
+            ["{rose|Missed point of contact}", "responds to the shared topic instead of the specific claim the stem targets"]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Full routine on each: question first, one-sentence summary per text, name the relationship, predict—then eliminate by voice, direction, and strength. Commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "label": "Text 1",
+                  "text": "Noah Webster's dictionaries did more than record American English—they helped invent it. By adopting distinctly American spellings such as *color* for *colour* and *theater* for *theatre*, Webster deliberately cut ties with British convention and gave the young republic a linguistic identity of its own."
+                },
+                {
+                  "type": "passage",
+                  "label": "Text 2",
+                  "text": "Webster originally campaigned for far more sweeping reforms—*soop* for *soup*, *tung* for *tongue*, *wimmen* for *women*—and the reading public flatly refused them. The American spellings that endure are the modest handful that printers and readers were already inclined to accept. Webster succeeded less as a revolutionary than as an editor with a good sense of which changes his audience would tolerate."
+                },
+                {
+                  "type": "question",
+                  "stem": "Based on the texts, how would the author of Text 2 most likely respond to Text 1's characterization of Webster's influence?",
+                  "choices": [
+                    "By agreeing that Webster's reforms gave American English an identity wholly distinct from British English",
+                    "By noting that Webster's lasting influence was narrower than Text 1 suggests, since the public adopted only his most modest proposals",
+                    "By arguing that British spelling conventions were superior to the ones Webster proposed",
+                    "By denying that Webster ever proposed spellings beyond those still in use today"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Summaries: **Text 1**—Webster's spellings forged an American linguistic identity. **Text 2**—his radical proposals failed; only modest, already-palatable changes survived. Relationship: {amber|qualification}—Text 2 shrinks Text 1's story without erasing it."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "“Wholly distinct” is stronger than even Text 1 claims—and Text 2's entire point cuts against it. {rose|Too extreme, wrong voice.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Captures both the direction (a qualification, not a denial) and the reason Text 2 gives: the public accepted only the modest handful."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Text 2 never ranks British against American spellings—it discusses which *American* proposals survived. {rose|Not in the text.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Text 2 itself lists the failed proposals (*soop*, *tung*, *wimmen*)—this choice contradicts the very text it speaks for. {rose|Self-contradiction.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "label": "Text 1",
+                  "text": "Telescopes can now read the atmospheres of planets orbiting distant stars, and certain mixtures of gases—oxygen alongside methane, for example—are hard to sustain without ongoing biological activity. Detecting such a combination on a rocky, temperate world would be the strongest indication yet that life exists beyond Earth."
+                },
+                {
+                  "type": "passage",
+                  "label": "Text 2",
+                  "text": "Enthusiasm for atmospheric “biosignatures” should be tempered by chemistry's talent for mimicry: volcanic outgassing, the breakup of water by starlight, and other lifeless processes can generate the same gases under the right conditions. Before any detection is credited to biology, researchers must rule out these abiotic impostors—planet by planet, gas by gas."
+                },
+                {
+                  "type": "question",
+                  "stem": "Based on the texts, both authors would most likely agree with which statement?",
+                  "choices": [
+                    "The chemical composition of an exoplanet's atmosphere can provide evidence relevant to the search for life beyond Earth.",
+                    "A single detection of a biosignature gas would establish that a planet hosts life.",
+                    "Lifeless chemical processes are incapable of producing the gases associated with life.",
+                    "The search for life should be limited to planets within our own solar system."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** **Text 1**: certain atmospheric gas mixtures would strongly indicate life. **Text 2**: careful—lifeless chemistry can fake those gases. They disagree on how much a detection would prove, but the shared premise is that atmospheres are *evidence worth reading*—Text 2's demand to “rule out impostors, gas by gas” only makes sense if the gases matter."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "In the overlap: Text 1 treats atmospheric composition as potential strong evidence; Text 2 treats it as evidence requiring verification. Both treat it as evidence."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "“Establish” is exactly what Text 2 warns against—and even Text 1 hedges with “strongest indication yet,” not proof. {rose|Too extreme for both circles.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Text 2 asserts the opposite: abiotic processes *can* produce these gases. {rose|Contradicts a text.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Both texts are *about* studying distant exoplanets; neither proposes abandoning that search. {rose|Neither text.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "label": "Text 1",
+                  "text": "For early interpreters of the Paleolithic cave paintings at sites like Lascaux, the images served a practical magic: by depicting horses, aurochs, and stags, hunters sought power over the animals they needed to kill. On this view, the painted cave was less an art gallery than a ritual instrument for securing the next meal."
+                },
+                {
+                  "type": "passage",
+                  "label": "Text 2",
+                  "text": "The hunting-magic interpretation stumbles on the caves' own garbage. At Lascaux, the bones littering the site show that its occupants ate mostly reindeer—an animal that scarcely appears among the hundreds of painted figures. Whatever moved the painters to fill the walls with horses and aurochs, it does not map neatly onto the contents of their dinners."
+                },
+                {
+                  "type": "question",
+                  "stem": "Based on the texts, how would the author of Text 2 most likely respond to the interpretation presented in Text 1?",
+                  "choices": [
+                    "By endorsing the view that the paintings helped guarantee successful hunts",
+                    "By conceding that the painted species closely match the animals the painters ate",
+                    "By pointing out that the mismatch between what the painters ate and what they painted undermines a key assumption of that interpretation",
+                    "By arguing that the paintings were added to the caves by much later visitors"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** **Text 1**: the paintings were hunting magic—images of the animals the painters needed to kill. **Text 2**: the food remains say otherwise—they ate reindeer but painted horses and aurochs. Relationship: {rose|direct challenge}, aimed at the interpretation's core assumption (painted = hunted)."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "*By endorsing* reverses the direction entirely—“stumbles” announces a challenge, not support. {rose|Reversed voices.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Text 2 asserts the opposite of a close match: reindeer dominated the diet but “scarcely appears” on the walls. {rose|Contradicts the text.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "Names the evidence (diet–art mismatch), the target (the assumption linking painting to hunting), and the direction (undermines)—all three match Text 2 exactly."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The paintings' date and authorship are never questioned in either text. {rose|Not in the text.}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Read the **question first**—it names whose voice must respond to which claim.",
+            "Write (mentally) a **one-sentence summary of each text**, stance included, before reading any choice.",
+            "**Name the relationship**—agreement, caveat, qualification, challenge—then predict the response.",
+            "On *respond* questions, read choices **verb-first** (*by agreeing…*, *by pointing out…*): direction kills faster than content.",
+            "On *both agree* questions, the answer lives in the {green|overlap}—usually a shared premise more modest than either author's conclusion.",
+            "Eliminate by name: {rose|reversed voices}, {rose|too extreme}, {rose|one-text support}, {rose|missed point of contact}."
+          ]
+        }
+      ]
+    }
+  ]
+}

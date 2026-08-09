@@ -1,0 +1,681 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "form-structure-sense",
+  "title": "Form, Structure, and Sense",
+  "estimatedMinutes": 35,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Form, Structure, and Sense",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Form, Structure, and Sense is the grammar half of Standard English Conventions: while Boundaries tests **punctuation**, this skill tests **word forms**—verbs that must agree with their subjects, pronouns that must match their antecedents, tenses that must fit the timeline, and modifiers that must point at the right thing. The stem is the same one you know: ==Which choice completes the text so that it conforms to the conventions of Standard English?=="
+        },
+        {
+          "type": "p",
+          "text": "As with Boundaries, the **choices diagnose the question** before you read a word of the text:"
+        },
+        {
+          "type": "table",
+          "headers": ["If the choices rotate…", "The question is testing…"],
+          "align": ["left", "left"],
+          "compact": true,
+          "rows": [
+            ["*offer / offers / are offering*", "{blue|subject–verb agreement} (find the true subject)"],
+            ["*its / their / it's / whose*", "{blue|pronouns and possessive determiners} (find the antecedent)"],
+            ["*won / winning / to win / having won*", "{blue|verb form} (the sentence needs a conjugated verb) or {blue|tense}"],
+            ["the same words, **reordered** after an opening phrase", "{blue|modifier placement} (who is doing the action?)"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Find the true subject** and cross out everything between it and the verb—interrupters exist to fool your ear.",
+            "**Find the antecedent** for any pronoun choice, and match its number exactly.",
+            "**Check the timeline.** Dates, *since*, *by the time*, and the surrounding verbs dictate the tense.",
+            "**After an opening modifier, demand the doer.** The noun after the comma must be what the modifier describes.",
+            "**Don't trust your ear alone.** These questions are engineered so the wrong form *sounds* fine next to a nearby noun—the rules, not the sound, decide."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Boundaries and this skill share one stem, so scan the choices first on every conventions question: punctuation moving means Boundaries rules; word forms changing means the rules in this lesson."
+        }
+      ]
+    },
+    {
+      "id": "subject-verb-agreement",
+      "title": "Subject–Verb Agreement",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "A verb agrees with its subject—never with the noun that happens to sit closest to it."
+        },
+        {
+          "type": "p",
+          "text": "The SAT's favorite disguise is the {rose|interrupter}: a prepositional phrase (*of the letters*), a relative clause (*who used them*), or an aside (*along with its crew*) wedged between subject and verb so that a nearby noun of the **wrong number** brushes your ear. The cure is mechanical: **cross out the interrupters, then match**."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "The collection of rare maps and charts were donated to the library.",
+              "note": "Cross out *of rare maps and charts*: “The collection … were donated” — the subject is singular *collection*."
+            },
+            {
+              "verdict": "correct",
+              "text": "The collection of rare maps and charts was donated to the library.",
+              "note": "Collection … was. The plural nouns inside the interrupter have no vote."
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Phrases like *along with*, *as well as*, *in addition to*, and *together with* are interrupters too—they **never** make a singular subject plural. Only *and* builds a compound subject."
+        },
+        {
+          "type": "h3",
+          "text": "Tricky Subjects"
+        },
+        {
+          "type": "table",
+          "headers": ["Subject pattern", "Number", "Example"],
+          "compact": true,
+          "rows": [
+            ["**each**, **either**, **neither**, **every** + noun", "{green|singular}", "*Each of the samples was labeled.*"],
+            ["two subjects joined by **and**", "{teal|plural}", "*The violin and the cello were retuned.*"],
+            ["**or** / **nor**", "matches the **nearer** subject", "*Neither the coach nor the players were ready.*"],
+            ["collective nouns (**committee**, **team**, **orchestra**)", "{green|singular} on the SAT", "*The committee meets on Fridays.*"],
+            ["**the number of** / **a number of**", "{green|singular} / {teal|plural}", "*The number of entries has doubled. A number of entries have errors.*"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Inverted Sentences"
+        },
+        {
+          "type": "p",
+          "text": "In sentences opening with *there* or with a place phrase, the subject hides **after** the verb. Flip the sentence to find it: *Beyond the dunes {blank} a fishing village* → flip → *a fishing village lies beyond the dunes* → singular → **lies**."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "The museum's collection of navigational charts, many of them annotated by the sailors who relied on them, {blank} historians a rare view of daily life at sea."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+              "choices": [
+                "offer",
+                "offers",
+                "are offering",
+                "have offered"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Cross out the interrupters: *of navigational charts* and *many of them … relied on them*. What's left: **The museum's collection {blank} historians a rare view.** The subject is {blue|collection}—singular."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "*Offer* is plural, seduced by *charts* and *sailors*—two nouns that live inside interrupters and have no vote. {rose|Nearest-noun trap.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "*The collection … offers.* Singular subject, singular verb—the crossed-out sentence reads perfectly."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "*Are offering* is plural. Same trap, progressive disguise. {rose|Wrong number.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*Have offered* is plural again—every wrong choice here fails on number alone, which is typical: the test rotates one real decision. {rose|Wrong number.}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pronouns-and-determiners",
+      "title": "Pronouns and Possessive Determiners",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "A pronoun agrees in number with its antecedent—the specific noun it stands for. Find the antecedent first; the pronoun follows."
+        },
+        {
+          "type": "p",
+          "text": "The classic traps mirror subject–verb agreement: a {rose|nearby plural} noun luring *their* when the antecedent is singular, and {rose|collective nouns} (*the committee, the band, the agency*), which the SAT treats as **singular**—so they take *its*, not *their*."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "The orchestra tuned their instruments and waited for the conductor.",
+              "note": "On the SAT, *orchestra* is singular: it takes *its*. (*Their* would need a plural antecedent like *the musicians*.)"
+            },
+            {
+              "verdict": "correct",
+              "text": "The orchestra tuned its instruments and waited for the conductor.",
+              "note": "Singular collective noun, singular determiner."
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Words like **each**, **either**, and **every one** stay singular here too: *Each of the labs submitted **its** results*—no matter how plural *labs* feels."
+        },
+        {
+          "type": "h3",
+          "text": "The Sound-Alike Determiners"
+        },
+        {
+          "type": "table",
+          "headers": ["Possessive (no apostrophe)", "Contraction (apostrophe)", "The test"],
+          "compact": true,
+          "rows": [
+            ["**its** = belonging to it", "**it's** = *it is / it has*", "expand it: if “it is” fits, use *it's*"],
+            ["**their** = belonging to them", "**they're** = *they are* (and **there** = a place)", "expand: “they are” → *they're*"],
+            ["**whose** = belonging to whom", "**who's** = *who is*", "expand: “who is” → *who's*"],
+            ["**your** = belonging to you", "**you're** = *you are*", "expand: “you are” → *you're*"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Same expansion test as the apostrophe rules in the Boundaries lesson—the two question types share this territory. Possessive determiners never take apostrophes; contractions always do."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Each of the agency's deep-space missions has {blank} own operations team, working on a schedule set by the spacecraft's distance from Earth."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+              "choices": [
+                "their",
+                "it's",
+                "its",
+                "there"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "The antecedent is *each*—singular—no matter how loudly the plural *missions* sings from inside the interrupter. {rose|Nearest-noun trap}, pronoun edition."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Expand it: “has *it is* own operations team.” Nonsense—so the contraction is out. {rose|Contraction for possessive.}"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "*Each … has its own team.* Singular antecedent, singular possessive determiner, no apostrophe."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*There* is a place, not a possessive. {rose|Sound-alike.}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verb-forms-and-tense",
+      "title": "Verb Forms and Tense",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Every sentence needs at least one conjugated (finite) verb. Participles and infinitives alone cannot power a sentence."
+        },
+        {
+          "type": "table",
+          "headers": ["Verb form", "Example", "Can it be the main verb?"],
+          "align": ["left", "left", "center"],
+          "compact": true,
+          "rows": [
+            ["conjugated (finite)", "*studies, studied, is studying, has studied*", "{green|Yes}"],
+            ["-ing participle alone", "*studying the samples*", "{rose|No}"],
+            ["infinitive", "*to study the samples*", "{rose|No}"],
+            ["having + participle", "*having studied the samples*", "{rose|No}"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "This is the SAT's favorite fragment machine: a subject followed by a long descriptive clause, then a blank where only a **finite verb** completes the sentence. Strip the description away and listen: *“Maathai … winning the Nobel Peace Prize”* is not a sentence; *“Maathai … won”* is."
+        },
+        {
+          "type": "h3",
+          "text": "Matching the Timeline"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Dated past events take simple past**: *in 1977, she founded…*",
+            "**Since / for + present perfect**: *has monitored the reef since 2010*.",
+            "**By the time + past event → past perfect** for what came earlier: *By the time the ship docked, the crew had repaired the mast.*",
+            "**Match the neighbors**: the verbs around the blank set the tense—an unexplained jump from past to present is almost always wrong."
+          ]
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "The observatory opened in 1897 and quickly becomes a center of astronomical research.",
+              "note": "An unexplained jump from past (*opened*) to present (*becomes*) mid-sentence."
+            },
+            {
+              "verdict": "correct",
+              "text": "The observatory opened in 1897 and quickly became a center of astronomical research.",
+              "note": "One timeline, one tense."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Wangari Maathai, who founded Kenya's Green Belt Movement in 1977 and spent decades organizing the planting of millions of trees, {blank} the Nobel Peace Prize in 2004."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+              "choices": [
+                "winning",
+                "won",
+                "to win",
+                "having won"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Strip the *who* clause: **Wangari Maathai {blank} the Nobel Peace Prize in 2004.** The sentence still has no main verb—so the blank must supply a finite one, in the tense the date demands."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "*Winning* is a participle—install it and the sentence never happens. {rose|Fragment.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "Finite verb, simple past, matching the dated event (*in 2004*). The sentence stands."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "An infinitive can't conjugate anything. {rose|Fragment.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*Having won* is a participle phrase in a trench coat—still no main verb. {rose|Fragment.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "When three choices are participles and infinitives and one is a conjugated verb, the question is testing the finite-verb rule—not style. Don't talk yourself into the elegant-sounding *having won*."
+        }
+      ]
+    },
+    {
+      "id": "modifier-placement",
+      "title": "Modifier Placement",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "An opening modifier describes the subject that immediately follows the comma. If that subject isn't the thing the modifier describes, the modifier dangles—and the sentence misfires."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "Hiking along the ridge, the valley finally came into view.",
+              "note": "Read literally: the *valley* was hiking. The doer of the modifier never appears."
+            },
+            {
+              "verdict": "correct",
+              "text": "Hiking along the ridge, the surveyors finally saw the valley below.",
+              "note": "The noun after the comma—*the surveyors*—is who was hiking. Modifier anchored."
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "On the SAT, these questions look different from other conventions items: the choices contain the **same information reshuffled**, and your job is to pick the version whose subject sits flush against the modifier. Ask one question of the opening phrase—**“Who or what does this describe?”**—then demand that answer right after the comma."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "First domesticated in the Andes several thousand years ago, {blank}"
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+              "choices": [
+                "farmers eventually carried the potato across the Atlantic on Spanish ships.",
+                "the potato reached Europe in the sixteenth century aboard Spanish ships.",
+                "Europe first tasted the potato in the sixteenth century.",
+                "Spanish ships brought the potato to Europe in the sixteenth century."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Who or what was *first domesticated in the Andes*? {blue|The potato}—so *the potato* must be the first noun after the comma. Every other arrangement dangles."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Read literally: *farmers* were domesticated in the Andes. {rose|Dangler.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "*…the Andes, the potato reached Europe…* — the modifier lands on exactly the thing it describes."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Now *Europe* was domesticated in the Andes. {rose|Dangler}—same information, wrong doer at the door."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "And here it's the *ships*. Note that every choice is factually fine—only the geometry of subject and modifier separates them. {rose|Dangler.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Modifier questions are the one place in conventions where all four choices usually say true things grammatically assembled—the error is *about who's standing next to the modifier*, nothing else. Fast check: comma, then finger on the next noun, then ask “is this the doer?”"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Scan the choices to diagnose the rule, apply the matching method—cross out interrupters, find the antecedent, check the timeline, demand the doer—and commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Among the papers recovered from the expedition's final camp {blank} a sketchbook filled with pressed alpine flowers, each one labeled in pencil."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "were",
+                    "was",
+                    "have been",
+                    "are"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Inverted sentence: flip it to find the subject. *A sketchbook … was among the papers recovered…* The subject is {blue|a sketchbook}—singular—no matter how many plural nouns (*papers*, *flowers*) crowd the sentence."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "*Were* agrees with *papers*—a noun inside the opening place phrase, not the subject. {rose|Nearest-noun trap, inverted edition.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Flip test: *a sketchbook was among the papers.* Singular subject, singular verb, past to match *recovered*."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Plural again—and the present-perfect timeline jars against the single past event of the discovery. {rose|Wrong number and tense.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*Are* is plural and present—two mismatches in one word. {rose|Wrong number and tense.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The commission spent two years reviewing the dam proposal before releasing {blank} final report, a document that surprised nearly everyone who had followed the debate."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "their",
+                    "it's",
+                    "there",
+                    "its"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is D.** The antecedent is {blue|the commission}—a collective noun, singular on the SAT. A singular possessive determiner with no apostrophe: *its*."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "*Their* needs a plural antecedent; *commission* is singular even though it contains many people. {rose|Collective-noun trap.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Expand: “before releasing *it is* final report.” The contraction fails the test. {rose|Contraction for possessive.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "*There* points to a place; nothing here is a place. {rose|Sound-alike.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "correct",
+                      "text": "Singular antecedent → *its*, apostrophe-free, exactly as the possessive determiner table demands."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "By the time the lighthouse was finally decommissioned in 1957, its keepers {blank} the lamp by hand every evening for more than a century."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "had lit",
+                    "have lit",
+                    "light",
+                    "will have lit"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** *By the time* + a past event (*was decommissioned in 1957*) points backward from the past: the lighting came **earlier than** the decommissioning, and earlier-of-two-past-events is the past perfect's exact job."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "*Had lit* places a century of lamp-lighting before the 1957 endpoint—the timeline locks together."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Present perfect (*have lit*) reaches up to the present—but the whole sentence closed in 1957. {rose|Wrong anchor.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Present tense inside a dated past narrative. {rose|Timeline jump.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Future perfect points forward from now—the wrong direction entirely for events that ended decades ago. {rose|Wrong direction.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Published anonymously in 1811 with a title page credited only to “a Lady,” {blank}"
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "Jane Austen gave readers no hint of her identity in her first novel.",
+                    "readers of Sense and Sensibility had no way to learn the author's name.",
+                    "Jane Austen's first novel, Sense and Sensibility, gave readers no hint of its author's identity.",
+                    "the identity of the author of Sense and Sensibility remained hidden from readers."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Ask the opening phrase its one question: what was *published anonymously in 1811*? {blue|The novel}. So the noun after the comma must be the novel—and only one choice puts it there."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Read literally: *Jane Austen* was published anonymously. The book was published; the author wasn't. {rose|Dangler.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Now the *readers* were published in 1811. {rose|Dangler.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "*…“a Lady,” Jane Austen's first novel…* — the modifier lands on the published thing itself. Everything after flows."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "An *identity* can stay hidden, but it can't be *published anonymously with a title page*. {rose|Dangler}—close, but the doer at the door is still wrong."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Scan the choices first: rotating verb forms, pronouns, or reshuffled clauses each name their own rule.",
+            "**Agreement is a cross-out game**: delete interrupters (*of the…*, *along with…*, *who…*) and match the verb to the true subject. In inverted sentences, flip to find it.",
+            "**Each, either, neither, every** and collective nouns (*committee*, *orchestra*) are singular—for verbs *and* pronouns.",
+            "Possessive determiners never take apostrophes; contractions always do. Run the **expansion test**: *it's* = “it is,” or it's *its*.",
+            "Every sentence needs a **finite verb**—*winning*, *to win*, and *having won* can't power a sentence alone. Then match the **timeline**: dates, *since*, and *by the time* dictate the tense.",
+            "An opening modifier describes the **first noun after the comma**. Ask “who's the doer?”—and demand that doer at the door."
+          ]
+        }
+      ]
+    }
+  ]
+}

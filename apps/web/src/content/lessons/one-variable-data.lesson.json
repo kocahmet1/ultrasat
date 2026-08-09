@@ -1,0 +1,690 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "one-variable-data",
+  "title": "One-Variable Data",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "One-Variable Data",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{blue|One-variable data} is a list of values of a single quantity—test scores, books read, salaries. The SAT asks two things about such a list: where is its **center**, and how wide is its **spread**? Five measures cover everything:"
+        },
+        {
+          "type": "table",
+          "headers": ["Measure", "What it tells you", "How to find it"],
+          "align": ["left", "left", "left"],
+          "rows": [
+            ["{blue|Mean}", "the average — the balance point", "$\\dfrac{\\text{sum of values}}{\\text{number of values}}$"],
+            ["{teal|Median}", "the middle value", "sort, take the middle (average the two middles if the count is even)"],
+            ["{purple|Mode}", "the most frequent value", "count repeats"],
+            ["{amber|Range}", "total width of the data", "maximum $-$ minimum"],
+            ["{amber|Standard deviation}", "typical distance from the mean", "**never computed on the SAT** — only compared: more spread out = larger"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Sort before finding the median**—and check whether the count is odd or even.",
+            "**Work the mean in both directions:** $\\text{sum} = \\text{mean} \\times \\text{count}$ unlocks every missing-value question.",
+            "**Outliers drag the mean and barely move the median.** When a question contrasts the two, an outlier is the reason.",
+            "**Standard deviation by eye:** clustered near the mean → small; stretched out → large. No formula, ever.",
+            "**Read displays carefully:** in dot plots and histograms, height is a *count* of data points, not a data value."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Almost every hard question in this skill is one of two games: “find the missing value from the mean” (use sum $=$ mean $\\times$ count) or “mean vs. median” (find the outlier). Name the game first."
+        }
+      ]
+    },
+    {
+      "id": "center",
+      "title": "Mean, Median & Mode",
+      "blocks": [
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Find the mean, median, and mode of the data set $\\{4, 7, 7, 8, 10, 12\\}$."
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\text{mean} = \\frac{4 + 7 + 7 + 8 + 10 + 12}{6} = \\frac{48}{6} = 8", "note": "Sum divided by the count" },
+                { "math": "\\text{median} = \\frac{7 + 8}{2} = 7.5", "note": "Six values (even count) — average the 3rd and 4th" },
+                { "math": "\\text{mode} = 7", "note": "The only value that appears twice" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Note the even-count move: with no single middle value, the median is the **average of the two middle values**—and it doesn't have to be a value in the set."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Workhorse: sum = mean × count"
+        },
+        {
+          "type": "p",
+          "text": "The mean formula, read backwards, tells you the **total**. That's the key to every “find the missing value” question:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Amara's mean score on $5$ tests is $84$. Her first four scores are $78$, $82$, $85$, and $89$. What is her fifth score?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\text{total needed} = 84 \\times 5 = 420", "note": "Mean $\\times$ count gives the required sum" },
+                { "math": "78 + 82 + 85 + 89 = 334", "note": "What the first four contribute" },
+                { "math": "420 - 334 = 86", "note": "The fifth score" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check:** $\\frac{334 + 86}{5} = \\frac{420}{5} = 84$. {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The median needs a **sorted** list. Data in a table or word problem often arrives unsorted—reorder before you count to the middle."
+        }
+      ]
+    },
+    {
+      "id": "displays",
+      "title": "Read the Displays",
+      "blocks": [
+        {
+          "type": "h3",
+          "text": "Dot Plots: Every Point Visible"
+        },
+        {
+          "type": "p",
+          "text": "A dot plot stacks one dot per data point. The plot below shows the number of books $15$ students read over a summer:"
+        },
+        {
+          "type": "dotplot",
+          "min": 0,
+          "max": 6,
+          "step": 1,
+          "counts": [
+            { "x": 0, "n": 1 },
+            { "x": 1, "n": 2 },
+            { "x": 2, "n": 4 },
+            { "x": 3, "n": 3 },
+            { "x": 4, "n": 3 },
+            { "x": 5, "n": 1 },
+            { "x": 6, "n": 1 }
+          ],
+          "xTitle": "Books read",
+          "caption": "$15$ dots — one per student. The tallest stack ($2$ books) is the **mode**.",
+          "alt": "Dot plot of books read by 15 students, with counts 1, 2, 4, 3, 3, 1, 1 for values 0 through 6"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What is the median number of books read? With $15$ values, the median is the $\\frac{15+1}{2} = 8$th value—count dots from the left:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "1, \\; 3, \\; 7, \\; 10, \\; \\ldots", "note": "Running totals after $0$, $1$, $2$, $3$ books" },
+                { "math": "\\text{median} = 3", "note": "The 8th, 9th, and 10th dots all sit at $3$ books" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Histograms: Counts over Intervals"
+        },
+        {
+          "type": "p",
+          "text": "A histogram groups data into intervals, so **individual values are invisible**—you can locate the median's interval, but not its exact value. Here, the movies watched last month by $20$ people:"
+        },
+        {
+          "type": "histogram",
+          "bins": [
+            { "label": "0–2", "n": 5 },
+            { "label": "3–5", "n": 8 },
+            { "label": "6–8", "n": 4 },
+            { "label": "9–11", "n": 3 }
+          ],
+          "yStep": 2,
+          "xTitle": "Movies watched",
+          "caption": "Heights are **frequencies**: $5 + 8 + 4 + 3 = 20$ people.",
+          "alt": "Histogram with four bars: 0 to 2 movies, 5 people; 3 to 5, 8 people; 6 to 8, 4 people; 9 to 11, 3 people"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Based on the histogram, which interval contains the **median** number of movies watched?",
+              "choices": ["0–2", "3–5", "6–8", "The median cannot be determined from a histogram"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "The first bar holds only positions $1$ through $5$—the median sits at positions $10$ and $11$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "With $20$ values, the median averages the $10$th and $11$th. Running totals: $5$, then $13$—both positions land in the $3$–$5$ bar."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The $6$–$8$ bar starts at position $14$—past the middle."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Half right: the *exact* median is unknowable, but its **interval** is exactly what running totals reveal."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Box Plots: The Five-Number Summary"
+        },
+        {
+          "type": "boxplot",
+          "min": 55,
+          "max": 100,
+          "step": 5,
+          "low": 62,
+          "q1": 70,
+          "median": 78,
+          "q3": 86,
+          "high": 94,
+          "caption": "Minimum $62$, quartiles $70$ and $86$, **median $78$** (the line inside the box), maximum $94$. Range $= 94 - 62 = 32$; the box holds the middle half of the data.",
+          "alt": "Box plot from 62 to 94 with a box from 70 to 86 and a median line at 78"
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Each display trades detail for clarity: dot plots show every value, histograms show only interval counts, box plots show only five summary numbers. Ask “what can this display even tell me?” before hunting for an answer."
+        }
+      ]
+    },
+    {
+      "id": "outliers",
+      "title": "Outliers: Mean vs. Median",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "An {rose|outlier} is a value far from the rest. It affects the two center measures very differently: the **mean chases it**, because every dollar enters the sum; the **median barely notices**, because one value shifts the middle position by at most a step."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Five employees at a small firm earn (in thousands): $42, 45, 48, 50, 55$. Then the owner—earning $260$—is added to the data."
+            },
+            {
+              "type": "columns",
+              "items": [
+                {
+                  "title": "Before (5 values)",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "\\text{mean} = \\frac{240}{5} = 48", "note": "Sum $240$" },
+                        { "math": "\\text{median} = 48", "note": "The 3rd of 5 sorted values" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "title": "After adding 260 (6 values)",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "\\text{mean} = \\frac{500}{6} \\approx 83.3", "note": "Jumped $35$ — dragged by the outlier" },
+                        { "math": "\\text{median} = \\frac{48 + 50}{2} = 49", "note": "Moved only $1$" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "One value moved the mean from $48$ to $83.3$—now *nobody* earns close to the “average.” The median, at $49$, still describes a typical employee. **With outliers, the median is the honest center.**"
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Skew: What Mean vs. Median Reveals"
+        },
+        {
+          "type": "table",
+          "headers": ["Shape of the data", "Relationship"],
+          "align": ["left", "center"],
+          "rows": [
+            ["Symmetric", "mean $\\approx$ median"],
+            ["Tail of high values (skewed right)", "mean $>$ median"],
+            ["Tail of low values (skewed left)", "mean $<$ median"]
+          ],
+          "caption": "The mean gets pulled **toward the tail**; the median stays with the crowd."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "If the value $260$ is removed from the six-value salary data set above, which of the following will change the **most**?",
+              "choices": ["The mean", "The median", "The minimum", "The mean and median will change equally"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Removing the outlier drops the mean from $\\approx 83.3$ back to $48$—a change of about $35$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The median slides only from $49$ to $48$—a change of $1$. Middles are stubborn."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The minimum is $42$ with or without the owner—removing a *maximum* can't touch it."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "They change by $35$ and $1$—about as unequal as it gets. This choice exists for students who skip the computation."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "“Which measure best represents the typical value?” with an outlier present → the **median**. “Which will change most if the outlier is removed?” → the **mean** (and the range, if the outlier was an extreme)."
+        }
+      ]
+    },
+    {
+      "id": "spread",
+      "title": "Spread: Range & Standard Deviation",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{amber|Range} $=$ maximum $-$ minimum: one subtraction, and—like the mean—hostage to outliers. {amber|Standard deviation} measures the **typical distance of values from the mean**. The SAT never asks you to compute it; it asks you to *compare* it by eye:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Smaller standard deviation",
+              "blocks": [
+                {
+                  "type": "dotplot",
+                  "min": 0,
+                  "max": 12,
+                  "step": 2,
+                  "counts": [
+                    { "x": 5, "n": 1 },
+                    { "x": 6, "n": 3 },
+                    { "x": 7, "n": 1 }
+                  ],
+                  "tone": "teal",
+                  "caption": "Mean $6$ — values hug the mean.",
+                  "alt": "Dot plot with values tightly clustered at 5, 6, and 7"
+                }
+              ]
+            },
+            {
+              "title": "Larger standard deviation",
+              "blocks": [
+                {
+                  "type": "dotplot",
+                  "min": 0,
+                  "max": 12,
+                  "step": 2,
+                  "counts": [
+                    { "x": 2, "n": 1 },
+                    { "x": 4, "n": 1 },
+                    { "x": 6, "n": 1 },
+                    { "x": 8, "n": 1 },
+                    { "x": 10, "n": 1 }
+                  ],
+                  "tone": "rose",
+                  "caption": "Same mean $6$ — values scattered far from it.",
+                  "alt": "Dot plot with values spread out at 2, 4, 6, 8, and 10"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Same scale, more clustered around the mean → **smaller** standard deviation. More spread out → **larger**. That comparison is the entire skill."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Class A's quiz scores all fall between $78$ and $82$. Class B's scores range from $60$ to $100$. The mean score in both classes is $80$. Which statement is true?",
+              "choices": [
+                "The standard deviation of Class A's scores is smaller than that of Class B's",
+                "The standard deviation of Class A's scores is larger than that of Class B's",
+                "The two classes have different mean scores",
+                "The standard deviations cannot be compared without calculating them"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Class A's scores sit within $2$ points of the mean; Class B's roam up to $20$ away. Tighter cluster, smaller standard deviation."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Backwards—spread and standard deviation rise together."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Both means are given as $80$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "The SAT *expects* the by-eye comparison—no computation is ever required, or possible, from a summary like this."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Shifting and Scaling the Whole Data Set"
+        },
+        {
+          "type": "table",
+          "headers": ["Transformation", "Mean & median", "Range & standard deviation"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["Add $k$ to every value", "shift by $k$", "**unchanged**"],
+            ["Multiply every value by $k$", "multiply by $k$", "multiply by $k$"]
+          ],
+          "caption": "Sliding the data doesn't change how spread out it is; stretching it does."
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "“The teacher adds $5$ points to every score” moves the mean and median up $5$—and leaves the range and standard deviation exactly where they were. Distances between values don't feel a shift."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Name the game before computing: missing value (sum $=$ mean $\\times$ count), display reading (count carefully), outlier contrast (mean vs. median), or spread comparison (cluster vs. scatter)."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The mean of four numbers is $15$. Three of the numbers are $11$, $14$, and $18$. What is the fourth number?",
+                  "choices": ["$17$", "$15$", "$14.3$", "$60$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.**"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "15 \\times 4 = 60", "note": "The four numbers must total $60$" },
+                    { "math": "11 + 14 + 18 = 43", "note": "The three known numbers" },
+                    { "math": "60 - 43 = 17", "note": "The fourth number" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Check: $\\frac{43 + 17}{4} = 15$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$15$ assumes the missing value equals the mean—only true if the other three already averaged $15$ (they average $14.3$)."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$14.3$ is the mean of the three **known** numbers—a computation about the wrong group."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$60$ is the required *total*, one step short of the answer."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "dotplot",
+                  "min": 1,
+                  "max": 5,
+                  "step": 1,
+                  "counts": [
+                    { "x": 1, "n": 2 },
+                    { "x": 2, "n": 5 },
+                    { "x": 3, "n": 4 },
+                    { "x": 4, "n": 2 },
+                    { "x": 5, "n": 2 }
+                  ],
+                  "xTitle": "Pets per household",
+                  "alt": "Dot plot of pets per household for 15 households: counts 2, 5, 4, 2, 2 for values 1 through 5"
+                },
+                {
+                  "type": "question",
+                  "stem": "The dot plot shows the number of pets in $15$ households. What is the **median** number of pets?",
+                  "choices": ["$3$", "$2$", "$2.8$", "$4$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** With $15$ values the median is the $8$th. Running totals: $2$, then $7$, then $11$—the $8$th dot lands in the stack at $3$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Positions $8$ through $11$ all hold the value $3$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$2$ is the **mode**—the tallest stack, not the middle dot."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$2.8$ is the **mean** ($42 \\div 15$)—the right kind of care applied to the wrong measure."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$4$ is merely the middle of the axis labels $1$–$5$; the data's weight sits lower."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A data set consists of the values $12, 14, 15, 15, 16, 18$. If the value $45$ is added to the data set, which of the following measures will increase the **most**?",
+                  "choices": ["The mean", "The median", "The mode", "All will increase equally"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Before: mean $= \\frac{90}{6} = 15$, median $= 15$, mode $= 15$. After adding $45$: mean $= \\frac{135}{7} \\approx 19.3$, median $=$ the $4$th of $7$ values $= 15$, mode $= 15$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "The mean climbs about $4.3$—the outlier's entire excess gets averaged in."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The median doesn't move at all: the middle of the sorted list is still $15$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$15$ still appears twice and $45$ once—the mode is untouched."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "One measure moved $4.3$, the other two moved $0$—outliers are precisely the situation where measures *disagree*."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A teacher adds $5$ points to every student's score on a quiz. Which of the following describes the effect on the mean and the standard deviation of the scores?",
+                  "choices": [
+                    "The mean increases by 5; the standard deviation is unchanged",
+                    "The mean and the standard deviation both increase by 5",
+                    "The mean is unchanged; the standard deviation increases by 5",
+                    "The mean and the standard deviation are both unchanged"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Every value slides up $5$, so the balance point slides up $5$ with them. But the *distances between* values—and from each value to the new mean—are identical, so the spread doesn't change."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Shift the data → shift the center, keep the spread. (Multiplying is the operation that would scale both.)"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Standard deviation measures spacing, and adding a constant changes no spacing."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Exactly reversed: the center moves, the spread stays."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The mean must rise—every single value did."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Mean $= \\frac{\\text{sum}}{\\text{count}}$, and backwards: **sum $=$ mean $\\times$ count**—the key to missing-value questions.",
+            "Median: sort first; odd count → middle value, even count → average of the two middles (it may not be in the set).",
+            "**Outliers drag the mean, barely move the median.** With an outlier present, the median is the better “typical” value; the mean (and range) change most when it's removed.",
+            "Mean pulled above the median → tail of high values (skewed right); below → tail of low values.",
+            "Standard deviation is compared, never computed: tighter cluster around the mean → smaller SD.",
+            "Add $k$ to every value → center shifts by $k$, spread (range, SD) unchanged. Multiply by $k$ → both scale.",
+            "Displays: dot plots show every value; histograms show interval counts only (median *interval* via running totals); box plots show the five-number summary, median = the line in the box."
+          ]
+        }
+      ]
+    }
+  ]
+}

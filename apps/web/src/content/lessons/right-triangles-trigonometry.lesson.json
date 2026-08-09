@@ -1,0 +1,658 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "right-triangles-trigonometry",
+  "title": "Right Triangles and Trigonometry",
+  "estimatedMinutes": 35,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Right Triangles and Trigonometry",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Everything in this skill happens inside a **right triangle**, with two toolkits: the {blue|Pythagorean theorem} relates the three *sides*, and the {teal|trig ratios} (sine, cosine, tangent) connect sides to *angles*. Knowing which toolkit a question wants is half the solve."
+        },
+        {
+          "type": "table",
+          "headers": ["You know…", "You want…", "Use"],
+          "align": ["left", "left", "center"],
+          "rows": [
+            ["two sides", "the third side", "$a^2 + b^2 = c^2$"],
+            ["a $45°$ or $30°/60°$ angle + one side", "another side", "special-triangle patterns"],
+            ["an angle's trig ratio + one side", "another side", "SOH-CAH-TOA"],
+            ["$\\sin$ of one acute angle", "$\\cos$ of the other", "they're **equal** (complements)"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**The hypotenuse is the side opposite the right angle**—always the longest, always $c$.",
+            "**Opposite and adjacent are relative to the chosen angle.** Re-label them every time the angle changes.",
+            "**Memorize the triples**—$3$-$4$-$5$, $5$-$12$-$13$, $7$-$24$-$25$, $8$-$15$-$17$ and their multiples—to skip the arithmetic entirely.",
+            "**Special triangles:** $45$-$45$-$90$ → $x, x, x\\sqrt{2}$;  $30$-$60$-$90$ → $x, x\\sqrt{3}, 2x$ (short leg opposite $30°$).",
+            "**Cofunction identity:** $\\sin(x°) = \\cos(90° - x°)$—the acute angles of a right triangle are complements.",
+            "**Similar right triangles have identical trig ratios**—size never changes sine."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Draw and label before computing: mark the right angle, star the angle in play, then write O, A, H on the three sides. Thirty seconds of labeling prevents every inverted ratio."
+        }
+      ]
+    },
+    {
+      "id": "pythagorean",
+      "title": "The Pythagorean Theorem",
+      "blocks": [
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 270,
+              "height": 165,
+              "elements": [
+                { "kind": "polygon", "points": [[50, 135], [215, 135], [215, 40]], "tone": "blue", "fill": true },
+                { "kind": "rightangle", "x": 215, "y": 135, "size": 11, "rotate": 270 },
+                { "kind": "label", "x": 132, "y": 153, "text": "a = 6", "italic": false },
+                { "kind": "label", "x": 232, "y": 92, "text": "b = 8", "italic": false },
+                { "kind": "label", "x": 112, "y": 76, "text": "c", "tone": "rose" }
+              ],
+              "caption": "The hypotenuse $c$ faces the right angle.",
+              "alt": "A right triangle with legs 6 and 8 and unknown hypotenuse c"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "c^2 = 6^2 + 8^2 = 100", "note": "Legs squared and **added**" },
+                { "math": "c = 10", "note": "Square root — a scaled $3$-$4$-$5$ triple" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Finding a Leg: Subtract"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A right triangle has a hypotenuse of $13$ and one leg of $5$. What is the other leg?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "b^2 = 13^2 - 5^2 = 144", "note": "The hypotenuse goes **alone** on its side — subtract the known leg" },
+                { "math": "b = 12", "note": "The $5$-$12$-$13$ triple, confirmed" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In a right triangle, the hypotenuse has length $15$ and one leg has length $9$. What is the length of the other leg?",
+              "choices": ["$12$", "$\\sqrt{306} \\approx 17.5$", "$6$", "$144$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$\\sqrt{15^2 - 9^2} = \\sqrt{144} = 12$ — a $3$-$4$-$5$ triple scaled by $3$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\sqrt{225 + 81}$ **adds**—but the $15$ is the hypotenuse, so it stands alone. Adding also produces a side *longer* than the hypotenuse: impossible."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$15 - 9 = 6$ subtracts the lengths instead of their squares."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$144$ is $b^2$—the square root never happened."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Triples to know on sight: $3$-$4$-$5$, $5$-$12$-$13$, $7$-$24$-$25$, $8$-$15$-$17$—and every multiple ($6$-$8$-$10$, $9$-$12$-$15$, $10$-$24$-$26$…). Spotting one converts a calculation into a glance."
+        }
+      ]
+    },
+    {
+      "id": "special-triangles",
+      "title": "Special Right Triangles",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Two angle patterns come with **fixed side ratios** (both are on the reference sheet, both are worth knowing cold):"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "$45°$-$45°$-$90°$:  $x,\\; x,\\; x\\sqrt{2}$",
+              "blocks": [
+                {
+                  "type": "geometry",
+                  "width": 215,
+                  "height": 165,
+                  "elements": [
+                    { "kind": "polygon", "points": [[45, 135], [170, 135], [170, 40]], "tone": "blue", "fill": true },
+                    { "kind": "rightangle", "x": 170, "y": 135, "size": 10, "rotate": 270 },
+                    { "kind": "label", "x": 72, "y": 126, "text": "45°", "italic": false, "size": 11 },
+                    { "kind": "label", "x": 160, "y": 62, "text": "45°", "italic": false, "size": 11 },
+                    { "kind": "label", "x": 108, "y": 153, "text": "x" },
+                    { "kind": "label", "x": 182, "y": 92, "text": "x" },
+                    { "kind": "label", "x": 88, "y": 78, "text": "x√2", "size": 11 }
+                  ],
+                  "caption": "Half a square: equal legs, hypotenuse $\\sqrt{2}$ times a leg.",
+                  "alt": "A 45-45-90 right triangle with legs x and hypotenuse x times root 2"
+                }
+              ]
+            },
+            {
+              "title": "$30°$-$60°$-$90°$:  $x,\\; x\\sqrt{3},\\; 2x$",
+              "blocks": [
+                {
+                  "type": "geometry",
+                  "width": 245,
+                  "height": 165,
+                  "elements": [
+                    { "kind": "polygon", "points": [[30, 135], [205, 135], [205, 45]], "tone": "teal", "fill": true },
+                    { "kind": "rightangle", "x": 205, "y": 135, "size": 10, "rotate": 270 },
+                    { "kind": "label", "x": 62, "y": 127, "text": "30°", "italic": false, "size": 11 },
+                    { "kind": "label", "x": 192, "y": 66, "text": "60°", "italic": false, "size": 11 },
+                    { "kind": "label", "x": 118, "y": 153, "text": "x√3", "size": 11 },
+                    { "kind": "label", "x": 219, "y": 94, "text": "x" },
+                    { "kind": "label", "x": 102, "y": 80, "text": "2x", "size": 11 }
+                  ],
+                  "caption": "Half an equilateral triangle: short leg opposite $30°$, hypotenuse twice the short leg.",
+                  "alt": "A 30-60-90 right triangle with short leg x, long leg x root 3, and hypotenuse 2x"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Anchor on the **short leg** $x$ (opposite the $30°$): hypotenuse $= 2x$, long leg $= x\\sqrt{3}$. In the $45$er, the legs match and the hypotenuse picks up the $\\sqrt{2}$."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A $30$-$60$-$90$ triangle has a hypotenuse of length $12$. Find the legs."
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x = \\frac{12}{2} = 6", "note": "Short leg — half the hypotenuse" },
+                { "math": "x\\sqrt{3} = 6\\sqrt{3} \\approx 10.4", "note": "Long leg — short leg times $\\sqrt{3}$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In a $30$-$60$-$90$ triangle, the **longer leg** has length $9$. What is the length of the hypotenuse?",
+              "choices": ["$6\\sqrt{3}$", "$18$", "$9\\sqrt{3}$", "$4.5$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Long leg $= x\\sqrt{3} = 9$ gives $x = \\frac{9}{\\sqrt{3}} = 3\\sqrt{3}$; hypotenuse $= 2x = 6\\sqrt{3} \\approx 10.4$. Sanity: just longer than the $9$ leg. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$18$ doubles the $9$—but doubling applies to the **short** leg, and $9$ is the long one."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$9\\sqrt{3} \\approx 15.6$ multiplies by $\\sqrt{3}$ a second time—that converts short to long, not long to hypotenuse."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$4.5$ halves—the hypotenuse must be the **longest** side, not shorter than a leg."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Before applying a pattern, ask **which side is the $9$?** Short leg, long leg, and hypotenuse each convert differently—the wrong choices above are the other two conversions."
+        }
+      ]
+    },
+    {
+      "id": "soh-cah-toa",
+      "title": "SOH-CAH-TOA",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Trig ratios name the three possible side-pairs of a right triangle, **as seen from one acute angle** $\\theta$:"
+        },
+        {
+          "type": "geometry",
+          "width": 300,
+          "height": 175,
+          "elements": [
+            { "kind": "polygon", "points": [[40, 140], [235, 140], [235, 45]], "tone": "blue", "fill": true },
+            { "kind": "rightangle", "x": 235, "y": 140, "size": 11, "rotate": 270 },
+            { "kind": "label", "x": 74, "y": 131, "text": "θ", "tone": "purple", "size": 14 },
+            { "kind": "label", "x": 137, "y": 158, "text": "adjacent", "tone": "teal", "size": 11, "italic": false },
+            { "kind": "label", "x": 264, "y": 94, "text": "opposite", "tone": "rose", "size": 11, "italic": false },
+            { "kind": "label", "x": 115, "y": 78, "text": "hypotenuse", "tone": "blue", "size": 11, "italic": false }
+          ],
+          "caption": "{rose|Opposite} faces $\\theta$; {teal|adjacent} touches it; the {blue|hypotenuse} faces the right angle.",
+          "alt": "A right triangle with angle theta marked and the sides labeled adjacent, opposite, and hypotenuse"
+        },
+        {
+          "type": "math",
+          "tex": "\\sin\\theta = \\frac{\\rose{\\text{opp}}}{\\blue{\\text{hyp}}} \\qquad \\cos\\theta = \\frac{\\teal{\\text{adj}}}{\\blue{\\text{hyp}}} \\qquad \\tan\\theta = \\frac{\\rose{\\text{opp}}}{\\teal{\\text{adj}}}",
+          "boxed": true,
+          "caption": "**S**OH · **C**AH · **T**OA"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 280,
+              "height": 170,
+              "elements": [
+                { "kind": "polygon", "points": [[45, 140], [225, 140], [225, 50]], "tone": "teal", "fill": true },
+                { "kind": "rightangle", "x": 225, "y": 140, "size": 11, "rotate": 270 },
+                { "kind": "label", "x": 35, "y": 152, "text": "A" },
+                { "kind": "label", "x": 235, "y": 154, "text": "C" },
+                { "kind": "label", "x": 235, "y": 40, "text": "B" },
+                { "kind": "label", "x": 135, "y": 158, "text": "8", "italic": false },
+                { "kind": "label", "x": 238, "y": 98, "text": "6", "italic": false },
+                { "kind": "label", "x": 118, "y": 82, "text": "10", "italic": false }
+              ],
+              "alt": "Right triangle ABC with the right angle at C, AC equal to 8, BC equal to 6, and AB equal to 10"
+            },
+            {
+              "type": "question",
+              "stem": "In the triangle shown, what is the value of $\\tan A$?",
+              "choices": ["$\\frac{3}{4}$", "$\\frac{4}{3}$", "$\\frac{3}{5}$", "$\\frac{4}{5}$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "From $A$: opposite $= BC = 6$, adjacent $= AC = 8$. $\\tan A = \\frac{6}{8} = \\frac{3}{4}$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{8}{6}$ is $\\tan B$—the ratio as seen from the *other* acute angle. Opposite and adjacent swap when the angle does."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{6}{10}$ is $\\sin A$—right sides, wrong ratio."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{8}{10}$ is $\\cos A$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Using a Ratio to Find a Side"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "In a right triangle, $\\cos B = \\frac{12}{13}$ and the hypotenuse has length $26$. What is the length of the side adjacent to angle $B$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{\\text{adj}}{26} = \\frac{12}{13}", "note": "$\\cos = \\frac{\\text{adj}}{\\text{hyp}}$, with the knowns dropped in" },
+                { "math": "\\text{adj} = 26 \\times \\frac{12}{13} = 24", "note": "The triangle is $5$-$12$-$13$ scaled by $2$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "A given ratio like $\\cos B = \\frac{12}{13}$ *is* a similar-triangle statement: the real triangle is the $12$-$13$ reference triangle scaled by some factor. Find the factor, scale every side."
+        }
+      ]
+    },
+    {
+      "id": "complements",
+      "title": "The Complement Identity",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A right triangle's two acute angles sum to $90°$—and one angle's **opposite** side is the other's **adjacent**. Swapping viewpoints swaps sine and cosine:"
+        },
+        {
+          "type": "math",
+          "tex": "\\sin(x°) = \\cos(90° - x°)",
+          "boxed": true,
+          "caption": "Sine of an angle $=$ cosine of its complement — and vice versa"
+        },
+        {
+          "type": "p",
+          "text": "So $\\sin 38° = \\cos 52°$, $\\cos 71° = \\sin 19°$—no calculator, just $90°$ minus the angle. The SAT tests this identity directly and often:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In a right triangle, $\\sin(x°) = \\cos(23°)$. If $0 < x < 90$, what is the value of $x$?",
+              "choices": ["$67$", "$23$", "$157$", "$46$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Sine equals the cosine of the **complement**: $x = 90 - 23 = 67$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$23$ would need $\\sin$ and $\\cos$ of the *same* angle to match—only true at $45°$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$157$ uses $180 - 23$: supplements belong to straight lines, not to this identity."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$46$ doubles the $23$—no identity does that."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Similar Triangles, Identical Ratios"
+        },
+        {
+          "type": "p",
+          "text": "Trig ratios depend only on the triangle's **angles**—its shape. All right triangles containing a $35°$ angle are similar, so $\\sin 35°$ is the *same number* in every one of them, from a stamp to a stadium:"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "$3$-$4$-$5$ triangle:  $\\sin\\theta = \\frac{3}{5} = 0.6$.   Scaled to $6$-$8$-$10$:  $\\sin\\theta = \\frac{6}{10} = 0.6$",
+              "note": "Both sides of the ratio scale by the same factor, which cancels. Size in, size out."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "This is why “triangle $DEF$ is similar to triangle $ABC$…” questions can ask for $\\sin F$ using $ABC$'s sides: corresponding angles have **identical** trig values. Ratios travel; lengths don't."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Label first—right angle, chosen angle, O/A/H—then pick the toolkit: Pythagorean, special pattern, or ratio."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A $25$-foot ladder leans against a vertical wall, with its base $7$ feet from the wall on level ground. How high up the wall, in feet, does the ladder reach?",
+                  "choices": ["$24$", "$26$", "$18$", "$32$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The ladder is the hypotenuse:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "h^2 = 25^2 - 7^2 = 576", "note": "Hypotenuse alone; subtract the known leg" },
+                    { "math": "h = 24", "note": "The $7$-$24$-$25$ triple" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Check: $49 + 576 = 625 = 25^2$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$\\sqrt{625 + 49} \\approx 26$ adds—and reaches *higher than the ladder is long*, which no wall allows."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$18 = 25 - 7$ subtracts lengths, not squares."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$32 = 25 + 7$ adds lengths—the ladder isn't a folding ruler."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The hypotenuse of a $45°$-$45°$-$90°$ triangle has length $8$. What is the length of each leg?",
+                  "choices": ["$4\\sqrt{2}$", "$8\\sqrt{2}$", "$4$", "$16$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Hypotenuse $= x\\sqrt{2} = 8$, so $x = \\frac{8}{\\sqrt{2}} = 4\\sqrt{2} \\approx 5.7$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Sanity: legs ($\\approx 5.7$) shorter than the hypotenuse ($8$). {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$8\\sqrt{2}$ multiplies instead of divides—that's the hypotenuse of a triangle whose *leg* is $8$, the conversion run backward."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$4$ halves the hypotenuse—that's the $30$-$60$-$90$ move, wrong triangle."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$16$ doubles it—no pattern in either special triangle does this to a hypotenuse."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "In right triangle $PQR$, $\\sin R = \\frac{5}{13}$. If the hypotenuse has length $39$, what is the length of the side **opposite** angle $R$?",
+                  "choices": ["$15$", "$36$", "$5$", "$101.4$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Sine is opposite over hypotenuse:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{\\text{opp}}{39} = \\frac{5}{13}", "note": "SOH with the knowns in place" },
+                    { "math": "\\text{opp} = 39 \\times \\frac{5}{13} = 15", "note": "The $5$-$12$-$13$ reference triangle scaled by $3$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Scale factor $3$: sides $15$-$36$-$39$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$36$ is the **adjacent** side ($12 \\times 3$)—the cosine's side, not the sine's."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$5$ reads the ratio's numerator as a length, ignoring the scale factor."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$101.4 = 39 \\times \\frac{13}{5}$—the ratio flipped upside down, producing a side longer than the hypotenuse."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "In a right triangle, one acute angle measures $x°$ and $\\cos(x°) = \\sin(19°)$. What is the value of $x$?",
+                  "choices": ["$71$", "$19$", "$161$", "$38$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Cosine of an angle equals sine of its **complement**: $x = 90 - 19 = 71$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$\\cos 71° = \\sin 19°$—the identity, both directions. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$19$ assumes $\\sin$ and $\\cos$ agree at the same angle—only at $45°$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$161 = 180 - 19$ reaches for supplements—and isn't even an acute angle."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$38 = 2 \\times 19$—doubling isn't part of any trig identity here."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "$a^2 + b^2 = c^2$ with $c$ the hypotenuse (opposite the right angle, always longest). Finding a **leg**? The hypotenuse stands alone—subtract.",
+            "Triples on sight: $3$-$4$-$5$, $5$-$12$-$13$, $7$-$24$-$25$, $8$-$15$-$17$, and all their multiples.",
+            "$45$-$45$-$90$: $x, x, x\\sqrt{2}$.  $30$-$60$-$90$: $x, x\\sqrt{3}, 2x$—anchor on the short leg, opposite the $30°$. Identify **which** side you're given before converting.",
+            "SOH-CAH-TOA, with opposite/adjacent defined **by the chosen angle**—they swap when the angle does.",
+            "$\\sin(x°) = \\cos(90° - x°)$: sine and cosine trade places across complements.",
+            "Similar right triangles share identical trig ratios—a given ratio is a reference triangle; find the scale factor and every side follows."
+          ]
+        }
+      ]
+    }
+  ]
+}

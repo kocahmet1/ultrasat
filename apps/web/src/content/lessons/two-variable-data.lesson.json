@@ -1,0 +1,847 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "two-variable-data",
+  "title": "Two-Variable Data",
+  "estimatedMinutes": 30,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Two-Variable Data",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{blue|Two-variable data} is a set of pairs—hours studied and score earned, temperature and sales. A {teal|scatterplot} plots each pair as a point, and the cloud's shape reveals the **association** between the variables:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Positive association",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 185,
+                  "height": 160,
+                  "xMin": 0,
+                  "xMax": 10,
+                  "yMin": 0,
+                  "yMax": 10,
+                  "step": 2,
+                  "ticks": false,
+                  "points": [
+                    { "x": 1, "y": 2 }, { "x": 2, "y": 3.5 }, { "x": 3, "y": 3 },
+                    { "x": 4, "y": 5 }, { "x": 5, "y": 4.5 }, { "x": 6, "y": 6.5 },
+                    { "x": 7, "y": 7 }, { "x": 8, "y": 6.5 }, { "x": 9, "y": 8.5 }
+                  ],
+                  "caption": "As $x$ increases, $y$ **tends to increase**.",
+                  "alt": "Scatterplot with points rising from lower left to upper right"
+                }
+              ]
+            },
+            {
+              "title": "Negative association",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 185,
+                  "height": 160,
+                  "xMin": 0,
+                  "xMax": 10,
+                  "yMin": 0,
+                  "yMax": 10,
+                  "step": 2,
+                  "ticks": false,
+                  "points": [
+                    { "x": 1, "y": 8.5 }, { "x": 2, "y": 7 }, { "x": 3, "y": 7.5 },
+                    { "x": 4, "y": 6 }, { "x": 5, "y": 5 }, { "x": 6, "y": 5.5 },
+                    { "x": 7, "y": 3.5 }, { "x": 8, "y": 3 }, { "x": 9, "y": 2 }
+                  ],
+                  "caption": "As $x$ increases, $y$ **tends to decrease**.",
+                  "alt": "Scatterplot with points falling from upper left to lower right"
+                }
+              ]
+            },
+            {
+              "title": "No clear association",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 185,
+                  "height": 160,
+                  "xMin": 0,
+                  "xMax": 10,
+                  "yMin": 0,
+                  "yMax": 10,
+                  "step": 2,
+                  "ticks": false,
+                  "points": [
+                    { "x": 1, "y": 5 }, { "x": 2, "y": 2 }, { "x": 3, "y": 7 },
+                    { "x": 4, "y": 4 }, { "x": 5, "y": 8 }, { "x": 6, "y": 3 },
+                    { "x": 7, "y": 6 }, { "x": 8, "y": 2.5 }, { "x": 9, "y": 7.5 }
+                  ],
+                  "caption": "No trend — $x$ tells you little about $y$.",
+                  "alt": "Scatterplot with points scattered with no visible pattern"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Read the axes first**—what each variable is, and in what units. Half the wrong answers misuse the axes.",
+            "**The line of best fit summarizes the trend.** Predictions come from the **line**, not from individual points.",
+            "**Slope = predicted change in $y$ per one unit of $x$**; the y-intercept is the prediction at $x = 0$. Interpret both with the axes' units.",
+            "**Actual $-$ predicted:** a point above the line beats its prediction; below the line falls short.",
+            "**Association is a tendency, not a law**—and it is not causation. The right answers say “tends to” and “predicted.”"
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Every scatterplot question is one of four jobs: describe the trend, interpret the line's numbers, predict from the line, or compare a point with the line. Identify the job before touching the plot."
+        }
+      ]
+    },
+    {
+      "id": "read-scatterplots",
+      "title": "Read the Scatterplot",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Besides its **direction**, a cloud of points has a **shape**. If the trend runs straight, a linear model fits; if it bends, you'll need a curve:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Linear trend",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 215,
+                  "height": 180,
+                  "xMin": 0,
+                  "xMax": 9,
+                  "yMin": 0,
+                  "yMax": 9,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": 0.8, "b": 1, "tone": "teal" }],
+                  "points": [
+                    { "x": 1, "y": 1.5 }, { "x": 2, "y": 3 }, { "x": 3, "y": 3.2 },
+                    { "x": 4, "y": 4.5 }, { "x": 5, "y": 4.8 }, { "x": 6, "y": 6.2 },
+                    { "x": 7, "y": 6.5 }, { "x": 8, "y": 7.8 }
+                  ],
+                  "caption": "Constant rate — a **line** fits.",
+                  "alt": "Scatterplot with points along a straight rising line"
+                }
+              ]
+            },
+            {
+              "title": "Nonlinear trend",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 215,
+                  "height": 180,
+                  "xMin": 0,
+                  "xMax": 10,
+                  "yMin": 0,
+                  "yMax": 10,
+                  "step": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "vertex", "a": -0.3, "h": 5, "k": 8, "tone": "purple" }],
+                  "points": [
+                    { "x": 1, "y": 3 }, { "x": 2, "y": 5.5 }, { "x": 3, "y": 6.5 },
+                    { "x": 4, "y": 7.8 }, { "x": 5, "y": 8.2 }, { "x": 6, "y": 7.6 },
+                    { "x": 7, "y": 6.8 }, { "x": 8, "y": 5.2 }, { "x": 9, "y": 3.4 }
+                  ],
+                  "caption": "Rises, peaks, falls — a **curve** fits.",
+                  "alt": "Scatterplot with points following an arch shape"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "graph",
+              "width": 320,
+              "height": 250,
+              "xMin": 0,
+              "xMax": 9,
+              "yMin": 60,
+              "yMax": 92,
+              "stepX": 1,
+              "stepY": 8,
+              "ticks": true,
+              "xLabel": "h",
+              "yLabel": "s",
+              "points": [
+                { "x": 1, "y": 88 }, { "x": 2, "y": 84 }, { "x": 3, "y": 85 },
+                { "x": 4, "y": 78 }, { "x": 5, "y": 74 }, { "x": 6, "y": 75 },
+                { "x": 7, "y": 68 }, { "x": 8, "y": 65 }
+              ],
+              "caption": "Hours of TV per day ($h$) and test score ($s$) for eight students.",
+              "alt": "Scatterplot of test score versus hours of TV, with points trending downward"
+            },
+            {
+              "type": "question",
+              "stem": "Which statement best describes the relationship shown in the scatterplot?",
+              "choices": [
+                "As TV time increases, test scores tend to decrease",
+                "As TV time increases, test scores tend to increase",
+                "There is no relationship between TV time and test scores",
+                "Watching more TV causes lower test scores"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "The cloud falls from left to right—a negative association, described with “tends to.”"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "That would slope upward; this cloud clearly falls."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "“No relationship” looks like a shapeless cloud—this one has an unmistakable downward drift."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "The data shows the two variables *move together*—it cannot show that one **causes** the other. Association is never causation on the SAT."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Correct answers about scatterplots hedge: “tend to,” “in general,” “predicted.” Choices with “causes,” “always,” or “every” overstate what data can say—and they're nearly always wrong."
+        }
+      ]
+    },
+    {
+      "id": "line-of-best-fit",
+      "title": "The Line of Best Fit",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The {teal|line of best fit} runs through the middle of the cloud—roughly half the points above, half below—and turns the trend into an equation you can interpret and use. Here, quiz score $y$ against hours studied $x$, fit by $\\hat{y} = 4x + 55$:"
+        },
+        {
+          "type": "graph",
+          "width": 340,
+          "height": 280,
+          "xMin": 0,
+          "xMax": 9,
+          "yMin": 50,
+          "yMax": 92,
+          "stepX": 1,
+          "stepY": 10,
+          "ticks": true,
+          "lines": [{ "m": 4, "b": 55, "tone": "teal", "label": "y = 4x + 55", "labelAt": 6.9, "labelDx": 6, "labelDy": -8 }],
+          "points": [
+            { "x": 1, "y": 57 }, { "x": 2, "y": 65 }, { "x": 3, "y": 64 },
+            { "x": 4, "y": 73 }, { "x": 5, "y": 72 }, { "x": 6, "y": 85 },
+            { "x": 7, "y": 81 }, { "x": 8, "y": 88 }
+          ],
+          "caption": "Hours studied vs. quiz score, with the line of best fit.",
+          "alt": "Scatterplot of quiz scores rising with study hours, with a fitted line through the cloud"
+        },
+        {
+          "type": "table",
+          "headers": ["Number in the model", "Meaning in context"],
+          "rows": [
+            ["slope $= 4$", "**predicted** increase of $4$ points for each additional hour studied"],
+            ["y-intercept $= 55$", "**predicted** score for a student who studies $0$ hours"]
+          ],
+          "caption": "Interpretations always carry the axes' units — points per hour, points at zero hours."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Based on the model $\\hat{y} = 4x + 55$, which of the following is the best interpretation of the number $4$?",
+              "choices": [
+                "The predicted increase in quiz score for each additional hour studied",
+                "The predicted quiz score for a student who does not study",
+                "The number of hours a typical student studies",
+                "The exact number of points every student gains per hour of studying"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "The slope multiplies $x$ (hours), so it's the predicted change in $y$ (points) per one hour."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "That's the y-intercept's job—the $55$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$4$ carries units of points **per hour**, not hours—the units veto this reading."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "“Exact… every student” claims certainty a trend line doesn't have. Models **predict on average**; the scattered points prove individuals vary."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Best-fit interpretations have a fixed grammar: slope → “predicted change in [y-units] per one [x-unit]”; intercept → “predicted [y] when [x] is zero.” Match the choice to the grammar and the units."
+        }
+      ]
+    },
+    {
+      "id": "prediction-residuals",
+      "title": "Predictions & the Gap to the Line",
+      "blocks": [
+        {
+          "type": "h3",
+          "text": "Predicting from the Model"
+        },
+        {
+          "type": "p",
+          "text": "To predict, feed an $x$-value to the **line**—the points have already done their job by shaping it."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Using $\\hat{y} = 4x + 55$, what score does the model predict for a student who studies $6$ hours?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\hat{y} = 4(6) + 55", "note": "Substitute $x = 6$ into the model" },
+                { "math": "\\hat{y} = 79", "note": "The predicted score" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Actual vs. Predicted"
+        },
+        {
+          "type": "p",
+          "text": "Real students don't land exactly on the line. The vertical gap—**actual $-$ predicted**—says who beat the model and by how much. One student studied $6$ hours and scored $85$:"
+        },
+        {
+          "type": "graph",
+          "width": 340,
+          "height": 280,
+          "xMin": 0,
+          "xMax": 9,
+          "yMin": 50,
+          "yMax": 92,
+          "stepX": 1,
+          "stepY": 10,
+          "ticks": true,
+          "lines": [{ "m": 4, "b": 55, "tone": "teal" }],
+          "segments": [
+            { "x1": 6, "y1": 79, "x2": 6, "y2": 85, "tone": "green", "dashed": true, "label": "+6", "labelDx": 7, "labelDy": 4 }
+          ],
+          "points": [
+            { "x": 1, "y": 57 }, { "x": 2, "y": 65 }, { "x": 3, "y": 64 },
+            { "x": 4, "y": 73 }, { "x": 5, "y": 72 },
+            { "x": 6, "y": 85, "tone": "green", "label": "(6, 85)", "labelDx": -20, "labelDy": -12 },
+            { "x": 7, "y": 81 }, { "x": 8, "y": 88 }
+          ],
+          "caption": "Actual $85$, predicted $79$: the point sits $\\green{6}$ **above** the line — $6$ points better than predicted.",
+          "alt": "The scatterplot with the point at 6 hours, 85 points highlighted above the fitted line, with a dashed gap of 6"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Point **above** the line → actual $>$ predicted (difference positive). Point **below** → actual $<$ predicted (negative). “Farthest from the line” means the largest vertical gap, sign ignored."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "graph",
+              "width": 320,
+              "height": 260,
+              "xMin": 0,
+              "xMax": 10,
+              "yMin": 0,
+              "yMax": 16,
+              "stepX": 2,
+              "stepY": 4,
+              "ticks": true,
+              "lines": [{ "m": 1, "b": 2, "tone": "teal", "label": "best fit", "labelAt": 8.6, "labelDx": 6, "labelDy": 12 }],
+              "points": [
+                { "x": 2, "y": 7, "tone": "blue", "label": "A", "labelDx": -14, "labelDy": -8 },
+                { "x": 5, "y": 6, "tone": "blue", "label": "B", "labelDx": 8, "labelDy": 14 },
+                { "x": 8, "y": 14, "tone": "blue", "label": "C", "labelDx": -6, "labelDy": -10 },
+                { "x": 9, "y": 10, "tone": "blue", "label": "D", "labelDx": 8, "labelDy": 14 }
+              ],
+              "caption": "Four data points and the line of best fit $\\hat{y} = x + 2$.",
+              "alt": "Scatterplot with four labeled points around the line y equals x plus 2"
+            },
+            {
+              "type": "question",
+              "stem": "For which point does the actual $y$-value differ **most** from the value predicted by the line of best fit?",
+              "choices": ["A", "B", "C", "D"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Predicted $2 + 2 = 4$, actual $7$: a gap of $3$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Predicted $7$, actual $6$: a gap of only $1$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "Predicted $10$, actual $14$: a gap of $4$—the largest vertical distance from the line."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Predicted $11$, actual $10$: a gap of $1$. Being far to the *right* isn't being far from the *line*."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "model-choice",
+      "title": "Choosing the Model",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "When the SAT asks *which kind of model* fits, it's a shape-recognition task—the same fingerprints from the Nonlinear Functions lesson, now worn by data:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Linear",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 195,
+                  "height": 165,
+                  "xMin": 0,
+                  "xMax": 8,
+                  "yMin": 0,
+                  "yMax": 9,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": 1, "b": 1, "tone": "teal" }],
+                  "points": [
+                    { "x": 1, "y": 2.2 }, { "x": 2, "y": 2.8 }, { "x": 3, "y": 4.2 },
+                    { "x": 4, "y": 4.8 }, { "x": 5, "y": 6.2 }, { "x": 6, "y": 6.8 }, { "x": 7, "y": 8.2 }
+                  ],
+                  "caption": "Steady climb — equal steps.",
+                  "alt": "Data points along a straight line"
+                }
+              ]
+            },
+            {
+              "title": "Quadratic",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 195,
+                  "height": 165,
+                  "xMin": 0,
+                  "xMax": 8,
+                  "yMin": 0,
+                  "yMax": 8,
+                  "step": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "vertex", "a": 0.3, "h": 4, "k": 1, "tone": "purple" }],
+                  "points": [
+                    { "x": 0, "y": 6 }, { "x": 1, "y": 3.5 }, { "x": 2, "y": 2.4 },
+                    { "x": 3, "y": 1.2 }, { "x": 4, "y": 1.1 }, { "x": 5, "y": 1.5 },
+                    { "x": 6, "y": 2 }, { "x": 7, "y": 3.9 }, { "x": 8, "y": 5.6 }
+                  ],
+                  "caption": "Falls, turns, rises — a vertex.",
+                  "alt": "Data points in a U shape"
+                }
+              ]
+            },
+            {
+              "title": "Exponential",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 195,
+                  "height": 165,
+                  "xMin": 0,
+                  "xMax": 6,
+                  "yMin": 0,
+                  "yMax": 11,
+                  "stepX": 1,
+                  "stepY": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "exponential", "a": 1, "base": 1.6, "tone": "rose" }],
+                  "points": [
+                    { "x": 0, "y": 1 }, { "x": 1, "y": 1.8 }, { "x": 2, "y": 2.4 },
+                    { "x": 3, "y": 4.3 }, { "x": 4, "y": 6.3 }, { "x": 5, "y": 10 }
+                  ],
+                  "caption": "Slow, then steep — multiplying.",
+                  "alt": "Data points rising along an exponential curve"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "From a table with equal $x$-steps: constant **differences** → linear model; constant **ratios** → exponential model; differences that shrink then grow (or a visible turn) → quadratic."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "table",
+              "compact": true,
+              "headers": ["$x$", "$y$"],
+              "align": ["center", "center"],
+              "rows": [
+                ["$0$", "$3$"],
+                ["$1$", "$6$"],
+                ["$2$", "$12$"],
+                ["$3$", "$24$"]
+              ]
+            },
+            {
+              "type": "question",
+              "stem": "The table shows values from a data set. Which type of model best fits the data?",
+              "choices": [
+                "Increasing exponential",
+                "Increasing linear",
+                "Decreasing exponential",
+                "Quadratic with a minimum"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Each step **doubles** $y$: ratios $\\frac{6}{3} = \\frac{12}{6} = \\frac{24}{12} = 2$. Constant ratio, growing values—exponential growth, $y = 3 \\cdot 2^x$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Linear needs constant differences; these are $3, 6, 12$—growing, not constant."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The values rise; decay falls."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "A quadratic with a minimum would fall before it rises—these values only climb, and by ratios, not by a turning pattern."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Growth by **adding** (“$120$ more members each year”) → linear. Growth by **multiplying** (“increases $8\\%$ each year”, “doubles”) → exponential. The verbs in the question tell you the model."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Name the job—trend, interpretation, prediction, gap-to-line, or model choice—then keep units and “predicted” language in view."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 320,
+                  "height": 245,
+                  "xMin": 0,
+                  "xMax": 20,
+                  "yMin": 0,
+                  "yMax": 45,
+                  "stepX": 5,
+                  "stepY": 10,
+                  "ticks": true,
+                  "xLabel": "t",
+                  "yLabel": "c",
+                  "points": [
+                    { "x": 2, "y": 38 }, { "x": 4, "y": 35 }, { "x": 6, "y": 30 },
+                    { "x": 8, "y": 31 }, { "x": 10, "y": 25 }, { "x": 12, "y": 20 },
+                    { "x": 14, "y": 21 }, { "x": 16, "y": 14 }, { "x": 18, "y": 10 }
+                  ],
+                  "caption": "Outdoor temperature $t$ (°C) and cups of hot chocolate sold $c$ at a cafe on nine days.",
+                  "alt": "Scatterplot of hot chocolate sales versus temperature, trending downward"
+                },
+                {
+                  "type": "question",
+                  "stem": "Which statement about the data in the scatterplot is true?",
+                  "choices": [
+                    "As temperature increases, sales tend to decrease",
+                    "As temperature increases, sales tend to increase",
+                    "Temperature and sales show no association",
+                    "Selling less hot chocolate causes the temperature to rise"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The cloud falls steadily from left to right—warm days, few cups."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "A clear negative association, stated as a tendency. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The trend runs the other way."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "The downward drift is unmistakable—“no association” would look like a formless cloud."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Backwards *and* causal: the data can't establish causation in either direction—it only shows the variables moving together."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The model $h = 12w + 30$ predicts the height $h$, in millimeters, of a seedling $w$ weeks after planting. Which is the best interpretation of the number $12$ in this context?",
+                  "choices": [
+                    "The predicted increase in height, in millimeters, each week",
+                    "The height of the seedling, in millimeters, when it was planted",
+                    "The predicted height, in millimeters, after one week",
+                    "The number of weeks it takes the seedling to double in height"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The $12$ multiplies $w$ (weeks), so its units are millimeters **per week**—the slope's predicted weekly growth."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Slope grammar: predicted change in $h$ per one unit of $w$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The height at planting ($w = 0$) is the intercept, $30$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "The predicted height after one week is $12(1) + 30 = 42$ mm—the whole expression, not the $12$ alone."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$12$ is in millimeters per week, not weeks—units rule it out."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A line of best fit for a data set is $\\hat{y} = 3x + 20$. One of the data points is $(10, 44)$. What is the actual $y$-value **minus** the value predicted by the model at $x = 10$?",
+                  "choices": ["$-6$", "$6$", "$44$", "$50$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.**"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\hat{y} = 3(10) + 20 = 50", "note": "Predicted value at $x = 10$" },
+                    { "math": "44 - 50 = -6", "note": "Actual minus predicted — the point sits $6$ **below** the line" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Negative, because the actual value fell short of the prediction. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$+6$ subtracts in the wrong order—sign carries meaning here (above vs. below the line)."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$44$ is the actual value alone; the question asks for the comparison."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$50$ is the predicted value alone—one input to the subtraction, not its result."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "table",
+                  "compact": true,
+                  "headers": ["$x$", "$y$"],
+                  "align": ["center", "center"],
+                  "rows": [
+                    ["$0$", "$80$"],
+                    ["$1$", "$40$"],
+                    ["$2$", "$20$"],
+                    ["$3$", "$10$"]
+                  ]
+                },
+                {
+                  "type": "question",
+                  "stem": "Which type of model best fits the data in the table?",
+                  "choices": [
+                    "Decreasing exponential",
+                    "Decreasing linear",
+                    "Increasing exponential",
+                    "Quadratic with a maximum"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Each step **halves** $y$: ratios of $\\frac{1}{2}$ throughout—constant ratio, shrinking values. The model is $y = 80 \\left(\\tfrac{1}{2}\\right)^x$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Constant ratio $\\frac{40}{80} = \\frac{20}{40} = \\frac{10}{20} = \\frac{1}{2}$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Linear decay needs equal drops; these drops are $40, 20, 10$—shrinking, not constant."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "The values fall; growth rises."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "A quadratic with a maximum rises before it falls—this data only falls, and by ratios."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Read the **axes and units** before anything else. Association: cloud rises → positive, falls → negative, formless → none.",
+            "The line of best fit is the trend's summary—**predict from the line**, not from individual points.",
+            "Slope: predicted change in $y$ per one unit of $x$. Y-intercept: predicted $y$ at $x = 0$. Interpretations must match the units and say “predicted.”",
+            "**Actual $-$ predicted**: positive above the line, negative below; “farthest from the line” = largest vertical gap.",
+            "Model choice: equal differences → linear; equal ratios → exponential; a turn (peak or valley) → quadratic.",
+            "Association is never causation, and trends are tendencies—reject choices with “causes,” “exactly,” or “every.”"
+          ]
+        }
+      ]
+    }
+  ]
+}

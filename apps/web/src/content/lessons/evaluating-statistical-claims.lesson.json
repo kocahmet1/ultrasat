@@ -1,0 +1,511 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "evaluating-statistical-claims",
+  "title": "Evaluating Statistical Claims",
+  "estimatedMinutes": 25,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Evaluating Statistical Claims",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "These questions describe a study and ask what it actually proves. The whole skill rests on one insight: **“random” appears in study design twice, doing two completely different jobs**—and each job earns a different kind of conclusion."
+        },
+        {
+          "type": "table",
+          "headers": ["Ingredient", "What it means", "What it earns"],
+          "rows": [
+            ["{blue|Random selection} (sampling)", "participants drawn at random **from a population**", "the right to **generalize** results to that population"],
+            ["{teal|Random assignment} (to groups)", "participants split at random **into treatment groups**", "the right to conclude **cause and effect**"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Classify the study first:** did researchers *assign* treatments (experiment), or just observe and measure (observational study)?",
+            "**Match the verbs to the design:** observational → “is associated with”; randomized experiment → “likely causes.”",
+            "**Check both randoms separately.** Random selection without assignment generalizes but can't prove cause; random assignment of volunteers proves cause but only for people like the participants.",
+            "**Hunt the confounder** in observational claims: what third factor could drive both variables?",
+            "**Pick the strongest conclusion the design supports—and no stronger.** Overreach and underreach are both wrong."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Two-question checklist for every study: **Who got sampled, and how? Who got assigned, and how?** The answers dictate the conclusion almost mechanically."
+        }
+      ]
+    },
+    {
+      "id": "observational-vs-experiment",
+      "title": "Observational Studies vs. Experiments",
+      "blocks": [
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Observational study",
+              "blocks": [
+                {
+                  "type": "p",
+                  "text": "Researchers **measure what's already happening**—no one is told what to do. *Survey adults about their coffee habits and their sleep.*"
+                },
+                {
+                  "type": "p",
+                  "text": "Can show: an {blue|association} between variables."
+                }
+              ]
+            },
+            {
+              "title": "Experiment",
+              "blocks": [
+                {
+                  "type": "p",
+                  "text": "Researchers **randomly assign** participants to treatments. *Assign half to regular coffee, half to decaf; compare sleep.*"
+                },
+                {
+                  "type": "p",
+                  "text": "Can show: {teal|cause and effect}—if assignment was random."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Why Observation Can't Prove Cause"
+        },
+        {
+          "type": "p",
+          "text": "Suppose heavy coffee drinkers in a survey sleep worse. Did coffee cause it? Maybe—or maybe people with **stressful jobs** both drink more coffee *and* sleep worse. That lurking third factor is a {rose|confounding variable}, and observation alone can never rule it out. Random assignment can: splitting people into groups by coin flip spreads the stressful jobs (and every other hidden factor) evenly across both groups, leaving the treatment as the only systematic difference."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Researchers survey $500$ randomly selected adults about how often they exercise and how they rate their mood. Which best describes this study?",
+              "choices": [
+                "An observational study, because no treatment was assigned to participants",
+                "An experiment, because the participants were selected at random",
+                "An experiment, because the sample size is large",
+                "Neither, because mood cannot be measured"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Everyone kept their own habits; researchers only measured. Observation—despite the random sampling."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The trap this page exists for: random **selection** is about who gets surveyed. An experiment requires random **assignment** to treatments."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Size changes precision, never study type."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Self-reported ratings are measured in studies constantly—measurability isn't the issue."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "“Randomly selected” does **not** make a study an experiment. Ask what happened *after* selection: assigned to groups, or just observed?"
+        }
+      ]
+    },
+    {
+      "id": "conclusions-grid",
+      "title": "What Conclusions Does a Design Support?",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Cross the two ingredients and every study lands in one of four boxes:"
+        },
+        {
+          "type": "table",
+          "headers": ["", "{teal|Random assignment}", "No random assignment"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["{blue|Random selection}", "**cause**, generalizable to the population", "**association**, generalizable to the population"],
+            ["No random selection", "**cause**, but only for the participants (and people like them)", "**association**, among the participants only"]
+          ],
+          "caption": "Assignment controls the *cause* column; selection controls how far the result travels."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Causation requires **random assignment**. Generalization requires **random selection**. Each “random” buys exactly one, never both."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Researchers recruit $2{,}000$ **volunteers** with insomnia and randomly assign half to a new sleep program and half to a waiting list. After eight weeks, the program group sleeps $45$ minutes longer per night on average. What's supported?"
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "The program **likely caused** the sleep improvement among the participants.",
+                  "note": "Random assignment ✓ — comparable groups make the program the credible explanation."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "The program will improve sleep for **all adults with insomnia**.",
+                  "note": "The participants were volunteers, not a random sample of that population—the causal result stays with people like them."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A botanist randomly selects $400$ tomato plants from the thousands in a greenhouse, then randomly assigns half to receive Fertilizer X and half to receive no fertilizer. After a month, the Fertilizer X plants are substantially taller on average. Which is the best conclusion?",
+              "choices": [
+                "Fertilizer X is likely the cause of the greater growth for plants in this greenhouse",
+                "Fertilizer X is associated with greater growth, but no causal conclusion can be drawn",
+                "Fertilizer X will cause greater growth for all tomato plants everywhere",
+                "No conclusion can be drawn, because plants respond differently to fertilizer"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Both randoms present: assignment earns **cause**, selection earns generalization to **this greenhouse's** plants. The strongest supported claim—and not a syllable stronger."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Underreach: with random assignment, “association only” throws away exactly what the design paid for."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Overreach: the sample came from one greenhouse—“everywhere” was never sampled."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Variation between individual plants is why the study compares *group averages*—it doesn't void the conclusion."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "The right answer is usually the **Goldilocks** choice: one option too strong, one too weak, one derailing—and one that claims precisely what the two randoms bought."
+        }
+      ]
+    },
+    {
+      "id": "spot-the-flaw",
+      "title": "Spot the Flaw",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "When a claim outruns its study, the SAT asks *why it isn't justified*. The usual suspects:"
+        },
+        {
+          "type": "table",
+          "headers": ["Flaw", "What it looks like", "What it wrecks"],
+          "rows": [
+            ["{rose|Self-selection}", "volunteers, reply-if-you-want surveys, product reviewers", "the sample represents no one but itself"],
+            ["{rose|No control group}", "everyone got the treatment; “they improved!”", "improvement can't be attributed—maybe everyone improves"],
+            ["{rose|Confounding variable}", "a third factor tied to both variables", "the causal story has a rival explanation"],
+            ["{rose|Population overreach}", "sampled one group, concluded about a bigger one", "the generalization"],
+            ["{rose|Tiny sample}", "a handful of participants", "precision — the margin of error balloons"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A vitamin company emails a survey to its customers; $90$ reply, and $62\\%$ of them report feeling healthier since starting the vitamin. The company claims its vitamin improves health for adults. Which statement best explains why the claim is **not** justified?",
+              "choices": [
+                "The sample was not randomly selected from the population of adults, so the results may not represent adults in general",
+                "The sample size of 90 is too small for any statistical conclusion",
+                "The percentage 62% is too close to one-half to mean anything",
+                "The survey should have been conducted by phone rather than by email"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Two layers of bias: only *customers* were emailed, and only the *willing* replied. No random selection → no reach beyond respondents—and with no comparison group, even “feeling healthier” has no benchmark."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Size is the lesser problem: $90$ randomly selected adults could support a (wide) estimate. A **biased** sample of $90{,}000$ still couldn't."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$62\\%$ is a perfectly usable statistic; the issue is *whose* $62\\%$ it is."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Changing the medium changes nothing about who was invited or who chose to answer."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "When flaws compete, **bias beats size**. The SAT's favorite wrong answer blames the sample size when the real problem is that the sample was never random."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Run the checklist on each study—random selection? random assignment?—then find the conclusion that spends exactly what the design earned."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A nutritionist randomly assigns each of $60$ participants to one of two breakfast plans and measures their reported energy levels after two weeks. Which best describes this study?",
+                  "choices": [
+                    "An experiment, because participants were randomly assigned to treatments",
+                    "An observational study, because energy levels were only reported",
+                    "An experiment, because numerical data was collected",
+                    "An observational study, because participants knew which plan they followed"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The defining act of an experiment happened: the researcher **assigned** the treatments, at random."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Random assignment → comparable groups → the study can support causal comparisons of the plans."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "How the outcome is measured (even self-reported) doesn't decide the type—assignment does."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Observational studies collect numbers too; data type is irrelevant to design."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Participants' awareness may matter for *blinding*, but the study is still an experiment."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A study of $1{,}200$ randomly selected adults finds that those who nap at least three times per week report lower stress than those who don't nap. Which is the best conclusion?",
+                  "choices": [
+                    "For adults, frequent napping is associated with lower reported stress",
+                    "Frequent napping causes lower stress in adults",
+                    "The association holds only for the 1,200 adults surveyed",
+                    "No conclusion is possible without knowing why people nap"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Random selection ✓, random assignment ✗ → an **association** that **generalizes** to adults. Exactly that, no more, no less."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "The Goldilocks conclusion for the top-right box of the grid."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Nobody was assigned to nap—confounders (flexible schedules, less demanding jobs) could drive both variables. No causation."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Underreach: random selection is precisely the license to extend the association to the adult population."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Unknown motives block *causal* claims, not associational ones—the pattern itself is a finding."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Researchers recruit adult **volunteers** who experience frequent headaches and randomly assign each to receive either a new medication or a placebo. The medication group reports significantly fewer headaches. Which is the best conclusion?",
+                  "choices": [
+                    "The medication likely caused the reduction in headaches for participants, and for people similar to them",
+                    "The medication will reduce headaches for all adults",
+                    "The medication is associated with fewer headaches, but causation cannot be concluded",
+                    "The placebo group's results should be discarded"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Random assignment ✓ earns causation; volunteer recruitment ✗ limits the reach to the participants and people like them—the bottom-left box of the grid."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Cause: yes. Reach: limited. Both randoms accounted for."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "“All adults” needs random selection from all adults—volunteers with headaches aren't that."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Underreach: with random assignment and a placebo control, causal language is exactly what the design supports."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The placebo group is the **comparison** that makes the result meaningful—discarding it would destroy the study."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A principal notices that students who chose to use a study app have higher grades than students who didn't, and wants to determine whether the app **causes** higher grades. Which change to the study design would best support such a conclusion?",
+                  "choices": [
+                    "Randomly assign students to use the app or not, then compare grades",
+                    "Survey a larger number of students who already use the app",
+                    "Ask the app's users how satisfied they are with it",
+                    "Compare the app users' grades with those of last year's students"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The current design is observational with self-selection—motivated students may both choose the app *and* earn higher grades. Random assignment spreads motivation (and every other hidden factor) evenly, isolating the app's effect."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Random assignment is the only listed change that removes the confounding—the coin flip, not the student, decides."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "More of a self-selected group is more of the same bias—size never fixes selection."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Satisfaction measures opinion of the app, not its effect on grades."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Last year's students differ in courses, teachers, and cohort—swapping one non-comparable group for another."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Two randoms, two jobs: {blue|random selection} → **generalize** to the population; {teal|random assignment} → **cause and effect**. Each buys one, never both.",
+            "Experiment = researchers assign treatments; observational study = researchers only measure. Random *selection* alone does not make an experiment.",
+            "Observational findings are **associations**—a confounding third variable can always be driving both sides.",
+            "Volunteers cap the reach: causal results from assigned volunteers apply to the participants and people like them.",
+            "Flawed-claim questions: **bias beats size**—look for self-selection, missing control groups, and population overreach before blaming sample size.",
+            "Choose the Goldilocks conclusion: everything the design earned, and nothing it didn't."
+          ]
+        }
+      ]
+    }
+  ]
+}

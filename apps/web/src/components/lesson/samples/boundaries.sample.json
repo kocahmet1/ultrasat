@@ -1,0 +1,104 @@
+{
+  "subcategoryId": "boundaries",
+  "subcategoryName": "Boundaries",
+  "source": "hand-authored-demo-p2d",
+  "blocks": [
+    {
+      "type": "html",
+      "html": "<p>Boundaries questions test one thing: the punctuation that joins, separates, or interrupts clauses. Every answer choice keeps the same words and changes only the marks — so the whole question lives at one <strong>seam</strong> in the sentence.</p>"
+    },
+    {
+      "type": "rule",
+      "title": "The boundary rule",
+      "text": [
+        "Find the seam — the spot where the answer choices differ — and test each side of it alone. If [u]both[/u] sides can stand alone as complete sentences (independent clauses), you must use a period, a semicolon, or a comma plus a FANBOYS word (for, and, nor, but, or, yet, so).",
+        "If either side cannot stand alone, those three strong joints are all wrong — you need a comma or nothing at all."
+      ]
+    },
+    {
+      "type": "annotated-example",
+      "title": "Anatomy of a legal colon",
+      "intro": "The SAT's favorite boundary trap is the colon. Read how each part of this sentence earns its punctuation:",
+      "segments": [
+        { "text": "The reef survey produced a surprising result", "marker": 1, "tone": "accent" },
+        { "text": ":", "marker": 2, "tone": "plain" },
+        " ",
+        { "text": "coral cover had increased in every protected zone", "marker": 3, "tone": "accent" },
+        "."
+      ],
+      "markers": [
+        { "n": 1, "label": "A complete sentence — subject (survey) plus verb (produced). The colon is legal only because this half could end with a period." },
+        { "n": 2, "label": "The colon acts as a gate: it promises that what follows will name or explain the \"surprising result.\"" },
+        { "n": 3, "label": "The payoff. After a legal colon, anything may follow — a list, a phrase, or, as here, another complete sentence." }
+      ],
+      "note": "Test a colon by covering everything after it. If what remains is not a sentence you could end with a period, the colon is wrong — no matter how natural it sounds."
+    },
+    {
+      "type": "check-cross",
+      "title": "Colon setup: complete sentence required",
+      "wrong": {
+        "text": "The survey measured: coral cover, fish density, and water clarity.",
+        "why": "\"The survey measured\" is not a complete sentence — the verb is left hanging without its object. A colon can never interrupt a clause that is still in progress."
+      },
+      "correct": {
+        "text": "The survey measured three variables: coral cover, fish density, and water clarity.",
+        "why": "\"The survey measured three variables\" stands alone as a complete sentence, so the colon legally introduces the list that names those variables."
+      }
+    },
+    {
+      "type": "rule",
+      "title": "Semicolon = period in disguise",
+      "text": "A semicolon joins two independent clauses, exactly like a period does. If you could not put a period at the seam, you cannot put a semicolon there either. A comma alone between two independent clauses is always wrong — that error is called a comma splice, and the SAT plants it in the choices on nearly every boundaries question."
+    },
+    {
+      "type": "check-cross",
+      "title": "Comma splice vs. semicolon",
+      "wrong": {
+        "text": "The zone was protected in 2019, coral cover rose within two seasons.",
+        "why": "Both halves are independent clauses, and a comma alone cannot join them — this is a comma splice. To keep the comma, you would need a FANBOYS word after it (\", and coral cover rose\")."
+      },
+      "correct": {
+        "text": "The zone was protected in 2019; coral cover rose within two seasons.",
+        "why": "The semicolon is a legal joint between two related independent clauses — each side could stand alone as its own sentence."
+      }
+    },
+    {
+      "type": "steps",
+      "title": "Worked example",
+      "intro": "Marine biologist Ana Ruiz spent a decade mapping the reef's recovery ______ her data now guides marine-park policy in three countries.  (A) recovery, her  (B) recovery her  (C) recovery, and, her  (D) recovery; her",
+      "steps": [
+        {
+          "label": "Find the seam",
+          "content": "The choices differ only at the boundary between \"recovery\" and \"her data.\" Same words, different marks — this is a boundaries question, so ignore meaning and test the clauses."
+        },
+        {
+          "label": "Test the left side",
+          "content": "\"Marine biologist Ana Ruiz spent a decade mapping the reef's recovery\" has a subject (Ana Ruiz) and a main verb (spent). It could end with a period — independent clause."
+        },
+        {
+          "label": "Test the right side",
+          "content": "\"Her data now guides marine-park policy in three countries\" also has a subject (data) and a verb (guides) — a second independent clause."
+        },
+        {
+          "label": "Apply the rule, eliminate",
+          "content": "IC + IC needs a period, a semicolon, or comma + FANBOYS. (A) is a comma splice. (B) fuses the clauses with nothing at all — a run-on. (C) buries \"and\" between two commas, which joins nothing.",
+          "note": "Notice that every wrong choice fails the same one rule — you never had to weigh style or tone."
+        },
+        {
+          "label": "Answer: (D) recovery; her",
+          "content": "The semicolon is the only legal joint offered between the two independent clauses."
+        }
+      ]
+    },
+    {
+      "type": "remember",
+      "items": [
+        "Choices that keep the words and change only the punctuation mean one thing: test the seam, not the meaning.",
+        "Period, semicolon, and comma + FANBOYS are interchangeable joints — all three require an independent clause on [u]both[/u] sides.",
+        "A comma alone between two independent clauses is a comma splice. It is never correct on the SAT.",
+        "A colon must follow a complete sentence; what follows the colon can be anything — list, phrase, or full clause.",
+        "Interrupters need matching punctuation on both sides: two commas or two dashes, never one of each."
+      ]
+    }
+  ]
+}

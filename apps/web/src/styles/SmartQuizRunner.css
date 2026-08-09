@@ -1,0 +1,821 @@
+/* SmartQuizRunner.css — Khan-Academy-inspired redesign of the SmartQuiz runner.
+   Single centered column, hairline option rows, quiet fixed footer with
+   progress dots, and a bottom-right feedback popover after "Check".
+
+   Scope: every class here is prefixed `sqr-` and used ONLY by pages/SmartQuiz.jsx.
+   GuestSmartQuiz still uses the legacy styles/SmartQuiz.css — do not cross-import.
+   Colors/fonts come from tokens.css (imported globally in index.jsx). */
+
+/* ---------- root & top bar ------------------------------------------------ */
+
+.sqr-root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ut-card);
+  color: var(--ut-text);
+  font-family: var(--ut-font-body);
+}
+
+.sqr-top {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  height: 54px;
+  padding: 0 18px;
+  background: var(--ut-panel-top);
+  color: var(--ut-on-ink);
+}
+
+.sqr-brand {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: none;
+  color: var(--ut-on-ink-bright);
+  font-family: var(--ut-font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+
+.sqr-brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--ut-accent) 0%, var(--ut-accent-bright) 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.25);
+}
+
+.sqr-top-skill {
+  justify-self: center;
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-on-ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40vw;
+}
+
+.sqr-top-right {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sqr-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--ut-rule-on-ink);
+  font-family: var(--ut-font-mono);
+  font-size: 12.5px;
+  color: var(--ut-on-ink);
+}
+
+.sqr-timer--low {
+  border-color: var(--ut-danger);
+  color: #FFD9D9;
+  animation: sqr-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes sqr-pulse {
+  50% { opacity: 0.55; }
+}
+
+.sqr-exit {
+  border: 1px solid var(--ut-rule-on-ink);
+  background: none;
+  color: var(--ut-on-ink);
+  font-family: var(--ut-font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--ut-radius-sm);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sqr-exit:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- main column --------------------------------------------------- */
+
+.sqr-main {
+  flex: 1;
+}
+
+.sqr-column {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 36px 24px 140px; /* bottom clears the fixed footer + popover */
+}
+
+.sqr-skill-title {
+  margin: 0;
+  text-align: center;
+  font-family: var(--ut-font-display);
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ut-text);
+}
+
+/* difficulty chip + bookmark, quietly centered under the title (Khan puts its
+   share links here) */
+.sqr-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.sqr-difficulty {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sqr-difficulty.easy   { background: var(--ut-success-soft); color: var(--ut-success-dark); }
+.sqr-difficulty.medium { background: var(--ut-warn-soft);    color: var(--ut-warn-dark); }
+.sqr-difficulty.hard   { background: var(--ut-danger-soft);  color: var(--ut-danger-dark); }
+
+.sqr-bookmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  color: var(--ut-muted);
+  font-family: var(--ut-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: var(--ut-radius-sm);
+  transition: color 0.15s ease;
+}
+
+.sqr-bookmark:hover:not(:disabled) { color: var(--ut-accent-dark); }
+.sqr-bookmark:disabled { opacity: 0.5; cursor: default; }
+.sqr-bookmark.is-saved { color: var(--ut-accent-dark); }
+.sqr-bookmark svg { font-size: 15px; }
+
+.sqr-rule {
+  border: 0;
+  border-top: 1px solid var(--ut-rule);
+  margin: 24px 0 30px;
+}
+
+/* ---------- question body ------------------------------------------------- */
+
+.sqr-passage,
+.sqr-prompt {
+  font-family: var(--ut-font-serif);
+  font-size: 17px;
+  line-height: 1.68;
+  color: var(--ut-text);
+}
+
+.sqr-passage p, .sqr-prompt p { margin: 0 0 14px; }
+.sqr-passage p:last-child, .sqr-prompt p:last-child { margin-bottom: 0; }
+.sqr-passage u { text-underline-offset: 3px; }
+
+.sqr-prompt { margin-top: 18px; }
+
+.sqr-graph {
+  display: flex;
+  justify-content: center;
+  margin: 22px 0;
+}
+
+.sqr-graph img {
+  max-width: 100%;
+  max-height: 360px;
+  border-radius: var(--ut-radius);
+  border: 1px solid var(--ut-rule);
+}
+
+.sqr-choose {
+  margin: 26px 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+/* ---------- options (the centerpiece) ------------------------------------- */
+
+.sqr-options {
+  margin: 10px 0 0;
+}
+
+/* Idle: hairline-separated rows, Khan style. */
+.sqr-option {
+  border-top: 1px solid var(--ut-rule);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, margin 0.15s ease;
+}
+
+.sqr-option:last-child { border-bottom: 1px solid var(--ut-rule); }
+
+.sqr-option-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  border: 0;
+  background: none;
+  text-align: left;
+  padding: 15px 12px;
+  border-radius: var(--ut-radius-sm);
+  cursor: pointer;
+  transition: background 0.13s ease;
+}
+
+.sqr-option-btn:focus-visible {
+  outline: 2px solid var(--ut-accent);
+  outline-offset: -2px;
+}
+
+.sqr-option:not(.is-revealed) .sqr-option-btn:hover:not(:disabled) {
+  background: #F3F6FD;
+}
+
+.sqr-option-letter {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 1.6px solid var(--ut-rule-strong);
+  font-family: var(--ut-font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ut-text-soft);
+  transition: all 0.13s ease;
+}
+
+.sqr-option-btn:hover:not(:disabled) .sqr-option-letter {
+  border-color: var(--ut-accent);
+  color: var(--ut-accent-dark);
+}
+
+.sqr-option-text {
+  flex: 1;
+  font-family: var(--ut-font-serif);
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ut-text);
+  padding-top: 2px;
+  transition: color 0.13s ease;
+}
+
+/* Selected (pre-check): blue letter + blue text, like Khan. */
+.sqr-option.is-selected .sqr-option-letter {
+  background: var(--ut-accent);
+  border-color: var(--ut-accent);
+  color: var(--ut-on-accent);
+}
+
+.sqr-option.is-selected .sqr-option-text { color: var(--ut-accent-dark); }
+
+/* Post-check: rows become spaced verdict boxes. */
+.sqr-option.is-revealed { border-top-color: transparent; }
+.sqr-option.is-revealed + .sqr-option { border-top-color: transparent; }
+.sqr-option.is-revealed:last-child { border-bottom-color: transparent; }
+
+.sqr-option.is-revealed .sqr-option-btn { cursor: default; }
+
+.sqr-option.is-correct,
+.sqr-option.is-wrong-pick {
+  margin: 10px 0;
+  border-radius: var(--ut-radius);
+  background: var(--ut-card);
+}
+
+.sqr-option.is-correct {
+  box-shadow: inset 0 0 0 2px var(--ut-success);
+}
+
+.sqr-option.is-wrong-pick {
+  box-shadow: inset 0 0 0 2px var(--ut-danger);
+}
+
+.sqr-option.is-correct .sqr-option-letter {
+  background: var(--ut-success);
+  border-color: var(--ut-success);
+  color: #fff;
+}
+
+.sqr-option.is-wrong-pick .sqr-option-letter {
+  background: var(--ut-danger);
+  border-color: var(--ut-danger);
+  color: #fff;
+}
+
+/* Revealed options that are neither the pick nor the key stay fully
+   readable — each now carries a rebuttal note the student is meant to read
+   against its text. Only the letter badge recedes. */
+.sqr-option.is-muted .sqr-option-text {
+  color: var(--ut-text-soft);
+}
+.sqr-option.is-muted .sqr-option-letter {
+  opacity: 0.6;
+}
+
+.sqr-option-verdict {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.sqr-option.is-correct .sqr-option-verdict { color: var(--ut-success); }
+.sqr-option.is-wrong-pick .sqr-option-verdict { color: var(--ut-danger); }
+
+/* P2-B peer chip: "% of students chose this", post-check only. */
+.sqr-option-peer {
+  flex: none;
+  margin-top: 5px;
+  font-family: var(--ut-font-mono);
+  font-size: 11.5px;
+  color: var(--ut-mono-muted);
+}
+
+/* Per-choice note (Khan shows the rebuttal directly under each option).
+   Styled as a labeled annotation so it cannot be mistaken for choice text:
+   a small mono kicker over a barely-there wash of the state color. Kept
+   deliberately mellow — no rules/borders, tints mixed well toward white.
+   (color-mix lines soften further where supported; the plain declaration
+   above each is the fallback.) */
+.sqr-option-note {
+  margin: 0 14px 14px 53px;
+  padding: 9px 12px 10px;
+  font-family: var(--ut-font-body);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ut-text-soft);
+  background: var(--ut-card-soft);
+  border-radius: var(--ut-radius-sm);
+}
+
+.sqr-option-note::before {
+  content: 'Why it\'s wrong';
+  display: block;
+  font-family: var(--ut-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 4px;
+}
+
+.sqr-option-note strong { color: var(--ut-text); }
+
+.sqr-option.is-correct .sqr-option-note {
+  background: var(--ut-success-soft);
+  background: color-mix(in srgb, var(--ut-success-soft) 45%, var(--ut-card));
+}
+.sqr-option.is-correct .sqr-option-note::before {
+  content: 'Why it\'s correct';
+  color: var(--ut-mono-muted);
+  color: color-mix(in srgb, var(--ut-success-dark) 55%, var(--ut-mono-muted));
+}
+
+.sqr-option.is-wrong-pick .sqr-option-note {
+  background: var(--ut-danger-soft);
+  background: color-mix(in srgb, var(--ut-danger-soft) 45%, var(--ut-card));
+}
+.sqr-option.is-wrong-pick .sqr-option-note::before {
+  content: 'Why it\'s wrong \2014  your answer';
+  color: var(--ut-mono-muted);
+  color: color-mix(in srgb, var(--ut-danger-dark) 55%, var(--ut-mono-muted));
+}
+
+.sqr-option.is-muted .sqr-option-note { color: var(--ut-text-soft); }
+
+/* ---------- grid-in (user input) ------------------------------------------ */
+
+.sqr-input-wrap { margin: 18px 0 6px; }
+
+.sqr-input-instructions {
+  font-size: 14px;
+  color: var(--ut-text-soft);
+  margin-bottom: 12px;
+}
+
+.sqr-input {
+  width: 230px;
+  padding: 12px 14px;
+  border: 1.6px solid var(--ut-rule-strong);
+  border-radius: var(--ut-radius-sm);
+  font-family: var(--ut-font-mono);
+  font-size: 16px;
+  color: var(--ut-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sqr-input:focus {
+  outline: none;
+  border-color: var(--ut-accent);
+  box-shadow: 0 0 0 3px var(--ut-accent-soft);
+}
+
+.sqr-input--correct { border-color: var(--ut-success); box-shadow: 0 0 0 3px var(--ut-success-soft); }
+.sqr-input--incorrect { border-color: var(--ut-danger); box-shadow: 0 0 0 3px var(--ut-danger-soft); }
+.sqr-input:disabled { background: var(--ut-card-soft); }
+
+.sqr-input-hint {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--ut-muted);
+}
+
+/* ---------- post-check feedback area -------------------------------------- */
+
+.sqr-reveal {
+  margin-top: 18px;
+  animation: sqr-fade-in 0.25s ease;
+}
+
+@keyframes sqr-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.sqr-peerline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ut-muted);
+  padding: 10px 2px;
+}
+
+.sqr-peerline svg { flex: none; font-size: 14px; }
+.sqr-peerline-time { color: var(--ut-mono-muted); }
+
+.sqr-explain-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  padding: 10px 2px;
+  font-family: var(--ut-font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ut-accent-dark);
+  cursor: pointer;
+}
+
+.sqr-explain-toggle:hover { text-decoration: underline; }
+.sqr-explain-toggle svg { transition: transform 0.18s ease; }
+.sqr-explain-toggle.is-open svg { transform: rotate(180deg); }
+
+.sqr-explain {
+  margin-top: 6px;
+  animation: sqr-fade-in 0.25s ease;
+}
+
+/* "Report a problem", Khan-style quiet link under the question. */
+.sqr-under-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 26px;
+}
+
+.sqr-report-link {
+  border: 0;
+  background: none;
+  font-size: 12.5px;
+  color: var(--ut-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.sqr-report-link:hover { color: var(--ut-text); }
+
+/* ---------- feedback popover (bottom-right, above the footer) -------------- */
+
+.sqr-popover {
+  position: fixed;
+  right: 22px;
+  bottom: 86px;
+  z-index: 60;
+  width: 270px;
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-lg);
+  padding: 16px;
+  animation: sqr-pop-in 0.28s cubic-bezier(0.2, 0.9, 0.35, 1.2);
+}
+
+@keyframes sqr-pop-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+.sqr-popover-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sqr-popover-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 17px;
+}
+
+.sqr-popover-icon.correct { background: var(--ut-success); color: #fff; }
+.sqr-popover-icon.incorrect { background: var(--ut-danger-soft); color: var(--ut-danger); }
+.sqr-popover-icon.omitted { background: var(--ut-bg-alt); color: var(--ut-muted); }
+
+.sqr-popover-title {
+  flex: 1;
+  font-family: var(--ut-font-display);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+.sqr-popover-sub {
+  margin: 4px 0 0 44px;
+  font-size: 13px;
+  color: var(--ut-text-soft);
+}
+
+.sqr-popover-link {
+  display: inline-block;
+  margin: 8px 0 0 44px;
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ut-accent-dark);
+  cursor: pointer;
+}
+
+.sqr-popover-link:hover { text-decoration: underline; }
+
+.sqr-popover-close {
+  flex: none;
+  align-self: flex-start;
+  border: 0;
+  background: none;
+  color: var(--ut-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.sqr-popover-close:hover { color: var(--ut-text); background: var(--ut-bg-alt); }
+
+/* ---------- fixed footer --------------------------------------------------- */
+
+.sqr-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 55;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+  height: 66px;
+  padding: 0 20px;
+  background: var(--ut-card);
+  border-top: 1px solid var(--ut-rule);
+}
+
+.sqr-footer-left { justify-self: start; }
+.sqr-footer-right {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sqr-prev {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: none;
+  font-family: var(--ut-font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ut-text-soft);
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: var(--ut-radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.sqr-prev:hover:not(:disabled) { color: var(--ut-text); background: var(--ut-bg-alt); }
+.sqr-prev:disabled { opacity: 0.35; cursor: default; }
+
+.sqr-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sqr-progress-count {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ut-text);
+  white-space: nowrap;
+}
+
+.sqr-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sqr-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.6px solid var(--ut-rule-strong);
+  background: transparent;
+  transition: all 0.15s ease;
+}
+
+.sqr-dot.is-current {
+  border-color: var(--ut-accent);
+  background: var(--ut-accent);
+  box-shadow: 0 0 0 3px var(--ut-accent-soft);
+}
+
+.sqr-dot.is-answered {
+  border-color: var(--ut-text-soft);
+  background: var(--ut-text-soft);
+}
+
+.sqr-dot.is-correct,
+.sqr-dot.is-incorrect,
+.sqr-dot.is-omitted {
+  width: auto;
+  height: auto;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  box-shadow: none;
+}
+
+.sqr-dot.is-correct { color: var(--ut-success); }
+.sqr-dot.is-incorrect { color: var(--ut-text-soft); }
+.sqr-dot.is-omitted { color: var(--ut-rule-strong); }
+
+/* the current question keeps its ring even when it already has a verdict */
+.sqr-dot.is-correct.is-current,
+.sqr-dot.is-incorrect.is-current,
+.sqr-dot.is-omitted.is-current {
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--ut-accent-soft);
+}
+
+.sqr-skip {
+  border: 0;
+  background: none;
+  font-family: var(--ut-font-body);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ut-accent-dark);
+  cursor: pointer;
+  padding: 8px 6px;
+}
+
+.sqr-skip:hover { text-decoration: underline; }
+
+.sqr-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 128px;
+  border: 0;
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-accent);
+  color: var(--ut-on-accent);
+  font-family: var(--ut-font-body);
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sqr-primary:hover:not(:disabled) {
+  background: var(--ut-accent-dark);
+  box-shadow: 0 0 0 4px rgba(43, 89, 216, 0.16);
+}
+
+.sqr-primary:disabled {
+  background: var(--ut-bg-alt);
+  color: var(--ut-muted);
+  cursor: not-allowed;
+}
+
+/* ---------- loading / completion ------------------------------------------ */
+
+.sqr-loading {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: var(--ut-card);
+  color: var(--ut-text);
+  font-family: var(--ut-font-body);
+  text-align: center;
+  padding: 24px;
+}
+
+.sqr-loading h2 {
+  margin: 0;
+  font-family: var(--ut-font-display);
+  font-size: 20px;
+}
+
+.sqr-loading p { margin: 0; color: var(--ut-muted); font-size: 14px; }
+
+.sqr-spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid var(--ut-accent-soft);
+  border-top-color: var(--ut-accent);
+  animation: sqr-spin 0.8s linear infinite;
+}
+
+@keyframes sqr-spin { to { transform: rotate(360deg); } }
+
+/* ---------- responsive ----------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .sqr-top { grid-template-columns: auto 1fr auto; padding: 0 12px; }
+  .sqr-top-skill { display: none; }
+  .sqr-brand-name { display: none; }
+
+  .sqr-column { padding: 26px 16px 150px; }
+  .sqr-skill-title { font-size: 21px; }
+  .sqr-passage, .sqr-prompt { font-size: 16px; }
+  .sqr-option-text { font-size: 15.5px; }
+  .sqr-option-btn { padding: 13px 8px; gap: 11px; }
+  .sqr-option-note { margin-left: 46px; }
+
+  .sqr-footer { padding: 0 12px; gap: 8px; height: 62px; }
+  .sqr-prev span { display: none; }         /* icon-only "Previous" */
+  .sqr-prev { padding: 8px; font-size: 16px; }
+  .sqr-progress-count { display: none; }    /* dots carry the state */
+  .sqr-primary { min-width: 104px; padding: 11px 16px; }
+
+  .sqr-popover { right: 12px; left: 12px; width: auto; bottom: 76px; }
+}

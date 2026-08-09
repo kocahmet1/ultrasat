@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "inferences",
+  "title": "Inferences",
+  "estimatedMinutes": 25,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Inferences",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Inferences questions show you a short text that stops just before its final thought—the last sentence ends in a blank ({blank}). The question is always the same: ==Which choice most logically completes the text?== Your job is to supply the conclusion the text has been building toward."
+        },
+        {
+          "type": "p",
+          "text": "On the SAT, an {teal|inference} is not a guess. It is the next step that the stated information **forces**—a conclusion so well supported that a careful reader can't refuse it. A choice that merely *could* be true isn't enough; the text has to make it true."
+        },
+        {
+          "type": "p",
+          "text": "Suppose a text states: *“Every specimen the team collected below 200 meters belonged to a previously undescribed species.”* Compare two ways of completing it:"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "The deep-water site harbored species that were unknown to science.",
+              "note": "An **inference**: this simply restates what the finding means. Given the text, it must be true."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "Deeper waters always contain more undiscovered species than shallow waters do.",
+              "note": "**Speculation**: possible, but one site's specimens can't support “always”—or a claim about all oceans."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Read the text as a chain of evidence.** Track what has been established by the time you reach the blank.",
+            "**Check the transition just before the blank.** *Therefore* demands a conclusion; *however* demands a contrast; *because* demands a reason.",
+            "**Predict your own completion** in a plain sentence before you read the choices.",
+            "**Prefer the modest claim.** The correct answer is the one the text fully pays for—hedged wording like *may* or *some* is a good sign.",
+            "**Eliminate ruthlessly**: too strong, wrong direction, out of scope, or plausible-but-unsupported."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Because every Inferences question uses the same stem, you can make your routine automatic: read, track the logic, **predict**, then match. The blank is at the end, so the whole text exists to set it up—nothing you read is decoration."
+        }
+      ]
+    },
+    {
+      "id": "follow-the-logic",
+      "title": "Follow the Logical Thread",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Treat the text as an argument under construction: each sentence adds a piece, and the blank is the piece that's missing. Your method:"
+        },
+        {
+          "type": "list",
+          "style": "number",
+          "items": [
+            "Read each sentence asking, “What does this **add** to the argument?”",
+            "At the blank, look at the final sentence's {blue|transition}—it assigns the blank's job.",
+            "**Predict** the completion in your own words.",
+            "Pick the choice that matches your prediction, then verify it against **every** stated fact."
+          ]
+        },
+        {
+          "type": "table",
+          "headers": ["Transition before the blank", "The blank's job"],
+          "rows": [
+            ["**therefore**, **thus**, **so**, “this suggests that”", "state the conclusion the evidence supports"],
+            ["**however**, **but**, **instead**", "push against the expectation the text just set up"],
+            ["**because**, **since**", "supply the reason for the claim just made"],
+            ["**for example**, “one such …”", "give a specific instance of the general claim"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Watch the Setup Happen"
+        },
+        {
+          "type": "passage",
+          "text": "{teal|Ancient Roman concrete often contains small white chunks of lime, which researchers long dismissed as evidence of sloppy mixing.} {teal|A recent analysis suggests instead that the chunks act as a built-in repair system: when hairline cracks form and water seeps in, calcium from the chunks dissolves and then recrystallizes, sealing the cracks shut.} ==It follows that== the lime chunks {blank}"
+        },
+        {
+          "type": "legend",
+          "items": [
+            { "tone": "teal", "label": "Evidence the text establishes" },
+            { "tone": "yellow", "label": "Transition that assigns the blank's job" }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**Prediction:** the chunks probably help explain why Roman structures have lasted so long. The transition *it follows that* demands a conclusion, and the only conclusion these two sentences pay for is one about **self-repair helping durability**—nothing about builders, modern concrete, or anything else."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Many songbirds migrate at night, navigating in part by the stars. Artificial light can disorient them, drawing them toward brightly lit buildings, where fatal collisions are common. At one Chicago exhibition hall monitored for more than two decades, researchers found that bird collisions were several times less frequent on nights when most of the building's windows went dark. These findings suggest that {blank}"
+            },
+            {
+              "type": "question",
+              "stem": "Which choice most logically completes the text?",
+              "choices": [
+                "city buildings should be legally required to turn off their lights during migration seasons",
+                "songbirds that migrate during the day are unaffected by artificial light",
+                "most songbird deaths in cities result from causes unrelated to lighting",
+                "dimming building lights at night could substantially reduce bird collisions during migration"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "*These findings suggest that* signals a {blue|conclusion}. Prediction: less light at night means fewer collisions. Now eliminate:"
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "The text reports evidence; it never weighs laws, costs, or policy. A recommendation about what *should be required* goes beyond anything stated. {rose|Too strong / out of scope.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The text discusses only night-migrating birds—it says nothing about daytime migrants. {rose|Out of scope.}"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The evidence points the opposite way: darkening windows cut collisions several times over, which ties collisions *to* lighting. {rose|Wrong direction.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "correct",
+                  "text": "A modest, hedged conclusion (“could … reduce”) that the twenty-year comparison directly supports. This is exactly what the findings suggest."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "must-be-true",
+      "title": "The Must-Be-True Standard",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Among four choices, the correct one is the claim the text **fully pays for**. That's why the right answer often sounds cautious while the traps sound impressive: a 100-word text can afford a modest conclusion, but almost never a sweeping one. The wording of a choice is evidence about the choice:"
+        },
+        {
+          "type": "table",
+          "headers": ["{green|Hedged — usually survives}", "{rose|Extreme — usually dies}"],
+          "align": ["center", "center"],
+          "rows": [
+            ["may, might, could", "must, will, always, never"],
+            ["some, several, often", "all, none, every, only"],
+            ["suggests, indicates, is likely", "proves, demonstrates conclusively"],
+            ["helps explain, contributes to", "is the reason, is the sole cause"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Standard in Action"
+        },
+        {
+          "type": "passage",
+          "text": "Archaeologists excavating Çatalhöyük, a 9,000-year-old settlement in central Anatolia, have recovered numerous tools made of obsidian, a volcanic glass. The nearest natural source of obsidian lies more than 100 kilometers away. It can reasonably be concluded that the settlement's inhabitants {blank}"
+        },
+        {
+          "type": "p",
+          "text": "The text establishes exactly two facts: obsidian tools were **there**, and obsidian forms naturally only **far away**. What must be true?"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "obtained some materials from distant sources, whether through travel or exchange",
+              "note": "Modest and airtight: the tools got there somehow, and “whether … or” refuses to guess at the mechanism."
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "And here is how each of the four standard traps would dress up the same blank:"
+        },
+        {
+          "type": "table",
+          "headers": ["Trap", "Sample wrong completion", "Why it fails"],
+          "rows": [
+            ["{rose|Too strong}", "“controlled a trade network that spanned the ancient Near East”", "Two facts about one material can't fund an empire. The scale dwarfs the evidence."],
+            ["{rose|Wrong direction}", "“rarely came into contact with people outside their own valley”", "Points opposite to the evidence, which shows a long-distance connection of some kind."],
+            ["{rose|Out of scope}", "“preferred obsidian tools because they were sharper than flint ones”", "Sharpness and preference are never discussed. New topic, no support."],
+            ["{rose|Plausible but unsupported}", "“sent expeditions to the obsidian source every year”", "A believable story—but the text says nothing about who moved, how, or how often."]
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "The correct completion must be true given only the text. If it needs one outside fact, or takes one step the text doesn't take, it's wrong."
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Don't pick a choice because it sounds informed or matches something you know about the topic. The SAT deliberately writes traps that are true in the real world but unsupported by the text."
+        }
+      ]
+    },
+    {
+      "id": "contrast-blanks",
+      "title": "When the Blank Changes Direction",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Not every blank asks for a conclusion. When the sentence before the blank pivots with {blue|however}, {blue|but}, or {blue|instead}, the completion must **push against the expectation the text just built**—while still using only the text's own facts. Misread the pivot and every trap starts to look right."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "In nineteenth-century Paris, the state-sponsored Salon was virtually the only place a painter could exhibit work and attract buyers, and its jurors repeatedly rejected the loose, sketchlike canvases of Claude Monet and his circle. The painters, ==however==, refused to change their style to satisfy the jury. ==Instead==, in 1874, they {blank}"
+            },
+            {
+              "type": "question",
+              "stem": "Which choice most logically completes the text?",
+              "choices": [
+                "submitted more conventional paintings to improve their chances with the jurors",
+                "organized an independent exhibition, presenting their work to the public without the Salon's approval",
+                "abandoned painting in favor of the newly invented medium of photography",
+                "persuaded the Salon's jurors to relax their standards for admission"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Two pivots stack up: *however* (they wouldn't change their style) and *instead* (they did something **other than** relying on the Salon). Prediction: they found their own way to show their work."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Directly contradicts “refused to change their style.” {rose|Wrong direction}—it ignores the *however*."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "Continues the defiance and completes *instead*: not the Salon's path, but their own. Every element is set up by the text."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The text is about how they would exhibit *paintings*; quitting painting answers a question nobody asked. {rose|Out of scope.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "The jurors “repeatedly rejected” them, and *instead* signals a move away from the Salon—not a renegotiation with it. {rose|Plausible but unsupported.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Hypothesis Meets Evidence"
+        },
+        {
+          "type": "p",
+          "text": "A favorite SAT structure: a text presents a {blue|hypothesis}, then reports {teal|new evidence}—and the blank states what the evidence means for the hypothesis. Ask one question: does the evidence **fit the prediction or break it?** The completion must honor that answer."
+        },
+        {
+          "type": "p",
+          "text": "Suppose a text explains that a biologist's hypothesis predicts a beetle species should live only in pine forests—and then reports that surveys found thriving populations in oak woodlands."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "the hypothesis may need to be revised to account for the beetle's broader habitat range",
+              "note": "The evidence breaks the prediction, so the completion acknowledges the challenge—hedged, not triumphant."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "the surveys confirm that the beetle is confined to pine forests",
+              "note": "States the opposite of the reported evidence. On test day this trap is dressed in the text's own vocabulary."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Same routine as test day: track the logic, read the transition, **predict**, then eliminate. Commit to a choice before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Ice crystals forming inside cells are lethal to most animals. Yet each winter the North American wood frog survives the freezing of much of its body water. As temperatures fall, the frog's liver releases a surge of glucose that accumulates inside its cells, lowering the temperature at which the cells' interiors freeze and limiting the damage ice can do. It can therefore be inferred that the frog's glucose surge {blank}"
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice most logically completes the text?",
+                  "choices": [
+                    "prevents any part of the frog's body from freezing during the winter",
+                    "guarantees that wood frogs survive even the harshest winters",
+                    "helps protect the interiors of the frog's cells while much of its body water freezes",
+                    "appeared in wood frogs after other amphibians had evolved different cold-weather strategies"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** *Therefore* asks for a conclusion, and the text has established two things: internal ice kills cells, and glucose in the frog's cells lowers their freezing point and limits damage. The safe conclusion: the surge protects the cells' interiors."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "The text says much of the frog's body water **does** freeze—the glucose protects the cells' *interiors*, not the whole body. {rose|Wrong direction.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "“Guarantees” and “even the harshest” claim far more than one described mechanism can fund. {rose|Too strong.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "Restates exactly what the mechanism accomplishes, with the same scope the text gives it—protection inside cells while outside water freezes."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Evolutionary timing is never mentioned. A believable trivia claim with zero textual support. {rose|Out of scope.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Early twentieth-century scholars generally assumed that performers of long oral epics recited texts they had memorized word for word. In the 1930s, Milman Parry and Albert Lord recorded singers in the Balkans performing the “same” epic on different occasions and found that the wording, the length, and even the sequence of episodes changed from one performance to the next. Parry and Lord concluded that the singers were not reciting a fixed text but were instead {blank}"
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice most logically completes the text?",
+                  "choices": [
+                    "memorizing several complete versions of each epic word for word",
+                    "composing the poem anew in the course of each performance",
+                    "performing translations of written epics they had studied closely",
+                    "gradually forgetting poems they had once known in full"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** The structure is hypothesis meets evidence: the old assumption (verbatim recitation) is broken by the recordings (everything varied). *Not reciting a fixed text but instead …* must complete the contrast: creating, not reciting."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Sneaky—“several versions” nods at the variation, but “memorized … word for word” is precisely the assumption the evidence dismantled. {rose|Wrong direction} in disguise."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "If performances of the “same” epic differ every time, the singers must be producing the poem in performance—the only completion the contrast supports."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Written sources and translation are never mentioned—these are *oral* epics. {rose|Out of scope.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The text frames variation as the singers' method, not as memory failure—and “concluded” introduces their finding, not a lament. {rose|Plausible but unsupported.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The Antikythera mechanism, a geared bronze device recovered from a Mediterranean shipwreck dated to the first century BCE, modeled the movements of the sun and moon with astonishing precision. No surviving artifact of comparable mechanical complexity appears again in the historical record for well over a thousand years. Some historians argue that such sophistication is unlikely to have emerged in isolation and that the mechanism therefore {blank}"
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice most logically completes the text?",
+                  "choices": [
+                    "must have been built centuries later than the shipwreck that carried it",
+                    "proves that ancient engineers understood gearing as thoroughly as modern clockmakers do",
+                    "was probably one of a number of complex devices whose counterparts have not survived",
+                    "was more valuable than any other object recovered from the shipwreck"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** The blank completes the *historians' argument*: if such a device is “unlikely to have emerged in isolation,” then it probably wasn't alone—others existed and were lost. Note the hedge “probably,” matching the historians' “unlikely.”"
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Contradicts the text's own dating of the wreck—and “must” overreaches besides. {rose|Wrong direction, too strong.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "“Proves” and a comparison to modern clockmakers go far beyond one recovered device. {rose|Too strong.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "Follows directly from “unlikely to have emerged in isolation”: comparable devices likely existed but didn't survive—which also squares with the thousand-year gap in the record."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The rest of the cargo is never discussed, and value has nothing to do with the historians' argument. {rose|Out of scope.}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Inferences questions always ask the same thing: which choice **most logically completes** the text. The whole text exists to set up the blank.",
+            "The {blue|transition} before the blank assigns its job: *therefore* → conclusion, *however / instead* → contrast, *because* → reason.",
+            "**Predict before you peek.** State your own completion, then find its match.",
+            "The correct answer is the **most modest claim the text fully supports**—hedges ({green|may}, {green|some}, {green|likely}) are friends; extremes ({rose|proves}, {rose|always}, {rose|only}) are warnings.",
+            "Eliminate by name: {rose|too strong}, {rose|wrong direction}, {rose|out of scope}, {rose|plausible but unsupported}."
+          ]
+        }
+      ]
+    }
+  ]
+}

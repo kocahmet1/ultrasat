@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "percentages",
+  "title": "Percentages",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Percentages",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|percent} is a fraction with a fixed denominator of $100$: $35\\% = \\frac{35}{100} = 0.35$. Every percent question on the SAT is built from one sentence with three slots—and the question hides exactly one of them:"
+        },
+        {
+          "type": "strip",
+          "alt": "Part equals percent times whole",
+          "segments": [
+            { "text": "Part", "tone": "green" },
+            { "text": "=", "tone": "op" },
+            { "text": "Percent (as a decimal)", "tone": "blue" },
+            { "text": "×", "tone": "op" },
+            { "text": "Whole", "tone": "purple" }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Convert to a decimal before computing:** drop the $\\%$ and divide by $100$. ($35\\% \\to 0.35$, $4\\% \\to 0.04$.)",
+            "**Identify the missing slot**—the part, the percent, or the whole—and solve the sentence for it.",
+            "**Translate word by word:** “of” means multiply, “is” means equals, “what percent” means $\\frac{x}{100}$.",
+            "**Percent change = one multiplier:** up $r\\%$ → $\\times(1 + r)$; down $r\\%$ → $\\times(1 - r)$. To *undo* a change, **divide** by the multiplier.",
+            "**Always ask: percent of WHAT?** The base matters—and successive percent changes **multiply**, never add."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Sanity anchors: $10\\%$ is “move the decimal,” $50\\%$ is half, $1\\%$ is a hundredth. Estimate with these before computing—an answer that's wildly off the anchor is wrong regardless of the algebra."
+        }
+      ]
+    },
+    {
+      "id": "three-questions",
+      "title": "The Three Percent Questions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The sentence {green|part} $=$ {blue|percent} $\\times$ {purple|whole} generates exactly three question types, depending on which slot is blank:"
+        },
+        {
+          "type": "table",
+          "headers": ["Missing slot", "Question sounds like", "Setup", "Answer"],
+          "align": ["left", "left", "center", "center"],
+          "rows": [
+            ["{green|Part}", "“What is $30\\%$ of $80$?”", "$p = 0.30 \\times 80$", "$24$"],
+            ["{blue|Percent}", "“$18$ is what percent of $45$?”", "$\\frac{18}{45} \\times 100$", "$40\\%$"],
+            ["{purple|Whole}", "“$36$ is $45\\%$ of what number?”", "$36 = 0.45 \\times w$", "$80$"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "The first two are direct arithmetic. The third—**finding the whole**—is where the traps live, because the given number is the *part*, and dividing feels backwards:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "$36$ is $45\\%$ of what number?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "36 = 0.45\\,w", "note": "Part $=$ percent $\\times$ whole — the $36$ is the **part**" },
+                { "math": "w = \\frac{36}{0.45} = 80", "note": "Divide by the percent to recover the whole" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check:** $0.45 \\times 80 = 36$. {green|✓} The whole ($80$) is *bigger* than the part ($36$)—as it must be when the percent is under $100\\%$."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In a school club, $24$ students play an instrument. These students make up $15\\%$ of the club's membership. How many members does the club have?",
+              "choices": ["$160$", "$3.6$", "$36$", "$1{,}600$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$24 = 0.15m$, so $m = 24 \\div 0.15 = 160$. Sanity check: $10\\%$ of $160$ is $16$, plus half of that is $24$. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$3.6$ is $15\\%$ **of** $24$—the sentence run in reverse. The $24$ is the part, not the whole."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$36$ multiplies $24$ by $1.5$, misreading $15\\%$ as “one and a half times.”"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$1{,}600$ divides by $0.015$—a decimal-place slip. A club of $1{,}600$ for $24$ musicians fails the sanity check instantly."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "“$A$ is $r\\%$ of $B$”: the number next to **of** is the whole. Getting the part and the whole reversed is this page's entire trap inventory."
+        }
+      ]
+    },
+    {
+      "id": "percent-change",
+      "title": "Percent Change & Multipliers",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Increases and decreases are cleanest as **one multiplication**. Keeping $100\\%$ and adding or removing $r$ percent means multiplying by:"
+        },
+        {
+          "type": "math",
+          "tex": "\\text{increase: } \\times\\,(1 + r) \\qquad\\qquad \\text{decrease: } \\times\\,(1 - r)",
+          "boxed": true
+        },
+        {
+          "type": "table",
+          "headers": ["Change", "Multiplier"],
+          "align": ["left", "center"],
+          "rows": [
+            ["increase by $25\\%$", "$\\times\\, 1.25$"],
+            ["decrease by $30\\%$", "$\\times\\, 0.70$"],
+            ["increase by $100\\%$ (doubles)", "$\\times\\, 2$"],
+            ["decrease by $15\\%$", "$\\times\\, 0.85$"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "An $\\$80$ jacket is on sale at $30\\%$ off. Two roads to the sale price:"
+            },
+            {
+              "type": "columns",
+              "items": [
+                {
+                  "title": "One multiplier",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "80 \\times 0.70 = 56", "note": "$30\\%$ off = keep $70\\%$" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "title": "Subtract the discount",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "0.30 \\times 80 = 24", "note": "The discount in dollars" },
+                        { "math": "80 - 24 = 56", "note": "Same answer, one extra step" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Finding the Percent Change"
+        },
+        {
+          "type": "math",
+          "tex": "\\%\\ \\text{change} = \\frac{\\text{new} - \\text{original}}{\\blue{\\text{original}}} \\times 100",
+          "boxed": true,
+          "caption": "The denominator is always the {blue|original} — the “before” value."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "The price of a concert ticket rose from $\\$60$ to $\\$75$. By what percent did the price increase?",
+              "choices": ["$25\\%$", "$20\\%$", "$15\\%$", "$125\\%$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Change is $\\$15$ on an original of $\\$60$: $\\frac{15}{60} = 0.25 = 25\\%$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{15}{75} = 20\\%$ divides by the **new** price—the before/after mix-up this formula exists to prevent."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$15$ is the change in *dollars*; a percent needs it compared with the original."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{75}{60} = 125\\%$ is the new price **as a percent of** the old one—the price is $125\\%$ of what it was, which is a $25\\%$ *increase*."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "“Percent of” vs. “percent more”: $75$ is $125\\%$ **of** $60$, and $25\\%$ **more than** $60$. Both sentences describe the same numbers—the question's wording picks which one it wants."
+        }
+      ]
+    },
+    {
+      "id": "reverse-percent",
+      "title": "Working Backward: Before the Change",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "When you know the **after** and need the **before**, run the multiplier in reverse: **divide** by it. The tempting alternative—adding the percent back—uses the wrong base and always misses."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "After a $20\\%$ discount, a sweater costs $\\$44$. What was the original price?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "0.80\\,p = 44", "note": "Sale price = $80\\%$ of the original" },
+                { "math": "p = \\frac{44}{0.80} = 55", "note": "Divide by the multiplier — the original was $\\$55$" }
+              ]
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "$44 \\div 0.80 = 55$, and the check runs forward: $55 \\times 0.80 = 44$",
+                  "note": "Undo a multiplication with a division."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "$44 + 20\\% \\text{ of } 44 = 52.80$",
+                  "note": "Adds $20\\%$ of the **sale** price, but the discount was $20\\%$ of the **original**—different base, wrong answer."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Tax works the same way in the other direction—the total is *more* than $100\\%$ of the price:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "With $8\\%$ sales tax included, a book costs $\\$27$. What is the price before tax?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "1.08\\,p = 27", "note": "Total = $108\\%$ of the pre-tax price" },
+                { "math": "p = \\frac{27}{1.08} = 25", "note": "Divide by $1.08$ — the price was $\\$25$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "After a $25\\%$ discount, a pair of headphones sells for $\\$66$. What was the price before the discount?",
+              "choices": ["$\\$88$", "$\\$82.50$", "$\\$49.50$", "$\\$91$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$0.75p = 66$, so $p = 66 \\div 0.75 = 88$. Forward check: $88 \\times 0.75 = 66$. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$66 \\times 1.25 = 82.50$ adds $25\\%$ of the **sale** price—the discount's base was the original."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$66 \\times 0.75 = 49.50$ discounts the discounted price *again*—running the change forward instead of backward."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$66 + 25 = 91$ treats the percent as dollars."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "**Undo with division, never by adding the percent back.** A $20\\%$ drop is *not* reversed by a $20\\%$ rise—the two changes use different bases."
+        }
+      ]
+    },
+    {
+      "id": "successive-changes",
+      "title": "Successive Changes & Comparisons",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Two percent changes in a row do **not** add—each acts on a new base. Convert both to multipliers and **multiply**:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A stock worth $\\$200$ gains $10\\%$ one month, then loses $10\\%$ the next. Is it back to $\\$200$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "200 \\times 1.10 = 220", "note": "Up $10\\%$ — the base was $200$" },
+                { "math": "220 \\times 0.90 = 198", "note": "Down $10\\%$ — but the base is now $220$" },
+                { "math": "1.10 \\times 0.90 = 0.99", "note": "Net multiplier: a $1\\%$ **loss**, not zero" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The $10\\%$ drop was measured on the *larger* number, so it removed more dollars than the gain added. Symmetric percents, asymmetric bases."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A town's population increased by $20\\%$ during one decade and by $50\\%$ during the next. By what percent did the population increase over the two decades combined?",
+              "choices": ["$80\\%$", "$70\\%$", "$180\\%$", "$35\\%$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Multipliers: $1.20 \\times 1.50 = 1.80$—the population is $180\\%$ of the original, an **increase of $80\\%$**."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$70\\%$ adds the percents ($20 + 50$). The second change grew an already-grown base, so the true total is more."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$180\\%$ reads the multiplier $1.80$ as the increase. Being *at* $180\\%$ of the original means gaining $80\\%$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$35\\%$ averages the two rates—averaging has no meaning for successive changes."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "“Percent More Than” Sets the Base"
+        },
+        {
+          "type": "p",
+          "text": "“$A$ is $20\\%$ more than $B$” translates as $A = 1.20\\,B$—the thing after **than** is the base. It does *not* follow that $B$ is $20\\%$ less than $A$: $B = \\frac{A}{1.2} \\approx 0.833A$, about $16.7\\%$ less."
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "For any successive-change question, skip the running totals: build each multiplier, multiply them once, and read the net change from the final multiplier ($0.99 \\to$ down $1\\%$; $1.80 \\to$ up $80\\%$)."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Before each answer: which slot is missing—part, percent, or whole? Forward change or backward? One change or two?"
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Of the $48$ students in a homeroom, $12$ walk to school. What percent of the students walk to school?",
+                  "choices": ["$25\\%$", "$36\\%$", "$4\\%$", "$2.5\\%$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The percent slot is missing: $\\frac{\\text{part}}{\\text{whole}} = \\frac{12}{48} = \\frac{1}{4} = 25\\%$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$12 \\div 48 = 0.25$. Anchor check: $12$ is a quarter of $48$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$36$ is $48 - 12$—the students who *don't* walk, and not a percent of anything."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$4$ divides the wrong way ($48 \\div 12$): that says the whole is $4$ times the part, not what percent the part is."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$2.5\\%$ is the right division with a lost decimal place: $0.25$ is $25\\%$, not $2.5\\%$."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A $\\$120$ jacket is on sale for $35\\%$ off. What is the sale price?",
+                  "choices": ["$\\$78$", "$\\$42$", "$\\$85$", "$\\$162$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** One multiplier: $35\\%$ off means keeping $65\\%$."
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "120 \\times 0.65 = 78", "note": "Keep $100\\% - 35\\% = 65\\%$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Or the long way: discount $= 0.35 \\times 120 = 42$, and $120 - 42 = 78$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$\\$42$ is the **discount**, not the price you pay—the most common one-step-short answer."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$\\$85$ subtracts $35$ *dollars*; the discount is $35$ *percent*."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$\\$162$ multiplies by $1.35$—a markup instead of a markdown."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Including $8\\%$ sales tax, Marcus paid $\\$648$ for a laptop. What was the price of the laptop **before** tax?",
+                  "choices": ["$\\$596.16$", "$\\$600$", "$\\$640$", "$\\$699.84$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** The total is $108\\%$ of the pre-tax price—divide to go backward:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "1.08\\,p = 648", "note": "Price plus $8\\%$ tax" },
+                    { "math": "p = \\frac{648}{1.08} = 600", "note": "Forward check: $600 \\times 1.08 = 648$ {green|✓}" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$648 \\times 0.92$ removes $8\\%$ **of the total**—but the tax was $8\\%$ of the smaller pre-tax price. Wrong base."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Undo a multiplication with a division. {green|✓}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$\\$640$ subtracts $8$ *dollars*, not $8$ percent."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$648 \\times 1.08$ adds tax **again**—running the change forward from the wrong starting point."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A store raises the price of a gadget by $25\\%$, then offers a $20\\%$ discount on the new price. How does the final price compare with the original price?",
+                  "choices": [
+                    "It is equal to the original price",
+                    "It is $5\\%$ higher",
+                    "It is $5\\%$ lower",
+                    "It is $45\\%$ higher"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Multipliers, multiplied:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "1.25 \\times 0.80 = 1.00", "note": "Up $25\\%$, then down $20\\%$ of the *raised* price" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Net multiplier exactly $1$: the $20\\%$ cut acted on a larger base, so it removed the entire $25\\%$ gain. (Try $\\$100$: $\\to \\$125 \\to \\$100$.)"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$+5\\%$ comes from adding $+25 - 20$—successive percents never add."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$-5\\%$ is the same addition error with the sign guessed the other way."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$+45\\%$ adds the sizes of both changes as if both pushed the price up."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "{green|Part} $=$ {blue|percent} $\\times$ {purple|whole}. Find which slot is missing; the number next to “of” is the whole.",
+            "Convert percents to decimals before computing—and watch the decimal point ($4\\% = 0.04$).",
+            "Percent change is one multiplier: $\\times(1+r)$ up, $\\times(1-r)$ down. **Percent change $= \\frac{\\text{change}}{\\text{original}}$**—divide by the *before* value.",
+            "To find the value **before** a change, divide by the multiplier. Adding the percent back uses the wrong base—always.",
+            "Successive changes **multiply**: $+20\\%$ then $+50\\%$ is $1.2 \\times 1.5 = 1.8$, an $80\\%$ gain. Read the net change off the final multiplier.",
+            "“$A$ is $r\\%$ more than $B$” → $A = (1+r)B$; the base is whatever follows **than**.",
+            "Anchor-check every answer with $10\\%$ / $50\\%$ estimates."
+          ]
+        }
+      ]
+    }
+  ]
+}

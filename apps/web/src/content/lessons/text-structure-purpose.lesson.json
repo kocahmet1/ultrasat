@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "text-structure-purpose",
+  "title": "Text Structure and Purpose",
+  "estimatedMinutes": 25,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Text Structure and Purpose",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Most reading questions ask what a text **says**. Text Structure and Purpose questions ask something different: **why** the author wrote it and **how** the text is built. You'll analyze the text's {blue|main purpose}, its {teal|overall structure}, or the {purple|function} of one underlined sentence within the whole."
+        },
+        {
+          "type": "table",
+          "headers": ["Language in the question", "What to analyze"],
+          "align": ["left", "center"],
+          "rows": [
+            ["“Which choice best states the **main purpose** of the text?”", "why the author wrote it"],
+            ["“Which choice best describes the **overall structure** of the text?”", "how the text is organized"],
+            ["“Which choice best describes the **function of the underlined sentence** in the text as a whole?”", "the job that one sentence does"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "All three reward the same mental shift: stop reading only for information and start watching what each sentence **does**—introduces, explains, complicates, concludes. Once you see the text's skeleton, all three question types become the same question at different zoom levels."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Track the moves.** After each sentence, ask: “What did that sentence just *do*?”",
+            "**For purpose, state the whole text's job** as a verb phrase (“to explain how…”) before reading the choices.",
+            "**Check the verb first.** In purpose and function choices, the opening verb kills or keeps the choice faster than anything after it.",
+            "**Match the scope.** Purpose covers the *whole* text; a choice describing one sentence's job is wrong—even if it's accurate.",
+            "**Verify every clause of a structure choice.** Half-right structures are the format's favorite trap."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Purpose and function choices almost always begin with **“To …”** — *To explain…*, *To introduce…*, *To challenge…*. The verb is the answer's spine; read choices verb-first."
+        }
+      ]
+    },
+    {
+      "id": "read-for-the-moves",
+      "title": "Read for the Moves",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Every text runs on two tracks at once: its {blue|content}—what it says—and its {teal|moves}—what each sentence does to advance the whole. Structure and Purpose questions are answered entirely on the second track. Watch both tracks in a short text:"
+        },
+        {
+          "type": "passage",
+          "text": "Along stretches of the Pacific coast, kelp forests thin dramatically wherever sea otters disappear. The reason is a chain of appetites: otters prey on sea urchins, and urchins graze on kelp—so without otters, urchin populations explode and mow the kelp down. Ecologists therefore describe the sea otter as a keystone species: one whose influence on its ecosystem far exceeds its abundance."
+        },
+        {
+          "type": "table",
+          "headers": ["Sentence", "What it says", "What it does"],
+          "compact": true,
+          "rows": [
+            ["1", "Kelp declines where otters vanish.", "{blue|Presents a phenomenon}—a pattern that demands explanation."],
+            ["2", "Otters eat urchins; urchins eat kelp.", "{teal|Explains the mechanism} behind the pattern."],
+            ["3", "Ecologists call otters a keystone species.", "{purple|Draws the conclusion} the pattern illustrates."]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Read this way, the text's skeleton is three moves long: **phenomenon → mechanism → conclusion**. That skeleton *is* the overall structure, and the text's purpose is the skeleton summed up in one verb phrase: *to explain why ecologists consider the sea otter a keystone species*."
+        },
+        {
+          "type": "h3",
+          "text": "Signal Words Mark the Moves"
+        },
+        {
+          "type": "table",
+          "headers": ["Move", "Typical signals"],
+          "compact": true,
+          "rows": [
+            ["Pivot / contrast", "**however**, **but**, **yet**, “on the contrary”"],
+            ["Example / illustration", "**for instance**, **for example**, “one such”"],
+            ["Explanation / mechanism", "**because**, “the reason is”, a colon followed by detail"],
+            ["Concession", "**admittedly**, **granted**, **of course**"],
+            ["Qualification", "**though**, “in some cases”, “can” instead of “does”"],
+            ["Conclusion / takeaway", "**therefore**, **thus**, “researchers now describe”"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "As you read, paraphrase each sentence as a verb phrase—“introduces a puzzle,” “offers an explanation,” “complicates it.” Three or four verb phrases are the entire answer key to this question type."
+        }
+      ]
+    },
+    {
+      "id": "purpose-questions",
+      "title": "Purpose Questions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The main purpose is the whole text's job compressed into one verb phrase. Before you read the choices, finish this sentence yourself: *“The author wrote this to {blank}.”* Then judge every choice **verb-first**—the verb must match the text's temperature."
+        },
+        {
+          "type": "table",
+          "headers": ["Verb temperature", "Typical verbs", "What the text must do"],
+          "rows": [
+            ["{green|Neutral}", "describe, explain, present, outline, trace", "inform without taking sides—**most SAT texts live here**"],
+            ["{amber|Evaluative}", "argue, advocate, defend, challenge, critique", "actually take a position, not merely report one"],
+            ["{rose|Extreme}", "prove, condemn, celebrate, dismiss", "almost never survives—hotter than a 100-word text can support"]
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "The purpose must cover the whole text. A choice that accurately describes one sentence's job is a function answer wearing a purpose costume—eliminate it."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Before Louis Braille, books for blind readers used embossed Roman letters, which were laborious to trace with a finger and nearly impossible to write. As a teenager in the 1820s, Braille adapted a military code of raised dots into a six-dot cell sized to fit beneath a single fingertip. The new system let readers identify each character with one touch rather than a slow tracing motion—and, using a simple stylus, to write as easily as they read."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice best states the main purpose of the text?",
+              "choices": [
+                "To argue that dot-based writing systems should replace embossed lettering",
+                "To describe the childhood education of Louis Braille",
+                "To explain how Braille's dot-based system overcame the practical shortcomings of embossed-letter books",
+                "To compare the reading speeds of blind and sighted readers"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The moves: sentence 1 {blue|presents a problem} (embossed letters were slow to read, impossible to write), sentences 2–3 {teal|explain the solution and its advantages}. Prediction: *to explain how Braille's system fixed the old system's problems.* Now, verbs first:"
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "*Argue … should* is an advocacy verb, but the text takes no position—it reports what the system accomplished. {rose|Wrong temperature.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "*Describe* is the right temperature, but the object is wrong: Braille's education appears only as “as a teenager.” {rose|Too narrow}—one phrase promoted to the whole text's job."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "Neutral verb, and the object spans the entire skeleton: the problem (sentence 1) and how the new system overcame it (sentences 2–3)."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Sighted readers are never mentioned. {rose|Not in the text.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "When two choices share a defensible verb, the **object** decides: which one covers everything the text does? The trap describes a part beautifully; the answer describes the whole plainly."
+        }
+      ]
+    },
+    {
+      "id": "structure-and-function",
+      "title": "Structure and Function Questions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "**Structure questions** ask you to name the text's skeleton outright. The SAT reuses a small set of blueprints—learn them and the choices start reading like labels:"
+        },
+        {
+          "type": "table",
+          "headers": ["Blueprint", "The text…"],
+          "compact": true,
+          "rows": [
+            ["Phenomenon → explanation", "describes a pattern, then explains what causes it"],
+            ["Problem → solution", "lays out a difficulty, then presents a response to it"],
+            ["Claim → evidence", "states a position, then supports it with examples or data"],
+            ["Accepted view → challenge", "presents a common belief, then complicates or overturns it"],
+            ["Comparison", "examines two subjects side by side"],
+            ["Chronology", "traces a process or development over time"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Structure choices arrive as chains of clauses: *“The text presents X, then does Y.”* Verify **each clause in order** against the text. If the first half fits and the second half doesn't, the whole choice dies—{rose|half-right is all wrong} here, exactly as it is everywhere else on this test."
+        },
+        {
+          "type": "h3",
+          "text": "Function of an Underlined Sentence"
+        },
+        {
+          "type": "p",
+          "text": "Function questions zoom in: one sentence is underlined, and you must name its **role in the text as a whole**—not summarize its content. Read the sentence's neighbors: the role lives in how it connects what comes before to what comes after."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "In recent years, many cities have encouraged rooftop beekeeping as a gesture toward urban conservation. __Honeybees, however, are essentially livestock—and a growing body of research suggests that dense clusters of managed hives can outcompete the wild native bees on which local pollination networks chiefly depend.__ Some ecologists therefore urge cities to measure conservation success not by the number of hives installed but by the diversity of wild pollinators their green spaces sustain."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+              "choices": [
+                "It provides an example of the conservation efforts described in the previous sentence.",
+                "It argues that beekeeping should be prohibited in urban areas.",
+                "It explains why honeybee populations have been declining in cities.",
+                "It introduces a complication that motivates the recommendation presented in the following sentence."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Skeleton: sentence 1 {blue|presents a practice and its rationale}; the underlined sentence pivots with **however** and {rose|undercuts the rationale}; sentence 3 opens with **therefore** and {teal|builds a recommendation on that complication}. The underlined sentence is the hinge."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "**However** signals a turn *against* the previous sentence, not an example of it. The first signal word already rules this out. {rose|Wrong move.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The text questions how success is *measured*; nobody proposes a ban. {rose|Too strong.}"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The sentence says managed honeybees outcompete *wild bees*—honeybee decline is never mentioned. A misreading dressed in the text's vocabulary. {rose|Not in the text.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "correct",
+                  "text": "Names the move (introduces a complication) *and* its role in the whole (it's what the **therefore** of the final sentence stands on). Scope and connection both check out."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "For function questions, the signal word attached to the underlined sentence (however, therefore, for example) usually names the move outright. Traps count on you reading the sentence's content and ignoring its connector."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "One of each flavor. Build the skeleton first—verb phrases per sentence—then go to the choices, verbs first. Commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The atomic clocks aboard GPS satellites tick slightly faster than identical clocks on Earth's surface—a consequence, predicted by Einstein's general theory of relativity, of the weaker gravity at orbital altitude. The discrepancy amounts to mere millionths of a second per day, but position calculations depend on timing so precise that uncorrected clocks would push location estimates off by several kilometers each day. GPS engineers therefore build relativistic corrections directly into the system."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice best states the main purpose of the text?",
+                  "choices": [
+                    "To explain why a seemingly negligible physical effect must be corrected for in a practical technology",
+                    "To argue that general relativity is the most consequential theory in modern physics",
+                    "To describe how the atomic clocks used aboard satellites are manufactured",
+                    "To question the reliability of the location estimates that GPS provides"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Skeleton: a tiny effect is presented → its outsized practical consequence is explained → the engineering response is stated. Purpose: to explain why the tiny effect matters and must be corrected."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Neutral verb (*explain*), and the object covers all three moves—effect, consequence, correction."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "*Argue … most consequential* takes a position the text never takes; relativity appears only to explain the clock discrepancy. {rose|Wrong temperature, too strong.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "How the clocks are built never comes up. {rose|Not in the text.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Backwards: the text explains how corrections keep GPS *accurate*, not why to doubt it. {rose|Wrong direction.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The word “Luddite” has become shorthand for a person who fears technology, echoing the popular image of the nineteenth-century English textile workers who smashed mechanized looms. Historians who study the movement, however, tell a different story: the Luddites' grievance was not machinery itself but the way factory owners used it—to cut wages, sideline skilled workers, and flood the market with shoddy goods. Machine-breaking, in this account, was a bargaining tactic of last resort, not a war on progress."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice best describes the overall structure of the text?",
+                  "choices": [
+                    "It offers a chronological narrative of the rise and decline of a labor movement.",
+                    "It presents a widely held image of a historical group and then presents scholarship that complicates that image.",
+                    "It compares two present-day definitions of a term and endorses the older one.",
+                    "It states a thesis about industrialization and supports it with statistics."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Skeleton: sentence 1 presents the popular image; **however** pivots to the historians' account; sentence 3 restates the corrected view. That is the *accepted view → challenge* blueprint."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "No dates, no rise, no decline—the text analyzes an image of the movement, not its timeline. {rose|Wrong blueprint.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Clause one: the popular “technophobe” image—check. Clause two: historians' evidence complicating it—check. Every clause verified."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "The two views aren't both *present-day definitions*, and the text endorses the historians' newer account, not an older one. Both clauses fail. {rose|Half-right isn't even reached.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "There isn't a single statistic in the text. {rose|Not in the text.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Cuttlefish are masters of camouflage, matching the color and texture of nearly any patch of seafloor—yet their eyes contain a single type of photoreceptor, which should leave them colorblind. How the animals match colors they presumably cannot see remains an open question. __One hypothesis holds that light-sensing proteins scattered throughout the cuttlefish's skin allow the skin itself to detect and respond to local color.__ Definitive evidence, however, has proved elusive, and the mechanism remains one of the stranger unsolved puzzles in sensory biology."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice best describes the function of the underlined sentence in the text as a whole?",
+                  "choices": [
+                    "It resolves the puzzle introduced earlier in the text.",
+                    "It disputes the finding that cuttlefish eyes contain only one type of photoreceptor.",
+                    "It presents a possible explanation for the puzzle the text describes.",
+                    "It provides an example of the camouflage abilities described in the first sentence."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Skeleton: puzzle presented (color matching without color vision) → open question stated → underlined sentence offers **one hypothesis** → final sentence says evidence is still lacking. The underlined move: propose, not prove."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "The final sentence explicitly keeps the puzzle *unsolved*—“definitive evidence … elusive.” *Resolves* overshoots the move. {rose|Too strong.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The hypothesis works *around* the single-photoreceptor finding; it never questions it. {rose|Wrong move.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "“One hypothesis holds…” is the text naming the move itself: a candidate explanation for the stated puzzle—qualified by the next sentence as unconfirmed."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The sentence is about skin *sensing*, not a camouflage feat—and it explains rather than exemplifies. {rose|Wrong move.}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Read on two tracks: what each sentence {blue|says} and what it {teal|does}. Structure and Purpose questions are answered entirely on the second track.",
+            "**Purpose** = the whole text's job as one verb phrase. Predict it, then read choices **verb-first** and match the text's temperature—{green|describe/explain} for informative texts, {amber|argue/challenge} only when a position is actually taken.",
+            "**Structure** choices are clause chains—verify every clause in order. {rose|Half-right is all wrong.}",
+            "**Function** = the underlined sentence's role in the whole; its signal word (*however*, *therefore*, *for example*) usually names the move outright.",
+            "Scope check everything: a perfect description of one part is still a wrong answer to a whole-text question."
+          ]
+        }
+      ]
+    }
+  ]
+}

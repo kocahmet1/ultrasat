@@ -83,7 +83,7 @@ const PredictiveExam = () => {
           <span className="ut-label ut-label--on-ink">27-question diagnostic</span>
           <h2 className="pel-continue-title">Find your starting score</h2>
           <p className="pel-continue-meta">
-            15 Reading &amp; Writing + 12 Math questions &middot; about 30 minutes &middot; free for everyone
+            15 Reading &amp; Writing + 12 Math questions &middot; about 35 minutes &middot; free for everyone
           </p>
         </div>
         {!isLoading && exams.length > 0 && (
@@ -169,7 +169,7 @@ const PredictiveExam = () => {
                   </span>
                 </span>
                 <span className="pel-exam-side">
-                  <span className="ut-chip">~30 min</span>
+                  <span className="ut-chip">~35 min</span>
                   <FiChevronRight className="pel-exam-arrow" aria-hidden="true" />
                 </span>
               </button>

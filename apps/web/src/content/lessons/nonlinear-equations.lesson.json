@@ -1,0 +1,714 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "nonlinear-equations",
+  "title": "Nonlinear Equations",
+  "estimatedMinutes": 35,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Nonlinear Equations",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|nonlinear equation} contains a squared variable (or a variable under a root), so it can have $0$, $1$, or $2$ real solutions instead of always one. The centerpiece is the **quadratic equation** $ax^2 + bx + c = 0$, and you have three tools for it—plus one detector that counts solutions without solving at all."
+        },
+        {
+          "type": "table",
+          "headers": ["Tool", "Use it when…"],
+          "rows": [
+            ["**Factoring** + zero product", "the quadratic factors nicely (integer roots)"],
+            ["**Square-root method**", "there's a perfect square but no lone $x$-term: $(x - 3)^2 = 25$"],
+            ["**Quadratic formula**", "always works—your fallback when factoring isn't obvious"],
+            ["**Discriminant** $b^2 - 4ac$", "the question asks *how many* solutions, not what they are"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Get one side to $0$ first.** Factoring and the formula both need the form $ax^2 + bx + c = 0$.",
+            "**Zero product:** if a product equals $0$, some factor equals $0$—that's what makes factoring solve equations.",
+            "**Taking a square root gives two answers:** $\\pm$. Forgetting the negative root is the top error in this skill.",
+            "**Never divide both sides by the variable**—you'll silently delete the $x = 0$ solution.",
+            "**Squared both sides?** Check every answer in the *original* equation—squaring can create {rose|extraneous solutions}.",
+            "**Systems with a parabola:** substitute, solve the resulting quadratic; solutions are the **intersection points**."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Multiple choice bailout: solutions of an equation can always be *tested*. Plugging the choices into the equation is never wrong—and often faster."
+        }
+      ]
+    },
+    {
+      "id": "factoring",
+      "title": "Solve by Factoring",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "**Zero product property:** if $A \\cdot B = 0$, then $A = 0$ or $B = 0$. Factor the quadratic, set each factor to zero, and each gives a solution."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What are the solutions of $x^2 + 2x - 15 = 0$? Look for two numbers that **multiply to $-15$** and **add to $+2$**: they are $+5$ and $-3$."
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x^2 + 2x - 15 = 0", "note": "Given equation — one side is already $0$" },
+                { "math": "(x + 5)(x - 3) = 0", "note": "Factor: $5 \\times (-3) = -15$ and $5 + (-3) = 2$" },
+                { "math": "x = -5 \\quad \\text{or} \\quad x = 3", "note": "Set each factor equal to $0$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check** one of them: $(-5)^2 + 2(-5) - 15 = 25 - 10 - 15 = 0$ {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Move Everything to One Side First"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What are the solutions of $x^2 = 5x + 24$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x^2 - 5x - 24 = 0", "note": "Subtract $5x$ and $24$ — get $0$ on one side **before** factoring" },
+                { "math": "(x - 8)(x + 3) = 0", "note": "$-8 \\times 3 = -24$ and $-8 + 3 = -5$" },
+                { "math": "x = 8 \\quad \\text{or} \\quad x = -3", "note": "Zero product" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Forbidden Move"
+        },
+        {
+          "type": "p",
+          "text": "When both sides share a factor of $x$, dividing it away feels natural—and quietly destroys a solution:"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "$x^2 = 6x \\;\\Rightarrow\\; x = 6$",
+              "note": "Divided both sides by $x$ — the solution $x = 0$ is gone. (Test it: $0^2 = 6(0)$ is true!)"
+            },
+            {
+              "verdict": "correct",
+              "text": "$x^2 - 6x = 0 \\;\\Rightarrow\\; x(x - 6) = 0 \\;\\Rightarrow\\; x = 0 \\;\\text{or}\\; x = 6$",
+              "note": "Factor instead of dividing — both solutions survive."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Dividing by a variable is dividing by something that might be zero. Factor it out instead—every time."
+        }
+      ]
+    },
+    {
+      "id": "roots-and-formula",
+      "title": "Square Roots & the Quadratic Formula",
+      "blocks": [
+        {
+          "type": "h3",
+          "text": "The Square-Root Method"
+        },
+        {
+          "type": "p",
+          "text": "When the equation is a **perfect square equal to a number**—no lone $x$-term—skip factoring entirely: take the square root of both sides, and keep **both** signs."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What are the solutions of $(x - 3)^2 = 25$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x - 3 = \\pm 5", "note": "Square root of both sides — a square of $25$ can come from $5$ **or** $-5$" },
+                { "math": "x = 3 + 5 \\quad \\text{or} \\quad x = 3 - 5", "note": "Add $3$ to both sides, once for each sign" },
+                { "math": "x = 8 \\quad \\text{or} \\quad x = -2", "note": "Two solutions" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The $\\pm$ is not decoration. Answering only $x = 8$ throws away half the solution set—and the discarded half is usually among the wrong answers waiting for you."
+        },
+        {
+          "type": "h3",
+          "text": "The Quadratic Formula"
+        },
+        {
+          "type": "p",
+          "text": "When factoring isn't obvious, the formula solves **any** quadratic in standard form $ax^2 + bx + c = 0$:"
+        },
+        {
+          "type": "math",
+          "tex": "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}",
+          "boxed": true
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What are the solutions of $3x^2 - 5x - 2 = 0$? Here $a = 3$, $b = -5$, $c = -2$:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x = \\frac{-(-5) \\pm \\sqrt{(-5)^2 - 4(3)(-2)}}{2(3)}", "note": "Plug in $a$, $b$, $c$ — parentheses around every negative" },
+                { "math": "x = \\frac{5 \\pm \\sqrt{25 + 24}}{6} = \\frac{5 \\pm 7}{6}", "note": "$\\sqrt{49} = 7$" },
+                { "math": "x = 2 \\quad \\text{or} \\quad x = -\\tfrac{1}{3}", "note": "$\\frac{12}{6}$ and $\\frac{-2}{6}$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "(This one also factors—$(3x + 1)(x - 2) = 0$—but the formula doesn't care whether you spotted that.)"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Formula sign traps: $-b$ when $b$ is negative becomes positive, and $-4ac$ with a negative $c$ becomes **addition** under the root. Write the substitution line fully before simplifying."
+        }
+      ]
+    },
+    {
+      "id": "discriminant",
+      "title": "How Many Solutions? The Discriminant",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Often the SAT doesn't want the solutions—just **how many** there are. The answer lives entirely under the square root of the quadratic formula:"
+        },
+        {
+          "type": "math",
+          "tex": "x = \\frac{-b \\pm \\sqrt{\\,\\blue{b^2 - 4ac}\\,}}{2a}",
+          "boxed": true,
+          "caption": "{blue|b² − 4ac} — the **discriminant**: the only part that decides the number of real solutions"
+        },
+        {
+          "type": "p",
+          "text": "A positive number has two square roots, zero has one, and a negative number has none (among real numbers). So:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "$b^2 - 4ac > 0$ — two",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 170,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -5,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "quadratic", "a": 1, "b": 0, "c": -4, "tone": "blue" }],
+                  "points": [
+                    { "x": -2, "y": 0, "tone": "rose" },
+                    { "x": 2, "y": 0, "tone": "rose" }
+                  ],
+                  "caption": "Crosses the x-axis twice.",
+                  "alt": "A parabola crossing the x-axis at two points"
+                }
+              ]
+            },
+            {
+              "title": "$b^2 - 4ac = 0$ — one",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 170,
+                  "xMin": -2,
+                  "xMax": 4,
+                  "yMin": -1,
+                  "yMax": 6,
+                  "step": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "vertex", "a": 1, "h": 1, "k": 0, "tone": "purple" }],
+                  "points": [{ "x": 1, "y": 0, "tone": "rose" }],
+                  "caption": "Touches the x-axis once.",
+                  "alt": "A parabola touching the x-axis at exactly one point"
+                }
+              ]
+            },
+            {
+              "title": "$b^2 - 4ac < 0$ — zero",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 170,
+                  "xMin": -3,
+                  "xMax": 3,
+                  "yMin": -1,
+                  "yMax": 7,
+                  "step": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "quadratic", "a": 1, "b": 0, "c": 2, "tone": "teal" }],
+                  "caption": "Never reaches the x-axis.",
+                  "alt": "A parabola entirely above the x-axis"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "How many distinct real solutions does the equation $3x^2 - 6x + 5 = 0$ have?",
+              "choices": ["Zero", "Exactly one", "Exactly two", "Infinitely many"]
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "b^2 - 4ac", "note": "Discriminant, with $a = 3$, $b = -6$, $c = 5$" },
+                { "math": "(-6)^2 - 4(3)(5) = 36 - 60", "note": "Substitute" },
+                { "math": "-24 < 0", "note": "Negative — no real solutions" }
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "A negative discriminant means the square root has no real value—the parabola never touches the x-axis."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Exactly one requires the discriminant to equal exactly $0$; $-24 \\neq 0$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Two solutions needs a **positive** discriminant. If you got $+96$, you added $4ac$ instead of subtracting."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "A quadratic equation can't hold for every $x$—infinitely many solutions is a *linear* identity situation."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In the equation $x^2 + 10x + k = 0$, $k$ is a constant. If the equation has **exactly one** real solution, what is the value of $k$?",
+              "choices": ["$25$", "$-25$", "$5$", "$50$"]
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "b^2 - 4ac = 0", "note": "Exactly one solution ⇔ discriminant equals $0$" },
+                { "math": "(10)^2 - 4(1)k = 0", "note": "Substitute $a = 1$, $b = 10$, $c = k$" },
+                { "math": "k = 25", "note": "$100 = 4k$" }
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$100 - 4(25) = 0$. {green|✓} (Fittingly, $x^2 + 10x + 25 = (x + 5)^2$ — a perfect square touching at $x = -5$.)"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$k = -25$ gives a discriminant of $200 > 0$ — **two** solutions, not one."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$5$ is $\\sqrt{25}$ — one simplification too many. The constant itself must be $25$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$50$ halves the $100$ instead of dividing by $4$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Translate first, compute second: “two distinct real solutions” ⇔ $b^2 - 4ac > 0$; “exactly one” ⇔ $= 0$; “no real solutions” ⇔ $< 0$. Then it's arithmetic."
+        }
+      ]
+    },
+    {
+      "id": "systems-and-extraneous",
+      "title": "Systems & Extraneous Solutions",
+      "blocks": [
+        {
+          "type": "h3",
+          "text": "A Line Meets a Parabola"
+        },
+        {
+          "type": "p",
+          "text": "For a system pairing a linear and a quadratic equation, **substitute** one into the other. The resulting quadratic's solutions are the $x$-coordinates of the **intersection points**—so there can be $2$, $1$ (tangent), or $0$ of them."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} y = x^2 - 2x - 3 \\\\ y = x + 1 \\end{cases}"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x^2 - 2x - 3 = x + 1", "note": "Both equal $y$ — set them equal" },
+                { "math": "x^2 - 3x - 4 = 0", "note": "Move everything to one side" },
+                { "math": "(x - 4)(x + 1) = 0", "note": "Factor: $-4 \\times 1 = -4$, $-4 + 1 = -3$" },
+                { "math": "x = 4 \\quad \\text{or} \\quad x = -1", "note": "Then $y = x + 1$ gives the points $(4, 5)$ and $(-1, 0)$" }
+              ]
+            },
+            {
+              "type": "graph",
+              "width": 340,
+              "height": 300,
+              "xMin": -3,
+              "xMax": 5,
+              "yMin": -5,
+              "yMax": 7,
+              "step": 2,
+              "ticks": true,
+              "curves": [{ "type": "quadratic", "a": 1, "b": -2, "c": -3, "tone": "blue" }],
+              "lines": [{ "m": 1, "b": 1, "tone": "teal" }],
+              "points": [
+                { "x": 4, "y": 5, "tone": "green", "label": "(4, 5)", "labelDx": -14, "labelDy": -12 },
+                { "x": -1, "y": 0, "tone": "green", "label": "(-1, 0)", "labelDx": -48, "labelDy": -10 }
+              ],
+              "caption": "The system's two solutions are the two crossings.",
+              "alt": "A parabola and a line intersecting at the points (-1, 0) and (4, 5)"
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Extraneous Solutions"
+        },
+        {
+          "type": "p",
+          "text": "Equations with a square root get solved by **squaring both sides**—but squaring is a one-way door: it can manufacture solutions the original equation never had. Always test your answers in the **original**."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What is the solution set of $\\sqrt{x + 7} = x - 5$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x + 7 = (x - 5)^2", "note": "Square both sides" },
+                { "math": "x + 7 = x^2 - 10x + 25", "note": "Expand the square" },
+                { "math": "x^2 - 11x + 18 = 0", "note": "Move everything to one side" },
+                { "math": "(x - 2)(x - 9) = 0 \\;\\Rightarrow\\; x = 2 \\;\\text{or}\\; x = 9", "note": "Factor — now **check both** in the original" }
+              ]
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "$x = 9$:  $\\sqrt{9 + 7} = \\sqrt{16} = 4$  and  $9 - 5 = 4$",
+                  "note": "Both sides agree — a genuine solution."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "$x = 2$:  $\\sqrt{2 + 7} = 3$  but  $2 - 5 = -3$",
+                  "note": "$3 \\neq -3$: {rose|extraneous} — created by squaring, not a solution of the original. The solution set is $\\{9\\}$ only."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "A square root symbol outputs the **nonnegative** root, so $\\sqrt{\\text{anything}}$ can never equal a negative number. That's exactly the check $x = 2$ failed."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Choose the tool before touching the algebra: factor, square-root method, formula, or discriminant. And keep the two safety rules live—both roots of a square, and check after squaring."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "What is the **positive** solution of the equation $x^2 - 3x - 28 = 0$?",
+                  "choices": ["$4$", "$7$", "$14$", "$28$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Two numbers that multiply to $-28$ and add to $-3$: $-7$ and $+4$."
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "(x - 7)(x + 4) = 0", "note": "Factor" },
+                    { "math": "x = 7 \\quad \\text{or} \\quad x = -4", "note": "Zero product — the positive one is $7$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$4$ reads the factor $(x + 4)$ without flipping the sign—that factor's solution is $-4$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Check: $49 - 21 - 28 = 0$. {green|✓}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$14$ is $7 \\times 2$—no step in the solution produces it. Distractors don't have to be clever."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$28$ is the constant term, not a solution: $784 - 84 - 28 \\neq 0$."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "If $(x + 2)^2 = 49$, what is the **sum** of the solutions of the equation?",
+                  "choices": ["$-4$", "$-2$", "$5$", "$14$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Square-root method, keeping both signs:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "x + 2 = \\pm 7", "note": "Square root of both sides" },
+                    { "math": "x = 5 \\quad \\text{or} \\quad x = -9", "note": "$-2 + 7$ and $-2 - 7$" },
+                    { "math": "5 + (-9) = -4", "note": "Sum of the solutions" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Both roots kept, then added. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$-2$ is the **midpoint** of the solutions (the axis of symmetry), not their sum."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$5$ is what's left when the $\\pm$ becomes just $+$: one solution, not the sum of two."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$14$ adds $7 + 7$—the two square roots of $49$, not the two values of $x$."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "How many distinct real solutions does the equation $2x^2 - 7x + 9 = 0$ have?",
+                  "choices": ["Zero", "Exactly one", "Exactly two", "Cannot be determined"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** No solving needed—just the discriminant with $a = 2$, $b = -7$, $c = 9$:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "(-7)^2 - 4(2)(9)", "note": "$b^2 - 4ac$" },
+                    { "math": "49 - 72 = -23", "note": "Negative — the parabola never reaches the x-axis" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$-23 < 0$: zero real solutions. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Exactly one needs the discriminant to be exactly $0$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$49 + 72 = 121$ comes from **adding** $4ac$; the formula subtracts it."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The discriminant always determines the count—nothing is ambiguous here."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "math",
+                  "tex": "\\begin{cases} y = x^2 \\\\ y = 2x + 8 \\end{cases}"
+                },
+                {
+                  "type": "question",
+                  "stem": "The graphs of the equations in the system above intersect at two points. If $(a, b)$ is the intersection point with $a > 0$, what is the value of $b$?",
+                  "choices": ["$4$", "$8$", "$16$", "$-2$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Substitute and solve:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "x^2 = 2x + 8", "note": "Set the two expressions for $y$ equal" },
+                    { "math": "x^2 - 2x - 8 = 0 \\;\\Rightarrow\\; (x - 4)(x + 2) = 0", "note": "Standard form, then factor" },
+                    { "math": "x = 4 \\;\\text{or}\\; x = -2", "note": "The positive one is $a = 4$" },
+                    { "math": "b = 4^2 = 16", "note": "Intersection point $(4, 16)$ — check the line: $2(4) + 8 = 16$ {green|✓}" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$4$ is $a$ itself—and also the $y$-value of the *other* intersection $(-2, 4)$. Either way, not what was asked."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$8$ is the line's y-intercept, a number lifted from the problem, not from the solution."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "$(4, 16)$ satisfies both equations. {green|✓}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$-2$ is the $x$-coordinate of the other intersection—the one the condition $a > 0$ rules out."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Get $= 0$ first, then factor and apply the **zero product property**. Never divide both sides by $x$—factor it out so $x = 0$ survives.",
+            "Square-root method: $(x - h)^2 = n$ gives $x = h \\pm \\sqrt{n}$ — **two** answers.",
+            "The quadratic formula always works: $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$. Substitute negatives in parentheses.",
+            "The **discriminant** $b^2 - 4ac$ counts solutions: positive → two, zero → one, negative → none. Translate the words into the right comparison before computing.",
+            "Line + parabola: substitute, solve the quadratic; solutions are intersection points ($2$, $1$, or $0$ of them).",
+            "After squaring both sides, test every answer in the **original** equation—$\\sqrt{\\ }$ can't output a negative, and extraneous roots must be discarded."
+          ]
+        }
+      ]
+    }
+  ]
+}

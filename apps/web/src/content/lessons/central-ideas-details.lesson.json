@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "central-ideas-details",
+  "title": "Central Ideas and Details",
+  "estimatedMinutes": 25,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Central Ideas and Details",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Central Ideas and Details questions test whether you understood what a short text actually says. The question will ask you to identify the ==central idea== of a text or to find a specific ==detail== stated in it. Each text is brief—usually 25 to 110 words—and is followed by exactly one question."
+        },
+        {
+          "type": "p",
+          "text": "These are among the most common questions in the Reading and Writing section, and they are also among the most learnable: everything you need is **stated in the text**. You never need outside knowledge, and you should never use it—the correct answer is correct because the text says so, not because it is true in the real world."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Identify what the question asks.** Decide whether you are looking for the central idea of the whole text or one detail inside it.",
+            "**Read with a purpose.** Find the topic, then ask: “What point is the author making about it?”",
+            "**Summarize the text in your own words** before reading the choices, and predict what the answer should say.",
+            "**Compare each choice with the text**—not with what sounds smart or what you know about the subject.",
+            "**Use the process of elimination.** Ruling out the four common trap answers is often faster than hunting for the correct one."
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Identify What the Question Asks"
+        },
+        {
+          "type": "p",
+          "text": "The wording of the question tells you exactly what to look for—so read the question (but not the choices) *before* you read the text. The phrasing falls into a few predictable patterns:"
+        },
+        {
+          "type": "table",
+          "headers": ["Language in the question", "What to read for"],
+          "align": ["left", "center"],
+          "rows": [
+            ["“Which choice best states the **main idea** of the text?”", "central idea"],
+            ["“Which choice best states the **central idea** of the text?”", "central idea"],
+            ["“**According to the text**, what/why/how …?”", "stated detail"],
+            ["“**Based on the text**, …?”", "stated detail"],
+            ["“Which choice best describes **X**, as presented in the text?”", "detail about X"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "*Main idea* and *central idea* mean the same thing: the point the **whole text** makes. Detail questions, by contrast, point you toward one specific piece of information—the phrases *According to the text* and *Based on the text* are your signal that the answer is sitting in the text, waiting to be found."
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Knowing your goal before you read changes *how* you read. For a central-idea question, you track the big picture and let small details blur. For a detail question, you scan for one target and ignore everything else."
+        }
+      ]
+    },
+    {
+      "id": "find-the-central-idea",
+      "title": "Find the Central Idea",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Every text has a {blue|topic}—who or what the text is about—and a {teal|central idea}—the point the author makes about that topic. A topic is a fragment; a central idea is a complete thought."
+        },
+        {
+          "type": "strip",
+          "alt": "Topic plus the author's point about it equals the central idea",
+          "segments": [
+            { "text": "Topic", "tone": "blue" },
+            { "text": "+", "tone": "op" },
+            { "text": "The author's point about it", "tone": "teal" },
+            { "text": "=", "tone": "op" },
+            { "text": "Central idea", "tone": "green" }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "“Seagrass meadows” is a {blue|topic}. “Seagrass meadows store far more carbon than their small size suggests” is a {teal|central idea}."
+        },
+        {
+          "type": "h3",
+          "text": "Where the Central Idea Lives"
+        },
+        {
+          "type": "p",
+          "text": "In SAT texts, the central idea is usually stated directly in a single sentence—very often the **first** or **last** one. Every other sentence plays a supporting role: examples, data, and explanations that back the main point up. Watch how that works in a test-length text:"
+        },
+        {
+          "type": "passage",
+          "text": "Seagrass meadows cover less than 0.2 percent of the seafloor, ==yet they are among the ocean's most effective carbon sinks==. {teal|Their dense roots trap drifting organic particles and lock them into the sediment}, where the carbon can stay buried for centuries. {teal|By some estimates, seagrasses account for roughly 10 percent of the carbon stored in ocean sediment each year.}"
+        },
+        {
+          "type": "legend",
+          "items": [
+            { "tone": "yellow", "label": "Central idea" },
+            { "tone": "teal", "label": "Supporting details" }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**Summary:** Despite covering a tiny area, seagrass meadows store an outsized share of the ocean's carbon. The highlighted clause makes a **claim**; every other sentence exists to support it—*how* the meadows trap carbon, and *how much* they store."
+        },
+        {
+          "type": "h3",
+          "text": "Summarize, Then Predict"
+        },
+        {
+          "type": "p",
+          "text": "Before you look at the choices, compress the text into one plain sentence of your own. The summary doesn't need to be elegant—it needs to capture the {blue|topic} and the {teal|author's point}. Then choose the answer that matches your summary."
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Three of the four choices are written to sound reasonable. If you read them before forming your own summary, they all start to sound right. Predict first—then match."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "In the late 1920s, anthropologist and writer Zora Neale Hurston traveled through the American South collecting the folktales, songs, and sermons of Black communities—material she published in the 1935 volume *Mules and Men*. This fieldwork was more than a separate scholarly pursuit: the storytelling traditions she recorded became the backbone of her fiction. In novels such as *Their Eyes Were Watching God*, dialogue and folk speech carry much of the story, a technique drawn directly from the oral performances she had documented."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice best states the main idea of the text?",
+              "choices": [
+                "Hurston's anthropological fieldwork strongly shaped the style of her fiction.",
+                "Hurston was the most important collector of folklore in the twentieth century.",
+                "Hurston published a collection of folk material titled *Mules and Men* in 1935.",
+                "Hurston gave up anthropology once her novels began to succeed."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "A quick summary first: {blue|Hurston's folklore fieldwork} {teal|fed directly into how she wrote her novels}. Now hold each choice against that summary."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "The text moves from Hurston's fieldwork to the claim that it “became the backbone of her fiction,” then supports that claim with the example of her novels. This choice restates exactly that relationship."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The text never compares Hurston with other collectors, so “most important” goes beyond anything stated. This answer is {rose|too broad} for the text."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "True—but it is a single supporting detail, not the point of the whole text. A detail promoted to “main idea” is a classic {rose|too narrow} trap."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "The text says the fieldwork was “more than a separate scholarly pursuit” and shaped her novels—it never says she abandoned it. This choice {rose|distorts} the text's claim."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "detail-questions",
+      "title": "Answer Detail Questions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Detail questions ask what the text says about **one specific thing**. The stems ==According to the text, …== and ==Based on the text, …== are your cue: the answer is stated in the text, and your job is precise retrieval—find it, understand it, and match it."
+        },
+        {
+          "type": "h3",
+          "text": "Turn the Question into a Search Target"
+        },
+        {
+          "type": "list",
+          "style": "number",
+          "items": [
+            "Note the **key term** in the question—the person, thing, or event it asks about.",
+            "**Scan the text** for that term (or a synonym) and read the entire sentence around it—not just the phrase itself.",
+            "Put what the text says **in your own words**.",
+            "Choose the answer that **means the same thing**, even if it uses completely different words."
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Paraphrase Beats Word-Matching"
+        },
+        {
+          "type": "p",
+          "text": "Correct answers usually **restate the text in new words**. Trap answers often do the opposite: they recycle the text's exact words but change the meaning. If a choice repeats striking vocabulary from the text, inspect it *more* carefully, not less."
+        },
+        {
+          "type": "p",
+          "text": "Suppose a text states: *“The museum's new wing, funded largely by small donations, doubled the building's exhibition space,”* and the question asks what the text says about the wing's funding."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "Much of the money for the wing came from many modest gifts.",
+              "note": "A paraphrase: “funded largely” → “much of the money,” “small donations” → “many modest gifts.” Different words, same meaning."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "Donations to the museum doubled after the new wing opened.",
+              "note": "Recycles “donations” and “doubled” straight from the text—but stitches them into a claim the text never makes."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "When a honeybee locates a rich patch of flowers, it returns to the hive and performs a “waggle dance” on the vertical comb. The angle of the dance relative to straight up communicates the direction of the flowers relative to the sun, while the duration of the dance's central waggle run indicates the distance: the longer the waggle phase lasts, the farther away the food source is."
+            },
+            {
+              "type": "question",
+              "stem": "According to the text, how does a honeybee communicate the **distance** to a food source?",
+              "choices": [
+                "By the angle of its dance relative to straight up",
+                "By the length of time its waggle phase lasts",
+                "By the number of flowers it visits before returning to the hive",
+                "By dancing more rapidly when the food source is nearby"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The search target is {blue|distance}. The text pairs **angle** with *direction* and **duration** with *distance*—so the answer must be about how long the dance lasts."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "The angle is real, but the text ties it to *direction*, not distance. This is a {rose|swapped detail}—right words, wrong idea."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "A clean paraphrase of “the longer the waggle phase lasts, the farther away the food source is.”"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The text says nothing about counting flower visits. {rose|Not in the text.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Tempting because it sounds plausible—but the text links distance to the dance's *duration*, never to its speed. This choice {rose|distorts} the stated detail."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trap-answers",
+      "title": "Eliminate Trap Answers",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Wrong answers on the SAT aren't random—they're engineered, and the same four traps appear on nearly every Central Ideas and Details question. Once you can *name* the trap in a choice, elimination becomes fast and reliable. Take this text:"
+        },
+        {
+          "type": "passage",
+          "text": "After the disappointing performance of their early gliders, Wilbur and Orville Wright grew skeptical of the aerodynamic tables their designs relied on. In 1901 they built a six-foot wind tunnel in their Dayton bicycle shop and methodically tested more than two hundred model wing shapes. The data they gathered replaced guesswork with measurement, and the wing designed from that data carried their successful 1902 glider—and, a year later, the first powered airplane."
+        },
+        {
+          "type": "p",
+          "text": "A reasonable summary: *systematic wind-tunnel testing gave the Wrights reliable data, and that data made their later success possible.* Now watch each trap distort that idea:"
+        },
+        {
+          "type": "table",
+          "headers": ["Trap", "Sample wrong answer", "Why it fails"],
+          "rows": [
+            ["{rose|Too broad}", "“The Wright brothers transformed the history of transportation.”", "Sweeps far beyond this text, which covers one testing program—not all of transportation history."],
+            ["{rose|Too narrow}", "“The Wrights' wind tunnel was six feet long.”", "A true detail, but it supports the point—it isn't the point of the whole text."],
+            ["{rose|Distortion}", "“The Wrights' tests confirmed that the existing aerodynamic tables were reliable.”", "Twists the text's claim into its opposite: their data *replaced* the tables they had come to distrust."],
+            ["{rose|Not in the text}", "“The Wrights' engine design was the key to powered flight.”", "Sounds plausible—but engines are never mentioned. Outside knowledge can't make an answer correct."]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "And here is what a correct answer looks like against the same text:"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "By systematically testing wing shapes, the Wrights replaced guesswork with data that made their later aircraft possible.",
+              "note": "Matches the text's scope and its actual claim—nothing added, nothing exaggerated, nothing twisted."
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "If any part of a choice is unsupported by the text—even one word—the entire choice is wrong. Eliminate it."
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Extreme wording—*always*, *only*, *proves*, *the most important*—is a red flag. A 100-word text can rarely support a claim that strong, so extreme choices are usually **too broad** or **distortions**."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Work through these the way you will on test day: read the question stem, read the text with that goal in mind, summarize, predict—and only then eliminate. Commit to a choice before you open the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The royal library assembled at Nineveh in the seventh century BCE by the Assyrian king Ashurbanipal held tens of thousands of clay tablets, including the epic of *Gilgamesh*. When the palace burned during the sack of the city in 612 BCE, the fire had an unexpected effect: it baked the clay tablets hard, preserving texts that might otherwise have crumbled away over the centuries. Much of what scholars now know about Mesopotamian literature survives because of that destruction."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice best states the main idea of the text?",
+                  "choices": [
+                    "The library at Nineveh was the largest library in the ancient world.",
+                    "The fire that destroyed Ashurbanipal's palace ironically preserved his library's contents.",
+                    "The epic of *Gilgamesh* is the most important work of Mesopotamian literature.",
+                    "Scholars have now finished studying the tablets recovered from Nineveh."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** The text's turn—“the fire had an unexpected effect”—is the point: destruction ended up preserving the library, which is why so much Mesopotamian literature survives."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "The text says the library held “tens of thousands” of tablets but never compares it with other libraries. {rose|Not in the text.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Captures both the topic (the library's destruction) and the author's point about it (the fire preserved the tablets)—the claim every other sentence supports."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "*Gilgamesh* appears only as an example of the collection, and the text never ranks its importance. {rose|Too narrow}, plus an unsupported superlative."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The text says scholars *know* much because the tablets survived—not that their study is finished. {rose|Distortion.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Growing up in Lyme Regis on England's southern coast, Mary Anning supported her family by collecting fossils from the crumbling seaside cliffs and selling them to visitors. In 1811, when she was about twelve, she and her brother Joseph uncovered the first ichthyosaur skeleton to be scientifically described, and in 1823 she found the first complete plesiosaur. Though the scientific societies of her era rarely credited her, geologists came to rely on her discoveries and her careful anatomical observations."
+                },
+                {
+                  "type": "question",
+                  "stem": "According to the text, how did the scientific societies of Anning's era respond to her work?",
+                  "choices": [
+                    "They rarely gave her credit for it.",
+                    "They funded her collecting expeditions along the cliffs.",
+                    "They published her anatomical observations under her own name.",
+                    "They questioned whether her plesiosaur skeleton was genuine."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The search target is *scientific societies*. The text's final sentence states that they “rarely credited her”—choice A paraphrases exactly that."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "“Rarely credited her” → “rarely gave her credit.” A direct paraphrase of the stated detail."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The text says she sold fossils to support her family—no funding from societies is ever mentioned. {rose|Not in the text.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "The opposite of what the text states: societies that “rarely credited her” were not publishing under her name. {rose|Contradiction.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The text mentions no doubts about her finds. Even if such doubts existed historically, an answer must come from *this text*. {rose|Not in the text.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "For much of the twentieth century, some historians argued that the settlement of the remote Pacific islands was largely accidental—the result of canoes drifting off course. The experimental voyages of the Hōkūleʻa, a reconstructed double-hulled canoe first sailed from Hawaiʻi to Tahiti in 1976, undermined that view. Navigating without instruments, by reading stars, ocean swells, and seabirds, its crew showed that traditional Polynesian wayfinding could reliably guide voyagers across thousands of kilometers of open ocean—strengthening the case that Pacific settlement was deliberate."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice best states the main idea of the text?",
+                  "choices": [
+                    "The Hōkūleʻa's voyages provided evidence that the Pacific islands were settled deliberately rather than accidentally.",
+                    "The Hōkūleʻa sailed from Hawaiʻi to Tahiti for the first time in 1976.",
+                    "Historians have abandoned every earlier theory about the settlement of the Pacific.",
+                    "Traditional Polynesian wayfinding relies on stars, ocean swells, and seabirds."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The text is built on a contrast: an old view (accidental drift) and the evidence that “undermined that view.” The main idea must capture that turn—old theory challenged, deliberate-settlement case strengthened."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "States the full arc: the voyages supplied evidence against accidental drift and for deliberate settlement. This is the claim the whole text develops."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "A true date-and-place detail, but only the setup for the point. {rose|Too narrow.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "“Abandoned every earlier theory” is far stronger than “undermined that view.” Extreme wording marks this as a {rose|distortion}."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The navigation methods are a supporting detail about *how* the crew sailed—not the point of the text. {rose|Too narrow.}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Read the question first and decide: **central idea** or **specific detail**? The question's wording tells you.",
+            "Central idea = {blue|topic} + {teal|the author's point about it}. Summarize in your own words *before* reading the choices.",
+            "Correct answers **paraphrase** the text; trap answers often recycle its exact words with a twisted meaning.",
+            "Eliminate by name: {rose|too broad}, {rose|too narrow}, {rose|distortion}, {rose|not in the text}.",
+            "If any part of a choice is unsupported, the whole choice is wrong—and outside knowledge never rescues it."
+          ]
+        }
+      ]
+    }
+  ]
+}

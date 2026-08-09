@@ -1,0 +1,629 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "probability",
+  "title": "Probability",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Probability",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{blue|Probability} measures how likely an event is, on a scale from $0$ (impossible) to $1$ (certain). When outcomes are equally likely, it's a counting exercise:"
+        },
+        {
+          "type": "math",
+          "tex": "P(\\text{event}) = \\frac{\\green{\\text{favorable outcomes}}}{\\blue{\\text{total possible outcomes}}}",
+          "boxed": true
+        },
+        {
+          "type": "table",
+          "headers": ["Probability", "Meaning"],
+          "align": ["center", "left"],
+          "rows": [
+            ["$0$", "impossible"],
+            ["$0.5$", "as likely as not"],
+            ["$1$", "certain"],
+            ["$\\frac{7}{20}$, $0.35$, $35\\%$", "the same probability in three costumes—convert freely"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**The denominator is the group being drawn from.** Identifying it correctly *is* the skill—most wrong answers are right numerators over wrong denominators.",
+            "**Two-way tables:** “and” questions take one cell over the **grand total**.",
+            "**“Given that” shrinks the world:** the denominator becomes that row's or column's total, not the grand total.",
+            "**Complement:** $P(\\text{not } A) = 1 - P(A)$—often the faster count.",
+            "**Probability predicts counts:** expected number $=$ probability $\\times$ group size."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Before computing anything, say the denominator out loud: “out of *all* $200$ students” or “out of *the $120$ eleventh-graders*.” The words of the question always name the group."
+        }
+      ]
+    },
+    {
+      "id": "basics",
+      "title": "Probability Basics",
+      "blocks": [
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A jar holds $5$ red, $7$ blue, and $8$ green marbles. One marble is drawn at random. What is the probability it is blue?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\text{total} = 5 + 7 + 8 = 20", "note": "Count **all** possible outcomes first" },
+                { "math": "P(\\text{blue}) = \\frac{7}{20} = 0.35", "note": "Favorable over total" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Complement: “Not” Questions"
+        },
+        {
+          "type": "p",
+          "text": "For the same jar, what is $P(\\text{not green})$? Two roads, one answer:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Count the favorables",
+              "blocks": [
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "P = \\frac{5 + 7}{20} = \\frac{12}{20}", "note": "Red and blue are the non-greens" }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Subtract from 1",
+              "blocks": [
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "P = 1 - \\frac{8}{20} = \\frac{12}{20}", "note": "Everything except green" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Both give $\\frac{12}{20} = \\frac{3}{5}$. The complement route shines when “not” covers many categories—one subtraction instead of a long addition."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A box contains $12$ pens: $5$ black, $4$ blue, and $3$ red. If one pen is selected at random, what is the probability that it is **not** blue?",
+              "choices": ["$\\frac{2}{3}$", "$\\frac{1}{3}$", "$\\frac{5}{12}$", "$\\frac{7}{12}$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Not blue means black or red: $\\frac{5 + 3}{12} = \\frac{8}{12} = \\frac{2}{3}$. Or: $1 - \\frac{4}{12}$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{4}{12} = \\frac{1}{3}$ is $P(\\text{blue})$—the “not” never got applied."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{5}{12}$ counts only the black pens, as if “not blue” had one alternative. The red pens are also not blue."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{7}{12}$ adds blue and red—a complement taken of the wrong color."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Sanity bound: every probability lives in $[0, 1]$, and $P(A) + P(\\text{not } A) = 1$. If your two pieces don't sum to $1$, a count is off."
+        }
+      ]
+    },
+    {
+      "id": "two-way-tables",
+      "title": "Two-Way Tables",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Most SAT probability questions read from a {blue|two-way table}—counts sorted by two categories at once. A survey of $200$ students, by grade and by whether they play a school sport:"
+        },
+        {
+          "type": "table",
+          "headers": ["", "Plays a sport", "No sport", "Total"],
+          "align": ["left", "center", "center", "center"],
+          "rows": [
+            ["**Grade 11**", "$72$", "$48$", "$120$"],
+            ["**Grade 12**", "$18$", "$62$", "$80$"],
+            ["**Total**", "$90$", "$110$", "$200$"]
+          ],
+          "caption": "Row and column totals in the margins; the grand total ($200$) in the corner."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "If one of the $200$ students is chosen at random, what is the probability that the student plays a sport?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "P(\\text{sport}) = \\frac{90}{200} = \\frac{9}{20}", "note": "Column total over the grand total — grade doesn't matter here" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "An **“and”** event names one cell: $P(A \\text{ and } B) = \\dfrac{\\text{that cell}}{\\text{grand total}}$ — as long as the draw is from the whole group."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "If one of the $200$ students is selected at random, what is the probability that the student is in grade 11 **and** plays a sport?",
+              "choices": ["$\\frac{9}{25}$", "$\\frac{3}{5}$", "$\\frac{4}{5}$", "$\\frac{3}{5} \\times \\frac{9}{20}$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "One cell: $72$ grade-11 athletes, out of all $200$ students: $\\frac{72}{200} = \\frac{9}{25}$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{72}{120} = \\frac{3}{5}$ divides by the grade-11 total—that answers a **given that** question (“given grade 11…”), which this is not."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{72}{90} = \\frac{4}{5}$ divides by the athletes' total—the other conditional, also not asked."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Multiplying the two overall probabilities assumes grade and sport are unrelated—the table shows they aren't (grade 11 plays at a much higher rate). Read the cell; don't reconstruct it."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Check a table's health before using it: rows sum to their margins, margins sum to the grand total. Ten seconds, and it also forces you to *see* where everything lives."
+        }
+      ]
+    },
+    {
+      "id": "conditional",
+      "title": "“Given That” Shrinks the World",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "**Conditional probability:** “given that $B$” restricts the draw to group $B$. The denominator becomes $B$'s total; the numerator is the part of $B$ that is also $A$."
+        },
+        {
+          "type": "p",
+          "text": "Same table as before. *Given that a student is in grade 11*, what is the probability the student plays a sport? The words “given grade 11” collapse the world to that one row of $120$ students:"
+        },
+        {
+          "type": "steps",
+          "items": [
+            { "math": "P(\\text{sport} \\mid \\text{grade 11}) = \\frac{72}{120} = \\frac{3}{5}", "note": "Athletes within the row, over the **row total**" }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Compare: overall, $P(\\text{sport}) = \\frac{90}{200} = 45\\%$—but *within grade 11* it's $60\\%$. Conditioning changed the answer because the two grades behave differently. And the **direction** of conditioning matters too:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "$P(\\text{sport} \\mid \\text{grade 11})$",
+              "blocks": [
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{72}{120} = \\frac{3}{5}", "note": "World = the $120$ in grade 11" }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "$P(\\text{grade 11} \\mid \\text{sport})$",
+              "blocks": [
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{72}{90} = \\frac{4}{5}", "note": "World = the $90$ athletes" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Same cell on top ($72$), different worlds below—$\\frac{3}{5}$ versus $\\frac{4}{5}$. The condition always names the denominator."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "One student is selected at random from those who do **not** play a sport. What is the probability that the student is in grade 12?",
+              "choices": ["$\\frac{31}{55}$", "$\\frac{31}{100}$", "$\\frac{31}{40}$", "$\\frac{11}{20}$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "“From those who do not play” makes the world the $110$ non-athletes; $62$ of them are twelfth-graders: $\\frac{62}{110} = \\frac{31}{55}$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{62}{200} = \\frac{31}{100}$ uses the grand total—but the draw was never from all $200$ students."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{62}{80} = \\frac{31}{40}$ conditions in the wrong direction: that's $P(\\text{no sport} \\mid \\text{grade 12})$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{110}{200} = \\frac{11}{20}$ is just the probability of being a non-athlete—the *condition*, not the question."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Watch for conditioning in disguise: “of the students who…,” “among those that…,” “selected from…”—all mean **given that**, and all shrink the denominator."
+        }
+      ]
+    },
+    {
+      "id": "frequencies-expected",
+      "title": "Frequencies & Expected Counts",
+      "blocks": [
+        {
+          "type": "h3",
+          "text": "Probability from a Frequency Table"
+        },
+        {
+          "type": "p",
+          "text": "One-variable frequency data works the same way—the denominator is the total frequency. Twenty students reported the number of books they read last month:"
+        },
+        {
+          "type": "table",
+          "compact": true,
+          "headers": ["Books read", "$0$", "$1$", "$2$", "$3$"],
+          "align": ["left", "center", "center", "center", "center"],
+          "rows": [["**Number of students**", "$4$", "$9$", "$5$", "$2$"]]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "If one of the $20$ students is chosen at random, what is the probability that the student read **at least** $2$ books?",
+              "choices": ["$\\frac{7}{20}$", "$\\frac{1}{4}$", "$\\frac{13}{20}$", "$\\frac{7}{13}$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "“At least $2$” means $2$ or $3$: $\\frac{5 + 2}{20} = \\frac{7}{20}$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{5}{20} = \\frac{1}{4}$ counts only *exactly* $2$—“at least” includes everything above it."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{13}{20}$ is the complement—the students who read **fewer than** $2$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{7}{13}$ divides favorable by *unfavorable*. Probabilities compare with the **total**, never part-to-part."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "From Probability to Predicted Counts"
+        },
+        {
+          "type": "p",
+          "text": "Probability runs forward, too: applied to a group, it **predicts a count**."
+        },
+        {
+          "type": "math",
+          "tex": "\\text{expected count} = P(\\text{event}) \\times \\text{group size}",
+          "boxed": true
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Quality testing shows that the probability a randomly selected part is defective is $0.02$. About how many defective parts should be expected in a shipment of $1{,}500$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "0.02 \\times 1{,}500 = 30", "note": "Probability $\\times$ group size — about $30$ defective parts" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Words like “expected,” “predicted,” or “about how many” signal this move—and the answer is an estimate, so it needn't divide evenly in real life."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "For every question, name the denominator's group **before** computing—then check whether a “given that” (in any disguise) shrinks it."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A bag contains $6$ apple, $9$ grape, and $5$ cherry candies. If one candy is drawn at random, what is the probability that it is **not** grape?",
+                  "choices": ["$\\frac{11}{20}$", "$\\frac{9}{20}$", "$\\frac{3}{10}$", "$\\frac{11}{9}$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Total $= 6 + 9 + 5 = 20$; not-grape $= 6 + 5 = 11$, so $P = \\frac{11}{20}$ (equivalently $1 - \\frac{9}{20}$)."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Check: $\\frac{9}{20} + \\frac{11}{20} = 1$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{9}{20}$ is $P(\\text{grape})$—the complement was never taken."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{6}{20} = \\frac{3}{10}$ counts only apple, forgetting cherry is also not grape."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{11}{9}$ is greater than $1$—impossible for a probability, and a part-to-part ratio besides."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "table",
+                  "headers": ["", "Morning shift", "Evening shift", "Total"],
+                  "align": ["left", "center", "center", "center"],
+                  "rows": [
+                    ["**Drives**", "$54$", "$36$", "$90$"],
+                    ["**Public transit**", "$24$", "$36$", "$60$"],
+                    ["**Total**", "$78$", "$72$", "$150$"]
+                  ]
+                },
+                {
+                  "type": "question",
+                  "stem": "The table classifies $150$ workers by commute type and shift. If one worker is selected at random, what is the probability that the worker takes public transit **and** works the evening shift?",
+                  "choices": ["$\\frac{6}{25}$", "$\\frac{3}{5}$", "$\\frac{1}{2}$", "$\\frac{2}{5}$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** “And” names one cell—$36$ transit-evening workers—over the grand total: $\\frac{36}{150} = \\frac{6}{25}$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "One cell over $150$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{36}{60} = \\frac{3}{5}$ divides by the transit row—that's $P(\\text{evening} \\mid \\text{transit})$, a conditional that wasn't asked."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{36}{72} = \\frac{1}{2}$ divides by the evening column—the other unasked conditional."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{60}{150} = \\frac{2}{5}$ is just $P(\\text{transit})$—the “and” half is missing."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Using the same table: if the selected worker is known to work the **morning shift**, what is the probability that the worker drives?",
+                  "choices": ["$\\frac{9}{13}$", "$\\frac{9}{25}$", "$\\frac{3}{5}$", "$\\frac{13}{25}$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** “Known to work the morning shift” shrinks the world to that column's $78$ workers, of whom $54$ drive: $\\frac{54}{78} = \\frac{9}{13}$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Cell over **column total**—the condition names the denominator. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{54}{150} = \\frac{9}{25}$ uses the grand total, ignoring the condition entirely."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{54}{90} = \\frac{3}{5}$ conditions the wrong way: that's $P(\\text{morning} \\mid \\text{drives})$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{78}{150} = \\frac{13}{25}$ is the probability of the *condition* (morning shift), not of driving within it."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The probability that a certain team wins any given game is $\\frac{3}{8}$. If the team plays $240$ games, about how many games should the team be expected to win?",
+                  "choices": ["$90$", "$80$", "$150$", "$30$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Expected count $=$ probability $\\times$ group size: $\\frac{3}{8} \\times 240 = 90$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$240 \\div 8 = 30$ per eighth, times $3$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$80$ is $\\frac{1}{3}$ of $240$—the fraction $\\frac{3}{8}$ flipped into “one in three.”"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$150$ is $\\frac{5}{8} \\times 240$—the expected **losses**, the complement."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$30$ is $240 \\div 8$: one eighth, with the $3$ never applied."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "$P = \\frac{\\text{favorable}}{\\text{total}}$, always between $0$ and $1$. Fractions, decimals, and percents are interchangeable.",
+            "**The denominator is the group being drawn from**—say it before you compute.",
+            "Two-way tables: “$A$ and $B$” $=$ one cell over the **grand total**. Check that rows and columns sum to their margins.",
+            "“Given that,” “of those who,” “selected from” → conditional: the denominator becomes that **row or column total**. Direction matters: $P(A \\mid B) \\neq P(B \\mid A)$.",
+            "$P(\\text{not } A) = 1 - P(A)$; the two must sum to $1$. “At least $k$” includes $k$ and everything above.",
+            "Expected count $=$ probability $\\times$ group size."
+          ]
+        }
+      ]
+    }
+  ]
+}

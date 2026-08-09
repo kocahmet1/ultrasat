@@ -1,0 +1,683 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "lines-angles-triangles",
+  "title": "Lines, Angles, and Triangles",
+  "estimatedMinutes": 35,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Lines, Angles, and Triangles",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Geometry questions here are **angle-chasing**: each figure hides a chain of small, certain facts—vertical angles, straight lines, triangle sums—and you follow the chain link by link until the unknown falls out. The full toolkit is short:"
+        },
+        {
+          "type": "table",
+          "headers": ["Fact", "Statement"],
+          "rows": [
+            ["Straight line", "angles on a line sum to $180°$"],
+            ["Around a point", "angles around a point sum to $360°$"],
+            ["Vertical angles", "opposite angles at a crossing are **equal**"],
+            ["Parallel lines + transversal", "only **two** angle values exist, summing to $180°$"],
+            ["Triangle sum", "interior angles sum to $180°$"],
+            ["Exterior angle", "equals the **sum of the two remote interior** angles"],
+            ["Isosceles triangle", "equal sides face **equal base angles**"],
+            ["Similar triangles", "equal angles; corresponding sides **proportional**"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Mark everything you deduce on the figure**—each new angle unlocks the next.",
+            "**At any crossing:** vertical angles match; neighbors sum to $180°$.",
+            "**Parallel lines:** decide equal (both acute or both obtuse) vs. supplementary (one of each)—that's the whole classification.",
+            "**In triangles:** two known angles always buy the third; tick marks (equal sides) buy equal angles.",
+            "**Similar triangles:** match corresponding sides *by position across from equal angles*, then set up one proportion—in the same order on both sides."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Figures on the SAT are usually to scale unless marked otherwise—use your eyes to *check* (an angle that looks acute isn't $130°$), but use the chain of facts to *prove*."
+        }
+      ]
+    },
+    {
+      "id": "lines-and-points",
+      "title": "Angles at Lines and Points",
+      "blocks": [
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 260,
+              "height": 150,
+              "elements": [
+                { "kind": "segment", "x1": 55, "y1": 30, "x2": 205, "y2": 120, "tone": "blue" },
+                { "kind": "segment", "x1": 55, "y1": 120, "x2": 205, "y2": 30, "tone": "blue" },
+                { "kind": "label", "x": 78, "y": 80, "text": "130°", "italic": false },
+                { "kind": "label", "x": 186, "y": 80, "text": "x°", "tone": "teal" },
+                { "kind": "label", "x": 130, "y": 45, "text": "y°", "tone": "rose" }
+              ],
+              "caption": "Two lines crossing: four angles, two facts.",
+              "alt": "Two crossing lines forming an X, with the left angle marked 130 degrees, the right angle marked x, and the top angle marked y"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x = 130", "note": "**Vertical angles** — opposite openings are equal" },
+                { "math": "y = 180 - 130 = 50", "note": "**Linear pair** — neighbors on a straight line sum to $180°$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Around a full point, the angles complete a circle: they sum to $\\blue{360°}$. Keep the two totals straight—**line $180°$, point $360°$**—because the test builds traps from exactly that mix-up:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Three angles measuring $x°$, $2x°$, and $60°$ together form a complete rotation **around a point**. What is the value of $x$?",
+              "choices": ["$100$", "$40$", "$60$", "$200$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Around a point: $x + 2x + 60 = 360$, so $3x = 300$ and $x = 100$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$40$ solves $3x + 60 = 180$—the **straight line** total, but these angles complete a full rotation."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$60$ just copies the given angle; nothing forces $x$ to match it."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$200$ is $2x$—the middle angle's measure, not $x$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Angle-chasing bookkeeping: every time you compute an angle, write it on the figure immediately. The next fact is usually waiting right next to it."
+        }
+      ]
+    },
+    {
+      "id": "parallel-lines",
+      "title": "Parallel Lines & Transversals",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A transversal crossing **parallel** lines creates eight angles—but only **two different values**. Every acute angle equals every other acute; every obtuse equals every obtuse; and any acute–obtuse pair sums to $180°$."
+        },
+        {
+          "type": "geometry",
+          "width": 290,
+          "height": 185,
+          "elements": [
+            { "kind": "segment", "x1": 30, "y1": 60, "x2": 260, "y2": 60, "tone": "blue" },
+            { "kind": "segment", "x1": 30, "y1": 135, "x2": 260, "y2": 135, "tone": "blue" },
+            { "kind": "segment", "x1": 75, "y1": 20, "x2": 215, "y2": 175, "tone": "gray" },
+            { "kind": "label", "x": 270, "y": 64, "text": "ℓ" },
+            { "kind": "label", "x": 270, "y": 139, "text": "m" },
+            { "kind": "label", "x": 145, "y": 52, "text": "65°", "italic": false },
+            { "kind": "label", "x": 125, "y": 129, "text": "a°", "tone": "teal" },
+            { "kind": "label", "x": 196, "y": 129, "text": "b°", "tone": "rose" }
+          ],
+          "caption": "$\\ell \\parallel m$. The $65°$ angle sits at the top crossing; $a°$ and $b°$ at the bottom one.",
+          "alt": "Two parallel horizontal lines cut by a transversal, with 65 degrees marked at the top intersection and angles a and b at the bottom intersection"
+        },
+        {
+          "type": "steps",
+          "items": [
+            { "math": "a = 65", "note": "Alternate interior angles (the “Z” pattern) — both acute, so **equal**" },
+            { "math": "b = 180 - 65 = 115", "note": "Same-side interior angles — one acute, one obtuse, so **supplementary**" }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Skip the vocabulary quiz (corresponding, alternate, co-interior…) and ask one question: **do the two angles look the same type, or different?** Same type → equal. Different → sum to $180°$. That shortcut answers every parallel-line question—when the lines are parallel."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 290,
+              "height": 185,
+              "elements": [
+                { "kind": "segment", "x1": 30, "y1": 60, "x2": 260, "y2": 60, "tone": "blue" },
+                { "kind": "segment", "x1": 30, "y1": 135, "x2": 260, "y2": 135, "tone": "blue" },
+                { "kind": "segment", "x1": 75, "y1": 20, "x2": 215, "y2": 175, "tone": "gray" },
+                { "kind": "label", "x": 270, "y": 64, "text": "ℓ" },
+                { "kind": "label", "x": 270, "y": 139, "text": "m" },
+                { "kind": "label", "x": 148, "y": 52, "text": "105°", "italic": false },
+                { "kind": "label", "x": 118, "y": 129, "text": "(2x + 25)°", "tone": "teal", "anchor": "end" }
+              ],
+              "caption": "The two marked angles are alternate interior angles.",
+              "alt": "Parallel lines with a transversal; 105 degrees marked at the top intersection and the expression 2x plus 25 degrees at the bottom intersection"
+            },
+            {
+              "type": "question",
+              "stem": "In the figure, lines $\\ell$ and $m$ are parallel. What is the value of $x$?",
+              "choices": ["$40$", "$25$", "$52.5$", "$105$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Both angles are the same type (the “Z” pair), so they're equal: $2x + 25 = 105$, giving $2x = 80$ and $x = 40$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$x = 25$ comes from $2x + 25 = 75$—treating the pair as supplementary. They're the same type, so they match, not sum."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$x = 52.5$ halves the $105$ without ever subtracting the $25$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$x = 105$ confuses the *angle's* measure with $x$—the variable inside the expression."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "triangle-angles",
+      "title": "Triangle Angles",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "The interior angles of **every** triangle sum to $180°$. Two known angles always determine the third."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 260,
+              "height": 155,
+              "elements": [
+                { "kind": "polygon", "points": [[35, 130], [225, 130], [150, 30]], "tone": "teal", "fill": true },
+                { "kind": "label", "x": 62, "y": 122, "text": "52°", "italic": false },
+                { "kind": "label", "x": 196, "y": 122, "text": "63°", "italic": false },
+                { "kind": "label", "x": 150, "y": 58, "text": "x°", "tone": "rose" }
+              ],
+              "alt": "A triangle with angles 52 degrees, 63 degrees, and x degrees"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x = 180 - 52 - 63 = 65", "note": "Triangle sum" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Exterior Angle Shortcut"
+        },
+        {
+          "type": "p",
+          "text": "Extend one side and the new **exterior angle** equals the sum of the two **remote** interior angles—the triangle sum and the straight line, fused into one step:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 300,
+              "height": 160,
+              "elements": [
+                { "kind": "polygon", "points": [[95, 35], [45, 135], [195, 135]], "tone": "teal", "fill": true },
+                { "kind": "segment", "x1": 195, "y1": 135, "x2": 275, "y2": 135, "tone": "gray" },
+                { "kind": "label", "x": 100, "y": 60, "text": "45°", "italic": false },
+                { "kind": "label", "x": 72, "y": 126, "text": "x°", "tone": "rose" },
+                { "kind": "label", "x": 222, "y": 124, "text": "115°", "italic": false }
+              ],
+              "caption": "The $115°$ exterior angle gathers the two remote interior angles.",
+              "alt": "A triangle with one side extended, forming an exterior angle of 115 degrees; the remote interior angles are 45 degrees and x degrees"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x + 45 = 115", "note": "Exterior $=$ sum of the two **remote** interiors" },
+                { "math": "x = 70", "note": "One subtraction — no need to find the third angle first" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Isosceles: Tick Marks Buy Angles"
+        },
+        {
+          "type": "p",
+          "text": "Equal sides (shown by tick marks) sit opposite **equal angles**. Given the apex angle, the two base angles split what's left of $180°$ evenly."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In triangle $ABC$, $AB = AC$ and the measure of angle $A$ is $48°$. What is the measure of angle $B$?",
+              "choices": ["$66°$", "$48°$", "$132°$", "$42°$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "The equal sides $AB$ and $AC$ face equal angles at $B$ and $C$: each is $\\frac{180 - 48}{2} = 66°$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$48°$ copies angle $A$—but $A$ is the *apex* between the equal sides, not one of the matched pair."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$132°$ is $180 - 48$ **unhalved**—the two base angles' combined share, not one angle."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$42°$ computes $90 - 48$: a complement, which nothing in this triangle asks for."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "similar-triangles",
+      "title": "Similar Triangles",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{blue|Similar} triangles are the same shape at different sizes: **all angles equal, all sides scaled by the same factor**. Two matching angles are enough to prove it (AA)—the third comes free from the triangle sum."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 310,
+              "height": 175,
+              "elements": [
+                { "kind": "polygon", "points": [[35, 135], [115, 135], [91, 75]], "tone": "blue", "fill": true },
+                { "kind": "label", "x": 75, "y": 152, "text": "6", "italic": false },
+                { "kind": "label", "x": 50, "y": 102, "text": "8", "italic": false },
+                { "kind": "label", "x": 112, "y": 102, "text": "10", "italic": false },
+                { "kind": "polygon", "points": [[150, 150], [270, 150], [234, 60]], "tone": "teal", "fill": true },
+                { "kind": "label", "x": 210, "y": 167, "text": "9", "italic": false },
+                { "kind": "label", "x": 178, "y": 100, "text": "12", "italic": false },
+                { "kind": "label", "x": 264, "y": 100, "text": "15", "italic": false }
+              ],
+              "caption": "Same shape, scale factor $\\frac{9}{6} = 1.5$: every side of the large triangle is $1.5$ times its partner.",
+              "alt": "A small triangle with sides 6, 8, 10 next to a similar larger triangle with sides 9, 12, 15"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "k = \\frac{9}{6} = 1.5", "note": "Scale factor from one **matched pair** of sides" },
+                { "math": "8 \\times 1.5 = 12, \\qquad 10 \\times 1.5 = 15", "note": "Every other side scales by the same $k$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Nested Version"
+        },
+        {
+          "type": "p",
+          "text": "The SAT's favorite similar-triangle setup hides one triangle inside another: a segment drawn **parallel to a side** creates a smaller triangle similar to the whole thing."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 300,
+              "height": 195,
+              "elements": [
+                { "kind": "polygon", "points": [[150, 30], [60, 160], [240, 160]], "tone": "blue", "fill": true },
+                { "kind": "segment", "x1": 90, "y1": 117, "x2": 210, "y2": 117, "tone": "rose" },
+                { "kind": "label", "x": 150, "y": 22, "text": "A" },
+                { "kind": "label", "x": 48, "y": 172, "text": "B" },
+                { "kind": "label", "x": 252, "y": 172, "text": "C" },
+                { "kind": "label", "x": 76, "y": 117, "text": "D" },
+                { "kind": "label", "x": 224, "y": 117, "text": "E" },
+                { "kind": "label", "x": 106, "y": 72, "text": "4", "italic": false },
+                { "kind": "label", "x": 64, "y": 142, "text": "2", "italic": false },
+                { "kind": "label", "x": 150, "y": 110, "text": "6", "italic": false },
+                { "kind": "label", "x": 150, "y": 178, "text": "x", "tone": "rose" }
+              ],
+              "caption": "$\\overline{DE} \\parallel \\overline{BC}$, so $\\triangle ADE \\sim \\triangle ABC$.",
+              "alt": "Triangle ABC with segment DE drawn parallel to base BC; AD is 4, DB is 2, DE is 6, and BC is x"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "AB = 4 + 2 = 6", "note": "The big triangle's side is the **whole** length $AD + DB$" },
+                { "math": "\\frac{DE}{BC} = \\frac{AD}{AB} \\;\\Rightarrow\\; \\frac{6}{x} = \\frac{4}{6}", "note": "Corresponding sides, same order: small over big" },
+                { "math": "x = 9", "note": "Cross-multiply: $4x = 36$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The classic nested-triangle error: using $DB = 2$ in the ratio. The big triangle's side runs from $A$ all the way to $B$—compare **whole side to whole side** ($AD$ with $AB$), never the leftover piece."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A person $6$ feet tall casts a shadow $4$ feet long. At the same time, a nearby tree casts a shadow $18$ feet long. What is the height, in feet, of the tree?",
+              "choices": ["$27$", "$12$", "$16$", "$72$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Sunlight makes two similar right triangles: $\\frac{\\text{height}}{\\text{shadow}} = \\frac{6}{4} = 1.5$ for both, so the tree is $18 \\times 1.5 = 27$ feet."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$12$ uses the ratio upside down ($18 \\times \\frac{4}{6}$)—that would make the tree *shorter* relative to its shadow than the person."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$16$ reasons additively (“the person's height is $2$ more than the shadow”)—similarity scales by multiplication, never by a fixed difference."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$72$ multiplies $18 \\times 4$—two lengths multiplied gives an area-like number, not a height."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Chase the chain: mark what you know, apply one fact at a time—and in similarity questions, check the ratio's order twice."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Two lines intersect, and a pair of **vertical** angles measures $(3x - 10)°$ and $(2x + 15)°$. What is the value of $x$?",
+                  "choices": ["$25$", "$35$", "$5$", "$65$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Vertical angles are equal:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "3x - 10 = 2x + 15", "note": "Set the vertical pair equal" },
+                    { "math": "x = 25", "note": "Subtract $2x$, add $10$ — each angle is $65°$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Check: $3(25) - 10 = 65$ and $2(25) + 15 = 65$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$35$ solves $5x + 5 = 180$—treating the pair as a **linear pair**. Vertical angles match; neighbors sum."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$5$ comes from botching the collection step ($x = 15 - 10$)."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$65$ is each angle's **measure**—the question asks for $x$."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Two parallel lines are cut by a transversal. Two **same-side interior** angles measure $(5x)°$ and $(4x)°$. What is the value of $x$?",
+                  "choices": ["$20$", "$36$", "$45$", "$10$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Same-side interior angles are one acute, one obtuse—**supplementary**:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "5x + 4x = 180", "note": "Different types → sum to $180°$" },
+                    { "math": "x = 20", "note": "$9x = 180$ — the angles are $100°$ and $80°$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$100 + 80 = 180$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$36$ sets $5x = 180$ alone—as if one angle filled the whole straight line."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$45$ does the same with $4x = 180$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$10$ solves $9x = 90$—a right angle where the fact demands $180°$."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "geometry",
+                  "width": 300,
+                  "height": 160,
+                  "elements": [
+                    { "kind": "polygon", "points": [[95, 35], [45, 135], [195, 135]], "tone": "teal", "fill": true },
+                    { "kind": "segment", "x1": 195, "y1": 135, "x2": 275, "y2": 135, "tone": "gray" },
+                    { "kind": "label", "x": 100, "y": 60, "text": "58°", "italic": false },
+                    { "kind": "label", "x": 72, "y": 126, "text": "x°", "tone": "rose" },
+                    { "kind": "label", "x": 222, "y": 124, "text": "126°", "italic": false }
+                  ],
+                  "alt": "A triangle with one side extended forming an exterior angle of 126 degrees; the remote interior angles are 58 degrees and x degrees"
+                },
+                {
+                  "type": "question",
+                  "stem": "In the figure, what is the value of $x$?",
+                  "choices": ["$68$", "$54$", "$32$", "$63$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Exterior angle theorem: $x + 58 = 126$, so $x = 68$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Check the long way: the interior angle beside $126°$ is $54°$, and $68 + 58 + 54 = 180$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$54$ is $180 - 126$: the *adjacent* interior angle, not the remote $x$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$32$ computes $90 - 58$—no right angle appears anywhere in this figure."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$63$ halves the $126$, as if the two remote angles had to be equal. Nothing says they are."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "In triangle $ABC$, point $D$ lies on side $\\overline{AB}$ and point $E$ lies on side $\\overline{AC}$ such that $\\overline{DE} \\parallel \\overline{BC}$. If $AD = 6$, $AB = 9$, and $DE = 10$, what is the length of $\\overline{BC}$?",
+                  "choices": ["$15$", "$6.7$", "$13$", "$30$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** $\\triangle ADE \\sim \\triangle ABC$ because $\\overline{DE} \\parallel \\overline{BC}$:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{AD}{AB} = \\frac{6}{9} = \\frac{2}{3}", "note": "Small triangle to big triangle — whole sides, both times" },
+                    { "math": "\\frac{DE}{BC} = \\frac{2}{3} \\;\\Rightarrow\\; BC = \\frac{3}{2}(10) = 15", "note": "Same ratio for every pair of corresponding sides" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "The big triangle is $\\frac{3}{2}$ the size, so its base is $15$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$6.7 \\approx 10 \\times \\frac{6}{9}$ shrinks instead of enlarging—$BC$ belongs to the *bigger* triangle."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$13$ adds the difference $9 - 6 = 3$ to $10$—additive thinking where similarity multiplies."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$30$ scales by $DB = 3$ as a *factor*—the leftover piece $DB$ isn't a side of either similar triangle."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Line $= 180°$, point $= 360°$, vertical angles equal. Write every deduced angle on the figure.",
+            "Parallel lines + transversal: only two values exist—same type → **equal**, different type → **supplementary**.",
+            "Triangle sum $180°$; the exterior angle equals the sum of the two **remote** interiors—one step instead of two.",
+            "Isosceles: equal sides face equal angles; base angles $= \\frac{180 - \\text{apex}}{2}$.",
+            "Similar triangles (AA): sides scale by one factor $k$. Set ratios in **matching order**, and in nested figures compare **whole side to whole side**—never the leftover piece.",
+            "Similarity multiplies, never adds—an answer built from a *difference* of sides is a trap."
+          ]
+        }
+      ]
+    }
+  ]
+}

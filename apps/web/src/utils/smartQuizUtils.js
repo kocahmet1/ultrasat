@@ -50,6 +50,22 @@ export const DIFFICULTY_FOR_LEVEL = {
 
 // HELPERS --------------------------------------------------------------------
 /**
+ * Restrict a fetched candidate pool to questions SmartQuiz should serve.
+ *
+ * - Questions with usageContext 'retired' are never served (they are kept in
+ *   Firestore only so past quiz sessions still resolve).
+ * - When the general-use pool (usageContext absent or 'general') can fill a
+ *   quiz by itself, exam-context questions are excluded so practice-exam
+ *   content is not spoiled in SmartQuizzes. Subcategories whose pool is
+ *   mostly exam-sourced keep working via the fallback.
+ */
+function filterServablePool(items, minCount = QUESTIONS_PER_QUIZ) {
+  const live = (items || []).filter((q) => q?.usageContext !== 'retired');
+  const general = live.filter((q) => !q?.usageContext || q.usageContext === 'general');
+  return general.length >= minCount ? general : live;
+}
+
+/**
  * Randomly sample `n` items from an array (without replacement).
  */
 function sampleN(arr, n) {
@@ -115,7 +131,8 @@ async function getQuizQuestions(subcategoryId, level, excludeIds = []) {
     raw = await getQuestionsBySubcategory(subcategoryId, null, 50);
     console.log(`[getQuizQuestions] Found ${raw.length} questions without difficulty filter for subcategory '${subcategoryId}'`);
   }
-  
+
+  raw = filterServablePool(raw);
   const filtered = raw.filter((q) => !excludeIds.includes(q.id));
   console.log(`[getQuizQuestions] After filtering excludeIds, ${filtered.length} questions remain`);
   
@@ -182,7 +199,7 @@ export const createMetaSmartQuiz = async (
         if (items.length === 0) {
           items = await getQuestionsBySubcategory(sc, null, 60);
         }
-        pool.push(...items);
+        pool.push(...filterServablePool(items));
       }
 
       // Deduplicate and filter out already asked
@@ -292,7 +309,8 @@ const createSmartQuizInternal = async (
         allQuestions = await getQuestionsBySubcategory(normalized, null, 50);
         console.log(`[createSmartQuizInternal] Found ${allQuestions.length} questions without difficulty filter for re-insertion`);
       }
-      
+      allQuestions = filterServablePool(allQuestions);
+
       // Create a map of question IDs we've already selected to avoid duplicates
       const selectedIds = new Set(quizQuestions.map(q => q.id));
       
@@ -751,6 +769,16 @@ const LEVEL_FOR_DIFFICULTY = Object.fromEntries(
 /** Questions flagged for exam-only use never enter practice quizzes. */
 const isGeneralUseQuestion = (q) => !q?.usageContext || q.usageContext === 'general';
 
+/**
+ * Retired questions stay in the collection so that past attempts, `questionStats`, and any
+ * `examModules` references remain intact — they are only withheld from new quizzes.
+ * See `scripts/retireQuestions.js`.
+ */
+const isRetiredQuestion = (q) => q?.retired === true;
+
+/** A question is eligible for a new practice quiz only if it is general-use and not retired. */
+export const isQuizEligibleQuestion = (q) => isGeneralUseQuestion(q) && !isRetiredQuestion(q);
+
 /** Canonical kebab subcategory of a question doc, tolerating field variants. */
 const getQuestionSubcategoryId = (q) =>
   getKebabCaseFromAnyFormat(q?.subcategory || q?.subCategory || q?.subcategoryId || '') || null;
@@ -811,7 +839,7 @@ const createCustomSmartQuizInternal = async (userId, config = {}) => {
 
   // Filters are honored exactly — we never silently widen them.
   const matchesFilters = (q) => {
-    if (!q?.id || !isGeneralUseQuestion(q)) return false;
+    if (!q?.id || !isQuizEligibleQuestion(q)) return false;
     if (difficultySet.size > 0 && !difficultySet.has(q.difficulty)) return false;
     if (subcatSet.size > 0) {
       const sc = getQuestionSubcategoryId(q);
