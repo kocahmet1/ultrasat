@@ -1,0 +1,700 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "linear-equations-two-variables",
+  "title": "Linear Equations in Two Variables",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Linear Equations in Two Variables",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|linear equation in two variables} relates an $x$ and a $y$, each to the first power. Unlike a one-variable equation, it doesn't have a single answer: a **solution** is an ordered pair $(x, y)$ that makes the equation true, and there are **infinitely many** of them. Plotted together, those pairs form a straight **line**—the equation and the line are two descriptions of the same object."
+        },
+        {
+          "type": "p",
+          "text": "You'll meet these equations in two standard costumes:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Slope-intercept form",
+              "blocks": [
+                { "type": "math", "tex": "y = \\blue{m}x + \\green{b}" },
+                { "type": "p", "text": "Built for **graphs and rates**: the slope and y-intercept are visible at a glance." }
+              ]
+            },
+            {
+              "title": "Standard form",
+              "blocks": [
+                { "type": "math", "tex": "\\blue{A}x + \\teal{B}y = \\green{C}" },
+                { "type": "p", "text": "Built for **totals and combinations**: two quantities contributing to one result." }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**A solution is a point on the line.** To test a pair, substitute *both* coordinates; a true statement means it's a solution.",
+            "**Match the form to the job.** Need slope or a graph? Solve for $y$. Need a total or intercepts? Standard form is faster.",
+            "**Intercepts from standard form:** set the *other* variable to $0$.",
+            "**Parallel lines share a slope; perpendicular slopes multiply to $-1$** (flip the fraction *and* the sign).",
+            "**When the choices are points, plug them in**—testing pairs is usually faster than graphing."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Keep the two-variable mindset: the question never asks for *the* solution—it asks for *a* solution, a slope, an intercept, or a meaning. Know which one before you compute."
+        }
+      ]
+    },
+    {
+      "id": "solutions-as-points",
+      "title": "What Counts as a Solution?",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "The pair $(x, y)$ is a solution exactly when substituting both values makes the equation true—which is exactly when the point $(x, y)$ lies on the line."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Is $(3, 2)$ a solution of $4x - 5y = 2$? Substitute both coordinates:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "4(3) - 5(2) = 2", "note": "Replace $x$ with $3$ and $y$ with $2$" },
+                { "math": "12 - 10 = 2", "note": "Multiply" },
+                { "math": "2 = 2", "note": "True — so $(3, 2)$ **is** a solution" }
+              ]
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "$(3, 2)$:  $4(3) - 5(2) = 2$",
+                  "note": "True statement — the point sits on the line."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "$(1, 2)$:  $4(1) - 5(2) = -6 \\neq 2$",
+                  "note": "False statement — the point misses the line."
+                }
+              ]
+            },
+            {
+              "type": "graph",
+              "width": 320,
+              "height": 270,
+              "xMin": -2,
+              "xMax": 5,
+              "yMin": -3,
+              "yMax": 4,
+              "step": 2,
+              "ticks": true,
+              "lines": [{ "m": 0.8, "b": -0.4, "tone": "blue" }],
+              "points": [
+                { "x": 3, "y": 2, "tone": "green", "label": "(3, 2)", "labelDx": 8, "labelDy": 16 },
+                { "x": 1, "y": 2, "tone": "rose", "label": "(1, 2)", "labelDx": 8, "labelDy": -8 }
+              ],
+              "caption": "The line $4x - 5y = 2$: solutions are on it, non-solutions are off it.",
+              "alt": "A line with the point (3, 2) on it and the point (1, 2) off it"
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Which of the following ordered pairs $(x, y)$ is a solution to the equation $3x + 2y = 18$?",
+              "choices": ["$(2, 6)$", "$(6, 2)$", "$(3, 4)$", "$(4, 2)$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$3(2) + 2(6) = 6 + 12 = 18$. True—this pair is on the line."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$3(6) + 2(2) = 22$. Same numbers, **swapped order**—an ordered pair means $x$ first, $y$ second."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$3(3) + 2(4) = 17$. Close is not on the line."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$3(4) + 2(2) = 16$. False statement—not a solution."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Order matters: $(2, 6)$ and $(6, 2)$ are different points. Swapped-coordinate traps appear constantly in this question type."
+        }
+      ]
+    },
+    {
+      "id": "two-forms",
+      "title": "Two Forms of the Same Line",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Any linear equation can wear either costume. Converting between them is one skill: **solve for $y$** to reveal the slope, or clear fractions to rebuild the total."
+        },
+        {
+          "type": "h3",
+          "text": "From Standard to Slope-Intercept"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What is the slope of the graph of $4x + 2y = 10$ in the $xy$-plane?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "4x + 2y = 10", "note": "Given equation" },
+                { "math": "2y = -4x + 10", "note": "Subtract $4x$ from both sides" },
+                { "math": "y = -2x + 5", "note": "Divide both sides by $2$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Now the line reads itself: slope $\\blue{-2}$, y-intercept $\\green{(0, 5)}$."
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Doing that conversion in general produces three shortcuts worth memorizing for $Ax + By = C$:"
+        },
+        {
+          "type": "table",
+          "headers": ["From $Ax + By = C$", "Shortcut", "Check with $4x + 2y = 10$"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["Slope", "$-\\frac{A}{B}$", "$-\\frac{4}{2} = -2$"],
+            ["y-intercept  (set $x = 0$)", "$\\left(0, \\frac{C}{B}\\right)$", "$\\frac{10}{2} = 5$"],
+            ["x-intercept  (set $y = 0$)", "$\\left(\\frac{C}{A}, 0\\right)$", "$\\frac{10}{4} = 2.5$"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Intercepts Straight from Standard Form"
+        },
+        {
+          "type": "p",
+          "text": "Standard form makes intercepts almost free: **zero out one variable and divide**."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Find both intercepts of the graph of $3x + 5y = 30$."
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "3x + 5(0) = 30 \\;\\Rightarrow\\; x = 10", "note": "Set $y = 0$: the x-intercept is $(10, 0)$" },
+                { "math": "3(0) + 5y = 30 \\;\\Rightarrow\\; y = 6", "note": "Set $x = 0$: the y-intercept is $(0, 6)$" }
+              ]
+            },
+            {
+              "type": "graph",
+              "width": 340,
+              "height": 240,
+              "xMin": 0,
+              "xMax": 12,
+              "yMin": 0,
+              "yMax": 8,
+              "stepX": 2,
+              "stepY": 2,
+              "ticks": true,
+              "lines": [{ "m": -0.6, "b": 6, "tone": "blue" }],
+              "points": [
+                { "x": 0, "y": 6, "tone": "green", "label": "(0, 6)", "labelDx": 10, "labelDy": 0 },
+                { "x": 10, "y": 0, "tone": "rose", "label": "(10, 0)", "labelDx": 8, "labelDy": -10 }
+              ],
+              "caption": "The intercepts of $3x + 5y = 30$.",
+              "alt": "A falling line crossing the y-axis at (0, 6) and the x-axis at (10, 0)"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Two intercepts are also the fastest way to *sketch* a standard-form line: mark both, connect the dots."
+        }
+      ]
+    },
+    {
+      "id": "equations-from-context",
+      "title": "Building Equations from Context",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Standard form is the natural language of **combination stories**: two things, each with its own per-unit value, adding up to one total."
+        },
+        {
+          "type": "strip",
+          "alt": "Value per unit times quantity plus value per unit times quantity equals total",
+          "segments": [
+            { "text": "Value × Quantity", "tone": "blue" },
+            { "text": "+", "tone": "op" },
+            { "text": "Value × Quantity", "tone": "teal" },
+            { "text": "=", "tone": "op" },
+            { "text": "Total", "tone": "green" }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A cafe sells a small coffee for $\\$4$ and a large coffee for $\\$6$. One morning, the cafe earns $\\$120$ from coffee sales. If $s$ is the number of small coffees and $l$ the number of large coffees sold, the situation is modeled by:"
+            },
+            {
+              "type": "math",
+              "tex": "\\blue{4}s + \\teal{6}l = \\green{120}",
+              "boxed": true,
+              "caption": "{blue|4} dollars per small · {teal|6} dollars per large · {green|120} dollars in total"
+            },
+            {
+              "type": "p",
+              "text": "One equation, many mornings: $(s, l) = (12, 12)$ works, and so does $(30, 0)$—every solution is a possible sales combination. Given one value, the other is forced:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "4(18) + 6l = 120", "note": "Suppose $18$ small coffees were sold" },
+                { "math": "6l = 48", "note": "Subtract $72$ from both sides" },
+                { "math": "l = 8", "note": "Divide by $6$ — so $8$ large coffees were sold" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "At a craft fair, Lena sells bracelets and keychains. The equation $5x + 3y = 90$ models a day when she earned $\\$90$, where $x$ is the number of bracelets and $y$ is the number of keychains sold. What is the best interpretation of the number $5$ in this context?",
+              "choices": [
+                "Lena sold $5$ bracelets that day",
+                "Each bracelet was sold for $\\$5$",
+                "Lena earned $\\$5$ in total from bracelets",
+                "Bracelets cost $\\$5$ more than keychains"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "The number of bracelets is the variable $x$—not its coefficient. $5$ is what each one contributes."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "$5$ multiplies the number of bracelets, so every bracelet adds $\\$5$ to the total—it's the price per bracelet."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The total earned from bracelets is the whole term $5x$, not the coefficient alone."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Comparing prices would involve $5 - 3$; the equation says nothing about a difference."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Read coefficients with units: $5$ {gray|dollars per bracelet} $\\times$ $x$ {gray|bracelets} $=$ dollars. If an interpretation breaks the units, it's wrong."
+        }
+      ]
+    },
+    {
+      "id": "parallel-perpendicular",
+      "title": "Parallel & Perpendicular Lines",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Slopes control direction—so slopes decide when two lines run alongside each other and when they cross at a right angle."
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Parallel: same slope",
+              "blocks": [
+                { "type": "math", "tex": "m_1 = m_2" },
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 200,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 2, "b": 2, "tone": "blue" },
+                    { "m": 2, "b": -2, "tone": "teal" }
+                  ],
+                  "caption": "Equal slopes, different intercepts — never meet.",
+                  "alt": "Two parallel rising lines"
+                }
+              ]
+            },
+            {
+              "title": "Perpendicular: slopes multiply to −1",
+              "blocks": [
+                { "type": "math", "tex": "m_1 \\cdot m_2 = -1" },
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 200,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 2, "b": 1, "tone": "blue" },
+                    { "m": -0.5, "b": 1, "tone": "teal" }
+                  ],
+                  "caption": "Slopes $2$ and $-\\frac{1}{2}$: flipped and negated.",
+                  "alt": "Two lines crossing at a right angle"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Perpendicular slope = **negative reciprocal**: flip the fraction *and* change the sign. The slope $2$ becomes $-\\frac{1}{2}$; the slope $-\\frac{3}{4}$ becomes $\\frac{4}{3}$."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In the $xy$-plane, which equation defines a line that is parallel to the graph of $y = 2x - 7$?",
+              "choices": [
+                "$y = 2x + 3$",
+                "$y = -2x - 7$",
+                "$y = -\\frac{1}{2}x + 3$",
+                "$y = 7x - 2$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Same slope ($2$), different y-intercept—the definition of parallel."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Slope $-2$ is the *opposite* slope, not the same one—this line crosses the original."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$-\\frac{1}{2}$ is the negative reciprocal—that's the **perpendicular** line, not the parallel one."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Recycles the numbers $7$ and $2$ in new positions; the slope $7$ matches nothing relevant."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Line $t$ is perpendicular to the graph of $y = 3x - 4$ and passes through the point $(6, 1)$. What is the y-intercept of line $t$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "m_t = -\\frac{1}{3}", "note": "Negative reciprocal of $3$" },
+                { "math": "1 = -\\frac{1}{3}(6) + b", "note": "Plug the point $(6, 1)$ into $y = m_t x + b$" },
+                { "math": "1 = -2 + b", "note": "Simplify" },
+                { "math": "b = 3", "note": "The y-intercept is $(0, 3)$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The classic perpendicular error is doing only half the job—flipping without negating, or negating without flipping. Check yourself: the two slopes must multiply to $-1$."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Name the job first: test a point, find a slope, build an equation, or apply a slope relationship. Commit to an answer before you open the explanation."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Which ordered pair $(x, y)$ is a solution to the equation $5x - 2y = 4$?",
+                  "choices": ["$(2, 3)$", "$(3, 2)$", "$(0, 2)$", "$(2, -3)$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Substitute each pair until one makes the equation true."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$5(2) - 2(3) = 10 - 6 = 4$. True—this point is on the line."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$5(3) - 2(2) = 11$. The swapped-order trap: $x$ comes first in an ordered pair."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$5(0) - 2(2) = -4$. Right size, wrong sign—$-4 \\neq 4$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$5(2) - 2(-3) = 10 + 6 = 16$. Subtracting a negative *adds*—the sign flip works against you here."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "What is the slope of the graph of $6x + 3y = 12$ in the $xy$-plane?",
+                  "choices": ["$-2$", "$2$", "$-6$", "$4$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Solve for $y$ (or use the shortcut $-\\frac{A}{B}$):"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "3y = -6x + 12", "note": "Subtract $6x$ from both sides" },
+                    { "math": "y = -2x + 4", "note": "Divide both sides by $3$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "The coefficient of $x$ after solving for $y$: $-\\frac{6}{3} = -2$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$2$ drops the sign—moving $6x$ across the equals sign negates it."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$-6$ reads the $x$-coefficient straight from standard form without dividing by $B = 3$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$4$ is the y-intercept, not the slope."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A theater sells matinee tickets for $\\$9$ each and evening tickets for $\\$14$ each. One day, ticket sales totaled $\\$252$. If $m$ is the number of matinee tickets and $e$ is the number of evening tickets sold that day, which equation represents this situation?",
+                  "choices": [
+                    "$9m + 14e = 252$",
+                    "$14m + 9e = 252$",
+                    "$m + e = 252$",
+                    "$23(m + e) = 252$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Each ticket type contributes price × quantity, and the contributions add to the day's total."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$9$ dollars per matinee times $m$, plus $14$ dollars per evening times $e$, equals $252$ dollars. Units check out."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Swaps the prices: it charges matinee-goers the evening price and vice versa."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$m + e$ counts *tickets*, but $252$ is *dollars*—the units don't match."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$23(m + e)$ charges every ticket the *combined* price of both types—no ticket costs $\\$23$."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "In the $xy$-plane, line $t$ is perpendicular to the graph of $y = 2x + 3$ and passes through the point $(4, 1)$. At what point does line $t$ cross the $y$-axis?",
+                  "choices": ["$(0, 3)$", "$(0, -7)$", "$(0, 9)$", "$(0, -1)$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Perpendicular to slope $2$ means slope $-\\frac{1}{2}$—flip *and* negate—then plug in the point:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "m_t = -\\frac{1}{2}", "note": "Negative reciprocal of $2$" },
+                    { "math": "1 = -\\frac{1}{2}(4) + b", "note": "Use the point $(4, 1)$" },
+                    { "math": "b = 3", "note": "$1 = -2 + b$ — line $t$ crosses at $(0, 3)$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Slope $-\\frac{1}{2}$ through $(4, 1)$ gives $b = 3$. Check: $2 \\cdot \\left(-\\frac{1}{2}\\right) = -1$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$(0, -7)$ keeps the slope $2$ unchanged—that's the *parallel* setup, not perpendicular."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$(0, 9)$ uses slope $-2$: negated but never flipped. Half the job."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$(0, -1)$ uses slope $\\frac{1}{2}$: flipped but never negated. The other half."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "A solution of a two-variable equation is an ordered pair—and a **point on the line**. Substitute both coordinates to test it; watch for swapped-order traps.",
+            "Two forms, one line: $y = mx + b$ shows slope and intercept; $Ax + By = C$ shows totals. Convert by solving for $y$; from standard form, slope $= -\\frac{A}{B}$.",
+            "Intercepts from standard form: set the other variable to $0$ and divide.",
+            "Combination stories: {blue|value × quantity} $+$ {teal|value × quantity} $=$ {green|total}. Coefficients are per-unit values—read them with units.",
+            "Parallel: same slope. Perpendicular: flip **and** negate—the slopes must multiply to $-1$.",
+            "When answer choices are points or pairs, plug them in instead of graphing."
+          ]
+        }
+      ]
+    }
+  ]
+}

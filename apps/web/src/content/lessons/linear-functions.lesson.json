@@ -1,0 +1,764 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "linear-functions",
+  "title": "Linear Functions",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Linear Functions",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|function} is a rule that turns an **input** into exactly one **output**. A {teal|linear function} is a function whose output changes at a **constant rate**: every time the input goes up by $1$, the output changes by the same amount. Its graph is a straight line, and its rule can always be written in one form:"
+        },
+        {
+          "type": "math",
+          "tex": "f(x) = \\blue{m}x + \\green{b}",
+          "boxed": true,
+          "caption": "{blue|m} — the slope: how much $f$ changes per one unit of $x$ · {green|b} — the y-intercept: the starting value $f(0)$"
+        },
+        {
+          "type": "p",
+          "text": "Almost every SAT Linear Functions question is one of four jobs: **evaluate** the function at an input, **find the slope** from two points or a table, **build the equation** from given information, or **interpret** $m$ and $b$ in a real-world story."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**$f(c)$ means substitute.** Replace every $x$ in the rule with $c$ and simplify—the result is the output.",
+            "**Read $m$ and $b$ before anything else.** The slope is the number multiplying $x$; the y-intercept is the constant.",
+            "**Slope from two points:** divide the change in output by the change in input—in the same order.",
+            "**In context:** “per” and “each” point to the {blue|slope}; “initial,” “base fee,” and “starting” point to the {green|y-intercept}.",
+            "**Check candidate equations against every point or table row**—wrong choices are built to match just one."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Every fact about a linear function is a point on its line. $f(4) = 9$ and “the point $(4, 9)$ is on the graph” are the same sentence in two languages—translate freely between them."
+        }
+      ]
+    },
+    {
+      "id": "function-notation",
+      "title": "Function Notation",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Think of a function as a machine: an input goes in, the rule runs, an output comes out. The notation $f(x)$—read “$f$ of $x$”—names the **output** that the rule $f$ produces from the input $x$."
+        },
+        {
+          "type": "strip",
+          "alt": "Input x goes into rule f and produces output f(x)",
+          "segments": [
+            { "text": "Input  $x$", "tone": "blue" },
+            { "text": "→", "tone": "op" },
+            { "text": "Rule  $f$", "tone": "teal" },
+            { "text": "→", "tone": "op" },
+            { "text": "Output  $f(x)$", "tone": "green" }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "$f(x)$ is **not** “$f$ times $x$.” The parentheses hold the input; they don't multiply."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "$f(c)$ means: substitute $c$ for every $x$ in the rule. The result is a number—and the point $(c, f(c))$ lies on the graph of $f$."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "The function $f$ is defined by $f(x) = 3x + 5$. What is the value of $f(4)$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "f(4) = 3(4) + 5", "note": "Replace every $x$ with $4$" },
+                { "math": "f(4) = 12 + 5", "note": "Multiply" },
+                { "math": "f(4) = 17", "note": "Add" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "So $f(4) = 17$—and the point $(4, 17)$ is on the graph of $f$."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Working Backward"
+        },
+        {
+          "type": "p",
+          "text": "Questions also run the machine in reverse: they give you the **output** and ask for the **input**. Set the rule equal to the output and solve—this is exactly the equation-solving from the previous lesson."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "For the function $f(x) = 3x + 5$, the value of $f(a)$ is $26$. What is the value of $a$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "3a + 5 = 26", "note": "Set the rule equal to the output $26$" },
+                { "math": "3a = 21", "note": "Subtract $5$ from both sides" },
+                { "math": "a = 7", "note": "Divide both sides by $3$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check:** $f(7) = 3(7) + 5 = 26$ {green|✓}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "slope",
+      "title": "Slope: the Rate of Change",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The {blue|slope} measures how fast the output changes: **how much $f$ rises (or falls) each time $x$ increases by $1$**. From any two points on the line, the slope is the change in $y$ divided by the change in $x$:"
+        },
+        {
+          "type": "math",
+          "tex": "m = \\frac{\\green{\\text{rise}}}{\\amber{\\text{run}}} = \\frac{y_2 - y_1}{x_2 - x_1}",
+          "boxed": true
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "The graph of the linear function $f$ passes through the points $(2, 5)$ and $(6, 17)$. What is the slope of the graph of $f$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "m = \\frac{17 - 5}{6 - 2}", "note": "Subtract the coordinates in the same order" },
+                { "math": "m = \\frac{12}{4}", "note": "Simplify each difference" },
+                { "math": "m = 3", "note": "Divide — $f$ grows by $3$ per unit of $x$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Mixing the order — $\\frac{y_2 - y_1}{x_1 - x_2}$ — flips the sign of the slope. Pick an order and use it in **both** the top and the bottom."
+        },
+        {
+          "type": "p",
+          "text": "On a graph, the slope is the **rise over the run** between any two points on the line—here, a rise of $4$ over a run of $2$ gives $m = \\frac{4}{2} = 2$:"
+        },
+        {
+          "type": "graph",
+          "width": 330,
+          "height": 290,
+          "xMin": -1,
+          "xMax": 5,
+          "yMin": -2,
+          "yMax": 6,
+          "step": 2,
+          "ticks": true,
+          "lines": [{ "m": 2, "b": -1, "tone": "blue", "label": "f", "labelAt": 3.4, "labelDx": 8, "labelDy": -4 }],
+          "segments": [
+            { "x1": 1, "y1": 1, "x2": 3, "y2": 1, "tone": "amber", "dashed": true, "label": "run = 2", "labelAnchor": "middle", "labelDx": 0, "labelDy": 16 },
+            { "x1": 3, "y1": 1, "x2": 3, "y2": 5, "tone": "green", "dashed": true, "label": "rise = 4", "labelDx": 8, "labelDy": 3 }
+          ],
+          "points": [
+            { "x": 1, "y": 1, "tone": "blue", "label": "(1, 1)", "labelDx": -42, "labelDy": -10 },
+            { "x": 3, "y": 5, "tone": "blue", "label": "(3, 5)", "labelDx": 10, "labelDy": 0 }
+          ],
+          "caption": "Slope $= \\frac{\\text{rise}}{\\text{run}} = \\frac{4}{2} = 2$",
+          "alt": "A line through the points (1, 1) and (3, 5) with the run of 2 and rise of 4 marked as dashed legs"
+        },
+        {
+          "type": "h3",
+          "text": "The Sign of the Slope"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Positive slope",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 165,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": 1, "b": 1, "tone": "blue" }],
+                  "caption": "$f$ increases as $x$ increases.",
+                  "alt": "A line rising from left to right"
+                }
+              ]
+            },
+            {
+              "title": "Negative slope",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 165,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": -1, "b": 1, "tone": "blue" }],
+                  "caption": "$f$ decreases as $x$ increases.",
+                  "alt": "A line falling from left to right"
+                }
+              ]
+            },
+            {
+              "title": "Zero slope",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 165,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": 0, "b": 2, "tone": "blue" }],
+                  "caption": "$f$ is constant: $f(x) = b$.",
+                  "alt": "A horizontal line"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intercepts-and-equations",
+      "title": "Intercepts & Building the Equation",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The two intercepts are the line's landmark points. The {green|y-intercept} is where the line crosses the $y$-axis: set $x = 0$, giving the point $(0, b)$. The {rose|x-intercept} is where it crosses the $x$-axis: set $f(x) = 0$ and solve."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Consider the linear function $f(x) = -2x + 6$. Its {green|y-intercept} is $(0, 6)$, read directly from the rule. For the {rose|x-intercept}, solve $f(x) = 0$:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "0 = -2x + 6", "note": "Set $f(x)$ equal to $0$" },
+                { "math": "2x = 6", "note": "Add $2x$ to both sides" },
+                { "math": "x = 3", "note": "Divide both sides by $2$ — the x-intercept is $(3, 0)$" }
+              ]
+            },
+            {
+              "type": "graph",
+              "width": 320,
+              "height": 280,
+              "xMin": -2,
+              "xMax": 5,
+              "yMin": -2,
+              "yMax": 8,
+              "step": 2,
+              "ticks": true,
+              "lines": [{ "m": -2, "b": 6, "tone": "blue", "label": "f", "labelAt": 4, "labelDx": 8, "labelDy": -2 }],
+              "points": [
+                { "x": 0, "y": 6, "tone": "green", "label": "(0, 6)", "labelDx": 10, "labelDy": 0 },
+                { "x": 3, "y": 0, "tone": "rose", "label": "(3, 0)", "labelDx": 10, "labelDy": -8 }
+              ],
+              "caption": "Both intercepts of $f(x) = -2x + 6$.",
+              "alt": "A falling line crossing the y-axis at (0, 6) and the x-axis at (3, 0)"
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "From Two Points to the Equation"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Slope first, intercept second: compute $m$ from the two points, then plug either point into $f(x) = mx + b$ to find $b$."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "The graph of the linear function $f$ passes through $(2, 9)$ and $(5, 18)$. Which equation defines $f$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "m = \\frac{18 - 9}{5 - 2} = \\frac{9}{3} = 3", "note": "Slope from the two points" },
+                { "math": "9 = 3(2) + b", "note": "Plug the point $(2, 9)$ into $f(x) = 3x + b$" },
+                { "math": "b = 3", "note": "Solve for $b$" },
+                { "math": "f(x) = 3x + 3", "note": "Assemble the rule" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check with the other point:** $f(5) = 3(5) + 3 = 18$ {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "From a Table"
+        },
+        {
+          "type": "p",
+          "text": "A table shows a linear function when the output changes by a **constant step** for equal steps of $x$. That constant step (per one unit of $x$) is the slope, and the row with $x = 0$ hands you the y-intercept."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "table",
+              "compact": true,
+              "headers": ["$x$", "$f(x)$"],
+              "align": ["center", "center"],
+              "rows": [
+                ["$0$", "$8$"],
+                ["$1$", "$11$"],
+                ["$2$", "$14$"],
+                ["$3$", "$17$"]
+              ]
+            },
+            {
+              "type": "question",
+              "stem": "The table shows four values of the linear function $f$. Which equation defines $f$?",
+              "choices": [
+                "$f(x) = 3x + 8$",
+                "$f(x) = 8x + 3$",
+                "$f(x) = 3x + 11$",
+                "$f(x) = 11x + 8$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Each $+1$ step in $x$ adds $3$ to $f(x)$, so $m = 3$; and $f(0) = 8$, so $b = 8$. Every row checks out."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Swaps the roles: it uses the starting value as the rate and the rate as the starting value. Already fails at $f(0) = 3 \\neq 8$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Grabs $f(1) = 11$ as the y-intercept—but $b$ is the value at $x = 0$, not $x = 1$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Matches the table at $x = 0$ but nowhere else: $f(1)$ would be $19$, not $11$. One matching row is not enough."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Test candidate equations against **every** row of the table. Wrong choices are engineered to match exactly one."
+        }
+      ]
+    },
+    {
+      "id": "linear-models",
+      "title": "Linear Models in Context",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "In word problems, a linear function is a story with two numbers: something **starts** at a value and **changes** at a steady rate. That's the same skeleton you used for equations from context:"
+        },
+        {
+          "type": "strip",
+          "alt": "Output equals starting value plus rate times input",
+          "segments": [
+            { "text": "Output", "tone": "green" },
+            { "text": "=", "tone": "op" },
+            { "text": "Starting value", "tone": "blue" },
+            { "text": "+", "tone": "op" },
+            { "text": "Rate", "tone": "teal" },
+            { "text": "×", "tone": "op" },
+            { "text": "Input", "tone": "purple" }
+          ]
+        },
+        {
+          "type": "table",
+          "headers": ["Words in the problem", "Part of $f(x) = mx + b$"],
+          "rows": [
+            ["“per,” “each,” “every,” “for every additional”", "the **slope** $m$"],
+            ["“initial,” “base fee,” “starting amount,” “when $x = 0$”", "the **y-intercept** $b$"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "The function $C(h) = 35h + 50$ gives the total cost, in dollars, of a landscaping job that takes $h$ hours. What is the best interpretation of the number $50$ in this context?",
+              "choices": [
+                "The cost of each additional hour of work",
+                "A fixed charge that does not depend on the number of hours",
+                "The total cost of a job that takes one hour",
+                "The number of hours a typical job takes"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "The per-hour cost is the number multiplied by $h$—that's the slope, $35$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "$50$ is the constant term: it's the cost when $h = 0$, charged before any hourly work—a fixed fee."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "A one-hour job costs $C(1) = 35 + 50 = 85$ dollars, not $50$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$50$ is measured in dollars, not hours—the units don't match this interpretation."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Build the Model, Read the Intercepts"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A water tank holds $240$ gallons and drains at a constant $15$ gallons per minute. The volume after $t$ minutes is:"
+            },
+            {
+              "type": "math",
+              "tex": "V(t) = \\blue{240} - \\teal{15}t",
+              "boxed": true,
+              "caption": "{blue|240} — starting volume (the y-intercept) · {teal|15} — drain rate per minute (the slope is $-15$)"
+            },
+            {
+              "type": "p",
+              "text": "The intercepts *are* the story's key moments—when does it start, and when does it end?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "V(0) = 240", "note": "y-intercept — the tank starts full" },
+                { "math": "0 = 240 - 15t", "note": "x-intercept — set $V(t) = 0$ for the empty tank" },
+                { "math": "t = 16", "note": "Divide $240$ by $15$ — empty after $16$ minutes" }
+              ]
+            },
+            {
+              "type": "graph",
+              "width": 380,
+              "height": 260,
+              "xMin": 0,
+              "xMax": 18,
+              "yMin": 0,
+              "yMax": 280,
+              "stepX": 2,
+              "stepY": 40,
+              "ticks": true,
+              "xLabel": "t",
+              "yLabel": "V",
+              "lines": [{ "m": -15, "b": 240, "tone": "blue" }],
+              "points": [
+                { "x": 0, "y": 240, "tone": "green", "label": "(0, 240)", "labelDx": 10, "labelDy": 4 },
+                { "x": 16, "y": 0, "tone": "rose", "label": "(16, 0)", "labelDx": -20, "labelDy": -12 }
+              ],
+              "caption": "$V(t) = 240 - 15t$: full at $t = 0$, empty at $t = 16$.",
+              "alt": "A falling line from (0, 240) to (16, 0) showing the tank draining"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Units are a free answer check: the slope's units are always *output units per input unit* (gallons **per minute**), and the intercepts carry the output's units. An interpretation with mismatched units is wrong—no algebra needed."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Before opening each answer: name the job—evaluate, find the slope, build the equation, or interpret. Then do only that job."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The function $f$ is defined by $f(x) = 7 - 2x$. What is the value of $f(3)$?",
+                  "choices": ["$-1$", "$1$", "$5$", "$15$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Substitute $3$ for $x$: $f(3) = 7 - 2(3) = 7 - 6 = 1$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$-1$ subtracts in the wrong direction: $6 - 7$ instead of $7 - 6$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "$7 - 2(3) = 1$. Multiplication before subtraction."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$5$ computes $7 - 2$ first and never uses the input—$f(3)$ means $x = 3$ everywhere."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$15$ computes $(7 - 2) \\cdot 3$: order of operations broken twice."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The function $g$ is linear, $g(1) = 4$, and $g(5) = 16$. What is the value of $g(9)$?",
+                  "choices": ["$20$", "$24$", "$28$", "$48$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Find the rate, then ride it forward:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "m = \\frac{16 - 4}{5 - 1} = \\frac{12}{4} = 3", "note": "Slope from the two known points" },
+                    { "math": "g(9) = 16 + 3(9 - 5)", "note": "From $x = 5$ to $x = 9$ is $4$ steps of $+3$" },
+                    { "math": "g(9) = 28", "note": "Or build the rule: $g(x) = 3x + 1$, and $g(9) = 28$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$20$ adds the $x$-step ($+4$) to $g(5)$ instead of adding $4$ steps of the slope."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$24$ is $3(9 - 1)$: the total growth from $x = 1$, but it forgets to add the starting value $g(1) = 4$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "$16 + 12 = 28$. Check with the rule $g(x) = 3x + 1$: $g(1) = 4$ {green|✓} $g(5) = 16$ {green|✓} $g(9) = 28$ {green|✓}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$48$ multiplies $g(5) = 16$ by the slope $3$—slopes are added per step, not multiplied onto outputs."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The function $T(m) = 90 - 6m$ gives the temperature of a cup of tea, in degrees, $m$ minutes after it is poured. Based on the model, after how many minutes does the model predict a temperature of $0$ degrees?",
+                  "choices": ["$6$", "$15$", "$84$", "$90$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** A temperature of $0$ means $T(m) = 0$—this is the x-intercept:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "0 = 90 - 6m", "note": "Set the output equal to $0$" },
+                    { "math": "6m = 90", "note": "Add $6m$ to both sides" },
+                    { "math": "m = 15", "note": "Divide both sides by $6$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$6$ is the cooling rate (degrees per minute), not a time."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "$90 \\div 6 = 15$ minutes for the starting $90$ degrees to drain away at $6$ per minute."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$84$ is $90 - 6$: the temperature after **one** minute, not the time to reach zero."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$90$ is the starting temperature—the y-intercept, not the x-intercept."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 300,
+                  "height": 275,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -6,
+                  "yMax": 6,
+                  "step": 2,
+                  "ticks": true,
+                  "lines": [{ "m": 2, "b": -2, "tone": "blue" }],
+                  "points": [
+                    { "x": 0, "y": -2, "tone": "green", "label": "(0, -2)", "labelDx": 8, "labelDy": 18 },
+                    { "x": 2, "y": 2, "tone": "blue", "label": "(2, 2)", "labelDx": 8, "labelDy": 18 }
+                  ],
+                  "alt": "A rising line through the points (0, negative 2) and (2, 2)"
+                },
+                {
+                  "type": "question",
+                  "stem": "The graph of the linear function $f$ is shown. Which equation defines $f$?",
+                  "choices": [
+                    "$f(x) = 2x - 2$",
+                    "$f(x) = 2x + 2$",
+                    "$f(x) = -2x + 2$",
+                    "$f(x) = \\frac{1}{2}x - 2$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Read the two marked points: the y-intercept is $(0, -2)$, so $b = -2$; and from $(0, -2)$ to $(2, 2)$ the rise is $4$ over a run of $2$, so $m = 2$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$m = \\frac{2 - (-2)}{2 - 0} = 2$ and $b = -2$. Both marked points satisfy $f(x) = 2x - 2$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Drops the sign of the y-intercept: this line would cross the $y$-axis **above** zero."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "A negative slope means a falling line—the graph clearly rises from left to right."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$\\frac{1}{2}$ is run-over-rise—the slope fraction written upside down."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "$f(c)$ is the **output** at input $c$—substitute and simplify. The point $(c, f(c))$ is on the graph.",
+            "In $f(x) = mx + b$: {blue|m} is the slope—the change in $f$ per one unit of $x$; {green|b} is the y-intercept, $f(0)$.",
+            "Slope from two points: $m = \\frac{y_2 - y_1}{x_2 - x_1}$—same order top and bottom. In a table, it's the constant step per unit of $x$.",
+            "{green|y-intercept}: set $x = 0$. {rose|x-intercept}: set $f(x) = 0$ and solve.",
+            "In context: “per/each” → slope; “initial/base fee/starting” → y-intercept. Check that the units match the interpretation.",
+            "Test a candidate equation against **every** given point or row—not just one."
+          ]
+        }
+      ]
+    }
+  ]
+}

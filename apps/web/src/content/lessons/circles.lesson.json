@@ -1,0 +1,650 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "circles",
+  "title": "Circles",
+  "estimatedMinutes": 35,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Circles",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Circle questions live in two worlds. In the **geometry** world, arcs and sectors are just *fractions* of one circle. In the **coordinate** world, a circle is an equation whose center and radius you read off—or reconstruct. Both worlds run on a short set of facts:"
+        },
+        {
+          "type": "table",
+          "headers": ["Fact", "Formula"],
+          "align": ["left", "center"],
+          "rows": [
+            ["Circumference / area", "$C = 2\\pi r$ · $A = \\pi r^2$"],
+            ["Fraction cut by a central angle", "$\\dfrac{\\text{angle}}{360°}$"],
+            ["Arc length / sector area", "fraction $\\times\\, C$ · fraction $\\times\\, A$"],
+            ["Circle equation", "$(x - h)^2 + (y - k)^2 = r^2$, center $(h, k)$"],
+            ["Degrees ↔ radians", "$180° = \\pi$ radians"],
+            ["Tangent line", "perpendicular to the radius at the touch point"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Everything proportional starts with the fraction** $\\frac{\\text{central angle}}{360°}$—then multiply by the whole circumference or the whole area.",
+            "**Reading the equation:** the signs **flip** ($x - 3$ means $h = +3$; $y + 2$ means $k = -2$), and the right side is $r^2$—take the square root.",
+            "**Messy equation?** Complete the square: half the coefficient, square it, add to **both** sides.",
+            "**Tangent = right angle.** A tangent meeting a radius builds a right triangle—Pythagorean toolkit applies.",
+            "**Radians:** multiply degrees by $\\frac{\\pi}{180}$."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Two slips cause most circle mistakes: forgetting the sign flip in the equation, and reporting $r^2$ as the radius. Check both, every time."
+        }
+      ]
+    },
+    {
+      "id": "arcs-sectors",
+      "title": "Arcs and Sectors: Fractions of a Circle",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "A central angle of $\\theta$ degrees cuts off $\\frac{\\theta}{360}$ of the circle—of its circumference (**arc length**) and of its area (**sector area**) alike."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 250,
+              "height": 200,
+              "elements": [
+                { "kind": "circle", "cx": 122, "cy": 102, "r": 78, "tone": "blue" },
+                { "kind": "sector", "cx": 122, "cy": 102, "r": 78, "start": -90, "end": -30, "tone": "rose" },
+                { "kind": "point", "x": 122, "y": 102 },
+                { "kind": "label", "x": 132, "y": 84, "text": "60°", "italic": false, "size": 11 },
+                { "kind": "label", "x": 104, "y": 58, "text": "6", "tone": "blue" }
+              ],
+              "caption": "A $60°$ central angle in a circle of radius $6$: the shaded sector is $\\frac{60}{360} = \\frac{1}{6}$ of the circle.",
+              "alt": "A circle of radius 6 with a shaded 60-degree sector cut from the center"
+            },
+            {
+              "type": "columns",
+              "items": [
+                {
+                  "title": "Arc length",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "C = 2\\pi(6) = 12\\pi", "note": "Whole circumference" },
+                        { "math": "\\frac{1}{6} \\times 12\\pi = 2\\pi \\approx 6.3", "note": "The $60°$ share" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "title": "Sector area",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "A = \\pi(6)^2 = 36\\pi", "note": "Whole area" },
+                        { "math": "\\frac{1}{6} \\times 36\\pi = 6\\pi \\approx 18.8", "note": "Same fraction, applied to area" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A circle has a radius of $9$. What is the area of a sector with a central angle of $120°$?",
+              "choices": ["$27\\pi$", "$81\\pi$", "$6\\pi$", "$54\\pi$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Fraction $\\frac{120}{360} = \\frac{1}{3}$; whole area $81\\pi$; sector $= \\frac{81\\pi}{3} = 27\\pi$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$81\\pi$ is the **entire** circle—the fraction never got applied."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$6\\pi$ is the **arc length** ($\\frac{1}{3}$ of $18\\pi$)—right fraction, wrong measurement."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$54\\pi$ uses $\\frac{2}{3}$—the fraction of the circle *outside* the sector."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Arc length and sector area use the **same fraction** but different wholes—circumference ($2\\pi r$) versus area ($\\pi r^2$). Check which one the question asks for before multiplying."
+        }
+      ]
+    },
+    {
+      "id": "circle-equation",
+      "title": "The Circle Equation",
+      "blocks": [
+        {
+          "type": "math",
+          "tex": "(x - \\blue{h})^2 + (y - \\blue{k})^2 = \\rose{r}^2",
+          "boxed": true,
+          "caption": "Center $(\\blue{h}, \\blue{k})$ · radius $\\rose{r}$ — every point at distance $r$ from the center"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What are the center and radius of the circle $(x - 3)^2 + (y + 2)^2 = 25$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "h = 3, \\quad k = -2", "note": "**Signs flip**: $(y + 2)$ is $(y - (-2))$" },
+                { "math": "r = \\sqrt{25} = 5", "note": "The right side is $r^2$ — root it" }
+              ]
+            },
+            {
+              "type": "graph",
+              "width": 300,
+              "height": 295,
+              "xMin": -3,
+              "xMax": 9,
+              "yMin": -8,
+              "yMax": 4,
+              "step": 4,
+              "ticks": true,
+              "circles": [{ "cx": 3, "cy": -2, "r": 5, "tone": "blue", "fill": true }],
+              "points": [{ "x": 3, "y": -2, "tone": "blue", "label": "(3, -2)", "labelDx": 8, "labelDy": 16 }],
+              "segments": [
+                { "x1": 3, "y1": -2, "x2": 8, "y2": -2, "tone": "rose", "label": "r = 5", "labelDx": -30, "labelDy": -8 }
+              ],
+              "caption": "$(x - 3)^2 + (y + 2)^2 = 25$ in the $xy$-plane.",
+              "alt": "A circle centered at the point 3, negative 2 with radius 5, drawn on coordinate axes"
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Which of the following are the center and radius of the circle with equation $x^2 + (y - 4)^2 = 49$?",
+              "choices": [
+                "Center $(0, 4)$; radius $7$",
+                "Center $(0, -4)$; radius $7$",
+                "Center $(0, 4)$; radius $49$",
+                "Center $(0, -4)$; radius $49$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$x^2$ is $(x - 0)^2$, so $h = 0$; $(y - 4)$ gives $k = +4$; and $r = \\sqrt{49} = 7$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Flips the sign the wrong way: $(y - 4)$ means the center is at $+4$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Right center, but $49$ is $r^2$—the radius is its square root."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Both classic slips at once."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Quick uses of the equation: a point is **on** the circle if it satisfies the equation, **inside** if the left side comes out smaller than $r^2$, **outside** if larger."
+        }
+      ]
+    },
+    {
+      "id": "completing-the-square",
+      "title": "Completing the Square",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Expanded circle equations hide the center and radius: $x^2 + y^2 - 6x + 4y - 12 = 0$ is the page-before's circle in disguise. **Completing the square** rebuilds the two perfect squares:"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "For $x^2 + bx$: take **half** of $b$, **square** it, add it to **both** sides. The square is then $(x + \\frac{b}{2})^2$."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Find the center and radius of the circle $x^2 + y^2 - 6x + 4y - 12 = 0$."
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "(x^2 - 6x) + (y^2 + 4y) = 12", "note": "Group by variable; move the constant across" },
+                { "math": "(x^2 - 6x + \\green{9}) + (y^2 + 4y + \\green{4}) = 12 + \\green{9} + \\green{4}", "note": "Half of $-6$ is $-3$, squared: $9$. Half of $4$ is $2$, squared: $4$. Add to **both sides**" },
+                { "math": "(x - 3)^2 + (y + 2)^2 = 25", "note": "Center $(3, -2)$, radius $5$ — the disguise removed" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In the $xy$-plane, the graph of $x^2 + y^2 + 8y = 33$ is a circle. What is the radius of the circle?",
+              "choices": ["$7$", "$\\sqrt{33}$", "$49$", "$4$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Complete the square in $y$: add $\\left(\\frac{8}{2}\\right)^2 = 16$ to both sides, giving $x^2 + (y + 4)^2 = 49$, so $r = 7$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\sqrt{33}$ takes the root of the right side **before** completing the square—the $33$ isn't $r^2$ yet."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$49$ is $r^2$—one square root short."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$4$ is half the $y$-coefficient—it locates the center ($k = -4$), not the radius."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Whatever you add inside the parentheses must be added to the **other side too**—the equation stays balanced or the radius comes out wrong."
+        }
+      ]
+    },
+    {
+      "id": "radians-tangents",
+      "title": "Radians & Tangent Lines",
+      "blocks": [
+        {
+          "type": "h3",
+          "text": "Radians: Another Unit for Angles"
+        },
+        {
+          "type": "p",
+          "text": "Radians measure angles by arc length: a full circle is $2\\pi$ radians, so $\\blue{180° = \\pi \\text{ radians}}$. Converting is one multiplication:"
+        },
+        {
+          "type": "table",
+          "compact": true,
+          "headers": ["Degrees", "$30°$", "$45°$", "$60°$", "$90°$", "$180°$", "$360°$"],
+          "align": ["left", "center", "center", "center", "center", "center", "center"],
+          "rows": [["**Radians**", "$\\frac{\\pi}{6}$", "$\\frac{\\pi}{4}$", "$\\frac{\\pi}{3}$", "$\\frac{\\pi}{2}$", "$\\pi$", "$2\\pi$"]]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Convert $150°$ to radians."
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "150° \\times \\frac{\\pi}{180°} = \\frac{150\\pi}{180}", "note": "Multiply by $\\frac{\\pi}{180}$ — degrees cancel" },
+                { "math": "= \\frac{5\\pi}{6}", "note": "Reduce the fraction" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Tangents Build Right Triangles"
+        },
+        {
+          "type": "p",
+          "text": "A {teal|tangent line} touches the circle at exactly one point—and the radius drawn to that point is **perpendicular** to it. That right angle is an invitation: center, touch point, and any external point form a right triangle."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "geometry",
+              "width": 300,
+              "height": 190,
+              "elements": [
+                { "kind": "circle", "cx": 95, "cy": 105, "r": 62, "tone": "blue" },
+                { "kind": "point", "x": 95, "y": 105 },
+                { "kind": "label", "x": 84, "y": 98, "text": "O" },
+                { "kind": "segment", "x1": 95, "y1": 105, "x2": 95, "y2": 43, "tone": "rose" },
+                { "kind": "label", "x": 84, "y": 74, "text": "5", "tone": "rose" },
+                { "kind": "segment", "x1": 95, "y1": 43, "x2": 262, "y2": 43, "tone": "teal" },
+                { "kind": "rightangle", "x": 95, "y": 43, "size": 10, "rotate": 90 },
+                { "kind": "segment", "x1": 95, "y1": 105, "x2": 262, "y2": 43, "dashed": true },
+                { "kind": "label", "x": 272, "y": 40, "text": "P" },
+                { "kind": "label", "x": 178, "y": 33, "text": "x", "tone": "teal" },
+                { "kind": "label", "x": 185, "y": 92, "text": "13" }
+              ],
+              "caption": "The tangent from $P$ meets the radius at $90°$: a right triangle with legs $5$ and $x$, hypotenuse $13$.",
+              "alt": "A circle with center O and radius 5; a tangent line from external point P touches the circle, with OP equal to 13"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x^2 = 13^2 - 5^2 = 144", "note": "Pythagorean theorem — $OP$ is the hypotenuse" },
+                { "math": "x = 12", "note": "The $5$-$12$-$13$ triple, one lesson later" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Which of the following is the measure $240°$ expressed in radians?",
+              "choices": ["$\\frac{4\\pi}{3}$", "$\\frac{3\\pi}{4}$", "$\\frac{2\\pi}{3}$", "$\\frac{5\\pi}{6}$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$240 \\times \\frac{\\pi}{180} = \\frac{240\\pi}{180} = \\frac{4\\pi}{3}$. Sanity: $240°$ is more than half a turn, and $\\frac{4\\pi}{3} > \\pi$. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{3\\pi}{4}$ flips the reduced fraction—and equals $135°$, less than half a turn."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{2\\pi}{3}$ is $120°$—half of the target angle."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$\\frac{5\\pi}{6}$ is $150°$—a different conversion entirely."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Radian sanity check: compare with $\\pi$. More than a half-turn ($> 180°$) must convert to more than $\\pi$; less converts to less. It filters wrong choices instantly."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Fraction first for arcs and sectors; sign-flip and square-root checks for equations; and when a tangent appears, look for the right triangle."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A circle has radius $12$. What is the area of a sector with a central angle of $90°$?",
+                  "choices": ["$36\\pi$", "$144\\pi$", "$6\\pi$", "$12\\pi$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The fraction is $\\frac{90}{360} = \\frac{1}{4}$, and the whole area is $\\pi(12)^2 = 144\\pi$; the sector is $\\frac{144\\pi}{4} = 36\\pi$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "A quarter of the circle. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$144\\pi$ is the whole circle—no quarter taken."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$6\\pi$ is the **arc length**: $\\frac{1}{4}$ of the circumference $24\\pi$. Right fraction, wrong whole."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$12\\pi$ is half the circumference—a length, where the question asks for an area."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The equation $(x + 5)^2 + (y - 1)^2 = 36$ is graphed in the $xy$-plane. What are the center and radius of the circle?",
+                  "choices": [
+                    "Center $(-5, 1)$; radius $6$",
+                    "Center $(5, -1)$; radius $6$",
+                    "Center $(-5, 1)$; radius $36$",
+                    "Center $(5, -1)$; radius $36$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** $(x + 5)$ is $(x - (-5))$, so $h = -5$; $(y - 1)$ gives $k = 1$; and $r = \\sqrt{36} = 6$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Both signs flipped, root taken. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Reads the signs literally—the equation's $+5$ means the center sits at $-5$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Center right; $36$ is $r^2$, not $r$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Both slips together."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The graph of $x^2 + y^2 - 10x + 6y + 18 = 0$ in the $xy$-plane is a circle. What is the radius of the circle?",
+                  "choices": ["$4$", "$16$", "$\\sqrt{34}$", "$5$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Complete both squares:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "(x^2 - 10x + \\green{25}) + (y^2 + 6y + \\green{9}) = -18 + \\green{25} + \\green{9}", "note": "Halve, square, add to both sides" },
+                    { "math": "(x - 5)^2 + (y + 3)^2 = 16", "note": "Center $(5, -3)$" },
+                    { "math": "r = \\sqrt{16} = 4", "note": "Root the right side" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Both squares completed, constant moved, root taken. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$16$ is $r^2$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$\\sqrt{34}$ adds the $25$ and $9$ but forgets the equation already carried a $+18$—the constant must move across with its sign."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$5$ is half the $x$-coefficient—the center's $x$-coordinate, not the radius."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A circle has center $O$ and radius $8$. Point $P$ lies outside the circle with $OP = 17$, and a line through $P$ is tangent to the circle at point $T$. What is the length of $\\overline{PT}$?",
+                  "choices": ["$15$", "$9$", "$25$", "$\\sqrt{353} \\approx 18.8$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The radius $\\overline{OT}$ is perpendicular to the tangent, so triangle $OTP$ is right-angled at $T$:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "PT^2 = 17^2 - 8^2 = 225", "note": "$OP$ is the hypotenuse; the radius $8$ is a leg" },
+                    { "math": "PT = 15", "note": "The $8$-$15$-$17$ triple" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Tangent ⊥ radius → Pythagorean theorem. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$9 = 17 - 8$ subtracts lengths instead of squares."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$25 = 17 + 8$ adds them—no triangle side works that way."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$\\sqrt{289 + 64}$ **adds** the squares—but $OP$ is the hypotenuse, so its square stands alone."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Arc length and sector area $=$ $\\frac{\\text{central angle}}{360°}$ times the whole circumference ($2\\pi r$) or the whole area ($\\pi r^2$)—same fraction, different wholes.",
+            "Circle equation $(x - h)^2 + (y - k)^2 = r^2$: **signs flip** for the center, and the right side is $r^2$—root it.",
+            "Completing the square: half the coefficient, square it, add to **both** sides—then read center and radius from the rebuilt form.",
+            "A point is on/inside/outside the circle when plugging it in gives exactly/less than/more than $r^2$.",
+            "Tangent ⊥ radius at the touch point—expect a right triangle and reach for the Pythagorean toolkit.",
+            "Radians: degrees $\\times \\frac{\\pi}{180}$; sanity-check against $\\pi$ (a half-turn)."
+          ]
+        }
+      ]
+    }
+  ]
+}

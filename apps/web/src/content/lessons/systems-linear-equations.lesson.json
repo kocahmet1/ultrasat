@@ -1,0 +1,710 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "systems-linear-equations",
+  "title": "Systems of Linear Equations",
+  "estimatedMinutes": 35,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Systems of Linear Equations",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|system of linear equations} is two equations about the **same two variables**. A solution of the system is a pair $(x, y)$ that makes **both** equations true at the same time—each equation alone has infinitely many solutions, but the system usually pins down exactly one."
+        },
+        {
+          "type": "p",
+          "text": "Graphically, each equation is a line, and the system's solution is where the lines **intersect**—the one point that sits on both:"
+        },
+        {
+          "type": "graph",
+          "width": 320,
+          "height": 280,
+          "xMin": -1,
+          "xMax": 5,
+          "yMin": -1,
+          "yMax": 7,
+          "step": 2,
+          "ticks": true,
+          "lines": [
+            { "m": 1, "b": 1, "tone": "blue" },
+            { "m": -2, "b": 7, "tone": "teal" }
+          ],
+          "points": [{ "x": 2, "y": 3, "tone": "green", "label": "(2, 3)", "labelDx": 10, "labelDy": -4 }],
+          "caption": "The system $y = x + 1$ and $y = -2x + 7$ has one solution: the intersection $(2, 3)$.",
+          "alt": "Two lines crossing at the point (2, 3)"
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**The solution must satisfy both equations.** A pair that works in only one is the test's favorite trap.",
+            "**Substitution** shines when a variable is already isolated (or has coefficient $1$).",
+            "**Elimination** shines when coefficients line up—or can be scaled to line up.",
+            "**Compare slopes** to count solutions: crossing lines, parallel lines, or the same line twice.",
+            "**When the choices are pairs, plug them into both equations**—no solving required.",
+            "**Asked for a combination like $x + y$?** Try adding or subtracting the equations before solving for anything."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Substitution and elimination always both work—the skill being tested is picking the one that's *faster* for the given system."
+        }
+      ]
+    },
+    {
+      "id": "substitution",
+      "title": "Solve by Substitution",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "When one equation hands you a variable—already isolated, or easy to isolate—**substitute** that expression into the other equation. The system collapses into a one-variable equation you already know how to solve."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Isolate → substitute into the **other** equation → solve → back-substitute for the second variable."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} y = 2x - 1 \\\\ 3x + y = 14 \\end{cases}"
+            },
+            {
+              "type": "p",
+              "text": "The first equation already says what $y$ is—so replace $y$ in the second:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "3x + (2x - 1) = 14", "note": "Substitute $2x - 1$ for $y$" },
+                { "math": "5x - 1 = 14", "note": "Combine the $x$-terms" },
+                { "math": "x = 3", "note": "Add $1$, divide by $5$" },
+                { "math": "y = 2(3) - 1 = 5", "note": "Back-substitute $x = 3$ into $y = 2x - 1$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check in both:** $5 = 2(3) - 1$ {green|✓} and $3(3) + 5 = 14$ {green|✓} — the solution is $(3, 5)$."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} x + 4y = 14 \\\\ 2x - 3y = 6 \\end{cases}"
+            },
+            {
+              "type": "p",
+              "text": "Nothing is isolated yet—but $x$ has coefficient $1$ in the first equation, so isolating it costs one step:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x = 14 - 4y", "note": "Isolate $x$ in the first equation" },
+                { "math": "2(14 - 4y) - 3y = 6", "note": "Substitute into the **second** equation" },
+                { "math": "28 - 11y = 6", "note": "Distribute, then combine $-8y - 3y$" },
+                { "math": "y = 2", "note": "Subtract $28$, divide by $-11$" },
+                { "math": "x = 14 - 4(2) = 6", "note": "Back-substitute — the solution is $(6, 2)$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Substitute into the **other** equation. Plugging the expression back into the equation it came from just produces $14 = 14$—true, and useless."
+        }
+      ]
+    },
+    {
+      "id": "elimination",
+      "title": "Solve by Elimination",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "**Elimination** adds or subtracts whole equations so that one variable cancels. It's the fast lane whenever the coefficients of a variable are equal or opposite—and a small multiplication can *make* them so."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} 3x + 2y = 19 \\\\ 5x - 2y = 21 \\end{cases}"
+            },
+            {
+              "type": "p",
+              "text": "The $y$-coefficients are opposites ($+2$ and $-2$), so adding the equations wipes $y$ out:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "8x = 40", "note": "Add the equations — the $y$-terms cancel" },
+                { "math": "x = 5", "note": "Divide both sides by $8$" },
+                { "math": "3(5) + 2y = 19", "note": "Plug $x = 5$ into either equation" },
+                { "math": "y = 2", "note": "The solution is $(5, 2)$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Scale First, Then Eliminate"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} 2x + 3y = 12 \\\\ 3x + 4y = 17 \\end{cases}"
+            },
+            {
+              "type": "p",
+              "text": "No coefficients match yet. Multiply each equation so the $x$-coefficients agree (both become $6$):"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "6x + 9y = 36", "note": "First equation $\\times\\, 3$" },
+                { "math": "6x + 8y = 34", "note": "Second equation $\\times\\, 2$" },
+                { "math": "y = 2", "note": "Subtract — the $x$-terms cancel" },
+                { "math": "2x + 3(2) = 12 \\;\\Rightarrow\\; x = 3", "note": "Back-substitute — the solution is $(3, 2)$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Shortcut the SAT Loves"
+        },
+        {
+          "type": "p",
+          "text": "Some questions never ask for $x$ or $y$ alone—they ask for a **combination** like $x + y$. Before solving, try simply adding (or subtracting) the equations as they stand:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} 4x + y = 14 \\\\ x + 4y = 16 \\end{cases}"
+            },
+            {
+              "type": "p",
+              "text": "What is the value of $x + y$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "5x + 5y = 30", "note": "Add the two equations" },
+                { "math": "x + y = 6", "note": "Divide both sides by $5$ — done" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Solving fully would produce fractions ($x = \\frac{8}{3}$, $y = \\frac{10}{3}$)—a sign the question was *designed* for the shortcut. Ugly individual values, clean combination."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "When the target is $x + y$, $x - y$, or something like $3x + 3y$, look at what adding or subtracting the equations produces **before** you grind through a full solve."
+        }
+      ]
+    },
+    {
+      "id": "number-of-solutions",
+      "title": "How Many Solutions?",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Two lines can cross once, never, or be the same line—so a system has exactly one solution, none, or infinitely many. Slopes and intercepts decide which:"
+        },
+        {
+          "type": "table",
+          "headers": ["The two lines", "Slopes & intercepts", "Solutions"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["Cross at one point", "different slopes", "**Exactly one**"],
+            ["Parallel", "same slope, different intercepts", "**None**"],
+            ["The same line", "same slope, same intercept", "**Infinitely many**"]
+          ]
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Exactly one",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 175,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 1, "b": 1, "tone": "blue" },
+                    { "m": -1, "b": 3, "tone": "teal" }
+                  ],
+                  "points": [{ "x": 1, "y": 2, "tone": "green" }],
+                  "caption": "Different slopes — one crossing.",
+                  "alt": "Two lines crossing at one point"
+                }
+              ]
+            },
+            {
+              "title": "None",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 175,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 1, "b": 2, "tone": "blue" },
+                    { "m": 1, "b": -2, "tone": "teal" }
+                  ],
+                  "caption": "Parallel — no shared point.",
+                  "alt": "Two parallel lines"
+                }
+              ]
+            },
+            {
+              "title": "Infinitely many",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 200,
+                  "height": 175,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 1, "b": 1, "tone": "blue" },
+                    { "m": 1, "b": 1, "tone": "teal", "dashed": true }
+                  ],
+                  "caption": "Same line twice — every point works.",
+                  "alt": "Two coincident lines"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "In standard form: if you can scale one equation so the $x$- and $y$-coefficients match the other's, then matching constants mean **infinitely many** solutions, and different constants mean **no** solution."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} 2x + 5y = 9 \\\\ 4x + ky = 11 \\end{cases}"
+            },
+            {
+              "type": "question",
+              "stem": "In the system above, $k$ is a constant. For which value of $k$ does the system have **no** solution?",
+              "choices": ["$10$", "$5$", "$2.5$", "$20$"]
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "4x + 10y = 18", "note": "First equation $\\times\\, 2$ — now the $x$-coefficients match" },
+                { "math": "k = 10", "note": "Same $y$-coefficient makes the lines parallel…" },
+                { "math": "11 \\neq 18", "note": "…and different constants keep them from being the same line" }
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "With $k = 10$, the left sides are perfect multiples but the right sides aren't—parallel lines, no solution."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$5$ just copies the first equation's $y$-coefficient without scaling it by the same factor as the $x$-terms."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$2.5$ scales *down* ($5 \\div 2$) while the $x$-coefficients scale *up* ($2 \\to 4$)—the ratios must match in the same direction."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$20$ doubles twice. With $k = 20$ the slopes differ, so the lines cross and the system has exactly one solution."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "“No solution” and “infinitely many” questions look identical until the last step: check the **constants**. Matching coefficients + matching constants = same line; matching coefficients + different constants = parallel."
+        }
+      ]
+    },
+    {
+      "id": "systems-from-context",
+      "title": "Systems from Context",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A system shows up in a word problem whenever a story places **two constraints** on the same two unknowns. The classic pair: the *counts* add up, and the *values* add up."
+        },
+        {
+          "type": "table",
+          "headers": ["Constraint in the story", "Equation it becomes"],
+          "rows": [
+            ["The **counts** add up (“$250$ tickets were sold”)", "$x + y = \\text{total count}$"],
+            ["The **values** add up (“sales totaled $\\$2{,}450$”)", "$ax + by = \\text{total value}$"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A museum sold $250$ tickets one day: adult tickets for $\\$12$ and student tickets for $\\$7$. Ticket sales totaled $\\$2{,}450$. How many adult tickets were sold? Let $a$ and $s$ be the numbers of adult and student tickets:"
+            },
+            {
+              "type": "math",
+              "tex": "\\begin{cases} a + s = 250 \\\\ 12a + 7s = 2{,}450 \\end{cases}",
+              "boxed": true
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "7a + 7s = 1{,}750", "note": "Count equation $\\times\\, 7$" },
+                { "math": "5a = 700", "note": "Subtract it from the value equation — $s$ cancels" },
+                { "math": "a = 140", "note": "Divide by $5$: $140$ adult tickets (and $s = 110$)" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check:** $140 + 110 = 250$ {green|✓} and $12(140) + 7(110) = 1{,}680 + 770 = 2{,}450$ {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A food truck sells tacos for $\\$3$ each and burritos for $\\$8$ each. During one lunch, the truck sold $45$ items for a total of $\\$210$. Which system of equations gives the number of tacos $t$ and burritos $b$ sold?",
+              "choices": [
+                "$t + b = 45;\\;\\; 3t + 8b = 210$",
+                "$t + b = 45;\\;\\; 8t + 3b = 210$",
+                "$t + b = 210;\\;\\; 3t + 8b = 45$",
+                "$11(t + b) = 210$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Counts add to $45$ items; values add to $210$ dollars, with each taco worth $3$ and each burrito $8$. (Solving gives $t = 30$, $b = 15$.)"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Swaps the prices—it charges $\\$8$ per taco and $\\$3$ per burrito."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Swaps the totals: $210$ is dollars and $45$ is items. Units first, always."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "One equation can't carry two constraints—and no single item costs $\\$11$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Label your variables in writing before building equations (“$t$ = tacos”). Half of all system-from-context errors are really *labeling* errors."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Pick your method before you compute: is something isolated (substitute)? Do coefficients align (eliminate)? Is the question about $k$ (compare ratios) or a combination like $x + y$ (add the equations)?"
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "math",
+                  "tex": "\\begin{cases} y = 3x - 5 \\\\ 2x + y = 10 \\end{cases}"
+                },
+                {
+                  "type": "question",
+                  "stem": "What is the solution $(x, y)$ to the system above?",
+                  "choices": ["$(3, 4)$", "$(4, 3)$", "$(1, -2)$", "$(5, 0)$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Substitute $3x - 5$ for $y$ in the second equation:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "2x + (3x - 5) = 10", "note": "Substitute" },
+                    { "math": "5x = 15", "note": "Combine and add $5$" },
+                    { "math": "x = 3, \\;\\; y = 3(3) - 5 = 4", "note": "Back-substitute" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$4 = 3(3) - 5$ {green|✓} and $2(3) + 4 = 10$ {green|✓} — true in **both** equations."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$(4, 3)$ swaps the coordinates—and satisfies neither equation."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$(1, -2)$ satisfies the **first** equation only ($-2 = 3 - 5$), but $2(1) + (-2) = 0 \\neq 10$. One out of two isn't a solution."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$(5, 0)$ satisfies the **second** equation only ($10 + 0 = 10$), but $3(5) - 5 = 10 \\neq 0$. Same trap, other equation."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "math",
+                  "tex": "\\begin{cases} 5x + 2y = 26 \\\\ 3x - 2y = 6 \\end{cases}"
+                },
+                {
+                  "type": "question",
+                  "stem": "If $(x, y)$ is the solution to the system above, what is the value of $y$?",
+                  "choices": ["$3$", "$4$", "$8$", "$13$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Opposite $y$-coefficients beg for elimination:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "8x = 32", "note": "Add the equations — $y$ cancels" },
+                    { "math": "x = 4", "note": "Divide by $8$" },
+                    { "math": "5(4) + 2y = 26 \\;\\Rightarrow\\; y = 3", "note": "Back-substitute into either equation" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$2y = 26 - 20 = 6$, so $y = 3$. Check: $3(4) - 2(3) = 6$ {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$4$ is the value of $x$—the question asks for $y$. Answer the variable that was asked."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$8$ is the coefficient of $x$ after adding the equations, not a value of $y$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$13$ is $26 \\div 2$—dividing the first equation's constant without eliminating anything first."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "math",
+                  "tex": "\\begin{cases} kx - 6y = 10 \\\\ 2x - 3y = 5 \\end{cases}"
+                },
+                {
+                  "type": "question",
+                  "stem": "In the system above, $k$ is a constant. If the system has infinitely many solutions, what is the value of $k$?",
+                  "choices": ["$4$", "$-4$", "$2$", "$12$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Infinitely many solutions means the two equations are the *same line*. Scale the second equation to match the first:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "4x - 6y = 10", "note": "Second equation $\\times\\, 2$" },
+                    { "math": "k = 4", "note": "Coefficients **and** constant all match the first equation" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "With $k = 4$, the first equation is exactly the second times $2$—one line drawn twice."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$-4$ flips the sign: $-4x - 6y = 10$ has a different slope, so the lines cross once."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$2$ copies the second equation's $x$-coefficient without scaling—the $y$-terms and constants then don't match."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$12$ scales the $x$-term by $6$ while the $y$-term was scaled by $2$—proportions must match across the whole equation."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Zoe buys pens for $\\$2$ each and notebooks for $\\$5$ each. She buys $12$ items in total and spends $\\$39$. How many notebooks does she buy?",
+                  "choices": ["$3$", "$5$", "$6$", "$7$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Two constraints, two equations—counts and dollars:"
+                },
+                {
+                  "type": "math",
+                  "tex": "\\begin{cases} p + n = 12 \\\\ 2p + 5n = 39 \\end{cases}"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "2p + 2n = 24", "note": "Count equation $\\times\\, 2$" },
+                    { "math": "3n = 15", "note": "Subtract it from the money equation" },
+                    { "math": "n = 5", "note": "Divide by $3$: $5$ notebooks (and $p = 7$ pens)" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$3$ divides the $15$ by the notebook price $5$ instead of by the coefficient $3$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "$n = 5$. Check: $7 + 5 = 12$ items {green|✓} and $2(7) + 5(5) = 14 + 25 = 39$ dollars {green|✓}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$6$ assumes an even split of the $12$ items—the prices make that impossible at $\\$39$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$7$ is the number of **pens**. Solved correctly, answered the wrong question—the most preventable miss on the whole test."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "A system's solution satisfies **both** equations—graphically, it's the **intersection** of the two lines. Traps satisfy exactly one.",
+            "**Substitute** when a variable is isolated or has coefficient $1$; **eliminate** when coefficients match or are opposites (scale first if needed).",
+            "Always **back-substitute** to get the second variable, and check the pair in both equations.",
+            "Counting solutions: different slopes → one; same slope, different intercepts → none; same line → infinitely many. For $k$-questions, scale one equation and compare—**constants decide** between none and infinite.",
+            "Context: counts add up and values add up—two equations. Define your variables in writing first.",
+            "Asked for $x + y$ or another combination? **Add or subtract the equations** before solving fully—especially if full solving looks ugly.",
+            "Answer the variable the question asked for—$x$ when it wants $x$, $y$ when it wants $y$."
+          ]
+        }
+      ]
+    }
+  ]
+}

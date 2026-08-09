@@ -131,6 +131,9 @@ const PaymentCancel = React.lazy(() => import('./pages/PaymentCancel'));
 // Repair Engine Pages
 const ConceptPractice = React.lazy(() => import('./pages/ConceptPractice'));
 const SubcategoryLearnPage = React.lazy(() => import('./pages/SubcategoryLearnPage'));
+// Lesson v2 rollout: serves the redesigned LessonPage where v2 content
+// exists, the legacy SubcategoryLearnPage otherwise (see LearnRouteSwitch).
+const LearnRouteSwitch = React.lazy(() => import('./pages/LearnRouteSwitch'));
 
 // Helper function to create private suspense routes
 const PrivateSuspenseRoute = ({ children }) => (
@@ -271,7 +274,9 @@ const router = createBrowserRouter([
       { path: '/concept-bank', element: <ProSuspenseRoute><ConceptBank /></ProSuspenseRoute> },
       { path: '/concept-detail/:conceptId', element: <PrivateSuspenseRoute><ConceptDetail /></PrivateSuspenseRoute> },
       { path: '/concept/:conceptId', element: <PrivateSuspenseRoute><ConceptPractice /></PrivateSuspenseRoute> },
-      { path: '/learn/:subcategoryId', element: <ProSuspenseRoute><SubcategoryLearnPage /></ProSuspenseRoute> },
+      { path: '/learn/:subcategoryId', element: <ProSuspenseRoute><LearnRouteSwitch /></ProSuspenseRoute> },
+      // Retired lesson pages stay reachable for admins during the redesign
+      { path: '/admin/legacy-learn/:subcategoryId', element: <AdminSuspenseRoute><SubcategoryLearnPage /></AdminSuspenseRoute> },
       { path: '/lesson/:skillTag', element: <PrivateSuspenseRoute><LegacyLessonRedirect /></PrivateSuspenseRoute> },
       { path: '/skill-drill/:skillTag', element: <PrivateSuspenseRoute><LegacySkillDrillRedirect /></PrivateSuspenseRoute> },
       { path: '/practice-exams', element: <PrivateSuspenseRoute><PracticeExamList /></PrivateSuspenseRoute> },

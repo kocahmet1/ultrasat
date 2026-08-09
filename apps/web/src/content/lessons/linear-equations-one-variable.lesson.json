@@ -1,0 +1,800 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "linear-equations-one-variable",
+  "title": "Linear Equations in One Variable",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Linear Equations in One Variable",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|linear equation in one variable} is an equation whose variable appears only to the **first power**—no exponents, no square roots, no variable in a denominator. Every one of them can be rearranged into the form $ax + b = c$, where $a$, $b$, and $c$ are numbers."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "$3x + 5 = 11$",
+              "note": "The variable is raised only to the first power — linear."
+            },
+            {
+              "verdict": "correct",
+              "text": "$\\frac{x}{4} - 2 = 7$",
+              "note": "Dividing the variable by a number is still linear."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "$x^2 + 1 = 5$",
+              "note": "The variable is squared — that's a quadratic, not linear."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "$\\frac{3}{x} = 6$",
+              "note": "The variable sits in a denominator — not linear."
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**Solving** an equation means finding the value of the variable that makes both sides equal. On the SAT you'll solve equations directly, build them from word problems, and reason about *how many* solutions an equation has—this lesson covers all three."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Keep the equation balanced.** Whatever you do to one side, do to the other—always.",
+            "**Undo operations with their inverses** to peel everything away from the variable.",
+            "**Variables on both sides?** Collect the $x$-terms on one side and the numbers on the other.",
+            "**Asked for an expression** (like $6x - 10$)? Look for a shortcut before solving for $x$.",
+            "**Check your answer** by plugging it back in—or, on multiple choice, plug in the choices."
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Inverse Operations"
+        },
+        {
+          "type": "p",
+          "text": "Every solving move is an **undo**. An equation was built by doing operations to $x$; you solve it by undoing them with each operation's inverse, working in **reverse** order of operations."
+        },
+        {
+          "type": "strip",
+          "alt": "Addition and subtraction undo each other",
+          "segments": [
+            { "text": "Addition", "tone": "blue" },
+            { "text": "⇄", "tone": "op" },
+            { "text": "Subtraction", "tone": "blue" }
+          ]
+        },
+        {
+          "type": "strip",
+          "alt": "Multiplication and division undo each other",
+          "segments": [
+            { "text": "Multiplication", "tone": "teal" },
+            { "text": "⇄", "tone": "op" },
+            { "text": "Division", "tone": "teal" }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Think of solving as unwrapping: the last operation done to $x$ is the first one you undo."
+        }
+      ]
+    },
+    {
+      "id": "solve-for-a-value",
+      "title": "Solve for a Value",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "To solve for the variable, isolate it: move everything else to the other side, one inverse operation at a time. Undo addition and subtraction first, then multiplication and division."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What value of $x$ satisfies the equation below?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "5x + 7 = 42", "note": "Given equation" },
+                { "math": "5x = 35", "note": "Subtract $7$ from both sides" },
+                { "math": "x = 7", "note": "Divide both sides by $5$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check:** $5(7) + 7 = 35 + 7 = 42$ {green|✓} — the solution works."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Variables on Both Sides"
+        },
+        {
+          "type": "p",
+          "text": "When the variable appears on both sides, **collect the $x$-terms on one side and the numbers on the other**—then finish as usual."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What value of $x$ satisfies $2x + 9 = 4x - 1$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "2x + 9 = 4x - 1", "note": "Given equation" },
+                { "math": "9 = 2x - 1", "note": "Subtract $2x$ from both sides" },
+                { "math": "10 = 2x", "note": "Add $1$ to both sides" },
+                { "math": "5 = x", "note": "Divide both sides by $2$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "note",
+          "text": "Collect the $x$-terms on the side with the **larger** coefficient—here, the right side—so the coefficient stays positive and sign errors stay away."
+        },
+        {
+          "type": "h3",
+          "text": "Distribute First"
+        },
+        {
+          "type": "p",
+          "text": "If the equation has parentheses, **distribute before anything else**—then it becomes a familiar two-side equation."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "steps",
+              "items": [
+                { "math": "3(x - 4) = 2x + 1", "note": "Given equation" },
+                { "math": "3x - 12 = 2x + 1", "note": "Distribute the $3$" },
+                { "math": "x - 12 = 1", "note": "Subtract $2x$ from both sides" },
+                { "math": "x = 13", "note": "Add $12$ to both sides" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Clear Fractions"
+        },
+        {
+          "type": "p",
+          "text": "A fraction is just a division—undo it by **multiplying both sides** by the denominator, ideally as your first move."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{2x + 1}{5} = 3", "note": "Given equation" },
+                { "math": "2x + 1 = 15", "note": "Multiply both sides by $5$" },
+                { "math": "2x = 14", "note": "Subtract $1$ from both sides" },
+                { "math": "x = 7", "note": "Divide both sides by $2$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "On multiple-choice questions you can also work backward: plug each answer choice into the equation and keep the one that makes both sides equal."
+        }
+      ]
+    },
+    {
+      "id": "solve-for-an-expression",
+      "title": "Solve for an Expression",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Some questions never ask for $x$. They give you an equation and ask for the value of an **expression**—and the fastest route is usually *not* to solve for $x$. Compare the target expression with the given equation first: it's often a multiple of it."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "If $4x + 3 = 19$, what is the value of $12x + 9$?"
+            },
+            {
+              "type": "columns",
+              "items": [
+                {
+                  "title": "Shortcut: scale the equation",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "4x + 3 = 19", "note": "Given equation" },
+                        { "math": "3(4x + 3) = 3(19)", "note": "$12x + 9$ is $3$ times the left side" },
+                        { "math": "12x + 9 = 57", "note": "Simplify" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "title": "Or: solve for x first",
+                  "blocks": [
+                    {
+                      "type": "steps",
+                      "items": [
+                        { "math": "4x = 16", "note": "Subtract $3$ from both sides" },
+                        { "math": "x = 4", "note": "Divide both sides by $4$" },
+                        { "math": "12(4) + 9 = 57", "note": "Plug $x = 4$ into $12x + 9$" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Both routes work—but the shortcut is fewer steps, and fewer steps means fewer chances for an arithmetic slip."
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Before solving for $x$, compare the target expression with the given equation. If the target is a multiple of it, transform the whole equation instead of solving."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "If $3x - 5 = 16$, what is the value of $6x - 10$?",
+              "choices": ["$7$", "$21$", "$32$", "$42$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "$7$ is the value of $x$ itself—the classic trap. The question asks for $6x - 10$, not $x$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$21$ is the value of $3x$—stopping one step short of anything the question asked."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "$6x - 10 = 2(3x - 5)$, so its value is $2(16) = 32$. (Solving instead also works: $x = 7$, and $6(7) - 10 = 32$.)"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$42$ is the value of $6x$ alone—the $- 10$ still has to be applied."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "When a question asks for an expression, the value of $x$ is almost always sitting among the wrong choices. Answer the question that was actually asked."
+        }
+      ]
+    },
+    {
+      "id": "number-of-solutions",
+      "title": "How Many Solutions?",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A linear equation in one variable doesn't always have exactly one solution. To find out how many it has, **simplify both sides completely** and look at what's left:"
+        },
+        {
+          "type": "table",
+          "headers": ["What simplifying leaves", "Example", "Number of solutions"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["$x =$ a number", "$x = 5$", "**Exactly one**"],
+            ["A **false** statement", "$5 = 3$", "**None** — “no solution”"],
+            ["A **true** statement", "$12 = 12$", "**Infinitely many**"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "How many solutions does the equation $4(2x + 3) = 8x + 12$ have?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "4(2x + 3) = 8x + 12", "note": "Given equation" },
+                { "math": "8x + 12 = 8x + 12", "note": "Distribute the $4$" },
+                { "math": "12 = 12", "note": "Subtract $8x$ from both sides" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The $x$-terms vanished and left a **true** statement—the equation holds no matter what $x$ is. It has **infinitely many solutions**."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "A Picture of the Three Cases"
+        },
+        {
+          "type": "p",
+          "text": "Treat each side of the equation as its own line: $y = \\text{left side}$ and $y = \\text{right side}$. A solution is an $x$-value where the two lines meet."
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Exactly one",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 215,
+                  "height": 190,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -3,
+                  "yMax": 7,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 2, "b": 1, "tone": "blue" },
+                    { "m": -1, "b": 4, "tone": "teal" }
+                  ],
+                  "points": [{ "x": 1, "y": 3, "tone": "rose" }],
+                  "caption": "The sides cross at one $x$-value.",
+                  "alt": "Two lines crossing at a single point"
+                }
+              ]
+            },
+            {
+              "title": "None",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 215,
+                  "height": 190,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -3,
+                  "yMax": 7,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 2, "b": 1, "tone": "blue" },
+                    { "m": 2, "b": -2, "tone": "teal" }
+                  ],
+                  "caption": "Parallel sides never meet.",
+                  "alt": "Two parallel lines that never intersect"
+                }
+              ]
+            },
+            {
+              "title": "Infinitely many",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 215,
+                  "height": 190,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -3,
+                  "yMax": 7,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [
+                    { "m": 2, "b": 1, "tone": "blue" },
+                    { "m": 2, "b": 1, "tone": "teal", "dashed": true }
+                  ],
+                  "caption": "Both sides are the same line.",
+                  "alt": "Two coincident lines drawn on top of each other"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "In the equation $6x + k = 3(2x + 5)$, $k$ is a constant. If the equation has infinitely many solutions, what is the value of $k$?",
+              "choices": ["$3$", "$5$", "$15$", "$30$"]
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "6x + k = 3(2x + 5)", "note": "Given equation" },
+                { "math": "6x + k = 6x + 15", "note": "Distribute the $3$" },
+                { "math": "k = 15", "note": "Identical $x$-terms — the constants must match too" }
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "$3$ is just the multiplier outside the parentheses, not the matched constant."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$5$ is the constant *inside* the parentheses—before the $3$ has been distributed."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "After distributing, the right side is $6x + 15$. The $x$-terms already agree, so the equation is true for every $x$ exactly when $k = 15$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "With $k = 30$, subtracting $6x$ leaves $30 = 15$—a false statement, which means **no** solution rather than infinitely many."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "equations-from-context",
+      "title": "Equations from Context",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Many SAT linear equations arrive as word problems. Nearly all of them are built from the same skeleton:"
+        },
+        {
+          "type": "strip",
+          "alt": "Total equals starting amount plus rate times quantity",
+          "segments": [
+            { "text": "Total", "tone": "green" },
+            { "text": "=", "tone": "op" },
+            { "text": "Starting amount", "tone": "blue" },
+            { "text": "+", "tone": "op" },
+            { "text": "Rate", "tone": "teal" },
+            { "text": "×", "tone": "op" },
+            { "text": "Quantity", "tone": "purple" }
+          ]
+        },
+        {
+          "type": "table",
+          "headers": ["Words in the problem", "Math"],
+          "rows": [
+            ["“each,” “per,” “every”", "a **rate** — it multiplies the quantity"],
+            ["“one-time fee,” “initial,” “starts with”", "a **constant** added once"],
+            ["“total,” “altogether,” “in all”", "the **result** of the sum"],
+            ["“is,” “was,” “will be”", "the equals sign"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A moving company charges a one-time fee of $\\$55$, plus $\\$65$ for each hour of work. If a move costs $\\$380$ in total, how many hours did it take?"
+            },
+            {
+              "type": "p",
+              "text": "Map the words onto the skeleton: the {green|total} is $380$, the {blue|starting amount} is the $55$ fee, and the {teal|rate} of $65$ per hour multiplies the {purple|number of hours} $h$:"
+            },
+            {
+              "type": "math",
+              "tex": "\\green{380} = \\blue{55} + \\teal{65}\\purple{h}",
+              "boxed": true
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "325 = 65h", "note": "Subtract $55$ from both sides" },
+                { "math": "h = 5", "note": "Divide both sides by $65$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The move took **5 hours**. Check: $55 + 65(5) = 55 + 325 = 380$ {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Amara puts $\\$220$ on a transit card and spends $\\$14$ from it each week. If $\\$52$ remains on the card after $w$ weeks, which equation represents this situation?",
+              "choices": [
+                "$220 - 14w = 52$",
+                "$220 + 14w = 52$",
+                "$14w - 220 = 52$",
+                "$52 - 14w = 220$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Spending *removes* money: start at $220$, subtract $14$ per week, land on $52$. (Solving it gives $w = 12$ weeks—a reasonable number.)"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Adds the spending, so the balance would *grow* each week—the opposite of the story."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Reverses the roles: it subtracts the starting balance from the spending, which has no meaning here."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Treats the leftover $52$ as the starting amount and the $220$ as the result—the story run backward."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Before solving, sanity-check the equation's *story*: should the total grow or shrink? Should the answer be large or small? A ten-second reality check catches most setup mistakes."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Solve each one fully before opening the answer. If you get stuck, name the move you need: distribute, clear a fraction, collect the $x$-terms, or scale the whole equation."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "What value of $x$ satisfies the equation $4x - 7 = 2x + 9$?",
+                  "choices": ["$1$", "$4$", "$8$", "$16$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Collect the $x$-terms on the left and the numbers on the right:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "4x - 7 = 2x + 9", "note": "Given equation" },
+                    { "math": "2x - 7 = 9", "note": "Subtract $2x$ from both sides" },
+                    { "math": "2x = 16", "note": "Add $7$ to both sides" },
+                    { "math": "x = 8", "note": "Divide both sides by $2$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$1$ comes from subtracting $7$ from $9$ and halving—skipping the collection of $x$-terms entirely."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$4$ treats the equation as $4x = 9 + 7$, ignoring the $2x$ on the right side."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "$2x = 16$, so $x = 8$. Check: $4(8) - 7 = 25$ and $2(8) + 9 = 25$. {green|✓}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$16$ stops at $2x = 16$—the final division by $2$ is still needed."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "If $\\frac{x}{5} + 3 = 10$, what is the value of $\\frac{x}{5} - 2$?",
+                  "choices": ["$5$", "$7$", "$33$", "$35$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** No need to find $x$: the given equation already tells you that $\\frac{x}{5} = 7$, so $\\frac{x}{5} - 2 = 7 - 2 = 5$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Subtract $3$ from both sides to get $\\frac{x}{5} = 7$, then subtract $2$ more: $5$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$7$ is the value of $\\frac{x}{5}$—one step short of what was asked."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$33$ is $x - 2$: it subtracts the $2$ from $x = 35$ instead of from $\\frac{x}{5}$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$35$ is the value of $x$ itself—the question asks for $\\frac{x}{5} - 2$."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "In the equation $3(2x - 4) = 6x + c$, $c$ is a constant. If the equation has infinitely many solutions, what is the value of $c$?",
+                  "choices": ["$-12$", "$-4$", "$4$", "$12$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Distribute, then compare the two sides:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "3(2x - 4) = 6x + c", "note": "Given equation" },
+                    { "math": "6x - 12 = 6x + c", "note": "Distribute the $3$" },
+                    { "math": "c = -12", "note": "Identical $x$-terms — constants must match" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "With $c = -12$, both sides are the exact same expression, so every value of $x$ works."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$-4$ is the constant inside the parentheses—before it has been multiplied by $3$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$4$ flips the sign of that inner constant on top of skipping the distribution."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$12$ is a sign error: $3 \\times (-4) = -12$, not $12$. With $c = 12$ the equation has no solution."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A climbing gym charges a one-time enrollment fee of $\\$40$ plus $\\$20$ per month of membership. Malik has paid the gym $\\$240$ in total. For how many months has he been a member?",
+                  "choices": ["$6$", "$10$", "$12$", "$14$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Total $=$ fee $+$ rate $\\times$ months:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "240 = 40 + 20m", "note": "Build the equation from the story" },
+                    { "math": "200 = 20m", "note": "Subtract $40$ from both sides" },
+                    { "math": "m = 10", "note": "Divide both sides by $20$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$6$ divides by the $\\$40$ fee instead of the $\\$20$ monthly rate."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "$240 - 40 = 200$ spent on monthly dues, and $200 \\div 20 = 10$ months."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$12$ is $240 \\div 20$—it forgets the one-time enrollment fee."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$14$ adds the fee instead of subtracting it: $(240 + 40) \\div 20$."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Linear means the variable appears only to the **first power**. Solve by undoing operations—inverse operations, reverse order, and always the **same move on both sides**.",
+            "**Distribute** and **clear fractions** first; then collect the $x$-terms on one side and the numbers on the other.",
+            "Asked for an **expression**? Check whether it's a multiple of the given equation before solving for $x$—and expect the value of $x$ among the trap choices.",
+            "After simplifying: $x =$ a number → **one** solution; a false statement → **none**; a true statement → **infinitely many**.",
+            "Word problems: {green|total} $=$ {blue|starting amount} $+$ {teal|rate} $\\times$ {purple|quantity}. Sanity-check the story before you solve.",
+            "**Check your answer** by plugging it back in—or plug in the answer choices."
+          ]
+        }
+      ]
+    }
+  ]
+}

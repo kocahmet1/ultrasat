@@ -1,0 +1,624 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "ratios-rates-proportions",
+  "title": "Ratios, Rates, and Proportions",
+  "estimatedMinutes": 30,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Ratios, Rates, and Proportions",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|ratio} compares two quantities ($3$ cups of flour to $2$ of sugar). A {teal|rate} is a ratio of quantities with **different units** (miles per gallon). A {purple|proportion} says two ratios are equal—and it's the engine that solves most of this domain's questions."
+        },
+        {
+          "type": "p",
+          "text": "The math here is light: multiply, divide, cross-multiply. The points are won and lost on **bookkeeping**—which quantity is on top, what the whole is, and whether the units make sense. Let the labels do the thinking."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Write every ratio as a labeled fraction** and keep the same order throughout: $\\frac{\\text{red}}{\\text{blue}}$ stays $\\frac{\\text{red}}{\\text{blue}}$.",
+            "**Part : part vs. part : whole.** A $3{:}5$ ratio has a whole of $3 + 5 = 8$ parts—check which comparison the question gives and which it asks for.",
+            "**“Per” means divide**, and the unit after *per* goes in the denominator. A unit rate is the amount per **one**.",
+            "**Proportions:** match units across the tops and across the bottoms, then cross-multiply.",
+            "**Conversions:** multiply by conversion factors—fractions equal to $1$—arranged so the old unit **cancels**.",
+            "**End with a units check.** If the units of your answer are wrong, the setup was wrong—no exceptions."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Units are self-checking machinery. Carry them through every step and cancel them like factors—when the leftover unit matches what the question asks for, the arithmetic is almost always right too."
+        }
+      ]
+    },
+    {
+      "id": "ratios",
+      "title": "Ratios: Parts and Wholes",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The ratio $a{:}b$ means “$a$ of this for every $b$ of that,” and it can be written as the fraction $\\frac{a}{b}$. One ratio generates a whole family of comparisons—suppose a bag has red and blue marbles in the ratio $3{:}5$:"
+        },
+        {
+          "type": "table",
+          "headers": ["Comparison", "Ratio", "As a fraction"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["red to blue  (part : part)", "$3:5$", "$\\frac{3}{5}$"],
+            ["red to **all**  (part : whole)", "$3:8$", "$\\frac{3}{8}$"],
+            ["blue to **all**  (part : whole)", "$5:8$", "$\\frac{5}{8}$"]
+          ],
+          "caption": "The whole is the sum of the parts: $3 + 5 = 8$."
+        },
+        {
+          "type": "h3",
+          "text": "From Ratio to Actual Counts"
+        },
+        {
+          "type": "p",
+          "text": "A ratio gives proportions, not counts—the actual numbers are the ratio **scaled up** by some factor $x$: $3x$ red and $5x$ blue. The total pins down $x$."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "At an animal shelter, the ratio of dogs to cats is $4:7$. If the shelter has $44$ dogs and cats in total, how many cats are there?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "4x + 7x = 44", "note": "Dogs $= 4x$, cats $= 7x$ — the parts sum to the total" },
+                { "math": "11x = 44 \\;\\Rightarrow\\; x = 4", "note": "Each “part” is $4$ animals" },
+                { "math": "7x = 28 \\;\\text{cats}", "note": "Scale the cats' share" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check:** $16$ dogs $+\\;28$ cats $= 44$, and $\\frac{16}{28} = \\frac{4}{7}$. {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A juice blend mixes cranberry juice and apple juice in a ratio of $2:3$. How many cups of **cranberry** juice are in $20$ cups of the blend?",
+              "choices": ["$8$", "$12$", "$2$", "$10$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "The whole is $2 + 3 = 5$ parts, so each part is $20 \\div 5 = 4$ cups; cranberry gets $2 \\times 4 = 8$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$12$ is the **apple** juice—the other part. Answer the part that was asked."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$2$ is the raw ratio number, never scaled up to the actual $20$-cup batch."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$10$ splits the blend in half—ignoring the $2:3$ ratio entirely."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The single most common ratio error: treating a part : part ratio as part : whole. $2:3$ cranberry-to-apple means cranberry is $\\frac{2}{5}$ of the blend—not $\\frac{2}{3}$."
+        }
+      ]
+    },
+    {
+      "id": "rates",
+      "title": "Rates and Unit Rates",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {teal|rate} compares different units—miles and gallons, pages and minutes, dollars and ounces. The most useful version is the {blue|unit rate}: the amount per **one** unit, found by dividing."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A car travels $312$ miles on $12$ gallons of gas. At this rate, how far can it travel on $8$ gallons?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{312 \\;\\text{miles}}{12 \\;\\text{gallons}} = 26 \\;\\frac{\\text{miles}}{\\text{gallon}}", "note": "Unit rate: divide by the gallons to get miles per **one** gallon" },
+                { "math": "26 \\times 8 = 208 \\;\\text{miles}", "note": "Scale the unit rate by the new amount" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Unit Rates Compare Deals"
+        },
+        {
+          "type": "p",
+          "text": "Two prices with different sizes can't be compared directly—but their unit prices can:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "18 oz jar — $\\$4.50$",
+              "blocks": [
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{\\$4.50}{18 \\;\\text{oz}} = \\$0.25 \\;\\text{per oz}", "note": "Divide price by amount" }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "24 oz jar — $\\$5.52$",
+              "blocks": [
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{\\$5.52}{24 \\;\\text{oz}} = \\$0.23 \\;\\text{per oz}", "note": "Lower cost per ounce — the better buy" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "“Per” tells you the division order: dollars **per ounce** = $\\frac{\\text{dollars}}{\\text{ounces}}$, miles **per hour** = $\\frac{\\text{miles}}{\\text{hours}}$. Whatever follows *per* lives in the denominator—and speed problems are just this rule: distance $=$ rate $\\times$ time."
+        }
+      ]
+    },
+    {
+      "id": "proportions",
+      "title": "Proportions & Proportional Relationships",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {purple|proportion} sets two ratios equal. To build one safely, make the **units match across the tops and across the bottoms**—then cross-multiply."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "If $\\frac{a}{b} = \\frac{c}{d}$, then $ad = bc$ (cross-multiplication)."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A recipe uses $3$ cups of flour to make $24$ muffins. How many cups are needed for $40$ muffins?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{3 \\;\\text{cups}}{24 \\;\\text{muffins}} = \\frac{f \\;\\text{cups}}{40 \\;\\text{muffins}}", "note": "Cups over muffins on **both** sides" },
+                { "math": "24f = 120", "note": "Cross-multiply" },
+                { "math": "f = 5 \\;\\text{cups}", "note": "Divide by $24$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Proportional Relationships: $y = kx$"
+        },
+        {
+          "type": "p",
+          "text": "Two quantities are {blue|directly proportional} when their ratio never changes: $y = kx$, where $k$ (the **constant of proportionality**) is just the unit rate. The graph is a line **through the origin**—double the input, double the output."
+        },
+        {
+          "type": "graph",
+          "width": 300,
+          "height": 250,
+          "xMin": 0,
+          "xMax": 6,
+          "yMin": 0,
+          "yMax": 15,
+          "stepX": 2,
+          "stepY": 5,
+          "ticks": true,
+          "lines": [{ "m": 2.5, "b": 0, "tone": "blue", "label": "y = 2.5x", "labelAt": 4.4, "labelDx": 8, "labelDy": -4 }],
+          "points": [
+            { "x": 2, "y": 5, "tone": "green", "label": "(2, 5)", "labelDx": 8, "labelDy": 16 },
+            { "x": 4, "y": 10, "tone": "green", "label": "(4, 10)", "labelDx": 8, "labelDy": 16 }
+          ],
+          "caption": "Proportional ⇔ a line through the **origin**: $\\frac{y}{x}$ is the same at every point.",
+          "alt": "A line through the origin passing through the points (2, 5) and (4, 10)"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "The quantity $y$ is directly proportional to $x$, and $y = 15$ when $x = 6$. What is the value of $y$ when $x = 10$?",
+              "choices": ["$4$", "$19$", "$25$", "$90$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "$4$ uses the constant upside down: $10 \\times \\frac{6}{15}$. The ratio is $\\frac{y}{x}$, not $\\frac{x}{y}$."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$19$ is **additive** thinking: $x$ went up by $4$, so $y$ goes up by $4$. Proportional quantities scale by *multiplication*, not addition."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "$k = \\frac{15}{6} = 2.5$, so $y = 2.5(10) = 25$. (Or the proportion $\\frac{15}{6} = \\frac{y}{10}$.)"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$90$ multiplies $15 \\times 6$—two values of different quantities multiplied for no reason."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The additive trap (choice B) is this skill's signature wrong answer. When quantities are proportional, ask “what do I **multiply** by?”—never “what do I add?”"
+        }
+      ]
+    },
+    {
+      "id": "unit-conversions",
+      "title": "Unit Conversions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|conversion factor} is a fraction equal to $1$—like $\\frac{100 \\;\\text{cm}}{1 \\;\\text{m}}$—so multiplying by it changes the **units** without changing the quantity. Arrange each factor so the unwanted unit sits in the denominator and **cancels**:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "How many centimeters is $2$ meters?  ($1$ m $= 100$ cm)"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "2 \\;\\cancel{\\text{m}} \\times \\frac{100 \\;\\text{cm}}{1 \\;\\cancel{\\text{m}}} = 200 \\;\\text{cm}", "note": "Old unit cancels; only cm survives" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Chain Factors for Multi-Step Conversions"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "How many hours is $7{,}200$ seconds?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "7{,}200 \\;\\cancel{\\text{s}} \\times \\frac{1 \\;\\cancel{\\text{min}}}{60 \\;\\cancel{\\text{s}}} \\times \\frac{1 \\;\\text{h}}{60 \\;\\cancel{\\text{min}}}", "note": "Seconds → minutes → hours; each factor kills one unit" },
+                { "math": "\\frac{7{,}200}{3{,}600} = 2 \\;\\text{h}", "note": "Multiply the chain through" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Converting a Rate: Fix Both Units"
+        },
+        {
+          "type": "p",
+          "text": "A rate has a unit on top **and** bottom—convert each with its own factor:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A train travels $72$ kilometers per hour. What is its speed in meters per **second**?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{72 \\;\\cancel{\\text{km}}}{1 \\;\\cancel{\\text{h}}} \\times \\frac{1{,}000 \\;\\text{m}}{1 \\;\\cancel{\\text{km}}} \\times \\frac{1 \\;\\cancel{\\text{h}}}{3{,}600 \\;\\text{s}}", "note": "One factor converts the top (km → m), one the bottom (h → s)" },
+                { "math": "\\frac{72{,}000}{3{,}600} = 20 \\;\\frac{\\text{m}}{\\text{s}}", "note": "Only m on top and s below survive" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Density and Other Built-In Rates"
+        },
+        {
+          "type": "p",
+          "text": "Density is a rate in disguise—mass per unit of volume: $\\text{density} = \\frac{\\text{mass}}{\\text{volume}}$."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A metal block has a mass of $540$ grams and a volume of $60$ cubic centimeters. What is its density in grams per cubic centimeter?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\text{density} = \\frac{540 \\;\\text{g}}{60 \\;\\text{cm}^3} = 9 \\;\\frac{\\text{g}}{\\text{cm}^3}", "note": "The unit asked for — grams **per** cm³ — dictates the division" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Whenever a conversion confuses you, write the units first and the numbers second: the unit you want to eliminate goes in a denominator, the unit you want to keep goes on top. The numbers just come along for the ride."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "For each one: label the ratio, identify part vs. whole, and let the units steer. Commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A bag contains only red and green candies in a ratio of $5:3$. If the bag holds $48$ candies, how many are **green**?",
+                  "choices": ["$18$", "$30$", "$3$", "$16$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The whole is $5 + 3 = 8$ parts:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "8x = 48 \\;\\Rightarrow\\; x = 6", "note": "Each part is $6$ candies" },
+                    { "math": "3x = 18 \\;\\text{green}", "note": "Green owns $3$ of the $8$ parts" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Check: $30$ red $+ 18$ green $= 48$, and $\\frac{30}{18} = \\frac{5}{3}$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$30$ is the **red** count—the other part of the ratio."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$3$ is the unscaled ratio number—a ratio is a recipe, not a count."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$16$ is $48 \\div 3$: dividing by green's ratio number instead of scaling by the whole's $8$ parts."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A printer prints $45$ pages in $2.5$ minutes. At this rate, how many pages does it print in $8$ minutes?",
+                  "choices": ["$90$", "$144$", "$360$", "$14$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Unit rate first:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{45 \\;\\text{pages}}{2.5 \\;\\text{min}} = 18 \\;\\frac{\\text{pages}}{\\text{min}}", "note": "Pages per **one** minute" },
+                    { "math": "18 \\times 8 = 144 \\;\\text{pages}", "note": "Scale to $8$ minutes" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$90$ doubles the $45$—that covers only $5$ minutes, not $8$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "$18$ pages per minute for $8$ minutes. (The proportion $\\frac{45}{2.5} = \\frac{p}{8}$ gives the same $144$.)"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$360$ is $45 \\times 8$—it treats $45$ as a per-minute rate and ignores the $2.5$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$14$ comes from the proportion set up upside down ($45 \\times \\frac{2.5}{8}$)—units would be pages·min², which is the tell."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "On an architectural drawing, $0.5$ inch represents $4$ feet. A wall is $22$ feet long. What is the length, in inches, of the wall on the drawing?",
+                  "choices": ["$2.75$", "$11$", "$44$", "$5.5$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Inches over feet on both sides:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{0.5 \\;\\text{in}}{4 \\;\\text{ft}} = \\frac{L \\;\\text{in}}{22 \\;\\text{ft}}", "note": "Matching units across tops and bottoms" },
+                    { "math": "4L = 11 \\;\\Rightarrow\\; L = 2.75 \\;\\text{in}", "note": "Cross-multiply, then divide" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$22$ ft is $5.5$ four-foot chunks, each worth $0.5$ in: $5.5 \\times 0.5 = 2.75$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$11$ multiplies $22 \\times 0.5$, ignoring that each half-inch covers **four** feet."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$44$ divides by $0.5$—the scale flipped upside down, making the drawing *bigger* than the wall."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$5.5$ is the number of $4$-ft chunks—a correct middle step, stopped one multiplication early."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Water flows through a hose at $4.5$ liters per minute. What is this flow rate in **milliliters per second**?  ($1$ L $= 1{,}000$ mL)",
+                  "choices": ["$75$", "$270$", "$4{,}500$", "$0.075$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Convert the top and the bottom, each with its own factor:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{4.5 \\;\\cancel{\\text{L}}}{1 \\;\\cancel{\\text{min}}} \\times \\frac{1{,}000 \\;\\text{mL}}{1 \\;\\cancel{\\text{L}}} \\times \\frac{1 \\;\\cancel{\\text{min}}}{60 \\;\\text{s}}", "note": "L → mL on top; min → s below" },
+                    { "math": "\\frac{4{,}500}{60} = 75 \\;\\frac{\\text{mL}}{\\text{s}}", "note": "Only mL and s survive" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Both units converted, both directions correct. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$270$ multiplies by $60$ instead of dividing—seconds are *smaller* than minutes, so the per-second rate must be smaller."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$4{,}500$ converts the liters but forgets the time unit entirely—that's mL per **minute**."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$0.075$ divides by $1{,}000$ *and* by $60$: the mL factor was applied upside down."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Label every ratio and keep the order fixed. A part : part ratio of $a{:}b$ lives inside a whole of $a + b$ parts—actual counts are $ax$ and $bx$.",
+            "**“Per” = divide**, with the unit after *per* in the denominator. Unit rate = amount per one; it's also $k$ in $y = kx$.",
+            "Proportions: units must match across tops and across bottoms—then cross-multiply. Proportional graphs pass through the **origin**.",
+            "Scale by **multiplying**, never by adding the difference—the additive trap is this skill's favorite wrong answer.",
+            "Conversion factors are fractions equal to $1$: put the unit you're eliminating in the denominator and cancel. Rates need one factor for the top **and** one for the bottom.",
+            "Density $= \\frac{\\text{mass}}{\\text{volume}}$—and in general, the requested unit ($\\frac{\\text{g}}{\\text{cm}^3}$, $\\frac{\\text{mi}}{\\text{h}}$) spells out exactly what to divide.",
+            "Finish with the units check: right units out = right setup in."
+          ]
+        }
+      ]
+    }
+  ]
+}

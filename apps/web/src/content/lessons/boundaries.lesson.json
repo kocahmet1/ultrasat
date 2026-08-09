@@ -1,0 +1,783 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "boundaries",
+  "title": "Boundaries",
+  "estimatedMinutes": 40,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Boundaries",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Boundaries questions test punctuation: where one idea ends, where the next begins, and which marks may legally sit between them. You'll see a text with a blank and four choices that differ **only in punctuation**, under the stem ==Which choice completes the text so that it conforms to the conventions of Standard English?=="
+        },
+        {
+          "type": "p",
+          "text": "Every rule in this lesson hangs on one skill: recognizing an {blue|independent clause}—a word group that could stand alone as a sentence. Once you can label each side of the blank as *can stand alone* or *can't*, the rules decide the question almost mechanically. That's what makes Boundaries the most learnable question type in the section."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Scan the choices first**—they name the topic. Choices rotating **; , : —** mean a clause-joining question; choices moving a comma pair mean a supplement question; apostrophes shifting mean possession.",
+            "**Test each side of the blank**: could the words before it stand alone as a sentence? Could the words after it?",
+            "**Apply the joining rules** (next pages): two stand-alone clauses have exactly five legal connectors—and a comma alone is never one of them.",
+            "**Read the sentence with your choice installed.** The winning mark should make the sentence read cleanly, with no stitched-together feel.",
+            "**Punctuation pairs must match**: open with a dash, close with a dash; open with a comma, close with a comma."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Boundaries rewards drilling more than any other question type: there are only a dozen rules, the SAT tests the same ones every time, and none of them require interpreting the passage's meaning beyond the sentence in front of you."
+        }
+      ]
+    },
+    {
+      "id": "clauses",
+      "title": "Clauses: The Foundation",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|clause} is a word group with a subject and a conjugated verb. An {blue|independent clause} expresses a complete thought and could stand alone as a sentence. A {teal|dependent clause} has a subject and verb but starts with a subordinating word—*because, although, when, if, since, while, that, which, who*—that leaves it hanging. A {purple|phrase} lacks a subject–verb pair entirely."
+        },
+        {
+          "type": "table",
+          "headers": ["Word group", "Example", "Can it stand alone?"],
+          "align": ["left", "left", "center"],
+          "compact": true,
+          "rows": [
+            ["{blue|Independent clause}", "*the experiment succeeded*", "{green|Yes}"],
+            ["{teal|Dependent clause}", "*because the experiment succeeded*", "{rose|No}"],
+            ["{purple|Phrase}", "*hoping for a breakthrough*", "{rose|No}"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Two Capital Crimes"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Two independent clauses may never sit together with no punctuation (a fused sentence) or with only a comma (a comma splice)."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "The seminar ended early, the students lingered in the hallway.",
+              "note": "Comma splice: both halves could stand alone, and a comma is not strong enough to join them."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "The seminar ended early the students lingered in the hallway.",
+              "note": "Fused sentence: the same two clauses with nothing at all between them."
+            },
+            {
+              "verdict": "correct",
+              "text": "The seminar ended early; the students lingered in the hallway.",
+              "note": "A semicolon is built for exactly this: two independent clauses, joined legally."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Fragments"
+        },
+        {
+          "type": "p",
+          "text": "The opposite failure: punctuating a **non**-sentence as if it were one. A subordinator turns a clause dependent, and a dependent clause published alone is a fragment—it must attach to an independent clause, usually with just a comma."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "Although the seminar ended early.",
+              "note": "*Although* leaves the thought hanging—this cannot stand as a sentence."
+            },
+            {
+              "verdict": "correct",
+              "text": "Although the seminar ended early, the students lingered in the hallway.",
+              "note": "Dependent clause attached to an independent clause: complete."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "On test day, everything starts with one question asked twice: *Could the words before the blank stand alone? Could the words after?* Yes–Yes, Yes–No, and No–Yes each unlock a different set of legal marks."
+        }
+      ]
+    },
+    {
+      "id": "joining-clauses",
+      "title": "Joining Independent Clauses",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "When both sides of the blank are independent clauses, exactly **five** connectors are legal. Memorize the five; everything else is a wrong answer waiting to be eliminated."
+        },
+        {
+          "type": "table",
+          "headers": ["Legal join", "Pattern", "Example"],
+          "compact": true,
+          "rows": [
+            ["Period", "IC**.** IC.", "*The tide rose. The crew hauled in the nets.*"],
+            ["Semicolon", "IC**;** IC", "*The tide rose; the crew hauled in the nets.*"],
+            ["Comma + FANBOYS", "IC**, so** IC", "*The tide rose, so the crew hauled in the nets.*"],
+            ["Colon", "IC**:** IC (second explains the first)", "*The crew hurried: the tide was rising fast.*"],
+            ["Dash", "IC**—**IC (abrupt elaboration or turn)", "*The tide rose—the crew had minutes at most.*"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**FANBOYS** are the seven coordinating conjunctions: *for, and, nor, but, or, yet, so*. On the SAT, the convention for joining two independent clauses with one of them is **comma + conjunction**—the comma alone (splice) and the conjunction alone are both flagged."
+        },
+        {
+          "type": "h3",
+          "text": "The Conjunctive-Adverb Trap"
+        },
+        {
+          "type": "p",
+          "text": "Words like {rose|however}, {rose|therefore}, {rose|moreover}, {rose|nevertheless}, {rose|consequently}, and phrases like {rose|in fact} and {rose|for example} *feel* like conjunctions—but they are adverbs. They have no joining power. A comma plus *however* is still a comma splice."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "A conjunctive adverb between two independent clauses travels with a semicolon or a period before it and a comma after it: “IC; however, IC.”"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "The forecast promised sun, however, the summit stayed wrapped in cloud.",
+              "note": "Comma splice with a disguise. Remove *however* and the naked splice is obvious."
+            },
+            {
+              "verdict": "correct",
+              "text": "The forecast promised sun; however, the summit stayed wrapped in cloud.",
+              "note": "Semicolon does the joining; *however* just narrates the contrast."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "In April 1815, Mount Tambora erupted in present-day Indonesia{blank} the following year, ash and gases lingering in the atmosphere dimmed sunlight enough to chill much of the Northern Hemisphere."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+              "choices": [
+                "Indonesia,",
+                "Indonesia;",
+                "Indonesia, however,",
+                "Indonesia"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Test the sides. Before: *In April 1815, Mount Tambora erupted…* — stands alone. After: *the following year, ash and gases … dimmed sunlight…* — stands alone. Yes–Yes: only the five legal joins survive."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Comma alone between two independent clauses—the definition of a {rose|comma splice}."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "Semicolon joining two independent clauses: legal join number two, no further questions."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "*However* is a conjunctive adverb with no joining power—this is still a {rose|comma splice}, now with a logic problem on top (the second clause doesn't contrast with the first)."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Nothing at all between two independent clauses: a {rose|fused sentence}."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "colons-and-dashes",
+      "title": "Colons and Dashes",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Use a colon only after an independent clause, to introduce information that explains or elaborates on it—a list, a single item, a definition, or a complete second thought."
+        },
+        {
+          "type": "p",
+          "text": "The words **before** the colon must form a complete statement. The words **after** it can be almost anything:"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "Marisol packed the essentials: rope, a headlamp, and two liters of water.",
+              "note": "Complete statement, then a list."
+            },
+            {
+              "verdict": "correct",
+              "text": "Every test pointed to one culprit: the corroded valve.",
+              "note": "Complete statement, then a single item."
+            },
+            {
+              "verdict": "correct",
+              "text": "The library had a problem: its roof leaked every spring.",
+              "note": "Complete statement, then a full clause that explains it."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Colon Crimes"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "The essentials were: rope, a headlamp, and two liters of water.",
+              "note": "*The essentials were* is not a complete statement—the colon has split a verb from its complement."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "She packed gear such as: rope and a headlamp.",
+              "note": "Never place a colon after *such as* or *including*—those words already do the introducing."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Dashes: One Mark, Two Jobs"
+        },
+        {
+          "type": "p",
+          "text": "**A single dash** works like a colon with more drama: it follows a complete statement and introduces an elaboration or an abrupt turn. **A pair of dashes** works like a pair of commas: it fences off a nonessential interruption. The non-negotiable part is the pairing itself:"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Whatever mark opens a nonessential interruption must also close it. Dash pairs with dash, comma with comma, parenthesis with parenthesis—never a mixed pair."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "Three of Jupiter's largest moons—Io, Europa, and Ganymede—were visible through the telescope.",
+              "note": "Dash opens the interruption, dash closes it."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "Three of Jupiter's largest moons—Io, Europa, and Ganymede, were visible through the telescope.",
+              "note": "Opened with a dash, closed with a comma: a mismatched pair."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Ada Lovelace's 1843 notes on the Analytical Engine contain what many historians consider a first{blank} she described, step by step, how a machine could be made to compute a sequence of numbers."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+              "choices": [
+                "first:",
+                "first,",
+                "first",
+                "first, moreover,"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Complete statement before the blank; after it, a full clause that spells out what the “first” was. That explaining relationship is the colon's exact job."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Both sides stand alone, so a comma alone is a {rose|comma splice}."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "No mark at all: a {rose|fused sentence}."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*Moreover* is a conjunctive adverb—commas around it don't grant it joining power, and the splice remains. {rose|Trap from the last page.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "When the second clause explains the first, a colon and a semicolon can both be grammatical—so the SAT won't offer you both as live options. If two choices ever look equally legal, retest the sides of the blank: one of them usually isn't the independent clause you assumed."
+        }
+      ]
+    },
+    {
+      "id": "commas-and-parentheses",
+      "title": "Commas, Supplements, and Parentheses",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|supplement} is information a sentence could live without: an aside, a description, a renaming. Supplements are fenced off with a **pair** of commas, dashes, or parentheses. {teal|Essential} information—words that identify *which one* you mean—takes **no punctuation at all**. The whole game is deciding which kind you're looking at."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "If you can delete the words and the sentence still names the same thing and reads complete, fence them off (nonessential). If deleting them leaves “which one?” unanswered, leave them unfenced (essential)."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "Maya Angelou's memoir I Know Why the Caged Bird Sings was published in 1969.",
+              "note": "Angelou wrote seven memoirs—the title says *which one*, so it's essential: no commas."
+            },
+            {
+              "verdict": "correct",
+              "text": "Angelou's first memoir, I Know Why the Caged Bird Sings, was published in 1969.",
+              "note": "*First* already identifies the memoir; the title is now extra—fenced with a comma pair."
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "The same logic drives the *that/which* convention: **that**-clauses are essential (no comma); **which**-clauses add extra information (comma). And it drives naming patterns: *the poet Gwendolyn Brooks* (name identifies which poet—no commas) versus *Gwendolyn Brooks, a Chicago poet,* (description is extra—comma pair)."
+        },
+        {
+          "type": "h3",
+          "text": "Commas That Must Appear"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**After an introductory element**: *After the storm passed, the crews cleared the roads.*",
+            "**Between items in a list**: *rope, a headlamp, and two liters of water*.",
+            "**With a paired supplement**, as above—both commas, not one."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "When list items contain commas of their own, promote the separators to semicolons—the “super-comma”: *The tour stopped in Lima, Peru; Quito, Ecuador; and La Paz, Bolivia.*"
+        },
+        {
+          "type": "h3",
+          "text": "No-Comma Zones"
+        },
+        {
+          "type": "table",
+          "headers": ["Never put a comma between…", "✗ Example (comma shown where it doesn't belong)"],
+          "compact": true,
+          "rows": [
+            ["a subject and its verb", "*The results of the survey{rose|,} were surprising.*"],
+            ["a verb and its object", "*The committee announced{rose|,} its decision.*"],
+            ["an essential element and its sentence", "*The poet{rose|,} Gwendolyn Brooks{rose|,} won the prize.* (name is identifying)"],
+            ["just two elements joined by “and”", "*The lab tested the water{rose|,} and the soil.*"],
+            ["a clause and its “that”", "*Researchers found{rose|,} that the samples matched.*"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**Parentheses** behave like a comma pair in whispering form—the aside must be removable, and the sentence's own punctuation stays outside the closing parenthesis when the aside sits inside a sentence."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "The poet{blank} became the first Black writer to win a Pulitzer Prize when her collection Annie Allen was honored in 1950."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+              "choices": [
+                "Gwendolyn Brooks",
+                "Gwendolyn Brooks,",
+                ", Gwendolyn Brooks,",
+                ", Gwendolyn Brooks"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Run the deletion test: *The poet became the first Black writer to win a Pulitzer Prize…* — **which poet?** The name answers the question the sentence can't survive without: essential."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Essential information takes no punctuation: *The poet Gwendolyn Brooks became…* reads as one unbroken identification."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "One comma after the name splits the subject from its verb—{rose|no-comma zone}, and a lone half of a pair besides."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "A full comma pair treats the name as removable. Delete it and *The poet became…* no longer says which poet: the fencing is wrong because the information is {rose|essential}."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "An opening comma with no closing partner—{rose|a broken pair} in every reading."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "apostrophes-and-ends",
+      "title": "Apostrophes and End Punctuation",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Apostrophes mark possession or contraction—never plurality. A plain plural never takes an apostrophe."
+        },
+        {
+          "type": "table",
+          "headers": ["Form", "Example", "Meaning"],
+          "align": ["center", "left", "left"],
+          "compact": true,
+          "rows": [
+            ["noun + **'s**", "*the rover's cameras*", "one rover possesses"],
+            ["plural + **'**", "*the rovers' cameras*", "more than one rover possesses"],
+            ["irregular plural + **'s**", "*the children's projects*", "irregular plurals take **'s**"],
+            ["plain plural — no apostrophe", "*the rovers landed safely*", "more than one rover; nothing possessed"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Pronoun Trap"
+        },
+        {
+          "type": "p",
+          "text": "Possessive pronouns—{blue|its}, {blue|whose}, {blue|hers}, {blue|theirs}—never take apostrophes. The apostrophe versions are contractions: **it's** = *it is*, **who's** = *who is*, **they're** = *they are*. The test: expand the contraction aloud. If *it is* fits, write *it's*; otherwise the word is *its*."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "incorrect",
+              "text": "The committee published it's findings in March.",
+              "note": "Expand: “published *it is* findings”—nonsense. Possession needs *its*."
+            },
+            {
+              "verdict": "correct",
+              "text": "The committee published its findings in March.",
+              "note": "Possessive pronoun, no apostrophe."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "The rover collected sample's from the crater floor.",
+              "note": "*Samples* is just a plural—an apostrophe has nothing to mark."
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Question Marks: Direct Only"
+        },
+        {
+          "type": "p",
+          "text": "A question mark ends a **direct** question. A question *reported inside a statement*—an indirect or embedded question—ends with a period, because the sentence as a whole is a statement."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "Why did the colony vanish?",
+              "note": "Direct question, question mark."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "Researchers have long wondered why the colony vanished?",
+              "note": "The sentence *states* that researchers wondered—statement, period. The question lives inside it."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "When choices rotate *its / it's / its'*, remember that **its'** is never a word—eliminate it on sight, then run the expansion test on what remains."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "For each blank: scan the choices to name the topic, test whether each side stands alone, then apply the rules. Commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "In 1893, New Zealand became the first self-governing country to grant all women the right to vote{blank} the change followed years of organizing and petition drives led by the suffragist Kate Sheppard."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "vote,",
+                    "vote",
+                    "vote;",
+                    "vote, however,"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Both sides pass the stand-alone test (*New Zealand became the first…* / *the change followed years…*), so only the five legal joins survive—and the semicolon is the only one on offer."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Comma alone between two independent clauses: {rose|comma splice}."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "No mark at all: {rose|fused sentence}."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "Two independent clauses, one semicolon—legal join, clean read."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*However* has no joining power (and no contrast to narrate here)—the splice stands. {rose|Conjunctive-adverb trap.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The Mars rover Perseverance carries an experiment with an ambitious goal{blank} it must show that a machine can turn the planet's carbon-dioxide air into breathable oxygen."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "goal,",
+                    "goal:",
+                    "goal",
+                    "goal, moreover,"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Before the blank: a complete statement. After it: a full clause that spells out exactly what the “ambitious goal” is. Introducing that elaboration is the colon's defining job."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Two independent clauses, one comma: {rose|comma splice}."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "Independent clause, colon, explanation—the goal is announced, then delivered."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "{rose|Fused sentence}—two complete thoughts with nothing between them."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*Moreover* adds no joining power, and nothing is being added anyway—the second clause explains, not extends. {rose|Splice with a disguise.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The tuatara—a lizardlike reptile found today only in New {blank} belongs to an ancient order that flourished in the age of the dinosaurs."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "Zealand—",
+                    "Zealand,",
+                    "Zealand;",
+                    "Zealand"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The sentence opened a nonessential description with a dash (*—a lizardlike reptile found today only in New Zealand*). Whatever opens the fence must close it."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Dash opened, dash closed: the supplement lifts out cleanly, leaving *The tuatara belongs to an ancient order…*"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Dash opened, comma closed: {rose|a mismatched pair}."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "A semicolon must have an independent clause on each side; here it would sever a supplement from its own sentence. {rose|Wrong tool entirely.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "With no mark after *Zealand*, the interruption never ends—the description crashes straight into the verb. {rose|Unclosed pair.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "After months of collaboration, the three{blank} designs were selected for the national exhibition."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+                  "choices": [
+                    "student's",
+                    "students",
+                    "students'",
+                    "students's"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Whose designs? The designs of the three students—plural possessor. Regular plurals take the apostrophe **after** the s."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "*Student's* is one student possessing—but the sentence says three. {rose|Wrong number.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "A plain plural marks no possession, leaving *the three students designs* with two nouns collided. {rose|Missing possessive.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "Plural possessor, apostrophe after the s: *the three students' designs*."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*Students's* doubles the possessive machinery—regular plurals ending in s never take **'s**. {rose|Not a form.}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Everything hangs on the {blue|independent clause}. Test each side of the blank: *could it stand alone?*",
+            "Two independent clauses have exactly **five legal joins**: period, semicolon, comma + FANBOYS, colon (second explains first), dash. A comma alone is never one of them.",
+            "{rose|However}, {rose|therefore}, {rose|moreover} and friends are adverbs, not conjunctions—they ride with a semicolon or period, never a lone comma.",
+            "Colons and single dashes need a **complete statement before them**; what follows can be a list, an item, or a whole clause.",
+            "Supplements take a **matching pair**—two commas, two dashes, or two parentheses. Essential information takes **nothing**.",
+            "Respect the no-comma zones: never split subject from verb, verb from object, or a pair joined by *and*.",
+            "Apostrophes mark possession or contraction, never plurals: *rover's / rovers' / rovers* — and **its'** is never a word.",
+            "Direct questions get question marks; questions embedded in statements end with periods."
+          ]
+        }
+      ]
+    }
+  ]
+}

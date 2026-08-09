@@ -803,8 +803,12 @@ router.get('/public/subcategory/:subcategory', async (req, res) => {
     // Normalize
     let questions = Array.from(map.values()).map(normalizeQuestionForResponse);
 
-    // Server-side filter to ensure only general-usage content for public quizzes
-    questions = questions.filter((q) => !q.usageContext || q.usageContext === 'general');
+    // Server-side filter: only general-usage, non-retired content reaches public quizzes.
+    // Retired questions remain in the collection so past attempts and `questionStats` stay
+    // intact — see `scripts/retireQuestions.js`.
+    questions = questions.filter(
+      (q) => (!q.usageContext || q.usageContext === 'general') && q.retired !== true
+    );
 
     // Enforce overall limit after merge
     if (questions.length > limitCount) {

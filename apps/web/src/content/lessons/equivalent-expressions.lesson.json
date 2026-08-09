@@ -1,0 +1,637 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "equivalent-expressions",
+  "title": "Equivalent Expressions",
+  "estimatedMinutes": 35,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Equivalent Expressions",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Two expressions are {blue|equivalent} when they're equal for **every** value of the variable—the same object written two ways. These questions ask you to expand, factor, simplify, or rewrite: “Which expression is equivalent to…?” No solving, just rewriting without changing the value."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Combine only like terms**—same variable *and* same exponent. $3x^2$ and $5x$ don't mix.",
+            "**Distribute completely.** Subtracting a polynomial flips the sign of **every** term inside.",
+            "**Know the three special products cold:** $(a+b)^2$, $(a-b)^2$, and $(a+b)(a-b)$.",
+            "**Exponent rules:** multiplying powers *adds* exponents; a power of a power *multiplies* them; negative exponents flip to the denominator.",
+            "**Cancel factors, never terms.** Fractions simplify only after both top and bottom are factored.",
+            "**Test with a number.** Equivalent means equal for *every* $x$—so plug in one easy value and eliminate any choice that disagrees."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "The number test is this skill's superpower. Plug $x = 2$ into the original and into each choice—any mismatch kills that choice instantly. (Avoid $x = 0$ and $x = 1$: too many wrong choices accidentally agree there.)"
+        }
+      ]
+    },
+    {
+      "id": "polynomial-arithmetic",
+      "title": "Add, Subtract & Multiply Polynomials",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "**Like terms** have the same variable raised to the same power. Adding polynomials = combining like terms; nothing else merges."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Which expression is equivalent to $(3x^2 + 5x - 2) + (x^2 - 8x + 7)$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "(3x^2 + x^2) + (5x - 8x) + (-2 + 7)", "note": "Group like terms by power" },
+                { "math": "4x^2 - 3x + 5", "note": "Combine each group" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Subtraction Flips Every Sign"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Which expression is equivalent to $(5x^2 - 3x + 4) - (2x^2 + x - 6)$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "5x^2 - 3x + 4 - 2x^2 - x + 6", "note": "Distribute the minus to **all three** terms" },
+                { "math": "3x^2 - 4x + 10", "note": "Combine like terms" }
+              ]
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "$3x^2 - 4x + 10$",
+                  "note": "The $-6$ became $+6$: the minus reached the last term too."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "$3x^2 - 4x - 2$",
+                  "note": "Flipped $2x^2$ and $x$ but left $-6$ alone — the most common subtraction error. Test $x = 2$: the original gives $14$, this gives $2$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Multiply Binomials: Every Term Meets Every Term"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Which expression is equivalent to $(2x + 3)(x - 5)$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "2x \\cdot x + 2x \\cdot (-5) + 3 \\cdot x + 3 \\cdot (-5)", "note": "Four products: First, Outer, Inner, Last" },
+                { "math": "2x^2 - 10x + 3x - 15", "note": "Multiply each pair" },
+                { "math": "2x^2 - 7x - 15", "note": "Combine the middle terms" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Number check** with $x = 2$: original $(7)(-3) = -21$; result $8 - 14 - 15 = -21$. {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "note",
+          "text": "Matching-coefficient questions hide here: if $(2x + 3)(x - 5) = ax^2 + bx + c$ for all $x$, then $a = 2$, $b = -7$, $c = -15$—expand, then read the coefficients."
+        }
+      ]
+    },
+    {
+      "id": "special-products-factoring",
+      "title": "Special Products & Factoring",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Three multiplication patterns appear so often that the SAT assumes you know them **by sight**—forward (expanding) and backward (factoring):"
+        },
+        {
+          "type": "table",
+          "headers": ["Pattern", "Expansion", "Name"],
+          "align": ["center", "center", "left"],
+          "rows": [
+            ["$(a + b)^2$", "$a^2 + 2ab + b^2$", "square of a sum"],
+            ["$(a - b)^2$", "$a^2 - 2ab + b^2$", "square of a difference"],
+            ["$(a + b)(a - b)$", "$a^2 - b^2$", "**difference of squares**"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "$(a + b)^2$ is **not** $a^2 + b^2$. The middle term $2ab$ is exactly what the test's favorite wrong answer leaves out."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Which expression is equivalent to $(3x - 4)^2$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "(3x)^2 - 2(3x)(4) + 4^2", "note": "Square of a difference: $a^2 - 2ab + b^2$" },
+                { "math": "9x^2 - 24x + 16", "note": "Simplify each piece" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Factoring: Running the Patterns Backward"
+        },
+        {
+          "type": "steps",
+          "items": [
+            { "math": "6x^2 + 15x = 3x(2x + 5)", "note": "**GCF first**, always — pull out the greatest common factor" },
+            { "math": "25x^2 - 49 = (5x + 7)(5x - 7)", "note": "**Difference of squares**: both terms are perfect squares, minus between" },
+            { "math": "x^2 - 9x + 20 = (x - 4)(x - 5)", "note": "**Trinomial**: two numbers that multiply to $20$ and add to $-9$" }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Which expression is equivalent to $16x^2 - 81$?",
+              "choices": [
+                "$(4x + 9)(4x - 9)$",
+                "$(4x - 9)^2$",
+                "$(4x + 9)^2$",
+                "$(8x - 9)(2x + 9)$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Difference of squares: $(4x)^2 - 9^2$. Number check, $x = 1$: original $16 - 81 = -65$; this gives $(13)(-5) = -65$. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$(4x - 9)^2 = 16x^2 - 72x + 81$: a middle term appears and the constant's sign flips."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$(4x + 9)^2 = 16x^2 + 72x + 81$: same problems, other direction."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "The outer terms multiply correctly ($16x^2$, $-81$), but the cross terms don't cancel: this expands to $16x^2 + 54x - 81$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "A two-term expression with a minus between two perfect squares is *always* a difference of squares—$16x^2 - 81$, $x^4 - 25$, even $9 - y^2$. Spot the pattern, skip the work."
+        }
+      ]
+    },
+    {
+      "id": "exponent-rules",
+      "title": "Exponent Rules",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Exponent questions are pure rule application. Each rule is just repeated multiplication counted carefully:"
+        },
+        {
+          "type": "table",
+          "headers": ["Rule", "Statement", "Example"],
+          "align": ["left", "center", "center"],
+          "rows": [
+            ["Product", "$x^a \\cdot x^b = x^{a+b}$", "$x^3 \\cdot x^5 = x^8$"],
+            ["Quotient", "$\\dfrac{x^a}{x^b} = x^{a-b}$", "$\\dfrac{x^7}{x^2} = x^5$"],
+            ["Power of a power", "$(x^a)^b = x^{ab}$", "$(x^4)^2 = x^8$"],
+            ["Power of a product", "$(xy)^a = x^a y^a$", "$(3x)^2 = 9x^2$"],
+            ["Negative exponent", "$x^{-a} = \\dfrac{1}{x^a}$", "$x^{-2} = \\dfrac{1}{x^2}$"],
+            ["Rational exponent", "$x^{a/b} = \\sqrt[b]{x^a}$", "$x^{1/2} = \\sqrt{x}$"],
+            ["Zero exponent", "$x^0 = 1$  (for $x \\neq 0$)", "$5^0 = 1$"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Which expression is equivalent to $\\dfrac{(3x^4)^2 \\cdot x}{x^5}$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{9x^8 \\cdot x}{x^5}", "note": "Power of a product: square the $3$ **and** the $x^4$" },
+                { "math": "\\frac{9x^9}{x^5}", "note": "Product rule: $x^8 \\cdot x^1 = x^9$" },
+                { "math": "9x^4", "note": "Quotient rule: subtract exponents" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "For $x > 0$, which expression is equivalent to $x^{5/2}$?",
+              "choices": [
+                "$\\sqrt{x^5}$",
+                "$\\sqrt[5]{x^2}$",
+                "$x^5 \\div x^2$",
+                "$\\tfrac{5}{2}x$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Denominator = root, numerator = power: $x^{5/2} = \\sqrt{x^5}$. Check $x = 4$: $4^{5/2} = 32$ and $\\sqrt{4^5} = \\sqrt{1024} = 32$. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Flips the fraction's roles: this is $x^{2/5}$, a fifth root, not a square root."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Reads the fraction as division of powers: $x^5 \\div x^2 = x^3$, and $x^3 \\neq x^{5/2}$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Multiplies by the exponent—exponents aren't coefficients."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "A negative exponent doesn't make anything negative—it flips position: $x^{-2} = \\frac{1}{x^2}$, which is positive for every $x \\neq 0$."
+        }
+      ]
+    },
+    {
+      "id": "rational-and-matching",
+      "title": "Rational Expressions & Matching Coefficients",
+      "blocks": [
+        {
+          "type": "h3",
+          "text": "Simplify Fractions by Factoring"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "A fraction of polynomials simplifies **only** by canceling common *factors*. Factor the top, factor the bottom, then cancel whole parentheses—never individual terms."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "For $x \\neq -2$ and $x \\neq -3$, which expression is equivalent to $\\dfrac{x^2 - 9}{x^2 + 5x + 6}$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{(x - 3)(x + 3)}{(x + 2)(x + 3)}", "note": "Factor: difference of squares on top, trinomial below" },
+                { "math": "\\frac{x - 3}{x + 2}", "note": "Cancel the common **factor** $(x + 3)$" }
+              ]
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "$\\dfrac{(x - 3)\\cancel{(x + 3)}}{(x + 2)\\cancel{(x + 3)}} = \\dfrac{x - 3}{x + 2}$",
+                  "note": "Whole factors cancel. Check $x = 1$: original $\\frac{-8}{12} = -\\frac{2}{3}$; simplified $\\frac{-2}{3}$. {green|✓}"
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "“Cancel the $x^2$s”:  $\\dfrac{x^2 - 9}{x^2 + 5x + 6} \\to \\dfrac{-9}{5x + 6}$",
+                  "note": "$x^2$ is a **term**, not a factor—crossing it out changes the value. At $x = 1$ this gives $-\\frac{9}{11} \\neq -\\frac{2}{3}$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Matching Coefficients"
+        },
+        {
+          "type": "p",
+          "text": "If two polynomials are equivalent **for all** $x$, their coefficients match power by power—that's how the SAT asks you to find unknown constants."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "The equation $3x^2 + kx - 10 = (3x - 5)(x + c)$ is true for all values of $x$, where $k$ and $c$ are constants. What is the value of $k$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "(3x - 5)(x + c) = 3x^2 + (3c - 5)x - 5c", "note": "Expand the right side" },
+                { "math": "-5c = -10 \\;\\Rightarrow\\; c = 2", "note": "Match the constant terms" },
+                { "math": "k = 3c - 5 = 1", "note": "Match the $x$-coefficients" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "**Check** with $x = 1$: left side $3 + 1 - 10 = -6$; right side $(3 - 5)(1 + 2) = -6$. {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "“True for all values of $x$” is the signal phrase for coefficient matching. Expand, then line up: $x^2$ with $x^2$, $x$ with $x$, constant with constant."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Work each one by rule—then, before opening the answer, verify your choice with a quick $x = 2$ test. Two independent paths to the same answer is how you know."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Which expression is equivalent to $(4x^2 - 2x + 5) - (x^2 + 3x - 7)$?",
+                  "choices": [
+                    "$3x^2 - 5x + 12$",
+                    "$3x^2 - 5x - 2$",
+                    "$3x^2 + x - 2$",
+                    "$5x^2 + x - 2$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** The minus distributes to all three terms of the second polynomial:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "4x^2 - 2x + 5 - x^2 - 3x + 7", "note": "Flip every sign in the parentheses" },
+                    { "math": "3x^2 - 5x + 12", "note": "Combine like terms" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Test $x = 2$: original $(16 - 4 + 5) - (4 + 6 - 7) = 17 - 3 = 14$; this gives $12 - 10 + 12 = 14$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Flipped $x^2$ and $3x$ but not the $-7$: the constant became $5 - 7 = -2$ instead of $5 + 7 = 12$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Flipped nothing: it *added* $3x$ and $-7$ as written."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Added the polynomials outright—the leading term $5x^2$ gives it away instantly."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Which expression is equivalent to $(2x + 5)^2$?",
+                  "choices": [
+                    "$4x^2 + 20x + 25$",
+                    "$4x^2 + 25$",
+                    "$4x^2 + 10x + 25$",
+                    "$2x^2 + 20x + 25$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Square of a sum: $a^2 + 2ab + b^2$ with $a = 2x$, $b = 5$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$(2x)^2 + 2(2x)(5) + 5^2$. Test $x = 1$: $(7)^2 = 49$ and $4 + 20 + 25 = 49$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The classic: squares the pieces and skips the middle term $2ab$ entirely."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Has *a* middle term, but forgot to double it: $2(2x)(5) = 20x$, not $10x$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Squared the $5$ but not the $2$: $(2x)^2 = 4x^2$, coefficient included."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Which expression is equivalent to $(2a^5)^3 \\cdot a^{-2}$?",
+                  "choices": [
+                    "$8a^{13}$",
+                    "$6a^{13}$",
+                    "$8a^{17}$",
+                    "$2a^{13}$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.**"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "(2a^5)^3 = 8a^{15}", "note": "Cube the $2$ **and** multiply the exponents" },
+                    { "math": "8a^{15} \\cdot a^{-2} = 8a^{13}", "note": "Product rule: add the exponents, $15 + (-2)$" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Both rules applied in order. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$6$ comes from $2 \\times 3$—but the coefficient gets **cubed**, not multiplied by the exponent: $2^3 = 8$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$a^{17}$ adds $2$ instead of $-2$: a negative exponent *subtracts* in the product rule."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Leaves the $2$ uncubed—the power outside applies to everything inside the parentheses."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "For $x \\neq -\\tfrac{5}{2}$, which expression is equivalent to $\\dfrac{6x^2 + 7x - 20}{2x + 5}$?",
+                  "choices": [
+                    "$3x - 4$",
+                    "$3x + 4$",
+                    "$2x + 5$",
+                    "$6x - 4$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Factor the numerator so the denominator can cancel:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "6x^2 + 7x - 20 = (2x + 5)(3x - 4)", "note": "Check the middle: $2x(-4) + 5(3x) = 7x$ {green|✓}" },
+                    { "math": "\\frac{(2x + 5)(3x - 4)}{2x + 5} = 3x - 4", "note": "Cancel the common factor" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Test $x = 2$: original $\\frac{24 + 14 - 20}{9} = \\frac{18}{9} = 2$; and $3(2) - 4 = 2$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Sign slip on the constant: $(2x + 5)(3x + 4)$ would end in $+20$, not $-20$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Returns the divisor—it cancels the **wrong** factor of the numerator."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Term-by-term division ($6x^2$ by $x$, $-20$ by $5$)—division doesn't distribute over the denominator's terms."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Equivalent = equal for **every** value. Verify any rewrite by plugging in an easy number (not $0$ or $1$).",
+            "Combine only **like terms**; a subtracted polynomial flips the sign of *every* term inside.",
+            "Special products: $(a \\pm b)^2 = a^2 \\pm 2ab + b^2$ — never drop the middle term — and $(a+b)(a-b) = a^2 - b^2$.",
+            "Factor in this order: **GCF first**, then difference of squares, then trinomial patterns.",
+            "Exponents: product → add, quotient → subtract, power of a power → multiply; $x^{-a} = \\frac{1}{x^a}$; $x^{a/b} = \\sqrt[b]{x^a}$ (denominator is the root).",
+            "Fractions of polynomials: factor top and bottom, cancel whole **factors**—never lone terms.",
+            "“True for all $x$” → match coefficients power by power."
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -36,6 +36,9 @@
   color: var(--lp3-text);
   font-family: var(--lp3-body);
   overflow-x: hidden;
+  /* clip (where supported) instead of hidden: it clips without creating a
+     scroll container, so the sticky nav can never be trapped by this box. */
+  overflow-x: clip;
 }
 
 .lp3 *,
@@ -45,9 +48,13 @@
 }
 
 /* The design is a fixed 1440px canvas. --lp3-canvas-zoom (set from the component
-   on mount + resize) scales that canvas up to the viewport on wider screens, so
-   the hero keeps the designed text-to-panel proportions and the screenshot still
-   bleeds toward the right edge instead of stopping short of it.
+   on mount + resize) scales that canvas to the viewport BOTH ways: up on wider
+   screens (so the hero keeps the designed text-to-panel proportions and the
+   screenshot still bleeds toward the right edge instead of stopping short of
+   it) and down to 0.833 on 1200–1439px viewports (mid-size laptops, e.g.
+   1920×1080 at 125–150% OS scaling). Every viewport >=1200px therefore gets
+   the same composition at a proportional size; only below 1200px do the
+   compact breakpoints at the bottom of this file take over.
    zoom rather than transform: layout, the sticky nav and the 3D perspective all
    scale together, and text stays crisp. The auth modal is rendered outside this
    element so its fixed positioning is unaffected. */
@@ -608,7 +615,7 @@
 
 .lp3-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   border-top: 1px solid rgba(237, 240, 241, 0.14);
   margin-top: 62px;
 }
@@ -1186,7 +1193,303 @@
   text-align: right;
 }
 
-/* ---------- section 03: loop ---------- */
+/* ---------- section 03: the coach ---------- */
+
+.lp3-coach {
+  background: var(--lp3-light);
+  padding: 96px 0;
+}
+
+/* the coach/plan sections reuse .lp3-surface-links for their single CTA link;
+   tighter top margin since it follows a facts list, not a card list */
+.lp3-links-tight {
+  margin-top: 26px;
+}
+
+.lp3-note-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.lp3-note-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--lp3-accent);
+  color: var(--lp3-on-accent);
+  font-family: var(--lp3-mono);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lp3-note-who {
+  font-family: var(--lp3-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--lp3-text);
+}
+
+.lp3-note-text {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--lp3-text-soft);
+  margin: 0 0 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--lp3-rule);
+}
+
+.lp3-note-label {
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+  margin: 0 0 12px;
+}
+
+/* memory trail: three dated nodes joined by a line, dot per node */
+.lp3-trail {
+  display: flex;
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.lp3-trail::before {
+  content: '';
+  position: absolute;
+  top: 4.5px;
+  left: 5px;
+  right: calc(33.333% - 6px);
+  height: 1px;
+  background: var(--lp3-rule-strong);
+}
+
+.lp3-trail-node {
+  flex: 1;
+  position: relative;
+  padding-top: 18px;
+}
+
+.lp3-trail-node::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lp3-rule-strong);
+}
+
+.lp3-trail-good::before { background: var(--lp3-success-dark); } /* recovered — success family */
+
+.lp3-trail-now::before {
+  background: var(--lp3-accent);
+  box-shadow: 0 0 0 3px rgba(43, 89, 216, 0.18);
+}
+
+.lp3-trail-date {
+  display: block;
+  font-family: var(--lp3-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+  margin-bottom: 3px;
+}
+
+.lp3-trail-what {
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--lp3-text-soft);
+  padding-right: 10px;
+}
+
+.lp3-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.lp3-chip {
+  font-family: var(--lp3-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+  border: 1px solid var(--lp3-rule-strong);
+  border-radius: 6px;
+  padding: 5px 10px;
+  background: #FFFFFF;
+}
+
+.lp3-note-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lp3-note-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-family: var(--lp3-display);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.lp3-note-btn-primary {
+  background: var(--lp3-accent);
+  color: var(--lp3-on-accent);
+}
+
+.lp3-note-btn-ghost {
+  border: 1px solid var(--lp3-rule-strong);
+  color: var(--lp3-text);
+  background: #FFFFFF;
+}
+
+/* ---------- section 04: the plan ---------- */
+
+.lp3-plan {
+  background: var(--lp3-light-alt);
+  padding: 96px 0;
+  border-top: 1px solid var(--lp3-rule);
+}
+
+.lp3-plan-grid {
+  display: grid;
+  grid-template-columns: 560px 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* copy is first in source (so it leads when stacked), panel sits left on desktop */
+.lp3-plan-grid > .lp3-plan-copy { grid-column: 2; grid-row: 1; }
+.lp3-plan-grid > .lp3-plan-panel { grid-column: 1; grid-row: 1; }
+
+.lp3-plan-progresswrap {
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid var(--lp3-rule);
+}
+
+.lp3-plan-track {
+  height: 5px;
+  background: var(--lp3-rule);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.lp3-plan-fill {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--lp3-success-dark); /* plan progress — success family */
+}
+
+.lp3-plan-counts {
+  margin: 0;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lp3-mono-muted);
+}
+
+.lp3-plan-day {
+  margin: 0;
+  padding: 14px 18px 8px;
+  font-family: var(--lp3-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-accent-dark);
+}
+
+.lp3-plan-row {
+  display: grid;
+  grid-template-columns: 16px auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 18px;
+  border-top: 1px solid var(--lp3-rule);
+}
+
+.lp3-plan-check {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--lp3-rule-strong);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--lp3-card);
+  background: #FFFFFF;
+}
+
+.lp3-plan-row-done .lp3-plan-check {
+  background: var(--lp3-success-dark); /* completed task — success family */
+  border-color: var(--lp3-success-dark);
+}
+
+.lp3-plan-type {
+  font-family: var(--lp3-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--lp3-light);
+  color: var(--lp3-mono-muted);
+  white-space: nowrap;
+}
+
+.lp3-plan-type-lesson { background: rgba(43, 89, 216, 0.1); color: var(--lp3-accent-dark); }
+.lp3-plan-type-practice { background: rgba(23, 164, 92, 0.12); color: var(--lp3-success-dark); }
+
+.lp3-plan-name {
+  font-size: 13.5px;
+  color: var(--lp3-text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lp3-plan-row-done .lp3-plan-name {
+  color: var(--lp3-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--lp3-rule-strong);
+}
+
+.lp3-plan-meta {
+  color: var(--lp3-mono-muted);
+  font-size: 12px;
+}
+
+.lp3-plan-start {
+  font-family: var(--lp3-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lp3-accent-dark);
+}
+
+.lp3-plan-row-done .lp3-plan-start {
+  color: var(--lp3-mono-muted);
+}
+
+/* ---------- section 05: loop ---------- */
 
 .lp3-loop {
   background: var(--lp3-light);
@@ -1238,7 +1541,7 @@
   margin: 0;
 }
 
-/* ---------- section 04: surfaces ---------- */
+/* ---------- section 06: surfaces ---------- */
 
 .lp3-surfaces {
   background: var(--lp3-light-alt);
@@ -1581,9 +1884,9 @@
    line up with the nav, the stat rail or the sections below. Scaling the whole
    stage (rather than editing the interlocked rack/shot offsets) shrinks it and
    right-aligns it in one move, and widens the gap to the copy as a side effect.
-   Only above the compact breakpoint — below it the rack column is 440px and the
-   3D flattens anyway. */
-@media (min-width: 1361px) {
+   Applies whenever the canvas is in scaled mode (>=1200px, matching the
+   component's CANVAS_MIN_WIDTH) — below that the 3D flattens anyway. */
+@media (min-width: 1200px) {
   .lp3-rack-stage {
     transform: translateX(-43px) scale(0.9);
     transform-origin: right center;
@@ -1592,19 +1895,33 @@
 
 /* ---------- responsive ---------- */
 
-/* Below the design's 1440px canvas the shell can no longer reach its full 1280px
-   content width, so the hero switches to the compact composition rather than
-   letting the rack ride up against the headline. */
-@media (max-width: 1360px) {
-  .lp3-hero-grid { grid-template-columns: 1fr 440px; gap: 48px; }
-  .lp3-inside-grid { grid-template-columns: 1fr 480px; gap: 56px; }
-  .lp3-engine-top { grid-template-columns: 1fr 420px; gap: 40px; }
-  .lp3-h1 { font-size: 58px; }
+/* Below 1200px the canvas stops scaling (body text would drop under ~13px), so
+   the hero switches to the compact composition. There is deliberately no
+   squeezed in-between band any more: 1200–1439px viewports render the scaled
+   1440 canvas (see .lp3-canvas), because the as-authored 3D cluster in a
+   narrower column flooded the right edge of the screen and read as a broken,
+   too-wide page on mid-size laptops. */
+@media (max-width: 1199px) {
+  .lp3-hero-grid { grid-template-columns: 1fr 420px; gap: 40px; }
+  .lp3-inside-grid { grid-template-columns: 1fr 460px; gap: 48px; }
+  .lp3-plan-grid { grid-template-columns: 460px 1fr; gap: 48px; }
+  .lp3-engine-top { grid-template-columns: 1fr 400px; gap: 36px; }
+  .lp3-h1 { font-size: 48px; }
   .lp3-map-grid { column-gap: 40px; }
+
+  /* The 3D cluster is drawn for the 512px column on the 1440 canvas; in the
+     compact band it can only flood the right edge, so it flattens: upright
+     rack, no background screenshot. */
+  .lp3-rack-stage { perspective: none; left: 0; transform: none; }
+  .lp3-rack { transform: none; box-shadow: none; left: 0; }
+  .lp3-rack-shot,
+  .lp3-rack-shot:hover { display: none; }
 }
 
-@media (max-width: 1024px) {
-  .lp3 .lp3-shell { padding: 0 28px; }
+/* The inline nav (7 links + auth controls, more when signed in) runs out of
+   row a step before the rest of the compact layout does, so it collapses to
+   the toggle earlier than the 1024px breakpoint. */
+@media (max-width: 1080px) {
   .lp3-nav-toggle { display: flex; }
 
   .lp3-nav-links {
@@ -1623,27 +1940,37 @@
 
   .lp3-nav-links.lp3-nav-open { display: flex; }
   .lp3-nav-rule { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .lp3 .lp3-shell { padding: 0 28px; }
 
   .lp3-hero { padding-top: 48px; }
   .lp3-hero-grid,
   .lp3-inside-grid,
+  .lp3-plan-grid,
   .lp3-engine-top,
   .lp3-final-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 
+  /* stacked: copy leads again (the desktop column swap is undone) */
+  .lp3-plan-grid > .lp3-plan-copy,
+  .lp3-plan-grid > .lp3-plan-panel {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .lp3-engine-top { margin-bottom: 0; }
-  .lp3-rack-stage { perspective: none; left: 0; }
-  .lp3-rack { transform: none; box-shadow: none; left: 0; }
-  .lp3-rack-shot,
-  .lp3-rack-shot:hover { display: none; }
-  .lp3-hero-grid { gap: 40px; }
+  /* rack flattening + screenshot hiding inherited from the 1199px block */
   .lp3-stats { grid-template-columns: repeat(2, 1fr); margin-top: 48px; }
   .lp3-stat { padding: 22px 24px 26px; }
-  .lp3-stat:nth-child(3) { border-left: 0; padding-left: 0; }
   .lp3-stat:nth-child(3),
-  .lp3-stat:nth-child(4) { border-top: 1px solid rgba(237, 240, 241, 0.14); }
+  .lp3-stat:nth-child(5) { border-left: 0; padding-left: 0; }
+  .lp3-stat:nth-child(3),
+  .lp3-stat:nth-child(4),
+  .lp3-stat:nth-child(5) { border-top: 1px solid rgba(237, 240, 241, 0.14); }
 
   .lp3-map-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(15, auto); }
   .lp3-steps { grid-template-columns: repeat(2, 1fr); row-gap: 30px; }
@@ -1671,9 +1998,15 @@
 
   .lp3-inside,
   .lp3-engine,
+  .lp3-coach,
+  .lp3-plan,
   .lp3-loop,
   .lp3-surfaces,
   .lp3-pricing { padding: 64px 0; }
+
+  .lp3-trail { flex-direction: column; gap: 14px; }
+  .lp3-trail::before { display: none; }
+  .lp3-trail-node { padding-top: 0; padding-left: 22px; }
   .lp3-price-card { padding: 26px 22px 28px; }
 
   .lp3-routing-rows { grid-template-columns: 76px 1fr; }

@@ -1,0 +1,551 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "command-of-evidence",
+  "title": "Command of Evidence",
+  "estimatedMinutes": 30,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Command of Evidence",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Command of Evidence questions hand you a {blue|claim}—a hypothesis, an argument, an interpretation—and ask you to judge which piece of {teal|evidence} does a specific job for it. Unlike Central Ideas questions, you aren't just reading the text: you're testing how four candidate pieces of evidence bear on what the text asserts."
+        },
+        {
+          "type": "p",
+          "text": "The questions come in two families. **Textual** questions offer four findings (“Which finding, if true, would most directly support…”) or four quotations from a literary or scholarly work. **Quantitative** questions pair the text with a table or graph and ask which choice uses the data correctly. Both families reward the same discipline: anchor on the claim, then measure every choice against it."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Find the claim and restate it precisely.** The claim—not the topic—is the target every choice is measured against.",
+            "**Read the stem's verb.** *Support* means strengthen, *weaken/undermine* means attack, *illustrate* means match exactly.",
+            "**Predict what ideal evidence would show** before you read the choices.",
+            "**Take findings as true.** The stem says *if true*—your job is only to test each finding's logical connection to the claim.",
+            "**For data questions, check two things**: is the choice accurate to the table or graph, and does it actually do the job the text needs?"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Identify What the Question Asks"
+        },
+        {
+          "type": "table",
+          "headers": ["Language in the question", "Your task"],
+          "align": ["left", "center"],
+          "rows": [
+            ["“Which finding, if true, would most directly **support** the claim?”", "strengthen the claim"],
+            ["“Which finding, if true, would most directly **weaken/undermine** …?”", "attack the claim"],
+            ["“Which **quotation** most effectively **illustrates** the claim?”", "match the claim exactly"],
+            ["“Which choice most effectively **uses data from the table/graph** to …?”", "pick accurate + relevant data"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "The most common wrong answer in this whole domain is evidence that fits the **topic** but not the **claim**. A finding can be about zebras and still say nothing about what the text claims *about* zebras."
+        }
+      ]
+    },
+    {
+      "id": "anchor-on-the-claim",
+      "title": "Anchor on the Claim",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Every Command of Evidence question orbits one sentence. The text will flag it for you: *researchers* **hypothesize**, *the author* **argues**, *critics* **contend**, *the team* **claims**. Find that sentence, then restate it precisely—because precision is where these questions are won."
+        },
+        {
+          "type": "p",
+          "text": "When you restate the claim, capture three things: the {blue|subject}, the {teal|asserted relationship} (causes? deters? preceded? reflects?), and the {purple|scope} (all? some? one region? one poem?). Consider the claim ==zebras' stripes deter biting flies==. Supporting evidence must connect {blue|stripes} to {teal|fewer fly encounters}—evidence that zebras are healthy, or that flies are common, or that stripes vary, does not touch the claim."
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Restate the claim in your own words *before* reading the choices, exactly as you predict completions on Inferences questions. You're building the measuring stick first."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Zebras' bold black-and-white stripes have puzzled naturalists since Darwin's day: explanations based on camouflage or social signaling have fit the evidence poorly. Biologist Tim Caro and colleagues have advanced a different hypothesis—that ==the stripes deter biting flies==, whose bites can transmit dangerous diseases."
+            },
+            {
+              "type": "question",
+              "stem": "Which finding, if true, would most directly support Caro and colleagues' hypothesis?",
+              "choices": [
+                "Zebras in some regions have noticeably fainter stripes than zebras in other regions.",
+                "In field experiments, horses wearing striped coats experienced far fewer horsefly landings than horses wearing solid-colored coats.",
+                "Biting flies are most active during the hottest hours of the day.",
+                "Zebras and horses respond to fly bites with similar tail-swishing behaviors."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The claim: {blue|stripes} {teal|reduce fly landings}. Ideal evidence would show stripes—and nothing else—leading to fewer flies. Now measure each choice against that stick:"
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Stripe variation alone connects nothing to flies. Unless we also knew fly activity differed with stripe strength, this finding is silent on the claim. {rose|Topic, not claim.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "A controlled comparison in which the **only** difference is stripes, and the striped group gets fewer landings—this is the hypothesis's own prediction coming true."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "When flies are active says nothing about whether stripes deter them. {rose|Topic, not claim.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "A similarity between zebras and horses might justify the experimental setup, but by itself it neither strengthens nor weakens the stripes-deter-flies link. {rose|Irrelevant to the relationship.}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "support-or-weaken",
+      "title": "Support or Weaken",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Findings questions run in two directions, and the stem's verb tells you which way to point. Misread it and you'll do everything else perfectly—and pick the exact opposite of the credited answer."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Take every finding as a given—the stem says “if true.” Never reject a choice because it seems implausible; test only what it would do to the claim if it were fact."
+        },
+        {
+          "type": "table",
+          "headers": ["{green|Evidence that supports}", "{rose|Evidence that weakens}"],
+          "rows": [
+            ["confirms a **prediction** the claim makes", "shows a prediction of the claim **failing**"],
+            ["supplies the **mechanism** behind the claimed relationship", "offers a **rival explanation** for the same facts"],
+            ["**rules out an alternative** explanation", "presents a direct **counterexample**"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Weakening evidence doesn't need to disprove the claim—it just has to make it harder to believe. The strongest weakeners either break the claim's timeline or logic, or explain the evidence equally well without the claim."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "For much of the twentieth century, archaeologists held that the Clovis people—whose distinctive stone tools appear in the archaeological record about 13,000 years ago—were the first humans to inhabit the Americas."
+            },
+            {
+              "type": "question",
+              "stem": "Which finding, if true, would most directly weaken the view described in the text?",
+              "choices": [
+                "Clovis-style tools have been found at sites across much of North America.",
+                "Clovis tools were used primarily for hunting large animals such as mammoths.",
+                "Human footprints preserved at White Sands, New Mexico, have been reliably dated to more than 20,000 years ago.",
+                "Several Clovis sites have been dated to slightly later than 13,000 years ago."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The claim has a fragile hinge: **first**. Anything showing humans in the Americas *before* the Clovis tools appear breaks it. Predict: evidence of an earlier human presence."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Wide distribution shows the Clovis were successful and widespread—if anything, friendly to the traditional view. {rose|Wrong direction.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "What the tools were *for* has no bearing on who came first. {rose|Topic, not claim.}"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "Humans leaving footprints 20,000+ years ago means people were in the Americas roughly seven millennia before Clovis tools appear—the claim's “first” cannot survive this finding."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Later Clovis sites are exactly what you'd expect of a culture that persisted; the claim is about who came before, not after. {rose|Irrelevant direction.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "On weaken questions, at least one trap is usually a strong **supporter** of the claim. If you lose track of your direction, it will look perfect. Write a mental minus sign next to the stem's verb."
+        }
+      ]
+    },
+    {
+      "id": "quotations",
+      "title": "Choose the Right Quotation",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Quotation questions describe a claim about a literary or scholarly work—usually an interpretation of a poem or novel—and offer four quotations from it. The stem asks which quotation most effectively **illustrates** the claim. This is a matching task: the winning quotation must show the claim happening *in its own words*."
+        },
+        {
+          "type": "list",
+          "style": "number",
+          "items": [
+            "Break the claim into its **components**—most claims have two.",
+            "Read each quotation asking: which components are *visible on the page*? Ignore what the quotation merely reminds you of.",
+            "Choose the quotation that shows **every** component. One out of two is not a match."
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "“Hope is the thing with feathers” is an 1891 poem by Emily Dickinson. A student claims that in the poem, the speaker portrays hope as {blue|enduring even the harshest conditions} while {teal|never demanding anything in return}."
+            },
+            {
+              "type": "question",
+              "stem": "Which quotation from “Hope is the thing with feathers” most effectively illustrates the claim?",
+              "choices": [
+                "“Hope is the thing with feathers / That perches in the soul”",
+                "“And sweetest in the gale is heard”",
+                "“Yet, never, in extremity, / It asked a crumb of me.”",
+                "“And sings the tune without the words”"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Two components to check off: {blue|① endures hardship} and {teal|② demands nothing}. The right quotation must show **both**."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Establishes hope's dwelling place—a famous image, but it shows {blue|no hardship} and {teal|no demands}. Zero of two components."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The gale gives you {blue|component ①}—hope is sweetest in a storm—but nothing about {teal|asking or demanding}. One of two. **Half a match is no match.**"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "correct",
+                  "text": "“In extremity” = {blue|the harshest conditions}; “never … asked a crumb of me” = {teal|demanding nothing in return}. Both components, in the quotation's own words."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "A line about hope's wordless song—{blue|no hardship}, {teal|no demands}. Zero of two."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "The half-match trap (choice B above) is this format's signature. It quotes something beautiful and *related*—and test-takers who check only one component take it every time."
+        }
+      ]
+    },
+    {
+      "id": "use-the-data",
+      "title": "Use the Data",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Quantitative questions pair the text with a small table or graph. The text builds toward a claim (or ends in a blank), and the stem asks which choice most effectively **uses data** from the table or graph to support or complete it. Work in three steps:"
+        },
+        {
+          "type": "list",
+          "style": "number",
+          "items": [
+            "**Orient yourself first**: read the table's title, the row and column headers, and the units before touching the choices.",
+            "**Know the data's job**: restate what the text needs the numbers to show.",
+            "**Apply the two-bar test** to each choice: it must be {green|accurate} (matching the table exactly) *and* {green|relevant} (doing the job the claim needs). Most traps clear exactly one bar."
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A student compared pollinator activity in community gardens dominated by native plants, gardens with mixed planting, and gardens dominated by non-native plants. The student claims that gardens dominated by native plants attract more pollinator visits than gardens dominated by non-native plants."
+            },
+            {
+              "type": "table",
+              "caption": "Average pollinator visits per garden per hour, by garden type",
+              "headers": ["Garden type", "Bee visits", "Butterfly visits"],
+              "align": ["left", "center", "center"],
+              "compact": true,
+              "rows": [
+                ["Native-dominated", "24", "9"],
+                ["Mixed planting", "15", "6"],
+                ["Non-native-dominated", "8", "4"]
+              ]
+            },
+            {
+              "type": "question",
+              "stem": "Which choice most effectively uses data from the table to support the student's claim?",
+              "choices": [
+                "Gardens with mixed planting averaged 15 bee visits per hour.",
+                "Native-dominated gardens averaged more visits than non-native-dominated gardens from both bees (24 versus 8) and butterflies (9 versus 4).",
+                "Non-native-dominated gardens attracted an average of 9 butterfly visits per hour.",
+                "Native-dominated gardens attracted three times as many butterfly visits as gardens with mixed planting."
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "Accurate—but the claim compares native against non-native, and this choice mentions neither. Clears the {green|accuracy} bar, fails {rose|relevance}."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "Accurate to all four cells it cites, and aimed squarely at the claim: native beats non-native across both pollinator types. Two bars, cleared."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Misreads the table—9 is the *native* gardens' butterfly figure; non-native gardens averaged 4. Fails the {rose|accuracy} bar."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "9 versus 6 is 1.5 times, not three times—and mixed gardens aren't even part of the claim. Fails {rose|both bars}."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The accurate-but-irrelevant trap is the favorite here: a choice that reads the table perfectly and supports nothing. Verifying numbers feels like work, so it feels like the answer. Check the claim first."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "One of each: a support question, a quotation question, and a data question. Anchor on the claim, read the stem's verb, predict—then eliminate. Commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "White-crowned sparrows in different regions sing recognizably different “dialects”—consistent local variations in song structure. Ornithologists hypothesize that young sparrows acquire their dialect by learning it from the adults around them rather than by inheriting it."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which finding, if true, would most directly support the ornithologists' hypothesis?",
+                  "choices": [
+                    "Sparrow dialects in a given region remain stable across many generations.",
+                    "Young sparrows raised in captivity, where they hear no adult song, develop songs lacking the features of any regional dialect.",
+                    "Adult white-crowned sparrows sing most frequently at dawn and dusk.",
+                    "Regional dialects differ from one another most noticeably in the trilled endings of songs."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** The claim: dialects are {blue|learned from adults}, not {teal|inherited}. Ideal support: remove the adults, and the dialect should fail to appear. That is exactly what B reports."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Stability fits *both* hypotheses—faithful learning or faithful inheritance would each produce it. Evidence consistent with everything supports nothing. {rose|Doesn't discriminate.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "If song were inherited, isolation from adults shouldn't matter. Songs failing to develop dialect features without adult models is the learning hypothesis's own prediction confirmed."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "*When* adults sing says nothing about how young birds acquire dialects. {rose|Topic, not claim.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Describes *how* dialects differ—the phenomenon itself—without touching how they are acquired. {rose|Topic, not claim.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "p",
+                  "text": "“Sympathy” is an 1899 poem by Paul Laurence Dunbar. A student claims that the poem's speaker presents the caged bird's song not as an expression of happiness but as {blue|a desperate appeal}."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which quotation from “Sympathy” most effectively illustrates the claim?",
+                  "choices": [
+                    "“I know what the caged bird feels, alas!”",
+                    "“When the first bird sings and the first bud opes”",
+                    "“It is not a carol of joy or glee, / But a prayer that he sends from his heart's deep core”",
+                    "“And they pulse again with a keener sting”"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Two components: the song is {rose|not happy} and it is {blue|an appeal}. Choice C delivers both in its own words—“not a carol of joy or glee” and “a prayer … from his heart's deep core.”"
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "Establishes the speaker's empathy with the bird—but says nothing about the *song* or its meaning. Zero components."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "A free bird singing in springtime—not the caged bird, no denial of joy, no appeal. Zero components."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "Explicitly negates happiness (“not a carol of joy or glee”) and names the song a “prayer”—a plea sent from deep suffering. Both components, on the page."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Vivid pain, yes—but this line describes the bird's old wounds throbbing, not its song. One component at best, and the wrong subject. {rose|Half a match.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "p",
+                  "text": "A city's transportation department tested three intersection designs and tracked cyclist collisions at comparable intersections before and after redesign. Reviewing the results, an analyst concludes that of the three designs, protected intersections were associated with {blank}"
+                },
+                {
+                  "type": "table",
+                  "caption": "Average cyclist collisions per intersection per year",
+                  "headers": ["Intersection design", "Before redesign", "After redesign"],
+                  "align": ["left", "center", "center"],
+                  "compact": true,
+                  "rows": [
+                    ["Standard signals", "30", "28"],
+                    ["Painted bike lanes", "32", "24"],
+                    ["Protected intersection", "31", "12"]
+                  ]
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice most effectively uses data from the table to complete the statement?",
+                  "choices": [
+                    "an average of 24 cyclist collisions per year after redesign.",
+                    "fewer cyclist collisions than the other designs even before any redesign took place.",
+                    "a modest increase in cyclist collisions following redesign.",
+                    "the largest reduction in cyclist collisions of the three designs, falling from 31 to 12 per year."
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is D.** Orient first: rows are designs, columns are before/after averages. The statement needs data about *protected intersections* that distinguishes them from the other designs."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "24 is the *painted-lane* figure; protected intersections fell to 12. Fails the {rose|accuracy} bar."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Before redesign, protected sites averaged 31—more than standard's 30. Inaccurate, and “before redesign” isn't the comparison the analyst is drawing. {rose|Both bars failed.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Every design shows a *decrease*; protected intersections show the biggest one. {rose|Contradicts the table.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "correct",
+                      "text": "Accurate (31 → 12, the steepest drop: 19, versus 2 and 8) and exactly the comparative point the analyst's sentence sets up. Two bars, cleared."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Find the {blue|claim} and restate it precisely before reading the choices—evidence is judged against the claim, never just the topic.",
+            "The stem's verb sets your direction: **support** strengthens, **weaken** attacks, **illustrate** matches.",
+            "Findings are taken *as true*. Test only the logical connection, never the plausibility.",
+            "Quotations must show **every component** of the claim in their own words—{rose|half a match is no match}.",
+            "Data choices must clear **two bars**: {green|accurate} to the table or graph *and* {green|relevant} to the claim. Most traps clear exactly one.",
+            "Predict what ideal evidence would look like first; the right answer should feel like recognition, not persuasion."
+          ]
+        }
+      ]
+    }
+  ]
+}

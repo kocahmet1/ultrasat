@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "words-in-context",
+  "title": "Words in Context",
+  "estimatedMinutes": 25,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Words in Context",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Words in Context questions test vocabulary the way real reading does: a word means what the {blue|text around it} forces it to mean. They come in two flavors—one asks you to fill a blank with the best word; the other asks what a word already in the text means **there**, in that sentence, regardless of what it usually means."
+        },
+        {
+          "type": "table",
+          "headers": ["Language in the question", "Your task"],
+          "align": ["left", "center"],
+          "rows": [
+            ["“Which choice completes the text with the most **logical and precise** word or phrase?”", "fill the blank using the text's clues"],
+            ["“**As used in the text**, what does the word ‘X' most nearly mean?”", "identify the sense *this* text uses"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Both flavors run on the same engine: the text always contains a {teal|clue} that locks in the answer. You are never being asked to know a word in a vacuum—you're being asked to read the sentence that defines it."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Cover the choices** and read the whole text first—choices are written to sound plausible before you've found the clue.",
+            "**Predict your own word**—or at least the {blue|charge}: positive, negative, or neutral.",
+            "**Find the clue that forces your prediction**: a restatement, a contrast, a parallel, a cause.",
+            "**Match, then plug in and reread.** The right word is logical *and precise*—several choices usually fit loosely; one fits exactly.",
+            "For **“most nearly mean”** questions, substitute each choice into the sentence—and distrust the word's most familiar meaning.",
+            "**Unknown words in the choices?** Eliminate the ones you know don't fit; never pick a word because it sounds sophisticated."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Your prediction doesn't need to be elegant. “Messy,” “still argued about,” “good for plants” are perfect predictions—you're building a target, not writing the answer."
+        }
+      ]
+    },
+    {
+      "id": "predict-then-match",
+      "title": "Predict, Then Match",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The core discipline: decide what the blank must mean **before** the choices can start whispering. Two levels of prediction work:"
+        },
+        {
+          "type": "list",
+          "style": "number",
+          "items": [
+            "**A word of your own.** Read up to the blank's sentence, then finish the thought in plain English.",
+            "**At minimum, the charge.** Is the blank {green|positive}, {rose|negative}, or {blue|neutral}? Charge alone often eliminates two or three choices before you weigh a single definition."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Then hold every choice against the prediction—not against the vague question “could this word appear in this sentence?” Almost any word *could*. The test is whether it says what the clue **requires**."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Despite decades of close study, the function of the narwhal's spiral tusk remains {blank}: researchers have proposed that it senses changes in the water, attracts mates, and even stuns prey, but no single explanation has won general acceptance."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+              "choices": [
+                "predictable",
+                "contested",
+                "inconsequential",
+                "notorious"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The colon is a flashing arrow: everything after it **restates** the blank. Competing proposals, no accepted winner—prediction: *unsettled, still argued about*."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "*Predictable* points the wrong way entirely—a question with three live rival answers is the opposite of predictable. {rose|Fails the clue.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "*Contested* is the prediction in one word: multiple explanations in play, none accepted. The restatement after the colon pays for every letter of it."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "*Inconsequential* means unimportant—but decades of study and rival theories show scientists care a great deal. {rose|Wrong charge and wrong idea.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*Notorious* means famous for something bad. The tusk's function is unknown, not disgraceful. A word that merely *sounds* dramatic. {rose|Imprecise.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "“Logical and precise” is a two-part standard. On hard questions, two choices will be *logical*—only one will be precise, matching the clue's exact relationship rather than its general neighborhood."
+        }
+      ]
+    },
+    {
+      "id": "context-clues",
+      "title": "Find the Clue",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "SAT texts plant their clues in a handful of standard forms. Learn to spot the form, and the blank starts filling itself:"
+        },
+        {
+          "type": "table",
+          "headers": ["Clue type", "Signals", "Mini example"],
+          "compact": true,
+          "rows": [
+            ["{blue|Restatement}", "colon, **that is**, **in other words**, an appositive", "*The finding was an anomaly: nothing like it had ever been recorded.*"],
+            ["{rose|Contrast}", "**but**, **however**, **although**, **unlike**, **despite**, **once … now**", "*Although rehearsals were chaotic, the premiere was remarkably polished.*"],
+            ["{teal|Similarity}", "**and**, **like**, **just as**, **equally**", "*Like the estate's meticulously kept gardens, its library was immaculate.*"],
+            ["{green|Cause & effect}", "**because**, **so**, **therefore**", "*Because the trail was unmarked, hikers needed a guide.*"],
+            ["{purple|Example}", "**for example**, **such as**, a list", "*The species is adaptable: it thrives in deserts, marshes, and city parks.*"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Reversal words flip the charge mid-sentence: **hardly**, **far from**, **once … now**, **despite**, **no longer**. Misread one and you'll confidently choose the perfect *opposite* of the answer."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "Although the expedition journal's title page promised an {blank} account of the voyage—every landfall, every trade, every storm—the pages inside recorded little more than daily temperature readings."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+              "choices": [
+                "tedious",
+                "plausible",
+                "anonymous",
+                "exhaustive"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "*Although* sets a contrast between the **promise** and the **reality** (nearly empty pages). The dash-list—*every landfall, every trade, every storm*—restates the promise. Prediction: *complete, covering everything*."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "*Tedious* describes the disappointing **reality**, not the title page's promise—the reversal trap in its natural habitat. {rose|Wrong side of the contrast.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "*Plausible* means believable—the clue list is about **coverage**, not credibility. {rose|Logical-ish, not precise.}"
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "*Anonymous* answers a question nobody asked; authorship never comes up. {rose|No clue supports it.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "correct",
+                  "text": "*Exhaustive*—covering everything—is precisely what “every landfall, every trade, every storm” promises, and precisely what the thin reality betrays."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "most-nearly-mean",
+      "title": "“Most Nearly Mean” Questions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The second flavor quotes a word already in the text—almost always a **common word with several senses**: *assume*, *charge*, *economy*, *check*, *bear*. The engineered trap is the word's {rose|most familiar meaning}, sitting in the choices, wrong for this sentence."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Answer with the sense the text uses, never the sense you know best. Substitute each choice for the word; exactly one preserves the sentence's meaning."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "When the conductor fell ill on the eve of the tour, the orchestra's young assistant __assumed__ direction of the ensemble, leading all fourteen performances to warm reviews."
+            },
+            {
+              "type": "question",
+              "stem": "As used in the text, what does the word “assumed” most nearly mean?",
+              "choices": [
+                "supposed",
+                "took on",
+                "pretended",
+                "doubted"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Substitute each choice into the sentence and listen:"
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "“The assistant *supposed* direction of the ensemble”—the familiar meaning of *assume*, and it produces nonsense here. {rose|The familiar-meaning trap, working as designed.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "“The assistant *took on* direction of the ensemble, leading all fourteen performances”—the sentence's logic (stepping in, then leading) survives intact."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "*Pretended* implies the assistant only faked leadership—yet the performances really happened under his baton. {rose|Contradicts the sentence.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*Doubted* direction? No sense of *assume* means doubt, and the warm reviews argue confidence besides. {rose|No fit at all.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "The substitution reread is not optional. Your memory of what a word “means” is exactly what these questions are built to exploit—the sentence with the choice installed is the only evidence that counts."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Cover the choices, predict (a word or at least a charge), find the clue, match—then plug in and reread. Commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The mantis shrimp's strike is astonishingly {blank}: its hammer-like club accelerates about as fast as a small-caliber bullet and reaches its target in under three milliseconds."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+                  "choices": [
+                    "conspicuous",
+                    "deliberate",
+                    "rapid",
+                    "durable"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** The colon restates the blank: bullet-like acceleration, a strike in under three milliseconds. Prediction: *fast*."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "*Conspicuous* means easy to notice—if anything, a three-millisecond strike is nearly invisible. {rose|Wrong idea.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "*Deliberate* means slow and considered—the exact opposite of the clue. {rose|Wrong direction.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "*Rapid* is the restatement's one-word summary: the entire clause after the colon is a description of speed."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*Durable* describes toughness over time; the clue measures milliseconds, not wear. {rose|Wrong idea.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "When it opened in 1889, prominent artists condemned the Eiffel Tower as {blank}; today the same silhouette is celebrated as a triumph of iron elegance."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+                  "choices": [
+                    "graceful",
+                    "ungainly",
+                    "durable",
+                    "inevitable"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Two clues stack: *condemned* fixes a {rose|negative} charge, and the *then/today* reversal demands the opposite of “elegance.” Prediction: *ugly, awkward*."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "*Graceful* is praise—inside a verb of condemnation. {rose|Wrong charge}, and the wrong side of the reversal."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "*Ungainly*—awkward, inelegant—is negative, aimed at appearance, and the precise mirror of the elegance now celebrated."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "*Durable* is neutral-to-positive and about endurance, not looks; you can't condemn a tower for lasting. {rose|Wrong charge, wrong idea.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*Inevitable* has nothing to do with the artists' aesthetic complaint—and condemning something as “unavoidable” makes little sense. {rose|No clue supports it.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "The naturalist's field notes __betray__ her excitement at the discovery: exclamation marks crowd every page describing the reef, and whole paragraphs are underlined twice."
+                },
+                {
+                  "type": "question",
+                  "stem": "As used in the text, what does the word “betray” most nearly mean?",
+                  "choices": [
+                    "deceive",
+                    "abandon",
+                    "undermine",
+                    "reveal"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is D.** Substitute and reread: the exclamation marks and double underlines *show* her excitement. The notes are making her feelings visible—despite *betray*'s more familiar, treacherous senses."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "“The notes *deceive* her excitement” doesn't parse—and nothing here is being tricked. {rose|The familiar-meaning trap.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "*Abandon* her excitement? The pages overflow with it. {rose|Contradicts the evidence after the colon.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "*Undermine* means weaken—but the punctuation amplifies her excitement rather than sapping it. {rose|Wrong direction.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "correct",
+                      "text": "“The notes *reveal* her excitement: exclamation marks crowd every page…” The colon's evidence flows perfectly from it—this is *betray* in its give-away sense."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Cover the choices and **predict first**—a plain word of your own, or at least the {blue|charge} (positive, negative, neutral).",
+            "The clue is always in the text: {blue|restatement}, {rose|contrast}, {teal|similarity}, {green|cause}, or {purple|example}. Find the form, and the blank fills itself.",
+            "**Reversal words** (*hardly*, *far from*, *once … now*, *despite*) flip the charge—misread one and you'll pick the perfect opposite.",
+            "The standard is **logical *and* precise**: several choices fit loosely; one matches the clue exactly.",
+            "On “most nearly mean” questions, **substitute every choice** into the sentence—and distrust the word's most familiar meaning.",
+            "Never choose a word for its sophistication. The test rewards the reader, not the thesaurus."
+          ]
+        }
+      ]
+    }
+  ]
+}

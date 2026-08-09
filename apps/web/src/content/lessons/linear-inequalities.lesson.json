@@ -1,0 +1,637 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "linear-inequalities",
+  "title": "Linear Inequalities",
+  "estimatedMinutes": 30,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Linear Inequalities",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "An {blue|inequality} compares two expressions instead of equating them. Where an equation usually pins down one value, an inequality's solutions form a **range** (in one variable) or a whole **region** (in two variables)—so the right mental picture is a shaded number line or a shaded half-plane, not a single point."
+        },
+        {
+          "type": "table",
+          "headers": ["Symbol", "Read as", "Words that signal it"],
+          "align": ["center", "left", "left"],
+          "rows": [
+            ["$<$", "less than", "“less than,” “fewer than,” “below”"],
+            ["$\\leq$", "less than or equal to", "“at most,” “no more than,” “a maximum of”"],
+            ["$>$", "greater than", "“more than,” “greater than,” “exceeds”"],
+            ["$\\geq$", "greater than or equal to", "“at least,” “no fewer than,” “a minimum of”"]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Solve like an equation—with one extra rule:** multiplying or dividing both sides by a *negative* flips the inequality sign.",
+            "**Translate words precisely.** “At least” and “at most” include equality ($\\geq$, $\\leq$); “more than” and “fewer than” do not ($>$, $<$).",
+            "**A point satisfies an inequality** if substituting gives a true statement; for a system it must satisfy **every** inequality.",
+            "**On graphs:** solid boundary for $\\leq$ / $\\geq$, dashed for $<$ / $>$; shade the side where a test point works.",
+            "**Sanity-check with an easy number** from your solution range—it takes five seconds and catches sign-flip errors."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Inequality answers are *sets*, so the question always narrows them somehow: “which inequality represents…,” “which point satisfies…,” or “what is the greatest/least value….” Spot which narrowing is being asked before you compute."
+        }
+      ]
+    },
+    {
+      "id": "solve-one-variable",
+      "title": "Solve One-Variable Inequalities",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Use exactly the moves you know from equations—add, subtract, multiply, divide on both sides. The solution is a range, drawn on a number line with a circle and a ray."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Which values of $x$ satisfy $3x + 5 < 20$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "3x + 5 < 20", "note": "Given inequality" },
+                { "math": "3x < 15", "note": "Subtract $5$ from both sides" },
+                { "math": "x < 5", "note": "Divide both sides by $3$ (positive — no flip)" }
+              ]
+            },
+            {
+              "type": "numberline",
+              "min": 0,
+              "max": 8,
+              "step": 1,
+              "points": [{ "x": 5, "kind": "open", "tone": "blue" }],
+              "rays": [{ "from": 5, "direction": "left", "tone": "blue" }],
+              "caption": "$x < 5$: an **open** circle — $5$ itself is *not* a solution.",
+              "alt": "Number line with an open circle at 5 and shading to the left"
+            },
+            {
+              "type": "p",
+              "text": "**Check** with an easy number from the range, like $x = 0$: $3(0) + 5 = 5 < 20$ {green|✓}"
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Flip Rule"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Multiplying or dividing both sides of an inequality by a **negative number** reverses the inequality sign. (Adding or subtracting never flips it.)"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Which values of $x$ satisfy $12 - 2x \\geq 4$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "12 - 2x \\geq 4", "note": "Given inequality" },
+                { "math": "-2x \\geq -8", "note": "Subtract $12$ from both sides" },
+                { "math": "x \\leq 4", "note": "Divide by $-2$ — **flip the sign**" }
+              ]
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "$-2x \\geq -8 \\;\\Rightarrow\\; x \\leq 4$",
+                  "note": "Divided by $-2$ and flipped. Check $x = 0$: $12 - 0 \\geq 4$ is true, and $0 \\leq 4$ agrees."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "$-2x \\geq -8 \\;\\Rightarrow\\; x \\geq 4$",
+                  "note": "Divided by a negative without flipping. Check $x = 5$: $12 - 10 = 2 \\geq 4$ is false — the range is wrong."
+                }
+              ]
+            },
+            {
+              "type": "numberline",
+              "min": 0,
+              "max": 8,
+              "step": 1,
+              "points": [{ "x": 4, "kind": "closed", "tone": "blue" }],
+              "rays": [{ "from": 4, "direction": "left", "tone": "blue" }],
+              "caption": "$x \\leq 4$: a **closed** circle — $4$ itself *is* a solution.",
+              "alt": "Number line with a closed circle at 4 and shading to the left"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "You can dodge the flip entirely: from $12 - 2x \\geq 4$, **add** $2x$ to both sides to get $12 \\geq 4 + 2x$, then $8 \\geq 2x$, so $4 \\geq x$. Same answer, no negative division, no flip to forget."
+        }
+      ]
+    },
+    {
+      "id": "words-to-inequalities",
+      "title": "Translate Words into Inequalities",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Most SAT inequality questions are word problems about **limits**: budgets, capacities, minimum goals. The equation-building skeleton is the same as before—what's new is choosing the right symbol, and the strict/inclusive distinction does real work."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Amir has $\\$60$ to spend at the movies. A ticket costs $\\$14$, and snacks cost $\\$8$ each. What is the greatest number of snacks he can buy?"
+            },
+            {
+              "type": "p",
+              "text": "“Has $\\$60$ to spend” means the total can't exceed $60$—spending **at most** $\\$60$:"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "14 + 8s \\leq 60", "note": "Ticket plus $8$ per snack, capped at $60$" },
+                { "math": "8s \\leq 46", "note": "Subtract $14$ from both sides" },
+                { "math": "s \\leq 5.75", "note": "Divide by $8$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Snacks come in whole numbers, so the greatest value is $s = \\green{5}$—**round down**, because $6$ snacks would cost $14 + 48 = \\$62$, over budget. A fractional cutoff always rounds *toward* the allowed side."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A freight elevator can carry **at most** $2{,}000$ pounds. The operator weighs $180$ pounds, and each crate weighs $65$ pounds. Which inequality gives all possible numbers of crates $c$ the elevator can carry with the operator aboard?",
+              "choices": [
+                "$65c + 180 \\leq 2{,}000$",
+                "$65c + 180 < 2{,}000$",
+                "$65c + 180 \\geq 2{,}000$",
+                "$65(c + 180) \\leq 2{,}000$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Total weight is $65$ per crate plus the operator's $180$, and “at most” allows equality: $\\leq 2{,}000$. (In fact $c = 28$ hits $2{,}000$ exactly—and it's allowed.)"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The strict $<$ wrongly forbids loading exactly $2{,}000$ pounds—but “at most $2{,}000$” includes $2{,}000$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Flipped direction: this demands the elevator be loaded *to at least* its limit."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Grouping error: it multiplies the operator's weight by $65$ too. Only crates cost $65$ pounds each."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Strict vs. inclusive is a favorite trap: “at most” and “at least” **include** the boundary ($\\leq$, $\\geq$); “fewer than” and “more than” **exclude** it ($<$, $>$). One word changes the symbol."
+        }
+      ]
+    },
+    {
+      "id": "two-variables",
+      "title": "Two Variables: Shade a Half-Plane",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A two-variable inequality like $y \\leq x + 1$ is satisfied by every point on one **side** of a line. Its graph has two parts: the {blue|boundary line} $y = x + 1$, and the {teal|shaded half-plane} of solutions."
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Boundary: **solid** for $\\leq$ or $\\geq$ (points on the line count), **dashed** for $<$ or $>$ (they don't). Solved for $y$: shade **above** for $y >$, **below** for $y <$."
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "$y \\leq x + 1$  —  solid, shade below",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 230,
+                  "height": 210,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": 1, "b": 1, "tone": "blue", "fill": "below" }],
+                  "points": [
+                    { "x": 2, "y": 1, "tone": "green", "label": "(2, 1)", "labelDx": 6, "labelDy": 16 },
+                    { "x": -1, "y": 3, "tone": "rose", "label": "(-1, 3)", "labelDx": 6, "labelDy": -8 }
+                  ],
+                  "caption": "$(2, 1)$: $1 \\leq 3$ {green|✓} — in. $(-1, 3)$: $3 \\leq 0$ {rose|✗} — out.",
+                  "alt": "A solid line with the region below it shaded; one point inside and one outside"
+                }
+              ]
+            },
+            {
+              "title": "$y > -x + 2$  —  dashed, shade above",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 230,
+                  "height": 210,
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": -1, "b": 2, "tone": "teal", "dashed": true, "fill": "above" }],
+                  "caption": "Dashed boundary: points **on** the line are not solutions.",
+                  "alt": "A dashed line with the region above it shaded"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The Test-Point Method"
+        },
+        {
+          "type": "p",
+          "text": "Not sure which side to shade—or which side a graph is shading? **Test one easy point.** The origin $(0, 0)$ is ideal whenever it's not on the boundary: for $y \\leq x + 1$, testing gives $0 \\leq 1$, true—so the solution side is the side containing the origin."
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "Is $(3, 5)$ a solution of $y < 3x - 2$?  Test: $5 < 3(3) - 2 = 7$",
+              "note": "True — the point lies in the shaded region."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "Is $(2, 5)$ a solution of $y < 3x - 2$?  Test: $5 < 3(2) - 2 = 4$",
+              "note": "False — the point lies on the wrong side of the boundary."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "On the SAT you rarely need to *draw* the region—testing the given points against the inequality is almost always faster than graphing."
+        }
+      ]
+    },
+    {
+      "id": "systems-of-inequalities",
+      "title": "Systems of Inequalities",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A system of inequalities asks for points that satisfy **all** of its inequalities at once. Graphically, that's where the shaded regions **overlap**:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "math",
+              "tex": "\\begin{cases} y \\leq x + 3 \\\\ y \\geq -x + 1 \\end{cases}"
+            },
+            {
+              "type": "graph",
+              "width": 340,
+              "height": 300,
+              "xMin": -5,
+              "xMax": 5,
+              "yMin": -3,
+              "yMax": 7,
+              "step": 2,
+              "ticks": true,
+              "lines": [
+                { "m": 1, "b": 3, "tone": "blue", "fill": "below" },
+                { "m": -1, "b": 1, "tone": "teal", "fill": "above" }
+              ],
+              "points": [{ "x": 3, "y": 2, "tone": "green", "label": "(3, 2)", "labelDx": 8, "labelDy": 16 }],
+              "caption": "The doubly-shaded wedge satisfies **both** inequalities; $(3, 2)$ is in it.",
+              "alt": "Two overlapping shaded half-planes forming a wedge, with the point (3, 2) inside the overlap"
+            },
+            {
+              "type": "question",
+              "stem": "Which ordered pair $(x, y)$ satisfies the system above?",
+              "choices": ["$(3, 2)$", "$(0, 4)$", "$(-2, -3)$", "$(-4, 8)$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "First: $2 \\leq 3 + 3$ {green|✓} Second: $2 \\geq -3 + 1$ {green|✓} — true in **both**."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Second holds ($4 \\geq 1$), but the first fails: $4 \\leq 0 + 3$ is false. One out of two is out."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "First holds ($-3 \\leq 1$), but the second fails: $-3 \\geq 2 + 1$ is false. Same trap, other inequality."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "The second holds ($8 \\geq 4 + 1$), but the first fails badly: $8 \\leq -4 + 3 = -1$ is false. One failed inequality disqualifies the pair—no matter how comfortably the other one passes."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Two Constraints in Context"
+        },
+        {
+          "type": "p",
+          "text": "Real-world systems pair a **goal** (“earn at least…”) with a **limit** (“work at most…”). Mara tutors for $\\$25$ per hour and lifeguards for $\\$12$ per hour. She wants to earn **at least** $\\$300$ while working **at most** $20$ hours:"
+        },
+        {
+          "type": "math",
+          "tex": "\\begin{cases} 25t + 12l \\geq 300 \\\\ t + l \\leq 20 \\end{cases}",
+          "boxed": true,
+          "caption": "$t$ = tutoring hours · $l$ = lifeguarding hours"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "$t = 8,\\; l = 12$:  earnings $25(8) + 12(12) = 344 \\geq 300$; hours $8 + 12 = 20 \\leq 20$",
+              "note": "Works—and note that exactly $20$ hours is allowed, because $\\leq$ includes the boundary."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "$t = 6,\\; l = 10$:  earnings $25(6) + 12(10) = 270$",
+              "note": "Under the $\\$300$ goal — fails the first inequality, so the pair fails the system."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Check candidates against **every** inequality, every time. Wrong answers on system questions almost always satisfy exactly one of the two."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Watch for the two classic traps as you work: a missed sign flip, and a boundary treated as strict when it isn't (or the reverse)."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Which of the following represents all solutions of $7 - 4x > 19$?",
+                  "choices": ["$x < -3$", "$x > -3$", "$x < 3$", "$x > 3$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.**"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "-4x > 12", "note": "Subtract $7$ from both sides" },
+                    { "math": "x < -3", "note": "Divide by $-4$ — **flip the sign**" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Check $x = -4$: $7 - 4(-4) = 23 > 19$ {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Divided by $-4$ without flipping. Check $x = 0$: $7 > 19$ is false, so the range containing $0$ can't be right."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Loses the negative: treats $-4x > 12$ as $4x > 12$ and then flips anyway—two errors trading places."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Loses the negative *and* skips the flip: solves $4x > 12$ directly."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Jae has saved $\\$140$ and saves an additional $\\$35$ each week. He wants **more than** $\\$450$ for a new laptop setup. Which inequality gives the numbers of weeks $w$ after which Jae will have more than $\\$450$?",
+                  "choices": [
+                    "$140 + 35w > 450$",
+                    "$140 + 35w \\geq 450$",
+                    "$35 + 140w > 450$",
+                    "$35w > 450 + 140$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Total savings = starting $\\$140$ plus $\\$35$ per week—and “more than” is the strict $>$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$140 + 35w > 450$. (Sanity check: $w = 9$ gives $140 + 315 = 455 > 450$ {green|✓}, while $w = 8$ gives $140 + 280 = 420$, still short.)"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$\\geq$ would allow hitting **exactly** $\\$450$—but “more than $\\$450$” excludes $450$ itself."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Swaps the roles: it saves $\\$140$ per week starting from $\\$35$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Adds the starting $\\$140$ to the goal instead of to Jae's savings—the $140$ helps him, it doesn't raise the target."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "math",
+                  "tex": "\\begin{cases} y \\geq 2x - 3 \\\\ y < x + 2 \\end{cases}"
+                },
+                {
+                  "type": "question",
+                  "stem": "Which ordered pair $(x, y)$ satisfies the system above?",
+                  "choices": ["$(1, 1)$", "$(0, 3)$", "$(3, 1)$", "$(2, 4)$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Test each pair in **both** inequalities."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "First: $1 \\geq 2(1) - 3 = -1$ {green|✓} Second: $1 < 1 + 2 = 3$ {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "First holds ($3 \\geq -3$), but the second fails: $3 < 0 + 2$ is false."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Second holds ($1 < 5$), but the first fails: $1 \\geq 2(3) - 3 = 3$ is false."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "First holds ($4 \\geq 1$)—but $(2, 4)$ lands **exactly on** the boundary $y = x + 2$, and the strict $<$ excludes the line: $4 < 4$ is false."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A robotics club has raised $\\$96$ and sells raffle tickets for $\\$4$ each. The club's goal is to have **at least** $\\$200$. What is the minimum number of tickets the club must sell to reach its goal?",
+                  "choices": ["$25$", "$26$", "$50$", "$104$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.**"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "96 + 4t \\geq 200", "note": "Current funds plus $4$ per ticket, goal included" },
+                    { "math": "4t \\geq 104", "note": "Subtract $96$ from both sides" },
+                    { "math": "t \\geq 26", "note": "Divide by $4$ — minimum $26$ tickets" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$25$ tickets give $96 + 100 = 196 < 200$—just short. Rounding down only works for *maximum* questions."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "$96 + 4(26) = 200$ exactly—and “at least $\\$200$” **includes** $200$, so $26$ reaches the goal."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$50$ is $200 \\div 4$: it ignores the $\\$96$ already raised."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$104$ is the missing *dollar amount*—the subtraction result, never divided by the ticket price."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Solve inequalities with equation moves, plus the **flip rule**: reverse the sign when multiplying or dividing by a negative. Adding and subtracting never flip.",
+            "Translate exactly: “at least” $\\to \\geq$, “at most” $\\to \\leq$, “more than” $\\to >$, “fewer than” $\\to <$. The boundary is included only by $\\leq$ and $\\geq$.",
+            "Whole-number contexts: round **down** for maximum questions, **up** for minimum ones—always toward the allowed side.",
+            "Two variables: solid boundary for $\\leq/\\geq$, dashed for $</>$; shade the side where a test point (try the origin) makes the inequality true.",
+            "Systems: a pair must satisfy **every** inequality; traps typically pass exactly one, or sit on a strict boundary.",
+            "Always end with a five-second check: plug one easy value from your answer back into the original inequality."
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -28,6 +28,13 @@ yarn-error.log*
 *.json
 !package.json
 !package-lock.json
+
+# Runtime JSON required by the deployed web and API applications
+!apps/api/data/subcategoryTaxonomy.json
+!apps/web/public/manifest.json
+!apps/web/src/components/lesson/samples/*.sample.json
+!apps/web/src/content/lessons/*.lesson.json
+!apps/web/src/data/subcategoryTaxonomy.json
 ultrasat-5e4c4-369f564bdaef.json
 
 # Backup files

@@ -1,0 +1,766 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "nonlinear-functions",
+  "title": "Nonlinear Functions",
+  "estimatedMinutes": 35,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Nonlinear Functions",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A linear function changes at a constant rate—its graph is a straight line. A {blue|nonlinear function}'s rate of change *itself changes*, which bends the graph. Two families dominate the SAT: {blue|quadratic functions} (parabolas) and {teal|exponential functions} (growth and decay curves)."
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Linear",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 195,
+                  "height": 165,
+                  "xMin": -3,
+                  "xMax": 3,
+                  "yMin": -3,
+                  "yMax": 6,
+                  "step": 2,
+                  "ticks": false,
+                  "lines": [{ "m": 1, "b": 1, "tone": "gray" }],
+                  "caption": "Adds the same amount per step.",
+                  "alt": "A straight rising line"
+                }
+              ]
+            },
+            {
+              "title": "Quadratic",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 195,
+                  "height": 165,
+                  "xMin": -3,
+                  "xMax": 3,
+                  "yMin": -3,
+                  "yMax": 6,
+                  "step": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "quadratic", "a": 1, "b": 0, "c": -2, "tone": "blue" }],
+                  "caption": "Falls, turns at the **vertex**, rises.",
+                  "alt": "An upward-opening parabola"
+                }
+              ]
+            },
+            {
+              "title": "Exponential",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 195,
+                  "height": 165,
+                  "xMin": -3,
+                  "xMax": 3,
+                  "yMin": -3,
+                  "yMax": 6,
+                  "step": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "exponential", "a": 1, "base": 2, "tone": "teal" }],
+                  "caption": "**Multiplies** by the same factor per step.",
+                  "alt": "An exponential growth curve"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Evaluate like always—substitute carefully.** Exponents and negative inputs are where points are lost; put substituted negatives in parentheses.",
+            "**Know the three quadratic forms** and what each displays at a glance: y-intercept, x-intercepts, or vertex.",
+            "**Read a parabola from its equation:** sign of $a$ → opens up or down; vertex → minimum or maximum; the graph is symmetric about the vertex.",
+            "**Read an exponential as** {blue|initial value} $\\times$ {teal|factor}$^{\\,x}$: factor $> 1$ grows, between $0$ and $1$ decays; percent change hides inside the factor.",
+            "**In tables:** equal $x$-steps with constant *differences* → linear; constant *ratios* → exponential."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Most nonlinear questions are recognition, not computation: which form shows the vertex, which function matches the table, what does the $0.85$ mean. Learn the fingerprints and the algebra stays light."
+        }
+      ]
+    },
+    {
+      "id": "parabola-anatomy",
+      "title": "The Parabola: Reading a Quadratic",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A {blue|quadratic function} $f(x) = ax^2 + bx + c$ graphs as a **parabola**. Every feature the SAT asks about is visible on one picture:"
+        },
+        {
+          "type": "graph",
+          "width": 340,
+          "height": 300,
+          "xMin": -1,
+          "xMax": 5,
+          "yMin": -2,
+          "yMax": 6,
+          "step": 2,
+          "ticks": true,
+          "curves": [{ "type": "quadratic", "a": 1, "b": -4, "c": 3, "tone": "blue" }],
+          "segments": [
+            { "x1": 2, "y1": -2, "x2": 2, "y2": 6, "tone": "gray", "dashed": true, "label": "x = 2", "labelDx": 6, "labelDy": -30 }
+          ],
+          "points": [
+            { "x": 2, "y": -1, "tone": "purple", "label": "vertex (2, -1)", "labelDx": 8, "labelDy": 18 },
+            { "x": 1, "y": 0, "tone": "rose", "label": "(1, 0)", "labelDx": -40, "labelDy": -10 },
+            { "x": 3, "y": 0, "tone": "rose", "label": "(3, 0)", "labelDx": 10, "labelDy": -8 },
+            { "x": 0, "y": 3, "tone": "green", "label": "(0, 3)", "labelDx": 10, "labelDy": -2 }
+          ],
+          "caption": "$f(x) = x^2 - 4x + 3$: {green|y-intercept}, {rose|x-intercepts (zeros)}, {purple|vertex}, and the dashed **axis of symmetry**.",
+          "alt": "An upward-opening parabola with its y-intercept, two x-intercepts, vertex, and axis of symmetry marked"
+        },
+        {
+          "type": "table",
+          "headers": ["Feature", "Where to find it", "For $f(x) = x^2 - 4x + 3$"],
+          "align": ["left", "left", "center"],
+          "rows": [
+            ["Opens up / down", "sign of $a$: up if $a > 0$, down if $a < 0$", "$a = 1 > 0$: up"],
+            ["{green|y-intercept}", "the constant $c$ (set $x = 0$)", "$(0, 3)$"],
+            ["{rose|Zeros / x-intercepts}", "solve $f(x) = 0$", "$x = 1$ and $x = 3$"],
+            ["{purple|Vertex}", "$x = -\\frac{b}{2a}$ — or halfway between the zeros", "$(2, -1)$"],
+            ["Min / max value", "the vertex's $y$: minimum if opens up, maximum if down", "minimum $-1$"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "The parabola is **symmetric** about the dashed line through its vertex: inputs equally far from $x = 2$ give equal outputs. Since $f(0) = 3$, symmetry says $f(4) = 3$—no computation needed."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "For $f(x) = x^2 - 4x + 3$, what is the value of $f(5)$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "f(5) = (5)^2 - 4(5) + 3", "note": "Substitute $5$ for every $x$" },
+                { "math": "f(5) = 25 - 20 + 3", "note": "Exponent first, then multiply" },
+                { "math": "f(5) = 8", "note": "Add" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Substituting negatives: write parentheses. For $f(x) = x^2$, $f(-3) = (-3)^2 = 9$. Typing $-3^2$ into your calculator gives $-9$—the exponent grabs the $3$ before the minus sign does."
+        }
+      ]
+    },
+    {
+      "id": "three-forms",
+      "title": "Three Forms of a Quadratic",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The same quadratic can be written three ways, and each form **displays** a different feature as constants you can read directly. The SAT tests this constantly with the phrase *“…displays … as a constant or coefficient.”*"
+        },
+        {
+          "type": "table",
+          "headers": ["Form", "Template", "Shows at a glance"],
+          "align": ["left", "center", "left"],
+          "rows": [
+            ["Standard", "$ax^2 + bx + c$", "{green|y-intercept}: $(0, c)$"],
+            ["Factored", "$a(x - r)(x - s)$", "{rose|x-intercepts}: $r$ and $s$"],
+            ["Vertex", "$a(x - h)^2 + k$", "{purple|vertex}: $(h, k)$"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Here is the parabola from the previous page in all three costumes—same function, different features on display:"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Standard",
+              "blocks": [
+                { "type": "math", "tex": "x^2 - 4x + \\green{3}" },
+                { "type": "p", "text": "y-intercept $(0, {green|3})$" }
+              ]
+            },
+            {
+              "title": "Factored",
+              "blocks": [
+                { "type": "math", "tex": "(x - \\rose{1})(x - \\rose{3})" },
+                { "type": "p", "text": "zeros at $x = {rose|1}$, $x = {rose|3}$" }
+              ]
+            },
+            {
+              "title": "Vertex",
+              "blocks": [
+                { "type": "math", "tex": "(x - \\purple{2})^2 - \\purple{1}" },
+                { "type": "p", "text": "vertex $({purple|2}, {purple|-1})$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "The function $f(x) = x^2 - 4x + 3$ is graphed in the $xy$-plane. Which equivalent form of $f$ displays the coordinates of the **vertex** of the graph as constants?",
+              "choices": [
+                "$f(x) = (x - 2)^2 - 1$",
+                "$f(x) = (x - 1)(x - 3)$",
+                "$f(x) = x^2 - 4x + 3$",
+                "$f(x) = (x + 2)^2 - 1$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Vertex form: $h = 2$ and $k = -1$ are right there as constants. Expanding checks it: $(x-2)^2 - 1 = x^2 - 4x + 3$. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Equivalent, but it displays the **x-intercepts** $1$ and $3$—not the vertex."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Equivalent, but standard form displays only the **y-intercept** $3$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Not equivalent: $(x + 2)^2 - 1 = x^2 + 4x + 3$. The sign inside the parentheses is *opposite* the vertex's $x$-coordinate—$(x - 2)$ means $h = +2$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Vertex from the Zeros"
+        },
+        {
+          "type": "p",
+          "text": "Given factored form, the vertex costs two steps: by symmetry, its $x$-coordinate is the **midpoint of the zeros**; then evaluate."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "What is the minimum value of $g(x) = (x - 1)(x - 3)$?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "x = \\frac{1 + 3}{2} = 2", "note": "Vertex $x$: midpoint of the zeros $1$ and $3$" },
+                { "math": "g(2) = (2 - 1)(2 - 3) = -1", "note": "Evaluate — the minimum value is $-1$" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "“Displays as constants” means **read, don't compute**. If finding the feature from a given form takes algebra, that form doesn't display it."
+        }
+      ]
+    },
+    {
+      "id": "exponential-functions",
+      "title": "Exponential Functions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "An {teal|exponential function} multiplies by the same factor at every step instead of adding the same amount:"
+        },
+        {
+          "type": "math",
+          "tex": "f(x) = \\blue{a} \\cdot \\teal{b}^{\\,x}",
+          "boxed": true,
+          "caption": "{blue|a} — initial value, $f(0)$ · {teal|b} — the factor per step: growth if $b > 1$, decay if $0 < b < 1$"
+        },
+        {
+          "type": "columns",
+          "items": [
+            {
+              "title": "Growth:  $b > 1$",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 210,
+                  "height": 180,
+                  "xMin": -3,
+                  "xMax": 3,
+                  "yMin": 0,
+                  "yMax": 8,
+                  "stepX": 1,
+                  "stepY": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "exponential", "a": 1, "base": 2, "tone": "teal" }],
+                  "points": [{ "x": 0, "y": 1, "tone": "blue", "label": "(0, a)", "labelDx": 8, "labelDy": -6 }],
+                  "caption": "$y = 2^x$ — doubles each step.",
+                  "alt": "An increasing exponential curve through (0, 1)"
+                }
+              ]
+            },
+            {
+              "title": "Decay:  $0 < b < 1$",
+              "blocks": [
+                {
+                  "type": "graph",
+                  "width": 210,
+                  "height": 180,
+                  "xMin": -3,
+                  "xMax": 3,
+                  "yMin": 0,
+                  "yMax": 8,
+                  "stepX": 1,
+                  "stepY": 2,
+                  "ticks": false,
+                  "curves": [{ "type": "exponential", "a": 1, "base": 0.5, "tone": "rose" }],
+                  "points": [{ "x": 0, "y": 1, "tone": "blue", "label": "(0, a)", "labelDx": 8, "labelDy": -6 }],
+                  "caption": "$y = \\left(\\frac{1}{2}\\right)^x$ — halves each step.",
+                  "alt": "A decreasing exponential curve through (0, 1)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Percent Change Lives Inside the Factor"
+        },
+        {
+          "type": "table",
+          "headers": ["Words in the problem", "Factor $b$"],
+          "align": ["left", "center"],
+          "rows": [
+            ["“increases $5\\%$ per year”", "$1 + 0.05 = 1.05$"],
+            ["“decreases $20\\%$ per year”", "$1 - 0.20 = 0.80$"],
+            ["“doubles each hour”", "$2$"],
+            ["“loses half its value each day”", "$0.5$"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A bacteria culture starts with $500$ cells, and the population **triples** every hour. Which function gives the population $P(t)$ after $t$ hours?",
+              "choices": [
+                "$P(t) = 500 \\cdot 3^{t}$",
+                "$P(t) = 3 \\cdot 500^{t}$",
+                "$P(t) = 500 + 3t$",
+                "$P(t) = 500 \\cdot \\left(\\tfrac{1}{3}\\right)^{t}$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Initial value $500$, factor $3$ applied $t$ times. Check $t = 0$: $P(0) = 500$. {green|✓}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Swaps the roles: at $t = 0$ this gives $P(0) = 3$ cells, not $500$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Linear: it *adds* $3$ cells per hour. “Triples” means multiply, and the growth compounds."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "A factor of $\\frac{1}{3}$ is decay—the culture would shrink, not triple."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "The value of a car is modeled by $V(t) = 8{,}000(0.75)^t$, where $t$ is the number of years from now. What does the model predict the value will be in $2$ years—and what does the $0.75$ mean?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "V(2) = 8{,}000(0.75)^2", "note": "Substitute $t = 2$" },
+                { "math": "V(2) = 8{,}000(0.5625)", "note": "Exponent first: $0.75 \\times 0.75$" },
+                { "math": "V(2) = 4{,}500", "note": "The predicted value is $\\$4{,}500$" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "And since $0.75 = 1 - 0.25$, the model says the car loses $\\green{25\\%}$ of its value **each year**—the factor keeps $75\\%$, so it loses the other $25\\%$."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "A factor of $0.75$ means a $25\\%$ *decrease*, not a $75\\%$ one. The factor is what's **kept**; the percent change is what's gained or lost: $b = 1 + r$ for growth, $b = 1 - r$ for decay."
+        }
+      ]
+    },
+    {
+      "id": "linear-or-exponential",
+      "title": "Linear or Exponential?",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Given a table, the test is one comparison away. Check equal steps of $x$:"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "Constant **differences** → linear (add the same amount). Constant **ratios** → exponential (multiply by the same factor)."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "table",
+              "compact": true,
+              "headers": ["$x$", "$f(x)$", "$g(x)$"],
+              "align": ["center", "center", "center"],
+              "rows": [
+                ["$0$", "$5$", "$5$"],
+                ["$1$", "$10$", "$10$"],
+                ["$2$", "$20$", "$15$"],
+                ["$3$", "$40$", "$20$"]
+              ]
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "$f$ is exponential: $5 \\to 10 \\to 20 \\to 40$ multiplies by $2$ each step — $f(x) = 5 \\cdot 2^x$",
+                  "note": "Both functions match at $x = 0$ and $x = 1$ — you must check a third row to tell them apart."
+                },
+                {
+                  "verdict": "correct",
+                  "text": "$g$ is linear: $5 \\to 10 \\to 15 \\to 20$ adds $5$ each step — $g(x) = 5x + 5$",
+                  "note": "Constant difference, straight-line graph."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "table",
+              "compact": true,
+              "headers": ["$x$", "$h(x)$"],
+              "align": ["center", "center"],
+              "rows": [
+                ["$0$", "$81$"],
+                ["$1$", "$27$"],
+                ["$2$", "$9$"],
+                ["$3$", "$3$"]
+              ]
+            },
+            {
+              "type": "question",
+              "stem": "The table gives values of the function $h$. Which equation defines $h$?",
+              "choices": [
+                "$h(x) = 81 \\cdot \\left(\\tfrac{1}{3}\\right)^{x}$",
+                "$h(x) = 81 - 54x$",
+                "$h(x) = \\tfrac{1}{3} \\cdot 81^{x}$",
+                "$h(x) = 81 \\cdot 3^{x}$"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Each step multiplies by $\\frac{27}{81} = \\frac{9}{27} = \\frac{3}{9} = \\frac{1}{3}$: constant ratio, initial value $81$. Every row checks."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "Linear, built from the first step's drop of $54$. It matches two rows, then predicts $h(2) = -27$—the table says $9$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Swaps initial value and factor: $h(0)$ would be $\\frac{1}{3}$, not $81$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Factor $3$ grows; the table shrinks. Direction matters."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Check **at least three rows**. Linear and exponential models can agree at two points—the third one exposes the impostor."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Name the family first—quadratic or exponential—then the job: evaluate, pick a form, build a model, or match a table."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The function $f$ is defined by $f(x) = 2x^2 - 3x$. What is the value of $f(-2)$?",
+                  "choices": ["$-14$", "$-2$", "$2$", "$14$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is D.** Parentheses around the negative input keep every sign honest:"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "f(-2) = 2(-2)^2 - 3(-2)", "note": "Substitute $(-2)$ for each $x$" },
+                    { "math": "f(-2) = 2(4) + 6", "note": "$(-2)^2 = 4$; subtracting $-6$ adds $6$" },
+                    { "math": "f(-2) = 14", "note": "Add" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "$-14$ flips the sign of everything—a global sign slip, usually from rushing the two negatives at once."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$-2$ squares without parentheses: treating $(-2)^2$ as $-4$ gives $-8 + 6 = -2$."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$2$ gets the square right but misses the double negative: $8 - 6 = 2$ treats $-3(-2)$ as $-6$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "correct",
+                      "text": "$2(4) + 6 = 14$. Both negatives handled. {green|✓}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "The function $g$ is defined by $g(x) = (x - 3)^2 - 8$. What is the **minimum value** of $g$?",
+                  "choices": ["$-8$", "$3$", "$1$", "$8$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Vertex form hands you the answer: the vertex is $(3, -8)$, and since $a = 1 > 0$ the parabola opens up, so the vertex's $y$-value is the minimum."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Minimum **value** $= k = -8$, reached at $x = 3$."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$3$ is *where* the minimum happens (the $x$-coordinate), not the minimum value itself."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$1$ is $g(0) = 9 - 8$—the y-intercept, not the minimum."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$8$ drops the sign of $k$: the vertex sits $8$ **below** the x-axis."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Nadia deposits $\\$400$ in an account that earns $6\\%$ interest each year, compounded annually. Which function gives the account's value $A(t)$, in dollars, after $t$ years?",
+                  "choices": [
+                    "$A(t) = 400(1.06)^{t}$",
+                    "$A(t) = 400(0.06)^{t}$",
+                    "$A(t) = 400(1.6)^{t}$",
+                    "$A(t) = 400 + 1.06t$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Growing $6\\%$ per year means keeping $100\\%$ and adding $6\\%$: the factor is $1 + 0.06 = 1.06$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$400$ initial, multiplied by $1.06$ each year. Check $t = 1$: $\\$424$—up $6\\%$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The classic: $0.06$ *is* the $6\\%$, but as a factor it means keeping only $6\\%$—the account would collapse to $\\$24$ in one year."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$1.6$ is a $60\\%$ raise—a decimal-place slip on the rate."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Linear: adds about a dollar a year and never compounds. Interest earns interest—that's the exponential part."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "table",
+                  "compact": true,
+                  "headers": ["$x$", "$f(x)$"],
+                  "align": ["center", "center"],
+                  "rows": [
+                    ["$0$", "$4$"],
+                    ["$1$", "$12$"],
+                    ["$2$", "$36$"],
+                    ["$3$", "$108$"]
+                  ]
+                },
+                {
+                  "type": "question",
+                  "stem": "The table gives values of the function $f$. Which equation defines $f$?",
+                  "choices": [
+                    "$f(x) = 4 \\cdot 3^{x}$",
+                    "$f(x) = 3 \\cdot 4^{x}$",
+                    "$f(x) = 8x + 4$",
+                    "$f(x) = 4 \\cdot 9^{x}$"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Ratios first: $\\frac{12}{4} = \\frac{36}{12} = \\frac{108}{36} = 3$—constant ratio, so exponential with factor $3$ and initial value $f(0) = 4$."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$4, 12, 36, 108$: every row checks. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Swapped roles: $f(0)$ would be $3$, but the table says $4$. Always test $x = 0$ first—it's the fastest eliminator."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Linear bait: matches the first two rows ($4$ and $12$), then predicts $20$ where the table says $36$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$9$ is the ratio across *two* steps ($4 \\to 36$). The factor is per single step of $x$."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "Quadratic $f(x) = ax^2 + bx + c$: opens up if $a > 0$, down if $a < 0$; y-intercept $c$; vertex at $x = -\\frac{b}{2a}$ (or midway between the zeros); symmetric about the vertex.",
+            "Three forms, three features: **standard** shows the {green|y-intercept}, **factored** shows the {rose|zeros}, **vertex** form shows the {purple|vertex}. “Displays as constants” = read it, don't compute it.",
+            "In $(x - h)^2 + k$, the sign flips: $(x - 2)^2$ puts the vertex at $x = \\gray{+}2$. The minimum/maximum **value** is $k$, and it happens **at** $x = h$.",
+            "Exponential $f(x) = a \\cdot b^x$: $a$ is the initial value, $b$ the per-step factor—$b = 1 + r$ for growth, $b = 1 - r$ for decay. $0.85$ means a $15\\%$ decrease.",
+            "Tables: constant differences → linear; constant ratios → exponential. Check three rows—two can lie.",
+            "Substitute negative inputs in **parentheses**: $(-3)^2 = 9$, but $-3^2 = -9$."
+          ]
+        }
+      ]
+    }
+  ]
+}

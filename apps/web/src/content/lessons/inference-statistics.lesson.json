@@ -1,0 +1,501 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "inference-statistics",
+  "title": "Inference from Statistics",
+  "estimatedMinutes": 25,
+  "difficulty": "Intermediate",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Inference from Statistics",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "You can't survey every resident or weigh every apple—so statisticians measure a {blue|random sample} and use its result (the **sample statistic**) to estimate the truth about the whole {purple|population}. This skill has almost no computation; it tests whether you know **what a sample can and cannot tell you**."
+        },
+        {
+          "type": "strip",
+          "alt": "Random sample produces a statistic which estimates the population value within a margin of error",
+          "segments": [
+            { "text": "Random sample", "tone": "blue" },
+            { "text": "→", "tone": "op" },
+            { "text": "Sample statistic", "tone": "teal" },
+            { "text": "→", "tone": "op" },
+            { "text": "Population estimate ± margin of error", "tone": "purple" }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Random selection is the license to generalize.** No random sample, no population conclusion.",
+            "**Scale up:** estimated population count $=$ sample proportion $\\times$ population size.",
+            "**Margin of error builds a plausible interval** for the *population* value: estimate $\\pm$ MOE. It's about sampling variation, not mistakes.",
+            "**Bigger random sample → smaller margin of error.** Precision comes from size, not enthusiasm.",
+            "**Conclusions reach only the population actually sampled**—visitors of *this* aquarium, subscribers of *this* magazine."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Correct answers in this skill are humble: “plausible,” “estimated,” “about,” and they name the sampled population precisely. Choices that say “exactly,” “all,” “every,” or leap to a bigger population are the traps."
+        }
+      ]
+    },
+    {
+      "id": "sample-to-population",
+      "title": "From Sample to Population",
+      "blocks": [
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "If the sample is selected **at random**, its proportion is the best estimate of the population's proportion—so multiply it by the population size to estimate a count."
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A random sample of $150$ students is selected from a school of $1{,}800$ students, and $42$ of the sampled students ride a bike to school. Based on the sample, approximately how many students in the school ride a bike?"
+            },
+            {
+              "type": "steps",
+              "items": [
+                { "math": "\\frac{42}{150} = 0.28", "note": "Sample proportion — $28\\%$ of the sample rides" },
+                { "math": "0.28 \\times 1{,}800 = 504", "note": "Apply the proportion to the whole school" }
+              ]
+            },
+            {
+              "type": "p",
+              "text": "The estimate is **about $504$ students**—“about,” because a different random sample of $150$ would give a slightly different proportion."
+            }
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A city has $6{,}000$ residents. In a random sample of $200$ residents, $55$ support building a new park. Based on the sample, about how many of the city's residents support the park?",
+              "choices": ["$1{,}650$", "$55$", "$275$", "$3{,}300$"]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "$\\frac{55}{200} = 0.275$, and $0.275 \\times 6{,}000 = 1{,}650$. The population estimate keeps the sample's proportion."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "$55$ is the raw sample count—never scaled up to the $6{,}000$ residents."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "$275$ misplaces a decimal: $27.5\\%$ became $275$ people instead of $27.5\\%$ **of** $6{,}000$."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "$3{,}300$ applies $55\\%$—reading the count $55$ as a percent. The sample proportion is $55$ out of $200$."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Proportion check: $55$ of $200$ is a bit over a quarter, so the answer should be a bit over a quarter of $6{,}000$. Estimates that break the sample's proportion are wrong at a glance."
+        }
+      ]
+    },
+    {
+      "id": "margin-of-error",
+      "title": "Margin of Error",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Run the survey again with a new random sample and you'd get a slightly different number—sampling comes with wiggle. The {blue|margin of error} (MOE) quantifies that wiggle by turning the estimate into a **plausible interval** for the population value:"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "A poll of randomly selected voters finds $62\\%$ support for a measure, with a margin of error of $4\\%$:"
+            },
+            {
+              "type": "math",
+              "tex": "62\\% - 4\\% \\;\\longrightarrow\\; 62\\% + 4\\%",
+              "boxed": true,
+              "caption": "Plausible values for the **population** percentage: $58\\%$ to $66\\%$"
+            },
+            {
+              "type": "check-cross",
+              "items": [
+                {
+                  "verdict": "correct",
+                  "text": "“It is plausible that between $58\\%$ and $66\\%$ of **all** voters support the measure.”",
+                  "note": "An interval, about the population, stated with appropriate uncertainty."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "“Exactly $62\\%$ of all voters support the measure.”",
+                  "note": "The sample can't deliver exactness—$62\\%$ is the estimate, not the truth."
+                },
+                {
+                  "verdict": "incorrect",
+                  "text": "“The pollsters made up to $4\\%$ worth of mistakes.”",
+                  "note": "MOE measures sampling variation, not errors. A flawless poll still has a margin of error."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "What Controls the Margin of Error"
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "A **larger random sample** produces a **smaller** margin of error—more data, tighter interval. (Not more careful measuring, not a more enthusiastic surveyor: size.)"
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "Researchers randomly select $50$ apples from an orchard's harvest. The sample's mean weight is $172$ grams, with an associated margin of error of $6$ grams. Which conclusion is best supported?",
+              "choices": [
+                "It is plausible that the mean weight of all apples in the harvest is between 166 and 178 grams",
+                "Every apple in the harvest weighs between 166 and 178 grams",
+                "The mean weight of all apples in the harvest is exactly 172 grams",
+                "The researchers' scale was off by as much as 6 grams"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "Estimate $\\pm$ MOE bounds the plausible **population mean**: $172 \\pm 6$. Interval, population, hedged—all three boxes checked."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The interval bounds the **mean**, not individual apples—plenty of single apples fall outside $166$–$178$."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "“Exactly” claims certainty a sample can't provide; $172$ is the estimate."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "MOE is about sample-to-sample variation, not equipment error."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "The margin of error belongs to the **population estimate**—never to individuals, and never to “mistakes.” Those two misreadings are the wrong answers, every time this is tested."
+        }
+      ]
+    },
+    {
+      "id": "conclusion-reach",
+      "title": "How Far Do Conclusions Reach?",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A sample speaks only for the population it was drawn from. Two questions decide what a study supports: was the sample **random**, and **from which group** was it selected?"
+        },
+        {
+          "type": "table",
+          "headers": ["How the sample was chosen", "Conclusions can reach…"],
+          "rows": [
+            ["Randomly from **all students** at a school", "all students at that school"],
+            ["Randomly from **one grade** at the school", "that grade only"],
+            ["**Volunteers** responding to an online post", "no wider population — self-selection invites bias"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "question",
+              "stem": "A researcher selects $300$ subscribers of a cooking magazine at random and finds that $80\\%$ of those selected enjoy baking. Which group does this result best support a conclusion about?",
+              "choices": [
+                "All subscribers of the cooking magazine",
+                "All adults in the country",
+                "All people who cook",
+                "The 300 subscribers who were surveyed, but no one else"
+              ]
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "The sample was drawn at random **from the subscribers**, so it generalizes to exactly that population—about $80\\%$ of subscribers plausibly enjoy baking."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "No adult outside the subscriber list ever had a chance to be sampled—people who subscribe to a cooking magazine are hardly typical of all adults."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "Same overreach with different packaging: cooks who don't subscribe were never in the pool."
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "Too *narrow*: random selection is precisely what licenses extending the result beyond the $300$ to the full subscriber population."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Bias beats size: a huge sample of volunteers is still just volunteers. Randomness—not sample size—is what earns the right to generalize; size only sharpens the margin of error afterward."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Three checks per question: Is the answer scaled correctly? Does it hedge (“plausible,” “about”)? Does it stay inside the sampled population?"
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A supermarket selects a random sample of $120$ of the $2{,}400$ shoppers who visited on Saturday; $45$ of the sampled shoppers bought produce. Based on the sample, about how many of Saturday's shoppers bought produce?",
+                  "choices": ["$900$", "$45$", "$375$", "$1{,}080$"]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.**"
+                },
+                {
+                  "type": "steps",
+                  "items": [
+                    { "math": "\\frac{45}{120} = 0.375", "note": "Sample proportion: $37.5\\%$" },
+                    { "math": "0.375 \\times 2{,}400 = 900", "note": "Scaled to all of Saturday's shoppers" }
+                  ]
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "A bit over a third of the sample bought produce, and $900$ is a bit over a third of $2{,}400$. {green|✓}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "$45$ is the sample count, never scaled up."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "$375$ turns the proportion $0.375$ directly into a count—dropping the $\\times 2{,}400$."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "$1{,}080$ applies $45\\%$—reading the count $45$ as a percent."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A poll of randomly selected likely voters estimates that $48\\%$ support Candidate M, with a margin of error of $3\\%$. Which of the following is the best interpretation of these results?",
+                  "choices": [
+                    "It is plausible that between 45% and 51% of likely voters support Candidate M",
+                    "Exactly 48% of likely voters support Candidate M",
+                    "The percentage of likely voters who support Candidate M cannot be less than 45% or greater than 51%",
+                    "3% of the voters surveyed had not decided which candidate to support"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Estimate $\\pm$ MOE gives the plausible interval $45\\%$–$51\\%$ for the **population** percentage—stated with the uncertainty a sample deserves."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Interval ✓ population ✓ “plausible” ✓."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "“Exactly” overstates: $48\\%$ describes the sample; the population value is estimated, not known."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "“Cannot be” turns a plausible range into an impossible-to-violate guarantee—margins of error don't promise that."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "The margin of error says nothing about undecided voters—it measures sampling variation."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "Researchers estimate a population mean from a random sample, with an associated margin of error. Which change would most likely make the margin of error **smaller**?",
+                  "choices": [
+                    "Selecting a larger random sample",
+                    "Selecting a smaller random sample",
+                    "Replacing random selection with volunteers, but surveying twice as many",
+                    "Reporting the estimate rounded to the nearest whole number"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** More randomly selected data means sample results vary less from sample to sample—a tighter plausible interval."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "Sample size is the lever that controls the margin of error."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Less data → more sample-to-sample wiggle → a *larger* margin of error."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Volunteers introduce bias that no sample size can fix—doubling a flawed sample doubles the flaw's reach, not the precision."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "Rounding changes how the number is *written*, not how uncertain it is."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "question",
+                  "stem": "A random sample of visitors to a city aquarium had a mean visit length of $95$ minutes, with a margin of error of $10$ minutes. Which conclusion is best supported by these results?",
+                  "choices": [
+                    "It is plausible that the mean visit length for all visitors to this aquarium is between 85 and 105 minutes",
+                    "It is plausible that the mean visit length at all aquariums is between 85 and 105 minutes",
+                    "Every visitor to this aquarium stays between 85 and 105 minutes",
+                    "Most visitors to this aquarium stay exactly 95 minutes"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Interval for the **mean**, hedged with “plausible,” restricted to the **population sampled**—visitors of this one aquarium."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "$95 \\pm 10$, about this aquarium's visitors. All three checks pass."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "Other aquariums were never sampled—the conclusion can't travel there."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "The interval bounds the *mean*, not individual visits—someone's quick 20-minute walkthrough doesn't violate it."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "“Exactly $95$” misreads an estimate as a fact about individuals—two traps in one."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "A **random** sample's statistic is the best estimate of the population's value—randomness is the license to generalize.",
+            "Estimated population count $=$ sample proportion $\\times$ population size. Check that the answer keeps the sample's proportion.",
+            "Margin of error → **plausible interval** for the *population* value: estimate $\\pm$ MOE. It reflects sampling variation—not mistakes, and not individuals.",
+            "Larger random sample → smaller margin of error. Bias can't be fixed by size.",
+            "Conclusions reach exactly as far as the sampled population—no further.",
+            "Pick answers that say “plausible,” “about,” “estimated”; reject “exactly,” “every,” “cannot be,” and population upgrades."
+          ]
+        }
+      ]
+    }
+  ]
+}

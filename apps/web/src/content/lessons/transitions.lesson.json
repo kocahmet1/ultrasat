@@ -1,0 +1,424 @@
+{
+  "schemaVersion": 2,
+  "subcategoryId": "transitions",
+  "title": "Transitions",
+  "estimatedMinutes": 25,
+  "difficulty": "Foundational",
+  "video": { "url": null, "poster": null, "durationLabel": null },
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Transitions",
+      "navTitle": "Overview & Strategies",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Transitions questions give you a short text with a blank—almost always at the start of a sentence—and four transition words or phrases. The stem never changes: ==Which choice completes the text with the most logical transition?== Your real task sits underneath the blank: figure out the {blue|logical relationship} between the idea before it and the idea after it. The transition is just that relationship's name tag."
+        },
+        {
+          "type": "p",
+          "text": "These are among the most frequently tested skills in Reading and Writing, and among the most improvable: there are only about nine relationships to know, and the same words signal them every time."
+        },
+        {
+          "type": "h3",
+          "text": "Strategies"
+        },
+        {
+          "type": "list",
+          "style": "bullet",
+          "items": [
+            "**Cover the choices.** Read the sentence before the blank and the entire sentence containing it—choices first is how traps win.",
+            "**Paraphrase the two ideas plainly**, then name the arrow between them: does idea two *oppose*, *result from*, *add to*, *exemplify*, or *intensify* idea one?",
+            "**Translate the relationship into a category**, then find the choice in that category.",
+            "**Plug the winner back in** and reread both sentences—the pair should now read as one continuous thought.",
+            "**Eliminate same-category duplicates.** If two choices would do the identical job, neither can be the single credited answer."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Transitions connect **ideas**, not just neighboring sentences. If the local pair feels ambiguous, read one sentence further—the blank sometimes serves the paragraph's whole arc (a conclusion, a final contrast) rather than only the sentence before it."
+        }
+      ]
+    },
+    {
+      "id": "categories",
+      "title": "The Transition Categories",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Nearly every transition the SAT tests falls into one of these categories. Learn the categories—not just the words—because the question is really asking *which category does this blank need?*"
+        },
+        {
+          "type": "table",
+          "headers": ["Category", "Common transitions", "The second idea…"],
+          "compact": true,
+          "rows": [
+            ["{rose|Contrast}", "**however**, **but**, **nevertheless**, **in contrast**, **on the other hand**, **conversely**", "pushes against the first"],
+            ["{teal|Cause & result}", "**therefore**, **thus**, **consequently**, **as a result**, **accordingly**", "follows from the first"],
+            ["{green|Addition}", "**moreover**, **furthermore**, **in addition**, **also**", "continues in the same direction with something new"],
+            ["{purple|Example}", "**for example**, **for instance**, **specifically**", "is a particular instance of the first"],
+            ["{amber|Emphasis / correction}", "**in fact**, **indeed**, **that is**, **in other words**", "intensifies, sharpens, or restates the first"],
+            ["{blue|Sequence & time}", "**then**, **next**, **finally**, **meanwhile**, **subsequently**, **previously**", "happens before, after, or alongside the first"],
+            ["{blue|Similarity}", "**similarly**, **likewise**", "makes a parallel point about something comparable"],
+            ["{rose|Alternative}", "**instead**, **rather**, **alternatively**", "replaces a first idea that was rejected"],
+            ["{amber|Concession}", "**granted**, **admittedly**, **of course**", "grants a point—usually before pushing back"]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Watch a single sentence pair accept one category and reject another:"
+        },
+        {
+          "type": "p",
+          "text": "*Rain had fallen without pause for three days. {blank} the trail was deep in mud.*"
+        },
+        {
+          "type": "check-cross",
+          "items": [
+            {
+              "verdict": "correct",
+              "text": "As a result, the trail was deep in mud.",
+              "note": "Mud is the **consequence** of three days of rain—cause and result."
+            },
+            {
+              "verdict": "incorrect",
+              "text": "Nevertheless, the trail was deep in mud.",
+              "note": "*Nevertheless* promises a surprise that defies the rain—a muddy trail is the opposite of surprising here."
+            }
+          ]
+        },
+        {
+          "type": "rule",
+          "label": "Rule",
+          "text": "If two answer choices belong to the same category and carry the same nuance—“therefore” and “consequently,” say—eliminate both. Interchangeable choices can't contain the single credited answer."
+        }
+      ]
+    },
+    {
+      "id": "find-the-relationship",
+      "title": "Find the Relationship",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The method, in full. It runs on paraphrase, because transitions link ideas—and you can't name a relationship between two sentences you haven't compressed into ideas yet."
+        },
+        {
+          "type": "list",
+          "style": "number",
+          "items": [
+            "**Cover the choices** and read up to the end of the sentence containing the blank.",
+            "**Compress each side into a plain clause.** Before: “their blood clots around toxins.” After: “industry uses it to test for contamination.”",
+            "**Name the arrow.** Opposes? Results? Adds? Exemplifies? Intensifies? Say it in your head before looking down.",
+            "**Match category → choice**, then reread the pair with the winner installed."
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "The blood of the horseshoe crab contains amebocytes, cells that clot almost instantly around even trace amounts of bacterial toxin. {blank} the pharmaceutical industry has relied for decades on horseshoe crab blood to screen vaccines and medical devices for contamination."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text with the most logical transition?",
+              "choices": [
+                "However,",
+                "Consequently,",
+                "For instance,",
+                "Meanwhile,"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Compress: {teal|the blood detects toxins} → {blue|industry uses it to detect toxins}. The second idea is a direct **consequence** of the first—the property explains the practice."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "incorrect",
+                  "text": "*However* demands opposition, but the second sentence cooperates with the first—no push against anything. {rose|Wrong category: contrast.}"
+                },
+                {
+                  "choice": "B",
+                  "verdict": "correct",
+                  "text": "Cause and result: because the cells clot around toxin, the industry uses the blood as a toxin detector. Reread with *Consequently*—the pair snaps into one thought."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "The industry's practice isn't an *instance* of the blood clotting—it's a downstream effect of it. {rose|Wrong category: example.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*Meanwhile* stamps the pair as simultaneous events in parallel—but these aren't two events, they're a property and its consequence. {rose|Wrong category: time.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Notice how the elimination worked: every wrong choice failed at the **category** level. You almost never need to weigh two transitions within a category—the SAT separates its four choices across categories precisely so that naming the relationship decides the question."
+        }
+      ]
+    },
+    {
+      "id": "tricky-pairs",
+      "title": "Tricky Pairs",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "A handful of look-alike pairs cause most Transitions mistakes. Each pair splits on one precise question—ask it, and the fog clears:"
+        },
+        {
+          "type": "table",
+          "headers": ["The pair", "Choose the first when…", "Choose the second when…"],
+          "compact": true,
+          "rows": [
+            ["**however** / **instead**", "idea two simply opposes idea one", "idea one was *rejected or negated*, and idea two replaces it (“did not X. Instead, Y”)"],
+            ["**therefore** / **for example**", "idea two is a *conclusion drawn from* idea one", "idea two is a *specific case* of idea one's general claim"],
+            ["**in fact** / **for example**", "idea two *raises the stakes* of the same claim (often correcting how things merely seem)", "idea two *drops down* from the general claim to one instance"],
+            ["**meanwhile** / **subsequently**", "two things happen *at the same time*, usually in different places", "the second thing happens *after* the first"],
+            ["**nevertheless** / **therefore**", "idea two holds *despite* idea one", "idea two holds *because of* idea one"]
+          ]
+        },
+        {
+          "type": "example",
+          "title": "Example",
+          "blocks": [
+            {
+              "type": "passage",
+              "text": "To a surface dweller, an animal that glows might seem like a rare curiosity of the deep sea. {blank} bioluminescence is closer to the rule than the exception: by one estimate, three-quarters of the animals drifting in the ocean's open midwaters can produce their own light."
+            },
+            {
+              "type": "question",
+              "stem": "Which choice completes the text with the most logical transition?",
+              "choices": [
+                "In fact,",
+                "For example,",
+                "Meanwhile,",
+                "Similarly,"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Compress: {teal|glowing animals *seem* rare} → {blue|they are actually the majority}. The second idea doesn't oppose a fact—it corrects an *appearance*, and raises the stakes with a striking statistic. That is the signature of **emphasis / correction**."
+            },
+            {
+              "type": "poe",
+              "items": [
+                {
+                  "choice": "A",
+                  "verdict": "correct",
+                  "text": "*In fact* is built for exactly this move: “things seem X; in fact, the reality is stronger.” The estimate intensifies and corrects the first sentence's impression."
+                },
+                {
+                  "choice": "B",
+                  "verdict": "incorrect",
+                  "text": "The 75-percent estimate is not an *example* of bioluminescence seeming rare—it's evidence against that impression. {rose|Wrong category}, and the tricky-pair question (“stakes raised, or instance given?”) settles it."
+                },
+                {
+                  "choice": "C",
+                  "verdict": "incorrect",
+                  "text": "No simultaneous events anywhere in sight. {rose|Wrong category: time.}"
+                },
+                {
+                  "choice": "D",
+                  "verdict": "incorrect",
+                  "text": "*Similarly* needs a parallel claim about a comparable subject; here both sentences are about the same subject, and the second overturns the first rather than paralleling it. {rose|Wrong category.}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "text": "Never pick a transition because it appears often on the test or sounds sophisticated. *However* is the most common transition in academic prose—and on any given question it is still wrong three times out of four."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Practice",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Cover the choices, compress the two ideas, name the arrow, then match. Commit before opening the answer."
+        },
+        {
+          "type": "practice",
+          "title": "Practice",
+          "items": [
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Early critics dismissed Emily Dickinson's unconventional punctuation as carelessness, and her first editors quietly “corrected” it, replacing her dashes with standard commas and periods. {blank} many scholars regard the dashes as deliberate instruments of rhythm and emphasis, and modern editions restore them."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text with the most logical transition?",
+                  "choices": [
+                    "Similarly,",
+                    "Today, however,",
+                    "For example,",
+                    "As a result,"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is B.** Compress: {teal|early readers treated the dashes as errors} → {blue|current scholars treat them as artistry}. Two eras, opposite judgments: a **contrast** (with a time shift that *Today* makes explicit)."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "*Similarly* would extend the dismissal into the present—the text does the opposite. {rose|Wrong direction.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "correct",
+                      "text": "*However* names the reversal in judgment; *Today* marks the era change that carries it. Reread the pair—it now reads as one arc from dismissal to restoration."
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "The scholars' view is not an *instance* of the editors' corrections—it's the repudiation of them. {rose|Wrong category.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*As a result* would make the modern reverence a consequence of the early dismissal—backwards causality the text never suggests. {rose|Wrong category.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Play is not a uniquely human habit: many animals engage in behavior that has no obvious survival purpose and seems to exist for its own sake. {blank} young ravens have been observed sliding down snowbanks on their backs, climbing up, and sliding down again."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text with the most logical transition?",
+                  "choices": [
+                    "In contrast,",
+                    "Therefore,",
+                    "For instance,",
+                    "Nevertheless,"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is C.** Compress: {teal|many animals play} → {blue|ravens sliding down snowbanks}. The second idea is one specific, vivid case of the first sentence's general claim—the **example** category, on the nose."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "incorrect",
+                      "text": "The ravens illustrate the claim; nothing opposes anything. {rose|Wrong category: contrast.}"
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "The sliding isn't a conclusion drawn from the claim—it's a case of it. Ask the tricky-pair question: instance, not inference. {rose|Wrong category.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "correct",
+                      "text": "General claim, then a particular animal doing a particular playful thing: *For instance* is the exact hinge this pair needs."
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*Nevertheless* concedes and pushes back; the raven anecdote pushes nothing back. {rose|Wrong category.}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "passage",
+                  "text": "Recycling aluminum saves about 95 percent of the energy required to produce the same amount of metal from ore. {blank} aluminum can be melted down and reprocessed again and again without any loss of quality, so the savings repeat with every cycle."
+                },
+                {
+                  "type": "question",
+                  "stem": "Which choice completes the text with the most logical transition?",
+                  "choices": [
+                    "Moreover,",
+                    "Instead,",
+                    "For example,",
+                    "Otherwise,"
+                  ]
+                }
+              ],
+              "answer": [
+                {
+                  "type": "p",
+                  "text": "**The correct answer is A.** Compress: {teal|recycling aluminum saves enormous energy} → {blue|and it can be recycled endlessly, multiplying the savings}. The second idea doesn't oppose, exemplify, or result from the first—it stacks a **second advantage** on top of it: **addition**."
+                },
+                {
+                  "type": "poe",
+                  "items": [
+                    {
+                      "choice": "A",
+                      "verdict": "correct",
+                      "text": "*Moreover* adds a new point in the same direction—exactly the relationship between the one-time saving and the repeatable one."
+                    },
+                    {
+                      "choice": "B",
+                      "verdict": "incorrect",
+                      "text": "*Instead* needs a rejected first idea to replace; the first sentence stands unchallenged. {rose|Wrong category: alternative.}"
+                    },
+                    {
+                      "choice": "C",
+                      "verdict": "incorrect",
+                      "text": "Close—but reprocessability is a *different benefit*, not a specific instance of the 95-percent energy claim. Additions continue; examples descend. {rose|Wrong category.}"
+                    },
+                    {
+                      "choice": "D",
+                      "verdict": "incorrect",
+                      "text": "*Otherwise* warns what happens if the first idea fails to hold—no such warning follows. {rose|Wrong category.}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "remember",
+          "title": "Things to Remember",
+          "items": [
+            "The blank is a **relationship** wearing a word. Name the relationship first; the word follows.",
+            "**Cover the choices**, compress the idea before and the idea after into plain clauses, and say the arrow out loud: opposes, results, adds, exemplifies, intensifies.",
+            "Know the categories cold: {rose|contrast}, {teal|cause & result}, {green|addition}, {purple|example}, {amber|emphasis}, {blue|time}, similarity, alternative, concession.",
+            "Two choices doing the identical job eliminate **each other**.",
+            "Master the tricky pairs: *however* vs. *instead*, *therefore* vs. *for example*, *in fact* vs. *for example*.",
+            "Always **plug the winner back in** and reread the pair as one continuous thought."
+          ]
+        }
+      ]
+    }
+  ]
+}
