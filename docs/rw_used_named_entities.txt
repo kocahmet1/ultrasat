@@ -1,0 +1,2648 @@
+127	United States
+31	Aunt Sue
+31	New York City
+31	South America
+30	African American
+29	North America
+28	New York
+24	Puerto Rico
+21	World War
+19	Late Cretaceous
+19	Puerto Rican
+19	Atlantic Monthly
+18	South American
+17	Spring Fragrance
+17	Angkor Wat
+15	George Eliot
+15	Random House
+15	Upland South
+15	Sam Maloof
+14	Mexican American
+14	Bronze Age
+14	Akumal Bay
+14	Atacama Desert
+13	Younger Dryas
+13	Great Migration
+13	Cathryn Halverson
+13	Lancaster Turnpike
+13	Wong Fei
+12	Natural History
+12	Mistaken Point
+12	Missouri River
+12	Aztec Empire
+12	Lady Howard
+12	Adam Bede
+11	Latin American
+11	San Francisco
+11	Civil War
+10	Buenos Aires
+10	Milky Way
+10	Mango Street
+10	Uncle Katsuhisa
+10	Navajo Code Talkers
+10	Uros Island
+10	Jordan Bennett
+10	Komodo National Park
+10	Chiang Mai
+10	Slow Food
+9	Native American
+9	Navajo Nation
+9	Public Broadcasting
+9	Round Table
+9	Lord Chancellor
+9	Edwin Carewe
+9	Bayeux Tapestry
+9	Miss Pyne
+9	Poor Miner
+9	Bring Him Back
+9	Samuel Selvon
+9	Samuel Delany
+9	Great Law
+8	Langston Hughes
+8	Northern California
+8	British Columbia
+8	Yugang Sun
+8	United Kingdom
+8	Mikhail Bakhtin
+8	Toni Morrison
+8	Arabia Terra
+8	Eugene Onegin
+8	Fairfield Gorget
+8	Octopus Garden
+8	Nuyorican Poets Cafe
+8	Civil Rights Movement
+8	Southern Pacific Railroad
+8	Big Mike
+8	Mayflower Compact
+8	Pauline Hopkins
+8	Zhiming Yuan
+8	John Cage
+8	Thomas Rogers
+8	Leland Russell
+8	Haudenosaunee Confederacy
+8	Dhagah Nabi Galay
+8	Alboran Sea
+7	Calle Pedro Loza
+7	Lan Samantha Chang
+7	Walt Whitman
+7	Native Hawaiians
+7	Los Angeles
+7	Murray Formation
+7	Reverend Villars
+7	One Last Word
+7	Los Coyotes Band
+7	Barrier Williams
+7	Plum Blossoms
+7	Ethan Frome
+7	Benjamin Franklin
+7	Steiger Butte Drum
+7	Choctaw Code Talkers
+7	Towards Autumn
+7	Rue Mouffetard
+7	Scripps National Spelling
+7	Nebula Award
+7	Laas Geel
+7	Unwoven Light
+6	Latin America
+6	North American
+6	Matthew Henson
+6	Jane Austen
+6	Pacific Ocean
+6	Polynesian Islands
+6	Black Pearl
+6	Mississippi Delta
+6	Native Hawaiian
+6	Gloria Richardson
+6	Vibration Cooking
+6	Travel Notes
+6	Geechee Girl
+6	Cueva Huenul
+6	Black Americans
+6	Crow Tribe
+6	New Yorkers
+6	Chiquihuite Cave
+6	San Antonio
+6	Atlantic Ocean
+6	Torchy Brown
+6	Faraway Women
+6	Fine Arts
+6	Grimanesa Amoros
+6	Mauna Loa
+6	Ida Tarbell
+6	Plymouth Colony
+6	Camille Jazmin Gaynus
+6	Sonic Meditations
+6	Twentieth Amendment
+6	Jon Ching
+6	Kentaro Terada
+6	American Art
+6	Commerce Department
+6	Bosco Verticale
+5	National Oceanic
+5	South Carolina
+5	Chinese American
+5	New Zealand
+5	Huntington Library
+5	Great Britain
+5	Southwest Asia
+5	Jordanelle Dam
+5	Ondo State
+5	Second World War
+5	William Shakespeare
+5	Alexandra Bergson
+5	Teec Nos Pos
+5	Tuba City
+5	Classical Nahuatl
+5	Cantares Mexicanos
+5	Taos Pueblo
+5	Sierra Negra
+5	James Young Deer
+5	Dark Cloud
+5	Flores Rivera
+5	Montana State University
+5	Although Text
+5	Edmonia Lewis
+5	Faithful Ruslan
+5	Harlem Renaissance
+5	Supreme Court
+5	Okot School
+5	South Asian
+5	Best Banda Album
+5	Hina Hanta
+5	Albert Popa
+5	Mary Ann Evans
+5	Mexican Women
+5	Heritage Center
+5	Frida Kahlo
+5	Qianmen Dajie
+5	Sister Rosetta Tharpe
+5	Wichita State University
+5	Laleh Mehran
+5	Old Faithful
+5	Modern Art
+5	Sasanian Empire
+5	Lyme Regis
+5	Vinland Map
+5	Tanam Press
+5	Yasemin Ozkan
+5	Kuulo Kataa
+5	Shaun Tan
+5	Outer Suburbia
+5	Inner City
+5	Soo Sunny Park
+4	Van Gogh
+4	Field Museum
+4	Danny Boy
+4	Indigenous Haudenosaunee
+4	Chesapeake Bay
+4	Old Road
+4	Nobel Prize
+4	Entomologist Heather Grab
+4	President Roosevelt
+4	Atmospheric Administration
+4	New Mexico
+4	Bodleian Library
+4	Burgess Shale
+4	Average Number
+4	Scott Fitzgerald
+4	Zelda Fitzgerald
+4	Sherlock Holmes
+4	United
+
+
+States
+4	Vita Sancti Cadoci
+4	Carla Brain
+4	Southern California
+4	Black American
+4	John Fletcher
+4	John Ashbery
+4	Southern Christian Leadership
+4	Sunset Route
+4	East Asia
+4	Choctaw Nation
+4	Louis Pipestone
+4	Howard University
+4	West African
+4	Nordic Bronze Age
+4	Eastern Europe
+4	Juanita Harrison
+4	Carl Bosch
+4	South African
+4	Simphiwe Ndzube
+4	Nelson Mandela
+4	Solvay Conference
+4	Yosemite Falls
+4	Banda Cuisillos
+4	Robert Fulton
+4	Fulton Street
+4	Maria Younghans
+4	Sonic Meditation
+4	John Lennon
+4	Forever Free
+4	Emancipation Proclamation
+4	Coastal Virginia Offshore
+4	Video Game High
+4	Emily Shepard
+4	Spanish Civil War
+4	Forage Sestina
+4	Cosmochemist Kentaro Terada
+4	Stephen Amos
+4	Raphael Ignases
+4	Historian Bruce Johansen
+4	Thomas Jefferson
+4	Whitney Museum
+4	Mary Kang
+4	Cecilia Vicu
+4	Museo Nacional
+4	Bellas Artes
+4	Terry Kind
+4	Robert Losey
+3	National Council
+3	Fifty Days
+3	Allan Houser
+3	Giulia Faggio
+3	Metric Tons
+3	Although Eastern North
+3	Pacific Coast Feeding
+3	French Revolution
+3	Billboard Hot
+3	New Caledonian
+3	True History
+3	Min Tsai
+3	Still Life
+3	Denver Museum
+3	Aomori Prefecture
+3	Walker Evans
+3	West Africa
+3	Andes Mountains
+3	New South Wales
+3	Temple University
+3	Puerto
+
+
+Rico
+3	Researcher Lin Zhi
+3	Octavia Butler
+3	Historic Places
+3	Canadian Rockies
+3	Triumphant Scale
+3	Art Between
+3	African Photographers
+3	Alvarado School Arts
+3	Elizabeth Catlett
+3	Eugene Wigner
+3	Feng Wang
+3	Clamshell Tools Found
+3	Are Marching
+3	South Levant
+3	Minneapolis Institute
+3	Sarah Orne Jewett
+3	Old English
+3	Asian American
+3	Total Areas
+3	Mexico City
+3	Zerviah Holme
+3	Black Folk
+3	North Africa
+3	Richard Wagner
+3	Murray
+
+
+Formation
+3	Georgia Douglas Johnson
+3	Happy House
+3	Red Sea
+3	Los Angeles Times
+3	Initiative Africa
+3	North East
+3	North Central
+3	South West
+3	South Central
+3	Chicago Defender
+3	Philip Massinger
+3	Badry Nance
+3	Thornfield Hall
+3	Herman Melville
+3	Sir Humphry Davy
+3	Prince Achmed
+3	Ezra Pound
+3	Nia Imara
+3	Mansfield Park
+3	European Romantic
+3	Rydra Wong
+3	Eleanor Janega
+3	Orchestral Powwow
+3	Michael Gordon
+3	Zora Neale Hurston
+3	Francis Cecil Sumner
+3	Nova Scotia
+3	Japanese American
+3	Country Cooking
+3	Soviet Union
+3	Jacob Lawrence
+3	Barbara Tuchman
+3	Great Plains
+3	Fritz Haber
+3	Florida Everglades
+3	Pink Universe
+3	Colonel Riego
+3	Sunil Bajpai
+3	Thar Desert
+3	Etel Adnan
+3	Grenfell Art Gallery
+3	National Women
+3	Western Hemisphere
+3	Mexican Americans
+3	Australian Aboriginal
+3	South Taranaki Bight
+3	Moses Ascending
+3	Celisse Henderson
+3	Suttirat Larlarb
+3	Burchardi Church
+3	Three Beats
+3	Beatbox Flute
+3	Natalia Rybczynski
+3	Underground Railroad
+3	African Americans
+3	Migration Series
+3	Jurassic Coast
+3	Ibn Sina
+3	Constab Ballads
+3	Harlem Shadows
+3	Marcela Guerrero
+3	Indigenous Space
+3	Modern Architecture
+3	New Art
+3	Korean American
+3	Dominique Fung
+3	Ice Age
+3	Louise Miller Cohen
+3	Vermelle Rodrigues
+3	King Lear
+3	Ancestral Puebloans
+3	Mesa Verde
+3	Proxima Centauri
+2	World Heritage List
+2	Amy Tan
+2	Pleading Child
+2	Amy Tan
+
+Based
+2	Amos Barton
+2	Kayode Ajewole
+2	American Indians
+2	Zunfeng Liu
+2	Ray Baughman
+2	Ruth Gates
+2	Kate Chopin
+2	Louise Mallard
+2	Elio Sueena
+2	Alemu Mekonnen
+2	Copper Mined
+2	Owl Creek Bridge
+2	Chess Problem
+2	Katsitsiouii Fox
+2	Space Telescope
+2	Arab River
+2	Latin American Art
+2	National Hispanic Cultural
+2	Florida Highwaymen
+2	Sam Newton
+2	Nikku Madhusudhan
+2	Diann Prosser
+2	East Coast
+2	Waterbird Community Integrity
+2	Claude Monet
+2	Water Lilies
+2	Bram Stoker
+2	Abbigail Merrill
+2	Life Among
+2	Violeta Parra
+2	Chilean New Song
+2	Round Rock Chapter
+2	Nathan Heller
+2	Hachinohe Port
+2	Honshu Island
+2	Jennifer Doudna
+2	Krishna River
+2	Guillaume Ghisbain
+2	Juan Lora
+2	Native Bee Species
+2	North Fen
+2	Edgar Allan Poe
+2	Old Kingdom
+2	Heather Grab
+2	Rebecca Kirby
+2	Richard Serra
+2	Nicholas Epley
+2	Nigerian American
+2	Teju Cole
+2	Pura Belpr
+2	New South
+
+
+Wales
+2	Wilma Rudolph
+2	Summer Olympics
+2	Human Feeling
+2	John Muir
+2	Thomas Paine
+2	Peter Rabbit
+2	Linnean Society
+2	Peter Damian
+2	Mesozoic Era
+2	Ever Given
+2	Suez Canal
+2	Maurya Empire
+2	Erkka Frankberg
+2	Tampere University
+2	Edwin Herbert Land
+2	Polaroid Land
+2	Mira Nair
+2	Mississippi Masala
+2	Sophie Calle
+2	Alice Coltrane
+2	Emmanuelle Charpentier
+2	Peter Whibberley
+2	Rafael Trujillo
+2	Akira Kurosawa
+2	Florence Price
+2	John Donne
+2	United Nations
+2	Agriculture Organization
+2	Kay Zufall
+2	Memory Test
+2	Road Bridge
+2	Mediterranean Sea
+2	Madeline Gins
+2	Nobu Yamaoka
+2	Economic Policy Uncertainty
+2	Sandile Hlatshwayo
+2	Provo River
+2	Northern
+
+
+California
+2	Geographer Adebayo Oluwole
+2	Okwui Enwezor
+2	Katy Siegel
+2	Malangatana Ngwenya
+2	Andy Warhol
+2	David Siqueiros
+2	Liberation Movements
+2	Thomas Mukarobgwa
+2	Loon Point
+2	Amy Lowell
+2	Ruth Asawa
+2	Celina Suarez
+2	Lynn Harrell
+2	Kathe Kollwitz
+2	Harriet Tubman
+2	Willa Cather
+2	Linguist Deborah Tannen
+2	Harshad Puranik
+2	United States Congress
+2	Neanderthal Cave
+
+
+
+ Depth
+2	Paola Villa
+2	Alan Tennyson
+2	Sandra Cisneros
+2	Homero Gil
+2	Trevor Diehl
+2	Sui Sin Far
+2	San Jos
+2	Edith Nesbit
+2	South Africa
+2	Jessie Montgomery
+2	Looking Back
+2	Dante Gabriel Rossetti
+2	Dorian Gray
+2	Archaeologist Petra Vaiglova
+2	Xinyi Liu
+2	Amelia Quon
+2	Kathleen Morrill
+2	Ana Castillo
+2	Jesse Green
+2	Hedda Gabler
+2	West Asia
+2	Saharan Africa
+2	Blues Legacies
+2	Black Feminism
+2	Bessie Smith
+2	Anton Chekhov
+2	Old Year
+2	Pacific Islander
+2	British Museum
+2	Gale Crater
+2	Saho Takagi
+2	Fairy Palace
+2	Earthly Paradise
+2	Nikki Grimes
+2	Teatro Campesino
+2	Arctic Ocean
+2	Kristin Laidre
+2	Partial List
+2	Candidate Species
+2	San Ildefonso
+2	Santa Clara Pueblo
+2	John Cranko
+2	British Broadcasting System
+2	Jack London
+2	John Thornton
+2	King Arthur
+2	Total Science Research
+2	Bourbon Restoration
+2	Lewis Carroll
+2	Egyptian Red Sea
+2	Frances Hodgson Burnett
+2	Northern Hemisphere
+2	Red Wing
+2	Although Miranda
+2	Greatest Number
+2	Organic Farms
+2	Chicago Tribune
+2	Hoopa Valley Tribe
+2	Jolla Band
+2	Pauma Band
+2	Agua Caliente Band
+2	Jan Packer
+2	Alaska Marmots
+2	Arctic Ground Squirrels
+2	Caribbean Sea
+2	Marianne Moore
+2	Roman Empire
+2	Modeled Radial Growth
+2	Sugar Maple Trees
+2	Star Trek
+2	Nathaniel Hawthorne
+2	Economist Trevon Logan
+2	Maggie Lena Walker
+2	Luke Penny Savings
+2	Vicente Lull
+2	Early Bronze Age
+2	Ester Hernandez
+2	Hishida Shuns
+2	Southeast Asia
+2	Anita Desai
+2	Renata Flores Rivera
+2	Sterlin Harjo
+2	Reservation Dogs
+2	Yann Martel
+2	Aymeric Roux
+2	Ulysses Jenkins
+2	Chris Brierley
+2	Elisabetta Palagi
+2	Olga Tokarczuk
+2	Lisa Trever
+2	Israel Potter
+2	New England
+2	Sam Wang
+2	Apollo Moon
+2	Astronomer Mark Holland
+2	Geologist Keith Putirka
+2	Andria Smythe
+2	Angelina Weld
+2	Bing Xie
+2	Annie Dodge Wauneka
+2	Nature Poem
+2	Tommy Pico
+2	Fun Home
+2	Ayana Holloway Arce
+2	James Baldwin
+2	Florian Humpen
+2	National Trails System
+2	Appalachian Trail
+2	Edith Wharton
+2	Chukwuebuka Okolo
+2	Susan Glaspell
+2	Out There
+2	Okunola Jeyifous
+2	Joe Baker
+2	Brooklyn Public Library
+2	Mark Oshiro
+2	West Oakland
+2	Jeremy Douglass
+2	Ecologist Michael Behrenfeld
+2	Mei Chang
+2	Sam Gilliam
+2	Aroba Saleem
+2	Gabriela Gonz
+2	Wave Observatory
+2	Louise Erdrich
+2	Louise Erdrich
+
+
+
+
+Which
+2	Benito Juarez
+2	Ofelia Zepeda
+2	Emily Pauline Johnson
+2	Peter Edwards
+2	David Graeber
+2	David Wengrow
+2	Soul Shall Dance
+2	Jean Webster
+2	Edna Lewis
+2	Evelyne Huebscher
+2	Craig Santos Perez
+2	Georgi Vladimov
+2	Marie Tharp
+2	Bruce Heezen
+2	Wole Soyinka
+2	Melisa Diaz
+2	Mohsin Hamid
+2	Will Not Stand
+2	Eastern European
+2	Universal Robots
+2	Miss Glory
+2	American South
+2	Sara Oyler
+2	Mari Carmen
+2	Spanish Empire
+2	Researcher Jianbo Tang
+2	Congressman John Conyers
+2	Martin Luther King
+2	Shirley Chisholm
+2	Olaudah Equiano
+2	Slave Trade Act
+2	Pure Food
+2	Drug Act
+2	Aunt Molly Jackson
+2	Hugh Masekela
+2	Michael Garcia
+2	Sacred Rain Arrow
+2	Maria Martinez
+2	Nazca Desert
+2	Simons Island
+2	Suffrage Party
+2	Nancy Tuttle Craig
+2	Women Tea
+2	Indian Institute
+2	Patricia Jurado Gonzalez
+2	Nawal Nasrallah
+2	Yaku Island
+2	Fusa Miyake
+2	Progressive Era
+2	John Carver
+2	Art Gallery
+2	Biloxi Light
+2	Bridgeport Breakwater Light
+2	Mississauga Ojibwe
+2	Kirsten Buick
+2	Equal Suffrage Association
+2	Garisenda Tower
+2	Hesham Sallam
+2	Mansoura University
+2	Dakhla Oasis
+2	Freddie Wong
+2	Producers Guild Award
+2	Outstanding Digital Series
+2	Virginia Tech
+2	Thai New Year
+2	Vaishnavi Patel
+2	Once Upon
+2	Sutton Hoo
+2	Frank Zamboni
+2	Marilyn Hacker
+2	Ancient Native American
+2	Seven Sisters
+2	American Ballet Theatre
+2	Roxie Moore
+2	Osaka University
+2	New England Conservatory
+2	Sameer Mishra
+2	Kavya Shivashankar
+2	Abu Rayhan
+2	Jody Naranjo
+2	International System
+2	Alta River
+2	Archaeologist Noel Hidalgo
+2	Nestor Gomez
+2	Lebanese American
+2	Phillips Collection
+2	Luis Hernandez
+2	Chuska Mountains
+2	Slow Food Manifesto
+2	Kepler Challenge
+2	Lina Gonzalez
+2	Middle Eastern
+2	Jamaican American
+2	Joseph Priestley
+2	East Africa
+2	Vida Americana
+2	Mexican Muralists Remake
+2	Ice Ages
+2	Gullah Museum
+2	Turbulent Indigo
+2	Little Foot
+2	Rio Grande
+2	Rocket Labs
+2	Ann Petry
+1	Mir Castle Complex
+1	United Nations Educational
+1	Cultural Organization
+1	Sumiko Higashi
+1	Ariel Anbar
+1	Sarah Slotznick
+1	Stephen Crane
+1	Henry Johnson
+1	Examine Nicaragua
+1	Otar Akanyeti
+1	Jim Graham
+1	Sir Thomas More
+1	Our Lady
+1	Yankton Dakota
+1	Burke Museum
+1	Persian Gulf
+1	Long Beach
+1	Cultural Center
+1	Tangerine Sky
+1	Determine Tsai
+1	Analyze Option
+1	Minatogawa Limestone Quarry
+1	Diane Massam
+1	Dead Game
+1	Las Meninas
+1	King Philip
+1	Ernesto Lecuona
+1	Science Fiction
+1	Jesse Sheidlower
+1	White Worm
+1	Dark Energy Camera
+1	Cerro Tololo Inter
+1	American Observatory
+1	Frank Baum
+1	Guoping Wang
+1	Chemist Christian Adlhart
+1	Sarah Winnemucca Hopkins
+1	Northern Paiute
+1	Costa Rica
+1	Museo Castillo
+1	Snowy Landscape
+1	Old Tower
+1	Katsitsiomi Fox
+1	Geological Survey
+1	Bruno Morgado
+1	Richard Martin
+1	Nobel Committee
+1	Andres Sevtsuk
+1	North End
+1	What Absence
+1	Hirshhorn Museum
+1	Sculpture Garden
+1	Lorna Simpson
+1	Home Ground
+1	American Landscape
+1	Marian Klarner
+1	Sebouh David Aslanian
+1	New Julfa
+1	Robert Hayden
+1	Sasha Pimentel
+1	Gustav Klimt
+1	William Wordsworth
+1	Lines Composed
+1	Few Miles
+1	Tintern Abbey
+1	Workers Trade Union
+1	South Sudan
+1	Anne Vallayer
+1	Pablo Picasso
+1	Les Demoiselles
+1	Four Urban Parks
+1	Urban Parks
+1	Irena Vale
+1	Species  Typical
+1	Maple Street Rain
+1	Nari Okafor
+1	Salma Idris
+1	Jun Park
+1	Amina Daro
+1	Mara Velez
+1	Week Vocabulary Test
+1	Scores    Massed    Spaced
+1	Although Lake Aro
+1	Amara Nwosu
+1	Maria Sibylla Merian
+1	Many European
+1	Middle Kingdom
+1	New Kingdom
+1	European Egyptologists
+1	Old
+
+
+Kingdom
+1	Kitty Cone
+1	Living Index
+1	Researchers Amit Kumar
+1	Edward Lorenz
+1	Martha Lydia
+1	Jet Propulsion Laboratory
+1	Lake
+
+
+Maracaibo
+1	Willard Wigan
+1	Middle Ages
+1	Kiki Omeili
+1	Nollywood Portraits
+1	Great Depression
+1	Tres Reyes Magos
+1	Katy Milkman
+1	Belle Fourche River
+1	Devils Tower
+1	Bear Lodge
+1	Samuel Fabian
+1	During
+
+
+
+
+Correct Answer
+1	Arlie Russell Hochschild
+1	American Civil War
+1	Thomas Morris Chester
+1	Philadelphia Press
+1	President Theodore Roosevelt
+1	Yosemite Valley
+1	Fred Cox
+1	Hirschman Index
+1	Southeast Asian Nations
+1	Yugang Sun
+
+
+
+
+Correct
+1	Syrian American
+1	Shadia Habbal
+1	Solar Wind Sherpas
+1	Common Sense
+1	French Creole
+1	Natalia Lafourcade
+1	Latin Grammy
+1	Martin Joos
+1	Pillow Book
+1	Adorable Things
+1	Empress Teishi
+1	Lund University
+1	Object Notation
+1	Canterbury Tales
+1	Olympic Games
+1	Franklin
+
+
+Gavua
+1	Yiiiiikakaii African
+1	Bennie Maupin
+1	Bobbi
+
+
+Humphrey
+1	Janaki Ammal
+1	Silent Valley
+1	Atmospheric
+
+
+Administration
+1	Andrea Quattrini
+1	Cartagena Manifesto
+1	New Granada
+1	Eastern Washington University
+1	Barbara Chase
+1	Sally Hemings
+1	South Asia
+1	Flying Cloud
+1	New York Harbor
+1	Captain Josiah
+
+
+Perkins
+1	Eleanor Creesy
+1	Kim Borg
+1	Monash University
+1	Lene Hau
+1	North Atlantic Ocean
+1	North Atlantic Gyre
+1	Afrigo Band
+1	Sam Chatmon
+1	Monastic Trio
+1	Second Amendment
+1	Caitlin Whalen
+1	Lin Zhi
+1	Madeline Anderson
+1	Mary Shelley
+1	Gayatri Spivak
+1	Margaret Saville
+1	Dominican American
+1	Kenji Ekuan
+1	Cuban American
+1	Margarita Engle
+1	Stephen Graham Jones
+1	Never Whistle
+1	Indigenous Dark Fiction
+1	Paolo Bacigalupi
+1	Grand Staircase
+1	Bryce Canyon
+1	Grand Canyon
+1	Kaiparowits Formation
+1	Late
+
+
+Cretaceous
+1	Girlhood Among Ghosts
+1	Maxine Hong Kingston
+1	Sheena Iyengar
+1	First
+
+
+Symphony
+1	Gypsum Cave
+1	Bertha Parker
+1	Ohkay Owingeh
+1	Pueblo Revolt
+1	Rogue Enchantments
+1	Isabel Iba
+1	Far North
+1	James Watson
+1	Francis Crick
+1	Rosalind Franklin
+1	Raymond Gosling
+1	Its
+
+
+
+
+Correct Answer
+1	Butler Collection
+1	California
+
+
+
+
+Correct Answer
+1	Red Seas
+1	Bella Galil
+1	Great Bitter Lakes
+1	Howardena Pindell
+1	Columbian Native American
+1	Mississippi River
+1	Hawaii Register
+1	Louisa May Alcott
+1	Little Women
+1	New York Historical
+1	Boston Committee
+1	Continental Congress
+1	Emmett Ashford
+1	Major League Baseball
+1	Marta Coll
+1	Carlo Bianchi
+1	Carla Morri
+1	Shusaku
+
+
+Arakawa
+1	Throwaway History
+1	Anne Garner
+1	John Johnson
+1	Oxford University
+1	Farnoush Reshadi
+1	Julian Givi
+1	Gopal Das
+1	Potential Incentives
+1	Middle East
+1	Tatra Mountains
+1	Bernard Caron
+1	But Caron
+1	Food Items
+1	Gemini Mission
+
+
+                                                                     Menus
+1	Day        Meal
+
+
+
+                                                  Sugar
+1	Godfather Part
+1	Ornithologist Sahas Barve
+1	Himalaya Mountains
+1	Stephen Halliwell
+1	Both Plato
+1	Although Plato
+1	Lizard Species
+1	Average
+                                                                         Percent
+1	Maximal Speed Used
+1	Escaping Predators
+1	Provo River Downstream
+1	Malheur National
+
+
+Forest
+1	Allen Kim
+1	Charuta Pethe
+1	Steven Skiena
+1	Lloyd Henri Kiva
+1	Land Area Covered
+1	Native Flowering Plants
+1	Antarctica
+
+
+
+                          Area
+1	Botanist Niccoletta Cannone
+1	Ondo State
+                                                                                                Small
+1	Scale Farmers Who
+1	Are
+                                                                                                Female
+1	Main Crop Grown
+1	Corey Garza
+1	Carlos Robles
+1	Kamala Ibrahim Ishaq
+1	Americas
+
+
+
+                                         Pyramid            Country
+1	Djoser       Egypt
+1	Sahure       Egypt
+1	Castillo                 Belize
+1	Great Pyramid
+1	Researchers Ximena Bernal
+1	Researchers Bernal
+1	San
+
+
+Francisco
+1	Banana Ripening Time
+1	Different
+                                                           Temperatures
+1	Ethylene Treatment
+1	Nucleobase Concentrations
+1	Murchison Meteorite
+1	Soil Samples
+1	Billion
+
+
+
+                     Nucleobase       Murchison
+1	Yashiro Oba
+1	World Heritage Site
+1	Mistake Point
+1	Johanna Spyri
+1	Elisabeth Stork
+1	Before Heidi
+1	Although Heidi
+1	Three Studies
+1	Estimated Average Velocity
+1	Researchers            Study
+1	Nitya Kallivayalil
+1	Large Magellanic Cloud
+1	Gurtina Besla
+1	New Generation
+1	Black Unity
+1	Sojourner Truth
+1	Maru Etta
+1	Four Studies
+1	Food Choices
+1	Various Contexts
+
+
+
+                              Location
+1	John Bergson
+1	Nicole Trewick
+1	Cristina Mena
+1	Inta Dimante
+1	King Henry
+1	Catholic Church
+1	Pope
+
+
+Clement
+1	Michael Sherbrook
+1	Religious Howses
+1	Northern
+
+
+     England
+1	Congress Members Who
+1	Year
+
+                                                             House
+1	Representatives
+
+                                                             Senate
+1	Army Air Force
+1	Ralph Harold Metcalfe
+1	Three
+                                                                                                                                 Review Conditions
+1	Dezhi Yin
+1	Countee Cullen
+1	Different Levels Below
+1	Fur Seal
+1	Extended Period
+1	Paleontologist Alan Tennyson
+1	Home Heating Needs
+1	Subsurface
+                                                                              Thermal Pollution
+1	Two Temperature
+                                                                                Conditions
+1	Individuals
+                                                                                                            Reporting Directly
+1	Maria Guadalupe
+1	Julie Wulf
+1	Raghuram Rajan
+1	Kenneth Armijo
+1	Though Armijo
+1	Melike Biliroglu
+1	Video Game Availability
+1	Initial Release Years
+1	Additional Electricity Wind
+1	Turbines Could Generate
+1	Stronger Than Forecast
+1	West         Midwest
+
+Electric
+1	Bus Shelters
+1	Highest Average Summer
+1	Surface
+
+
+                                                                   Temperature
+
+
+
+                        Highest
+1	South
+
+
+American
+1	Ecologist Ralf Aben
+1	Rylan Schaeffer
+1	Maize Exported
+1	Three Countries
+1	Marketing
+                                                              Years
+1	Argentina
+
+                                                                       Brazil
+
+                                                                       United
+1	States
+
+Argentina
+1	Seed Germination
+1	Smart Pricing
+1	Jagmohan Raju
+1	John Zhang
+1	Harvey Danger
+1	Jane Siberry
+1	Carrie Law Morgan
+1	Amir Manzoor
+1	Laurent Formery
+1	Latin
+
+
+  American
+1	Sherlock Hound
+1	Hayao Miyazaki
+1	Although Gil
+1	Fifth Moon Festival
+1	Illustrious Teacher
+1	Zhong Wei
+1	Estimated Temperatures
+1	Evron Quarry Artifacts
+1	Were Exposed
+1	Evron Quarry
+1	But Zane Stepka
+1	Researchers Benjamin
+1	Orbiter Laser Altimeter
+1	Lilian Whiting
+1	Footprint Analysis
+1	Two Sets
+1	Theropod Tracks
+
+
+
+         Tracks
+1	Population Growth
+1	Capita
+                                                                                    Growth
+1	Two World Regions
+1	Richa Mahtta
+1	South
+
+
+Levant
+1	Nefize Ezgi
+1	Paleontologist Lucas
+1	South
+
+
+America
+1	Female
+
+
+                                                             Bottlenose Dolphins
+1	Their Calves
+
+
+
+                                                            Dolphin
+1	Black Pearl Chamber
+1	Jeri Lynne Johnson
+1	Xun Xiao
+1	Elizabeth Asiedu
+1	Google Arts
+1	Siah
+
+
+Armajani
+1	Siah Armajani
+1	Marianne Dashwood
+1	John Willoughby
+1	North American Thrasher
+1	Mean Bill Size
+1	Habitat Temperature Range
+1	Charlotte Probst
+1	Sonja Hillemacher
+1	Average Temperatures
+1	Four Locations
+1	Navajo Nation
+
+
+
+                         Location
+1	Aunt
+
+
+Sue
+1	Bertolt Brecht
+1	Caryl Churchill
+1	Evelyn Waugh
+1	Critic Seamus Perry
+1	Laila Lalami
+1	Summer Festival
+1	Palm Springs
+1	Laila Lalami
+
+
+
+
+According
+1	Although   Beowulf
+1	Oscar Wilde
+1	Although Dorian
+1	Year   Agriculture
+1	France   Manufacturing
+1	France    Services
+1	France    Agriculture
+1	Ilaria Carta
+1	Monthly Hours
+1	Month
+
+                                                                               Anchorage
+
+                                                                               Fairbanks
+1	Bronze
+
+
+  Age
+1	Christos Dimopoulos
+1	Ruiwen Fan
+1	Mars
+
+
+
+
+Correct Answer
+1	Asian American Studies
+1	Smallest
+
+
+                                                             Arabian Peninsula
+1	Countries
+
+
+
+                                                  Country    Total
+1	Population
+
+
+
+                                                  Kuwait
+1	Arabian Peninsula
+1	Copper Production
+1	Three States
+1	Year
+
+                                                                                                             Montana
+
+                                                                                                             Arizona
+1	Michigan
+
+
+Copper
+1	Kei Igarashi
+1	Jasmine Chavez
+1	Sylvia Acevedo
+1	Girl Scout
+1	Rocket Scientist
+1	Sylvia Acevedo
+
+
+
+
+According
+1	Since Mars
+1	Census Data
+1	Four Canadian Cities
+1	Year
+
+                                                                                        Halifax
+1	City
+
+                                                                                        Toronto
+
+The
+1	Halifax
+
+
+
+
+Correct Answer
+1	Related Vocabulary
+1	Various Southeastern Languages
+1	Language                                                                        English               Proposed
+1	Hannah Ditzler Alspaugh
+1	Percentage Point Changes
+1	Federal Outlays Relative
+1	Congressional Status
+
+
+
+                Period
+1	Economist Steve
+1	Javier Ortega
+1	James Weaver
+1	Henrik Ibsen
+1	Estimated Impacts
+1	Invasive Predator Species
+1	Threatened Birds
+1	Reptiles
+
+
+
+    Invasive
+1	Beatrice Harraden
+1	Ecosystem Services Affected
+1	Invasive Species
+1	Service Type
+
+
+
+                                       Region
+1	New York
+
+
+City
+1	Different Depths
+1	Archaeologist Paola Villa
+1	Vita Sackville
+1	Average Survival
+1	Fruit Flies
+1	Researchers Youran
+1	Marshall Fisher
+1	Augustin Holl
+1	North African
+1	Julio Sevilla
+1	Claudia Townsend
+1	Ornella Bertrand
+1	Jean Philippe
+1	James Weldon Johnson
+1	Sungkyoung Lee
+1	Researchers Jenna Ekwealor
+1	Mojave Desert
+1	Besides Native Hawaiians
+1	Marisela Granito
+1	Jasmine Kilburn
+1	Select Rotating Radio
+1	Transients
+
+
+
+                                      Name       Right
+1	Time Participants Spent
+1	Five London Museums
+1	Museum Name         Ranking
+1	National Gallery
+1	Tate Modern
+1	Museum
+
+
+
+Natural History
+1	Museum
+
+
+
+
+Researchers
+1	Natural History Museum
+1	Albert Museum
+1	Economists Gustavo Barboza
+1	Sandra Trejos
+1	Frances Rivera
+1	Five Children
+1	White House
+1	White
+
+
+       House
+1	Creative Musicians
+1	Juvenile Plants Found
+1	Bare Ground
+1	Five Species
+
+
+
+                        Species
+1	Total   Percent
+1	Alicia Montesinos
+1	Isabelle Storer
+1	Fanny Burney
+1	Iliana Medina
+1	Maosheng Xiang
+1	Walter Rix
+1	Davit Marikyan
+1	Adams Extract
+1	United Farm Workers
+1	Luis Valdez
+1	Sandeep
+
+
+Somvanshi
+1	Relative Contributions
+1	Fungal Community
+                                                                                   Assembly
+1	Tibetan Lakes
+1	Jian Yang
+1	Tibetan Plateau
+1	Gabrielle Adams
+1	Huia                  Heteralocha
+1	Jack Whitten
+1	Copper
+
+
+                                                              Mined
+1	Upland
+
+
+South
+1	French Cities
+1	Late Eighteenth Century
+1	City         Date     Inhabitants
+1	Although Lyon
+1	Approximate Rates
+1	Five Languages
+
+
+
+                       Language
+1	Robert Frost
+1	Five Pueblo Nations
+1	New
+
+
+                                                                        Mexico
+
+
+
+                                                        Tribal
+1	Alexander Pushkin
+1	Critic Emma Golden
+1	Two New
+                                                                    Battery
+1	Recycling Processes
+1	National Public Radio
+1	Donna
+
+
+Richardson
+1	Cambridge Nonviolent Action
+1	Maryland
+
+
+
+
+Correct Answer
+1	Atsuko Negishi
+1	But Wace
+1	Susan Manning
+1	Mexican Indigenous
+1	Vertamae Smart
+1	Low Country
+1	Ecologist Jessica Reichert
+1	Jane Abbott
+1	Fred Stevens
+1	Raoul Manenti
+1	Alyssa Rhoden
+1	Young Fish Collected
+1	Mangrove Sites
+1	During Three Seasons
+1	Season
+
+                                                                                        Common
+1	Milkfish
+
+
+Mangroves
+1	Patrick Kelly
+1	Bessie Coleman
+1	Deformation Rate
+1	Five Volcanoes
+1	Although Sierra Negra
+1	Mean Ticket Prices
+1	Two Studies
+1	Participative Pricing Messaging
+1	Annie Peng Cui
+1	Jennifer Wiggins
+1	Los Carpinteros
+1	Anita Allen
+1	Credited Film Output
+1	Cyr
+
+
+
+                                       Individual         Years
+1	Correlations Between Congestion
+1	Immediate Vicinity
+
+
+
+                                              Crowd
+1	Overall
+
+
+
+                                              Density
+1	Researcher Xiaolu Jia
+1	Seagrass Samples
+1	Four Sites
+1	Site      February
+1	Akumal
+
+
+  Bay
+1	State
+
+Organic
+1	Laura Miranda
+1	Top Four Species
+1	Wild Land
+                                                                                           Mammals
+1	Global Biomass
+1	Paywall Introduction
+1	Newspaper Companies
+1	Revenues
+
+
+
+                         Newspaper         Total
+1	Sun Sentinel
+1	Denver Post
+1	California Condor Populations
+1	Recovery Program
+1	California Condor Recovery
+1	Five Tribal Nations
+1	California
+
+
+
+                                              Tribal
+1	Location        Area
+1	Indians                     Southern California
+1	Mission Indians              Southern
+1	Cahuilla Indians                Northern
+1	Indians Southern California
+1	Los Coyotes
+
+
+Band
+1	Cahuilla Indians
+1	Mission Indians
+1	Mean Attentiveness Scores
+1	Leave Time Condition
+1	Torpor Bouts
+1	Arousal
+
+
+                                        Episodes
+1	Feature         Alaska
+1	Ancient Caribbean
+1	Oluwaseyi Moejoh
+1	Daily Distance Traveled
+1	Adult Mountain Lions
+1	Three Seasons
+
+
+
+                       Season
+1	Jennifer Bergner
+1	Conserve Energy
+
+
+
+                                        Action
+1	Shahzeen Attari
+1	Espen Finstad
+1	Global Strontium
+
+
+                                                                                          Seawater
+1	North American Land
+1	Mammal Age
+1	Montbrook Fossil Site
+1	Palmetto Fauna
+1	Bone Valley Region
+1	Ecologist Kathryn Beheshti
+1	City Areas
+1	Adding More Bike
+1	Paths
+
+
+
+                                       City Area
+1	North West
+1	Artist Marilyn Dingle
+1	West
+
+
+Africa
+1	Marilyn Dingle
+1	Although Dingle
+1	Jules Verne
+1	Alain Locke
+1	Sanjay Patel
+1	Jingnan
+
+
+Huang
+1	Clark Bridge
+1	Ohio River
+1	Clark
+
+
+Bridge
+1	Interrupted
+
+
+
+
+Correct Answer
+1	Economist Marco Castillo
+1	Srimati Svarna Kumari
+1	Christina Albers
+1	Since Text
+1	Paul Hanel
+1	Paul
+
+
+Hanel
+1	Fannie Barrier Williams
+1	United
+
+
+  States
+
+
+
+
+Correct
+1	Dugdale Sykes
+1	Jawole Willa
+1	Wooden Image
+1	Speculated
+
+
+
+
+Correct Answer
+1	Alexander Goikoetxea
+1	Applying Text
+1	Las Mujeres Muralistas
+1	Texas
+
+
+
+
+Correct Answer
+1	Unlike Kuroda Seiki
+1	Kuroda Seiki
+1	Plum
+
+
+Blossoms
+1	Astrophysicist Sarafina
+1	Michael Luca
+1	Abhishek Nagaraj
+1	Gauri Subramani
+1	Market Street Chinatown
+1	San Jose
+1	Hong Kong
+1	Ellen Ochoa
+1	Translator Translated
+1	Rejecting
+
+
+
+
+Correct Answer
+1	Anthony Fowler
+1	Jason Roy
+1	Qian Yuan
+1	Although Theia
+1	Coated
+
+
+
+
+Correct Answer
+1	Katarina Miljkovic
+1	Pittsburgh Courier
+1	Settled
+
+
+
+
+Correct Answer
+1	George Marion
+1	Kit
+
+
+Arabic
+1	James Webb Space
+1	Guadalupe Romero Villanueva
+1	Mexican
+
+
+American
+1	Jane Eyre
+1	Thornfield Hall
+
+
+
+
+Correct
+1	Enrique Seira
+1	David Wright
+1	Sahara
+
+
+Desert
+1	Alexandra Schnell
+1	Rie Ishii
+1	And Text
+1	Humphry Davy
+1	Sir
+
+
+Humphry Davy
+1	Alvin Ailey
+1	Charles Mingus
+1	Charlie Parker
+1	Duke Ellington
+1	Rachel Heng
+1	Rachel Heng
+
+
+
+
+Taken
+1	Noah Fierer
+1	Since Fierer
+1	Nella Larsen
+1	Shifting
+
+
+
+
+Correct Answer
+1	Inca Peru
+1	Lotte Reiniger
+1	Lotte
+
+
+Reiniger
+1	Biologist Jane Edgeloe
+1	Shark Bay
+1	New
+
+
+       Hampshire
+1	William Bains
+1	Annibale Carracci
+1	Lavinia Fontana
+1	President Abraham
+
+
+Lincoln
+1	Ann Rutledge
+1	President Lincoln
+1	Historians Tiya Miles
+1	Jermain Loguen
+1	Montana
+
+
+State University
+1	Seiichi Nagihara
+1	Takunda Chazovachii
+1	Mark Holland
+1	Robin Wall Kimmerer
+1	Joseph Conrad
+1	Simple Tale
+1	Gabriela Alem
+1	Nuyorican Poets
+
+
+Cafe
+1	Alaa Ahmed
+1	Transparent
+
+
+
+
+Correct Answer
+1	Black Finger
+1	Louise Ward
+1	Nia
+
+
+Imara
+1	Henry Crawford
+1	Fanny Price
+1	George Butte
+1	Samuel Beckett
+1	Patrick Bowles
+1	Grove Press
+1	Dwindling
+
+
+
+
+Correct Answer
+1	Mauro Paternostro
+1	Alison Bechdel
+1	Cynthia Kadohata
+1	Cynthia Kadohata
+
+
+
+
+Which
+1	Bao Phi
+1	George Bernard Shaw
+1	Henry Higgins
+1	Lily Bart
+1	Industrial
+
+
+Revolution
+1	Industrial Revolution
+1	Ecologist Juan Amat
+1	Juan Amat
+1	Composer Florence Price
+1	Wanamaker Foundation Awards
+1	Chicago Symphony Orchestra
+1	Wanamaker
+
+
+Foundation Awards
+1	European
+
+
+Romantic
+1	Composure
+
+
+
+
+Correct Answer
+1	Cecil Charles
+1	Suspicious
+
+
+
+
+Correct Answer
+1	Chinese World
+1	Hearing
+
+
+
+
+Correct Answer
+1	Spring
+
+
+Fragrance
+1	Citizen Education Program
+1	Dorothy Cotton
+1	Septima Clark
+1	Christian Leadership Conference
+1	John Matheus
+1	Defended
+
+
+
+
+Correct Answer
+1	Jay Gatsby
+1	Accomplishment
+
+
+
+
+Correct Answer
+1	Marissa Sharif
+1	Psychologist James Maddux
+1	Southern
+
+
+Pacific Railroad
+1	Ancient Inca
+1	Lisa Yaszek
+1	More Classic Science
+1	Fiction Stories
+1	Pacific Coast
+1	Painter Alma
+1	William Klein
+1	Scientist Atma Ivancevic
+1	Cris Derksen
+1	Nikku
+
+
+Madhusudhan
+1	Cristina Rengifo Faiffer
+1	Particular
+
+
+
+
+Correct Answer
+1	Since Bastos
+1	Although Lewis
+1	Betty Smith
+1	Tree Grows
+1	But Francie
+1	Betty Smith
+
+
+
+
+Which
+1	Klamath Tribes
+1	Pacific Northwest
+1	Foolishly
+
+
+
+
+Correct Answer
+1	North
+
+
+America
+1	Michelene Pesantubbee
+1	Gulf Coast
+1	Ryan
+
+Which
+1	Reina
+
+
+
+
+Correct Answer
+1	Indigenous Americans
+1	Although Saleem
+1	Laser Interferometer Gravitational
+1	Laser
+Interferometer Gravitational
+1	Only Celestine
+1	Aztec
+
+
+Empire
+1	Jennie Louise Touissant
+1	Doing Their Bit
+1	Tressie Souders
+1	And Maria
+1	Turtle Mountain Band
+1	North Dakota
+1	Zeyao Yang
+1	Emilio Ferrara
+1	Researcher
+
+
+Wriju Chowdhury
+1	Earth
+
+
+
+
+Correct Answer
+1	Wriju Chowdhury
+1	American Indian Language
+1	Development Institute
+1	Sketch
+
+
+
+
+Correct Answer
+1	Hiroshi Senju
+1	Live Safely
+1	Science Fictional Universe
+1	Cosmochemist Kazuhide Nagashima
+1	Arya Udry
+1	Upper Missouri
+1	Black Howard
+
+
+University
+1	Brigitte Schoenemann
+1	Xingli Giam
+1	Wendy Cope
+1	Ryan Griggs
+1	Nicomachean Ethics
+1	Jonathan Barnes
+1	Lucy Maud Montgomery
+1	Green Gables
+1	Jeremy Gunawardena
+1	Aphra Behn
+1	Samadi Galpayage
+1	Rachit Dubey
+1	Yucheng Wang
+1	Carl Simpson
+1	Deepasri Prasad
+1	Wilma Bainbridge
+1	Henry James
+1	Everything Osmond
+1	Indecision
+
+
+
+
+Correct Answer
+1	Ecologist Exequiel Ezcurra
+1	Booth Tarkington
+1	Alice Adams
+1	Watched
+
+
+
+
+Correct Answer
+1	Wakako Yamauchi
+1	Soul
+
+
+Shall Dance
+1	Vague
+
+
+
+
+Correct Answer
+1	Gwendolyn Bennett
+1	Street Lamps
+1	Early Spring
+1	Night
+
+
+  Move
+1	Alfonso Lacadena
+1	Habitat Threshold
+1	Habitat
+
+
+Threshold
+1	Maryam Kouchaki
+1	Economist Ying Fan
+1	Economists Dario Focarelli
+1	Fabio Panetta
+1	Atlantic
+
+
+Ocean
+1	Although Tharp
+1	Mauro Bernabei
+1	Jackie Ormes
+1	Tobias Gerstenberg
+1	Researcher Haesung Jung
+1	Although Tom
+1	Jason Reynolds
+1	Pass Out Show
+1	Jason Reynolds
+
+
+
+
+Which
+1	Kimberley Whitehead
+1	Geologist
+
+
+Melisa Diaz
+1	Great Lakes
+1	Exit West
+1	Zelia Maria Magdalena
+1	Francisco Lara
+1	Mexican
+
+
+Americans
+1	Geographer Juan Herrera
+1	Juan Herrera
+1	Archaeologist Helle Vandkilde
+1	John Redding Goes
+1	Lisa Paul
+1	Robert Ferl
+1	Sadakichi Hartmann
+1	Magnolia Blossoms
+1	Raymond Antrobus
+1	Wore
+
+
+Hearing Aids
+1	Ian Brennan
+1	Shalene Jha
+1	Claire Kremen
+1	Bernarda Alba
+1	Marcus Gardley
+1	Had Tuchman
+1	Luigi Albertini
+1	Paul Selver
+1	Nigel Playfair
+1	One Robot
+1	Fulfills
+
+
+
+
+Correct Answer
+1	Melanie Brucks
+1	Alice Storey
+1	Agusto Luzuriaga
+1	Yashraj Bhosale
+1	Alaska Highway
+1	Alaska Highway Day
+1	Alaska Highway
+
+
+Day
+1	Rita Dove
+1	Atlantic
+
+
+Monthly
+1	Chemists Fritz Haber
+1	Geneticist Sara Oyler
+1	Biogeographer Isabel
+1	Choctaw
+
+
+Code Talkers
+1	Henry Cullen
+1	Gal Badihi
+1	Lewis Latimer
+1	Thomas Edison
+1	Spanish Constitution
+1	Colonel Rafael
+1	Linda Watanabe
+1	Jianbo Tang
+1	Charles Darwin
+1	Alfred Wallace
+1	Dwaynica Greaves
+1	United States District
+1	Peruvian American
+1	Upton Sinclair
+1	Confederated Tribes
+1	Siletz Indians
+1	Muskogee Creek
+1	Sofia Gabriel
+1	Luz Mathias
+1	East
+
+
+African
+1	Albert Einstein
+1	Niels Bohr
+1	Chiricahua Warm Springs
+1	Iberian Peninsula
+1	Robert Plot
+1	Indigenous Khoesan
+1	Julien Benoit
+1	Susie Taylor
+1	Race Track
+1	Jean Metzinger
+1	Twila Moon
+1	Geoscientist Twila Moon
+1	Jhumpa Lahiri
+1	Temporary Matter
+1	Adwait Deshpande
+1	Shreejata Gupta
+1	Anindya Sinha
+1	Bandipur National
+
+
+        Park
+1	Bandipur National Park
+1	Alixa Naff
+1	Arab American
+1	East African
+1	Equality Tea
+1	Equality
+
+
+Tea
+1	Chiura Obata
+1	Novelist Willa Cather
+1	Among Cather
+1	Ugandan American
+1	Peter Nazareth
+1	Elvis Presley
+1	King James
+1	Asiya Wadud
+1	Treaded Red
+1	Latin Grammys
+1	Puras Rancheras Con
+1	Banda
+
+
+Cuisillos
+1	First Nations
+1	Both Jacobs
+1	Angana Chaudhuri
+1	Anne Willieme
+1	Folk Art Museum
+1	Amazon Reef
+1	Camille Jazmin
+
+
+Gaynus
+1	Sant Pau
+1	Hitoshi Fugo
+1	Flying Frying Pan
+1	Maria
+
+
+  Younghans
+1	Researchers Gwangsu Kim
+1	Pauline Oliveros
+1	Many Lennon
+1	Mark Glickman
+1	Jason Brown
+1	Ryan Song
+1	Wounded Knee
+1	Native America
+1	David Treuer
+1	Auguste Bartholdi
+1	Gustave Eiffel
+1	Albert
+
+
+Popa
+1	Academy Award
+1	Kathryn Bigelow
+1	Virginia Offshore Wind
+1	Virginia Beach
+1	Wilhelmina Kekelaokalaninui Widemann
+1	Guild Award
+1	Biblioteca Palafoxiana
+1	Few New Yorkers
+1	Thelma Pollard
+1	Songkran Water Festival
+1	Silom Road
+1	Tha Phae Gate
+1	Each April
+1	Tehnuka Ilanko
+1	Sahara Desert
+1	Hung Gar
+1	Jelly Roll Morton
+1	Outer Space Treaty
+1	Andrew Beard
+1	Frederick Jones
+1	Iestyn Barr
+1	Transantarctic Mountains
+1	Spanish Romani
+1	Carmen Amaya
+1	Anna Hedgeman
+1	President Truman
+1	Daisy Bates
+1	Although Hedgeman
+1	Many African American
+1	Oghenechovwe Donald Ekpeki
+1	Terrie Williams
+1	Color Charts
+1	Anne Varichon
+1	Forage
+  Sestina
+1	Amrita Sher
+1	Seven
+
+
+  Sisters
+1	Smriti Rai
+1	Leigh Torres
+1	Lonely Londoners
+1	Misty Copeland
+1	Mary Tape
+1	California Supreme Court
+1	Annie Dillard
+1	Tinker Creek
+1	Both Qianmen Dajie
+1	Roll Hall
+1	Gravitational Wave Observatory
+1	Greg Pattillo
+1	Composer Greg Pattillo
+1	Washington State
+1	Lost Apple Project
+1	Kavya
+
+
+  Shivashankar
+1	Spelling Bee
+1	Sunset Stampede
+1	Kiva Steps
+1	Jazmin Locke
+1	South
+
+
+       Florida
+1	John Kennedy
+1	Vice President Richard
+1	Native Language Archive
+1	Native Alaskan
+1	Iranian American
+1	Lauren Berlant
+1	Eric Boyd
+1	Mario Molina
+1	Sherwood Rowland
+1	Hala Altamimi
+1	Qiaozhen Liu
+1	William Still
+1	Frederick Douglass
+1	Marco Tullney
+1	Jeffrey Gibson
+1	Minutes Around
+1	Kurt Luther
+1	Vikram Mohanty
+1	Civil War Photo
+1	Louise Thaden
+1	Air Derby
+1	Travel
+
+
+Air
+1	Yirlis Yadeth Pineda
+1	Since Pbact
+1	Futures Conservatory
+1	Navajo Nation Department
+1	Water Resources
+1	Lani Tsinnajinnie
+1	Anna Tsing
+1	Archaeologist Jon Erlandson
+1	Jon Erlandson
+1	Global Positioning System
+1	Gladys West
+1	Physicist Muluneh Abebe
+1	Like Uranus
+1	Queensland Symphony Orchestra
+1	Los Angeles Opera
+1	Both Stephen Amos
+1	Haudenosaunee
+
+
+Confederacy
+1	Sada Mire
+1	Horn Heritage Foundation
+1	Horn Heritage
+1	Private Sky
+1	Stuart Bartlett
+1	Economist Elinor Ostrom
+1	Each Ice Age
+1	Neuroscientists Krishnan Padmanabhan
+1	Zhen Chen
+1	Yale University
+1	Architect Julian Abele
+1	Duke University
+1	Though Abele
+1	Doreen Massey
+1	Ilia Malinin
+1	Colas Koola
+1	Vivien Mermet
+1	Joan Robinson
+1	Seismologists Kaiqing Yuan
+1	Barbara Romanowicz
+1	Civil Aeronautics Authority
+1	Federal Aviation Administration
+1	Indigenous                                                                                                                                                                                                                                 Due
+1	Indian Boyhood
+1	Santee Dakota
+1	Georgia Douglas                                                                                                                                                                                                                                                                                                                                             Which
+1	Earth
+      Based
+1	Reporting Directly
+1	Economists Kerwin Kofi
+1	Melvin
+      Stephens
+1	Spider Population Count
+1	Ebonya Washington
+1	Sendhil Mullainathan
+1	Power Conversion Efficiency
+1	Highest Performing
+1	Electron Transport Layers
+1	Second
+         World War
+1	Kamala
+         Ibrahim Ishaq
+1	Beatrix Potter
+1	Joshua Hinson
+1	Chickasaw Nation
+1	Rosetta Stone
+1	Hot                                                                                                                                                                                                                                                                                                                                     Nigerian
+1	Buchi Emecheta
+1	Springs National Park
+1	Head Above Water
+1	Chimamanda Ngozi Adichie
+1	Sheena Iyengar                                                                                                                                                                                                                                                                                                                                      Americanah
+1	Sequoyah                                                                                                                                                                                                                              When Mexican
+1	Zelia Maria
+1	Magdalena Nuttall
+1	Igun Eronmwon
+1	Benin
+      Nation
+1	National Council                                                                                                                                                                                                                                                                                                                                       City
+1	Three Sisters
+1	Moath Alhaj
+1	Salton City
+1	Betelgeuse                                                                                                                                                                                                                                                                                                                                    The
+1	Patrice Lumumba
+1	Gins                                                                                                                                                                                                                                                                                                                                      Lumumba
+1	Aurelio Espinosa
+1	Hoon Jung
+1	Cherokee Nation
+1	Mary Golda Ross
+1	Stephanie Hutin
+1	Planetary Flight Handbook
+1	Toru Dutt
+1	Sheaf Gleaned
+1	French Fields
+1	Gil Scott
+1	Bisa Butler
+1	State University
+1	Hilton Head
+1	Gullah Museums
+1	Hilton Head Island
+1	Blind Spot
+1	Confederated Salish
+1	Kootenai Tribes
+1	Musician Joni Mitchell
+1	Studying
+      Vincent
+1	Bandaged Ear
+1	Tyrannosaurid Bite Force
+1	Study       Year      Estimation
+1	Paul Barrett
+1	Emily Rayfield
+1	Different
+                      Levels Below
+1	Neanderthal Cave
+ Depth
+1	Neanderthals Clamshells
+1	Torpor Bouts                                                                                                                                                                                                                                                                                                                                            Ratified
+1	Arousal Episodes
+1	Nagoya Protocol
+1	Feature        Alaska
+1	Indigenous
+      Which
+1	Former First Lady
+1	Eleanor Roosevelt
+1	Hansa Mehta
+1	Universal Declaration
+1	Agathe Charpagne
+1	Richard Turere
+1	Pierre Ruffin
+1	Era Club
+      Which
+1	Saudi Arabia
+1	Nabataean Kingdom
+1	Archaeologist Laila
+1	Archaeologist Sue Brunning
+1	Shai Meiri
+1	Tel Aviv University
+1	Unlike Tales
+1	Carpio Landry
+1	Anthropologist Kristian
+1	Hugh Capet
+1	She                                                                                                                                                                                                                                                                                                                                          Mansfield
+1	Rio Grande Valley
+1	Grande Valley
+1	Bengali Harlem
+1	Lost Histories
+1	South Asian America
+1	Vivek Bald
+1	New
+                                                                                                                                                                                                                                                                                                                                                                                              York City
+1	Howardena Pindell                                                                                                                                                                                                                                                                                                                                              University
+1	Both Sona Charaipotra
+1	Indian American
+1	Dhonielle Clayton
+1	Noel Hidalgo Tan
+1	Rice University
+1	Jennifer                                                                                                                                                                                                                                                                                                                                            Ming Tang
+1	Vanessa Galvez
+1	Todd Henry
+1	Astronomer Todd Henry
+1	Sun
+         Haudenosaunee Confederacy
+1	Hieronymus Bosch
+1	Ali
+      Because
+1	Frances Hodgson
+      Conventional
+1	Biologist Valentina
+1	Ablation Rates
+1	Three Elements
+1	Cosmic Dust
+1	Dust Source
+1	Los
+            Element
+1	Astrophysicist Juan Diego
+1	Mycorrhizal Fungi
+1	Plant Species
+                             Average
+1	Plant Mycorrhizal
+1	African American Percy
+1	Mount Tamalpais
+1	Marie Watt
+1	Alpine Botanic Garden
+1	Sociologist Alton Okinaka
+1	Register                                                                                                                                                                                                                                                                                                                                    Loa
+1	Samuel Coleridge
+1	Minoan
+      University
+1	Napoleonic France
+1	Three Men
+1	Alison
+      Bechdel
+1	Bosco Verticale                                                                                                                                                                                                                                                                                                                                           Many
+1	Vertical Forest
+1	Stefano Boeri
+1	Submissions                                                                                                                                                                                                                                                                                                                                 Fish
+1	Year                                                                                                                                                                                                                                                                                                                                           Which
+1	Simulated Change
+1	Annual Aquifer Input
+1	Irrigation Output
+1	Precipitation Concentration Increases
+1	Climate Models Predict
+1	Geeta Persad
+1	Mariana Nery
+1	Julia Alvarez
+1	Suez                                                                                                                                                                                                                                                                                                                                        Arlie Russell
+1	Jemaine Clement
+1	Minutes Around                                                                                                                                                                                                                                                                                                                                         Genome
+1	Sketch
+
+
+
+
+Unauthorized
+1	Mary Beth Wilhelm
+1	Erick Guerra
+1	Charlotte Perkins Gilman
+1	Caribbean          Monachus                                                                                                                                                                                                                                                                                                                                                               Which
+1	Passenger          Ectopistes
+1	Woolly             Mammuthus
+1	Mauritanian Coast
+1	Costa
+      Portilho
+1	Asian Nations
+1	Sebastian Purcell
+1	Billy Joel
+1	Louis David
+1	Denise Villers
+1	Jelly Roll
+1	Celebrated Tewa
+1	Mary Ann
+                                                                                                                                                                                                                                                                                                                                                                                                 Evans
+1	Wildlife Service

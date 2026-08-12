@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview — Lesson v2: Two-Variable Data</title>
+<style>/* tokens.css — Overhaul Phase F; re-themed to "Scholar Blue" (Phase G).
+   THE design tokens for the app. The palette moved from green-on-ink to a
+   light-first navy/blue system: blue = brand/actions, green = ONLY correctness,
+   red = ONLY errors/incorrect, amber = warnings. Use tokens, never raw hex.
+
+   Values are px on purpose: the app's html { font-size: 62.5% } rem scaling
+   must not warp the palette-adjacent sizing tokens. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- surfaces ---- */
+  --ut-ink: #0A1226;            /* darkest surface (final CTA, hero) */
+  --ut-panel: #0F1E3D;          /* dark panels, sidebar body */
+  --ut-panel-top: #0C1830;      /* dark panel top edge / nav */
+  --ut-bg: #F4F6F9;             /* app/page background */
+  --ut-bg-alt: #EAEEF3;         /* alternating section background */
+  --ut-card: #FFFFFF;           /* strong card on --ut-bg */
+  --ut-card-soft: #F8FAFC;      /* subtle card */
+
+  /* ---- text on light ---- */
+  --ut-text: #16202F;           /* primary text */
+  --ut-text-soft: #35435C;      /* secondary text */
+  --ut-muted: #4E5B70;          /* muted body text */
+  --ut-mono-muted: #5E6B80;     /* mono labels, captions */
+
+  /* ---- hairlines ---- */
+  --ut-rule: #DCE1E9;           /* hairlines on light */
+  --ut-rule-strong: #C9D0DC;    /* stronger hairlines */
+
+  /* ---- brand accent: BLUE (actions, links, active states) ---- */
+  --ut-accent: #2B59D8;         /* THE blue */
+  --ut-accent-bright: #86A4F5;  /* blue on dark surfaces */
+  --ut-accent-dark: #1D3FA8;    /* blue for text/links on light */
+  --ut-accent-soft: #E8EEFB;    /* blue tint fill (chips, active) */
+  --ut-accent-rule: #C9D6F0;    /* blue-tinted hairline */
+  --ut-on-accent: #FFFFFF;      /* text on the blue */
+
+  /* ---- semantic: success/correct = GREEN only ---- */
+  --ut-success: #17A45C;        /* fills, icons */
+  --ut-success-bright: #6FDCA8; /* green on dark surfaces */
+  --ut-success-dark: #0E6B3C;   /* text on light/soft */
+  --ut-success-soft: #E3F5EB;   /* tint fill */
+  --ut-success-rule: #BFE5CF;   /* tinted hairline */
+
+  /* ---- semantic: danger/incorrect = RED only ---- */
+  --ut-danger: #CC4141;         /* fills, icons */
+  --ut-danger-dark: #A03434;    /* text on light/soft */
+  --ut-danger-soft: #FBEEEE;    /* tint fill */
+  --ut-danger-rule: #EECACA;    /* tinted hairline */
+
+  /* ---- semantic: warning = AMBER only ---- */
+  --ut-warn: #C99A2E;           /* fills, icons */
+  --ut-warn-dark: #8A6D1D;      /* text on light/soft */
+  --ut-warn-soft: #FAF3DF;      /* tint fill */
+  --ut-warn-rule: #EAD9B0;      /* tinted hairline */
+
+  /* ---- text on dark ---- */
+  --ut-on-ink: #F2F5FA;         /* text on dark surfaces */
+  --ut-on-ink-bright: #F8FAFD;  /* emphasized text on dark */
+  --ut-on-ink-muted: rgba(242, 245, 250, 0.62);
+  --ut-rule-on-ink: rgba(237, 241, 248, 0.12); /* hairlines on dark */
+
+  /* ---- typography ---- */
+  --ut-font-display: 'Space Grotesk', system-ui, sans-serif;
+  --ut-font-body: 'Schibsted Grotesk', system-ui, sans-serif;
+  --ut-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --ut-font-serif: Georgia, 'Times New Roman', serif; /* reading passages only */
+
+  /* mono label recipe: font-family mono + these */
+  --ut-label-size: 10.5px;
+  --ut-label-tracking: 0.1em;
+
+  /* ---- radius (6 buttons / 10 cards / 12 panels) ---- */
+  --ut-radius-sm: 6px;
+  --ut-radius: 10px;
+  --ut-radius-lg: 12px;
+
+  /* ---- shadows (cool ink) ---- */
+  --ut-shadow-sm: 0 1px 2px rgba(12, 24, 48, 0.06);
+  --ut-shadow: 0 4px 12px rgba(12, 24, 48, 0.08);
+  --ut-shadow-lg: 0 12px 32px rgba(12, 24, 48, 0.14);
+
+  /* ---- legacy aliases, do not use in new code ----
+     These globals used to be re-declared with conflicting values in several
+     files' :root blocks (winner depended on chunk order). This is now the
+     single definition; old var() usages keep working through it. */
+  --primary-color: var(--ut-accent);
+  --secondary-color: var(--ut-card-soft);
+  --border-color: var(--ut-rule);
+  --shadow-sm: var(--ut-shadow-sm);
+  --shadow-md: var(--ut-shadow);
+  --shadow-lg: var(--ut-shadow-lg);
+  --border-radius-sm: var(--ut-radius-sm);
+}
+</style>
+<style>
+  body { margin: 0; background: var(--ut-bg); font-family: var(--ut-font-body); color: var(--ut-text); }
+  .ut-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:1px solid transparent; border-radius:var(--ut-radius-sm); font-family:var(--ut-font-body); font-size:13.5px; font-weight:700; line-height:1; padding:10px 16px; cursor:pointer; text-decoration:none; white-space:nowrap; }
+  .ut-btn--primary { background: var(--ut-accent); color: var(--ut-on-accent); }
+  .ut-btn--primary:hover { background: var(--ut-accent-dark); }
+  .preview-note { max-width:1480px; margin:0 auto; padding:10px 28px 0; font-size:12px; color:var(--ut-mono-muted); font-family:var(--ut-font-mono); }
+</style>
+<style>/* LessonPage.css — Lesson v2 (UWorld-style study guide).
+ *
+ * Scoped under .lp2-. Built on tokens.css (--ut-*) plus a small set of
+ * lesson-local variables below for the "study guide" look: steel-blue
+ * headings, exam-yellow highlights, blue example boxes, banded practice
+ * sections, green/red verdicts. Content JSON references tones by name
+ * (blue/teal/rose/green/purple/amber) — keep these class hooks stable.
+ */
+
+.lp2 {
+  /* palette */
+  --lp-heading: #1c3a5e;        /* sheet titles (dark navy) */
+  --lp-steel: #2b6ca3;          /* section headings, answer links */
+  --lp-steel-dark: #235a88;
+  --lp-body: #2a3342;           /* guide body text */
+  --lp-muted: #5c6a7d;
+  --lp-sheet-border: #dfe5ec;
+  --lp-hairline: #e4e9ef;
+
+  --lp-hl: #fbe97f;             /* exam-yellow highlight */
+  --lp-blue-border: #b9d3e6;
+  --lp-blue-band: #dcebf6;      /* example header band */
+  --lp-blue-tint: #f3f8fc;      /* example body tint */
+  --lp-table-head: #e3eef7;
+  --lp-table-border: #c9d6e3;
+
+  /* term tones (inline markup {tone|...}) */
+  --lp-term-blue: #0f6cbd;
+  --lp-term-teal: #0e8a7e;
+  --lp-term-rose: #c0392f;
+  --lp-term-green: #157f4b;
+  --lp-term-purple: #6d3fc4;
+  --lp-term-amber: #a8621a;
+
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 20px 28px 72px;
+  font-family: var(--ut-font-body);
+  color: var(--lp-body);
+}
+
+/* ═══════════ reading progress bar ═══════════ */
+
+.lp2-progressbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.lp2-progressbar__fill {
+  height: 100%;
+  background: var(--ut-accent);
+  transition: width 80ms linear;
+}
+
+/* ═══════════ top bar ═══════════ */
+
+.lp2-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.lp2-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lp-muted);
+  min-width: 0;
+}
+
+.lp2-crumbs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp2-crumbs__link:hover {
+  text-decoration: underline;
+}
+
+.lp2-crumbs__sep {
+  flex: 0 0 auto;
+  opacity: 0.55;
+}
+
+.lp2-crumbs__domain {
+  white-space: nowrap;
+}
+
+.lp2-crumbs__current {
+  font-weight: 600;
+  color: var(--ut-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp2-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp2-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ut-text-soft);
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.lp2-chip--done {
+  color: var(--ut-success-dark);
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+}
+
+/* ═══════════ two-panel body ═══════════ */
+
+.lp2-body {
+  display: grid;
+  grid-template-columns: 372px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+/* ───── left panel ───── */
+
+.lp2-left {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+
+/* video */
+
+.lp2-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ut-panel);
+  border-radius: var(--ut-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ut-shadow);
+  flex: 0 0 auto;
+}
+
+.lp2-video iframe,
+.lp2-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.lp2-video__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.lp2-video--placeholder .lp2-video__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(134, 164, 245, 0.18), transparent 55%),
+    radial-gradient(120% 100% at 90% 100%, rgba(43, 89, 216, 0.22), transparent 60%);
+}
+
+.lp2-video__playring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(242, 245, 250, 0.85);
+  color: var(--ut-on-ink);
+  font-size: 22px;
+  background: rgba(15, 30, 61, 0.35);
+}
+
+.lp2-video__playring svg {
+  margin-left: 3px;
+}
+
+.lp2-video__coming {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ut-on-ink-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* lesson card + page navigator */
+
+.lp2-left-card {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 18px 18px 16px;
+}
+
+.lp2-left-card__eyebrow {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 6px;
+}
+
+.lp2-left-card__title {
+  font-family: var(--ut-font-display);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.lp2-left-card__difficulty {
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  margin-bottom: 4px;
+}
+
+.lp2-pagenav {
+  margin-top: 14px;
+  border-top: 1px solid var(--lp-hairline);
+  padding-top: 12px;
+}
+
+.lp2-pagenav__label {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 8px;
+}
+
+.lp2-pagenav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lp2-pagenav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--ut-radius-sm);
+  padding: 8px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.lp2-pagenav__item:hover {
+  background: var(--ut-bg);
+  color: var(--ut-text);
+}
+
+.lp2-pagenav__item--active {
+  background: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+  font-weight: 600;
+}
+
+.lp2-pagenav__num {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.lp2-pagenav__title {
+  min-width: 0;
+}
+
+.lp2-practice-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.lp2-planner-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+}
+
+.lp2-planner-return:hover {
+  text-decoration: underline;
+}
+
+/* ───── study guide sheets ───── */
+
+.lp2-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 0;
+  max-width: 900px;
+}
+
+.lp2-sheet {
+  position: relative;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(16, 42, 67, 0.1), 0 6px 22px rgba(16, 42, 67, 0.05);
+  padding: 44px 58px 52px;
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.lp2-sheet__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #8a97a8;
+  margin: -14px -26px 14px 0;
+  text-align: right;
+}
+
+.lp2-sheet__h1 {
+  font-family: var(--ut-font-display);
+  font-size: 31px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  line-height: 1.2;
+}
+
+.lp2-sheet__h2 {
+  font-family: var(--ut-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+/* ═══════════ content blocks ═══════════ */
+
+.lp2-p {
+  margin: 0 0 14px;
+}
+
+.lp2-h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--lp-steel);
+  margin: 30px 0 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  line-height: 1.3;
+}
+
+.lp2-h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 18px 0 8px;
+}
+
+.lp2-sheet > .lp2-h3:first-of-type {
+  margin-top: 20px;
+}
+
+/* lists */
+
+.lp2-list {
+  margin: 0 0 14px;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lp2-list li::marker {
+  color: var(--lp-steel);
+}
+
+.lp2-list--number li::marker {
+  font-weight: 600;
+}
+
+/* inline markup */
+
+.lp2-blank {
+  display: inline-block;
+  width: 5.5em;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px);
+  margin: 0 2px;
+}
+
+.lp2-hl {
+  background: var(--lp-hl);
+  padding: 1px 3px;
+  border-radius: 2px;
+  color: inherit;
+}
+
+.lp2-term--blue { color: var(--lp-term-blue); }
+.lp2-term--teal { color: var(--lp-term-teal); }
+.lp2-term--rose { color: var(--lp-term-rose); }
+.lp2-term--green { color: var(--lp-term-green); }
+.lp2-term--purple { color: var(--lp-term-purple); }
+.lp2-term--amber { color: var(--lp-term-amber); }
+.lp2-term--gray { color: var(--lp-muted); font-weight: 600; }
+
+/* tables */
+
+.lp2-table-wrap {
+  margin: 18px 0 20px;
+  overflow-x: auto;
+}
+
+.lp2-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  min-width: 62%;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lp2-table th,
+.lp2-table td {
+  border: 1px solid var(--lp-table-border);
+  padding: 9px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp2-table th {
+  background: var(--lp-table-head);
+  color: var(--lp-heading);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lp2-table--compact th,
+.lp2-table--compact td {
+  padding: 6px 12px;
+  font-size: 13.5px;
+}
+
+.lp2-td--center {
+  text-align: center !important;
+}
+
+.lp2-table-caption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* rule statement */
+
+.lp2-rule {
+  margin: 16px 0;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+}
+
+.lp2-rule__label {
+  color: var(--lp-heading);
+}
+
+.lp2-rule em {
+  color: var(--lp-steel-dark);
+}
+
+/* callouts */
+
+.lp2-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card-soft);
+  padding: 13px 16px;
+  margin: 18px 0;
+  font-size: 14.5px;
+}
+
+.lp2-callout__icon {
+  flex: 0 0 auto;
+  font-size: 21px;
+  margin-top: 1px;
+  color: var(--lp-steel);
+}
+
+.lp2-callout--warning {
+  border-color: var(--ut-warn-rule);
+  background: var(--ut-warn-soft);
+}
+
+.lp2-callout--warning .lp2-callout__icon {
+  color: var(--ut-warn-dark);
+}
+
+.lp2-callout--tip .lp2-callout__icon {
+  color: var(--ut-warn);
+  font-size: 23px;
+}
+
+/* passages */
+
+.lp2-passage {
+  margin: 14px 0 16px;
+}
+
+.lp2-passage__label {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 6px;
+}
+
+.lp2-passage__body {
+  font-family: var(--ut-font-serif);
+  font-size: 15px;
+  line-height: 1.72;
+  color: #333c4b;
+  padding-left: 16px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-passage__body p {
+  margin: 0 0 10px;
+}
+
+.lp2-passage__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* questions + choices */
+
+.lp2-question {
+  margin: 14px 0;
+}
+
+.lp2-question__stem {
+  margin: 0 0 12px;
+}
+
+.lp2-choices {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lp2-choices li {
+  display: flex;
+  gap: 10px;
+}
+
+.lp2-choices__letter {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: var(--ut-text);
+}
+
+/* verdicts (✓ / ✗) */
+
+.lp2-verdict {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 19px;
+  margin-top: 1px;
+}
+
+.lp2-verdict svg {
+  stroke-width: 3px;
+}
+
+.lp2-verdict--correct { color: var(--ut-success); }
+.lp2-verdict--incorrect { color: var(--ut-danger); }
+
+/* process of elimination */
+
+.lp2-poe {
+  margin: 16px 0 6px;
+}
+
+.lp2-poe__intro {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.lp2-poe__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-poe__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-poe__text {
+  min-width: 0;
+}
+
+/* check-cross pairs */
+
+.lp2-checkcross {
+  list-style: none;
+  margin: 14px 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-checkcross__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-checkcross__text {
+  font-family: var(--ut-font-serif);
+  color: #333c4b;
+}
+
+.lp2-checkcross__note {
+  font-size: 13.5px;
+  color: var(--lp-muted);
+  margin-top: 3px;
+}
+
+/* example boxes */
+
+.lp2-example {
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 22px 0;
+  overflow: hidden;
+}
+
+.lp2-example__band {
+  background: var(--lp-blue-band);
+  border-bottom: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 8px 18px;
+}
+
+.lp2-example__body {
+  background: var(--lp-blue-tint);
+  padding: 18px 20px 16px;
+}
+
+.lp2-example__body > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-example__body .lp2-passage__body {
+  border-left-color: #a7c8de;
+}
+
+/* reveal (expandable answer) */
+
+.lp2-reveal {
+  margin: 10px 0 4px;
+}
+
+.lp2-reveal__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--lp-steel);
+}
+
+.lp2-reveal__toggle:hover {
+  color: var(--lp-steel-dark);
+  text-decoration: underline;
+}
+
+.lp2-reveal__chevron {
+  transition: transform 150ms ease;
+  font-size: 16px;
+}
+
+.lp2-reveal--open .lp2-reveal__chevron {
+  transform: rotate(180deg);
+}
+
+.lp2-reveal__body {
+  margin-top: 10px;
+  padding: 14px 16px 12px;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-left: 3px solid var(--lp-steel);
+  border-radius: 0 var(--ut-radius-sm) var(--ut-radius-sm) 0;
+  animation: lp2-reveal-in 180ms ease;
+}
+
+.lp2-reveal__body > :last-child {
+  margin-bottom: 0;
+}
+
+@keyframes lp2-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* practice section */
+
+.lp2-practice {
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+.lp2-practice__band {
+  background: linear-gradient(90deg, #3d4552 0%, #626c7a 55%, #8a93a0 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  padding: 9px 18px;
+}
+
+.lp2-practice__list {
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lp2-practice__item {
+  display: flex;
+  gap: 12px;
+  padding-left: 6px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-practice__item + .lp2-practice__item {
+  padding-top: 20px;
+  border-top: 1px dashed var(--lp-hairline);
+}
+
+.lp2-practice__number {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--ut-text);
+  padding-left: 8px;
+}
+
+.lp2-practice__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.lp2-practice__content > .lp2-p:first-child,
+.lp2-practice__content > .lp2-passage:first-child {
+  margin-top: 0;
+}
+
+/* things to remember */
+
+.lp2-remember {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius);
+  padding: 18px 22px 14px;
+  margin: 26px 0 4px;
+}
+
+.lp2-remember__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 10px;
+}
+
+.lp2-remember .lp2-list {
+  margin-bottom: 4px;
+}
+
+/* legend */
+
+.lp2-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: -6px 0 16px;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+
+.lp2-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lp2-legend__swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid rgba(16, 42, 67, 0.14);
+}
+
+.lp2-legend__swatch--yellow { background: var(--lp-hl); }
+.lp2-legend__swatch--blue { background: #cde3f4; }
+.lp2-legend__swatch--teal { background: #c9e9e4; }
+.lp2-legend__swatch--rose { background: #f6d5d2; }
+.lp2-legend__swatch--green { background: #d1eedd; }
+.lp2-legend__swatch--purple { background: #e4d9f7; }
+.lp2-legend__swatch--amber { background: #f4e3c8; }
+
+/* equation strip */
+
+.lp2-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 22px;
+}
+
+.lp2-strip__seg {
+  background: #eaf2f9;
+  border: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 7px;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.lp2-strip__seg--blue {
+  background: #dcebf6;
+  border-color: #a7c8de;
+  color: var(--lp-term-blue);
+}
+
+.lp2-strip__seg--teal {
+  background: #ddf1ee;
+  border-color: #a9d8d1;
+  color: var(--lp-term-teal);
+}
+
+.lp2-strip__seg--green {
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+  color: var(--lp-term-green);
+}
+
+.lp2-strip__seg--rose {
+  background: var(--ut-danger-soft);
+  border-color: var(--ut-danger-rule);
+  color: var(--lp-term-rose);
+}
+
+.lp2-strip__op {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ut-text-soft);
+}
+
+/* figures */
+
+.lp2-figure {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.lp2-figure img {
+  max-width: 100%;
+  border-radius: var(--ut-radius-sm);
+  border: 1px solid var(--lp-hairline);
+}
+
+.lp2-figure figcaption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* ═══════════ completion band ═══════════ */
+
+.lp2-mastery {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius-lg);
+  padding: 20px 24px;
+}
+
+.lp2-mastery__copy h3 {
+  margin: 0 0 4px;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+.lp2-mastery__copy p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+}
+
+.lp2-mastery__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.lp2-mastery__done {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ut-success-dark);
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.lp2-mastery__done svg {
+  font-size: 19px;
+  color: var(--ut-success);
+}
+
+.lp2-mastery__unmark {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ut-muted);
+  text-decoration: underline;
+}
+
+.lp2-mastery__unmark:disabled,
+.lp2-mastery__mark:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ═══════════ loading / message states ═══════════ */
+
+.lp2--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 55vh;
+  color: var(--ut-muted);
+  font-size: 14.5px;
+}
+
+.lp2-loading-icon {
+  font-size: 30px;
+  color: var(--ut-accent);
+  animation: lp2-spin 1s linear infinite;
+}
+
+@keyframes lp2-spin {
+  to { transform: rotate(360deg); }
+}
+
+.lp2--message {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+}
+
+.lp2-message-card {
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 32px;
+}
+
+/* ═══════════ responsive ═══════════ */
+
+@media (max-width: 1120px) {
+  .lp2-body {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .lp2-sheet {
+    padding: 36px 36px 44px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -12px -10px 12px 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .lp2 {
+    padding: 14px 14px 56px;
+  }
+
+  .lp2-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lp2-left {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .lp2-video {
+    max-width: 560px;
+  }
+
+  /* page navigator becomes a horizontal chip row */
+  .lp2-pagenav ol {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .lp2-pagenav__item {
+    white-space: nowrap;
+    border: 1px solid var(--ut-rule);
+    border-radius: 999px;
+    padding: 6px 12px;
+  }
+
+  .lp2-pagenav__item--active {
+    border-color: var(--ut-accent-rule);
+  }
+
+  .lp2-practice-cta {
+    max-width: 360px;
+  }
+
+  .lp2-sheet {
+    padding: 26px 20px 34px;
+    font-size: 14.5px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -8px 0 10px;
+  }
+
+  .lp2-sheet__h1 {
+    font-size: 25px;
+  }
+
+  .lp2-sheet__h2 {
+    font-size: 20.5px;
+  }
+
+  .lp2-h3 {
+    font-size: 17.5px;
+  }
+
+  .lp2-table {
+    min-width: 100%;
+  }
+
+  .lp2-practice__list {
+    padding: 14px 12px;
+  }
+
+  .lp2-example__body {
+    padding: 14px 14px 12px;
+  }
+}
+
+/* ═══════════ math blocks (Lesson v2 math lessons) ═══════════ */
+
+/* worked steps: centered equation lines + gray side annotations (UWorld style) */
+
+.lp2-steps {
+  margin: 14px 0 16px;
+}
+
+.lp2-steps__title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 8px;
+}
+
+.lp2-steps__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lp2-steps__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.lp2-steps__eq {
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.lp2-steps__eq .katex-display {
+  margin: 0;
+}
+
+.lp2-steps__eq .katex {
+  font-size: 1.08em;
+}
+
+.lp2-steps__note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--lp-muted);
+}
+
+.lp2-steps__note .katex {
+  font-size: 1.04em;
+}
+
+/* standalone display equation (optionally boxed, like key formulas) */
+
+.lp2-math {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-math__tex {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 2px 0;
+}
+
+.lp2-math__tex .katex-display {
+  margin: 0;
+}
+
+.lp2-math__tex .katex {
+  font-size: 1.12em;
+}
+
+.lp2-math--boxed .lp2-math__tex {
+  display: inline-block;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 12px 24px;
+  overflow-x: visible;
+}
+
+.lp2-math__caption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* side-by-side columns (compare methods, case-by-case graphs) */
+
+.lp2-columns {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.lp2-columns__col {
+  flex: 1;
+  min-width: 0;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-radius: var(--ut-radius-sm);
+  padding: 14px 16px 12px;
+}
+
+.lp2-columns__col > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-columns__title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--lp-steel);
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  text-align: center;
+}
+
+/* coordinate-plane figures */
+
+.lp2-graph {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-graph svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.lp2-columns__col .lp2-graph {
+  margin: 6px 0 4px;
+}
+
+.lp2-graph__caption {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  line-height: 1.5;
+}
+
+/* inline KaTeX inside prose/tables/POE: match surrounding rhythm */
+
+.lp2-sheet .katex {
+  font-size: 1.05em;
+}
+
+@media (max-width: 720px) {
+  .lp2-steps__row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 6px 0;
+  }
+
+  .lp2-steps__note {
+    text-align: center;
+  }
+
+  .lp2-columns {
+    flex-direction: column;
+  }
+}
+</style>
+<style>
+  .lp2-reveal:not(.lp2-reveal--open) .lp2-reveal__body { display: none; }
+</style>
+<!-- KaTeX (same CDN + options the app's katexLoader/LessonPage use) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof renderMathInElement !== 'function') return;
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\[', right: '\\]', display: true },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '$', right: '$', display: false },
+      ],
+      // No color macros here: \blue{...} etc. are pre-expanded to
+      // \textcolor by the renderer ("#" inside a KaTeX macro body is a
+      // parameter marker and would break the expression).
+      throwOnError: false,
+    });
+  });
+</script>
+</head>
+<body>
+<div class="preview-note">DESIGN PREVIEW — static render of /learn/two-variable-data (Lesson v2)</div>
+<div class="lp2">
+  <header class="lp2-topbar">
+    <nav class="lp2-crumbs" aria-label="Breadcrumb">
+      <a class="lp2-crumbs__link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Lectures</a>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__domain">Problem-Solving and Data Analysis</span>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__current">Two-Variable Data</span>
+    </nav>
+    <div class="lp2-topbar__meta"><span class="lp2-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~30 min</span></div>
+  </header>
+  <div class="lp2-body">
+    <aside class="lp2-left">
+      <div class="lp2-video lp2-video--placeholder">
+        <div class="lp2-video__overlay">
+          <span class="lp2-video__playring"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></span>
+          <span class="lp2-video__coming"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg> Video lesson coming soon</span>
+        </div>
+      </div>
+      <div class="lp2-left-card">
+        <div class="lp2-left-card__eyebrow">Math · Problem-Solving and Data Analysis</div>
+        <h2 class="lp2-left-card__title">Two-Variable Data</h2>
+        <div class="lp2-left-card__difficulty">Intermediate</div>
+        <nav class="lp2-pagenav"><div class="lp2-pagenav__label">In this lesson</div><ol>
+    <li><button type="button" class="lp2-pagenav__item lp2-pagenav__item--active" onclick="document.getElementById('lesson-page-overview').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">1</span><span class="lp2-pagenav__title">Overview & Strategies</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-read-scatterplots').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">2</span><span class="lp2-pagenav__title">Read the Scatterplot</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-line-of-best-fit').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">3</span><span class="lp2-pagenav__title">The Line of Best Fit</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-prediction-residuals').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">4</span><span class="lp2-pagenav__title">Predictions & the Gap to the Line</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-model-choice').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">5</span><span class="lp2-pagenav__title">Choosing the Model</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-practice').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">6</span><span class="lp2-pagenav__title">Practice</span>
+    </button></li></ol></nav>
+        <button type="button" class="ut-btn ut-btn--primary lp2-practice-cta"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg> Practice this skill</button>
+      </div>
+    </aside>
+    <main class="lp2-guide">
+      <article id="lesson-page-overview" class="lp2-sheet" data-page-index="0"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Two-Variable Data</span></div><h1 class="lp2-sheet__h1">Two-Variable Data</h1><p class="lp2-p"><strong class="lp2-term lp2-term--blue">Two-variable data</strong> is a set of pairs—hours studied and score earned, temperature and sales. A <strong class="lp2-term lp2-term--teal">scatterplot</strong> plots each pair as a point, and the cloud&#x27;s shape reveals the <strong>association</strong> between the variables:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Positive association</div><figure class="lp2-graph" role="img" aria-label="Scatterplot with points rising from lower left to upper right"><svg viewBox="0 0 185 160" width="185" height="160"><defs><marker id="arr-R6ap" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6ap"><rect x="16" y="16" width="151" height="128"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="46.2" y1="16" x2="46.2" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="76.4" y1="16" x2="76.4" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="106.6" y1="16" x2="106.6" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="136.8" y1="16" x2="136.8" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="167" y1="16" x2="167" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="144" x2="167" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="118.4" x2="167" y2="118.4" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="92.8" x2="167" y2="92.8" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="67.2" x2="167" y2="67.2" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="41.6" x2="167" y2="41.6" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="167" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="144" x2="173" y2="144" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ap)" marker-start="url(#arr-R6ap)"></line><line x1="16" y1="148" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ap)" marker-start="url(#arr-R6ap)"></line><text x="175" y="148" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><circle cx="31.1" cy="118.4" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="46.2" cy="99.2" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="61.3" cy="105.6" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="76.4" cy="80" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="91.5" cy="86.4" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="106.6" cy="60.8" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="121.69999999999999" cy="54.4" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="136.8" cy="60.8" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="151.9" cy="35.2" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">As $x$ increases, $y$ <strong>tends to increase</strong>.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Negative association</div><figure class="lp2-graph" role="img" aria-label="Scatterplot with points falling from upper left to lower right"><svg viewBox="0 0 185 160" width="185" height="160"><defs><marker id="arr-R6ip" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6ip"><rect x="16" y="16" width="151" height="128"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="46.2" y1="16" x2="46.2" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="76.4" y1="16" x2="76.4" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="106.6" y1="16" x2="106.6" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="136.8" y1="16" x2="136.8" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="167" y1="16" x2="167" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="144" x2="167" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="118.4" x2="167" y2="118.4" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="92.8" x2="167" y2="92.8" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="67.2" x2="167" y2="67.2" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="41.6" x2="167" y2="41.6" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="167" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="144" x2="173" y2="144" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ip)" marker-start="url(#arr-R6ip)"></line><line x1="16" y1="148" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ip)" marker-start="url(#arr-R6ip)"></line><text x="175" y="148" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><circle cx="31.1" cy="35.2" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="46.2" cy="54.4" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="61.3" cy="48" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="76.4" cy="67.2" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="91.5" cy="80" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="106.6" cy="73.6" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="121.69999999999999" cy="99.2" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="136.8" cy="105.6" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="151.9" cy="118.4" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">As $x$ increases, $y$ <strong>tends to decrease</strong>.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">No clear association</div><figure class="lp2-graph" role="img" aria-label="Scatterplot with points scattered with no visible pattern"><svg viewBox="0 0 185 160" width="185" height="160"><defs><marker id="arr-R6qp" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6qp"><rect x="16" y="16" width="151" height="128"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="46.2" y1="16" x2="46.2" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="76.4" y1="16" x2="76.4" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="106.6" y1="16" x2="106.6" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="136.8" y1="16" x2="136.8" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="167" y1="16" x2="167" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="144" x2="167" y2="144" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="118.4" x2="167" y2="118.4" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="92.8" x2="167" y2="92.8" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="67.2" x2="167" y2="67.2" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="41.6" x2="167" y2="41.6" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="167" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="144" x2="173" y2="144" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6qp)" marker-start="url(#arr-R6qp)"></line><line x1="16" y1="148" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6qp)" marker-start="url(#arr-R6qp)"></line><text x="175" y="148" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><circle cx="31.1" cy="80" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="46.2" cy="118.4" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="61.3" cy="54.4" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="76.4" cy="92.8" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="91.5" cy="41.6" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="106.6" cy="105.6" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="121.69999999999999" cy="67.2" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="136.8" cy="112" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="151.9" cy="48" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">No trend — $x$ tells you little about $y$.</figcaption></figure></div></div><h3 class="lp2-h3">Strategies</h3><ul class="lp2-list"><li><strong>Read the axes first</strong>—what each variable is, and in what units. Half the wrong answers misuse the axes.</li><li><strong>The line of best fit summarizes the trend.</strong> Predictions come from the <strong>line</strong>, not from individual points.</li><li><strong>Slope = predicted change in $y$ per one unit of $x$</strong>; the y-intercept is the prediction at $x = 0$. Interpret both with the axes&#x27; units.</li><li><strong>Actual $-$ predicted:</strong> a point above the line beats its prediction; below the line falls short.</li><li><strong>Association is a tendency, not a law</strong>—and it is not causation. The right answers say “tends to” and “predicted.”</li></ul><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Every scatterplot question is one of four jobs: describe the trend, interpret the line&#x27;s numbers, predict from the line, or compare a point with the line. Identify the job before touching the plot.</div></div></article><article id="lesson-page-read-scatterplots" class="lp2-sheet" data-page-index="1"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Two-Variable Data: Read the Scatterplot</span></div><h2 class="lp2-sheet__h2">Read the Scatterplot</h2><p class="lp2-p">Besides its <strong>direction</strong>, a cloud of points has a <strong>shape</strong>. If the trend runs straight, a linear model fits; if it bends, you&#x27;ll need a curve:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Linear trend</div><figure class="lp2-graph" role="img" aria-label="Scatterplot with points along a straight rising line"><svg viewBox="0 0 215 180" width="215" height="180"><defs><marker id="arr-R6aq" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6aq"><rect x="16" y="16" width="181" height="148"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="56.22222222222222" y1="16" x2="56.22222222222222" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="96.44444444444444" y1="16" x2="96.44444444444444" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="136.66666666666666" y1="16" x2="136.66666666666666" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="176.88888888888889" y1="16" x2="176.88888888888889" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="164" x2="197" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="131.11111111111111" x2="197" y2="131.11111111111111" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="98.22222222222223" x2="197" y2="98.22222222222223" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="65.33333333333333" x2="197" y2="65.33333333333333" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="32.44444444444444" x2="197" y2="32.44444444444444" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="164" x2="203" y2="164" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6aq)" marker-start="url(#arr-R6aq)"></line><line x1="16" y1="168" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6aq)" marker-start="url(#arr-R6aq)"></line><text x="205" y="168" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="16" y1="147.55555555555554" x2="197" y2="29.155555555555566" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line></g><g><circle cx="36.111111111111114" cy="139.33333333333334" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="56.22222222222222" cy="114.66666666666666" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="76.33333333333333" cy="111.37777777777777" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="96.44444444444444" cy="90" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="116.55555555555556" cy="85.06666666666666" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="136.66666666666666" cy="62.044444444444444" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="156.77777777777777" cy="57.111111111111114" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="176.88888888888889" cy="35.733333333333334" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Constant rate — a <strong>line</strong> fits.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Nonlinear trend</div><figure class="lp2-graph" role="img" aria-label="Scatterplot with points following an arch shape"><svg viewBox="0 0 215 180" width="215" height="180"><defs><marker id="arr-R6iq" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6iq"><rect x="16" y="16" width="181" height="148"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="52.2" y1="16" x2="52.2" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="88.4" y1="16" x2="88.4" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="124.6" y1="16" x2="124.6" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="160.8" y1="16" x2="160.8" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="197" y1="16" x2="197" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="164" x2="197" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="134.4" x2="197" y2="134.4" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="104.8" x2="197" y2="104.8" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="75.2" x2="197" y2="75.2" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="45.6" x2="197" y2="45.6" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="197" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="164" x2="203" y2="164" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6iq)" marker-start="url(#arr-R6iq)"></line><line x1="16" y1="168" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6iq)" marker-start="url(#arr-R6iq)"></line><text x="205" y="168" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,156.60 L17.13,153.84 L18.26,151.12 L19.39,148.43 L20.52,145.78 L21.66,143.16 L22.79,140.57 L23.92,138.02 L25.05,135.51 L26.18,133.03 L27.31,130.58 L28.44,128.17 L29.57,125.80 L30.71,123.46 L31.84,121.15 L32.97,118.88 L34.10,116.64 L35.23,114.44 L36.36,112.27 L37.49,110.14 L38.63,108.04 L39.76,105.97 L40.89,103.94 L42.02,101.95 L43.15,99.99 L44.28,98.06 L45.41,96.17 L46.54,94.32 L47.67,92.50 L48.81,90.71 L49.94,88.96 L51.07,87.24 L52.20,85.56 L53.33,83.91 L54.46,82.30 L55.59,80.72 L56.73,79.18 L57.86,77.67 L58.99,76.19 L60.12,74.75 L61.25,73.35 L62.38,71.98 L63.51,70.64 L64.64,69.34 L65.78,68.08 L66.91,66.85 L68.04,65.65 L69.17,64.49 L70.30,63.36 L71.43,62.27 L72.56,61.21 L73.69,60.19 L74.83,59.20 L75.96,58.24 L77.09,57.32 L78.22,56.44 L79.35,55.59 L80.48,54.77 L81.61,53.99 L82.74,53.25 L83.88,52.54 L85.01,51.86 L86.14,51.22 L87.27,50.61 L88.40,50.04 L89.53,49.50 L90.66,49.00 L91.79,48.53 L92.92,48.10 L94.06,47.70 L95.19,47.33 L96.32,47.00 L97.45,46.71 L98.58,46.45 L99.71,46.22 L100.84,46.03 L101.97,45.88 L103.11,45.76 L104.24,45.67 L105.37,45.62 L106.50,45.60 L107.63,45.62 L108.76,45.67 L109.89,45.76 L111.03,45.88 L112.16,46.03 L113.29,46.22 L114.42,46.45 L115.55,46.71 L116.68,47.00 L117.81,47.33 L118.94,47.70 L120.07,48.10 L121.21,48.53 L122.34,49.00 L123.47,49.50 L124.60,50.04 L125.73,50.61 L126.86,51.22 L127.99,51.86 L129.13,52.54 L130.26,53.25 L131.39,53.99 L132.52,54.77 L133.65,55.59 L134.78,56.44 L135.91,57.32 L137.04,58.24 L138.18,59.20 L139.31,60.19 L140.44,61.21 L141.57,62.27 L142.70,63.36 L143.83,64.49 L144.96,65.65 L146.09,66.85 L147.22,68.08 L148.36,69.34 L149.49,70.64 L150.62,71.98 L151.75,73.35 L152.88,74.75 L154.01,76.19 L155.14,77.67 L156.28,79.18 L157.41,80.72 L158.54,82.30 L159.67,83.91 L160.80,85.56 L161.93,87.24 L163.06,88.96 L164.19,90.71 L165.32,92.50 L166.46,94.32 L167.59,96.17 L168.72,98.06 L169.85,99.99 L170.98,101.95 L172.11,103.94 L173.24,105.97 L174.38,108.04 L175.51,110.14 L176.64,112.27 L177.77,114.44 L178.90,116.64 L180.03,118.88 L181.16,121.15 L182.29,123.46 L183.43,125.80 L184.56,128.17 L185.69,130.58 L186.82,133.03 L187.95,135.51 L189.08,138.02 L190.21,140.57 L191.34,143.16 L192.47,145.78 L193.61,148.43 L194.74,151.12 L195.87,153.84 L197.00,156.60" fill="none" stroke="#6d3fc4" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6iq)"></path></g><g><circle cx="34.1" cy="119.6" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="52.2" cy="82.60000000000001" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="70.3" cy="67.8" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="88.4" cy="48.56" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="106.5" cy="42.640000000000015" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="124.6" cy="51.52000000000001" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="142.7" cy="63.36" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="160.8" cy="87.03999999999999" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="178.9" cy="113.67999999999999" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Rises, peaks, falls — a <strong>curve</strong> fits.</figcaption></figure></div></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><figure class="lp2-graph" role="img" aria-label="Scatterplot of test score versus hours of TV, with points trending downward"><svg viewBox="0 0 320 250" width="320" height="250"><defs><marker id="arr-R1jq" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R1jq"><rect x="30" y="16" width="272" height="210"></rect></clipPath></defs><line x1="30" y1="16" x2="30" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="60.22222222222222" y1="16" x2="60.22222222222222" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="90.44444444444444" y1="16" x2="90.44444444444444" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="120.66666666666666" y1="16" x2="120.66666666666666" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="150.88888888888889" y1="16" x2="150.88888888888889" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="181.11111111111111" y1="16" x2="181.11111111111111" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="211.33333333333331" y1="16" x2="211.33333333333331" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="241.55555555555557" y1="16" x2="241.55555555555557" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="271.77777777777777" y1="16" x2="271.77777777777777" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="302" y1="16" x2="302" y2="226" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="199.75" x2="302" y2="199.75" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="147.25" x2="302" y2="147.25" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="94.75" x2="302" y2="94.75" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="42.25" x2="302" y2="42.25" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="230" x2="30" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R1jq)" marker-start="url(#arr-R1jq)"></line><text x="36" y="10" font-size="12" font-style="italic" fill="#3d4b5e">s</text><g><line x1="60.22222222222222" y1="223" x2="60.22222222222222" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="60.22222222222222" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">1</text></g><g><line x1="90.44444444444444" y1="223" x2="90.44444444444444" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="90.44444444444444" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="120.66666666666666" y1="223" x2="120.66666666666666" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="120.66666666666666" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">3</text></g><g><line x1="150.88888888888889" y1="223" x2="150.88888888888889" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="150.88888888888889" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="181.11111111111111" y1="223" x2="181.11111111111111" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="181.11111111111111" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">5</text></g><g><line x1="211.33333333333331" y1="223" x2="211.33333333333331" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="211.33333333333331" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">6</text></g><g><line x1="241.55555555555557" y1="223" x2="241.55555555555557" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="241.55555555555557" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">7</text></g><g><line x1="271.77777777777777" y1="223" x2="271.77777777777777" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="271.77777777777777" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">8</text></g><g><line x1="302" y1="223" x2="302" y2="229" stroke="#3d4b5e" stroke-width="1"></line><text x="302" y="240" font-size="10" fill="#5c6a7d" text-anchor="middle">9</text></g><g><line x1="27" y1="199.75" x2="33" y2="199.75" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="203.25" font-size="10" fill="#5c6a7d" text-anchor="end">64</text></g><g><line x1="27" y1="147.25" x2="33" y2="147.25" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="150.75" font-size="10" fill="#5c6a7d" text-anchor="end">72</text></g><g><line x1="27" y1="94.75" x2="33" y2="94.75" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="98.25" font-size="10" fill="#5c6a7d" text-anchor="end">80</text></g><g><line x1="27" y1="42.25" x2="33" y2="42.25" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="45.75" font-size="10" fill="#5c6a7d" text-anchor="end">88</text></g><g><circle cx="60.22222222222222" cy="42.25" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="90.44444444444444" cy="68.5" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="120.66666666666666" cy="61.9375" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="150.88888888888889" cy="107.875" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="181.11111111111111" cy="134.125" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="211.33333333333331" cy="127.5625" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="241.55555555555557" cy="173.5" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="271.77777777777777" cy="193.1875" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Hours of TV per day ($h$) and test score ($s$) for eight students.</figcaption></figure><div class="lp2-question"><p class="lp2-question__stem">Which statement best describes the relationship shown in the scatterplot?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">As TV time increases, test scores tend to decrease</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">As TV time increases, test scores tend to increase</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">There is no relationship between TV time and test scores</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">Watching more TV causes lower test scores</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>The cloud falls from left to right—a negative association, described with “tends to.”</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>That would slope upward; this cloud clearly falls.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>“No relationship” looks like a shapeless cloud—this one has an unmistakable downward drift.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>The data shows the two variables <em>move together</em>—it cannot show that one <strong>causes</strong> the other. Association is never causation on the SAT.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">Correct answers about scatterplots hedge: “tend to,” “in general,” “predicted.” Choices with “causes,” “always,” or “every” overstate what data can say—and they&#x27;re nearly always wrong.</div></div></article><article id="lesson-page-line-of-best-fit" class="lp2-sheet" data-page-index="2"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Two-Variable Data: The Line of Best Fit</span></div><h2 class="lp2-sheet__h2">The Line of Best Fit</h2><p class="lp2-p">The <strong class="lp2-term lp2-term--teal">line of best fit</strong> runs through the middle of the cloud—roughly half the points above, half below—and turns the trend into an equation you can interpret and use. Here, quiz score $y$ against hours studied $x$, fit by $\hat{y} = 4x + 55$:</p><figure class="lp2-graph" role="img" aria-label="Scatterplot of quiz scores rising with study hours, with a fitted line through the cloud"><svg viewBox="0 0 340 280" width="340" height="280"><defs><marker id="arr-R2r" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R2r"><rect x="30" y="16" width="292" height="240"></rect></clipPath></defs><line x1="30" y1="16" x2="30" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="62.44444444444444" y1="16" x2="62.44444444444444" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="94.88888888888889" y1="16" x2="94.88888888888889" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="127.33333333333333" y1="16" x2="127.33333333333333" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="159.77777777777777" y1="16" x2="159.77777777777777" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="192.22222222222223" y1="16" x2="192.22222222222223" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="224.66666666666666" y1="16" x2="224.66666666666666" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="257.1111111111111" y1="16" x2="257.1111111111111" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="289.55555555555554" y1="16" x2="289.55555555555554" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="322" y1="16" x2="322" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="256" x2="322" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="198.85714285714283" x2="322" y2="198.85714285714283" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="141.71428571428572" x2="322" y2="141.71428571428572" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="84.57142857142857" x2="322" y2="84.57142857142857" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="27.428571428571427" x2="322" y2="27.428571428571427" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="260" x2="30" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R2r)" marker-start="url(#arr-R2r)"></line><text x="36" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="62.44444444444444" y1="253" x2="62.44444444444444" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="62.44444444444444" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">1</text></g><g><line x1="94.88888888888889" y1="253" x2="94.88888888888889" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="94.88888888888889" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="127.33333333333333" y1="253" x2="127.33333333333333" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="127.33333333333333" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">3</text></g><g><line x1="159.77777777777777" y1="253" x2="159.77777777777777" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="159.77777777777777" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="192.22222222222223" y1="253" x2="192.22222222222223" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="192.22222222222223" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">5</text></g><g><line x1="224.66666666666666" y1="253" x2="224.66666666666666" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="224.66666666666666" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">6</text></g><g><line x1="257.1111111111111" y1="253" x2="257.1111111111111" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="257.1111111111111" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">7</text></g><g><line x1="289.55555555555554" y1="253" x2="289.55555555555554" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="289.55555555555554" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">8</text></g><g><line x1="322" y1="253" x2="322" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="322" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">9</text></g><g><line x1="27" y1="256" x2="33" y2="256" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="259.5" font-size="10" fill="#5c6a7d" text-anchor="end">50</text></g><g><line x1="27" y1="198.85714285714283" x2="33" y2="198.85714285714283" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="202.35714285714283" font-size="10" fill="#5c6a7d" text-anchor="end">60</text></g><g><line x1="27" y1="141.71428571428572" x2="33" y2="141.71428571428572" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="145.21428571428572" font-size="10" fill="#5c6a7d" text-anchor="end">70</text></g><g><line x1="27" y1="84.57142857142857" x2="33" y2="84.57142857142857" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="88.07142857142857" font-size="10" fill="#5c6a7d" text-anchor="end">80</text></g><g><line x1="27" y1="27.428571428571427" x2="33" y2="27.428571428571427" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="30.928571428571427" font-size="10" fill="#5c6a7d" text-anchor="end">90</text></g><g><line x1="30" y1="227.42857142857142" x2="322" y2="21.714285714285715" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line><text x="259.8666666666667" y="61.71428571428575" font-size="11.5" font-style="italic" fill="#0e8a7e">y = 4x + 55</text></g><g><circle cx="62.44444444444444" cy="216" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="94.88888888888889" cy="170.2857142857143" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="127.33333333333333" cy="176" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="159.77777777777777" cy="124.57142857142857" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="192.22222222222223" cy="130.28571428571428" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="224.66666666666666" cy="56" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="257.1111111111111" cy="78.85714285714286" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="289.55555555555554" cy="38.857142857142854" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Hours studied vs. quiz score, with the line of best fit.</figcaption></figure><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th>Number in the model</th><th>Meaning in context</th></tr></thead><tbody><tr><td>slope $= 4$</td><td><strong>predicted</strong> increase of $4$ points for each additional hour studied</td></tr><tr><td>y-intercept $= 55$</td><td><strong>predicted</strong> score for a student who studies $0$ hours</td></tr></tbody></table><div class="lp2-table-caption">Interpretations always carry the axes&#x27; units — points per hour, points at zero hours.</div></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">Based on the model $\hat{y} = 4x + 55$, which of the following is the best interpretation of the number $4$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">The predicted increase in quiz score for each additional hour studied</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">The predicted quiz score for a student who does not study</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">The number of hours a typical student studies</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">The exact number of points every student gains per hour of studying</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>The slope multiplies $x$ (hours), so it&#x27;s the predicted change in $y$ (points) per one hour.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>That&#x27;s the y-intercept&#x27;s job—the $55$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$4$ carries units of points <strong>per hour</strong>, not hours—the units veto this reading.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>“Exact… every student” claims certainty a trend line doesn&#x27;t have. Models <strong>predict on average</strong>; the scattered points prove individuals vary.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Best-fit interpretations have a fixed grammar: slope → “predicted change in [y-units] per one [x-unit]”; intercept → “predicted [y] when [x] is zero.” Match the choice to the grammar and the units.</div></div></article><article id="lesson-page-prediction-residuals" class="lp2-sheet" data-page-index="3"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Two-Variable Data: Predictions &amp; the Gap to the Line</span></div><h2 class="lp2-sheet__h2">Predictions &amp; the Gap to the Line</h2><h3 class="lp2-h3">Predicting from the Model</h3><p class="lp2-p">To predict, feed an $x$-value to the <strong>line</strong>—the points have already done their job by shaping it.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">Using $\hat{y} = 4x + 55$, what score does the model predict for a student who studies $6$ hours?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$\hat{y} = 4(6) + 55$$</div><div class="lp2-steps__note">Substitute $x = 6$ into the model</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$\hat{y} = 79$$</div><div class="lp2-steps__note">The predicted score</div></div></div></div></div></section><h3 class="lp2-h3">Actual vs. Predicted</h3><p class="lp2-p">Real students don&#x27;t land exactly on the line. The vertical gap—<strong>actual $-$ predicted</strong>—says who beat the model and by how much. One student studied $6$ hours and scored $85$:</p><figure class="lp2-graph" role="img" aria-label="The scatterplot with the point at 6 hours, 85 points highlighted above the fitted line, with a dashed gap of 6"><svg viewBox="0 0 340 280" width="340" height="280"><defs><marker id="arr-R6s" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6s"><rect x="30" y="16" width="292" height="240"></rect></clipPath></defs><line x1="30" y1="16" x2="30" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="62.44444444444444" y1="16" x2="62.44444444444444" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="94.88888888888889" y1="16" x2="94.88888888888889" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="127.33333333333333" y1="16" x2="127.33333333333333" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="159.77777777777777" y1="16" x2="159.77777777777777" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="192.22222222222223" y1="16" x2="192.22222222222223" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="224.66666666666666" y1="16" x2="224.66666666666666" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="257.1111111111111" y1="16" x2="257.1111111111111" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="289.55555555555554" y1="16" x2="289.55555555555554" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="322" y1="16" x2="322" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="256" x2="322" y2="256" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="198.85714285714283" x2="322" y2="198.85714285714283" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="141.71428571428572" x2="322" y2="141.71428571428572" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="84.57142857142857" x2="322" y2="84.57142857142857" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="27.428571428571427" x2="322" y2="27.428571428571427" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="260" x2="30" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6s)" marker-start="url(#arr-R6s)"></line><text x="36" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="62.44444444444444" y1="253" x2="62.44444444444444" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="62.44444444444444" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">1</text></g><g><line x1="94.88888888888889" y1="253" x2="94.88888888888889" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="94.88888888888889" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="127.33333333333333" y1="253" x2="127.33333333333333" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="127.33333333333333" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">3</text></g><g><line x1="159.77777777777777" y1="253" x2="159.77777777777777" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="159.77777777777777" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="192.22222222222223" y1="253" x2="192.22222222222223" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="192.22222222222223" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">5</text></g><g><line x1="224.66666666666666" y1="253" x2="224.66666666666666" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="224.66666666666666" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">6</text></g><g><line x1="257.1111111111111" y1="253" x2="257.1111111111111" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="257.1111111111111" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">7</text></g><g><line x1="289.55555555555554" y1="253" x2="289.55555555555554" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="289.55555555555554" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">8</text></g><g><line x1="322" y1="253" x2="322" y2="259" stroke="#3d4b5e" stroke-width="1"></line><text x="322" y="270" font-size="10" fill="#5c6a7d" text-anchor="middle">9</text></g><g><line x1="27" y1="256" x2="33" y2="256" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="259.5" font-size="10" fill="#5c6a7d" text-anchor="end">50</text></g><g><line x1="27" y1="198.85714285714283" x2="33" y2="198.85714285714283" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="202.35714285714283" font-size="10" fill="#5c6a7d" text-anchor="end">60</text></g><g><line x1="27" y1="141.71428571428572" x2="33" y2="141.71428571428572" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="145.21428571428572" font-size="10" fill="#5c6a7d" text-anchor="end">70</text></g><g><line x1="27" y1="84.57142857142857" x2="33" y2="84.57142857142857" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="88.07142857142857" font-size="10" fill="#5c6a7d" text-anchor="end">80</text></g><g><line x1="27" y1="27.428571428571427" x2="33" y2="27.428571428571427" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="30.928571428571427" font-size="10" fill="#5c6a7d" text-anchor="end">90</text></g><g><line x1="224.66666666666666" y1="90.28571428571429" x2="224.66666666666666" y2="56" stroke="#157f4b" stroke-width="1.8" stroke-dasharray="5 4" stroke-linecap="round"></line><text x="231.66666666666666" y="77.14285714285714" font-size="11" font-weight="600" fill="#157f4b" text-anchor="start">+6</text></g><g><line x1="30" y1="227.42857142857142" x2="322" y2="21.714285714285715" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line></g><g><circle cx="62.44444444444444" cy="216" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="94.88888888888889" cy="170.2857142857143" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="127.33333333333333" cy="176" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="159.77777777777777" cy="124.57142857142857" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="192.22222222222223" cy="130.28571428571428" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="224.66666666666666" cy="56" r="4" fill="#157f4b" stroke="#fff" stroke-width="1.4"></circle><text x="204.66666666666666" y="44" font-size="11" font-weight="600" fill="#157f4b">(6, 85)</text></g><g><circle cx="257.1111111111111" cy="78.85714285714286" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="289.55555555555554" cy="38.857142857142854" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Actual $85$, predicted $79$: the point sits $\textcolor{#157f4b}{6}$ <strong>above</strong> the line — $6$ points better than predicted.</figcaption></figure><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em>Point <strong>above</strong> the line → actual $&gt;$ predicted (difference positive). Point <strong>below</strong> → actual $&lt;$ predicted (negative). “Farthest from the line” means the largest vertical gap, sign ignored.</em></p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><figure class="lp2-graph" role="img" aria-label="Scatterplot with four labeled points around the line y equals x plus 2"><svg viewBox="0 0 320 260" width="320" height="260"><defs><marker id="arr-R38s" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R38s"><rect x="30" y="16" width="272" height="220"></rect></clipPath></defs><line x1="30" y1="16" x2="30" y2="236" stroke="#e4ebf2" stroke-width="1"></line><line x1="84.4" y1="16" x2="84.4" y2="236" stroke="#e4ebf2" stroke-width="1"></line><line x1="138.8" y1="16" x2="138.8" y2="236" stroke="#e4ebf2" stroke-width="1"></line><line x1="193.2" y1="16" x2="193.2" y2="236" stroke="#e4ebf2" stroke-width="1"></line><line x1="247.60000000000002" y1="16" x2="247.60000000000002" y2="236" stroke="#e4ebf2" stroke-width="1"></line><line x1="302" y1="16" x2="302" y2="236" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="236" x2="302" y2="236" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="181" x2="302" y2="181" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="126" x2="302" y2="126" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="71" x2="302" y2="71" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="16" x2="302" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="26" y1="236" x2="308" y2="236" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R38s)" marker-start="url(#arr-R38s)"></line><line x1="30" y1="240" x2="30" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R38s)" marker-start="url(#arr-R38s)"></line><text x="310" y="240" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="36" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="84.4" y1="233" x2="84.4" y2="239" stroke="#3d4b5e" stroke-width="1"></line><text x="84.4" y="250" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="138.8" y1="233" x2="138.8" y2="239" stroke="#3d4b5e" stroke-width="1"></line><text x="138.8" y="250" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="193.2" y1="233" x2="193.2" y2="239" stroke="#3d4b5e" stroke-width="1"></line><text x="193.2" y="250" font-size="10" fill="#5c6a7d" text-anchor="middle">6</text></g><g><line x1="247.60000000000002" y1="233" x2="247.60000000000002" y2="239" stroke="#3d4b5e" stroke-width="1"></line><text x="247.60000000000002" y="250" font-size="10" fill="#5c6a7d" text-anchor="middle">8</text></g><g><line x1="302" y1="233" x2="302" y2="239" stroke="#3d4b5e" stroke-width="1"></line><text x="302" y="250" font-size="10" fill="#5c6a7d" text-anchor="middle">10</text></g><g><line x1="27" y1="181" x2="33" y2="181" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="184.5" font-size="10" fill="#5c6a7d" text-anchor="end">4</text></g><g><line x1="27" y1="126" x2="33" y2="126" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="129.5" font-size="10" fill="#5c6a7d" text-anchor="end">8</text></g><g><line x1="27" y1="71" x2="33" y2="71" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="74.5" font-size="10" fill="#5c6a7d" text-anchor="end">12</text></g><g><line x1="27" y1="16" x2="33" y2="16" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="19.5" font-size="10" fill="#5c6a7d" text-anchor="end">16</text></g><g><line x1="30" y1="208.5" x2="302" y2="71" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line><text x="269.91999999999996" y="102.25" font-size="11.5" font-style="italic" fill="#0e8a7e">best fit</text></g><g><circle cx="84.4" cy="139.75" r="4" fill="#0f6cbd" stroke="#fff" stroke-width="1.4"></circle><text x="70.4" y="131.75" font-size="11" font-weight="600" fill="#0f6cbd">A</text></g><g><circle cx="166" cy="153.5" r="4" fill="#0f6cbd" stroke="#fff" stroke-width="1.4"></circle><text x="174" y="167.5" font-size="11" font-weight="600" fill="#0f6cbd">B</text></g><g><circle cx="247.60000000000002" cy="43.5" r="4" fill="#0f6cbd" stroke="#fff" stroke-width="1.4"></circle><text x="241.60000000000002" y="33.5" font-size="11" font-weight="600" fill="#0f6cbd">C</text></g><g><circle cx="274.8" cy="98.5" r="4" fill="#0f6cbd" stroke="#fff" stroke-width="1.4"></circle><text x="282.8" y="112.5" font-size="11" font-weight="600" fill="#0f6cbd">D</text></g></svg><figcaption class="lp2-graph__caption">Four data points and the line of best fit $\hat{y} = x + 2$.</figcaption></figure><div class="lp2-question"><p class="lp2-question__stem">For which point does the actual $y$-value differ <strong>most</strong> from the value predicted by the line of best fit?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">A</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">B</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">C</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">D</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Predicted $2 + 2 = 4$, actual $7$: a gap of $3$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Predicted $7$, actual $6$: a gap of only $1$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>Predicted $10$, actual $14$: a gap of $4$—the largest vertical distance from the line.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Predicted $11$, actual $10$: a gap of $1$. Being far to the <em>right</em> isn&#x27;t being far from the <em>line</em>.</div></li></ul></div></div></section></article><article id="lesson-page-model-choice" class="lp2-sheet" data-page-index="4"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Two-Variable Data: Choosing the Model</span></div><h2 class="lp2-sheet__h2">Choosing the Model</h2><p class="lp2-p">When the SAT asks <em>which kind of model</em> fits, it&#x27;s a shape-recognition task—the same fingerprints from the Nonlinear Functions lesson, now worn by data:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Linear</div><figure class="lp2-graph" role="img" aria-label="Data points along a straight line"><svg viewBox="0 0 195 165" width="195" height="165"><defs><marker id="arr-R6at" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6at"><rect x="16" y="16" width="161" height="133"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="56.25" y1="16" x2="56.25" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="96.5" y1="16" x2="96.5" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="136.75" y1="16" x2="136.75" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="177" y1="16" x2="177" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="149" x2="177" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="119.44444444444444" x2="177" y2="119.44444444444444" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="89.88888888888889" x2="177" y2="89.88888888888889" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="60.33333333333333" x2="177" y2="60.33333333333333" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="30.77777777777778" x2="177" y2="30.77777777777778" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="149" x2="183" y2="149" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6at)" marker-start="url(#arr-R6at)"></line><line x1="16" y1="153" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6at)" marker-start="url(#arr-R6at)"></line><text x="185" y="153" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="16" y1="134.22222222222223" x2="177" y2="16" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line></g><g><circle cx="36.125" cy="116.48888888888888" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="56.25" cy="107.62222222222222" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="76.375" cy="86.93333333333334" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="96.5" cy="78.06666666666666" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="116.625" cy="57.37777777777778" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="136.75" cy="48.51111111111111" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="156.875" cy="27.82222222222223" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Steady climb — equal steps.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Quadratic</div><figure class="lp2-graph" role="img" aria-label="Data points in a U shape"><svg viewBox="0 0 195 165" width="195" height="165"><defs><marker id="arr-R6it" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6it"><rect x="16" y="16" width="161" height="133"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="56.25" y1="16" x2="56.25" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="96.5" y1="16" x2="96.5" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="136.75" y1="16" x2="136.75" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="177" y1="16" x2="177" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="149" x2="177" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="115.75" x2="177" y2="115.75" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="82.5" x2="177" y2="82.5" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="49.25" x2="177" y2="49.25" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="177" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="149" x2="183" y2="149" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6it)" marker-start="url(#arr-R6it)"></line><line x1="16" y1="153" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6it)" marker-start="url(#arr-R6it)"></line><text x="185" y="153" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,52.58 L17.01,54.56 L18.01,56.52 L19.02,58.45 L20.02,60.36 L21.03,62.24 L22.04,64.10 L23.04,65.93 L24.05,67.74 L25.06,69.52 L26.06,71.28 L27.07,73.01 L28.07,74.72 L29.08,76.40 L30.09,78.06 L31.09,79.69 L32.10,81.30 L33.11,82.89 L34.11,84.45 L35.12,85.98 L36.13,87.49 L37.13,88.97 L38.14,90.43 L39.14,91.86 L40.15,93.27 L41.16,94.66 L42.16,96.02 L43.17,97.35 L44.17,98.66 L45.18,99.94 L46.19,101.20 L47.19,102.44 L48.20,103.65 L49.21,104.83 L50.21,105.99 L51.22,107.13 L52.23,108.24 L53.23,109.32 L54.24,110.38 L55.24,111.42 L56.25,112.42 L57.26,113.41 L58.26,114.37 L59.27,115.31 L60.28,116.22 L61.28,117.10 L62.29,117.96 L63.29,118.80 L64.30,119.61 L65.31,120.39 L66.31,121.15 L67.32,121.89 L68.33,122.60 L69.33,123.29 L70.34,123.95 L71.34,124.58 L72.35,125.19 L73.36,125.78 L74.36,126.34 L75.37,126.88 L76.38,127.39 L77.38,127.87 L78.39,128.34 L79.39,128.77 L80.40,129.18 L81.41,129.57 L82.41,129.93 L83.42,130.27 L84.42,130.58 L85.43,130.87 L86.44,131.13 L87.44,131.37 L88.45,131.58 L89.46,131.76 L90.46,131.93 L91.47,132.06 L92.47,132.18 L93.48,132.26 L94.49,132.33 L95.49,132.36 L96.50,132.38 L97.51,132.36 L98.51,132.33 L99.52,132.26 L100.53,132.18 L101.53,132.06 L102.54,131.93 L103.54,131.76 L104.55,131.58 L105.56,131.37 L106.56,131.13 L107.57,130.87 L108.57,130.58 L109.58,130.27 L110.59,129.93 L111.59,129.57 L112.60,129.18 L113.61,128.77 L114.61,128.34 L115.62,127.87 L116.63,127.39 L117.63,126.88 L118.64,126.34 L119.64,125.78 L120.65,125.19 L121.66,124.58 L122.66,123.95 L123.67,123.29 L124.68,122.60 L125.68,121.89 L126.69,121.15 L127.69,120.39 L128.70,119.61 L129.71,118.80 L130.71,117.96 L131.72,117.10 L132.72,116.22 L133.73,115.31 L134.74,114.37 L135.74,113.41 L136.75,112.42 L137.76,111.42 L138.76,110.38 L139.77,109.32 L140.78,108.24 L141.78,107.13 L142.79,105.99 L143.79,104.83 L144.80,103.65 L145.81,102.44 L146.81,101.20 L147.82,99.94 L148.82,98.66 L149.83,97.35 L150.84,96.02 L151.84,94.66 L152.85,93.27 L153.86,91.86 L154.86,90.43 L155.87,88.97 L156.88,87.49 L157.88,85.98 L158.89,84.45 L159.89,82.89 L160.90,81.30 L161.91,79.69 L162.91,78.06 L163.92,76.40 L164.93,74.72 L165.93,73.01 L166.94,71.28 L167.94,69.52 L168.95,67.74 L169.96,65.93 L170.96,64.10 L171.97,62.24 L172.97,60.36 L173.98,58.45 L174.99,56.52 L175.99,54.56 L177.00,52.58" fill="none" stroke="#6d3fc4" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6it)"></path></g><g><circle cx="16" cy="49.25" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="36.125" cy="90.8125" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="56.25" cy="109.1" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="76.375" cy="129.05" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="96.5" cy="130.7125" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="116.625" cy="124.0625" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="136.75" cy="115.75" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="156.875" cy="84.1625" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="177" cy="55.900000000000006" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Falls, turns, rises — a vertex.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Exponential</div><figure class="lp2-graph" role="img" aria-label="Data points rising along an exponential curve"><svg viewBox="0 0 195 165" width="195" height="165"><defs><marker id="arr-R6qt" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6qt"><rect x="16" y="16" width="161" height="133"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="42.83333333333333" y1="16" x2="42.83333333333333" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="69.66666666666666" y1="16" x2="69.66666666666666" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="96.5" y1="16" x2="96.5" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="123.33333333333333" y1="16" x2="123.33333333333333" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="150.16666666666669" y1="16" x2="150.16666666666669" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="177" y1="16" x2="177" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="149" x2="177" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="124.81818181818183" x2="177" y2="124.81818181818183" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="100.63636363636364" x2="177" y2="100.63636363636364" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="76.45454545454545" x2="177" y2="76.45454545454545" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="52.27272727272727" x2="177" y2="52.27272727272727" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="28.090909090909093" x2="177" y2="28.090909090909093" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="149" x2="183" y2="149" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6qt)" marker-start="url(#arr-R6qt)"></line><line x1="16" y1="153" x2="16" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6qt)" marker-start="url(#arr-R6qt)"></line><text x="185" y="153" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="22" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,136.91 L17.01,136.69 L18.01,136.48 L19.02,136.25 L20.02,136.03 L21.03,135.80 L22.04,135.56 L23.04,135.32 L24.05,135.08 L25.06,134.83 L26.06,134.58 L27.07,134.32 L28.07,134.06 L29.08,133.80 L30.09,133.53 L31.09,133.25 L32.10,132.97 L33.11,132.69 L34.11,132.39 L35.12,132.10 L36.13,131.80 L37.13,131.49 L38.14,131.18 L39.14,130.87 L40.15,130.54 L41.16,130.21 L42.16,129.88 L43.17,129.54 L44.18,129.19 L45.18,128.84 L46.19,128.48 L47.19,128.12 L48.20,127.75 L49.21,127.37 L50.21,126.99 L51.22,126.59 L52.23,126.20 L53.23,125.79 L54.24,125.38 L55.24,124.96 L56.25,124.53 L57.26,124.09 L58.26,123.65 L59.27,123.20 L60.27,122.74 L61.28,122.28 L62.29,121.80 L63.29,121.32 L64.30,120.82 L65.31,120.32 L66.31,119.81 L67.32,119.29 L68.33,118.77 L69.33,118.23 L70.34,117.68 L71.34,117.12 L72.35,116.56 L73.36,115.98 L74.36,115.39 L75.37,114.80 L76.38,114.19 L77.38,113.57 L78.39,112.94 L79.39,112.30 L80.40,111.65 L81.41,110.98 L82.41,110.30 L83.42,109.62 L84.42,108.92 L85.43,108.20 L86.44,107.48 L87.44,106.74 L88.45,105.99 L89.46,105.22 L90.46,104.45 L91.47,103.65 L92.48,102.85 L93.48,102.03 L94.49,101.19 L95.49,100.34 L96.50,99.48 L97.51,98.60 L98.51,97.70 L99.52,96.79 L100.53,95.86 L101.53,94.91 L102.54,93.95 L103.54,92.97 L104.55,91.98 L105.56,90.96 L106.56,89.93 L107.57,88.88 L108.58,87.81 L109.58,86.72 L110.59,85.62 L111.59,84.49 L112.60,83.34 L113.61,82.17 L114.61,80.99 L115.62,79.78 L116.63,78.55 L117.63,77.29 L118.64,76.02 L119.64,74.72 L120.65,73.40 L121.66,72.05 L122.66,70.69 L123.67,69.29 L124.67,67.88 L125.68,66.43 L126.69,64.97 L127.69,63.47 L128.70,61.95 L129.71,60.40 L130.71,58.83 L131.72,57.22 L132.72,55.59 L133.73,53.93 L134.74,52.24 L135.74,50.52 L136.75,48.77 L137.76,46.99 L138.76,45.17 L139.77,43.33 L140.78,41.45 L141.78,39.54 L142.79,37.59 L143.79,35.61 L144.80,33.59 L145.81,31.54 L146.81,29.45 L147.82,27.33 L148.83,25.16 L149.83,22.96 L150.84,20.72 L151.84,18.44 L152.85,16.12 L153.86,13.75 L154.86,11.35 L155.87,8.90 L156.88,6.41 L157.88,3.87 L158.89,1.29 L159.89,-1.33 L160.90,-4.01 L161.91,-6.73 L162.91,-9.50 L163.92,-12.31 L164.92,-15.18 L165.93,-18.10 L166.94,-21.07 L167.94,-24.10 L168.95,-27.17 L169.96,-30.31 L170.96,-33.50 L171.97,-36.74 L172.97,-40.04 L173.98,-43.40 L174.99,-46.83 L175.99,-50.31 L177.00,-53.85" fill="none" stroke="#c0392f" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6qt)"></path></g><g><circle cx="16" cy="136.9090909090909" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="42.83333333333333" cy="127.23636363636363" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="69.66666666666666" cy="119.98181818181817" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="96.5" cy="97.00909090909092" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="123.33333333333333" cy="72.82727272727273" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="150.16666666666669" cy="28.090909090909093" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Slow, then steep — multiplying.</figcaption></figure></div></div><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em>From a table with equal $x$-steps: constant <strong>differences</strong> → linear model; constant <strong>ratios</strong> → exponential model; differences that shrink then grow (or a visible turn) → quadratic.</em></p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-table-wrap"><table class="lp2-table lp2-table--compact"><thead><tr><th class="lp2-td--center">$x$</th><th class="lp2-td--center">$y$</th></tr></thead><tbody><tr><td class="lp2-td--center">$0$</td><td class="lp2-td--center">$3$</td></tr><tr><td class="lp2-td--center">$1$</td><td class="lp2-td--center">$6$</td></tr><tr><td class="lp2-td--center">$2$</td><td class="lp2-td--center">$12$</td></tr><tr><td class="lp2-td--center">$3$</td><td class="lp2-td--center">$24$</td></tr></tbody></table></div><div class="lp2-question"><p class="lp2-question__stem">The table shows values from a data set. Which type of model best fits the data?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">Increasing exponential</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">Increasing linear</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">Decreasing exponential</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">Quadratic with a minimum</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Each step <strong>doubles</strong> $y$: ratios $\frac{6}{3} = \frac{12}{6} = \frac{24}{12} = 2$. Constant ratio, growing values—exponential growth, $y = 3 \cdot 2^x$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Linear needs constant differences; these are $3, 6, 12$—growing, not constant.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>The values rise; decay falls.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>A quadratic with a minimum would fall before it rises—these values only climb, and by ratios, not by a turning pattern.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Growth by <strong>adding</strong> (“$120$ more members each year”) → linear. Growth by <strong>multiplying</strong> (“increases $8\%$ each year”, “doubles”) → exponential. The verbs in the question tell you the model.</div></div></article><article id="lesson-page-practice" class="lp2-sheet" data-page-index="5"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Two-Variable Data: Practice</span></div><h2 class="lp2-sheet__h2">Practice</h2><p class="lp2-p">Name the job—trend, interpretation, prediction, gap-to-line, or model choice—then keep units and “predicted” language in view.</p><section class="lp2-practice"><div class="lp2-practice__band">Practice</div><ol class="lp2-practice__list"><li class="lp2-practice__item"><div class="lp2-practice__number">1.</div><div class="lp2-practice__content"><figure class="lp2-graph" role="img" aria-label="Scatterplot of hot chocolate sales versus temperature, trending downward"><svg viewBox="0 0 320 245" width="320" height="245"><defs><marker id="arr-R2oqu" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R2oqu"><rect x="30" y="16" width="272" height="205"></rect></clipPath></defs><line x1="30" y1="16" x2="30" y2="221" stroke="#e4ebf2" stroke-width="1"></line><line x1="98" y1="16" x2="98" y2="221" stroke="#e4ebf2" stroke-width="1"></line><line x1="166" y1="16" x2="166" y2="221" stroke="#e4ebf2" stroke-width="1"></line><line x1="234" y1="16" x2="234" y2="221" stroke="#e4ebf2" stroke-width="1"></line><line x1="302" y1="16" x2="302" y2="221" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="221" x2="302" y2="221" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="175.44444444444446" x2="302" y2="175.44444444444446" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="129.8888888888889" x2="302" y2="129.8888888888889" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="84.33333333333333" x2="302" y2="84.33333333333333" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="38.77777777777777" x2="302" y2="38.77777777777777" stroke="#e4ebf2" stroke-width="1"></line><line x1="26" y1="221" x2="308" y2="221" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R2oqu)" marker-start="url(#arr-R2oqu)"></line><line x1="30" y1="225" x2="30" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R2oqu)" marker-start="url(#arr-R2oqu)"></line><text x="310" y="225" font-size="12" font-style="italic" fill="#3d4b5e">t</text><text x="36" y="10" font-size="12" font-style="italic" fill="#3d4b5e">c</text><g><line x1="98" y1="218" x2="98" y2="224" stroke="#3d4b5e" stroke-width="1"></line><text x="98" y="235" font-size="10" fill="#5c6a7d" text-anchor="middle">5</text></g><g><line x1="166" y1="218" x2="166" y2="224" stroke="#3d4b5e" stroke-width="1"></line><text x="166" y="235" font-size="10" fill="#5c6a7d" text-anchor="middle">10</text></g><g><line x1="234" y1="218" x2="234" y2="224" stroke="#3d4b5e" stroke-width="1"></line><text x="234" y="235" font-size="10" fill="#5c6a7d" text-anchor="middle">15</text></g><g><line x1="302" y1="218" x2="302" y2="224" stroke="#3d4b5e" stroke-width="1"></line><text x="302" y="235" font-size="10" fill="#5c6a7d" text-anchor="middle">20</text></g><g><line x1="27" y1="175.44444444444446" x2="33" y2="175.44444444444446" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="178.94444444444446" font-size="10" fill="#5c6a7d" text-anchor="end">10</text></g><g><line x1="27" y1="129.8888888888889" x2="33" y2="129.8888888888889" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="133.3888888888889" font-size="10" fill="#5c6a7d" text-anchor="end">20</text></g><g><line x1="27" y1="84.33333333333333" x2="33" y2="84.33333333333333" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="87.83333333333333" font-size="10" fill="#5c6a7d" text-anchor="end">30</text></g><g><line x1="27" y1="38.77777777777777" x2="33" y2="38.77777777777777" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="42.27777777777777" font-size="10" fill="#5c6a7d" text-anchor="end">40</text></g><g><circle cx="57.2" cy="47.888888888888886" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="84.4" cy="61.55555555555555" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="111.6" cy="84.33333333333333" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="138.8" cy="79.77777777777777" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="166" cy="107.1111111111111" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="193.2" cy="129.8888888888889" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="220.39999999999998" cy="125.33333333333333" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="247.60000000000002" cy="157.22222222222223" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="274.8" cy="175.44444444444446" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Outdoor temperature $t$ (°C) and cups of hot chocolate sold $c$ at a cafe on nine days.</figcaption></figure><div class="lp2-question"><p class="lp2-question__stem">Which statement about the data in the scatterplot is true?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">As temperature increases, sales tend to decrease</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">As temperature increases, sales tend to increase</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">Temperature and sales show no association</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">Selling less hot chocolate causes the temperature to rise</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> The cloud falls steadily from left to right—warm days, few cups.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>A clear negative association, stated as a tendency. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>The trend runs the other way.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>The downward drift is unmistakable—“no association” would look like a formless cloud.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Backwards <em>and</em> causal: the data can&#x27;t establish causation in either direction—it only shows the variables moving together.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">2.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">The model $h = 12w + 30$ predicts the height $h$, in millimeters, of a seedling $w$ weeks after planting. Which is the best interpretation of the number $12$ in this context?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">The predicted increase in height, in millimeters, each week</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">The height of the seedling, in millimeters, when it was planted</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">The predicted height, in millimeters, after one week</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">The number of weeks it takes the seedling to double in height</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> The $12$ multiplies $w$ (weeks), so its units are millimeters <strong>per week</strong>—the slope&#x27;s predicted weekly growth.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Slope grammar: predicted change in $h$ per one unit of $w$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>The height at planting ($w = 0$) is the intercept, $30$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>The predicted height after one week is $12(1) + 30 = 42$ mm—the whole expression, not the $12$ alone.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$12$ is in millimeters per week, not weeks—units rule it out.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">3.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">A line of best fit for a data set is $\hat{y} = 3x + 20$. One of the data points is $(10, 44)$. What is the actual $y$-value <strong>minus</strong> the value predicted by the model at $x = 10$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$-6$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$6$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$44$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$50$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong></p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$\hat{y} = 3(10) + 20 = 50$$</div><div class="lp2-steps__note">Predicted value at $x = 10$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$44 - 50 = -6$$</div><div class="lp2-steps__note">Actual minus predicted — the point sits $6$ <strong>below</strong> the line</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Negative, because the actual value fell short of the prediction. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$+6$ subtracts in the wrong order—sign carries meaning here (above vs. below the line).</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$44$ is the actual value alone; the question asks for the comparison.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$50$ is the predicted value alone—one input to the subtraction, not its result.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">4.</div><div class="lp2-practice__content"><div class="lp2-table-wrap"><table class="lp2-table lp2-table--compact"><thead><tr><th class="lp2-td--center">$x$</th><th class="lp2-td--center">$y$</th></tr></thead><tbody><tr><td class="lp2-td--center">$0$</td><td class="lp2-td--center">$80$</td></tr><tr><td class="lp2-td--center">$1$</td><td class="lp2-td--center">$40$</td></tr><tr><td class="lp2-td--center">$2$</td><td class="lp2-td--center">$20$</td></tr><tr><td class="lp2-td--center">$3$</td><td class="lp2-td--center">$10$</td></tr></tbody></table></div><div class="lp2-question"><p class="lp2-question__stem">Which type of model best fits the data in the table?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">Decreasing exponential</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">Decreasing linear</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">Increasing exponential</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">Quadratic with a maximum</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Each step <strong>halves</strong> $y$: ratios of $\frac{1}{2}$ throughout—constant ratio, shrinking values. The model is $y = 80 \left(\tfrac{1}{2}\right)^x$.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Constant ratio $\frac{40}{80} = \frac{20}{40} = \frac{10}{20} = \frac{1}{2}$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Linear decay needs equal drops; these drops are $40, 20, 10$—shrinking, not constant.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>The values fall; growth rises.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>A quadratic with a maximum rises before it falls—this data only falls, and by ratios.</div></li></ul></div></div></div></div></li></ol></section><section class="lp2-remember"><h3 class="lp2-remember__title">Things to Remember</h3><ul class="lp2-list"><li>Read the <strong>axes and units</strong> before anything else. Association: cloud rises → positive, falls → negative, formless → none.</li><li>The line of best fit is the trend&#x27;s summary—<strong>predict from the line</strong>, not from individual points.</li><li>Slope: predicted change in $y$ per one unit of $x$. Y-intercept: predicted $y$ at $x = 0$. Interpretations must match the units and say “predicted.”</li><li><strong>Actual $-$ predicted</strong>: positive above the line, negative below; “farthest from the line” = largest vertical gap.</li><li>Model choice: equal differences → linear; equal ratios → exponential; a turn (peak or valley) → quadratic.</li><li>Association is never causation, and trends are tendencies—reject choices with “causes,” “exactly,” or “every.”</li></ul></section></article>
+      <section class="lp2-mastery" aria-label="Lesson completion">
+        <div class="lp2-mastery__copy">
+          <h3>Have you mastered this lesson?</h3>
+          <p>Mark this lesson as complete to update your course progress and study plan.</p>
+        </div>
+        <div class="lp2-mastery__actions">
+          <button type="button" class="ut-btn ut-btn--primary lp2-mastery__mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Mark as Complete</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.lp2-reveal').forEach(function (r) {
+    r.classList.remove('lp2-reveal--open');
+    var btn = r.querySelector('.lp2-reveal__toggle');
+    if (btn) btn.addEventListener('click', function () { r.classList.toggle('lp2-reveal--open'); });
+  });
+</script>
+</body>
+</html>

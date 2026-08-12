@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview — Lesson v2: Linear Equations in Two Variables</title>
+<style>/* tokens.css — Overhaul Phase F; re-themed to "Scholar Blue" (Phase G).
+   THE design tokens for the app. The palette moved from green-on-ink to a
+   light-first navy/blue system: blue = brand/actions, green = ONLY correctness,
+   red = ONLY errors/incorrect, amber = warnings. Use tokens, never raw hex.
+
+   Values are px on purpose: the app's html { font-size: 62.5% } rem scaling
+   must not warp the palette-adjacent sizing tokens. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- surfaces ---- */
+  --ut-ink: #0A1226;            /* darkest surface (final CTA, hero) */
+  --ut-panel: #0F1E3D;          /* dark panels, sidebar body */
+  --ut-panel-top: #0C1830;      /* dark panel top edge / nav */
+  --ut-bg: #F4F6F9;             /* app/page background */
+  --ut-bg-alt: #EAEEF3;         /* alternating section background */
+  --ut-card: #FFFFFF;           /* strong card on --ut-bg */
+  --ut-card-soft: #F8FAFC;      /* subtle card */
+
+  /* ---- text on light ---- */
+  --ut-text: #16202F;           /* primary text */
+  --ut-text-soft: #35435C;      /* secondary text */
+  --ut-muted: #4E5B70;          /* muted body text */
+  --ut-mono-muted: #5E6B80;     /* mono labels, captions */
+
+  /* ---- hairlines ---- */
+  --ut-rule: #DCE1E9;           /* hairlines on light */
+  --ut-rule-strong: #C9D0DC;    /* stronger hairlines */
+
+  /* ---- brand accent: BLUE (actions, links, active states) ---- */
+  --ut-accent: #2B59D8;         /* THE blue */
+  --ut-accent-bright: #86A4F5;  /* blue on dark surfaces */
+  --ut-accent-dark: #1D3FA8;    /* blue for text/links on light */
+  --ut-accent-soft: #E8EEFB;    /* blue tint fill (chips, active) */
+  --ut-accent-rule: #C9D6F0;    /* blue-tinted hairline */
+  --ut-on-accent: #FFFFFF;      /* text on the blue */
+
+  /* ---- semantic: success/correct = GREEN only ---- */
+  --ut-success: #17A45C;        /* fills, icons */
+  --ut-success-bright: #6FDCA8; /* green on dark surfaces */
+  --ut-success-dark: #0E6B3C;   /* text on light/soft */
+  --ut-success-soft: #E3F5EB;   /* tint fill */
+  --ut-success-rule: #BFE5CF;   /* tinted hairline */
+
+  /* ---- semantic: danger/incorrect = RED only ---- */
+  --ut-danger: #CC4141;         /* fills, icons */
+  --ut-danger-dark: #A03434;    /* text on light/soft */
+  --ut-danger-soft: #FBEEEE;    /* tint fill */
+  --ut-danger-rule: #EECACA;    /* tinted hairline */
+
+  /* ---- semantic: warning = AMBER only ---- */
+  --ut-warn: #C99A2E;           /* fills, icons */
+  --ut-warn-dark: #8A6D1D;      /* text on light/soft */
+  --ut-warn-soft: #FAF3DF;      /* tint fill */
+  --ut-warn-rule: #EAD9B0;      /* tinted hairline */
+
+  /* ---- text on dark ---- */
+  --ut-on-ink: #F2F5FA;         /* text on dark surfaces */
+  --ut-on-ink-bright: #F8FAFD;  /* emphasized text on dark */
+  --ut-on-ink-muted: rgba(242, 245, 250, 0.62);
+  --ut-rule-on-ink: rgba(237, 241, 248, 0.12); /* hairlines on dark */
+
+  /* ---- typography ---- */
+  --ut-font-display: 'Space Grotesk', system-ui, sans-serif;
+  --ut-font-body: 'Schibsted Grotesk', system-ui, sans-serif;
+  --ut-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --ut-font-serif: Georgia, 'Times New Roman', serif; /* reading passages only */
+
+  /* mono label recipe: font-family mono + these */
+  --ut-label-size: 10.5px;
+  --ut-label-tracking: 0.1em;
+
+  /* ---- radius (6 buttons / 10 cards / 12 panels) ---- */
+  --ut-radius-sm: 6px;
+  --ut-radius: 10px;
+  --ut-radius-lg: 12px;
+
+  /* ---- shadows (cool ink) ---- */
+  --ut-shadow-sm: 0 1px 2px rgba(12, 24, 48, 0.06);
+  --ut-shadow: 0 4px 12px rgba(12, 24, 48, 0.08);
+  --ut-shadow-lg: 0 12px 32px rgba(12, 24, 48, 0.14);
+
+  /* ---- legacy aliases, do not use in new code ----
+     These globals used to be re-declared with conflicting values in several
+     files' :root blocks (winner depended on chunk order). This is now the
+     single definition; old var() usages keep working through it. */
+  --primary-color: var(--ut-accent);
+  --secondary-color: var(--ut-card-soft);
+  --border-color: var(--ut-rule);
+  --shadow-sm: var(--ut-shadow-sm);
+  --shadow-md: var(--ut-shadow);
+  --shadow-lg: var(--ut-shadow-lg);
+  --border-radius-sm: var(--ut-radius-sm);
+}
+</style>
+<style>
+  body { margin: 0; background: var(--ut-bg); font-family: var(--ut-font-body); color: var(--ut-text); }
+  .ut-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:1px solid transparent; border-radius:var(--ut-radius-sm); font-family:var(--ut-font-body); font-size:13.5px; font-weight:700; line-height:1; padding:10px 16px; cursor:pointer; text-decoration:none; white-space:nowrap; }
+  .ut-btn--primary { background: var(--ut-accent); color: var(--ut-on-accent); }
+  .ut-btn--primary:hover { background: var(--ut-accent-dark); }
+  .preview-note { max-width:1480px; margin:0 auto; padding:10px 28px 0; font-size:12px; color:var(--ut-mono-muted); font-family:var(--ut-font-mono); }
+</style>
+<style>/* LessonPage.css — Lesson v2 (UWorld-style study guide).
+ *
+ * Scoped under .lp2-. Built on tokens.css (--ut-*) plus a small set of
+ * lesson-local variables below for the "study guide" look: steel-blue
+ * headings, exam-yellow highlights, blue example boxes, banded practice
+ * sections, green/red verdicts. Content JSON references tones by name
+ * (blue/teal/rose/green/purple/amber) — keep these class hooks stable.
+ */
+
+.lp2 {
+  /* palette */
+  --lp-heading: #1c3a5e;        /* sheet titles (dark navy) */
+  --lp-steel: #2b6ca3;          /* section headings, answer links */
+  --lp-steel-dark: #235a88;
+  --lp-body: #2a3342;           /* guide body text */
+  --lp-muted: #5c6a7d;
+  --lp-sheet-border: #dfe5ec;
+  --lp-hairline: #e4e9ef;
+
+  --lp-hl: #fbe97f;             /* exam-yellow highlight */
+  --lp-blue-border: #b9d3e6;
+  --lp-blue-band: #dcebf6;      /* example header band */
+  --lp-blue-tint: #f3f8fc;      /* example body tint */
+  --lp-table-head: #e3eef7;
+  --lp-table-border: #c9d6e3;
+
+  /* term tones (inline markup {tone|...}) */
+  --lp-term-blue: #0f6cbd;
+  --lp-term-teal: #0e8a7e;
+  --lp-term-rose: #c0392f;
+  --lp-term-green: #157f4b;
+  --lp-term-purple: #6d3fc4;
+  --lp-term-amber: #a8621a;
+
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 20px 28px 72px;
+  font-family: var(--ut-font-body);
+  color: var(--lp-body);
+}
+
+/* ═══════════ reading progress bar ═══════════ */
+
+.lp2-progressbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.lp2-progressbar__fill {
+  height: 100%;
+  background: var(--ut-accent);
+  transition: width 80ms linear;
+}
+
+/* ═══════════ top bar ═══════════ */
+
+.lp2-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.lp2-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lp-muted);
+  min-width: 0;
+}
+
+.lp2-crumbs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp2-crumbs__link:hover {
+  text-decoration: underline;
+}
+
+.lp2-crumbs__sep {
+  flex: 0 0 auto;
+  opacity: 0.55;
+}
+
+.lp2-crumbs__domain {
+  white-space: nowrap;
+}
+
+.lp2-crumbs__current {
+  font-weight: 600;
+  color: var(--ut-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp2-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp2-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ut-text-soft);
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.lp2-chip--done {
+  color: var(--ut-success-dark);
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+}
+
+/* ═══════════ two-panel body ═══════════ */
+
+.lp2-body {
+  display: grid;
+  grid-template-columns: 372px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+/* ───── left panel ───── */
+
+.lp2-left {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+
+/* video */
+
+.lp2-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ut-panel);
+  border-radius: var(--ut-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ut-shadow);
+  flex: 0 0 auto;
+}
+
+.lp2-video iframe,
+.lp2-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.lp2-video__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.lp2-video--placeholder .lp2-video__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(134, 164, 245, 0.18), transparent 55%),
+    radial-gradient(120% 100% at 90% 100%, rgba(43, 89, 216, 0.22), transparent 60%);
+}
+
+.lp2-video__playring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(242, 245, 250, 0.85);
+  color: var(--ut-on-ink);
+  font-size: 22px;
+  background: rgba(15, 30, 61, 0.35);
+}
+
+.lp2-video__playring svg {
+  margin-left: 3px;
+}
+
+.lp2-video__coming {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ut-on-ink-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* lesson card + page navigator */
+
+.lp2-left-card {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 18px 18px 16px;
+}
+
+.lp2-left-card__eyebrow {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 6px;
+}
+
+.lp2-left-card__title {
+  font-family: var(--ut-font-display);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.lp2-left-card__difficulty {
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  margin-bottom: 4px;
+}
+
+.lp2-pagenav {
+  margin-top: 14px;
+  border-top: 1px solid var(--lp-hairline);
+  padding-top: 12px;
+}
+
+.lp2-pagenav__label {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 8px;
+}
+
+.lp2-pagenav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lp2-pagenav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--ut-radius-sm);
+  padding: 8px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.lp2-pagenav__item:hover {
+  background: var(--ut-bg);
+  color: var(--ut-text);
+}
+
+.lp2-pagenav__item--active {
+  background: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+  font-weight: 600;
+}
+
+.lp2-pagenav__num {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.lp2-pagenav__title {
+  min-width: 0;
+}
+
+.lp2-practice-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.lp2-planner-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+}
+
+.lp2-planner-return:hover {
+  text-decoration: underline;
+}
+
+/* ───── study guide sheets ───── */
+
+.lp2-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 0;
+  max-width: 900px;
+}
+
+.lp2-sheet {
+  position: relative;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(16, 42, 67, 0.1), 0 6px 22px rgba(16, 42, 67, 0.05);
+  padding: 44px 58px 52px;
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.lp2-sheet__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #8a97a8;
+  margin: -14px -26px 14px 0;
+  text-align: right;
+}
+
+.lp2-sheet__h1 {
+  font-family: var(--ut-font-display);
+  font-size: 31px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  line-height: 1.2;
+}
+
+.lp2-sheet__h2 {
+  font-family: var(--ut-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+/* ═══════════ content blocks ═══════════ */
+
+.lp2-p {
+  margin: 0 0 14px;
+}
+
+.lp2-h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--lp-steel);
+  margin: 30px 0 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  line-height: 1.3;
+}
+
+.lp2-h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 18px 0 8px;
+}
+
+.lp2-sheet > .lp2-h3:first-of-type {
+  margin-top: 20px;
+}
+
+/* lists */
+
+.lp2-list {
+  margin: 0 0 14px;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lp2-list li::marker {
+  color: var(--lp-steel);
+}
+
+.lp2-list--number li::marker {
+  font-weight: 600;
+}
+
+/* inline markup */
+
+.lp2-blank {
+  display: inline-block;
+  width: 5.5em;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px);
+  margin: 0 2px;
+}
+
+.lp2-hl {
+  background: var(--lp-hl);
+  padding: 1px 3px;
+  border-radius: 2px;
+  color: inherit;
+}
+
+.lp2-term--blue { color: var(--lp-term-blue); }
+.lp2-term--teal { color: var(--lp-term-teal); }
+.lp2-term--rose { color: var(--lp-term-rose); }
+.lp2-term--green { color: var(--lp-term-green); }
+.lp2-term--purple { color: var(--lp-term-purple); }
+.lp2-term--amber { color: var(--lp-term-amber); }
+.lp2-term--gray { color: var(--lp-muted); font-weight: 600; }
+
+/* tables */
+
+.lp2-table-wrap {
+  margin: 18px 0 20px;
+  overflow-x: auto;
+}
+
+.lp2-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  min-width: 62%;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lp2-table th,
+.lp2-table td {
+  border: 1px solid var(--lp-table-border);
+  padding: 9px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp2-table th {
+  background: var(--lp-table-head);
+  color: var(--lp-heading);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lp2-table--compact th,
+.lp2-table--compact td {
+  padding: 6px 12px;
+  font-size: 13.5px;
+}
+
+.lp2-td--center {
+  text-align: center !important;
+}
+
+.lp2-table-caption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* rule statement */
+
+.lp2-rule {
+  margin: 16px 0;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+}
+
+.lp2-rule__label {
+  color: var(--lp-heading);
+}
+
+.lp2-rule em {
+  color: var(--lp-steel-dark);
+}
+
+/* callouts */
+
+.lp2-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card-soft);
+  padding: 13px 16px;
+  margin: 18px 0;
+  font-size: 14.5px;
+}
+
+.lp2-callout__icon {
+  flex: 0 0 auto;
+  font-size: 21px;
+  margin-top: 1px;
+  color: var(--lp-steel);
+}
+
+.lp2-callout--warning {
+  border-color: var(--ut-warn-rule);
+  background: var(--ut-warn-soft);
+}
+
+.lp2-callout--warning .lp2-callout__icon {
+  color: var(--ut-warn-dark);
+}
+
+.lp2-callout--tip .lp2-callout__icon {
+  color: var(--ut-warn);
+  font-size: 23px;
+}
+
+/* passages */
+
+.lp2-passage {
+  margin: 14px 0 16px;
+}
+
+.lp2-passage__label {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 6px;
+}
+
+.lp2-passage__body {
+  font-family: var(--ut-font-serif);
+  font-size: 15px;
+  line-height: 1.72;
+  color: #333c4b;
+  padding-left: 16px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-passage__body p {
+  margin: 0 0 10px;
+}
+
+.lp2-passage__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* questions + choices */
+
+.lp2-question {
+  margin: 14px 0;
+}
+
+.lp2-question__stem {
+  margin: 0 0 12px;
+}
+
+.lp2-choices {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lp2-choices li {
+  display: flex;
+  gap: 10px;
+}
+
+.lp2-choices__letter {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: var(--ut-text);
+}
+
+/* verdicts (✓ / ✗) */
+
+.lp2-verdict {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 19px;
+  margin-top: 1px;
+}
+
+.lp2-verdict svg {
+  stroke-width: 3px;
+}
+
+.lp2-verdict--correct { color: var(--ut-success); }
+.lp2-verdict--incorrect { color: var(--ut-danger); }
+
+/* process of elimination */
+
+.lp2-poe {
+  margin: 16px 0 6px;
+}
+
+.lp2-poe__intro {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.lp2-poe__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-poe__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-poe__text {
+  min-width: 0;
+}
+
+/* check-cross pairs */
+
+.lp2-checkcross {
+  list-style: none;
+  margin: 14px 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-checkcross__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-checkcross__text {
+  font-family: var(--ut-font-serif);
+  color: #333c4b;
+}
+
+.lp2-checkcross__note {
+  font-size: 13.5px;
+  color: var(--lp-muted);
+  margin-top: 3px;
+}
+
+/* example boxes */
+
+.lp2-example {
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 22px 0;
+  overflow: hidden;
+}
+
+.lp2-example__band {
+  background: var(--lp-blue-band);
+  border-bottom: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 8px 18px;
+}
+
+.lp2-example__body {
+  background: var(--lp-blue-tint);
+  padding: 18px 20px 16px;
+}
+
+.lp2-example__body > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-example__body .lp2-passage__body {
+  border-left-color: #a7c8de;
+}
+
+/* reveal (expandable answer) */
+
+.lp2-reveal {
+  margin: 10px 0 4px;
+}
+
+.lp2-reveal__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--lp-steel);
+}
+
+.lp2-reveal__toggle:hover {
+  color: var(--lp-steel-dark);
+  text-decoration: underline;
+}
+
+.lp2-reveal__chevron {
+  transition: transform 150ms ease;
+  font-size: 16px;
+}
+
+.lp2-reveal--open .lp2-reveal__chevron {
+  transform: rotate(180deg);
+}
+
+.lp2-reveal__body {
+  margin-top: 10px;
+  padding: 14px 16px 12px;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-left: 3px solid var(--lp-steel);
+  border-radius: 0 var(--ut-radius-sm) var(--ut-radius-sm) 0;
+  animation: lp2-reveal-in 180ms ease;
+}
+
+.lp2-reveal__body > :last-child {
+  margin-bottom: 0;
+}
+
+@keyframes lp2-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* practice section */
+
+.lp2-practice {
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+.lp2-practice__band {
+  background: linear-gradient(90deg, #3d4552 0%, #626c7a 55%, #8a93a0 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  padding: 9px 18px;
+}
+
+.lp2-practice__list {
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lp2-practice__item {
+  display: flex;
+  gap: 12px;
+  padding-left: 6px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-practice__item + .lp2-practice__item {
+  padding-top: 20px;
+  border-top: 1px dashed var(--lp-hairline);
+}
+
+.lp2-practice__number {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--ut-text);
+  padding-left: 8px;
+}
+
+.lp2-practice__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.lp2-practice__content > .lp2-p:first-child,
+.lp2-practice__content > .lp2-passage:first-child {
+  margin-top: 0;
+}
+
+/* things to remember */
+
+.lp2-remember {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius);
+  padding: 18px 22px 14px;
+  margin: 26px 0 4px;
+}
+
+.lp2-remember__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 10px;
+}
+
+.lp2-remember .lp2-list {
+  margin-bottom: 4px;
+}
+
+/* legend */
+
+.lp2-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: -6px 0 16px;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+
+.lp2-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lp2-legend__swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid rgba(16, 42, 67, 0.14);
+}
+
+.lp2-legend__swatch--yellow { background: var(--lp-hl); }
+.lp2-legend__swatch--blue { background: #cde3f4; }
+.lp2-legend__swatch--teal { background: #c9e9e4; }
+.lp2-legend__swatch--rose { background: #f6d5d2; }
+.lp2-legend__swatch--green { background: #d1eedd; }
+.lp2-legend__swatch--purple { background: #e4d9f7; }
+.lp2-legend__swatch--amber { background: #f4e3c8; }
+
+/* equation strip */
+
+.lp2-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 22px;
+}
+
+.lp2-strip__seg {
+  background: #eaf2f9;
+  border: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 7px;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.lp2-strip__seg--blue {
+  background: #dcebf6;
+  border-color: #a7c8de;
+  color: var(--lp-term-blue);
+}
+
+.lp2-strip__seg--teal {
+  background: #ddf1ee;
+  border-color: #a9d8d1;
+  color: var(--lp-term-teal);
+}
+
+.lp2-strip__seg--green {
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+  color: var(--lp-term-green);
+}
+
+.lp2-strip__seg--rose {
+  background: var(--ut-danger-soft);
+  border-color: var(--ut-danger-rule);
+  color: var(--lp-term-rose);
+}
+
+.lp2-strip__op {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ut-text-soft);
+}
+
+/* figures */
+
+.lp2-figure {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.lp2-figure img {
+  max-width: 100%;
+  border-radius: var(--ut-radius-sm);
+  border: 1px solid var(--lp-hairline);
+}
+
+.lp2-figure figcaption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* ═══════════ completion band ═══════════ */
+
+.lp2-mastery {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius-lg);
+  padding: 20px 24px;
+}
+
+.lp2-mastery__copy h3 {
+  margin: 0 0 4px;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+.lp2-mastery__copy p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+}
+
+.lp2-mastery__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.lp2-mastery__done {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ut-success-dark);
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.lp2-mastery__done svg {
+  font-size: 19px;
+  color: var(--ut-success);
+}
+
+.lp2-mastery__unmark {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ut-muted);
+  text-decoration: underline;
+}
+
+.lp2-mastery__unmark:disabled,
+.lp2-mastery__mark:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ═══════════ loading / message states ═══════════ */
+
+.lp2--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 55vh;
+  color: var(--ut-muted);
+  font-size: 14.5px;
+}
+
+.lp2-loading-icon {
+  font-size: 30px;
+  color: var(--ut-accent);
+  animation: lp2-spin 1s linear infinite;
+}
+
+@keyframes lp2-spin {
+  to { transform: rotate(360deg); }
+}
+
+.lp2--message {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+}
+
+.lp2-message-card {
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 32px;
+}
+
+/* ═══════════ responsive ═══════════ */
+
+@media (max-width: 1120px) {
+  .lp2-body {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .lp2-sheet {
+    padding: 36px 36px 44px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -12px -10px 12px 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .lp2 {
+    padding: 14px 14px 56px;
+  }
+
+  .lp2-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lp2-left {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .lp2-video {
+    max-width: 560px;
+  }
+
+  /* page navigator becomes a horizontal chip row */
+  .lp2-pagenav ol {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .lp2-pagenav__item {
+    white-space: nowrap;
+    border: 1px solid var(--ut-rule);
+    border-radius: 999px;
+    padding: 6px 12px;
+  }
+
+  .lp2-pagenav__item--active {
+    border-color: var(--ut-accent-rule);
+  }
+
+  .lp2-practice-cta {
+    max-width: 360px;
+  }
+
+  .lp2-sheet {
+    padding: 26px 20px 34px;
+    font-size: 14.5px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -8px 0 10px;
+  }
+
+  .lp2-sheet__h1 {
+    font-size: 25px;
+  }
+
+  .lp2-sheet__h2 {
+    font-size: 20.5px;
+  }
+
+  .lp2-h3 {
+    font-size: 17.5px;
+  }
+
+  .lp2-table {
+    min-width: 100%;
+  }
+
+  .lp2-practice__list {
+    padding: 14px 12px;
+  }
+
+  .lp2-example__body {
+    padding: 14px 14px 12px;
+  }
+}
+
+/* ═══════════ math blocks (Lesson v2 math lessons) ═══════════ */
+
+/* worked steps: centered equation lines + gray side annotations (UWorld style) */
+
+.lp2-steps {
+  margin: 14px 0 16px;
+}
+
+.lp2-steps__title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 8px;
+}
+
+.lp2-steps__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lp2-steps__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.lp2-steps__eq {
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.lp2-steps__eq .katex-display {
+  margin: 0;
+}
+
+.lp2-steps__eq .katex {
+  font-size: 1.08em;
+}
+
+.lp2-steps__note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--lp-muted);
+}
+
+.lp2-steps__note .katex {
+  font-size: 1.04em;
+}
+
+/* standalone display equation (optionally boxed, like key formulas) */
+
+.lp2-math {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-math__tex {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 2px 0;
+}
+
+.lp2-math__tex .katex-display {
+  margin: 0;
+}
+
+.lp2-math__tex .katex {
+  font-size: 1.12em;
+}
+
+.lp2-math--boxed .lp2-math__tex {
+  display: inline-block;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 12px 24px;
+  overflow-x: visible;
+}
+
+.lp2-math__caption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* side-by-side columns (compare methods, case-by-case graphs) */
+
+.lp2-columns {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.lp2-columns__col {
+  flex: 1;
+  min-width: 0;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-radius: var(--ut-radius-sm);
+  padding: 14px 16px 12px;
+}
+
+.lp2-columns__col > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-columns__title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--lp-steel);
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  text-align: center;
+}
+
+/* coordinate-plane figures */
+
+.lp2-graph {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-graph svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.lp2-columns__col .lp2-graph {
+  margin: 6px 0 4px;
+}
+
+.lp2-graph__caption {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  line-height: 1.5;
+}
+
+/* inline KaTeX inside prose/tables/POE: match surrounding rhythm */
+
+.lp2-sheet .katex {
+  font-size: 1.05em;
+}
+
+@media (max-width: 720px) {
+  .lp2-steps__row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 6px 0;
+  }
+
+  .lp2-steps__note {
+    text-align: center;
+  }
+
+  .lp2-columns {
+    flex-direction: column;
+  }
+}
+</style>
+<style>
+  .lp2-reveal:not(.lp2-reveal--open) .lp2-reveal__body { display: none; }
+</style>
+<!-- KaTeX (same CDN + options the app's katexLoader/LessonPage use) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof renderMathInElement !== 'function') return;
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\[', right: '\\]', display: true },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '$', right: '$', display: false },
+      ],
+      // No color macros here: \blue{...} etc. are pre-expanded to
+      // \textcolor by the renderer ("#" inside a KaTeX macro body is a
+      // parameter marker and would break the expression).
+      throwOnError: false,
+    });
+  });
+</script>
+</head>
+<body>
+<div class="preview-note">DESIGN PREVIEW — static render of /learn/linear-equations-two-variables (Lesson v2)</div>
+<div class="lp2">
+  <header class="lp2-topbar">
+    <nav class="lp2-crumbs" aria-label="Breadcrumb">
+      <a class="lp2-crumbs__link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Lectures</a>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__domain">Algebra</span>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__current">Linear Equations in Two Variables</span>
+    </nav>
+    <div class="lp2-topbar__meta"><span class="lp2-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~30 min</span></div>
+  </header>
+  <div class="lp2-body">
+    <aside class="lp2-left">
+      <div class="lp2-video lp2-video--placeholder">
+        <div class="lp2-video__overlay">
+          <span class="lp2-video__playring"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></span>
+          <span class="lp2-video__coming"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg> Video lesson coming soon</span>
+        </div>
+      </div>
+      <div class="lp2-left-card">
+        <div class="lp2-left-card__eyebrow">Math · Algebra</div>
+        <h2 class="lp2-left-card__title">Linear Equations in Two Variables</h2>
+        <div class="lp2-left-card__difficulty">Foundational</div>
+        <nav class="lp2-pagenav"><div class="lp2-pagenav__label">In this lesson</div><ol>
+    <li><button type="button" class="lp2-pagenav__item lp2-pagenav__item--active" onclick="document.getElementById('lesson-page-overview').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">1</span><span class="lp2-pagenav__title">Overview & Strategies</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-solutions-as-points').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">2</span><span class="lp2-pagenav__title">What Counts as a Solution?</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-two-forms').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">3</span><span class="lp2-pagenav__title">Two Forms of the Same Line</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-equations-from-context').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">4</span><span class="lp2-pagenav__title">Building Equations from Context</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-parallel-perpendicular').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">5</span><span class="lp2-pagenav__title">Parallel & Perpendicular Lines</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-practice').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">6</span><span class="lp2-pagenav__title">Practice</span>
+    </button></li></ol></nav>
+        <button type="button" class="ut-btn ut-btn--primary lp2-practice-cta"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg> Practice this skill</button>
+      </div>
+    </aside>
+    <main class="lp2-guide">
+      <article id="lesson-page-overview" class="lp2-sheet" data-page-index="0"><div class="lp2-sheet__corner"><span>Algebra</span><span>Linear Equations in Two Variables</span></div><h1 class="lp2-sheet__h1">Linear Equations in Two Variables</h1><p class="lp2-p">A <strong class="lp2-term lp2-term--blue">linear equation in two variables</strong> relates an $x$ and a $y$, each to the first power. Unlike a one-variable equation, it doesn&#x27;t have a single answer: a <strong>solution</strong> is an ordered pair $(x, y)$ that makes the equation true, and there are <strong>infinitely many</strong> of them. Plotted together, those pairs form a straight <strong>line</strong>—the equation and the line are two descriptions of the same object.</p><p class="lp2-p">You&#x27;ll meet these equations in two standard costumes:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Slope-intercept form</div><div class="lp2-math"><div class="lp2-math__tex">$$y = \textcolor{#0f6cbd}{m}x + \textcolor{#157f4b}{b}$$</div></div><p class="lp2-p">Built for <strong>graphs and rates</strong>: the slope and y-intercept are visible at a glance.</p></div><div class="lp2-columns__col"><div class="lp2-columns__title">Standard form</div><div class="lp2-math"><div class="lp2-math__tex">$$\textcolor{#0f6cbd}{A}x + \textcolor{#0e8a7e}{B}y = \textcolor{#157f4b}{C}$$</div></div><p class="lp2-p">Built for <strong>totals and combinations</strong>: two quantities contributing to one result.</p></div></div><h3 class="lp2-h3">Strategies</h3><ul class="lp2-list"><li><strong>A solution is a point on the line.</strong> To test a pair, substitute <em>both</em> coordinates; a true statement means it&#x27;s a solution.</li><li><strong>Match the form to the job.</strong> Need slope or a graph? Solve for $y$. Need a total or intercepts? Standard form is faster.</li><li><strong>Intercepts from standard form:</strong> set the <em>other</em> variable to $0$.</li><li><strong>Parallel lines share a slope; perpendicular slopes multiply to $-1$</strong> (flip the fraction <em>and</em> the sign).</li><li><strong>When the choices are points, plug them in</strong>—testing pairs is usually faster than graphing.</li></ul><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Keep the two-variable mindset: the question never asks for <em>the</em> solution—it asks for <em>a</em> solution, a slope, an intercept, or a meaning. Know which one before you compute.</div></div></article><article id="lesson-page-solutions-as-points" class="lp2-sheet" data-page-index="1"><div class="lp2-sheet__corner"><span>Algebra</span><span>Linear Equations in Two Variables: What Counts as a Solution?</span></div><h2 class="lp2-sheet__h2">What Counts as a Solution?</h2><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em>The pair $(x, y)$ is a solution exactly when substituting both values makes the equation true—which is exactly when the point $(x, y)$ lies on the line.</em></p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">Is $(3, 2)$ a solution of $4x - 5y = 2$? Substitute both coordinates:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$4(3) - 5(2) = 2$$</div><div class="lp2-steps__note">Replace $x$ with $3$ and $y$ with $2$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$12 - 10 = 2$$</div><div class="lp2-steps__note">Multiply</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$2 = 2$$</div><div class="lp2-steps__note">True — so $(3, 2)$ <strong>is</strong> a solution</div></div></div></div><ul class="lp2-checkcross"><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$(3, 2)$:  $4(3) - 5(2) = 2$</div><div class="lp2-checkcross__note">True statement — the point sits on the line.</div></div></li><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$(1, 2)$:  $4(1) - 5(2) = -6 \neq 2$</div><div class="lp2-checkcross__note">False statement — the point misses the line.</div></div></li></ul><figure class="lp2-graph" role="img" aria-label="A line with the point (3, 2) on it and the point (1, 2) off it"><svg viewBox="0 0 320 270" width="320" height="270"><defs><marker id="arr-R4iq" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker></defs><line x1="30" y1="16" x2="30" y2="246" stroke="#e4ebf2" stroke-width="1"></line><line x1="107.71428571428571" y1="16" x2="107.71428571428571" y2="246" stroke="#e4ebf2" stroke-width="1"></line><line x1="185.42857142857142" y1="16" x2="185.42857142857142" y2="246" stroke="#e4ebf2" stroke-width="1"></line><line x1="263.1428571428571" y1="16" x2="263.1428571428571" y2="246" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="213.14285714285714" x2="302" y2="213.14285714285714" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="147.42857142857142" x2="302" y2="147.42857142857142" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="81.71428571428571" x2="302" y2="81.71428571428571" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="16" x2="302" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="26" y1="147.42857142857142" x2="308" y2="147.42857142857142" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R4iq)" marker-start="url(#arr-R4iq)"></line><line x1="107.71428571428571" y1="250" x2="107.71428571428571" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R4iq)" marker-start="url(#arr-R4iq)"></line><text x="310" y="151.42857142857142" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="113.71428571428571" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="30" y1="144.42857142857142" x2="30" y2="150.42857142857142" stroke="#3d4b5e" stroke-width="1"></line><text x="30" y="161.42857142857142" font-size="10" fill="#5c6a7d" text-anchor="middle">-2</text></g><g><line x1="185.42857142857142" y1="144.42857142857142" x2="185.42857142857142" y2="150.42857142857142" stroke="#3d4b5e" stroke-width="1"></line><text x="185.42857142857142" y="161.42857142857142" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="263.1428571428571" y1="144.42857142857142" x2="263.1428571428571" y2="150.42857142857142" stroke="#3d4b5e" stroke-width="1"></line><text x="263.1428571428571" y="161.42857142857142" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="104.71428571428571" y1="213.14285714285714" x2="110.71428571428571" y2="213.14285714285714" stroke="#3d4b5e" stroke-width="1"></line><text x="101.71428571428571" y="216.64285714285714" font-size="10" fill="#5c6a7d" text-anchor="end">-2</text></g><g><line x1="104.71428571428571" y1="81.71428571428571" x2="110.71428571428571" y2="81.71428571428571" stroke="#3d4b5e" stroke-width="1"></line><text x="101.71428571428571" y="85.21428571428571" font-size="10" fill="#5c6a7d" text-anchor="end">2</text></g><g><line x1="104.71428571428571" y1="16" x2="110.71428571428571" y2="16" stroke="#3d4b5e" stroke-width="1"></line><text x="101.71428571428571" y="19.5" font-size="10" fill="#5c6a7d" text-anchor="end">4</text></g><g><line x1="30" y1="213.14285714285714" x2="302" y2="29.14285714285714" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round"></line></g><g><circle cx="224.28571428571428" cy="81.71428571428571" r="4" fill="#157f4b" stroke="#fff" stroke-width="1.4"></circle><text x="232.28571428571428" y="97.71428571428571" font-size="11" font-weight="600" fill="#157f4b">(3, 2)</text></g><g><circle cx="146.57142857142856" cy="81.71428571428571" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle><text x="154.57142857142856" y="73.71428571428571" font-size="11" font-weight="600" fill="#c0392f">(1, 2)</text></g></svg><figcaption class="lp2-graph__caption">The line $4x - 5y = 2$: solutions are on it, non-solutions are off it.</figcaption></figure></div></section><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">Which of the following ordered pairs $(x, y)$ is a solution to the equation $3x + 2y = 18$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$(2, 6)$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$(6, 2)$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$(3, 4)$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$(4, 2)$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$3(2) + 2(6) = 6 + 12 = 18$. True—this pair is on the line.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$3(6) + 2(2) = 22$. Same numbers, <strong>swapped order</strong>—an ordered pair means $x$ first, $y$ second.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$3(3) + 2(4) = 17$. Close is not on the line.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$3(4) + 2(2) = 16$. False statement—not a solution.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">Order matters: $(2, 6)$ and $(6, 2)$ are different points. Swapped-coordinate traps appear constantly in this question type.</div></div></article><article id="lesson-page-two-forms" class="lp2-sheet" data-page-index="2"><div class="lp2-sheet__corner"><span>Algebra</span><span>Linear Equations in Two Variables: Two Forms of the Same Line</span></div><h2 class="lp2-sheet__h2">Two Forms of the Same Line</h2><p class="lp2-p">Any linear equation can wear either costume. Converting between them is one skill: <strong>solve for $y$</strong> to reveal the slope, or clear fractions to rebuild the total.</p><h3 class="lp2-h3">From Standard to Slope-Intercept</h3><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">What is the slope of the graph of $4x + 2y = 10$ in the $xy$-plane?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$4x + 2y = 10$$</div><div class="lp2-steps__note">Given equation</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$2y = -4x + 10$$</div><div class="lp2-steps__note">Subtract $4x$ from both sides</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$y = -2x + 5$$</div><div class="lp2-steps__note">Divide both sides by $2$</div></div></div></div><p class="lp2-p">Now the line reads itself: slope $\textcolor{#0f6cbd}{-2}$, y-intercept $\textcolor{#157f4b}{(0, 5)}$.</p></div></section><p class="lp2-p">Doing that conversion in general produces three shortcuts worth memorizing for $Ax + By = C$:</p><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th>From $Ax + By = C$</th><th class="lp2-td--center">Shortcut</th><th class="lp2-td--center">Check with $4x + 2y = 10$</th></tr></thead><tbody><tr><td>Slope</td><td class="lp2-td--center">$-\frac{A}{B}$</td><td class="lp2-td--center">$-\frac{4}{2} = -2$</td></tr><tr><td>y-intercept  (set $x = 0$)</td><td class="lp2-td--center">$\left(0, \frac{C}{B}\right)$</td><td class="lp2-td--center">$\frac{10}{2} = 5$</td></tr><tr><td>x-intercept  (set $y = 0$)</td><td class="lp2-td--center">$\left(\frac{C}{A}, 0\right)$</td><td class="lp2-td--center">$\frac{10}{4} = 2.5$</td></tr></tbody></table></div><h3 class="lp2-h3">Intercepts Straight from Standard Form</h3><p class="lp2-p">Standard form makes intercepts almost free: <strong>zero out one variable and divide</strong>.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">Find both intercepts of the graph of $3x + 5y = 30$.</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$3x + 5(0) = 30 \;\Rightarrow\; x = 10$$</div><div class="lp2-steps__note">Set $y = 0$: the x-intercept is $(10, 0)$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$3(0) + 5y = 30 \;\Rightarrow\; y = 6$$</div><div class="lp2-steps__note">Set $x = 0$: the y-intercept is $(0, 6)$</div></div></div></div><figure class="lp2-graph" role="img" aria-label="A falling line crossing the y-axis at (0, 6) and the x-axis at (10, 0)"><svg viewBox="0 0 340 240" width="340" height="240"><defs><marker id="arr-R78r" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker></defs><line x1="30" y1="16" x2="30" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="78.66666666666666" y1="16" x2="78.66666666666666" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="127.33333333333333" y1="16" x2="127.33333333333333" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="176" y1="16" x2="176" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="224.66666666666666" y1="16" x2="224.66666666666666" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="273.33333333333337" y1="16" x2="273.33333333333337" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="322" y1="16" x2="322" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="216" x2="322" y2="216" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="166" x2="322" y2="166" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="116" x2="322" y2="116" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="66" x2="322" y2="66" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="16" x2="322" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="26" y1="216" x2="328" y2="216" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R78r)" marker-start="url(#arr-R78r)"></line><line x1="30" y1="220" x2="30" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R78r)" marker-start="url(#arr-R78r)"></line><text x="330" y="220" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="36" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="78.66666666666666" y1="213" x2="78.66666666666666" y2="219" stroke="#3d4b5e" stroke-width="1"></line><text x="78.66666666666666" y="230" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="127.33333333333333" y1="213" x2="127.33333333333333" y2="219" stroke="#3d4b5e" stroke-width="1"></line><text x="127.33333333333333" y="230" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="176" y1="213" x2="176" y2="219" stroke="#3d4b5e" stroke-width="1"></line><text x="176" y="230" font-size="10" fill="#5c6a7d" text-anchor="middle">6</text></g><g><line x1="224.66666666666666" y1="213" x2="224.66666666666666" y2="219" stroke="#3d4b5e" stroke-width="1"></line><text x="224.66666666666666" y="230" font-size="10" fill="#5c6a7d" text-anchor="middle">8</text></g><g><line x1="273.33333333333337" y1="213" x2="273.33333333333337" y2="219" stroke="#3d4b5e" stroke-width="1"></line><text x="273.33333333333337" y="230" font-size="10" fill="#5c6a7d" text-anchor="middle">10</text></g><g><line x1="322" y1="213" x2="322" y2="219" stroke="#3d4b5e" stroke-width="1"></line><text x="322" y="230" font-size="10" fill="#5c6a7d" text-anchor="middle">12</text></g><g><line x1="27" y1="166" x2="33" y2="166" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="169.5" font-size="10" fill="#5c6a7d" text-anchor="end">2</text></g><g><line x1="27" y1="116" x2="33" y2="116" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="119.5" font-size="10" fill="#5c6a7d" text-anchor="end">4</text></g><g><line x1="27" y1="66" x2="33" y2="66" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="69.5" font-size="10" fill="#5c6a7d" text-anchor="end">6</text></g><g><line x1="27" y1="16" x2="33" y2="16" stroke="#3d4b5e" stroke-width="1"></line><text x="24" y="19.5" font-size="10" fill="#5c6a7d" text-anchor="end">8</text></g><g><line x1="30" y1="66" x2="273.33333333333337" y2="216" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round"></line></g><g><circle cx="30" cy="66" r="4" fill="#157f4b" stroke="#fff" stroke-width="1.4"></circle><text x="40" y="66" font-size="11" font-weight="600" fill="#157f4b">(0, 6)</text></g><g><circle cx="273.33333333333337" cy="216" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle><text x="281.33333333333337" y="206" font-size="11" font-weight="600" fill="#c0392f">(10, 0)</text></g></svg><figcaption class="lp2-graph__caption">The intercepts of $3x + 5y = 30$.</figcaption></figure></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Two intercepts are also the fastest way to <em>sketch</em> a standard-form line: mark both, connect the dots.</div></div></article><article id="lesson-page-equations-from-context" class="lp2-sheet" data-page-index="3"><div class="lp2-sheet__corner"><span>Algebra</span><span>Linear Equations in Two Variables: Building Equations from Context</span></div><h2 class="lp2-sheet__h2">Building Equations from Context</h2><p class="lp2-p">Standard form is the natural language of <strong>combination stories</strong>: two things, each with its own per-unit value, adding up to one total.</p><div class="lp2-strip" role="img" aria-label="Value per unit times quantity plus value per unit times quantity equals total"><span class="lp2-strip__seg lp2-strip__seg--blue">Value × Quantity</span><span class="lp2-strip__op">+</span><span class="lp2-strip__seg lp2-strip__seg--teal">Value × Quantity</span><span class="lp2-strip__op">=</span><span class="lp2-strip__seg lp2-strip__seg--green">Total</span></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">A cafe sells a small coffee for $\$4$ and a large coffee for $\$6$. One morning, the cafe earns $\$120$ from coffee sales. If $s$ is the number of small coffees and $l$ the number of large coffees sold, the situation is modeled by:</p><div class="lp2-math lp2-math--boxed"><div class="lp2-math__tex">$$\textcolor{#0f6cbd}{4}s + \textcolor{#0e8a7e}{6}l = \textcolor{#157f4b}{120}$$</div><div class="lp2-math__caption"><strong class="lp2-term lp2-term--blue">4</strong> dollars per small · <strong class="lp2-term lp2-term--teal">6</strong> dollars per large · <strong class="lp2-term lp2-term--green">120</strong> dollars in total</div></div><p class="lp2-p">One equation, many mornings: $(s, l) = (12, 12)$ works, and so does $(30, 0)$—every solution is a possible sales combination. Given one value, the other is forced:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$4(18) + 6l = 120$$</div><div class="lp2-steps__note">Suppose $18$ small coffees were sold</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$6l = 48$$</div><div class="lp2-steps__note">Subtract $72$ from both sides</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$l = 8$$</div><div class="lp2-steps__note">Divide by $6$ — so $8$ large coffees were sold</div></div></div></div></div></section><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">At a craft fair, Lena sells bracelets and keychains. The equation $5x + 3y = 90$ models a day when she earned $\$90$, where $x$ is the number of bracelets and $y$ is the number of keychains sold. What is the best interpretation of the number $5$ in this context?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">Lena sold $5$ bracelets that day</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">Each bracelet was sold for $\$5$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">Lena earned $\$5$ in total from bracelets</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">Bracelets cost $\$5$ more than keychains</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>The number of bracelets is the variable $x$—not its coefficient. $5$ is what each one contributes.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$5$ multiplies the number of bracelets, so every bracelet adds $\$5$ to the total—it&#x27;s the price per bracelet.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>The total earned from bracelets is the whole term $5x$, not the coefficient alone.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Comparing prices would involve $5 - 3$; the equation says nothing about a difference.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Read coefficients with units: $5$ <strong class="lp2-term lp2-term--gray">dollars per bracelet</strong> $\times$ $x$ <strong class="lp2-term lp2-term--gray">bracelets</strong> $=$ dollars. If an interpretation breaks the units, it&#x27;s wrong.</div></div></article><article id="lesson-page-parallel-perpendicular" class="lp2-sheet" data-page-index="4"><div class="lp2-sheet__corner"><span>Algebra</span><span>Linear Equations in Two Variables: Parallel &amp; Perpendicular Lines</span></div><h2 class="lp2-sheet__h2">Parallel &amp; Perpendicular Lines</h2><p class="lp2-p">Slopes control direction—so slopes decide when two lines run alongside each other and when they cross at a right angle.</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Parallel: same slope</div><div class="lp2-math"><div class="lp2-math__tex">$$m_1 = m_2$$</div></div><figure class="lp2-graph" role="img" aria-label="Two parallel rising lines"><svg viewBox="0 0 200 200" width="200" height="200"><defs><marker id="arr-Raat" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker></defs><line x1="16" y1="16" x2="16" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="57.5" y1="16" x2="57.5" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="99" y1="16" x2="99" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="140.5" y1="16" x2="140.5" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="182" y1="16" x2="182" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="184" x2="182" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="142" x2="182" y2="142" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="100" x2="182" y2="100" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="58" x2="182" y2="58" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="182" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="100" x2="188" y2="100" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Raat)" marker-start="url(#arr-Raat)"></line><line x1="99" y1="188" x2="99" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Raat)" marker-start="url(#arr-Raat)"></line><text x="190" y="104" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="105" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="36.75" y1="184" x2="119.75" y2="16" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round"></line></g><g><line x1="78.25" y1="184" x2="161.25" y2="16" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line></g></svg><figcaption class="lp2-graph__caption">Equal slopes, different intercepts — never meet.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Perpendicular: slopes multiply to −1</div><div class="lp2-math"><div class="lp2-math__tex">$$m_1 \cdot m_2 = -1$$</div></div><figure class="lp2-graph" role="img" aria-label="Two lines crossing at a right angle"><svg viewBox="0 0 200 200" width="200" height="200"><defs><marker id="arr-Rait" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker></defs><line x1="16" y1="16" x2="16" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="57.5" y1="16" x2="57.5" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="99" y1="16" x2="99" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="140.5" y1="16" x2="140.5" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="182" y1="16" x2="182" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="184" x2="182" y2="184" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="142" x2="182" y2="142" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="100" x2="182" y2="100" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="58" x2="182" y2="58" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="182" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="100" x2="188" y2="100" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Rait)" marker-start="url(#arr-Rait)"></line><line x1="99" y1="188" x2="99" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Rait)" marker-start="url(#arr-Rait)"></line><text x="190" y="104" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="105" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="47.125" y1="184" x2="130.125" y2="16" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round"></line></g><g><line x1="16" y1="37" x2="182" y2="121" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line></g></svg><figcaption class="lp2-graph__caption">Slopes $2$ and $-\frac{1}{2}$: flipped and negated.</figcaption></figure></div></div><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em>Perpendicular slope = <strong>negative reciprocal</strong>: flip the fraction <em>and</em> change the sign. The slope $2$ becomes $-\frac{1}{2}$; the slope $-\frac{3}{4}$ becomes $\frac{4}{3}$.</em></p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">In the $xy$-plane, which equation defines a line that is parallel to the graph of $y = 2x - 7$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$y = 2x + 3$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$y = -2x - 7$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$y = -\frac{1}{2}x + 3$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$y = 7x - 2$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Same slope ($2$), different y-intercept—the definition of parallel.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Slope $-2$ is the <em>opposite</em> slope, not the same one—this line crosses the original.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$-\frac{1}{2}$ is the negative reciprocal—that&#x27;s the <strong>perpendicular</strong> line, not the parallel one.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Recycles the numbers $7$ and $2$ in new positions; the slope $7$ matches nothing relevant.</div></li></ul></div></div></section><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">Line $t$ is perpendicular to the graph of $y = 3x - 4$ and passes through the point $(6, 1)$. What is the y-intercept of line $t$?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$m_t = -\frac{1}{3}$$</div><div class="lp2-steps__note">Negative reciprocal of $3$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$1 = -\frac{1}{3}(6) + b$$</div><div class="lp2-steps__note">Plug the point $(6, 1)$ into $y = m_t x + b$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$1 = -2 + b$$</div><div class="lp2-steps__note">Simplify</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$b = 3$$</div><div class="lp2-steps__note">The y-intercept is $(0, 3)$</div></div></div></div></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">The classic perpendicular error is doing only half the job—flipping without negating, or negating without flipping. Check yourself: the two slopes must multiply to $-1$.</div></div></article><article id="lesson-page-practice" class="lp2-sheet" data-page-index="5"><div class="lp2-sheet__corner"><span>Algebra</span><span>Linear Equations in Two Variables: Practice</span></div><h2 class="lp2-sheet__h2">Practice</h2><p class="lp2-p">Name the job first: test a point, find a slope, build an equation, or apply a slope relationship. Commit to an answer before you open the explanation.</p><section class="lp2-practice"><div class="lp2-practice__band">Practice</div><ol class="lp2-practice__list"><li class="lp2-practice__item"><div class="lp2-practice__number">1.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">Which ordered pair $(x, y)$ is a solution to the equation $5x - 2y = 4$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$(2, 3)$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$(3, 2)$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$(0, 2)$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$(2, -3)$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Substitute each pair until one makes the equation true.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$5(2) - 2(3) = 10 - 6 = 4$. True—this point is on the line.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$5(3) - 2(2) = 11$. The swapped-order trap: $x$ comes first in an ordered pair.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$5(0) - 2(2) = -4$. Right size, wrong sign—$-4 \neq 4$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$5(2) - 2(-3) = 10 + 6 = 16$. Subtracting a negative <em>adds</em>—the sign flip works against you here.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">2.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">What is the slope of the graph of $6x + 3y = 12$ in the $xy$-plane?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$-2$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$2$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$-6$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$4$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Solve for $y$ (or use the shortcut $-\frac{A}{B}$):</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$3y = -6x + 12$$</div><div class="lp2-steps__note">Subtract $6x$ from both sides</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$y = -2x + 4$$</div><div class="lp2-steps__note">Divide both sides by $3$</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>The coefficient of $x$ after solving for $y$: $-\frac{6}{3} = -2$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$2$ drops the sign—moving $6x$ across the equals sign negates it.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$-6$ reads the $x$-coefficient straight from standard form without dividing by $B = 3$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$4$ is the y-intercept, not the slope.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">3.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">A theater sells matinee tickets for $\$9$ each and evening tickets for $\$14$ each. One day, ticket sales totaled $\$252$. If $m$ is the number of matinee tickets and $e$ is the number of evening tickets sold that day, which equation represents this situation?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$9m + 14e = 252$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$14m + 9e = 252$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$m + e = 252$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$23(m + e) = 252$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Each ticket type contributes price × quantity, and the contributions add to the day&#x27;s total.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$9$ dollars per matinee times $m$, plus $14$ dollars per evening times $e$, equals $252$ dollars. Units check out.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Swaps the prices: it charges matinee-goers the evening price and vice versa.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$m + e$ counts <em>tickets</em>, but $252$ is <em>dollars</em>—the units don&#x27;t match.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$23(m + e)$ charges every ticket the <em>combined</em> price of both types—no ticket costs $\$23$.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">4.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">In the $xy$-plane, line $t$ is perpendicular to the graph of $y = 2x + 3$ and passes through the point $(4, 1)$. At what point does line $t$ cross the $y$-axis?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$(0, 3)$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$(0, -7)$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$(0, 9)$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$(0, -1)$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Perpendicular to slope $2$ means slope $-\frac{1}{2}$—flip <em>and</em> negate—then plug in the point:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$m_t = -\frac{1}{2}$$</div><div class="lp2-steps__note">Negative reciprocal of $2$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$1 = -\frac{1}{2}(4) + b$$</div><div class="lp2-steps__note">Use the point $(4, 1)$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$b = 3$$</div><div class="lp2-steps__note">$1 = -2 + b$ — line $t$ crosses at $(0, 3)$</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Slope $-\frac{1}{2}$ through $(4, 1)$ gives $b = 3$. Check: $2 \cdot \left(-\frac{1}{2}\right) = -1$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$(0, -7)$ keeps the slope $2$ unchanged—that&#x27;s the <em>parallel</em> setup, not perpendicular.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$(0, 9)$ uses slope $-2$: negated but never flipped. Half the job.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$(0, -1)$ uses slope $\frac{1}{2}$: flipped but never negated. The other half.</div></li></ul></div></div></div></div></li></ol></section><section class="lp2-remember"><h3 class="lp2-remember__title">Things to Remember</h3><ul class="lp2-list"><li>A solution of a two-variable equation is an ordered pair—and a <strong>point on the line</strong>. Substitute both coordinates to test it; watch for swapped-order traps.</li><li>Two forms, one line: $y = mx + b$ shows slope and intercept; $Ax + By = C$ shows totals. Convert by solving for $y$; from standard form, slope $= -\frac{A}{B}$.</li><li>Intercepts from standard form: set the other variable to $0$ and divide.</li><li>Combination stories: <strong class="lp2-term lp2-term--blue">value × quantity</strong> $+$ <strong class="lp2-term lp2-term--teal">value × quantity</strong> $=$ <strong class="lp2-term lp2-term--green">total</strong>. Coefficients are per-unit values—read them with units.</li><li>Parallel: same slope. Perpendicular: flip <strong>and</strong> negate—the slopes must multiply to $-1$.</li><li>When answer choices are points or pairs, plug them in instead of graphing.</li></ul></section></article>
+      <section class="lp2-mastery" aria-label="Lesson completion">
+        <div class="lp2-mastery__copy">
+          <h3>Have you mastered this lesson?</h3>
+          <p>Mark this lesson as complete to update your course progress and study plan.</p>
+        </div>
+        <div class="lp2-mastery__actions">
+          <button type="button" class="ut-btn ut-btn--primary lp2-mastery__mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Mark as Complete</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.lp2-reveal').forEach(function (r) {
+    r.classList.remove('lp2-reveal--open');
+    var btn = r.querySelector('.lp2-reveal__toggle');
+    if (btn) btn.addEventListener('click', function () { r.classList.toggle('lp2-reveal--open'); });
+  });
+</script>
+</body>
+</html>

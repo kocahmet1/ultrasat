@@ -5,6 +5,12 @@ import './MembershipUpgrade.css';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
+// Purchases are temporarily disabled while the site is free for current
+// students (they register free and are upgraded manually from the admin
+// panel). Set to true to restore prices, billing toggle, coupons and the
+// checkout button — all logic below is untouched.
+const PURCHASES_ENABLED = false;
+
 const CheckIcon = () => (
   <svg className="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -217,6 +223,9 @@ const MembershipUpgrade = () => {
     const isCurrentPlan = currentTier === tier;
     const isProcessing = loading[tier];
 
+    // No checkout button while purchases are disabled (current-plan badge still shows)
+    if (!PURCHASES_ENABLED && !isCurrentPlan) return null;
+
     if (isCurrentPlan) {
       return (
         <button className="plan-button secondary" disabled>
@@ -275,6 +284,7 @@ const MembershipUpgrade = () => {
     <div className="membership-upgrade-page">
       <div className="upgrade-header">
         <h1>Upgrade your plan</h1>
+        {PURCHASES_ENABLED && (
         <div className="billing-toggle">
           <button
             onClick={() => setBillingCycle('monthly')}
@@ -289,11 +299,13 @@ const MembershipUpgrade = () => {
             Yearly
           </button>
         </div>
+        )}
       </div>
 
       {renderSubscriptionStatus()}
 
       {/* Coupon Code Section */}
+      {PURCHASES_ENABLED && (
       <div className="coupon-section">
         <h3>Have a coupon code?</h3>
         {!validatedCoupon ? (
@@ -329,14 +341,21 @@ const MembershipUpgrade = () => {
         )}
         {couponError && <p className="coupon-error">{couponError}</p>}
       </div>
+      )}
 
       <div className="plans-container">
         {visiblePlans.map(([tierId, plan]) => (
           <div className="plan-card" key={tierId}>
             <h2>{plan.name}</h2>
             <div className="plan-price">
-              {renderPrice(plan.prices[billingCycle], tierId)}
-              <span className="period"> / {billingCycle === 'monthly' ? 'month' : 'year'}</span>
+              {PURCHASES_ENABLED ? (
+                <>
+                  {renderPrice(plan.prices[billingCycle], tierId)}
+                  <span className="period"> / {billingCycle === 'monthly' ? 'month' : 'year'}</span>
+                </>
+              ) : (
+                <span className="price">To be determined</span>
+              )}
             </div>
             <p className="plan-description">{plan.description}</p>
             <ul className="plan-features">

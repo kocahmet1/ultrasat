@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview — Lesson v2: Probability</title>
+<style>/* tokens.css — Overhaul Phase F; re-themed to "Scholar Blue" (Phase G).
+   THE design tokens for the app. The palette moved from green-on-ink to a
+   light-first navy/blue system: blue = brand/actions, green = ONLY correctness,
+   red = ONLY errors/incorrect, amber = warnings. Use tokens, never raw hex.
+
+   Values are px on purpose: the app's html { font-size: 62.5% } rem scaling
+   must not warp the palette-adjacent sizing tokens. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- surfaces ---- */
+  --ut-ink: #0A1226;            /* darkest surface (final CTA, hero) */
+  --ut-panel: #0F1E3D;          /* dark panels, sidebar body */
+  --ut-panel-top: #0C1830;      /* dark panel top edge / nav */
+  --ut-bg: #F4F6F9;             /* app/page background */
+  --ut-bg-alt: #EAEEF3;         /* alternating section background */
+  --ut-card: #FFFFFF;           /* strong card on --ut-bg */
+  --ut-card-soft: #F8FAFC;      /* subtle card */
+
+  /* ---- text on light ---- */
+  --ut-text: #16202F;           /* primary text */
+  --ut-text-soft: #35435C;      /* secondary text */
+  --ut-muted: #4E5B70;          /* muted body text */
+  --ut-mono-muted: #5E6B80;     /* mono labels, captions */
+
+  /* ---- hairlines ---- */
+  --ut-rule: #DCE1E9;           /* hairlines on light */
+  --ut-rule-strong: #C9D0DC;    /* stronger hairlines */
+
+  /* ---- brand accent: BLUE (actions, links, active states) ---- */
+  --ut-accent: #2B59D8;         /* THE blue */
+  --ut-accent-bright: #86A4F5;  /* blue on dark surfaces */
+  --ut-accent-dark: #1D3FA8;    /* blue for text/links on light */
+  --ut-accent-soft: #E8EEFB;    /* blue tint fill (chips, active) */
+  --ut-accent-rule: #C9D6F0;    /* blue-tinted hairline */
+  --ut-on-accent: #FFFFFF;      /* text on the blue */
+
+  /* ---- semantic: success/correct = GREEN only ---- */
+  --ut-success: #17A45C;        /* fills, icons */
+  --ut-success-bright: #6FDCA8; /* green on dark surfaces */
+  --ut-success-dark: #0E6B3C;   /* text on light/soft */
+  --ut-success-soft: #E3F5EB;   /* tint fill */
+  --ut-success-rule: #BFE5CF;   /* tinted hairline */
+
+  /* ---- semantic: danger/incorrect = RED only ---- */
+  --ut-danger: #CC4141;         /* fills, icons */
+  --ut-danger-dark: #A03434;    /* text on light/soft */
+  --ut-danger-soft: #FBEEEE;    /* tint fill */
+  --ut-danger-rule: #EECACA;    /* tinted hairline */
+
+  /* ---- semantic: warning = AMBER only ---- */
+  --ut-warn: #C99A2E;           /* fills, icons */
+  --ut-warn-dark: #8A6D1D;      /* text on light/soft */
+  --ut-warn-soft: #FAF3DF;      /* tint fill */
+  --ut-warn-rule: #EAD9B0;      /* tinted hairline */
+
+  /* ---- text on dark ---- */
+  --ut-on-ink: #F2F5FA;         /* text on dark surfaces */
+  --ut-on-ink-bright: #F8FAFD;  /* emphasized text on dark */
+  --ut-on-ink-muted: rgba(242, 245, 250, 0.62);
+  --ut-rule-on-ink: rgba(237, 241, 248, 0.12); /* hairlines on dark */
+
+  /* ---- typography ---- */
+  --ut-font-display: 'Space Grotesk', system-ui, sans-serif;
+  --ut-font-body: 'Schibsted Grotesk', system-ui, sans-serif;
+  --ut-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --ut-font-serif: Georgia, 'Times New Roman', serif; /* reading passages only */
+
+  /* mono label recipe: font-family mono + these */
+  --ut-label-size: 10.5px;
+  --ut-label-tracking: 0.1em;
+
+  /* ---- radius (6 buttons / 10 cards / 12 panels) ---- */
+  --ut-radius-sm: 6px;
+  --ut-radius: 10px;
+  --ut-radius-lg: 12px;
+
+  /* ---- shadows (cool ink) ---- */
+  --ut-shadow-sm: 0 1px 2px rgba(12, 24, 48, 0.06);
+  --ut-shadow: 0 4px 12px rgba(12, 24, 48, 0.08);
+  --ut-shadow-lg: 0 12px 32px rgba(12, 24, 48, 0.14);
+
+  /* ---- legacy aliases, do not use in new code ----
+     These globals used to be re-declared with conflicting values in several
+     files' :root blocks (winner depended on chunk order). This is now the
+     single definition; old var() usages keep working through it. */
+  --primary-color: var(--ut-accent);
+  --secondary-color: var(--ut-card-soft);
+  --border-color: var(--ut-rule);
+  --shadow-sm: var(--ut-shadow-sm);
+  --shadow-md: var(--ut-shadow);
+  --shadow-lg: var(--ut-shadow-lg);
+  --border-radius-sm: var(--ut-radius-sm);
+}
+</style>
+<style>
+  body { margin: 0; background: var(--ut-bg); font-family: var(--ut-font-body); color: var(--ut-text); }
+  .ut-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:1px solid transparent; border-radius:var(--ut-radius-sm); font-family:var(--ut-font-body); font-size:13.5px; font-weight:700; line-height:1; padding:10px 16px; cursor:pointer; text-decoration:none; white-space:nowrap; }
+  .ut-btn--primary { background: var(--ut-accent); color: var(--ut-on-accent); }
+  .ut-btn--primary:hover { background: var(--ut-accent-dark); }
+  .preview-note { max-width:1480px; margin:0 auto; padding:10px 28px 0; font-size:12px; color:var(--ut-mono-muted); font-family:var(--ut-font-mono); }
+</style>
+<style>/* LessonPage.css — Lesson v2 (UWorld-style study guide).
+ *
+ * Scoped under .lp2-. Built on tokens.css (--ut-*) plus a small set of
+ * lesson-local variables below for the "study guide" look: steel-blue
+ * headings, exam-yellow highlights, blue example boxes, banded practice
+ * sections, green/red verdicts. Content JSON references tones by name
+ * (blue/teal/rose/green/purple/amber) — keep these class hooks stable.
+ */
+
+.lp2 {
+  /* palette */
+  --lp-heading: #1c3a5e;        /* sheet titles (dark navy) */
+  --lp-steel: #2b6ca3;          /* section headings, answer links */
+  --lp-steel-dark: #235a88;
+  --lp-body: #2a3342;           /* guide body text */
+  --lp-muted: #5c6a7d;
+  --lp-sheet-border: #dfe5ec;
+  --lp-hairline: #e4e9ef;
+
+  --lp-hl: #fbe97f;             /* exam-yellow highlight */
+  --lp-blue-border: #b9d3e6;
+  --lp-blue-band: #dcebf6;      /* example header band */
+  --lp-blue-tint: #f3f8fc;      /* example body tint */
+  --lp-table-head: #e3eef7;
+  --lp-table-border: #c9d6e3;
+
+  /* term tones (inline markup {tone|...}) */
+  --lp-term-blue: #0f6cbd;
+  --lp-term-teal: #0e8a7e;
+  --lp-term-rose: #c0392f;
+  --lp-term-green: #157f4b;
+  --lp-term-purple: #6d3fc4;
+  --lp-term-amber: #a8621a;
+
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 20px 28px 72px;
+  font-family: var(--ut-font-body);
+  color: var(--lp-body);
+}
+
+/* ═══════════ reading progress bar ═══════════ */
+
+.lp2-progressbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.lp2-progressbar__fill {
+  height: 100%;
+  background: var(--ut-accent);
+  transition: width 80ms linear;
+}
+
+/* ═══════════ top bar ═══════════ */
+
+.lp2-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.lp2-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lp-muted);
+  min-width: 0;
+}
+
+.lp2-crumbs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp2-crumbs__link:hover {
+  text-decoration: underline;
+}
+
+.lp2-crumbs__sep {
+  flex: 0 0 auto;
+  opacity: 0.55;
+}
+
+.lp2-crumbs__domain {
+  white-space: nowrap;
+}
+
+.lp2-crumbs__current {
+  font-weight: 600;
+  color: var(--ut-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp2-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp2-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ut-text-soft);
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.lp2-chip--done {
+  color: var(--ut-success-dark);
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+}
+
+/* ═══════════ two-panel body ═══════════ */
+
+.lp2-body {
+  display: grid;
+  grid-template-columns: 372px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+/* ───── left panel ───── */
+
+.lp2-left {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+
+/* video */
+
+.lp2-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ut-panel);
+  border-radius: var(--ut-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ut-shadow);
+  flex: 0 0 auto;
+}
+
+.lp2-video iframe,
+.lp2-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.lp2-video__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.lp2-video--placeholder .lp2-video__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(134, 164, 245, 0.18), transparent 55%),
+    radial-gradient(120% 100% at 90% 100%, rgba(43, 89, 216, 0.22), transparent 60%);
+}
+
+.lp2-video__playring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(242, 245, 250, 0.85);
+  color: var(--ut-on-ink);
+  font-size: 22px;
+  background: rgba(15, 30, 61, 0.35);
+}
+
+.lp2-video__playring svg {
+  margin-left: 3px;
+}
+
+.lp2-video__coming {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ut-on-ink-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* lesson card + page navigator */
+
+.lp2-left-card {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 18px 18px 16px;
+}
+
+.lp2-left-card__eyebrow {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 6px;
+}
+
+.lp2-left-card__title {
+  font-family: var(--ut-font-display);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.lp2-left-card__difficulty {
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  margin-bottom: 4px;
+}
+
+.lp2-pagenav {
+  margin-top: 14px;
+  border-top: 1px solid var(--lp-hairline);
+  padding-top: 12px;
+}
+
+.lp2-pagenav__label {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 8px;
+}
+
+.lp2-pagenav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lp2-pagenav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--ut-radius-sm);
+  padding: 8px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.lp2-pagenav__item:hover {
+  background: var(--ut-bg);
+  color: var(--ut-text);
+}
+
+.lp2-pagenav__item--active {
+  background: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+  font-weight: 600;
+}
+
+.lp2-pagenav__num {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.lp2-pagenav__title {
+  min-width: 0;
+}
+
+.lp2-practice-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.lp2-planner-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+}
+
+.lp2-planner-return:hover {
+  text-decoration: underline;
+}
+
+/* ───── study guide sheets ───── */
+
+.lp2-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 0;
+  max-width: 900px;
+}
+
+.lp2-sheet {
+  position: relative;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(16, 42, 67, 0.1), 0 6px 22px rgba(16, 42, 67, 0.05);
+  padding: 44px 58px 52px;
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.lp2-sheet__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #8a97a8;
+  margin: -14px -26px 14px 0;
+  text-align: right;
+}
+
+.lp2-sheet__h1 {
+  font-family: var(--ut-font-display);
+  font-size: 31px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  line-height: 1.2;
+}
+
+.lp2-sheet__h2 {
+  font-family: var(--ut-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+/* ═══════════ content blocks ═══════════ */
+
+.lp2-p {
+  margin: 0 0 14px;
+}
+
+.lp2-h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--lp-steel);
+  margin: 30px 0 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  line-height: 1.3;
+}
+
+.lp2-h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 18px 0 8px;
+}
+
+.lp2-sheet > .lp2-h3:first-of-type {
+  margin-top: 20px;
+}
+
+/* lists */
+
+.lp2-list {
+  margin: 0 0 14px;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lp2-list li::marker {
+  color: var(--lp-steel);
+}
+
+.lp2-list--number li::marker {
+  font-weight: 600;
+}
+
+/* inline markup */
+
+.lp2-blank {
+  display: inline-block;
+  width: 5.5em;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px);
+  margin: 0 2px;
+}
+
+.lp2-hl {
+  background: var(--lp-hl);
+  padding: 1px 3px;
+  border-radius: 2px;
+  color: inherit;
+}
+
+.lp2-term--blue { color: var(--lp-term-blue); }
+.lp2-term--teal { color: var(--lp-term-teal); }
+.lp2-term--rose { color: var(--lp-term-rose); }
+.lp2-term--green { color: var(--lp-term-green); }
+.lp2-term--purple { color: var(--lp-term-purple); }
+.lp2-term--amber { color: var(--lp-term-amber); }
+.lp2-term--gray { color: var(--lp-muted); font-weight: 600; }
+
+/* tables */
+
+.lp2-table-wrap {
+  margin: 18px 0 20px;
+  overflow-x: auto;
+}
+
+.lp2-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  min-width: 62%;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lp2-table th,
+.lp2-table td {
+  border: 1px solid var(--lp-table-border);
+  padding: 9px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp2-table th {
+  background: var(--lp-table-head);
+  color: var(--lp-heading);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lp2-table--compact th,
+.lp2-table--compact td {
+  padding: 6px 12px;
+  font-size: 13.5px;
+}
+
+.lp2-td--center {
+  text-align: center !important;
+}
+
+.lp2-table-caption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* rule statement */
+
+.lp2-rule {
+  margin: 16px 0;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+}
+
+.lp2-rule__label {
+  color: var(--lp-heading);
+}
+
+.lp2-rule em {
+  color: var(--lp-steel-dark);
+}
+
+/* callouts */
+
+.lp2-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card-soft);
+  padding: 13px 16px;
+  margin: 18px 0;
+  font-size: 14.5px;
+}
+
+.lp2-callout__icon {
+  flex: 0 0 auto;
+  font-size: 21px;
+  margin-top: 1px;
+  color: var(--lp-steel);
+}
+
+.lp2-callout--warning {
+  border-color: var(--ut-warn-rule);
+  background: var(--ut-warn-soft);
+}
+
+.lp2-callout--warning .lp2-callout__icon {
+  color: var(--ut-warn-dark);
+}
+
+.lp2-callout--tip .lp2-callout__icon {
+  color: var(--ut-warn);
+  font-size: 23px;
+}
+
+/* passages */
+
+.lp2-passage {
+  margin: 14px 0 16px;
+}
+
+.lp2-passage__label {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 6px;
+}
+
+.lp2-passage__body {
+  font-family: var(--ut-font-serif);
+  font-size: 15px;
+  line-height: 1.72;
+  color: #333c4b;
+  padding-left: 16px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-passage__body p {
+  margin: 0 0 10px;
+}
+
+.lp2-passage__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* questions + choices */
+
+.lp2-question {
+  margin: 14px 0;
+}
+
+.lp2-question__stem {
+  margin: 0 0 12px;
+}
+
+.lp2-choices {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lp2-choices li {
+  display: flex;
+  gap: 10px;
+}
+
+.lp2-choices__letter {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: var(--ut-text);
+}
+
+/* verdicts (✓ / ✗) */
+
+.lp2-verdict {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 19px;
+  margin-top: 1px;
+}
+
+.lp2-verdict svg {
+  stroke-width: 3px;
+}
+
+.lp2-verdict--correct { color: var(--ut-success); }
+.lp2-verdict--incorrect { color: var(--ut-danger); }
+
+/* process of elimination */
+
+.lp2-poe {
+  margin: 16px 0 6px;
+}
+
+.lp2-poe__intro {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.lp2-poe__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-poe__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-poe__text {
+  min-width: 0;
+}
+
+/* check-cross pairs */
+
+.lp2-checkcross {
+  list-style: none;
+  margin: 14px 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-checkcross__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-checkcross__text {
+  font-family: var(--ut-font-serif);
+  color: #333c4b;
+}
+
+.lp2-checkcross__note {
+  font-size: 13.5px;
+  color: var(--lp-muted);
+  margin-top: 3px;
+}
+
+/* example boxes */
+
+.lp2-example {
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 22px 0;
+  overflow: hidden;
+}
+
+.lp2-example__band {
+  background: var(--lp-blue-band);
+  border-bottom: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 8px 18px;
+}
+
+.lp2-example__body {
+  background: var(--lp-blue-tint);
+  padding: 18px 20px 16px;
+}
+
+.lp2-example__body > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-example__body .lp2-passage__body {
+  border-left-color: #a7c8de;
+}
+
+/* reveal (expandable answer) */
+
+.lp2-reveal {
+  margin: 10px 0 4px;
+}
+
+.lp2-reveal__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--lp-steel);
+}
+
+.lp2-reveal__toggle:hover {
+  color: var(--lp-steel-dark);
+  text-decoration: underline;
+}
+
+.lp2-reveal__chevron {
+  transition: transform 150ms ease;
+  font-size: 16px;
+}
+
+.lp2-reveal--open .lp2-reveal__chevron {
+  transform: rotate(180deg);
+}
+
+.lp2-reveal__body {
+  margin-top: 10px;
+  padding: 14px 16px 12px;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-left: 3px solid var(--lp-steel);
+  border-radius: 0 var(--ut-radius-sm) var(--ut-radius-sm) 0;
+  animation: lp2-reveal-in 180ms ease;
+}
+
+.lp2-reveal__body > :last-child {
+  margin-bottom: 0;
+}
+
+@keyframes lp2-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* practice section */
+
+.lp2-practice {
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+.lp2-practice__band {
+  background: linear-gradient(90deg, #3d4552 0%, #626c7a 55%, #8a93a0 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  padding: 9px 18px;
+}
+
+.lp2-practice__list {
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lp2-practice__item {
+  display: flex;
+  gap: 12px;
+  padding-left: 6px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-practice__item + .lp2-practice__item {
+  padding-top: 20px;
+  border-top: 1px dashed var(--lp-hairline);
+}
+
+.lp2-practice__number {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--ut-text);
+  padding-left: 8px;
+}
+
+.lp2-practice__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.lp2-practice__content > .lp2-p:first-child,
+.lp2-practice__content > .lp2-passage:first-child {
+  margin-top: 0;
+}
+
+/* things to remember */
+
+.lp2-remember {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius);
+  padding: 18px 22px 14px;
+  margin: 26px 0 4px;
+}
+
+.lp2-remember__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 10px;
+}
+
+.lp2-remember .lp2-list {
+  margin-bottom: 4px;
+}
+
+/* legend */
+
+.lp2-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: -6px 0 16px;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+
+.lp2-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lp2-legend__swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid rgba(16, 42, 67, 0.14);
+}
+
+.lp2-legend__swatch--yellow { background: var(--lp-hl); }
+.lp2-legend__swatch--blue { background: #cde3f4; }
+.lp2-legend__swatch--teal { background: #c9e9e4; }
+.lp2-legend__swatch--rose { background: #f6d5d2; }
+.lp2-legend__swatch--green { background: #d1eedd; }
+.lp2-legend__swatch--purple { background: #e4d9f7; }
+.lp2-legend__swatch--amber { background: #f4e3c8; }
+
+/* equation strip */
+
+.lp2-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 22px;
+}
+
+.lp2-strip__seg {
+  background: #eaf2f9;
+  border: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 7px;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.lp2-strip__seg--blue {
+  background: #dcebf6;
+  border-color: #a7c8de;
+  color: var(--lp-term-blue);
+}
+
+.lp2-strip__seg--teal {
+  background: #ddf1ee;
+  border-color: #a9d8d1;
+  color: var(--lp-term-teal);
+}
+
+.lp2-strip__seg--green {
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+  color: var(--lp-term-green);
+}
+
+.lp2-strip__seg--rose {
+  background: var(--ut-danger-soft);
+  border-color: var(--ut-danger-rule);
+  color: var(--lp-term-rose);
+}
+
+.lp2-strip__op {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ut-text-soft);
+}
+
+/* figures */
+
+.lp2-figure {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.lp2-figure img {
+  max-width: 100%;
+  border-radius: var(--ut-radius-sm);
+  border: 1px solid var(--lp-hairline);
+}
+
+.lp2-figure figcaption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* ═══════════ completion band ═══════════ */
+
+.lp2-mastery {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius-lg);
+  padding: 20px 24px;
+}
+
+.lp2-mastery__copy h3 {
+  margin: 0 0 4px;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+.lp2-mastery__copy p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+}
+
+.lp2-mastery__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.lp2-mastery__done {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ut-success-dark);
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.lp2-mastery__done svg {
+  font-size: 19px;
+  color: var(--ut-success);
+}
+
+.lp2-mastery__unmark {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ut-muted);
+  text-decoration: underline;
+}
+
+.lp2-mastery__unmark:disabled,
+.lp2-mastery__mark:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ═══════════ loading / message states ═══════════ */
+
+.lp2--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 55vh;
+  color: var(--ut-muted);
+  font-size: 14.5px;
+}
+
+.lp2-loading-icon {
+  font-size: 30px;
+  color: var(--ut-accent);
+  animation: lp2-spin 1s linear infinite;
+}
+
+@keyframes lp2-spin {
+  to { transform: rotate(360deg); }
+}
+
+.lp2--message {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+}
+
+.lp2-message-card {
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 32px;
+}
+
+/* ═══════════ responsive ═══════════ */
+
+@media (max-width: 1120px) {
+  .lp2-body {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .lp2-sheet {
+    padding: 36px 36px 44px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -12px -10px 12px 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .lp2 {
+    padding: 14px 14px 56px;
+  }
+
+  .lp2-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lp2-left {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .lp2-video {
+    max-width: 560px;
+  }
+
+  /* page navigator becomes a horizontal chip row */
+  .lp2-pagenav ol {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .lp2-pagenav__item {
+    white-space: nowrap;
+    border: 1px solid var(--ut-rule);
+    border-radius: 999px;
+    padding: 6px 12px;
+  }
+
+  .lp2-pagenav__item--active {
+    border-color: var(--ut-accent-rule);
+  }
+
+  .lp2-practice-cta {
+    max-width: 360px;
+  }
+
+  .lp2-sheet {
+    padding: 26px 20px 34px;
+    font-size: 14.5px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -8px 0 10px;
+  }
+
+  .lp2-sheet__h1 {
+    font-size: 25px;
+  }
+
+  .lp2-sheet__h2 {
+    font-size: 20.5px;
+  }
+
+  .lp2-h3 {
+    font-size: 17.5px;
+  }
+
+  .lp2-table {
+    min-width: 100%;
+  }
+
+  .lp2-practice__list {
+    padding: 14px 12px;
+  }
+
+  .lp2-example__body {
+    padding: 14px 14px 12px;
+  }
+}
+
+/* ═══════════ math blocks (Lesson v2 math lessons) ═══════════ */
+
+/* worked steps: centered equation lines + gray side annotations (UWorld style) */
+
+.lp2-steps {
+  margin: 14px 0 16px;
+}
+
+.lp2-steps__title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 8px;
+}
+
+.lp2-steps__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lp2-steps__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.lp2-steps__eq {
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.lp2-steps__eq .katex-display {
+  margin: 0;
+}
+
+.lp2-steps__eq .katex {
+  font-size: 1.08em;
+}
+
+.lp2-steps__note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--lp-muted);
+}
+
+.lp2-steps__note .katex {
+  font-size: 1.04em;
+}
+
+/* standalone display equation (optionally boxed, like key formulas) */
+
+.lp2-math {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-math__tex {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 2px 0;
+}
+
+.lp2-math__tex .katex-display {
+  margin: 0;
+}
+
+.lp2-math__tex .katex {
+  font-size: 1.12em;
+}
+
+.lp2-math--boxed .lp2-math__tex {
+  display: inline-block;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 12px 24px;
+  overflow-x: visible;
+}
+
+.lp2-math__caption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* side-by-side columns (compare methods, case-by-case graphs) */
+
+.lp2-columns {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.lp2-columns__col {
+  flex: 1;
+  min-width: 0;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-radius: var(--ut-radius-sm);
+  padding: 14px 16px 12px;
+}
+
+.lp2-columns__col > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-columns__title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--lp-steel);
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  text-align: center;
+}
+
+/* coordinate-plane figures */
+
+.lp2-graph {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-graph svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.lp2-columns__col .lp2-graph {
+  margin: 6px 0 4px;
+}
+
+.lp2-graph__caption {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  line-height: 1.5;
+}
+
+/* inline KaTeX inside prose/tables/POE: match surrounding rhythm */
+
+.lp2-sheet .katex {
+  font-size: 1.05em;
+}
+
+@media (max-width: 720px) {
+  .lp2-steps__row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 6px 0;
+  }
+
+  .lp2-steps__note {
+    text-align: center;
+  }
+
+  .lp2-columns {
+    flex-direction: column;
+  }
+}
+</style>
+<style>
+  .lp2-reveal:not(.lp2-reveal--open) .lp2-reveal__body { display: none; }
+</style>
+<!-- KaTeX (same CDN + options the app's katexLoader/LessonPage use) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof renderMathInElement !== 'function') return;
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\[', right: '\\]', display: true },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '$', right: '$', display: false },
+      ],
+      // No color macros here: \blue{...} etc. are pre-expanded to
+      // \textcolor by the renderer ("#" inside a KaTeX macro body is a
+      // parameter marker and would break the expression).
+      throwOnError: false,
+    });
+  });
+</script>
+</head>
+<body>
+<div class="preview-note">DESIGN PREVIEW — static render of /learn/probability (Lesson v2)</div>
+<div class="lp2">
+  <header class="lp2-topbar">
+    <nav class="lp2-crumbs" aria-label="Breadcrumb">
+      <a class="lp2-crumbs__link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Lectures</a>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__domain">Problem-Solving and Data Analysis</span>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__current">Probability</span>
+    </nav>
+    <div class="lp2-topbar__meta"><span class="lp2-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~30 min</span></div>
+  </header>
+  <div class="lp2-body">
+    <aside class="lp2-left">
+      <div class="lp2-video lp2-video--placeholder">
+        <div class="lp2-video__overlay">
+          <span class="lp2-video__playring"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></span>
+          <span class="lp2-video__coming"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg> Video lesson coming soon</span>
+        </div>
+      </div>
+      <div class="lp2-left-card">
+        <div class="lp2-left-card__eyebrow">Math · Problem-Solving and Data Analysis</div>
+        <h2 class="lp2-left-card__title">Probability</h2>
+        <div class="lp2-left-card__difficulty">Foundational</div>
+        <nav class="lp2-pagenav"><div class="lp2-pagenav__label">In this lesson</div><ol>
+    <li><button type="button" class="lp2-pagenav__item lp2-pagenav__item--active" onclick="document.getElementById('lesson-page-overview').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">1</span><span class="lp2-pagenav__title">Overview & Strategies</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-basics').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">2</span><span class="lp2-pagenav__title">Probability Basics</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-two-way-tables').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">3</span><span class="lp2-pagenav__title">Two-Way Tables</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-conditional').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">4</span><span class="lp2-pagenav__title">“Given That” Shrinks the World</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-frequencies-expected').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">5</span><span class="lp2-pagenav__title">Frequencies & Expected Counts</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-practice').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">6</span><span class="lp2-pagenav__title">Practice</span>
+    </button></li></ol></nav>
+        <button type="button" class="ut-btn ut-btn--primary lp2-practice-cta"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg> Practice this skill</button>
+      </div>
+    </aside>
+    <main class="lp2-guide">
+      <article id="lesson-page-overview" class="lp2-sheet" data-page-index="0"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Probability</span></div><h1 class="lp2-sheet__h1">Probability</h1><p class="lp2-p"><strong class="lp2-term lp2-term--blue">Probability</strong> measures how likely an event is, on a scale from $0$ (impossible) to $1$ (certain). When outcomes are equally likely, it&#x27;s a counting exercise:</p><div class="lp2-math lp2-math--boxed"><div class="lp2-math__tex">$$P(\text{event}) = \frac{\textcolor{#157f4b}{\text{favorable outcomes}}}{\textcolor{#0f6cbd}{\text{total possible outcomes}}}$$</div></div><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th class="lp2-td--center">Probability</th><th>Meaning</th></tr></thead><tbody><tr><td class="lp2-td--center">$0$</td><td>impossible</td></tr><tr><td class="lp2-td--center">$0.5$</td><td>as likely as not</td></tr><tr><td class="lp2-td--center">$1$</td><td>certain</td></tr><tr><td class="lp2-td--center">$\frac{7}{20}$, $0.35$, $35\%$</td><td>the same probability in three costumes—convert freely</td></tr></tbody></table></div><h3 class="lp2-h3">Strategies</h3><ul class="lp2-list"><li><strong>The denominator is the group being drawn from.</strong> Identifying it correctly <em>is</em> the skill—most wrong answers are right numerators over wrong denominators.</li><li><strong>Two-way tables:</strong> “and” questions take one cell over the <strong>grand total</strong>.</li><li><strong>“Given that” shrinks the world:</strong> the denominator becomes that row&#x27;s or column&#x27;s total, not the grand total.</li><li><strong>Complement:</strong> $P(\text{not } A) = 1 - P(A)$—often the faster count.</li><li><strong>Probability predicts counts:</strong> expected number $=$ probability $\times$ group size.</li></ul><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Before computing anything, say the denominator out loud: “out of <em>all</em> $200$ students” or “out of <em>the $120$ eleventh-graders</em>.” The words of the question always name the group.</div></div></article><article id="lesson-page-basics" class="lp2-sheet" data-page-index="1"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Probability: Probability Basics</span></div><h2 class="lp2-sheet__h2">Probability Basics</h2><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">A jar holds $5$ red, $7$ blue, and $8$ green marbles. One marble is drawn at random. What is the probability it is blue?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$\text{total} = 5 + 7 + 8 = 20$$</div><div class="lp2-steps__note">Count <strong>all</strong> possible outcomes first</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$P(\text{blue}) = \frac{7}{20} = 0.35$$</div><div class="lp2-steps__note">Favorable over total</div></div></div></div></div></section><h3 class="lp2-h3">The Complement: “Not” Questions</h3><p class="lp2-p">For the same jar, what is $P(\text{not green})$? Two roads, one answer:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Count the favorables</div><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$P = \frac{5 + 7}{20} = \frac{12}{20}$$</div><div class="lp2-steps__note">Red and blue are the non-greens</div></div></div></div></div><div class="lp2-columns__col"><div class="lp2-columns__title">Subtract from 1</div><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$P = 1 - \frac{8}{20} = \frac{12}{20}$$</div><div class="lp2-steps__note">Everything except green</div></div></div></div></div></div><p class="lp2-p">Both give $\frac{12}{20} = \frac{3}{5}$. The complement route shines when “not” covers many categories—one subtraction instead of a long addition.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">A box contains $12$ pens: $5$ black, $4$ blue, and $3$ red. If one pen is selected at random, what is the probability that it is <strong>not</strong> blue?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$\frac{2}{3}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$\frac{1}{3}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$\frac{5}{12}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$\frac{7}{12}$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Not blue means black or red: $\frac{5 + 3}{12} = \frac{8}{12} = \frac{2}{3}$. Or: $1 - \frac{4}{12}$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$\frac{4}{12} = \frac{1}{3}$ is $P(\text{blue})$—the “not” never got applied.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$\frac{5}{12}$ counts only the black pens, as if “not blue” had one alternative. The red pens are also not blue.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$\frac{7}{12}$ adds blue and red—a complement taken of the wrong color.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Sanity bound: every probability lives in $[0, 1]$, and $P(A) + P(\text{not } A) = 1$. If your two pieces don&#x27;t sum to $1$, a count is off.</div></div></article><article id="lesson-page-two-way-tables" class="lp2-sheet" data-page-index="2"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Probability: Two-Way Tables</span></div><h2 class="lp2-sheet__h2">Two-Way Tables</h2><p class="lp2-p">Most SAT probability questions read from a <strong class="lp2-term lp2-term--blue">two-way table</strong>—counts sorted by two categories at once. A survey of $200$ students, by grade and by whether they play a school sport:</p><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th></th><th class="lp2-td--center">Plays a sport</th><th class="lp2-td--center">No sport</th><th class="lp2-td--center">Total</th></tr></thead><tbody><tr><td><strong>Grade 11</strong></td><td class="lp2-td--center">$72$</td><td class="lp2-td--center">$48$</td><td class="lp2-td--center">$120$</td></tr><tr><td><strong>Grade 12</strong></td><td class="lp2-td--center">$18$</td><td class="lp2-td--center">$62$</td><td class="lp2-td--center">$80$</td></tr><tr><td><strong>Total</strong></td><td class="lp2-td--center">$90$</td><td class="lp2-td--center">$110$</td><td class="lp2-td--center">$200$</td></tr></tbody></table><div class="lp2-table-caption">Row and column totals in the margins; the grand total ($200$) in the corner.</div></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">If one of the $200$ students is chosen at random, what is the probability that the student plays a sport?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$P(\text{sport}) = \frac{90}{200} = \frac{9}{20}$$</div><div class="lp2-steps__note">Column total over the grand total — grade doesn&#x27;t matter here</div></div></div></div></div></section><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em>An <strong>“and”</strong> event names one cell: $P(A \text{ and } B) = \dfrac{\text{that cell}}{\text{grand total}}$ — as long as the draw is from the whole group.</em></p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">If one of the $200$ students is selected at random, what is the probability that the student is in grade 11 <strong>and</strong> plays a sport?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$\frac{9}{25}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$\frac{3}{5}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$\frac{4}{5}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$\frac{3}{5} \times \frac{9}{20}$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>One cell: $72$ grade-11 athletes, out of all $200$ students: $\frac{72}{200} = \frac{9}{25}$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$\frac{72}{120} = \frac{3}{5}$ divides by the grade-11 total—that answers a <strong>given that</strong> question (“given grade 11…”), which this is not.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$\frac{72}{90} = \frac{4}{5}$ divides by the athletes&#x27; total—the other conditional, also not asked.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Multiplying the two overall probabilities assumes grade and sport are unrelated—the table shows they aren&#x27;t (grade 11 plays at a much higher rate). Read the cell; don&#x27;t reconstruct it.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Check a table&#x27;s health before using it: rows sum to their margins, margins sum to the grand total. Ten seconds, and it also forces you to <em>see</em> where everything lives.</div></div></article><article id="lesson-page-conditional" class="lp2-sheet" data-page-index="3"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Probability: “Given That” Shrinks the World</span></div><h2 class="lp2-sheet__h2">“Given That” Shrinks the World</h2><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em><strong>Conditional probability:</strong> “given that $B$” restricts the draw to group $B$. The denominator becomes $B$&#x27;s total; the numerator is the part of $B$ that is also $A$.</em></p><p class="lp2-p">Same table as before. <em>Given that a student is in grade 11</em>, what is the probability the student plays a sport? The words “given grade 11” collapse the world to that one row of $120$ students:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$P(\text{sport} \mid \text{grade 11}) = \frac{72}{120} = \frac{3}{5}$$</div><div class="lp2-steps__note">Athletes within the row, over the <strong>row total</strong></div></div></div></div><p class="lp2-p">Compare: overall, $P(\text{sport}) = \frac{90}{200} = 45\%$—but <em>within grade 11</em> it&#x27;s $60\%$. Conditioning changed the answer because the two grades behave differently. And the <strong>direction</strong> of conditioning matters too:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">$P(\text{sport} \mid \text{grade 11})$</div><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$\frac{72}{120} = \frac{3}{5}$$</div><div class="lp2-steps__note">World = the $120$ in grade 11</div></div></div></div></div><div class="lp2-columns__col"><div class="lp2-columns__title">$P(\text{grade 11} \mid \text{sport})$</div><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$\frac{72}{90} = \frac{4}{5}$$</div><div class="lp2-steps__note">World = the $90$ athletes</div></div></div></div></div></div><p class="lp2-p">Same cell on top ($72$), different worlds below—$\frac{3}{5}$ versus $\frac{4}{5}$. The condition always names the denominator.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">One student is selected at random from those who do <strong>not</strong> play a sport. What is the probability that the student is in grade 12?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$\frac{31}{55}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$\frac{31}{100}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$\frac{31}{40}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$\frac{11}{20}$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>“From those who do not play” makes the world the $110$ non-athletes; $62$ of them are twelfth-graders: $\frac{62}{110} = \frac{31}{55}$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$\frac{62}{200} = \frac{31}{100}$ uses the grand total—but the draw was never from all $200$ students.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$\frac{62}{80} = \frac{31}{40}$ conditions in the wrong direction: that&#x27;s $P(\text{no sport} \mid \text{grade 12})$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$\frac{110}{200} = \frac{11}{20}$ is just the probability of being a non-athlete—the <em>condition</em>, not the question.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">Watch for conditioning in disguise: “of the students who…,” “among those that…,” “selected from…”—all mean <strong>given that</strong>, and all shrink the denominator.</div></div></article><article id="lesson-page-frequencies-expected" class="lp2-sheet" data-page-index="4"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Probability: Frequencies &amp; Expected Counts</span></div><h2 class="lp2-sheet__h2">Frequencies &amp; Expected Counts</h2><h3 class="lp2-h3">Probability from a Frequency Table</h3><p class="lp2-p">One-variable frequency data works the same way—the denominator is the total frequency. Twenty students reported the number of books they read last month:</p><div class="lp2-table-wrap"><table class="lp2-table lp2-table--compact"><thead><tr><th>Books read</th><th class="lp2-td--center">$0$</th><th class="lp2-td--center">$1$</th><th class="lp2-td--center">$2$</th><th class="lp2-td--center">$3$</th></tr></thead><tbody><tr><td><strong>Number of students</strong></td><td class="lp2-td--center">$4$</td><td class="lp2-td--center">$9$</td><td class="lp2-td--center">$5$</td><td class="lp2-td--center">$2$</td></tr></tbody></table></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">If one of the $20$ students is chosen at random, what is the probability that the student read <strong>at least</strong> $2$ books?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$\frac{7}{20}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$\frac{1}{4}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$\frac{13}{20}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$\frac{7}{13}$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>“At least $2$” means $2$ or $3$: $\frac{5 + 2}{20} = \frac{7}{20}$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$\frac{5}{20} = \frac{1}{4}$ counts only <em>exactly</em> $2$—“at least” includes everything above it.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$\frac{13}{20}$ is the complement—the students who read <strong>fewer than</strong> $2$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$\frac{7}{13}$ divides favorable by <em>unfavorable</em>. Probabilities compare with the <strong>total</strong>, never part-to-part.</div></li></ul></div></div></section><h3 class="lp2-h3">From Probability to Predicted Counts</h3><p class="lp2-p">Probability runs forward, too: applied to a group, it <strong>predicts a count</strong>.</p><div class="lp2-math lp2-math--boxed"><div class="lp2-math__tex">$$\text{expected count} = P(\text{event}) \times \text{group size}$$</div></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">Quality testing shows that the probability a randomly selected part is defective is $0.02$. About how many defective parts should be expected in a shipment of $1{,}500$?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$0.02 \times 1{,}500 = 30$$</div><div class="lp2-steps__note">Probability $\times$ group size — about $30$ defective parts</div></div></div></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Words like “expected,” “predicted,” or “about how many” signal this move—and the answer is an estimate, so it needn&#x27;t divide evenly in real life.</div></div></article><article id="lesson-page-practice" class="lp2-sheet" data-page-index="5"><div class="lp2-sheet__corner"><span>Problem-Solving and Data Analysis</span><span>Probability: Practice</span></div><h2 class="lp2-sheet__h2">Practice</h2><p class="lp2-p">For every question, name the denominator&#x27;s group <strong>before</strong> computing—then check whether a “given that” (in any disguise) shrinks it.</p><section class="lp2-practice"><div class="lp2-practice__band">Practice</div><ol class="lp2-practice__list"><li class="lp2-practice__item"><div class="lp2-practice__number">1.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">A bag contains $6$ apple, $9$ grape, and $5$ cherry candies. If one candy is drawn at random, what is the probability that it is <strong>not</strong> grape?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$\frac{11}{20}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$\frac{9}{20}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$\frac{3}{10}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$\frac{11}{9}$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Total $= 6 + 9 + 5 = 20$; not-grape $= 6 + 5 = 11$, so $P = \frac{11}{20}$ (equivalently $1 - \frac{9}{20}$).</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Check: $\frac{9}{20} + \frac{11}{20} = 1$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$\frac{9}{20}$ is $P(\text{grape})$—the complement was never taken.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$\frac{6}{20} = \frac{3}{10}$ counts only apple, forgetting cherry is also not grape.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$\frac{11}{9}$ is greater than $1$—impossible for a probability, and a part-to-part ratio besides.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">2.</div><div class="lp2-practice__content"><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th></th><th class="lp2-td--center">Morning shift</th><th class="lp2-td--center">Evening shift</th><th class="lp2-td--center">Total</th></tr></thead><tbody><tr><td><strong>Drives</strong></td><td class="lp2-td--center">$54$</td><td class="lp2-td--center">$36$</td><td class="lp2-td--center">$90$</td></tr><tr><td><strong>Public transit</strong></td><td class="lp2-td--center">$24$</td><td class="lp2-td--center">$36$</td><td class="lp2-td--center">$60$</td></tr><tr><td><strong>Total</strong></td><td class="lp2-td--center">$78$</td><td class="lp2-td--center">$72$</td><td class="lp2-td--center">$150$</td></tr></tbody></table></div><div class="lp2-question"><p class="lp2-question__stem">The table classifies $150$ workers by commute type and shift. If one worker is selected at random, what is the probability that the worker takes public transit <strong>and</strong> works the evening shift?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$\frac{6}{25}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$\frac{3}{5}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$\frac{1}{2}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$\frac{2}{5}$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> “And” names one cell—$36$ transit-evening workers—over the grand total: $\frac{36}{150} = \frac{6}{25}$.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>One cell over $150$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$\frac{36}{60} = \frac{3}{5}$ divides by the transit row—that&#x27;s $P(\text{evening} \mid \text{transit})$, a conditional that wasn&#x27;t asked.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$\frac{36}{72} = \frac{1}{2}$ divides by the evening column—the other unasked conditional.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$\frac{60}{150} = \frac{2}{5}$ is just $P(\text{transit})$—the “and” half is missing.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">3.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">Using the same table: if the selected worker is known to work the <strong>morning shift</strong>, what is the probability that the worker drives?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$\frac{9}{13}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$\frac{9}{25}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$\frac{3}{5}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$\frac{13}{25}$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> “Known to work the morning shift” shrinks the world to that column&#x27;s $78$ workers, of whom $54$ drive: $\frac{54}{78} = \frac{9}{13}$.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Cell over <strong>column total</strong>—the condition names the denominator. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$\frac{54}{150} = \frac{9}{25}$ uses the grand total, ignoring the condition entirely.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$\frac{54}{90} = \frac{3}{5}$ conditions the wrong way: that&#x27;s $P(\text{morning} \mid \text{drives})$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$\frac{78}{150} = \frac{13}{25}$ is the probability of the <em>condition</em> (morning shift), not of driving within it.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">4.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">The probability that a certain team wins any given game is $\frac{3}{8}$. If the team plays $240$ games, about how many games should the team be expected to win?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$90$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$80$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$150$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$30$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Expected count $=$ probability $\times$ group size: $\frac{3}{8} \times 240 = 90$.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$240 \div 8 = 30$ per eighth, times $3$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$80$ is $\frac{1}{3}$ of $240$—the fraction $\frac{3}{8}$ flipped into “one in three.”</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$150$ is $\frac{5}{8} \times 240$—the expected <strong>losses</strong>, the complement.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$30$ is $240 \div 8$: one eighth, with the $3$ never applied.</div></li></ul></div></div></div></div></li></ol></section><section class="lp2-remember"><h3 class="lp2-remember__title">Things to Remember</h3><ul class="lp2-list"><li>$P = \frac{\text{favorable}}{\text{total}}$, always between $0$ and $1$. Fractions, decimals, and percents are interchangeable.</li><li><strong>The denominator is the group being drawn from</strong>—say it before you compute.</li><li>Two-way tables: “$A$ and $B$” $=$ one cell over the <strong>grand total</strong>. Check that rows and columns sum to their margins.</li><li>“Given that,” “of those who,” “selected from” → conditional: the denominator becomes that <strong>row or column total</strong>. Direction matters: $P(A \mid B) \neq P(B \mid A)$.</li><li>$P(\text{not } A) = 1 - P(A)$; the two must sum to $1$. “At least $k$” includes $k$ and everything above.</li><li>Expected count $=$ probability $\times$ group size.</li></ul></section></article>
+      <section class="lp2-mastery" aria-label="Lesson completion">
+        <div class="lp2-mastery__copy">
+          <h3>Have you mastered this lesson?</h3>
+          <p>Mark this lesson as complete to update your course progress and study plan.</p>
+        </div>
+        <div class="lp2-mastery__actions">
+          <button type="button" class="ut-btn ut-btn--primary lp2-mastery__mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Mark as Complete</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.lp2-reveal').forEach(function (r) {
+    r.classList.remove('lp2-reveal--open');
+    var btn = r.querySelector('.lp2-reveal__toggle');
+    if (btn) btn.addEventListener('click', function () { r.classList.toggle('lp2-reveal--open'); });
+  });
+</script>
+</body>
+</html>

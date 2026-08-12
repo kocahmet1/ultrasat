@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview — Lesson v2: Nonlinear Functions</title>
+<style>/* tokens.css — Overhaul Phase F; re-themed to "Scholar Blue" (Phase G).
+   THE design tokens for the app. The palette moved from green-on-ink to a
+   light-first navy/blue system: blue = brand/actions, green = ONLY correctness,
+   red = ONLY errors/incorrect, amber = warnings. Use tokens, never raw hex.
+
+   Values are px on purpose: the app's html { font-size: 62.5% } rem scaling
+   must not warp the palette-adjacent sizing tokens. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- surfaces ---- */
+  --ut-ink: #0A1226;            /* darkest surface (final CTA, hero) */
+  --ut-panel: #0F1E3D;          /* dark panels, sidebar body */
+  --ut-panel-top: #0C1830;      /* dark panel top edge / nav */
+  --ut-bg: #F4F6F9;             /* app/page background */
+  --ut-bg-alt: #EAEEF3;         /* alternating section background */
+  --ut-card: #FFFFFF;           /* strong card on --ut-bg */
+  --ut-card-soft: #F8FAFC;      /* subtle card */
+
+  /* ---- text on light ---- */
+  --ut-text: #16202F;           /* primary text */
+  --ut-text-soft: #35435C;      /* secondary text */
+  --ut-muted: #4E5B70;          /* muted body text */
+  --ut-mono-muted: #5E6B80;     /* mono labels, captions */
+
+  /* ---- hairlines ---- */
+  --ut-rule: #DCE1E9;           /* hairlines on light */
+  --ut-rule-strong: #C9D0DC;    /* stronger hairlines */
+
+  /* ---- brand accent: BLUE (actions, links, active states) ---- */
+  --ut-accent: #2B59D8;         /* THE blue */
+  --ut-accent-bright: #86A4F5;  /* blue on dark surfaces */
+  --ut-accent-dark: #1D3FA8;    /* blue for text/links on light */
+  --ut-accent-soft: #E8EEFB;    /* blue tint fill (chips, active) */
+  --ut-accent-rule: #C9D6F0;    /* blue-tinted hairline */
+  --ut-on-accent: #FFFFFF;      /* text on the blue */
+
+  /* ---- semantic: success/correct = GREEN only ---- */
+  --ut-success: #17A45C;        /* fills, icons */
+  --ut-success-bright: #6FDCA8; /* green on dark surfaces */
+  --ut-success-dark: #0E6B3C;   /* text on light/soft */
+  --ut-success-soft: #E3F5EB;   /* tint fill */
+  --ut-success-rule: #BFE5CF;   /* tinted hairline */
+
+  /* ---- semantic: danger/incorrect = RED only ---- */
+  --ut-danger: #CC4141;         /* fills, icons */
+  --ut-danger-dark: #A03434;    /* text on light/soft */
+  --ut-danger-soft: #FBEEEE;    /* tint fill */
+  --ut-danger-rule: #EECACA;    /* tinted hairline */
+
+  /* ---- semantic: warning = AMBER only ---- */
+  --ut-warn: #C99A2E;           /* fills, icons */
+  --ut-warn-dark: #8A6D1D;      /* text on light/soft */
+  --ut-warn-soft: #FAF3DF;      /* tint fill */
+  --ut-warn-rule: #EAD9B0;      /* tinted hairline */
+
+  /* ---- text on dark ---- */
+  --ut-on-ink: #F2F5FA;         /* text on dark surfaces */
+  --ut-on-ink-bright: #F8FAFD;  /* emphasized text on dark */
+  --ut-on-ink-muted: rgba(242, 245, 250, 0.62);
+  --ut-rule-on-ink: rgba(237, 241, 248, 0.12); /* hairlines on dark */
+
+  /* ---- typography ---- */
+  --ut-font-display: 'Space Grotesk', system-ui, sans-serif;
+  --ut-font-body: 'Schibsted Grotesk', system-ui, sans-serif;
+  --ut-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --ut-font-serif: Georgia, 'Times New Roman', serif; /* reading passages only */
+
+  /* mono label recipe: font-family mono + these */
+  --ut-label-size: 10.5px;
+  --ut-label-tracking: 0.1em;
+
+  /* ---- radius (6 buttons / 10 cards / 12 panels) ---- */
+  --ut-radius-sm: 6px;
+  --ut-radius: 10px;
+  --ut-radius-lg: 12px;
+
+  /* ---- shadows (cool ink) ---- */
+  --ut-shadow-sm: 0 1px 2px rgba(12, 24, 48, 0.06);
+  --ut-shadow: 0 4px 12px rgba(12, 24, 48, 0.08);
+  --ut-shadow-lg: 0 12px 32px rgba(12, 24, 48, 0.14);
+
+  /* ---- legacy aliases, do not use in new code ----
+     These globals used to be re-declared with conflicting values in several
+     files' :root blocks (winner depended on chunk order). This is now the
+     single definition; old var() usages keep working through it. */
+  --primary-color: var(--ut-accent);
+  --secondary-color: var(--ut-card-soft);
+  --border-color: var(--ut-rule);
+  --shadow-sm: var(--ut-shadow-sm);
+  --shadow-md: var(--ut-shadow);
+  --shadow-lg: var(--ut-shadow-lg);
+  --border-radius-sm: var(--ut-radius-sm);
+}
+</style>
+<style>
+  body { margin: 0; background: var(--ut-bg); font-family: var(--ut-font-body); color: var(--ut-text); }
+  .ut-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:1px solid transparent; border-radius:var(--ut-radius-sm); font-family:var(--ut-font-body); font-size:13.5px; font-weight:700; line-height:1; padding:10px 16px; cursor:pointer; text-decoration:none; white-space:nowrap; }
+  .ut-btn--primary { background: var(--ut-accent); color: var(--ut-on-accent); }
+  .ut-btn--primary:hover { background: var(--ut-accent-dark); }
+  .preview-note { max-width:1480px; margin:0 auto; padding:10px 28px 0; font-size:12px; color:var(--ut-mono-muted); font-family:var(--ut-font-mono); }
+</style>
+<style>/* LessonPage.css — Lesson v2 (UWorld-style study guide).
+ *
+ * Scoped under .lp2-. Built on tokens.css (--ut-*) plus a small set of
+ * lesson-local variables below for the "study guide" look: steel-blue
+ * headings, exam-yellow highlights, blue example boxes, banded practice
+ * sections, green/red verdicts. Content JSON references tones by name
+ * (blue/teal/rose/green/purple/amber) — keep these class hooks stable.
+ */
+
+.lp2 {
+  /* palette */
+  --lp-heading: #1c3a5e;        /* sheet titles (dark navy) */
+  --lp-steel: #2b6ca3;          /* section headings, answer links */
+  --lp-steel-dark: #235a88;
+  --lp-body: #2a3342;           /* guide body text */
+  --lp-muted: #5c6a7d;
+  --lp-sheet-border: #dfe5ec;
+  --lp-hairline: #e4e9ef;
+
+  --lp-hl: #fbe97f;             /* exam-yellow highlight */
+  --lp-blue-border: #b9d3e6;
+  --lp-blue-band: #dcebf6;      /* example header band */
+  --lp-blue-tint: #f3f8fc;      /* example body tint */
+  --lp-table-head: #e3eef7;
+  --lp-table-border: #c9d6e3;
+
+  /* term tones (inline markup {tone|...}) */
+  --lp-term-blue: #0f6cbd;
+  --lp-term-teal: #0e8a7e;
+  --lp-term-rose: #c0392f;
+  --lp-term-green: #157f4b;
+  --lp-term-purple: #6d3fc4;
+  --lp-term-amber: #a8621a;
+
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 20px 28px 72px;
+  font-family: var(--ut-font-body);
+  color: var(--lp-body);
+}
+
+/* ═══════════ reading progress bar ═══════════ */
+
+.lp2-progressbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.lp2-progressbar__fill {
+  height: 100%;
+  background: var(--ut-accent);
+  transition: width 80ms linear;
+}
+
+/* ═══════════ top bar ═══════════ */
+
+.lp2-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.lp2-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lp-muted);
+  min-width: 0;
+}
+
+.lp2-crumbs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp2-crumbs__link:hover {
+  text-decoration: underline;
+}
+
+.lp2-crumbs__sep {
+  flex: 0 0 auto;
+  opacity: 0.55;
+}
+
+.lp2-crumbs__domain {
+  white-space: nowrap;
+}
+
+.lp2-crumbs__current {
+  font-weight: 600;
+  color: var(--ut-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp2-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp2-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ut-text-soft);
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.lp2-chip--done {
+  color: var(--ut-success-dark);
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+}
+
+/* ═══════════ two-panel body ═══════════ */
+
+.lp2-body {
+  display: grid;
+  grid-template-columns: 372px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+/* ───── left panel ───── */
+
+.lp2-left {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+
+/* video */
+
+.lp2-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ut-panel);
+  border-radius: var(--ut-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ut-shadow);
+  flex: 0 0 auto;
+}
+
+.lp2-video iframe,
+.lp2-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.lp2-video__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.lp2-video--placeholder .lp2-video__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(134, 164, 245, 0.18), transparent 55%),
+    radial-gradient(120% 100% at 90% 100%, rgba(43, 89, 216, 0.22), transparent 60%);
+}
+
+.lp2-video__playring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(242, 245, 250, 0.85);
+  color: var(--ut-on-ink);
+  font-size: 22px;
+  background: rgba(15, 30, 61, 0.35);
+}
+
+.lp2-video__playring svg {
+  margin-left: 3px;
+}
+
+.lp2-video__coming {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ut-on-ink-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* lesson card + page navigator */
+
+.lp2-left-card {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 18px 18px 16px;
+}
+
+.lp2-left-card__eyebrow {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 6px;
+}
+
+.lp2-left-card__title {
+  font-family: var(--ut-font-display);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.lp2-left-card__difficulty {
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  margin-bottom: 4px;
+}
+
+.lp2-pagenav {
+  margin-top: 14px;
+  border-top: 1px solid var(--lp-hairline);
+  padding-top: 12px;
+}
+
+.lp2-pagenav__label {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 8px;
+}
+
+.lp2-pagenav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lp2-pagenav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--ut-radius-sm);
+  padding: 8px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.lp2-pagenav__item:hover {
+  background: var(--ut-bg);
+  color: var(--ut-text);
+}
+
+.lp2-pagenav__item--active {
+  background: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+  font-weight: 600;
+}
+
+.lp2-pagenav__num {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.lp2-pagenav__title {
+  min-width: 0;
+}
+
+.lp2-practice-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.lp2-planner-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+}
+
+.lp2-planner-return:hover {
+  text-decoration: underline;
+}
+
+/* ───── study guide sheets ───── */
+
+.lp2-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 0;
+  max-width: 900px;
+}
+
+.lp2-sheet {
+  position: relative;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(16, 42, 67, 0.1), 0 6px 22px rgba(16, 42, 67, 0.05);
+  padding: 44px 58px 52px;
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.lp2-sheet__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #8a97a8;
+  margin: -14px -26px 14px 0;
+  text-align: right;
+}
+
+.lp2-sheet__h1 {
+  font-family: var(--ut-font-display);
+  font-size: 31px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  line-height: 1.2;
+}
+
+.lp2-sheet__h2 {
+  font-family: var(--ut-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+/* ═══════════ content blocks ═══════════ */
+
+.lp2-p {
+  margin: 0 0 14px;
+}
+
+.lp2-h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--lp-steel);
+  margin: 30px 0 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  line-height: 1.3;
+}
+
+.lp2-h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 18px 0 8px;
+}
+
+.lp2-sheet > .lp2-h3:first-of-type {
+  margin-top: 20px;
+}
+
+/* lists */
+
+.lp2-list {
+  margin: 0 0 14px;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lp2-list li::marker {
+  color: var(--lp-steel);
+}
+
+.lp2-list--number li::marker {
+  font-weight: 600;
+}
+
+/* inline markup */
+
+.lp2-blank {
+  display: inline-block;
+  width: 5.5em;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px);
+  margin: 0 2px;
+}
+
+.lp2-hl {
+  background: var(--lp-hl);
+  padding: 1px 3px;
+  border-radius: 2px;
+  color: inherit;
+}
+
+.lp2-term--blue { color: var(--lp-term-blue); }
+.lp2-term--teal { color: var(--lp-term-teal); }
+.lp2-term--rose { color: var(--lp-term-rose); }
+.lp2-term--green { color: var(--lp-term-green); }
+.lp2-term--purple { color: var(--lp-term-purple); }
+.lp2-term--amber { color: var(--lp-term-amber); }
+.lp2-term--gray { color: var(--lp-muted); font-weight: 600; }
+
+/* tables */
+
+.lp2-table-wrap {
+  margin: 18px 0 20px;
+  overflow-x: auto;
+}
+
+.lp2-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  min-width: 62%;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lp2-table th,
+.lp2-table td {
+  border: 1px solid var(--lp-table-border);
+  padding: 9px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp2-table th {
+  background: var(--lp-table-head);
+  color: var(--lp-heading);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lp2-table--compact th,
+.lp2-table--compact td {
+  padding: 6px 12px;
+  font-size: 13.5px;
+}
+
+.lp2-td--center {
+  text-align: center !important;
+}
+
+.lp2-table-caption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* rule statement */
+
+.lp2-rule {
+  margin: 16px 0;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+}
+
+.lp2-rule__label {
+  color: var(--lp-heading);
+}
+
+.lp2-rule em {
+  color: var(--lp-steel-dark);
+}
+
+/* callouts */
+
+.lp2-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card-soft);
+  padding: 13px 16px;
+  margin: 18px 0;
+  font-size: 14.5px;
+}
+
+.lp2-callout__icon {
+  flex: 0 0 auto;
+  font-size: 21px;
+  margin-top: 1px;
+  color: var(--lp-steel);
+}
+
+.lp2-callout--warning {
+  border-color: var(--ut-warn-rule);
+  background: var(--ut-warn-soft);
+}
+
+.lp2-callout--warning .lp2-callout__icon {
+  color: var(--ut-warn-dark);
+}
+
+.lp2-callout--tip .lp2-callout__icon {
+  color: var(--ut-warn);
+  font-size: 23px;
+}
+
+/* passages */
+
+.lp2-passage {
+  margin: 14px 0 16px;
+}
+
+.lp2-passage__label {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 6px;
+}
+
+.lp2-passage__body {
+  font-family: var(--ut-font-serif);
+  font-size: 15px;
+  line-height: 1.72;
+  color: #333c4b;
+  padding-left: 16px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-passage__body p {
+  margin: 0 0 10px;
+}
+
+.lp2-passage__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* questions + choices */
+
+.lp2-question {
+  margin: 14px 0;
+}
+
+.lp2-question__stem {
+  margin: 0 0 12px;
+}
+
+.lp2-choices {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lp2-choices li {
+  display: flex;
+  gap: 10px;
+}
+
+.lp2-choices__letter {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: var(--ut-text);
+}
+
+/* verdicts (✓ / ✗) */
+
+.lp2-verdict {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 19px;
+  margin-top: 1px;
+}
+
+.lp2-verdict svg {
+  stroke-width: 3px;
+}
+
+.lp2-verdict--correct { color: var(--ut-success); }
+.lp2-verdict--incorrect { color: var(--ut-danger); }
+
+/* process of elimination */
+
+.lp2-poe {
+  margin: 16px 0 6px;
+}
+
+.lp2-poe__intro {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.lp2-poe__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-poe__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-poe__text {
+  min-width: 0;
+}
+
+/* check-cross pairs */
+
+.lp2-checkcross {
+  list-style: none;
+  margin: 14px 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-checkcross__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-checkcross__text {
+  font-family: var(--ut-font-serif);
+  color: #333c4b;
+}
+
+.lp2-checkcross__note {
+  font-size: 13.5px;
+  color: var(--lp-muted);
+  margin-top: 3px;
+}
+
+/* example boxes */
+
+.lp2-example {
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 22px 0;
+  overflow: hidden;
+}
+
+.lp2-example__band {
+  background: var(--lp-blue-band);
+  border-bottom: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 8px 18px;
+}
+
+.lp2-example__body {
+  background: var(--lp-blue-tint);
+  padding: 18px 20px 16px;
+}
+
+.lp2-example__body > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-example__body .lp2-passage__body {
+  border-left-color: #a7c8de;
+}
+
+/* reveal (expandable answer) */
+
+.lp2-reveal {
+  margin: 10px 0 4px;
+}
+
+.lp2-reveal__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--lp-steel);
+}
+
+.lp2-reveal__toggle:hover {
+  color: var(--lp-steel-dark);
+  text-decoration: underline;
+}
+
+.lp2-reveal__chevron {
+  transition: transform 150ms ease;
+  font-size: 16px;
+}
+
+.lp2-reveal--open .lp2-reveal__chevron {
+  transform: rotate(180deg);
+}
+
+.lp2-reveal__body {
+  margin-top: 10px;
+  padding: 14px 16px 12px;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-left: 3px solid var(--lp-steel);
+  border-radius: 0 var(--ut-radius-sm) var(--ut-radius-sm) 0;
+  animation: lp2-reveal-in 180ms ease;
+}
+
+.lp2-reveal__body > :last-child {
+  margin-bottom: 0;
+}
+
+@keyframes lp2-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* practice section */
+
+.lp2-practice {
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+.lp2-practice__band {
+  background: linear-gradient(90deg, #3d4552 0%, #626c7a 55%, #8a93a0 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  padding: 9px 18px;
+}
+
+.lp2-practice__list {
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lp2-practice__item {
+  display: flex;
+  gap: 12px;
+  padding-left: 6px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-practice__item + .lp2-practice__item {
+  padding-top: 20px;
+  border-top: 1px dashed var(--lp-hairline);
+}
+
+.lp2-practice__number {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--ut-text);
+  padding-left: 8px;
+}
+
+.lp2-practice__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.lp2-practice__content > .lp2-p:first-child,
+.lp2-practice__content > .lp2-passage:first-child {
+  margin-top: 0;
+}
+
+/* things to remember */
+
+.lp2-remember {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius);
+  padding: 18px 22px 14px;
+  margin: 26px 0 4px;
+}
+
+.lp2-remember__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 10px;
+}
+
+.lp2-remember .lp2-list {
+  margin-bottom: 4px;
+}
+
+/* legend */
+
+.lp2-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: -6px 0 16px;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+
+.lp2-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lp2-legend__swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid rgba(16, 42, 67, 0.14);
+}
+
+.lp2-legend__swatch--yellow { background: var(--lp-hl); }
+.lp2-legend__swatch--blue { background: #cde3f4; }
+.lp2-legend__swatch--teal { background: #c9e9e4; }
+.lp2-legend__swatch--rose { background: #f6d5d2; }
+.lp2-legend__swatch--green { background: #d1eedd; }
+.lp2-legend__swatch--purple { background: #e4d9f7; }
+.lp2-legend__swatch--amber { background: #f4e3c8; }
+
+/* equation strip */
+
+.lp2-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 22px;
+}
+
+.lp2-strip__seg {
+  background: #eaf2f9;
+  border: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 7px;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.lp2-strip__seg--blue {
+  background: #dcebf6;
+  border-color: #a7c8de;
+  color: var(--lp-term-blue);
+}
+
+.lp2-strip__seg--teal {
+  background: #ddf1ee;
+  border-color: #a9d8d1;
+  color: var(--lp-term-teal);
+}
+
+.lp2-strip__seg--green {
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+  color: var(--lp-term-green);
+}
+
+.lp2-strip__seg--rose {
+  background: var(--ut-danger-soft);
+  border-color: var(--ut-danger-rule);
+  color: var(--lp-term-rose);
+}
+
+.lp2-strip__op {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ut-text-soft);
+}
+
+/* figures */
+
+.lp2-figure {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.lp2-figure img {
+  max-width: 100%;
+  border-radius: var(--ut-radius-sm);
+  border: 1px solid var(--lp-hairline);
+}
+
+.lp2-figure figcaption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* ═══════════ completion band ═══════════ */
+
+.lp2-mastery {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius-lg);
+  padding: 20px 24px;
+}
+
+.lp2-mastery__copy h3 {
+  margin: 0 0 4px;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+.lp2-mastery__copy p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+}
+
+.lp2-mastery__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.lp2-mastery__done {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ut-success-dark);
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.lp2-mastery__done svg {
+  font-size: 19px;
+  color: var(--ut-success);
+}
+
+.lp2-mastery__unmark {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ut-muted);
+  text-decoration: underline;
+}
+
+.lp2-mastery__unmark:disabled,
+.lp2-mastery__mark:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ═══════════ loading / message states ═══════════ */
+
+.lp2--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 55vh;
+  color: var(--ut-muted);
+  font-size: 14.5px;
+}
+
+.lp2-loading-icon {
+  font-size: 30px;
+  color: var(--ut-accent);
+  animation: lp2-spin 1s linear infinite;
+}
+
+@keyframes lp2-spin {
+  to { transform: rotate(360deg); }
+}
+
+.lp2--message {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+}
+
+.lp2-message-card {
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 32px;
+}
+
+/* ═══════════ responsive ═══════════ */
+
+@media (max-width: 1120px) {
+  .lp2-body {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .lp2-sheet {
+    padding: 36px 36px 44px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -12px -10px 12px 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .lp2 {
+    padding: 14px 14px 56px;
+  }
+
+  .lp2-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lp2-left {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .lp2-video {
+    max-width: 560px;
+  }
+
+  /* page navigator becomes a horizontal chip row */
+  .lp2-pagenav ol {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .lp2-pagenav__item {
+    white-space: nowrap;
+    border: 1px solid var(--ut-rule);
+    border-radius: 999px;
+    padding: 6px 12px;
+  }
+
+  .lp2-pagenav__item--active {
+    border-color: var(--ut-accent-rule);
+  }
+
+  .lp2-practice-cta {
+    max-width: 360px;
+  }
+
+  .lp2-sheet {
+    padding: 26px 20px 34px;
+    font-size: 14.5px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -8px 0 10px;
+  }
+
+  .lp2-sheet__h1 {
+    font-size: 25px;
+  }
+
+  .lp2-sheet__h2 {
+    font-size: 20.5px;
+  }
+
+  .lp2-h3 {
+    font-size: 17.5px;
+  }
+
+  .lp2-table {
+    min-width: 100%;
+  }
+
+  .lp2-practice__list {
+    padding: 14px 12px;
+  }
+
+  .lp2-example__body {
+    padding: 14px 14px 12px;
+  }
+}
+
+/* ═══════════ math blocks (Lesson v2 math lessons) ═══════════ */
+
+/* worked steps: centered equation lines + gray side annotations (UWorld style) */
+
+.lp2-steps {
+  margin: 14px 0 16px;
+}
+
+.lp2-steps__title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 8px;
+}
+
+.lp2-steps__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lp2-steps__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.lp2-steps__eq {
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.lp2-steps__eq .katex-display {
+  margin: 0;
+}
+
+.lp2-steps__eq .katex {
+  font-size: 1.08em;
+}
+
+.lp2-steps__note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--lp-muted);
+}
+
+.lp2-steps__note .katex {
+  font-size: 1.04em;
+}
+
+/* standalone display equation (optionally boxed, like key formulas) */
+
+.lp2-math {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-math__tex {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 2px 0;
+}
+
+.lp2-math__tex .katex-display {
+  margin: 0;
+}
+
+.lp2-math__tex .katex {
+  font-size: 1.12em;
+}
+
+.lp2-math--boxed .lp2-math__tex {
+  display: inline-block;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 12px 24px;
+  overflow-x: visible;
+}
+
+.lp2-math__caption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* side-by-side columns (compare methods, case-by-case graphs) */
+
+.lp2-columns {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.lp2-columns__col {
+  flex: 1;
+  min-width: 0;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-radius: var(--ut-radius-sm);
+  padding: 14px 16px 12px;
+}
+
+.lp2-columns__col > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-columns__title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--lp-steel);
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  text-align: center;
+}
+
+/* coordinate-plane figures */
+
+.lp2-graph {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-graph svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.lp2-columns__col .lp2-graph {
+  margin: 6px 0 4px;
+}
+
+.lp2-graph__caption {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  line-height: 1.5;
+}
+
+/* inline KaTeX inside prose/tables/POE: match surrounding rhythm */
+
+.lp2-sheet .katex {
+  font-size: 1.05em;
+}
+
+@media (max-width: 720px) {
+  .lp2-steps__row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 6px 0;
+  }
+
+  .lp2-steps__note {
+    text-align: center;
+  }
+
+  .lp2-columns {
+    flex-direction: column;
+  }
+}
+</style>
+<style>
+  .lp2-reveal:not(.lp2-reveal--open) .lp2-reveal__body { display: none; }
+</style>
+<!-- KaTeX (same CDN + options the app's katexLoader/LessonPage use) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof renderMathInElement !== 'function') return;
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\[', right: '\\]', display: true },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '$', right: '$', display: false },
+      ],
+      // No color macros here: \blue{...} etc. are pre-expanded to
+      // \textcolor by the renderer ("#" inside a KaTeX macro body is a
+      // parameter marker and would break the expression).
+      throwOnError: false,
+    });
+  });
+</script>
+</head>
+<body>
+<div class="preview-note">DESIGN PREVIEW — static render of /learn/nonlinear-functions (Lesson v2)</div>
+<div class="lp2">
+  <header class="lp2-topbar">
+    <nav class="lp2-crumbs" aria-label="Breadcrumb">
+      <a class="lp2-crumbs__link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Lectures</a>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__domain">Advanced Math</span>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__current">Nonlinear Functions</span>
+    </nav>
+    <div class="lp2-topbar__meta"><span class="lp2-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~35 min</span></div>
+  </header>
+  <div class="lp2-body">
+    <aside class="lp2-left">
+      <div class="lp2-video lp2-video--placeholder">
+        <div class="lp2-video__overlay">
+          <span class="lp2-video__playring"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></span>
+          <span class="lp2-video__coming"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg> Video lesson coming soon</span>
+        </div>
+      </div>
+      <div class="lp2-left-card">
+        <div class="lp2-left-card__eyebrow">Math · Advanced Math</div>
+        <h2 class="lp2-left-card__title">Nonlinear Functions</h2>
+        <div class="lp2-left-card__difficulty">Intermediate</div>
+        <nav class="lp2-pagenav"><div class="lp2-pagenav__label">In this lesson</div><ol>
+    <li><button type="button" class="lp2-pagenav__item lp2-pagenav__item--active" onclick="document.getElementById('lesson-page-overview').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">1</span><span class="lp2-pagenav__title">Overview & Strategies</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-parabola-anatomy').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">2</span><span class="lp2-pagenav__title">The Parabola: Reading a Quadratic</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-three-forms').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">3</span><span class="lp2-pagenav__title">Three Forms of a Quadratic</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-exponential-functions').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">4</span><span class="lp2-pagenav__title">Exponential Functions</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-linear-or-exponential').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">5</span><span class="lp2-pagenav__title">Linear or Exponential?</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-practice').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">6</span><span class="lp2-pagenav__title">Practice</span>
+    </button></li></ol></nav>
+        <button type="button" class="ut-btn ut-btn--primary lp2-practice-cta"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg> Practice this skill</button>
+      </div>
+    </aside>
+    <main class="lp2-guide">
+      <article id="lesson-page-overview" class="lp2-sheet" data-page-index="0"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Functions</span></div><h1 class="lp2-sheet__h1">Nonlinear Functions</h1><p class="lp2-p">A linear function changes at a constant rate—its graph is a straight line. A <strong class="lp2-term lp2-term--blue">nonlinear function</strong>&#x27;s rate of change <em>itself changes</em>, which bends the graph. Two families dominate the SAT: <strong class="lp2-term lp2-term--blue">quadratic functions</strong> (parabolas) and <strong class="lp2-term lp2-term--teal">exponential functions</strong> (growth and decay curves).</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Linear</div><figure class="lp2-graph" role="img" aria-label="A straight rising line"><svg viewBox="0 0 195 165" width="195" height="165"><defs><marker id="arr-R6ap" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6ap"><rect x="16" y="16" width="161" height="133"></rect></clipPath></defs><line x1="42.83333333333333" y1="16" x2="42.83333333333333" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="96.5" y1="16" x2="96.5" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="150.16666666666669" y1="16" x2="150.16666666666669" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="134.22222222222223" x2="177" y2="134.22222222222223" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="104.66666666666666" x2="177" y2="104.66666666666666" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="75.11111111111111" x2="177" y2="75.11111111111111" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="45.55555555555556" x2="177" y2="45.55555555555556" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="177" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="104.66666666666666" x2="183" y2="104.66666666666666" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ap)" marker-start="url(#arr-R6ap)"></line><line x1="96.5" y1="153" x2="96.5" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ap)" marker-start="url(#arr-R6ap)"></line><text x="185" y="108.66666666666666" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="102.5" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="16" y1="134.22222222222223" x2="177" y2="45.55555555555556" stroke="#5c6a7d" stroke-width="2.2" stroke-linecap="round"></line></g></svg><figcaption class="lp2-graph__caption">Adds the same amount per step.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Quadratic</div><figure class="lp2-graph" role="img" aria-label="An upward-opening parabola"><svg viewBox="0 0 195 165" width="195" height="165"><defs><marker id="arr-R6ip" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6ip"><rect x="16" y="16" width="161" height="133"></rect></clipPath></defs><line x1="42.83333333333333" y1="16" x2="42.83333333333333" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="96.5" y1="16" x2="96.5" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="150.16666666666669" y1="16" x2="150.16666666666669" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="134.22222222222223" x2="177" y2="134.22222222222223" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="104.66666666666666" x2="177" y2="104.66666666666666" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="75.11111111111111" x2="177" y2="75.11111111111111" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="45.55555555555556" x2="177" y2="45.55555555555556" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="177" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="104.66666666666666" x2="183" y2="104.66666666666666" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ip)" marker-start="url(#arr-R6ip)"></line><line x1="96.5" y1="153" x2="96.5" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ip)" marker-start="url(#arr-R6ip)"></line><text x="185" y="108.66666666666666" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="102.5" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,1.22 L17.01,4.53 L18.01,7.79 L19.02,11.01 L20.02,14.19 L21.03,17.33 L22.04,20.42 L23.04,23.48 L24.05,26.49 L25.06,29.46 L26.06,32.39 L27.07,35.28 L28.08,38.13 L29.08,40.94 L30.09,43.70 L31.09,46.42 L32.10,49.10 L33.11,51.74 L34.11,54.34 L35.12,56.90 L36.13,59.41 L37.13,61.88 L38.14,64.31 L39.14,66.70 L40.15,69.05 L41.16,71.36 L42.16,73.62 L43.17,75.85 L44.18,78.03 L45.18,80.17 L46.19,82.27 L47.19,84.33 L48.20,86.34 L49.21,88.32 L50.21,90.25 L51.22,92.14 L52.23,93.99 L53.23,95.80 L54.24,97.56 L55.24,99.29 L56.25,100.97 L57.26,102.61 L58.26,104.21 L59.27,105.77 L60.27,107.29 L61.28,108.77 L62.29,110.20 L63.29,111.59 L64.30,112.94 L65.31,114.25 L66.31,115.52 L67.32,116.75 L68.33,117.93 L69.33,119.07 L70.34,120.17 L71.34,121.23 L72.35,122.25 L73.36,123.23 L74.36,124.16 L75.37,125.06 L76.38,125.91 L77.38,126.72 L78.39,127.49 L79.39,128.22 L80.40,128.90 L81.41,129.55 L82.41,130.15 L83.42,130.71 L84.42,131.23 L85.43,131.71 L86.44,132.14 L87.44,132.54 L88.45,132.89 L89.46,133.20 L90.46,133.47 L91.47,133.70 L92.48,133.89 L93.48,134.04 L94.49,134.14 L95.49,134.20 L96.50,134.22 L97.51,134.20 L98.51,134.14 L99.52,134.04 L100.53,133.89 L101.53,133.70 L102.54,133.47 L103.54,133.20 L104.55,132.89 L105.56,132.54 L106.56,132.14 L107.57,131.71 L108.58,131.23 L109.58,130.71 L110.59,130.15 L111.59,129.55 L112.60,128.90 L113.61,128.22 L114.61,127.49 L115.62,126.72 L116.63,125.91 L117.63,125.06 L118.64,124.16 L119.64,123.23 L120.65,122.25 L121.66,121.23 L122.66,120.17 L123.67,119.07 L124.67,117.93 L125.68,116.75 L126.69,115.52 L127.69,114.25 L128.70,112.94 L129.71,111.59 L130.71,110.20 L131.72,108.77 L132.72,107.29 L133.73,105.77 L134.74,104.21 L135.74,102.61 L136.75,100.97 L137.76,99.29 L138.76,97.56 L139.77,95.80 L140.78,93.99 L141.78,92.14 L142.79,90.25 L143.79,88.32 L144.80,86.34 L145.81,84.33 L146.81,82.27 L147.82,80.17 L148.83,78.03 L149.83,75.85 L150.84,73.62 L151.84,71.36 L152.85,69.05 L153.86,66.70 L154.86,64.31 L155.87,61.88 L156.88,59.41 L157.88,56.90 L158.89,54.34 L159.89,51.74 L160.90,49.10 L161.91,46.42 L162.91,43.70 L163.92,40.94 L164.92,38.13 L165.93,35.28 L166.94,32.39 L167.94,29.46 L168.95,26.49 L169.96,23.48 L170.96,20.42 L171.97,17.33 L172.97,14.19 L173.98,11.01 L174.99,7.79 L175.99,4.53 L177.00,1.22" fill="none" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6ip)"></path></g></svg><figcaption class="lp2-graph__caption">Falls, turns at the <strong>vertex</strong>, rises.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Exponential</div><figure class="lp2-graph" role="img" aria-label="An exponential growth curve"><svg viewBox="0 0 195 165" width="195" height="165"><defs><marker id="arr-R6qp" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6qp"><rect x="16" y="16" width="161" height="133"></rect></clipPath></defs><line x1="42.83333333333333" y1="16" x2="42.83333333333333" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="96.5" y1="16" x2="96.5" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="150.16666666666669" y1="16" x2="150.16666666666669" y2="149" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="134.22222222222223" x2="177" y2="134.22222222222223" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="104.66666666666666" x2="177" y2="104.66666666666666" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="75.11111111111111" x2="177" y2="75.11111111111111" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="45.55555555555556" x2="177" y2="45.55555555555556" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="177" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="104.66666666666666" x2="183" y2="104.66666666666666" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6qp)" marker-start="url(#arr-R6qp)"></line><line x1="96.5" y1="153" x2="96.5" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6qp)" marker-start="url(#arr-R6qp)"></line><text x="185" y="108.66666666666666" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="102.5" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,102.82 L17.01,102.77 L18.01,102.72 L19.02,102.67 L20.02,102.62 L21.03,102.56 L22.04,102.51 L23.04,102.45 L24.05,102.39 L25.06,102.33 L26.06,102.27 L27.07,102.21 L28.08,102.14 L29.08,102.08 L30.09,102.01 L31.09,101.94 L32.10,101.87 L33.11,101.79 L34.11,101.72 L35.12,101.64 L36.13,101.56 L37.13,101.48 L38.14,101.39 L39.14,101.31 L40.15,101.22 L41.16,101.13 L42.16,101.04 L43.17,100.94 L44.18,100.84 L45.18,100.74 L46.19,100.64 L47.19,100.53 L48.20,100.42 L49.21,100.31 L50.21,100.20 L51.22,100.08 L52.23,99.96 L53.23,99.83 L54.24,99.71 L55.24,99.58 L56.25,99.44 L57.26,99.30 L58.26,99.16 L59.27,99.02 L60.27,98.87 L61.28,98.72 L62.29,98.56 L63.29,98.40 L64.30,98.23 L65.31,98.06 L66.31,97.89 L67.32,97.71 L68.33,97.53 L69.33,97.34 L70.34,97.15 L71.34,96.95 L72.35,96.75 L73.36,96.54 L74.36,96.32 L75.37,96.11 L76.38,95.88 L77.38,95.65 L78.39,95.41 L79.39,95.17 L80.40,94.92 L81.41,94.66 L82.41,94.40 L83.42,94.13 L84.42,93.85 L85.43,93.56 L86.44,93.27 L87.44,92.97 L88.45,92.66 L89.46,92.35 L90.46,92.02 L91.47,91.69 L92.48,91.35 L93.48,91.00 L94.49,90.64 L95.49,90.27 L96.50,89.89 L97.51,89.50 L98.51,89.10 L99.52,88.69 L100.53,88.27 L101.53,87.84 L102.54,87.39 L103.54,86.94 L104.55,86.47 L105.56,85.99 L106.56,85.50 L107.57,85.00 L108.58,84.48 L109.58,83.95 L110.59,83.40 L111.59,82.84 L112.60,82.27 L113.61,81.68 L114.61,81.07 L115.62,80.45 L116.63,79.81 L117.63,79.16 L118.64,78.49 L119.64,77.80 L120.65,77.09 L121.66,76.36 L122.66,75.62 L123.67,74.85 L124.67,74.07 L125.68,73.26 L126.69,72.44 L127.69,71.59 L128.70,70.72 L129.71,69.82 L130.71,68.90 L131.72,67.96 L132.72,67.00 L133.73,66.00 L134.74,64.99 L135.74,63.94 L136.75,62.87 L137.76,61.77 L138.76,60.64 L139.77,59.48 L140.78,58.29 L141.78,57.07 L142.79,55.81 L143.79,54.53 L144.80,53.21 L145.81,51.85 L146.81,50.46 L147.82,49.03 L148.83,47.57 L149.83,46.07 L150.84,44.52 L151.84,42.94 L152.85,41.31 L153.86,39.64 L154.86,37.93 L155.87,36.17 L156.88,34.37 L157.88,32.52 L158.89,30.62 L159.89,28.67 L160.90,26.67 L161.91,24.62 L162.91,22.51 L163.92,20.34 L164.92,18.12 L165.93,15.84 L166.94,13.50 L167.94,11.10 L168.95,8.64 L169.96,6.11 L170.96,3.52 L171.97,0.85 L172.97,-1.88 L173.98,-4.69 L174.99,-7.57 L175.99,-10.52 L177.00,-13.56" fill="none" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6qp)"></path></g></svg><figcaption class="lp2-graph__caption"><strong>Multiplies</strong> by the same factor per step.</figcaption></figure></div></div><h3 class="lp2-h3">Strategies</h3><ul class="lp2-list"><li><strong>Evaluate like always—substitute carefully.</strong> Exponents and negative inputs are where points are lost; put substituted negatives in parentheses.</li><li><strong>Know the three quadratic forms</strong> and what each displays at a glance: y-intercept, x-intercepts, or vertex.</li><li><strong>Read a parabola from its equation:</strong> sign of $a$ → opens up or down; vertex → minimum or maximum; the graph is symmetric about the vertex.</li><li><strong>Read an exponential as</strong> <strong class="lp2-term lp2-term--blue">initial value</strong> $\times$ <strong class="lp2-term lp2-term--teal">factor</strong>$^{\,x}$: factor $&gt; 1$ grows, between $0$ and $1$ decays; percent change hides inside the factor.</li><li><strong>In tables:</strong> equal $x$-steps with constant <em>differences</em> → linear; constant <em>ratios</em> → exponential.</li></ul><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Most nonlinear questions are recognition, not computation: which form shows the vertex, which function matches the table, what does the $0.85$ mean. Learn the fingerprints and the algebra stays light.</div></div></article><article id="lesson-page-parabola-anatomy" class="lp2-sheet" data-page-index="1"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Functions: The Parabola: Reading a Quadratic</span></div><h2 class="lp2-sheet__h2">The Parabola: Reading a Quadratic</h2><p class="lp2-p">A <strong class="lp2-term lp2-term--blue">quadratic function</strong> $f(x) = ax^2 + bx + c$ graphs as a <strong>parabola</strong>. Every feature the SAT asks about is visible on one picture:</p><figure class="lp2-graph" role="img" aria-label="An upward-opening parabola with its y-intercept, two x-intercepts, vertex, and axis of symmetry marked"><svg viewBox="0 0 340 300" width="340" height="300"><defs><marker id="arr-R2q" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R2q"><rect x="30" y="16" width="292" height="260"></rect></clipPath></defs><line x1="78.66666666666666" y1="16" x2="78.66666666666666" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="176" y1="16" x2="176" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="273.33333333333337" y1="16" x2="273.33333333333337" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="276" x2="322" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="211" x2="322" y2="211" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="146" x2="322" y2="146" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="81" x2="322" y2="81" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="16" x2="322" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="26" y1="211" x2="328" y2="211" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R2q)" marker-start="url(#arr-R2q)"></line><line x1="78.66666666666666" y1="280" x2="78.66666666666666" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R2q)" marker-start="url(#arr-R2q)"></line><text x="330" y="215" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="84.66666666666666" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="176" y1="208" x2="176" y2="214" stroke="#3d4b5e" stroke-width="1"></line><text x="176" y="225" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="273.33333333333337" y1="208" x2="273.33333333333337" y2="214" stroke="#3d4b5e" stroke-width="1"></line><text x="273.33333333333337" y="225" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="75.66666666666666" y1="276" x2="81.66666666666666" y2="276" stroke="#3d4b5e" stroke-width="1"></line><text x="72.66666666666666" y="279.5" font-size="10" fill="#5c6a7d" text-anchor="end">-2</text></g><g><line x1="75.66666666666666" y1="146" x2="81.66666666666666" y2="146" stroke="#3d4b5e" stroke-width="1"></line><text x="72.66666666666666" y="149.5" font-size="10" fill="#5c6a7d" text-anchor="end">2</text></g><g><line x1="75.66666666666666" y1="81" x2="81.66666666666666" y2="81" stroke="#3d4b5e" stroke-width="1"></line><text x="72.66666666666666" y="84.5" font-size="10" fill="#5c6a7d" text-anchor="end">4</text></g><g><line x1="75.66666666666666" y1="16" x2="81.66666666666666" y2="16" stroke="#3d4b5e" stroke-width="1"></line><text x="72.66666666666666" y="19.5" font-size="10" fill="#5c6a7d" text-anchor="end">6</text></g><g><line x1="176" y1="276" x2="176" y2="16" stroke="#5c6a7d" stroke-width="1.8" stroke-dasharray="5 4" stroke-linecap="round"></line><text x="182" y="116" font-size="11" font-weight="600" fill="#5c6a7d" text-anchor="start">x = 2</text></g><g><path d="M30.00,-49.00 L31.82,-41.73 L33.65,-34.56 L35.48,-27.47 L37.30,-20.48 L39.13,-13.58 L40.95,-6.77 L42.77,-0.05 L44.60,6.58 L46.42,13.11 L48.25,19.55 L50.08,25.91 L51.90,32.17 L53.73,38.34 L55.55,44.42 L57.38,50.40 L59.20,56.30 L61.02,62.10 L62.85,67.82 L64.68,73.44 L66.50,78.97 L68.33,84.41 L70.15,89.75 L71.97,95.01 L73.80,100.17 L75.63,105.25 L77.45,110.23 L79.28,115.12 L81.10,119.92 L82.92,124.63 L84.75,129.24 L86.58,133.77 L88.40,138.20 L90.22,142.54 L92.05,146.79 L93.88,150.95 L95.70,155.02 L97.52,158.99 L99.35,162.88 L101.17,166.67 L103.00,170.38 L104.83,173.99 L106.65,177.50 L108.47,180.93 L110.30,184.27 L112.13,187.51 L113.95,190.67 L115.78,193.73 L117.60,196.70 L119.42,199.58 L121.25,202.37 L123.08,205.06 L124.90,207.67 L126.72,210.18 L128.55,212.60 L130.38,214.94 L132.20,217.18 L134.03,219.32 L135.85,221.38 L137.68,223.34 L139.50,225.22 L141.32,227.00 L143.15,228.69 L144.97,230.29 L146.80,231.80 L148.63,233.22 L150.45,234.54 L152.28,235.78 L154.10,236.92 L155.93,237.97 L157.75,238.93 L159.58,239.80 L161.40,240.58 L163.22,241.26 L165.05,241.85 L166.88,242.36 L168.70,242.77 L170.53,243.09 L172.35,243.32 L174.17,243.45 L176.00,243.50 L177.82,243.45 L179.65,243.32 L181.47,243.09 L183.30,242.77 L185.13,242.36 L186.95,241.85 L188.78,241.26 L190.60,240.58 L192.43,239.80 L194.25,238.93 L196.07,237.97 L197.90,236.92 L199.72,235.78 L201.55,234.54 L203.38,233.22 L205.20,231.80 L207.03,230.29 L208.85,228.69 L210.68,227.00 L212.50,225.22 L214.32,223.34 L216.15,221.38 L217.97,219.32 L219.80,217.17 L221.63,214.94 L223.45,212.60 L225.28,210.18 L227.10,207.67 L228.93,205.06 L230.75,202.37 L232.57,199.58 L234.40,196.70 L236.22,193.73 L238.05,190.67 L239.88,187.51 L241.70,184.27 L243.53,180.93 L245.35,177.50 L247.18,173.99 L249.00,170.38 L250.82,166.67 L252.65,162.88 L254.47,158.99 L256.30,155.02 L258.13,150.95 L259.95,146.79 L261.77,142.54 L263.60,138.20 L265.43,133.77 L267.25,129.24 L269.07,124.63 L270.90,119.92 L272.73,115.12 L274.55,110.23 L276.38,105.25 L278.20,100.17 L280.02,95.01 L281.85,89.75 L283.68,84.41 L285.50,78.97 L287.32,73.44 L289.15,67.82 L290.97,62.10 L292.80,56.30 L294.63,50.40 L296.45,44.42 L298.28,38.34 L300.10,32.17 L301.93,25.91 L303.75,19.55 L305.57,13.11 L307.40,6.57 L309.22,-0.05 L311.05,-6.77 L312.88,-13.58 L314.70,-20.48 L316.53,-27.47 L318.35,-34.56 L320.18,-41.73 L322.00,-49.00" fill="none" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R2q)"></path></g><g><circle cx="176" cy="243.5" r="4" fill="#6d3fc4" stroke="#fff" stroke-width="1.4"></circle><text x="184" y="261.5" font-size="11" font-weight="600" fill="#6d3fc4">vertex (2, -1)</text></g><g><circle cx="127.33333333333333" cy="211" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle><text x="87.33333333333333" y="201" font-size="11" font-weight="600" fill="#c0392f">(1, 0)</text></g><g><circle cx="224.66666666666666" cy="211" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle><text x="234.66666666666666" y="203" font-size="11" font-weight="600" fill="#c0392f">(3, 0)</text></g><g><circle cx="78.66666666666666" cy="113.5" r="4" fill="#157f4b" stroke="#fff" stroke-width="1.4"></circle><text x="88.66666666666666" y="111.5" font-size="11" font-weight="600" fill="#157f4b">(0, 3)</text></g></svg><figcaption class="lp2-graph__caption">$f(x) = x^2 - 4x + 3$: <strong class="lp2-term lp2-term--green">y-intercept</strong>, <strong class="lp2-term lp2-term--rose">x-intercepts (zeros)</strong>, <strong class="lp2-term lp2-term--purple">vertex</strong>, and the dashed <strong>axis of symmetry</strong>.</figcaption></figure><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th>Feature</th><th>Where to find it</th><th class="lp2-td--center">For $f(x) = x^2 - 4x + 3$</th></tr></thead><tbody><tr><td>Opens up / down</td><td>sign of $a$: up if $a &gt; 0$, down if $a &lt; 0$</td><td class="lp2-td--center">$a = 1 &gt; 0$: up</td></tr><tr><td><strong class="lp2-term lp2-term--green">y-intercept</strong></td><td>the constant $c$ (set $x = 0$)</td><td class="lp2-td--center">$(0, 3)$</td></tr><tr><td><strong class="lp2-term lp2-term--rose">Zeros / x-intercepts</strong></td><td>solve $f(x) = 0$</td><td class="lp2-td--center">$x = 1$ and $x = 3$</td></tr><tr><td><strong class="lp2-term lp2-term--purple">Vertex</strong></td><td>$x = -\frac{b}{2a}$ — or halfway between the zeros</td><td class="lp2-td--center">$(2, -1)$</td></tr><tr><td>Min / max value</td><td>the vertex&#x27;s $y$: minimum if opens up, maximum if down</td><td class="lp2-td--center">minimum $-1$</td></tr></tbody></table></div><p class="lp2-p">The parabola is <strong>symmetric</strong> about the dashed line through its vertex: inputs equally far from $x = 2$ give equal outputs. Since $f(0) = 3$, symmetry says $f(4) = 3$—no computation needed.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">For $f(x) = x^2 - 4x + 3$, what is the value of $f(5)$?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$f(5) = (5)^2 - 4(5) + 3$$</div><div class="lp2-steps__note">Substitute $5$ for every $x$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$f(5) = 25 - 20 + 3$$</div><div class="lp2-steps__note">Exponent first, then multiply</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$f(5) = 8$$</div><div class="lp2-steps__note">Add</div></div></div></div></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">Substituting negatives: write parentheses. For $f(x) = x^2$, $f(-3) = (-3)^2 = 9$. Typing $-3^2$ into your calculator gives $-9$—the exponent grabs the $3$ before the minus sign does.</div></div></article><article id="lesson-page-three-forms" class="lp2-sheet" data-page-index="2"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Functions: Three Forms of a Quadratic</span></div><h2 class="lp2-sheet__h2">Three Forms of a Quadratic</h2><p class="lp2-p">The same quadratic can be written three ways, and each form <strong>displays</strong> a different feature as constants you can read directly. The SAT tests this constantly with the phrase <em>“…displays … as a constant or coefficient.”</em></p><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th>Form</th><th class="lp2-td--center">Template</th><th>Shows at a glance</th></tr></thead><tbody><tr><td>Standard</td><td class="lp2-td--center">$ax^2 + bx + c$</td><td><strong class="lp2-term lp2-term--green">y-intercept</strong>: $(0, c)$</td></tr><tr><td>Factored</td><td class="lp2-td--center">$a(x - r)(x - s)$</td><td><strong class="lp2-term lp2-term--rose">x-intercepts</strong>: $r$ and $s$</td></tr><tr><td>Vertex</td><td class="lp2-td--center">$a(x - h)^2 + k$</td><td><strong class="lp2-term lp2-term--purple">vertex</strong>: $(h, k)$</td></tr></tbody></table></div><p class="lp2-p">Here is the parabola from the previous page in all three costumes—same function, different features on display:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Standard</div><div class="lp2-math"><div class="lp2-math__tex">$$x^2 - 4x + \textcolor{#157f4b}{3}$$</div></div><p class="lp2-p">y-intercept $(0, <strong class="lp2-term lp2-term--green">3</strong>)$</p></div><div class="lp2-columns__col"><div class="lp2-columns__title">Factored</div><div class="lp2-math"><div class="lp2-math__tex">$$(x - \textcolor{#c0392f}{1})(x - \textcolor{#c0392f}{3})$$</div></div><p class="lp2-p">zeros at $x = <strong class="lp2-term lp2-term--rose">1</strong>$, $x = <strong class="lp2-term lp2-term--rose">3</strong>$</p></div><div class="lp2-columns__col"><div class="lp2-columns__title">Vertex</div><div class="lp2-math"><div class="lp2-math__tex">$$(x - \textcolor{#6d3fc4}{2})^2 - \textcolor{#6d3fc4}{1}$$</div></div><p class="lp2-p">vertex $(<strong class="lp2-term lp2-term--purple">2</strong>, <strong class="lp2-term lp2-term--purple">-1</strong>)$</p></div></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">The function $f(x) = x^2 - 4x + 3$ is graphed in the $xy$-plane. Which equivalent form of $f$ displays the coordinates of the <strong>vertex</strong> of the graph as constants?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$f(x) = (x - 2)^2 - 1$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$f(x) = (x - 1)(x - 3)$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$f(x) = x^2 - 4x + 3$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$f(x) = (x + 2)^2 - 1$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Vertex form: $h = 2$ and $k = -1$ are right there as constants. Expanding checks it: $(x-2)^2 - 1 = x^2 - 4x + 3$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Equivalent, but it displays the <strong>x-intercepts</strong> $1$ and $3$—not the vertex.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>Equivalent, but standard form displays only the <strong>y-intercept</strong> $3$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Not equivalent: $(x + 2)^2 - 1 = x^2 + 4x + 3$. The sign inside the parentheses is <em>opposite</em> the vertex&#x27;s $x$-coordinate—$(x - 2)$ means $h = +2$.</div></li></ul></div></div></section><h3 class="lp2-h3">Vertex from the Zeros</h3><p class="lp2-p">Given factored form, the vertex costs two steps: by symmetry, its $x$-coordinate is the <strong>midpoint of the zeros</strong>; then evaluate.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">What is the minimum value of $g(x) = (x - 1)(x - 3)$?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = \frac{1 + 3}{2} = 2$$</div><div class="lp2-steps__note">Vertex $x$: midpoint of the zeros $1$ and $3$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$g(2) = (2 - 1)(2 - 3) = -1$$</div><div class="lp2-steps__note">Evaluate — the minimum value is $-1$</div></div></div></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">“Displays as constants” means <strong>read, don&#x27;t compute</strong>. If finding the feature from a given form takes algebra, that form doesn&#x27;t display it.</div></div></article><article id="lesson-page-exponential-functions" class="lp2-sheet" data-page-index="3"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Functions: Exponential Functions</span></div><h2 class="lp2-sheet__h2">Exponential Functions</h2><p class="lp2-p">An <strong class="lp2-term lp2-term--teal">exponential function</strong> multiplies by the same factor at every step instead of adding the same amount:</p><div class="lp2-math lp2-math--boxed"><div class="lp2-math__tex">$$f(x) = \textcolor{#0f6cbd}{a} \cdot \textcolor{#0e8a7e}{b}^{\,x}$$</div><div class="lp2-math__caption"><strong class="lp2-term lp2-term--blue">a</strong> — initial value, $f(0)$ · <strong class="lp2-term lp2-term--teal">b</strong> — the factor per step: growth if $b &gt; 1$, decay if $0 &lt; b &lt; 1$</div></div><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">Growth:  $b &gt; 1$</div><figure class="lp2-graph" role="img" aria-label="An increasing exponential curve through (0, 1)"><svg viewBox="0 0 210 180" width="210" height="180"><defs><marker id="arr-Rcjs" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-Rcjs"><rect x="16" y="16" width="176" height="148"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="45.33333333333333" y1="16" x2="45.33333333333333" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="74.66666666666666" y1="16" x2="74.66666666666666" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="104" y1="16" x2="104" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="133.33333333333331" y1="16" x2="133.33333333333331" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="162.66666666666669" y1="16" x2="162.66666666666669" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="192" y1="16" x2="192" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="164" x2="192" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="127" x2="192" y2="127" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="90" x2="192" y2="90" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="53" x2="192" y2="53" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="192" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="164" x2="198" y2="164" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Rcjs)" marker-start="url(#arr-Rcjs)"></line><line x1="104" y1="168" x2="104" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Rcjs)" marker-start="url(#arr-Rcjs)"></line><text x="200" y="168" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="110" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,161.69 L17.10,161.63 L18.20,161.56 L19.30,161.50 L20.40,161.43 L21.50,161.37 L22.60,161.30 L23.70,161.23 L24.80,161.15 L25.90,161.08 L27.00,161.00 L28.10,160.92 L29.20,160.84 L30.30,160.76 L31.40,160.67 L32.50,160.58 L33.60,160.49 L34.70,160.40 L35.80,160.31 L36.90,160.21 L38.00,160.11 L39.10,160.01 L40.20,159.90 L41.30,159.80 L42.40,159.68 L43.50,159.57 L44.60,159.45 L45.70,159.33 L46.80,159.21 L47.90,159.09 L49.00,158.96 L50.10,158.82 L51.20,158.69 L52.30,158.55 L53.40,158.40 L54.50,158.26 L55.60,158.11 L56.70,157.95 L57.80,157.79 L58.90,157.63 L60.00,157.46 L61.10,157.29 L62.20,157.11 L63.30,156.93 L64.40,156.74 L65.50,156.55 L66.60,156.36 L67.70,156.15 L68.80,155.95 L69.90,155.74 L71.00,155.52 L72.10,155.29 L73.20,155.07 L74.30,154.83 L75.40,154.59 L76.50,154.34 L77.60,154.09 L78.70,153.83 L79.80,153.56 L80.90,153.28 L82.00,153.00 L83.10,152.71 L84.20,152.41 L85.30,152.11 L86.40,151.79 L87.50,151.47 L88.60,151.14 L89.70,150.80 L90.80,150.46 L91.90,150.10 L93.00,149.73 L94.10,149.36 L95.20,148.97 L96.30,148.58 L97.40,148.17 L98.50,147.75 L99.60,147.33 L100.70,146.89 L101.80,146.44 L102.90,145.97 L104.00,145.50 L105.10,145.01 L106.20,144.51 L107.30,144.00 L108.40,143.47 L109.50,142.93 L110.60,142.38 L111.70,141.81 L112.80,141.22 L113.90,140.62 L115.00,140.01 L116.10,139.38 L117.20,138.73 L118.30,138.06 L119.40,137.38 L120.50,136.68 L121.60,135.96 L122.70,135.22 L123.80,134.46 L124.90,133.69 L126.00,132.89 L127.10,132.07 L128.20,131.23 L129.30,130.36 L130.40,129.48 L131.50,128.57 L132.60,127.64 L133.70,126.68 L134.80,125.70 L135.90,124.69 L137.00,123.65 L138.10,122.59 L139.20,121.50 L140.30,120.38 L141.40,119.23 L142.50,118.05 L143.60,116.84 L144.70,115.60 L145.80,114.32 L146.90,113.02 L148.00,111.67 L149.10,110.30 L150.20,108.88 L151.30,107.43 L152.40,105.94 L153.50,104.41 L154.60,102.84 L155.70,101.23 L156.80,99.58 L157.90,97.88 L159.00,96.14 L160.10,94.35 L161.20,92.52 L162.30,90.64 L163.40,88.71 L164.50,86.72 L165.60,84.69 L166.70,82.60 L167.80,80.46 L168.90,78.26 L170.00,76.00 L171.10,73.68 L172.20,71.30 L173.30,68.86 L174.40,66.36 L175.50,63.79 L176.60,61.15 L177.70,58.44 L178.80,55.66 L179.90,52.80 L181.00,49.88 L182.10,46.87 L183.20,43.79 L184.30,40.62 L185.40,37.37 L186.50,34.04 L187.60,30.61 L188.70,27.10 L189.80,23.50 L190.90,19.80 L192.00,16.00" fill="none" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-Rcjs)"></path></g><g><circle cx="104" cy="145.5" r="4" fill="#0f6cbd" stroke="#fff" stroke-width="1.4"></circle><text x="112" y="139.5" font-size="11" font-weight="600" fill="#0f6cbd">(0, a)</text></g></svg><figcaption class="lp2-graph__caption">$y = 2^x$ — doubles each step.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">Decay:  $0 &lt; b &lt; 1$</div><figure class="lp2-graph" role="img" aria-label="A decreasing exponential curve through (0, 1)"><svg viewBox="0 0 210 180" width="210" height="180"><defs><marker id="arr-Rd3s" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-Rd3s"><rect x="16" y="16" width="176" height="148"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="45.33333333333333" y1="16" x2="45.33333333333333" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="74.66666666666666" y1="16" x2="74.66666666666666" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="104" y1="16" x2="104" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="133.33333333333331" y1="16" x2="133.33333333333331" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="162.66666666666669" y1="16" x2="162.66666666666669" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="192" y1="16" x2="192" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="164" x2="192" y2="164" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="127" x2="192" y2="127" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="90" x2="192" y2="90" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="53" x2="192" y2="53" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="192" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="164" x2="198" y2="164" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Rd3s)" marker-start="url(#arr-Rd3s)"></line><line x1="104" y1="168" x2="104" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-Rd3s)" marker-start="url(#arr-Rd3s)"></line><text x="200" y="168" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="110" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,16.00 L17.10,19.80 L18.20,23.50 L19.30,27.10 L20.40,30.61 L21.50,34.04 L22.60,37.37 L23.70,40.62 L24.80,43.79 L25.90,46.87 L27.00,49.88 L28.10,52.80 L29.20,55.66 L30.30,58.44 L31.40,61.15 L32.50,63.79 L33.60,66.36 L34.70,68.86 L35.80,71.30 L36.90,73.68 L38.00,76.00 L39.10,78.26 L40.20,80.46 L41.30,82.60 L42.40,84.69 L43.50,86.72 L44.60,88.71 L45.70,90.64 L46.80,92.52 L47.90,94.35 L49.00,96.14 L50.10,97.88 L51.20,99.58 L52.30,101.23 L53.40,102.84 L54.50,104.41 L55.60,105.94 L56.70,107.43 L57.80,108.88 L58.90,110.30 L60.00,111.67 L61.10,113.02 L62.20,114.32 L63.30,115.60 L64.40,116.84 L65.50,118.05 L66.60,119.23 L67.70,120.38 L68.80,121.50 L69.90,122.59 L71.00,123.65 L72.10,124.69 L73.20,125.70 L74.30,126.68 L75.40,127.64 L76.50,128.57 L77.60,129.48 L78.70,130.36 L79.80,131.23 L80.90,132.07 L82.00,132.89 L83.10,133.69 L84.20,134.46 L85.30,135.22 L86.40,135.96 L87.50,136.68 L88.60,137.38 L89.70,138.06 L90.80,138.73 L91.90,139.38 L93.00,140.01 L94.10,140.62 L95.20,141.22 L96.30,141.81 L97.40,142.38 L98.50,142.93 L99.60,143.47 L100.70,144.00 L101.80,144.51 L102.90,145.01 L104.00,145.50 L105.10,145.97 L106.20,146.44 L107.30,146.89 L108.40,147.33 L109.50,147.75 L110.60,148.17 L111.70,148.58 L112.80,148.97 L113.90,149.36 L115.00,149.73 L116.10,150.10 L117.20,150.46 L118.30,150.80 L119.40,151.14 L120.50,151.47 L121.60,151.79 L122.70,152.11 L123.80,152.41 L124.90,152.71 L126.00,153.00 L127.10,153.28 L128.20,153.56 L129.30,153.83 L130.40,154.09 L131.50,154.34 L132.60,154.59 L133.70,154.83 L134.80,155.07 L135.90,155.29 L137.00,155.52 L138.10,155.74 L139.20,155.95 L140.30,156.15 L141.40,156.36 L142.50,156.55 L143.60,156.74 L144.70,156.93 L145.80,157.11 L146.90,157.29 L148.00,157.46 L149.10,157.63 L150.20,157.79 L151.30,157.95 L152.40,158.11 L153.50,158.26 L154.60,158.40 L155.70,158.55 L156.80,158.69 L157.90,158.82 L159.00,158.96 L160.10,159.09 L161.20,159.21 L162.30,159.33 L163.40,159.45 L164.50,159.57 L165.60,159.68 L166.70,159.80 L167.80,159.90 L168.90,160.01 L170.00,160.11 L171.10,160.21 L172.20,160.31 L173.30,160.40 L174.40,160.49 L175.50,160.58 L176.60,160.67 L177.70,160.76 L178.80,160.84 L179.90,160.92 L181.00,161.00 L182.10,161.08 L183.20,161.15 L184.30,161.23 L185.40,161.30 L186.50,161.37 L187.60,161.43 L188.70,161.50 L189.80,161.56 L190.90,161.63 L192.00,161.69" fill="none" stroke="#c0392f" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-Rd3s)"></path></g><g><circle cx="104" cy="145.5" r="4" fill="#0f6cbd" stroke="#fff" stroke-width="1.4"></circle><text x="112" y="139.5" font-size="11" font-weight="600" fill="#0f6cbd">(0, a)</text></g></svg><figcaption class="lp2-graph__caption">$y = \left(\frac{1}{2}\right)^x$ — halves each step.</figcaption></figure></div></div><h3 class="lp2-h3">Percent Change Lives Inside the Factor</h3><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th>Words in the problem</th><th class="lp2-td--center">Factor $b$</th></tr></thead><tbody><tr><td>“increases $5\%$ per year”</td><td class="lp2-td--center">$1 + 0.05 = 1.05$</td></tr><tr><td>“decreases $20\%$ per year”</td><td class="lp2-td--center">$1 - 0.20 = 0.80$</td></tr><tr><td>“doubles each hour”</td><td class="lp2-td--center">$2$</td></tr><tr><td>“loses half its value each day”</td><td class="lp2-td--center">$0.5$</td></tr></tbody></table></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">A bacteria culture starts with $500$ cells, and the population <strong>triples</strong> every hour. Which function gives the population $P(t)$ after $t$ hours?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$P(t) = 500 \cdot 3^{t}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$P(t) = 3 \cdot 500^{t}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$P(t) = 500 + 3t$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$P(t) = 500 \cdot \left(\tfrac{1}{3}\right)^{t}$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Initial value $500$, factor $3$ applied $t$ times. Check $t = 0$: $P(0) = 500$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Swaps the roles: at $t = 0$ this gives $P(0) = 3$ cells, not $500$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>Linear: it <em>adds</em> $3$ cells per hour. “Triples” means multiply, and the growth compounds.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>A factor of $\frac{1}{3}$ is decay—the culture would shrink, not triple.</div></li></ul></div></div></section><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">The value of a car is modeled by $V(t) = 8{,}000(0.75)^t$, where $t$ is the number of years from now. What does the model predict the value will be in $2$ years—and what does the $0.75$ mean?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$V(2) = 8{,}000(0.75)^2$$</div><div class="lp2-steps__note">Substitute $t = 2$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$V(2) = 8{,}000(0.5625)$$</div><div class="lp2-steps__note">Exponent first: $0.75 \times 0.75$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$V(2) = 4{,}500$$</div><div class="lp2-steps__note">The predicted value is $\$4{,}500$</div></div></div></div><p class="lp2-p">And since $0.75 = 1 - 0.25$, the model says the car loses $\textcolor{#157f4b}{25\%}$ of its value <strong>each year</strong>—the factor keeps $75\%$, so it loses the other $25\%$.</p></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">A factor of $0.75$ means a $25\%$ <em>decrease</em>, not a $75\%$ one. The factor is what&#x27;s <strong>kept</strong>; the percent change is what&#x27;s gained or lost: $b = 1 + r$ for growth, $b = 1 - r$ for decay.</div></div></article><article id="lesson-page-linear-or-exponential" class="lp2-sheet" data-page-index="4"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Functions: Linear or Exponential?</span></div><h2 class="lp2-sheet__h2">Linear or Exponential?</h2><p class="lp2-p">Given a table, the test is one comparison away. Check equal steps of $x$:</p><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em>Constant <strong>differences</strong> → linear (add the same amount). Constant <strong>ratios</strong> → exponential (multiply by the same factor).</em></p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-table-wrap"><table class="lp2-table lp2-table--compact"><thead><tr><th class="lp2-td--center">$x$</th><th class="lp2-td--center">$f(x)$</th><th class="lp2-td--center">$g(x)$</th></tr></thead><tbody><tr><td class="lp2-td--center">$0$</td><td class="lp2-td--center">$5$</td><td class="lp2-td--center">$5$</td></tr><tr><td class="lp2-td--center">$1$</td><td class="lp2-td--center">$10$</td><td class="lp2-td--center">$10$</td></tr><tr><td class="lp2-td--center">$2$</td><td class="lp2-td--center">$20$</td><td class="lp2-td--center">$15$</td></tr><tr><td class="lp2-td--center">$3$</td><td class="lp2-td--center">$40$</td><td class="lp2-td--center">$20$</td></tr></tbody></table></div><ul class="lp2-checkcross"><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$f$ is exponential: $5 \to 10 \to 20 \to 40$ multiplies by $2$ each step — $f(x) = 5 \cdot 2^x$</div><div class="lp2-checkcross__note">Both functions match at $x = 0$ and $x = 1$ — you must check a third row to tell them apart.</div></div></li><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$g$ is linear: $5 \to 10 \to 15 \to 20$ adds $5$ each step — $g(x) = 5x + 5$</div><div class="lp2-checkcross__note">Constant difference, straight-line graph.</div></div></li></ul></div></section><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-table-wrap"><table class="lp2-table lp2-table--compact"><thead><tr><th class="lp2-td--center">$x$</th><th class="lp2-td--center">$h(x)$</th></tr></thead><tbody><tr><td class="lp2-td--center">$0$</td><td class="lp2-td--center">$81$</td></tr><tr><td class="lp2-td--center">$1$</td><td class="lp2-td--center">$27$</td></tr><tr><td class="lp2-td--center">$2$</td><td class="lp2-td--center">$9$</td></tr><tr><td class="lp2-td--center">$3$</td><td class="lp2-td--center">$3$</td></tr></tbody></table></div><div class="lp2-question"><p class="lp2-question__stem">The table gives values of the function $h$. Which equation defines $h$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$h(x) = 81 \cdot \left(\tfrac{1}{3}\right)^{x}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$h(x) = 81 - 54x$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$h(x) = \tfrac{1}{3} \cdot 81^{x}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$h(x) = 81 \cdot 3^{x}$</span></li></ol></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Each step multiplies by $\frac{27}{81} = \frac{9}{27} = \frac{3}{9} = \frac{1}{3}$: constant ratio, initial value $81$. Every row checks.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Linear, built from the first step&#x27;s drop of $54$. It matches two rows, then predicts $h(2) = -27$—the table says $9$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>Swaps initial value and factor: $h(0)$ would be $\frac{1}{3}$, not $81$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Factor $3$ grows; the table shrinks. Direction matters.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Check <strong>at least three rows</strong>. Linear and exponential models can agree at two points—the third one exposes the impostor.</div></div></article><article id="lesson-page-practice" class="lp2-sheet" data-page-index="5"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Functions: Practice</span></div><h2 class="lp2-sheet__h2">Practice</h2><p class="lp2-p">Name the family first—quadratic or exponential—then the job: evaluate, pick a form, build a model, or match a table.</p><section class="lp2-practice"><div class="lp2-practice__band">Practice</div><ol class="lp2-practice__list"><li class="lp2-practice__item"><div class="lp2-practice__number">1.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">The function $f$ is defined by $f(x) = 2x^2 - 3x$. What is the value of $f(-2)$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$-14$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$-2$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$2$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$14$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is D.</strong> Parentheses around the negative input keep every sign honest:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$f(-2) = 2(-2)^2 - 3(-2)$$</div><div class="lp2-steps__note">Substitute $(-2)$ for each $x$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$f(-2) = 2(4) + 6$$</div><div class="lp2-steps__note">$(-2)^2 = 4$; subtracting $-6$ adds $6$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$f(-2) = 14$$</div><div class="lp2-steps__note">Add</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$-14$ flips the sign of everything—a global sign slip, usually from rushing the two negatives at once.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$-2$ squares without parentheses: treating $(-2)^2$ as $-4$ gives $-8 + 6 = -2$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$2$ gets the square right but misses the double negative: $8 - 6 = 2$ treats $-3(-2)$ as $-6$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$2(4) + 6 = 14$. Both negatives handled. <strong class="lp2-term lp2-term--green">✓</strong></div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">2.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">The function $g$ is defined by $g(x) = (x - 3)^2 - 8$. What is the <strong>minimum value</strong> of $g$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$-8$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$3$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$1$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$8$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Vertex form hands you the answer: the vertex is $(3, -8)$, and since $a = 1 &gt; 0$ the parabola opens up, so the vertex&#x27;s $y$-value is the minimum.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Minimum <strong>value</strong> $= k = -8$, reached at $x = 3$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$3$ is <em>where</em> the minimum happens (the $x$-coordinate), not the minimum value itself.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$1$ is $g(0) = 9 - 8$—the y-intercept, not the minimum.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$8$ drops the sign of $k$: the vertex sits $8$ <strong>below</strong> the x-axis.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">3.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">Nadia deposits $\$400$ in an account that earns $6\%$ interest each year, compounded annually. Which function gives the account&#x27;s value $A(t)$, in dollars, after $t$ years?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$A(t) = 400(1.06)^{t}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$A(t) = 400(0.06)^{t}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$A(t) = 400(1.6)^{t}$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$A(t) = 400 + 1.06t$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Growing $6\%$ per year means keeping $100\%$ and adding $6\%$: the factor is $1 + 0.06 = 1.06$.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$400$ initial, multiplied by $1.06$ each year. Check $t = 1$: $\$424$—up $6\%$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>The classic: $0.06$ <em>is</em> the $6\%$, but as a factor it means keeping only $6\%$—the account would collapse to $\$24$ in one year.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$1.6$ is a $60\%$ raise—a decimal-place slip on the rate.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>Linear: adds about a dollar a year and never compounds. Interest earns interest—that&#x27;s the exponential part.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">4.</div><div class="lp2-practice__content"><div class="lp2-table-wrap"><table class="lp2-table lp2-table--compact"><thead><tr><th class="lp2-td--center">$x$</th><th class="lp2-td--center">$f(x)$</th></tr></thead><tbody><tr><td class="lp2-td--center">$0$</td><td class="lp2-td--center">$4$</td></tr><tr><td class="lp2-td--center">$1$</td><td class="lp2-td--center">$12$</td></tr><tr><td class="lp2-td--center">$2$</td><td class="lp2-td--center">$36$</td></tr><tr><td class="lp2-td--center">$3$</td><td class="lp2-td--center">$108$</td></tr></tbody></table></div><div class="lp2-question"><p class="lp2-question__stem">The table gives values of the function $f$. Which equation defines $f$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$f(x) = 4 \cdot 3^{x}$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$f(x) = 3 \cdot 4^{x}$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$f(x) = 8x + 4$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$f(x) = 4 \cdot 9^{x}$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Ratios first: $\frac{12}{4} = \frac{36}{12} = \frac{108}{36} = 3$—constant ratio, so exponential with factor $3$ and initial value $f(0) = 4$.</p><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$4, 12, 36, 108$: every row checks. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Swapped roles: $f(0)$ would be $3$, but the table says $4$. Always test $x = 0$ first—it&#x27;s the fastest eliminator.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>Linear bait: matches the first two rows ($4$ and $12$), then predicts $20$ where the table says $36$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$9$ is the ratio across <em>two</em> steps ($4 \to 36$). The factor is per single step of $x$.</div></li></ul></div></div></div></div></li></ol></section><section class="lp2-remember"><h3 class="lp2-remember__title">Things to Remember</h3><ul class="lp2-list"><li>Quadratic $f(x) = ax^2 + bx + c$: opens up if $a &gt; 0$, down if $a &lt; 0$; y-intercept $c$; vertex at $x = -\frac{b}{2a}$ (or midway between the zeros); symmetric about the vertex.</li><li>Three forms, three features: <strong>standard</strong> shows the <strong class="lp2-term lp2-term--green">y-intercept</strong>, <strong>factored</strong> shows the <strong class="lp2-term lp2-term--rose">zeros</strong>, <strong>vertex</strong> form shows the <strong class="lp2-term lp2-term--purple">vertex</strong>. “Displays as constants” = read it, don&#x27;t compute it.</li><li>In $(x - h)^2 + k$, the sign flips: $(x - 2)^2$ puts the vertex at $x = \textcolor{#5c6a7d}{+}2$. The minimum/maximum <strong>value</strong> is $k$, and it happens <strong>at</strong> $x = h$.</li><li>Exponential $f(x) = a \cdot b^x$: $a$ is the initial value, $b$ the per-step factor—$b = 1 + r$ for growth, $b = 1 - r$ for decay. $0.85$ means a $15\%$ decrease.</li><li>Tables: constant differences → linear; constant ratios → exponential. Check three rows—two can lie.</li><li>Substitute negative inputs in <strong>parentheses</strong>: $(-3)^2 = 9$, but $-3^2 = -9$.</li></ul></section></article>
+      <section class="lp2-mastery" aria-label="Lesson completion">
+        <div class="lp2-mastery__copy">
+          <h3>Have you mastered this lesson?</h3>
+          <p>Mark this lesson as complete to update your course progress and study plan.</p>
+        </div>
+        <div class="lp2-mastery__actions">
+          <button type="button" class="ut-btn ut-btn--primary lp2-mastery__mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Mark as Complete</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.lp2-reveal').forEach(function (r) {
+    r.classList.remove('lp2-reveal--open');
+    var btn = r.querySelector('.lp2-reveal__toggle');
+    if (btn) btn.addEventListener('click', function () { r.classList.toggle('lp2-reveal--open'); });
+  });
+</script>
+</body>
+</html>

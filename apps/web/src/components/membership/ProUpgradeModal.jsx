@@ -15,6 +15,12 @@ export const PRO_BENEFITS = [
 
 export const PRO_PRICE_LINE = '$9.99/mo or $99.99/yr';
 
+// Prices are temporarily hidden while the site is free for current students
+// (manual upgrades from the admin panel). Set to true to show prices again —
+// PRO_PRICE_LINE above is untouched.
+export const SHOW_PRICES = false;
+export const PRICE_TBD_LINE = 'Pricing to be determined';
+
 /**
  * The one shared upgrade modal (UX overhaul P0-A). Replaces the old
  * UpgradeModal, ProFeatureModal, WordBankUpgradeModal and LearnUpgradeModal.
@@ -94,8 +100,14 @@ const ProUpgradeModal = ({ open, isOpen, onClose, featureName, description }) =>
         </ul>
 
         <p className="pro-upgrade-price">
-          {PRO_PRICE_LINE}
-          <span> · cancel anytime</span>
+          {SHOW_PRICES ? (
+            <>
+              {PRO_PRICE_LINE}
+              <span> · cancel anytime</span>
+            </>
+          ) : (
+            PRICE_TBD_LINE
+          )}
         </p>
 
         <div className="pro-upgrade-actions">

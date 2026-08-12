@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiLock, FiCheck } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasAccess, getTierInfo, getAvailableUpgrades, hasFeatureAccess as hasFeatureTierAccess } from '../../utils/membershipUtils';
-import { PRO_BENEFITS, PRO_PRICE_LINE } from './ProUpgradeModal';
+import { PRO_BENEFITS, PRO_PRICE_LINE, SHOW_PRICES, PRICE_TBD_LINE } from './ProUpgradeModal';
 import './MembershipGate.css';
 
 // Max is never sold through the gate today, but keep its price honest
@@ -76,8 +76,14 @@ const MembershipGate = ({
           </ul>
 
           <p className="membership-gate-price">
-            {priceLine}
-            <span> · cancel anytime</span>
+            {SHOW_PRICES ? (
+              <>
+                {priceLine}
+                <span> · cancel anytime</span>
+              </>
+            ) : (
+              PRICE_TBD_LINE
+            )}
           </p>
 
           <div className="membership-gate-actions">

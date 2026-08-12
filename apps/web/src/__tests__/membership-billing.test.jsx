@@ -72,7 +72,7 @@ describe('membership and billing flows', () => {
     expect(screen.getByText('Upgrade Page')).toBeInTheDocument();
   });
 
-  it('validates coupons and starts a checkout session with the selected billing plan', async () => {
+  it('hides coupon and checkout controls while purchases are disabled', async () => {
     const currentUser = createMockUser();
 
     useAuth.mockReturnValue({
@@ -81,29 +81,10 @@ describe('membership and billing flows', () => {
       getMembershipDisplayName: jest.fn((tier) => tier),
     });
 
-    fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({}),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          valid: true,
-          coupon: {
-            id: 'coupon-1',
-            code: 'SAVE20',
-            discountType: 'percentage',
-            discountValue: 20,
-            applicableTiers: ['plus'],
-            applicableBilling: ['yearly'],
-          },
-        }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ sessionId: 'sess_123' }),
-      });
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({}),
+    });
 
     renderWithRoute(<MembershipUpgrade />, {
       path: '/membership/upgrade',
@@ -119,36 +100,13 @@ describe('membership and billing flows', () => {
       );
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/enter coupon code/i), {
-      target: { value: 'save20' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /apply/i }));
-
-    expect(await screen.findByRole('button', { name: /remove/i })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: /yearly/i }));
-    fireEvent.click(screen.getByRole('button', { name: /^upgrade$/i }));
-
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/stripe/create-checkout-session',
-        expect.any(Object),
-      );
-    });
-
-    const checkoutRequest = fetch.mock.calls[2][1];
-
-    expect(JSON.parse(checkoutRequest.body)).toEqual({
-      tier: 'plus',
-      billing: 'yearly',
-      couponId: 'coupon-1',
-    });
-
-    await waitFor(() => {
-      expect(mockRedirectToCheckout).toHaveBeenCalledWith({
-        sessionId: 'sess_123',
-      });
-    });
+    expect(screen.getByText('To be determined')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText(/enter coupon code/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /apply/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /yearly/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^upgrade$/i })).not.toBeInTheDocument();
+    expect(mockRedirectToCheckout).not.toHaveBeenCalled();
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   it('verifies a successful payment and lets the user continue into the app', async () => {

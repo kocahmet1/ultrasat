@@ -55,6 +55,8 @@ test_*.js
 *_test.js
 git_output.txt
 prompt.txt
+.m2a_*.js
+_dpcheck.js
 
 # Build analysis
 build-analysis.json

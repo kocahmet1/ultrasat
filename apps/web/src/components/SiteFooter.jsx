@@ -17,7 +17,9 @@ const COLUMNS = [
   {
     title: 'Product',
     links: [
-      { label: 'Pricing', href: '/#pricing' },
+      // Pricing link hidden while the landing-page pricing section is off
+      // (SHOW_PRICING in LandingPageV3.jsx). Restore both together.
+      // { label: 'Pricing', href: '/#pricing' },
       { label: 'SAT Guide', to: '/sat-guide' },
       { label: 'Score Calculator', to: '/score-calculator' },
       { label: 'Blog', to: '/blog' },

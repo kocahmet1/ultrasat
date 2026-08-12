@@ -12,6 +12,10 @@ import '../styles/LandingPageV3.css';
  * Reuses the existing auth + exam-start flow from the legacy landing page.
  */
 
+// Temporarily hides the pricing section + nav link while the site is free for
+// current students. Set to true to bring pricing back — nothing else to change.
+const SHOW_PRICING = false;
+
 // Shorter labels for the skill map, so 29 names fit three columns cleanly.
 const SHORT_NAMES = {
   1: 'Central Ideas and Details',
@@ -326,7 +330,9 @@ const LandingPageV3 = () => {
               <Link to={questionBankHref} onClick={closeMobileNav}>Question Bank</Link>
               <Link to={flashcardsHref} onClick={closeMobileNav}>Flashcards</Link>
               <Link to={coachHref} onClick={closeMobileNav}>Coach</Link>
-              <a href="#pricing" onClick={closeMobileNav}>Pricing</a>
+              {SHOW_PRICING && (
+                <a href="#pricing" onClick={closeMobileNav}>Pricing</a>
+              )}
               <span className="lp3-nav-rule" aria-hidden="true"></span>
               {currentUser ? (
                 <>
@@ -821,6 +827,7 @@ const LandingPageV3 = () => {
           </div>
         </section>
 
+        {SHOW_PRICING && (
         <section className="lp3-pricing" id="pricing">
           <div className="lp3-shell">
             <p className="lp3-eyebrow"><span className="lp3-eyebrow-num">07</span>Pricing</p>
@@ -880,6 +887,7 @@ const LandingPageV3 = () => {
             </div>
           </div>
         </section>
+        )}
 
         <section className="lp3-final">
           <div className="lp3-shell lp3-final-grid">

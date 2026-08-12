@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview — Lesson v2: Nonlinear Equations</title>
+<style>/* tokens.css — Overhaul Phase F; re-themed to "Scholar Blue" (Phase G).
+   THE design tokens for the app. The palette moved from green-on-ink to a
+   light-first navy/blue system: blue = brand/actions, green = ONLY correctness,
+   red = ONLY errors/incorrect, amber = warnings. Use tokens, never raw hex.
+
+   Values are px on purpose: the app's html { font-size: 62.5% } rem scaling
+   must not warp the palette-adjacent sizing tokens. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- surfaces ---- */
+  --ut-ink: #0A1226;            /* darkest surface (final CTA, hero) */
+  --ut-panel: #0F1E3D;          /* dark panels, sidebar body */
+  --ut-panel-top: #0C1830;      /* dark panel top edge / nav */
+  --ut-bg: #F4F6F9;             /* app/page background */
+  --ut-bg-alt: #EAEEF3;         /* alternating section background */
+  --ut-card: #FFFFFF;           /* strong card on --ut-bg */
+  --ut-card-soft: #F8FAFC;      /* subtle card */
+
+  /* ---- text on light ---- */
+  --ut-text: #16202F;           /* primary text */
+  --ut-text-soft: #35435C;      /* secondary text */
+  --ut-muted: #4E5B70;          /* muted body text */
+  --ut-mono-muted: #5E6B80;     /* mono labels, captions */
+
+  /* ---- hairlines ---- */
+  --ut-rule: #DCE1E9;           /* hairlines on light */
+  --ut-rule-strong: #C9D0DC;    /* stronger hairlines */
+
+  /* ---- brand accent: BLUE (actions, links, active states) ---- */
+  --ut-accent: #2B59D8;         /* THE blue */
+  --ut-accent-bright: #86A4F5;  /* blue on dark surfaces */
+  --ut-accent-dark: #1D3FA8;    /* blue for text/links on light */
+  --ut-accent-soft: #E8EEFB;    /* blue tint fill (chips, active) */
+  --ut-accent-rule: #C9D6F0;    /* blue-tinted hairline */
+  --ut-on-accent: #FFFFFF;      /* text on the blue */
+
+  /* ---- semantic: success/correct = GREEN only ---- */
+  --ut-success: #17A45C;        /* fills, icons */
+  --ut-success-bright: #6FDCA8; /* green on dark surfaces */
+  --ut-success-dark: #0E6B3C;   /* text on light/soft */
+  --ut-success-soft: #E3F5EB;   /* tint fill */
+  --ut-success-rule: #BFE5CF;   /* tinted hairline */
+
+  /* ---- semantic: danger/incorrect = RED only ---- */
+  --ut-danger: #CC4141;         /* fills, icons */
+  --ut-danger-dark: #A03434;    /* text on light/soft */
+  --ut-danger-soft: #FBEEEE;    /* tint fill */
+  --ut-danger-rule: #EECACA;    /* tinted hairline */
+
+  /* ---- semantic: warning = AMBER only ---- */
+  --ut-warn: #C99A2E;           /* fills, icons */
+  --ut-warn-dark: #8A6D1D;      /* text on light/soft */
+  --ut-warn-soft: #FAF3DF;      /* tint fill */
+  --ut-warn-rule: #EAD9B0;      /* tinted hairline */
+
+  /* ---- text on dark ---- */
+  --ut-on-ink: #F2F5FA;         /* text on dark surfaces */
+  --ut-on-ink-bright: #F8FAFD;  /* emphasized text on dark */
+  --ut-on-ink-muted: rgba(242, 245, 250, 0.62);
+  --ut-rule-on-ink: rgba(237, 241, 248, 0.12); /* hairlines on dark */
+
+  /* ---- typography ---- */
+  --ut-font-display: 'Space Grotesk', system-ui, sans-serif;
+  --ut-font-body: 'Schibsted Grotesk', system-ui, sans-serif;
+  --ut-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --ut-font-serif: Georgia, 'Times New Roman', serif; /* reading passages only */
+
+  /* mono label recipe: font-family mono + these */
+  --ut-label-size: 10.5px;
+  --ut-label-tracking: 0.1em;
+
+  /* ---- radius (6 buttons / 10 cards / 12 panels) ---- */
+  --ut-radius-sm: 6px;
+  --ut-radius: 10px;
+  --ut-radius-lg: 12px;
+
+  /* ---- shadows (cool ink) ---- */
+  --ut-shadow-sm: 0 1px 2px rgba(12, 24, 48, 0.06);
+  --ut-shadow: 0 4px 12px rgba(12, 24, 48, 0.08);
+  --ut-shadow-lg: 0 12px 32px rgba(12, 24, 48, 0.14);
+
+  /* ---- legacy aliases, do not use in new code ----
+     These globals used to be re-declared with conflicting values in several
+     files' :root blocks (winner depended on chunk order). This is now the
+     single definition; old var() usages keep working through it. */
+  --primary-color: var(--ut-accent);
+  --secondary-color: var(--ut-card-soft);
+  --border-color: var(--ut-rule);
+  --shadow-sm: var(--ut-shadow-sm);
+  --shadow-md: var(--ut-shadow);
+  --shadow-lg: var(--ut-shadow-lg);
+  --border-radius-sm: var(--ut-radius-sm);
+}
+</style>
+<style>
+  body { margin: 0; background: var(--ut-bg); font-family: var(--ut-font-body); color: var(--ut-text); }
+  .ut-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:1px solid transparent; border-radius:var(--ut-radius-sm); font-family:var(--ut-font-body); font-size:13.5px; font-weight:700; line-height:1; padding:10px 16px; cursor:pointer; text-decoration:none; white-space:nowrap; }
+  .ut-btn--primary { background: var(--ut-accent); color: var(--ut-on-accent); }
+  .ut-btn--primary:hover { background: var(--ut-accent-dark); }
+  .preview-note { max-width:1480px; margin:0 auto; padding:10px 28px 0; font-size:12px; color:var(--ut-mono-muted); font-family:var(--ut-font-mono); }
+</style>
+<style>/* LessonPage.css — Lesson v2 (UWorld-style study guide).
+ *
+ * Scoped under .lp2-. Built on tokens.css (--ut-*) plus a small set of
+ * lesson-local variables below for the "study guide" look: steel-blue
+ * headings, exam-yellow highlights, blue example boxes, banded practice
+ * sections, green/red verdicts. Content JSON references tones by name
+ * (blue/teal/rose/green/purple/amber) — keep these class hooks stable.
+ */
+
+.lp2 {
+  /* palette */
+  --lp-heading: #1c3a5e;        /* sheet titles (dark navy) */
+  --lp-steel: #2b6ca3;          /* section headings, answer links */
+  --lp-steel-dark: #235a88;
+  --lp-body: #2a3342;           /* guide body text */
+  --lp-muted: #5c6a7d;
+  --lp-sheet-border: #dfe5ec;
+  --lp-hairline: #e4e9ef;
+
+  --lp-hl: #fbe97f;             /* exam-yellow highlight */
+  --lp-blue-border: #b9d3e6;
+  --lp-blue-band: #dcebf6;      /* example header band */
+  --lp-blue-tint: #f3f8fc;      /* example body tint */
+  --lp-table-head: #e3eef7;
+  --lp-table-border: #c9d6e3;
+
+  /* term tones (inline markup {tone|...}) */
+  --lp-term-blue: #0f6cbd;
+  --lp-term-teal: #0e8a7e;
+  --lp-term-rose: #c0392f;
+  --lp-term-green: #157f4b;
+  --lp-term-purple: #6d3fc4;
+  --lp-term-amber: #a8621a;
+
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 20px 28px 72px;
+  font-family: var(--ut-font-body);
+  color: var(--lp-body);
+}
+
+/* ═══════════ reading progress bar ═══════════ */
+
+.lp2-progressbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.lp2-progressbar__fill {
+  height: 100%;
+  background: var(--ut-accent);
+  transition: width 80ms linear;
+}
+
+/* ═══════════ top bar ═══════════ */
+
+.lp2-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.lp2-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lp-muted);
+  min-width: 0;
+}
+
+.lp2-crumbs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp2-crumbs__link:hover {
+  text-decoration: underline;
+}
+
+.lp2-crumbs__sep {
+  flex: 0 0 auto;
+  opacity: 0.55;
+}
+
+.lp2-crumbs__domain {
+  white-space: nowrap;
+}
+
+.lp2-crumbs__current {
+  font-weight: 600;
+  color: var(--ut-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp2-topbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp2-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ut-text-soft);
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.lp2-chip--done {
+  color: var(--ut-success-dark);
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+}
+
+/* ═══════════ two-panel body ═══════════ */
+
+.lp2-body {
+  display: grid;
+  grid-template-columns: 372px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+/* ───── left panel ───── */
+
+.lp2-left {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+
+/* video */
+
+.lp2-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ut-panel);
+  border-radius: var(--ut-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ut-shadow);
+  flex: 0 0 auto;
+}
+
+.lp2-video iframe,
+.lp2-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.lp2-video__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.lp2-video--placeholder .lp2-video__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(134, 164, 245, 0.18), transparent 55%),
+    radial-gradient(120% 100% at 90% 100%, rgba(43, 89, 216, 0.22), transparent 60%);
+}
+
+.lp2-video__playring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(242, 245, 250, 0.85);
+  color: var(--ut-on-ink);
+  font-size: 22px;
+  background: rgba(15, 30, 61, 0.35);
+}
+
+.lp2-video__playring svg {
+  margin-left: 3px;
+}
+
+.lp2-video__coming {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ut-on-ink-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* lesson card + page navigator */
+
+.lp2-left-card {
+  background: var(--ut-card);
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-lg);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 18px 18px 16px;
+}
+
+.lp2-left-card__eyebrow {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 6px;
+}
+
+.lp2-left-card__title {
+  font-family: var(--ut-font-display);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.lp2-left-card__difficulty {
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  margin-bottom: 4px;
+}
+
+.lp2-pagenav {
+  margin-top: 14px;
+  border-top: 1px solid var(--lp-hairline);
+  padding-top: 12px;
+}
+
+.lp2-pagenav__label {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  margin-bottom: 8px;
+}
+
+.lp2-pagenav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lp2-pagenav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--ut-radius-sm);
+  padding: 8px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.lp2-pagenav__item:hover {
+  background: var(--ut-bg);
+  color: var(--ut-text);
+}
+
+.lp2-pagenav__item--active {
+  background: var(--ut-accent-soft);
+  color: var(--ut-accent-dark);
+  font-weight: 600;
+}
+
+.lp2-pagenav__num {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.lp2-pagenav__title {
+  min-width: 0;
+}
+
+.lp2-practice-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.lp2-planner-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ut-accent-dark);
+  text-decoration: none;
+}
+
+.lp2-planner-return:hover {
+  text-decoration: underline;
+}
+
+/* ───── study guide sheets ───── */
+
+.lp2-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 0;
+  max-width: 900px;
+}
+
+.lp2-sheet {
+  position: relative;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(16, 42, 67, 0.1), 0 6px 22px rgba(16, 42, 67, 0.05);
+  padding: 44px 58px 52px;
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.lp2-sheet__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #8a97a8;
+  margin: -14px -26px 14px 0;
+  text-align: right;
+}
+
+.lp2-sheet__h1 {
+  font-family: var(--ut-font-display);
+  font-size: 31px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  line-height: 1.2;
+}
+
+.lp2-sheet__h2 {
+  font-family: var(--ut-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+/* ═══════════ content blocks ═══════════ */
+
+.lp2-p {
+  margin: 0 0 14px;
+}
+
+.lp2-h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--lp-steel);
+  margin: 30px 0 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  line-height: 1.3;
+}
+
+.lp2-h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ut-text);
+  margin: 18px 0 8px;
+}
+
+.lp2-sheet > .lp2-h3:first-of-type {
+  margin-top: 20px;
+}
+
+/* lists */
+
+.lp2-list {
+  margin: 0 0 14px;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lp2-list li::marker {
+  color: var(--lp-steel);
+}
+
+.lp2-list--number li::marker {
+  font-weight: 600;
+}
+
+/* inline markup */
+
+.lp2-blank {
+  display: inline-block;
+  width: 5.5em;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px);
+  margin: 0 2px;
+}
+
+.lp2-hl {
+  background: var(--lp-hl);
+  padding: 1px 3px;
+  border-radius: 2px;
+  color: inherit;
+}
+
+.lp2-term--blue { color: var(--lp-term-blue); }
+.lp2-term--teal { color: var(--lp-term-teal); }
+.lp2-term--rose { color: var(--lp-term-rose); }
+.lp2-term--green { color: var(--lp-term-green); }
+.lp2-term--purple { color: var(--lp-term-purple); }
+.lp2-term--amber { color: var(--lp-term-amber); }
+.lp2-term--gray { color: var(--lp-muted); font-weight: 600; }
+
+/* tables */
+
+.lp2-table-wrap {
+  margin: 18px 0 20px;
+  overflow-x: auto;
+}
+
+.lp2-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  min-width: 62%;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lp2-table th,
+.lp2-table td {
+  border: 1px solid var(--lp-table-border);
+  padding: 9px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp2-table th {
+  background: var(--lp-table-head);
+  color: var(--lp-heading);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lp2-table--compact th,
+.lp2-table--compact td {
+  padding: 6px 12px;
+  font-size: 13.5px;
+}
+
+.lp2-td--center {
+  text-align: center !important;
+}
+
+.lp2-table-caption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* rule statement */
+
+.lp2-rule {
+  margin: 16px 0;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+}
+
+.lp2-rule__label {
+  color: var(--lp-heading);
+}
+
+.lp2-rule em {
+  color: var(--lp-steel-dark);
+}
+
+/* callouts */
+
+.lp2-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius-sm);
+  background: var(--ut-card-soft);
+  padding: 13px 16px;
+  margin: 18px 0;
+  font-size: 14.5px;
+}
+
+.lp2-callout__icon {
+  flex: 0 0 auto;
+  font-size: 21px;
+  margin-top: 1px;
+  color: var(--lp-steel);
+}
+
+.lp2-callout--warning {
+  border-color: var(--ut-warn-rule);
+  background: var(--ut-warn-soft);
+}
+
+.lp2-callout--warning .lp2-callout__icon {
+  color: var(--ut-warn-dark);
+}
+
+.lp2-callout--tip .lp2-callout__icon {
+  color: var(--ut-warn);
+  font-size: 23px;
+}
+
+/* passages */
+
+.lp2-passage {
+  margin: 14px 0 16px;
+}
+
+.lp2-passage__label {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 6px;
+}
+
+.lp2-passage__body {
+  font-family: var(--ut-font-serif);
+  font-size: 15px;
+  line-height: 1.72;
+  color: #333c4b;
+  padding-left: 16px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-passage__body p {
+  margin: 0 0 10px;
+}
+
+.lp2-passage__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* questions + choices */
+
+.lp2-question {
+  margin: 14px 0;
+}
+
+.lp2-question__stem {
+  margin: 0 0 12px;
+}
+
+.lp2-choices {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lp2-choices li {
+  display: flex;
+  gap: 10px;
+}
+
+.lp2-choices__letter {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: var(--ut-text);
+}
+
+/* verdicts (✓ / ✗) */
+
+.lp2-verdict {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 19px;
+  margin-top: 1px;
+}
+
+.lp2-verdict svg {
+  stroke-width: 3px;
+}
+
+.lp2-verdict--correct { color: var(--ut-success); }
+.lp2-verdict--incorrect { color: var(--ut-danger); }
+
+/* process of elimination */
+
+.lp2-poe {
+  margin: 16px 0 6px;
+}
+
+.lp2-poe__intro {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.lp2-poe__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-poe__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-poe__text {
+  min-width: 0;
+}
+
+/* check-cross pairs */
+
+.lp2-checkcross {
+  list-style: none;
+  margin: 14px 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp2-checkcross__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lp2-checkcross__text {
+  font-family: var(--ut-font-serif);
+  color: #333c4b;
+}
+
+.lp2-checkcross__note {
+  font-size: 13.5px;
+  color: var(--lp-muted);
+  margin-top: 3px;
+}
+
+/* example boxes */
+
+.lp2-example {
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 22px 0;
+  overflow: hidden;
+}
+
+.lp2-example__band {
+  background: var(--lp-blue-band);
+  border-bottom: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 8px 18px;
+}
+
+.lp2-example__body {
+  background: var(--lp-blue-tint);
+  padding: 18px 20px 16px;
+}
+
+.lp2-example__body > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-example__body .lp2-passage__body {
+  border-left-color: #a7c8de;
+}
+
+/* reveal (expandable answer) */
+
+.lp2-reveal {
+  margin: 10px 0 4px;
+}
+
+.lp2-reveal__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--lp-steel);
+}
+
+.lp2-reveal__toggle:hover {
+  color: var(--lp-steel-dark);
+  text-decoration: underline;
+}
+
+.lp2-reveal__chevron {
+  transition: transform 150ms ease;
+  font-size: 16px;
+}
+
+.lp2-reveal--open .lp2-reveal__chevron {
+  transform: rotate(180deg);
+}
+
+.lp2-reveal__body {
+  margin-top: 10px;
+  padding: 14px 16px 12px;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-left: 3px solid var(--lp-steel);
+  border-radius: 0 var(--ut-radius-sm) var(--ut-radius-sm) 0;
+  animation: lp2-reveal-in 180ms ease;
+}
+
+.lp2-reveal__body > :last-child {
+  margin-bottom: 0;
+}
+
+@keyframes lp2-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* practice section */
+
+.lp2-practice {
+  border: 1px solid var(--lp-sheet-border);
+  border-radius: var(--ut-radius-sm);
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+.lp2-practice__band {
+  background: linear-gradient(90deg, #3d4552 0%, #626c7a 55%, #8a93a0 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  padding: 9px 18px;
+}
+
+.lp2-practice__list {
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lp2-practice__item {
+  display: flex;
+  gap: 12px;
+  padding-left: 6px;
+  border-left: 3px solid var(--lp-blue-border);
+}
+
+.lp2-practice__item + .lp2-practice__item {
+  padding-top: 20px;
+  border-top: 1px dashed var(--lp-hairline);
+}
+
+.lp2-practice__number {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--ut-text);
+  padding-left: 8px;
+}
+
+.lp2-practice__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.lp2-practice__content > .lp2-p:first-child,
+.lp2-practice__content > .lp2-passage:first-child {
+  margin-top: 0;
+}
+
+/* things to remember */
+
+.lp2-remember {
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius);
+  padding: 18px 22px 14px;
+  margin: 26px 0 4px;
+}
+
+.lp2-remember__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--lp-heading);
+  margin: 0 0 10px;
+}
+
+.lp2-remember .lp2-list {
+  margin-bottom: 4px;
+}
+
+/* legend */
+
+.lp2-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: -6px 0 16px;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+
+.lp2-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lp2-legend__swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid rgba(16, 42, 67, 0.14);
+}
+
+.lp2-legend__swatch--yellow { background: var(--lp-hl); }
+.lp2-legend__swatch--blue { background: #cde3f4; }
+.lp2-legend__swatch--teal { background: #c9e9e4; }
+.lp2-legend__swatch--rose { background: #f6d5d2; }
+.lp2-legend__swatch--green { background: #d1eedd; }
+.lp2-legend__swatch--purple { background: #e4d9f7; }
+.lp2-legend__swatch--amber { background: #f4e3c8; }
+
+/* equation strip */
+
+.lp2-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 22px;
+}
+
+.lp2-strip__seg {
+  background: #eaf2f9;
+  border: 1px solid var(--lp-blue-border);
+  color: var(--lp-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 7px;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.lp2-strip__seg--blue {
+  background: #dcebf6;
+  border-color: #a7c8de;
+  color: var(--lp-term-blue);
+}
+
+.lp2-strip__seg--teal {
+  background: #ddf1ee;
+  border-color: #a9d8d1;
+  color: var(--lp-term-teal);
+}
+
+.lp2-strip__seg--green {
+  background: var(--ut-success-soft);
+  border-color: var(--ut-success-rule);
+  color: var(--lp-term-green);
+}
+
+.lp2-strip__seg--rose {
+  background: var(--ut-danger-soft);
+  border-color: var(--ut-danger-rule);
+  color: var(--lp-term-rose);
+}
+
+.lp2-strip__op {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ut-text-soft);
+}
+
+/* figures */
+
+.lp2-figure {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.lp2-figure img {
+  max-width: 100%;
+  border-radius: var(--ut-radius-sm);
+  border: 1px solid var(--lp-hairline);
+}
+
+.lp2-figure figcaption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* ═══════════ completion band ═══════════ */
+
+.lp2-mastery {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: var(--ut-accent-soft);
+  border: 1px solid var(--ut-accent-rule);
+  border-radius: var(--ut-radius-lg);
+  padding: 20px 24px;
+}
+
+.lp2-mastery__copy h3 {
+  margin: 0 0 4px;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--ut-text);
+}
+
+.lp2-mastery__copy p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ut-text-soft);
+}
+
+.lp2-mastery__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.lp2-mastery__done {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ut-success-dark);
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.lp2-mastery__done svg {
+  font-size: 19px;
+  color: var(--ut-success);
+}
+
+.lp2-mastery__unmark {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ut-muted);
+  text-decoration: underline;
+}
+
+.lp2-mastery__unmark:disabled,
+.lp2-mastery__mark:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ═══════════ loading / message states ═══════════ */
+
+.lp2--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 55vh;
+  color: var(--ut-muted);
+  font-size: 14.5px;
+}
+
+.lp2-loading-icon {
+  font-size: 30px;
+  color: var(--ut-accent);
+  animation: lp2-spin 1s linear infinite;
+}
+
+@keyframes lp2-spin {
+  to { transform: rotate(360deg); }
+}
+
+.lp2--message {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+}
+
+.lp2-message-card {
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 32px;
+}
+
+/* ═══════════ responsive ═══════════ */
+
+@media (max-width: 1120px) {
+  .lp2-body {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .lp2-sheet {
+    padding: 36px 36px 44px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -12px -10px 12px 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .lp2 {
+    padding: 14px 14px 56px;
+  }
+
+  .lp2-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lp2-left {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .lp2-video {
+    max-width: 560px;
+  }
+
+  /* page navigator becomes a horizontal chip row */
+  .lp2-pagenav ol {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .lp2-pagenav__item {
+    white-space: nowrap;
+    border: 1px solid var(--ut-rule);
+    border-radius: 999px;
+    padding: 6px 12px;
+  }
+
+  .lp2-pagenav__item--active {
+    border-color: var(--ut-accent-rule);
+  }
+
+  .lp2-practice-cta {
+    max-width: 360px;
+  }
+
+  .lp2-sheet {
+    padding: 26px 20px 34px;
+    font-size: 14.5px;
+  }
+
+  .lp2-sheet__corner {
+    margin: -8px 0 10px;
+  }
+
+  .lp2-sheet__h1 {
+    font-size: 25px;
+  }
+
+  .lp2-sheet__h2 {
+    font-size: 20.5px;
+  }
+
+  .lp2-h3 {
+    font-size: 17.5px;
+  }
+
+  .lp2-table {
+    min-width: 100%;
+  }
+
+  .lp2-practice__list {
+    padding: 14px 12px;
+  }
+
+  .lp2-example__body {
+    padding: 14px 14px 12px;
+  }
+}
+
+/* ═══════════ math blocks (Lesson v2 math lessons) ═══════════ */
+
+/* worked steps: centered equation lines + gray side annotations (UWorld style) */
+
+.lp2-steps {
+  margin: 14px 0 16px;
+}
+
+.lp2-steps__title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ut-text);
+  margin-bottom: 8px;
+}
+
+.lp2-steps__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lp2-steps__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.lp2-steps__eq {
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--lp-heading);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.lp2-steps__eq .katex-display {
+  margin: 0;
+}
+
+.lp2-steps__eq .katex {
+  font-size: 1.08em;
+}
+
+.lp2-steps__note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--lp-muted);
+}
+
+.lp2-steps__note .katex {
+  font-size: 1.04em;
+}
+
+/* standalone display equation (optionally boxed, like key formulas) */
+
+.lp2-math {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-math__tex {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 2px 0;
+}
+
+.lp2-math__tex .katex-display {
+  margin: 0;
+}
+
+.lp2-math__tex .katex {
+  font-size: 1.12em;
+}
+
+.lp2-math--boxed .lp2-math__tex {
+  display: inline-block;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-blue-border);
+  border-radius: var(--ut-radius-sm);
+  box-shadow: var(--ut-shadow-sm);
+  padding: 12px 24px;
+  overflow-x: visible;
+}
+
+.lp2-math__caption {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+}
+
+/* side-by-side columns (compare methods, case-by-case graphs) */
+
+.lp2-columns {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.lp2-columns__col {
+  flex: 1;
+  min-width: 0;
+  background: var(--ut-card);
+  border: 1px solid var(--lp-hairline);
+  border-radius: var(--ut-radius-sm);
+  padding: 14px 16px 12px;
+}
+
+.lp2-columns__col > :last-child {
+  margin-bottom: 0;
+}
+
+.lp2-columns__title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--lp-steel);
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--lp-hairline);
+  text-align: center;
+}
+
+/* coordinate-plane figures */
+
+.lp2-graph {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.lp2-graph svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.lp2-columns__col .lp2-graph {
+  margin: 6px 0 4px;
+}
+
+.lp2-graph__caption {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--lp-muted);
+  line-height: 1.5;
+}
+
+/* inline KaTeX inside prose/tables/POE: match surrounding rhythm */
+
+.lp2-sheet .katex {
+  font-size: 1.05em;
+}
+
+@media (max-width: 720px) {
+  .lp2-steps__row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 6px 0;
+  }
+
+  .lp2-steps__note {
+    text-align: center;
+  }
+
+  .lp2-columns {
+    flex-direction: column;
+  }
+}
+</style>
+<style>
+  .lp2-reveal:not(.lp2-reveal--open) .lp2-reveal__body { display: none; }
+</style>
+<!-- KaTeX (same CDN + options the app's katexLoader/LessonPage use) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof renderMathInElement !== 'function') return;
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '\\[', right: '\\]', display: true },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '$', right: '$', display: false },
+      ],
+      // No color macros here: \blue{...} etc. are pre-expanded to
+      // \textcolor by the renderer ("#" inside a KaTeX macro body is a
+      // parameter marker and would break the expression).
+      throwOnError: false,
+    });
+  });
+</script>
+</head>
+<body>
+<div class="preview-note">DESIGN PREVIEW — static render of /learn/nonlinear-equations (Lesson v2)</div>
+<div class="lp2">
+  <header class="lp2-topbar">
+    <nav class="lp2-crumbs" aria-label="Breadcrumb">
+      <a class="lp2-crumbs__link" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Lectures</a>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__domain">Advanced Math</span>
+      <svg class="lp2-crumbs__sep" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <span class="lp2-crumbs__current">Nonlinear Equations</span>
+    </nav>
+    <div class="lp2-topbar__meta"><span class="lp2-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~35 min</span></div>
+  </header>
+  <div class="lp2-body">
+    <aside class="lp2-left">
+      <div class="lp2-video lp2-video--placeholder">
+        <div class="lp2-video__overlay">
+          <span class="lp2-video__playring"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></span>
+          <span class="lp2-video__coming"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg> Video lesson coming soon</span>
+        </div>
+      </div>
+      <div class="lp2-left-card">
+        <div class="lp2-left-card__eyebrow">Math · Advanced Math</div>
+        <h2 class="lp2-left-card__title">Nonlinear Equations</h2>
+        <div class="lp2-left-card__difficulty">Intermediate</div>
+        <nav class="lp2-pagenav"><div class="lp2-pagenav__label">In this lesson</div><ol>
+    <li><button type="button" class="lp2-pagenav__item lp2-pagenav__item--active" onclick="document.getElementById('lesson-page-overview').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">1</span><span class="lp2-pagenav__title">Overview & Strategies</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-factoring').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">2</span><span class="lp2-pagenav__title">Solve by Factoring</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-roots-and-formula').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">3</span><span class="lp2-pagenav__title">Square Roots & the Quadratic Formula</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-discriminant').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">4</span><span class="lp2-pagenav__title">How Many Solutions? The Discriminant</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-systems-and-extraneous').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">5</span><span class="lp2-pagenav__title">Systems & Extraneous Solutions</span>
+    </button></li>
+    <li><button type="button" class="lp2-pagenav__item" onclick="document.getElementById('lesson-page-practice').scrollIntoView({behavior:'smooth'})">
+      <span class="lp2-pagenav__num">6</span><span class="lp2-pagenav__title">Practice</span>
+    </button></li></ol></nav>
+        <button type="button" class="ut-btn ut-btn--primary lp2-practice-cta"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg> Practice this skill</button>
+      </div>
+    </aside>
+    <main class="lp2-guide">
+      <article id="lesson-page-overview" class="lp2-sheet" data-page-index="0"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Equations</span></div><h1 class="lp2-sheet__h1">Nonlinear Equations</h1><p class="lp2-p">A <strong class="lp2-term lp2-term--blue">nonlinear equation</strong> contains a squared variable (or a variable under a root), so it can have $0$, $1$, or $2$ real solutions instead of always one. The centerpiece is the <strong>quadratic equation</strong> $ax^2 + bx + c = 0$, and you have three tools for it—plus one detector that counts solutions without solving at all.</p><div class="lp2-table-wrap"><table class="lp2-table"><thead><tr><th>Tool</th><th>Use it when…</th></tr></thead><tbody><tr><td><strong>Factoring</strong> + zero product</td><td>the quadratic factors nicely (integer roots)</td></tr><tr><td><strong>Square-root method</strong></td><td>there&#x27;s a perfect square but no lone $x$-term: $(x - 3)^2 = 25$</td></tr><tr><td><strong>Quadratic formula</strong></td><td>always works—your fallback when factoring isn&#x27;t obvious</td></tr><tr><td><strong>Discriminant</strong> $b^2 - 4ac$</td><td>the question asks <em>how many</em> solutions, not what they are</td></tr></tbody></table></div><h3 class="lp2-h3">Strategies</h3><ul class="lp2-list"><li><strong>Get one side to $0$ first.</strong> Factoring and the formula both need the form $ax^2 + bx + c = 0$.</li><li><strong>Zero product:</strong> if a product equals $0$, some factor equals $0$—that&#x27;s what makes factoring solve equations.</li><li><strong>Taking a square root gives two answers:</strong> $\pm$. Forgetting the negative root is the top error in this skill.</li><li><strong>Never divide both sides by the variable</strong>—you&#x27;ll silently delete the $x = 0$ solution.</li><li><strong>Squared both sides?</strong> Check every answer in the <em>original</em> equation—squaring can create <strong class="lp2-term lp2-term--rose">extraneous solutions</strong>.</li><li><strong>Systems with a parabola:</strong> substitute, solve the resulting quadratic; solutions are the <strong>intersection points</strong>.</li></ul><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Multiple choice bailout: solutions of an equation can always be <em>tested</em>. Plugging the choices into the equation is never wrong—and often faster.</div></div></article><article id="lesson-page-factoring" class="lp2-sheet" data-page-index="1"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Equations: Solve by Factoring</span></div><h2 class="lp2-sheet__h2">Solve by Factoring</h2><p class="lp2-rule"><strong class="lp2-rule__label">Rule: </strong><em><strong>Zero product property:</strong> if $A \cdot B = 0$, then $A = 0$ or $B = 0$. Factor the quadratic, set each factor to zero, and each gives a solution.</em></p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">What are the solutions of $x^2 + 2x - 15 = 0$? Look for two numbers that <strong>multiply to $-15$</strong> and <strong>add to $+2$</strong>: they are $+5$ and $-3$.</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x^2 + 2x - 15 = 0$$</div><div class="lp2-steps__note">Given equation — one side is already $0$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(x + 5)(x - 3) = 0$$</div><div class="lp2-steps__note">Factor: $5 \times (-3) = -15$ and $5 + (-3) = 2$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = -5 \quad \text{or} \quad x = 3$$</div><div class="lp2-steps__note">Set each factor equal to $0$</div></div></div></div><p class="lp2-p"><strong>Check</strong> one of them: $(-5)^2 + 2(-5) - 15 = 25 - 10 - 15 = 0$ <strong class="lp2-term lp2-term--green">✓</strong></p></div></section><h3 class="lp2-h3">Move Everything to One Side First</h3><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">What are the solutions of $x^2 = 5x + 24$?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x^2 - 5x - 24 = 0$$</div><div class="lp2-steps__note">Subtract $5x$ and $24$ — get $0$ on one side <strong>before</strong> factoring</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(x - 8)(x + 3) = 0$$</div><div class="lp2-steps__note">$-8 \times 3 = -24$ and $-8 + 3 = -5$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 8 \quad \text{or} \quad x = -3$$</div><div class="lp2-steps__note">Zero product</div></div></div></div></div></section><h3 class="lp2-h3">The Forbidden Move</h3><p class="lp2-p">When both sides share a factor of $x$, dividing it away feels natural—and quietly destroys a solution:</p><ul class="lp2-checkcross"><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$x^2 = 6x \;\Rightarrow\; x = 6$</div><div class="lp2-checkcross__note">Divided both sides by $x$ — the solution $x = 0$ is gone. (Test it: $0^2 = 6(0)$ is true!)</div></div></li><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$x^2 - 6x = 0 \;\Rightarrow\; x(x - 6) = 0 \;\Rightarrow\; x = 0 \;\text{or}\; x = 6$</div><div class="lp2-checkcross__note">Factor instead of dividing — both solutions survive.</div></div></li></ul><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">Dividing by a variable is dividing by something that might be zero. Factor it out instead—every time.</div></div></article><article id="lesson-page-roots-and-formula" class="lp2-sheet" data-page-index="2"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Equations: Square Roots &amp; the Quadratic Formula</span></div><h2 class="lp2-sheet__h2">Square Roots &amp; the Quadratic Formula</h2><h3 class="lp2-h3">The Square-Root Method</h3><p class="lp2-p">When the equation is a <strong>perfect square equal to a number</strong>—no lone $x$-term—skip factoring entirely: take the square root of both sides, and keep <strong>both</strong> signs.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">What are the solutions of $(x - 3)^2 = 25$?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x - 3 = \pm 5$$</div><div class="lp2-steps__note">Square root of both sides — a square of $25$ can come from $5$ <strong>or</strong> $-5$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 3 + 5 \quad \text{or} \quad x = 3 - 5$$</div><div class="lp2-steps__note">Add $3$ to both sides, once for each sign</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 8 \quad \text{or} \quad x = -2$$</div><div class="lp2-steps__note">Two solutions</div></div></div></div></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">The $\pm$ is not decoration. Answering only $x = 8$ throws away half the solution set—and the discarded half is usually among the wrong answers waiting for you.</div></div><h3 class="lp2-h3">The Quadratic Formula</h3><p class="lp2-p">When factoring isn&#x27;t obvious, the formula solves <strong>any</strong> quadratic in standard form $ax^2 + bx + c = 0$:</p><div class="lp2-math lp2-math--boxed"><div class="lp2-math__tex">$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$</div></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">What are the solutions of $3x^2 - 5x - 2 = 0$? Here $a = 3$, $b = -5$, $c = -2$:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = \frac{-(-5) \pm \sqrt{(-5)^2 - 4(3)(-2)}}{2(3)}$$</div><div class="lp2-steps__note">Plug in $a$, $b$, $c$ — parentheses around every negative</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = \frac{5 \pm \sqrt{25 + 24}}{6} = \frac{5 \pm 7}{6}$$</div><div class="lp2-steps__note">$\sqrt{49} = 7$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 2 \quad \text{or} \quad x = -\tfrac{1}{3}$$</div><div class="lp2-steps__note">$\frac{12}{6}$ and $\frac{-2}{6}$</div></div></div></div><p class="lp2-p">(This one also factors—$(3x + 1)(x - 2) = 0$—but the formula doesn&#x27;t care whether you spotted that.)</p></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Formula sign traps: $-b$ when $b$ is negative becomes positive, and $-4ac$ with a negative $c$ becomes <strong>addition</strong> under the root. Write the substitution line fully before simplifying.</div></div></article><article id="lesson-page-discriminant" class="lp2-sheet" data-page-index="3"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Equations: How Many Solutions? The Discriminant</span></div><h2 class="lp2-sheet__h2">How Many Solutions? The Discriminant</h2><p class="lp2-p">Often the SAT doesn&#x27;t want the solutions—just <strong>how many</strong> there are. The answer lives entirely under the square root of the quadratic formula:</p><div class="lp2-math lp2-math--boxed"><div class="lp2-math__tex">$$x = \frac{-b \pm \sqrt{\,\textcolor{#0f6cbd}{b^2 - 4ac}\,}}{2a}$$</div><div class="lp2-math__caption"><strong class="lp2-term lp2-term--blue">b² − 4ac</strong> — the <strong>discriminant</strong>: the only part that decides the number of real solutions</div></div><p class="lp2-p">A positive number has two square roots, zero has one, and a negative number has none (among real numbers). So:</p><div class="lp2-columns"><div class="lp2-columns__col"><div class="lp2-columns__title">$b^2 - 4ac &gt; 0$ — two</div><figure class="lp2-graph" role="img" aria-label="A parabola crossing the x-axis at two points"><svg viewBox="0 0 200 170" width="200" height="170"><defs><marker id="arr-R6cs" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6cs"><rect x="16" y="16" width="166" height="138"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="57.5" y1="16" x2="57.5" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="99" y1="16" x2="99" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="140.5" y1="16" x2="140.5" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="182" y1="16" x2="182" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="138.66666666666666" x2="182" y2="138.66666666666666" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="108" x2="182" y2="108" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="77.33333333333333" x2="182" y2="77.33333333333333" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="46.666666666666664" x2="182" y2="46.666666666666664" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="182" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="77.33333333333333" x2="188" y2="77.33333333333333" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6cs)" marker-start="url(#arr-R6cs)"></line><line x1="99" y1="158" x2="99" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6cs)" marker-start="url(#arr-R6cs)"></line><text x="190" y="81.33333333333333" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="105" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,-106.67 L17.04,-100.57 L18.08,-94.55 L19.11,-88.61 L20.15,-82.75 L21.19,-76.96 L22.22,-71.25 L23.26,-65.61 L24.30,-60.05 L25.34,-54.57 L26.38,-49.17 L27.41,-43.84 L28.45,-38.59 L29.49,-33.41 L30.53,-28.31 L31.56,-23.29 L32.60,-18.35 L33.64,-13.48 L34.67,-8.69 L35.71,-3.97 L36.75,0.67 L37.79,5.23 L38.83,9.71 L39.86,14.12 L40.90,18.45 L41.94,22.71 L42.97,26.89 L44.01,30.99 L45.05,35.01 L46.09,38.96 L47.13,42.83 L48.16,46.63 L49.20,50.35 L50.24,53.99 L51.28,57.55 L52.31,61.04 L53.35,64.45 L54.39,67.79 L55.42,71.05 L56.46,74.23 L57.50,77.33 L58.54,80.36 L59.58,83.31 L60.61,86.19 L61.65,88.99 L62.69,91.71 L63.72,94.35 L64.76,96.92 L65.80,99.41 L66.84,101.83 L67.88,104.17 L68.91,106.43 L69.95,108.61 L70.99,110.72 L72.03,112.75 L73.06,114.71 L74.10,116.59 L75.14,118.39 L76.17,120.11 L77.21,121.76 L78.25,123.33 L79.29,124.83 L80.33,126.25 L81.36,127.59 L82.40,128.85 L83.44,130.04 L84.47,131.15 L85.51,132.19 L86.55,133.15 L87.59,134.03 L88.63,134.83 L89.66,135.56 L90.70,136.21 L91.74,136.79 L92.78,137.29 L93.81,137.71 L94.85,138.05 L95.89,138.32 L96.92,138.51 L97.96,138.63 L99.00,138.67 L100.04,138.63 L101.07,138.51 L102.11,138.32 L103.15,138.05 L104.19,137.71 L105.22,137.29 L106.26,136.79 L107.30,136.21 L108.34,135.56 L109.38,134.83 L110.41,134.03 L111.45,133.15 L112.49,132.19 L113.53,131.15 L114.56,130.04 L115.60,128.85 L116.64,127.59 L117.68,126.25 L118.71,124.83 L119.75,123.33 L120.79,121.76 L121.82,120.11 L122.86,118.39 L123.90,116.59 L124.94,114.71 L125.97,112.75 L127.01,110.72 L128.05,108.61 L129.09,106.43 L130.13,104.17 L131.16,101.83 L132.20,99.41 L133.24,96.92 L134.28,94.35 L135.31,91.71 L136.35,88.99 L137.39,86.19 L138.43,83.31 L139.46,80.36 L140.50,77.33 L141.54,74.23 L142.57,71.05 L143.61,67.79 L144.65,64.45 L145.69,61.04 L146.72,57.55 L147.76,53.99 L148.80,50.35 L149.84,46.63 L150.88,42.83 L151.91,38.96 L152.95,35.01 L153.99,30.99 L155.03,26.89 L156.06,22.71 L157.10,18.45 L158.14,14.12 L159.18,9.71 L160.21,5.23 L161.25,0.67 L162.29,-3.97 L163.32,-8.69 L164.36,-13.48 L165.40,-18.35 L166.44,-23.29 L167.47,-28.31 L168.51,-33.41 L169.55,-38.59 L170.59,-43.84 L171.63,-49.17 L172.66,-54.57 L173.70,-60.05 L174.74,-65.61 L175.78,-71.25 L176.81,-76.96 L177.85,-82.75 L178.89,-88.61 L179.93,-94.55 L180.96,-100.57 L182.00,-106.67" fill="none" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6cs)"></path></g><g><circle cx="57.5" cy="77.33333333333333" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g><g><circle cx="140.5" cy="77.33333333333333" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Crosses the x-axis twice.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">$b^2 - 4ac = 0$ — one</div><figure class="lp2-graph" role="img" aria-label="A parabola touching the x-axis at exactly one point"><svg viewBox="0 0 200 170" width="200" height="170"><defs><marker id="arr-R6ks" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6ks"><rect x="16" y="16" width="166" height="138"></rect></clipPath></defs><line x1="16" y1="16" x2="16" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="71.33333333333333" y1="16" x2="71.33333333333333" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="126.66666666666666" y1="16" x2="126.66666666666666" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="182" y1="16" x2="182" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="134.28571428571428" x2="182" y2="134.28571428571428" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="94.85714285714285" x2="182" y2="94.85714285714285" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="55.42857142857142" x2="182" y2="55.42857142857142" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="16" x2="182" y2="16" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="134.28571428571428" x2="188" y2="134.28571428571428" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ks)" marker-start="url(#arr-R6ks)"></line><line x1="71.33333333333333" y1="158" x2="71.33333333333333" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ks)" marker-start="url(#arr-R6ks)"></line><text x="190" y="138.28571428571428" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="77.33333333333333" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,-43.14 L17.04,-38.73 L18.07,-34.38 L19.11,-30.09 L20.15,-25.84 L21.19,-21.66 L22.23,-17.53 L23.26,-13.45 L24.30,-9.43 L25.34,-5.47 L26.38,-1.56 L27.41,2.30 L28.45,6.09 L29.49,9.84 L30.52,13.52 L31.56,17.16 L32.60,20.73 L33.64,24.25 L34.67,27.72 L35.71,31.13 L36.75,34.48 L37.79,37.78 L38.82,41.02 L39.86,44.21 L40.90,47.35 L41.94,50.42 L42.98,53.44 L44.01,56.41 L45.05,59.32 L46.09,62.18 L47.13,64.98 L48.16,67.72 L49.20,70.41 L50.24,73.05 L51.27,75.62 L52.31,78.15 L53.35,80.61 L54.39,83.03 L55.43,85.38 L56.46,87.68 L57.50,89.93 L58.54,92.12 L59.58,94.25 L60.61,96.33 L61.65,98.36 L62.69,100.32 L63.73,102.24 L64.76,104.10 L65.80,105.90 L66.84,107.64 L67.88,109.33 L68.91,110.97 L69.95,112.55 L70.99,114.08 L72.02,115.54 L73.06,116.96 L74.10,118.32 L75.14,119.62 L76.17,120.87 L77.21,122.06 L78.25,123.20 L79.29,124.28 L80.33,125.30 L81.36,126.27 L82.40,127.19 L83.44,128.05 L84.48,128.85 L85.51,129.60 L86.55,130.29 L87.59,130.93 L88.63,131.51 L89.66,132.04 L90.70,132.51 L91.74,132.93 L92.77,133.29 L93.81,133.59 L94.85,133.84 L95.89,134.04 L96.92,134.17 L97.96,134.26 L99.00,134.29 L100.04,134.26 L101.08,134.17 L102.11,134.04 L103.15,133.84 L104.19,133.59 L105.22,133.29 L106.26,132.93 L107.30,132.51 L108.34,132.04 L109.38,131.51 L110.41,130.93 L111.45,130.29 L112.49,129.60 L113.53,128.85 L114.56,128.05 L115.60,127.19 L116.64,126.27 L117.67,125.30 L118.71,124.28 L119.75,123.20 L120.79,122.06 L121.83,120.87 L122.86,119.62 L123.90,118.32 L124.94,116.96 L125.97,115.54 L127.01,114.08 L128.05,112.55 L129.09,110.97 L130.13,109.33 L131.16,107.64 L132.20,105.90 L133.24,104.10 L134.28,102.24 L135.31,100.32 L136.35,98.36 L137.39,96.33 L138.42,94.25 L139.46,92.12 L140.50,89.93 L141.54,87.68 L142.58,85.38 L143.61,83.03 L144.65,80.61 L145.69,78.15 L146.72,75.62 L147.76,73.05 L148.80,70.41 L149.84,67.72 L150.88,64.98 L151.91,62.18 L152.95,59.32 L153.99,56.41 L155.03,53.44 L156.06,50.42 L157.10,47.35 L158.14,44.21 L159.17,41.02 L160.21,37.78 L161.25,34.48 L162.29,31.13 L163.33,27.72 L164.36,24.25 L165.40,20.73 L166.44,17.16 L167.47,13.52 L168.51,9.84 L169.55,6.09 L170.59,2.30 L171.63,-1.56 L172.66,-5.47 L173.70,-9.43 L174.74,-13.45 L175.78,-17.53 L176.81,-21.66 L177.85,-25.84 L178.89,-30.09 L179.92,-34.38 L180.96,-38.73 L182.00,-43.14" fill="none" stroke="#6d3fc4" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6ks)"></path></g><g><circle cx="99" cy="134.28571428571428" r="4" fill="#c0392f" stroke="#fff" stroke-width="1.4"></circle></g></svg><figcaption class="lp2-graph__caption">Touches the x-axis once.</figcaption></figure></div><div class="lp2-columns__col"><div class="lp2-columns__title">$b^2 - 4ac &lt; 0$ — zero</div><figure class="lp2-graph" role="img" aria-label="A parabola entirely above the x-axis"><svg viewBox="0 0 200 170" width="200" height="170"><defs><marker id="arr-R6ss" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R6ss"><rect x="16" y="16" width="166" height="138"></rect></clipPath></defs><line x1="43.666666666666664" y1="16" x2="43.666666666666664" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="99" y1="16" x2="99" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="154.33333333333334" y1="16" x2="154.33333333333334" y2="154" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="136.75" x2="182" y2="136.75" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="102.25" x2="182" y2="102.25" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="67.75" x2="182" y2="67.75" stroke="#e4ebf2" stroke-width="1"></line><line x1="16" y1="33.25" x2="182" y2="33.25" stroke="#e4ebf2" stroke-width="1"></line><line x1="12" y1="136.75" x2="188" y2="136.75" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ss)" marker-start="url(#arr-R6ss)"></line><line x1="99" y1="158" x2="99" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R6ss)" marker-start="url(#arr-R6ss)"></line><text x="190" y="140.75" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="105" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><path d="M16.00,-53.00 L17.04,-49.14 L18.08,-45.33 L19.11,-41.57 L20.15,-37.86 L21.19,-34.20 L22.23,-30.59 L23.26,-27.02 L24.30,-23.50 L25.34,-20.03 L26.38,-16.61 L27.41,-13.24 L28.45,-9.92 L29.49,-6.64 L30.52,-3.42 L31.56,-0.24 L32.60,2.89 L33.64,5.97 L34.67,9.00 L35.71,11.99 L36.75,14.92 L37.79,17.81 L38.83,20.65 L39.86,23.44 L40.90,26.18 L41.94,28.87 L42.98,31.51 L44.01,34.11 L45.05,36.66 L46.09,39.16 L47.13,41.61 L48.16,44.01 L49.20,46.36 L50.24,48.66 L51.27,50.92 L52.31,53.13 L53.35,55.29 L54.39,57.40 L55.43,59.46 L56.46,61.47 L57.50,63.44 L58.54,65.35 L59.58,67.22 L60.61,69.04 L61.65,70.81 L62.69,72.53 L63.73,74.21 L64.76,75.83 L65.80,77.41 L66.84,78.94 L67.88,80.42 L68.91,81.85 L69.95,83.23 L70.99,84.57 L72.02,85.85 L73.06,87.09 L74.10,88.28 L75.14,89.42 L76.17,90.51 L77.21,91.55 L78.25,92.55 L79.29,93.49 L80.33,94.39 L81.36,95.24 L82.40,96.04 L83.44,96.79 L84.48,97.50 L85.51,98.15 L86.55,98.76 L87.59,99.31 L88.63,99.82 L89.66,100.29 L90.70,100.70 L91.74,101.06 L92.77,101.38 L93.81,101.64 L94.85,101.86 L95.89,102.03 L96.92,102.15 L97.96,102.23 L99.00,102.25 L100.04,102.23 L101.08,102.15 L102.11,102.03 L103.15,101.86 L104.19,101.64 L105.22,101.38 L106.26,101.06 L107.30,100.70 L108.34,100.29 L109.38,99.82 L110.41,99.31 L111.45,98.76 L112.49,98.15 L113.53,97.50 L114.56,96.79 L115.60,96.04 L116.64,95.24 L117.67,94.39 L118.71,93.49 L119.75,92.55 L120.79,91.55 L121.83,90.51 L122.86,89.42 L123.90,88.28 L124.94,87.09 L125.97,85.85 L127.01,84.57 L128.05,83.23 L129.09,81.85 L130.13,80.42 L131.16,78.94 L132.20,77.41 L133.24,75.83 L134.28,74.21 L135.31,72.53 L136.35,70.81 L137.39,69.04 L138.42,67.22 L139.46,65.35 L140.50,63.44 L141.54,61.47 L142.58,59.46 L143.61,57.40 L144.65,55.29 L145.69,53.13 L146.72,50.92 L147.76,48.66 L148.80,46.36 L149.84,44.01 L150.88,41.61 L151.91,39.16 L152.95,36.66 L153.99,34.11 L155.03,31.51 L156.06,28.87 L157.10,26.18 L158.14,23.44 L159.17,20.65 L160.21,17.81 L161.25,14.92 L162.29,11.99 L163.33,9.00 L164.36,5.97 L165.40,2.89 L166.44,-0.24 L167.47,-3.42 L168.51,-6.64 L169.55,-9.92 L170.59,-13.24 L171.63,-16.61 L172.66,-20.03 L173.70,-23.50 L174.74,-27.02 L175.78,-30.59 L176.81,-34.20 L177.85,-37.86 L178.89,-41.57 L179.92,-45.33 L180.96,-49.14 L182.00,-53.00" fill="none" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R6ss)"></path></g></svg><figcaption class="lp2-graph__caption">Never reaches the x-axis.</figcaption></figure></div></div><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">How many distinct real solutions does the equation $3x^2 - 6x + 5 = 0$ have?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">Zero</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">Exactly one</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">Exactly two</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">Infinitely many</span></li></ol></div><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$b^2 - 4ac$$</div><div class="lp2-steps__note">Discriminant, with $a = 3$, $b = -6$, $c = 5$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(-6)^2 - 4(3)(5) = 36 - 60$$</div><div class="lp2-steps__note">Substitute</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$-24 &lt; 0$$</div><div class="lp2-steps__note">Negative — no real solutions</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>A negative discriminant means the square root has no real value—the parabola never touches the x-axis.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Exactly one requires the discriminant to equal exactly $0$; $-24 \neq 0$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>Two solutions needs a <strong>positive</strong> discriminant. If you got $+96$, you added $4ac$ instead of subtracting.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>A quadratic equation can&#x27;t hold for every $x$—infinitely many solutions is a <em>linear</em> identity situation.</div></li></ul></div></div></section><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-question"><p class="lp2-question__stem">In the equation $x^2 + 10x + k = 0$, $k$ is a constant. If the equation has <strong>exactly one</strong> real solution, what is the value of $k$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$25$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$-25$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$5$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$50$</span></li></ol></div><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$b^2 - 4ac = 0$$</div><div class="lp2-steps__note">Exactly one solution ⇔ discriminant equals $0$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(10)^2 - 4(1)k = 0$$</div><div class="lp2-steps__note">Substitute $a = 1$, $b = 10$, $c = k$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$k = 25$$</div><div class="lp2-steps__note">$100 = 4k$</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$100 - 4(25) = 0$. <strong class="lp2-term lp2-term--green">✓</strong> (Fittingly, $x^2 + 10x + 25 = (x + 5)^2$ — a perfect square touching at $x = -5$.)</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$k = -25$ gives a discriminant of $200 &gt; 0$ — <strong>two</strong> solutions, not one.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$5$ is $\sqrt{25}$ — one simplification too many. The constant itself must be $25$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$50$ halves the $100$ instead of dividing by $4$.</div></li></ul></div></div></section><div class="lp2-callout lp2-callout--tip"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" class="lp2-callout__icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg><div class="lp2-callout__text">Translate first, compute second: “two distinct real solutions” ⇔ $b^2 - 4ac &gt; 0$; “exactly one” ⇔ $= 0$; “no real solutions” ⇔ $&lt; 0$. Then it&#x27;s arithmetic.</div></div></article><article id="lesson-page-systems-and-extraneous" class="lp2-sheet" data-page-index="4"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Equations: Systems &amp; Extraneous Solutions</span></div><h2 class="lp2-sheet__h2">Systems &amp; Extraneous Solutions</h2><h3 class="lp2-h3">A Line Meets a Parabola</h3><p class="lp2-p">For a system pairing a linear and a quadratic equation, <strong>substitute</strong> one into the other. The resulting quadratic&#x27;s solutions are the $x$-coordinates of the <strong>intersection points</strong>—so there can be $2$, $1$ (tangent), or $0$ of them.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><div class="lp2-math"><div class="lp2-math__tex">$$\begin{cases} y = x^2 - 2x - 3 \\ y = x + 1 \end{cases}$$</div></div><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x^2 - 2x - 3 = x + 1$$</div><div class="lp2-steps__note">Both equal $y$ — set them equal</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x^2 - 3x - 4 = 0$$</div><div class="lp2-steps__note">Move everything to one side</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(x - 4)(x + 1) = 0$$</div><div class="lp2-steps__note">Factor: $-4 \times 1 = -4$, $-4 + 1 = -3$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 4 \quad \text{or} \quad x = -1$$</div><div class="lp2-steps__note">Then $y = x + 1$ gives the points $(4, 5)$ and $(-1, 0)$</div></div></div></div><figure class="lp2-graph" role="img" aria-label="A parabola and a line intersecting at the points (-1, 0) and (4, 5)"><svg viewBox="0 0 340 300" width="340" height="300"><defs><marker id="arr-R3jt" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 8 5 L 0 9 z" fill="#3d4b5e"></path></marker><clipPath id="clip-R3jt"><rect x="30" y="16" width="292" height="260"></rect></clipPath></defs><line x1="66.5" y1="16" x2="66.5" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="139.5" y1="16" x2="139.5" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="212.5" y1="16" x2="212.5" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="285.5" y1="16" x2="285.5" y2="276" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="254.33333333333331" x2="322" y2="254.33333333333331" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="211" x2="322" y2="211" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="167.66666666666669" x2="322" y2="167.66666666666669" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="124.33333333333334" x2="322" y2="124.33333333333334" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="81" x2="322" y2="81" stroke="#e4ebf2" stroke-width="1"></line><line x1="30" y1="37.666666666666664" x2="322" y2="37.666666666666664" stroke="#e4ebf2" stroke-width="1"></line><line x1="26" y1="167.66666666666669" x2="328" y2="167.66666666666669" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R3jt)" marker-start="url(#arr-R3jt)"></line><line x1="139.5" y1="280" x2="139.5" y2="10" stroke="#3d4b5e" stroke-width="1.4" marker-end="url(#arr-R3jt)" marker-start="url(#arr-R3jt)"></line><text x="330" y="171.66666666666669" font-size="12" font-style="italic" fill="#3d4b5e">x</text><text x="145.5" y="10" font-size="12" font-style="italic" fill="#3d4b5e">y</text><g><line x1="66.5" y1="164.66666666666669" x2="66.5" y2="170.66666666666669" stroke="#3d4b5e" stroke-width="1"></line><text x="66.5" y="181.66666666666669" font-size="10" fill="#5c6a7d" text-anchor="middle">-2</text></g><g><line x1="212.5" y1="164.66666666666669" x2="212.5" y2="170.66666666666669" stroke="#3d4b5e" stroke-width="1"></line><text x="212.5" y="181.66666666666669" font-size="10" fill="#5c6a7d" text-anchor="middle">2</text></g><g><line x1="285.5" y1="164.66666666666669" x2="285.5" y2="170.66666666666669" stroke="#3d4b5e" stroke-width="1"></line><text x="285.5" y="181.66666666666669" font-size="10" fill="#5c6a7d" text-anchor="middle">4</text></g><g><line x1="136.5" y1="254.33333333333331" x2="142.5" y2="254.33333333333331" stroke="#3d4b5e" stroke-width="1"></line><text x="133.5" y="257.8333333333333" font-size="10" fill="#5c6a7d" text-anchor="end">-4</text></g><g><line x1="136.5" y1="211" x2="142.5" y2="211" stroke="#3d4b5e" stroke-width="1"></line><text x="133.5" y="214.5" font-size="10" fill="#5c6a7d" text-anchor="end">-2</text></g><g><line x1="136.5" y1="124.33333333333334" x2="142.5" y2="124.33333333333334" stroke="#3d4b5e" stroke-width="1"></line><text x="133.5" y="127.83333333333334" font-size="10" fill="#5c6a7d" text-anchor="end">2</text></g><g><line x1="136.5" y1="81" x2="142.5" y2="81" stroke="#3d4b5e" stroke-width="1"></line><text x="133.5" y="84.5" font-size="10" fill="#5c6a7d" text-anchor="end">4</text></g><g><line x1="136.5" y1="37.666666666666664" x2="142.5" y2="37.666666666666664" stroke="#3d4b5e" stroke-width="1"></line><text x="133.5" y="41.166666666666664" font-size="10" fill="#5c6a7d" text-anchor="end">6</text></g><g><path d="M30.00,-92.33 L31.82,-83.72 L33.65,-75.22 L35.47,-66.82 L37.30,-58.53 L39.13,-50.35 L40.95,-42.28 L42.78,-34.32 L44.60,-26.47 L46.43,-18.72 L48.25,-11.08 L50.07,-3.55 L51.90,3.87 L53.72,11.18 L55.55,18.38 L57.38,25.48 L59.20,32.47 L61.03,39.35 L62.85,46.12 L64.68,52.78 L66.50,59.33 L68.33,65.78 L70.15,72.12 L71.97,78.35 L73.80,84.47 L75.63,90.48 L77.45,96.38 L79.28,102.18 L81.10,107.87 L82.92,113.45 L84.75,118.92 L86.58,124.28 L88.40,129.53 L90.22,134.68 L92.05,139.72 L93.88,144.65 L95.70,149.47 L97.53,154.18 L99.35,158.78 L101.17,163.28 L103.00,167.67 L104.82,171.95 L106.65,176.12 L108.47,180.18 L110.30,184.13 L112.13,187.98 L113.95,191.72 L115.78,195.35 L117.60,198.87 L119.43,202.28 L121.25,205.58 L123.07,208.78 L124.90,211.87 L126.72,214.85 L128.55,217.72 L130.38,220.48 L132.20,223.13 L134.03,225.68 L135.85,228.12 L137.68,230.45 L139.50,232.67 L141.32,234.78 L143.15,236.78 L144.97,238.68 L146.80,240.47 L148.63,242.15 L150.45,243.72 L152.28,245.18 L154.10,246.53 L155.93,247.78 L157.75,248.92 L159.57,249.95 L161.40,250.87 L163.22,251.68 L165.05,252.38 L166.88,252.98 L168.70,253.47 L170.53,253.85 L172.35,254.12 L174.18,254.28 L176.00,254.33 L177.82,254.28 L179.65,254.12 L181.48,253.85 L183.30,253.47 L185.13,252.98 L186.95,252.38 L188.77,251.68 L190.60,250.87 L192.43,249.95 L194.25,248.92 L196.07,247.78 L197.90,246.53 L199.73,245.18 L201.55,243.72 L203.38,242.15 L205.20,240.47 L207.02,238.68 L208.85,236.78 L210.68,234.78 L212.50,232.67 L214.32,230.45 L216.15,228.12 L217.98,225.68 L219.80,223.13 L221.63,220.48 L223.45,217.72 L225.27,214.85 L227.10,211.87 L228.93,208.78 L230.75,205.58 L232.57,202.28 L234.40,198.87 L236.23,195.35 L238.05,191.72 L239.88,187.98 L241.70,184.13 L243.52,180.18 L245.35,176.12 L247.18,171.95 L249.00,167.67 L250.82,163.28 L252.65,158.78 L254.48,154.18 L256.30,149.47 L258.13,144.65 L259.95,139.72 L261.77,134.68 L263.60,129.53 L265.43,124.28 L267.25,118.92 L269.07,113.45 L270.90,107.87 L272.73,102.18 L274.55,96.38 L276.38,90.48 L278.20,84.47 L280.02,78.35 L281.85,72.12 L283.68,65.78 L285.50,59.33 L287.32,52.78 L289.15,46.12 L290.98,39.35 L292.80,32.47 L294.63,25.48 L296.45,18.38 L298.27,11.18 L300.10,3.87 L301.93,-3.55 L303.75,-11.08 L305.57,-18.72 L307.40,-26.47 L309.23,-34.32 L311.05,-42.28 L312.88,-50.35 L314.70,-58.53 L316.52,-66.82 L318.35,-75.22 L320.18,-83.72 L322.00,-92.33" fill="none" stroke="#0f6cbd" stroke-width="2.2" stroke-linecap="round" clip-path="url(#clip-R3jt)"></path></g><g><line x1="30" y1="211" x2="322" y2="37.666666666666664" stroke="#0e8a7e" stroke-width="2.2" stroke-linecap="round"></line></g><g><circle cx="285.5" cy="59.33333333333333" r="4" fill="#157f4b" stroke="#fff" stroke-width="1.4"></circle><text x="271.5" y="47.33333333333333" font-size="11" font-weight="600" fill="#157f4b">(4, 5)</text></g><g><circle cx="103" cy="167.66666666666669" r="4" fill="#157f4b" stroke="#fff" stroke-width="1.4"></circle><text x="55" y="157.66666666666669" font-size="11" font-weight="600" fill="#157f4b">(-1, 0)</text></g></svg><figcaption class="lp2-graph__caption">The system&#x27;s two solutions are the two crossings.</figcaption></figure></div></section><h3 class="lp2-h3">Extraneous Solutions</h3><p class="lp2-p">Equations with a square root get solved by <strong>squaring both sides</strong>—but squaring is a one-way door: it can manufacture solutions the original equation never had. Always test your answers in the <strong>original</strong>.</p><section class="lp2-example"><div class="lp2-example__band">Example</div><div class="lp2-example__body"><p class="lp2-p">What is the solution set of $\sqrt{x + 7} = x - 5$?</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x + 7 = (x - 5)^2$$</div><div class="lp2-steps__note">Square both sides</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x + 7 = x^2 - 10x + 25$$</div><div class="lp2-steps__note">Expand the square</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x^2 - 11x + 18 = 0$$</div><div class="lp2-steps__note">Move everything to one side</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(x - 2)(x - 9) = 0 \;\Rightarrow\; x = 2 \;\text{or}\; x = 9$$</div><div class="lp2-steps__note">Factor — now <strong>check both</strong> in the original</div></div></div></div><ul class="lp2-checkcross"><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$x = 9$:  $\sqrt{9 + 7} = \sqrt{16} = 4$  and  $9 - 5 = 4$</div><div class="lp2-checkcross__note">Both sides agree — a genuine solution.</div></div></li><li class="lp2-checkcross__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-checkcross__body"><div class="lp2-checkcross__text">$x = 2$:  $\sqrt{2 + 7} = 3$  but  $2 - 5 = -3$</div><div class="lp2-checkcross__note">$3 \neq -3$: <strong class="lp2-term lp2-term--rose">extraneous</strong> — created by squaring, not a solution of the original. The solution set is $\{9\}$ only.</div></div></li></ul></div></section><div class="lp2-callout lp2-callout--warning"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-callout__icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div class="lp2-callout__text">A square root symbol outputs the <strong>nonnegative</strong> root, so $\sqrt{\text{anything}}$ can never equal a negative number. That&#x27;s exactly the check $x = 2$ failed.</div></div></article><article id="lesson-page-practice" class="lp2-sheet" data-page-index="5"><div class="lp2-sheet__corner"><span>Advanced Math</span><span>Nonlinear Equations: Practice</span></div><h2 class="lp2-sheet__h2">Practice</h2><p class="lp2-p">Choose the tool before touching the algebra: factor, square-root method, formula, or discriminant. And keep the two safety rules live—both roots of a square, and check after squaring.</p><section class="lp2-practice"><div class="lp2-practice__band">Practice</div><ol class="lp2-practice__list"><li class="lp2-practice__item"><div class="lp2-practice__number">1.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">What is the <strong>positive</strong> solution of the equation $x^2 - 3x - 28 = 0$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$4$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$7$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$14$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$28$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is B.</strong> Two numbers that multiply to $-28$ and add to $-3$: $-7$ and $+4$.</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(x - 7)(x + 4) = 0$$</div><div class="lp2-steps__note">Factor</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 7 \quad \text{or} \quad x = -4$$</div><div class="lp2-steps__note">Zero product — the positive one is $7$</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$4$ reads the factor $(x + 4)$ without flipping the sign—that factor&#x27;s solution is $-4$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Check: $49 - 21 - 28 = 0$. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$14$ is $7 \times 2$—no step in the solution produces it. Distractors don&#x27;t have to be clever.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$28$ is the constant term, not a solution: $784 - 84 - 28 \neq 0$.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">2.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">If $(x + 2)^2 = 49$, what is the <strong>sum</strong> of the solutions of the equation?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$-4$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$-2$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$5$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$14$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> Square-root method, keeping both signs:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x + 2 = \pm 7$$</div><div class="lp2-steps__note">Square root of both sides</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 5 \quad \text{or} \quad x = -9$$</div><div class="lp2-steps__note">$-2 + 7$ and $-2 - 7$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$5 + (-9) = -4$$</div><div class="lp2-steps__note">Sum of the solutions</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>Both roots kept, then added. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$-2$ is the <strong>midpoint</strong> of the solutions (the axis of symmetry), not their sum.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$5$ is what&#x27;s left when the $\pm$ becomes just $+$: one solution, not the sum of two.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$14$ adds $7 + 7$—the two square roots of $49$, not the two values of $x$.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">3.</div><div class="lp2-practice__content"><div class="lp2-question"><p class="lp2-question__stem">How many distinct real solutions does the equation $2x^2 - 7x + 9 = 0$ have?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">Zero</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">Exactly one</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">Exactly two</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">Cannot be determined</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is A.</strong> No solving needed—just the discriminant with $a = 2$, $b = -7$, $c = 9$:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$(-7)^2 - 4(2)(9)$$</div><div class="lp2-steps__note">$b^2 - 4ac$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$49 - 72 = -23$$</div><div class="lp2-steps__note">Negative — the parabola never reaches the x-axis</div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$-23 &lt; 0$: zero real solutions. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>Exactly one needs the discriminant to be exactly $0$.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$49 + 72 = 121$ comes from <strong>adding</strong> $4ac$; the formula subtracts it.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>The discriminant always determines the count—nothing is ambiguous here.</div></li></ul></div></div></div></div></li><li class="lp2-practice__item"><div class="lp2-practice__number">4.</div><div class="lp2-practice__content"><div class="lp2-math"><div class="lp2-math__tex">$$\begin{cases} y = x^2 \\ y = 2x + 8 \end{cases}$$</div></div><div class="lp2-question"><p class="lp2-question__stem">The graphs of the equations in the system above intersect at two points. If $(a, b)$ is the intersection point with $a &gt; 0$, what is the value of $b$?</p><ol class="lp2-choices"><li><span class="lp2-choices__letter">A)</span><span class="lp2-choices__text">$4$</span></li><li><span class="lp2-choices__letter">B)</span><span class="lp2-choices__text">$8$</span></li><li><span class="lp2-choices__letter">C)</span><span class="lp2-choices__text">$16$</span></li><li><span class="lp2-choices__letter">D)</span><span class="lp2-choices__text">$-2$</span></li></ol></div><div class="lp2-reveal lp2-reveal--open"><button type="button" class="lp2-reveal__toggle" aria-expanded="true">Answer<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="lp2-reveal__chevron" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="lp2-reveal__body"><p class="lp2-p"><strong>The correct answer is C.</strong> Substitute and solve:</p><div class="lp2-steps"><div class="lp2-steps__rows"><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x^2 = 2x + 8$$</div><div class="lp2-steps__note">Set the two expressions for $y$ equal</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x^2 - 2x - 8 = 0 \;\Rightarrow\; (x - 4)(x + 2) = 0$$</div><div class="lp2-steps__note">Standard form, then factor</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$x = 4 \;\text{or}\; x = -2$$</div><div class="lp2-steps__note">The positive one is $a = 4$</div></div><div class="lp2-steps__row"><div class="lp2-steps__eq">$$b = 4^2 = 16$$</div><div class="lp2-steps__note">Intersection point $(4, 16)$ — check the line: $2(4) + 8 = 16$ <strong class="lp2-term lp2-term--green">✓</strong></div></div></div></div><div class="lp2-poe"><div class="lp2-poe__intro">Process of Elimination:</div><ul class="lp2-poe__list"><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice A: </strong>$4$ is $a$ itself—and also the $y$-value of the <em>other</em> intersection $(-2, 4)$. Either way, not what was asked.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice B: </strong>$8$ is the line&#x27;s y-intercept, a number lifted from the problem, not from the solution.</div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--correct" aria-label="Correct"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg></span><div class="lp2-poe__text"><strong>Choice C: </strong>$(4, 16)$ satisfies both equations. <strong class="lp2-term lp2-term--green">✓</strong></div></li><li class="lp2-poe__item"><span class="lp2-verdict lp2-verdict--incorrect" aria-label="Incorrect"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><div class="lp2-poe__text"><strong>Choice D: </strong>$-2$ is the $x$-coordinate of the other intersection—the one the condition $a &gt; 0$ rules out.</div></li></ul></div></div></div></div></li></ol></section><section class="lp2-remember"><h3 class="lp2-remember__title">Things to Remember</h3><ul class="lp2-list"><li>Get $= 0$ first, then factor and apply the <strong>zero product property</strong>. Never divide both sides by $x$—factor it out so $x = 0$ survives.</li><li>Square-root method: $(x - h)^2 = n$ gives $x = h \pm \sqrt{n}$ — <strong>two</strong> answers.</li><li>The quadratic formula always works: $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$. Substitute negatives in parentheses.</li><li>The <strong>discriminant</strong> $b^2 - 4ac$ counts solutions: positive → two, zero → one, negative → none. Translate the words into the right comparison before computing.</li><li>Line + parabola: substitute, solve the quadratic; solutions are intersection points ($2$, $1$, or $0$ of them).</li><li>After squaring both sides, test every answer in the <strong>original</strong> equation—$\sqrt{\ }$ can&#x27;t output a negative, and extraneous roots must be discarded.</li></ul></section></article>
+      <section class="lp2-mastery" aria-label="Lesson completion">
+        <div class="lp2-mastery__copy">
+          <h3>Have you mastered this lesson?</h3>
+          <p>Mark this lesson as complete to update your course progress and study plan.</p>
+        </div>
+        <div class="lp2-mastery__actions">
+          <button type="button" class="ut-btn ut-btn--primary lp2-mastery__mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Mark as Complete</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.lp2-reveal').forEach(function (r) {
+    r.classList.remove('lp2-reveal--open');
+    var btn = r.querySelector('.lp2-reveal__toggle');
+    if (btn) btn.addEventListener('click', function () { r.classList.toggle('lp2-reveal--open'); });
+  });
+</script>
+</body>
+</html>
