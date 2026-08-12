@@ -674,7 +674,7 @@ export default function SmartQuiz() {
         <header className="sqr-top">
           <button className="sqr-brand" onClick={() => handleExit('/dashboard')} title="Back to dashboard">
             <span className="sqr-brand-mark" aria-hidden="true" />
-            <span className="sqr-brand-name">UltraSATPrep</span>
+            <span className="sqr-brand-name">SATPractice</span>
           </button>
 
           <span className="sqr-top-skill">{skillLabel}</span>

@@ -1,6 +1,6 @@
 {
-  "short_name": "UltraSAT",
-  "name": "UltraSAT - AI-Powered SAT Prep Platform",
+  "short_name": "SATPractice",
+  "name": "SATPractice - SAT Prep Platform",
   "icons": [
     {
       "src": "/favicon.ico",

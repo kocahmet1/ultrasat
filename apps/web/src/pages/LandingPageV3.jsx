@@ -396,7 +396,7 @@ const LandingPageV3 = () => {
               )}
 
               {STUDENT_HERO ? (
-                <h1 className="lp3-h1">
+                <h1 className="lp3-h1 lp3-h1-student">
                   Train for the<br />Digital SAT,<br />skill by skill.
                 </h1>
               ) : (
@@ -446,7 +446,9 @@ const LandingPageV3 = () => {
               <div className="lp3-rack" aria-label="Official Digital SAT exams">
               <div className="lp3-rack-edge" aria-hidden="true"></div>
               <div className="lp3-rack-head">
-                <span className="lp3-rack-badge">Official &middot; College Board released</span>
+                <span className="lp3-rack-badge">
+                  {STUDENT_HERO ? 'Full length practice tests' : <>Official &middot; College Board released</>}
+                </span>
                 <span className="lp3-rack-state">Ready now</span>
               </div>
 

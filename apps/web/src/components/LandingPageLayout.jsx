@@ -37,9 +37,9 @@ const LandingPageLayout = () => {
       <div className="landing-app-container lpl-frame">
         <header className="lpl-header">
           <div className="lpl-header-inner">
-            <Link to="/" className="lpl-brand" aria-label="UltraSAT home">
+            <Link to="/" className="lpl-brand" aria-label="SATPractice home">
               <span className="lpl-brand-mark" aria-hidden="true"></span>
-              <span className="lpl-brand-word">UltraSAT</span>
+              <span className="lpl-brand-word">SATPractice</span>
             </Link>
 
             <nav className="lpl-header-links" aria-label="Account">

@@ -126,7 +126,7 @@ const Sidebar = () => {
               </button>
             </div>
           ) : (
-            <p>&copy; {new Date().getFullYear()} UltraSatPrep</p>
+            <p>&copy; {new Date().getFullYear()} SATPractice</p>
           )}
         </div>
       </div>
