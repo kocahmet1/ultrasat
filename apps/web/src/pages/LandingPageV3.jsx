@@ -24,6 +24,11 @@ const SHOW_MARKETING_SECTIONS = false;
 // Hides the site footer on the landing page for now. Set to true to restore.
 const SHOW_FOOTER = false;
 
+// Student mode: the hero drops the sales copy (eyebrow pill, lede, "free"
+// micro line) and instead lists what students actually do on the site.
+// Set to false to restore the original marketing hero.
+const STUDENT_HERO = true;
+
 // Shorter labels for the skill map, so 29 names fit three columns cleanly.
 const SHORT_NAMES = {
   1: 'Central Ideas and Details',
@@ -381,20 +386,32 @@ const LandingPageV3 = () => {
 
           <div className="lp3-shell lp3-hero-grid">
             <div className="lp3-hero-copy">
-              <p className="lp3-eyebrow-pill">
-                <span className="lp3-dot" aria-hidden="true"></span>
-                10 official past exams &middot; free to start
-              </p>
+              {!STUDENT_HERO && (
+                <p className="lp3-eyebrow-pill">
+                  <span className="lp3-dot" aria-hidden="true"></span>
+                  10 official past exams &middot; free to start
+                </p>
+              )}
 
               <h1 className="lp3-h1">
                 Practice on the<br />real past Digital<br />SAT exams.
               </h1>
 
-              <p className="lp3-lede">
-                Full length, real timing, real adaptive second module. Then every answer you gave is filed
-                under one of the 29 skills the test measures &mdash; so you finish with a map, not a number,
-                and a coach who remembers it.
-              </p>
+              {STUDENT_HERO ? (
+                <ul className="lp3-hero-list">
+                  <li>Take full-length practice tests &mdash; real timing, real adaptive second module</li>
+                  <li>Drill the 4,000-question bank, with worked explanations</li>
+                  <li>Track your mastery across all 29 skills</li>
+                  <li>Debrief every test with the coach and get drills built for you</li>
+                  <li>Follow your day-by-day study plan, review with flashcards and the word bank</li>
+                </ul>
+              ) : (
+                <p className="lp3-lede">
+                  Full length, real timing, real adaptive second module. Then every answer you gave is filed
+                  under one of the 29 skills the test measures &mdash; so you finish with a map, not a number,
+                  and a coach who remembers it.
+                </p>
+              )}
 
               <div className="lp3-hero-actions">
                 <button type="button" className="lp3-btn-primary" onClick={() => handleExamStart(0)}>
@@ -406,7 +423,9 @@ const LandingPageV3 = () => {
                 )}
               </div>
 
-              <p className="lp3-micro">Free full-length diagnostic &middot; 2h 14m</p>
+              {!STUDENT_HERO && (
+                <p className="lp3-micro">Free full-length diagnostic &middot; 2h 14m</p>
+              )}
             </div>
 
             <div className="lp3-rack-stage">
@@ -442,7 +461,7 @@ const LandingPageV3 = () => {
               ))}
 
               <div className="lp3-rack-foot">
-                <span>+ 20 full-length tests, blueprint matched</span>
+                <span>+ {STUDENT_HERO ? '10' : '20'} full-length tests, blueprint matched</span>
                 <Link to="/practice-exams">All exams &rarr;</Link>
               </div>
               </div>
@@ -450,28 +469,55 @@ const LandingPageV3 = () => {
           </div>
 
           <div className="lp3-shell">
-            <div className="lp3-stats">
-              <div className="lp3-stat">
-                <span className="lp3-stat-num">10+</span>
-                <span className="lp3-stat-label">Official past exams</span>
+            {STUDENT_HERO ? (
+              /* Student-mode stats — flip STUDENT_HERO to false to restore the
+                 original marketing numbers below. */
+              <div className="lp3-stats">
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">1</span>
+                  <span className="lp3-stat-label">Diagnostic exam</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">10</span>
+                  <span className="lp3-stat-label">Full-length practice tests</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">4,000</span>
+                  <span className="lp3-stat-label">Questions in the bank</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">29</span>
+                  <span className="lp3-stat-label">Skills tracked per answer</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num lp3-stat-accent">1</span>
+                  <span className="lp3-stat-label">Coach that remembers all of it</span>
+                </div>
               </div>
-              <div className="lp3-stat">
-                <span className="lp3-stat-num">20</span>
-                <span className="lp3-stat-label">Full-length practice tests</span>
+            ) : (
+              <div className="lp3-stats">
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">10+</span>
+                  <span className="lp3-stat-label">Official past exams</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">20</span>
+                  <span className="lp3-stat-label">Full-length practice tests</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">8,000+</span>
+                  <span className="lp3-stat-label">Questions in the bank</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num">29</span>
+                  <span className="lp3-stat-label">Skills tracked per answer</span>
+                </div>
+                <div className="lp3-stat">
+                  <span className="lp3-stat-num lp3-stat-accent">1</span>
+                  <span className="lp3-stat-label">Coach that remembers all of it</span>
+                </div>
               </div>
-              <div className="lp3-stat">
-                <span className="lp3-stat-num">8,000+</span>
-                <span className="lp3-stat-label">Questions in the bank</span>
-              </div>
-              <div className="lp3-stat">
-                <span className="lp3-stat-num">29</span>
-                <span className="lp3-stat-label">Skills tracked per answer</span>
-              </div>
-              <div className="lp3-stat">
-                <span className="lp3-stat-num lp3-stat-accent">1</span>
-                <span className="lp3-stat-label">Coach that remembers all of it</span>
-              </div>
-            </div>
+            )}
           </div>
         </section>
 

@@ -323,6 +323,33 @@
   text-wrap: pretty;
 }
 
+/* Student-mode hero list (STUDENT_HERO in LandingPageV3.jsx) */
+.lp3-hero-list {
+  list-style: none;
+  margin: 0 0 34px;
+  padding: 0;
+  max-width: 470px;
+  display: grid;
+  gap: 12px;
+}
+
+.lp3-hero-list li {
+  position: relative;
+  padding-left: 26px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: rgba(242, 245, 245, 0.68);
+  text-wrap: pretty;
+}
+
+.lp3-hero-list li::before {
+  content: '\2192';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--lp3-accent-bright);
+}
+
 .lp3-hero-actions {
   display: flex;
   align-items: center;
