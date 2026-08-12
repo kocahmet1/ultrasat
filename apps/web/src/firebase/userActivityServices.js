@@ -1,11 +1,12 @@
 import { db } from './config';
-import { 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  orderBy, 
-  limit
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  limit,
+  startAfter
 } from 'firebase/firestore';
 
 /**
@@ -277,6 +278,65 @@ export const getCompleteUserActivity = async (userId) => {
     };
   } catch (error) {
     console.error('Error fetching complete user activity:', error);
+    throw error;
+  }
+};
+
+/**
+ * Search users by partial email or name match (case-insensitive).
+ * Firestore has no native substring search, so this scans the users
+ * collection in batches and filters client-side. Fine for admin use.
+ * @param {string} searchTerm - Partial email or name to search for
+ * @param {number} maxResults - Max matches to return (defaults to 25)
+ * @returns {Promise<Array>} Array of matching user objects
+ */
+export const searchUsers = async (searchTerm, maxResults = 25) => {
+  const term = (searchTerm || '').trim().toLowerCase();
+  if (!term) return [];
+
+  const BATCH_SIZE = 500;
+  const MAX_SCANNED = 10000; // safety cap on docs scanned per search
+
+  try {
+    const usersRef = collection(db, 'users');
+    const matches = [];
+    let lastDoc = null;
+    let scanned = 0;
+
+    while (matches.length < maxResults && scanned < MAX_SCANNED) {
+      const q = lastDoc
+        ? query(usersRef, orderBy('createdAt', 'desc'), startAfter(lastDoc), limit(BATCH_SIZE))
+        : query(usersRef, orderBy('createdAt', 'desc'), limit(BATCH_SIZE));
+
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) break;
+
+      snapshot.forEach((doc) => {
+        if (matches.length >= maxResults) return;
+        const userData = doc.data();
+        const email = (userData.email || '').toLowerCase();
+        const name = (userData.name || '').toLowerCase();
+
+        if (email.includes(term) || name.includes(term)) {
+          matches.push({
+            id: doc.id,
+            email: userData.email,
+            name: userData.name,
+            createdAt: userData.createdAt,
+            membershipTier: userData.membershipTier || 'free'
+          });
+        }
+      });
+
+      scanned += snapshot.size;
+      lastDoc = snapshot.docs[snapshot.docs.length - 1];
+      if (snapshot.size < BATCH_SIZE) break; // reached end of collection
+    }
+
+    console.log(`User search "${term}": ${matches.length} matches (scanned ${scanned} docs)`);
+    return matches;
+  } catch (error) {
+    console.error('Error searching users:', error);
     throw error;
   }
 };

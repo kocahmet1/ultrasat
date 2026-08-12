@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  getUsersSignedUpOnDate, 
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  getUsersSignedUpOnDate,
   getCompleteUserActivity,
-  getRecentSignups 
+  getRecentSignups,
+  searchUsers
 } from '../firebase/userActivityServices';
 import '../styles/UserActivityTracker.css';
 
@@ -17,8 +18,16 @@ const UserActivityTracker = () => {
   const [loading, setLoading] = useState(true);
   const [loadingUserDetails, setLoadingUserDetails] = useState(false);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('today'); // 'today' or 'recent'
+  const [activeTab, setActiveTab] = useState('today'); // 'today', 'recent' or 'search'
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+
+  // State for user search
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const searchDebounceRef = useRef(null);
+  const searchRequestIdRef = useRef(0);
 
   // Load data on component mount
   useEffect(() => {
@@ -65,6 +74,59 @@ const UserActivityTracker = () => {
       setLoading(false);
     }
   };
+
+  // Run a user search (partial email/name match)
+  const runSearch = async (term) => {
+    const requestId = ++searchRequestIdRef.current;
+    try {
+      setSearching(true);
+      setError(null);
+      const results = await searchUsers(term);
+      // Ignore stale responses from earlier keystrokes
+      if (requestId === searchRequestIdRef.current) {
+        setSearchResults(results);
+        setHasSearched(true);
+      }
+    } catch (err) {
+      console.error('Error searching users:', err);
+      if (requestId === searchRequestIdRef.current) {
+        setError('Failed to search users: ' + err.message);
+      }
+    } finally {
+      if (requestId === searchRequestIdRef.current) {
+        setSearching(false);
+      }
+    }
+  };
+
+  // Debounced search-as-you-type
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+
+    if (term.trim().length < 2) {
+      searchRequestIdRef.current++; // invalidate any in-flight search
+      setSearchResults([]);
+      setHasSearched(false);
+      setSearching(false);
+      return;
+    }
+
+    searchDebounceRef.current = setTimeout(() => runSearch(term), 400);
+  };
+
+  // Clean up pending debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+      }
+    };
+  }, []);
 
   // Handle user selection
   const handleUserClick = async (user) => {
@@ -329,11 +391,17 @@ const UserActivityTracker = () => {
             >
               Today's Signups
             </button>
-            <button 
+            <button
               className={`tab-button ${activeTab === 'recent' ? 'active' : ''}`}
               onClick={() => setActiveTab('recent')}
             >
               Recent Signups
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'search' ? 'active' : ''}`}
+              onClick={() => setActiveTab('search')}
+            >
+              Search
             </button>
           </div>
 
@@ -360,6 +428,30 @@ const UserActivityTracker = () => {
           {activeTab === 'recent' && (
             <div className="recent-signups">
               {renderUserList(recentSignups, 'Recent Signups (Last 7 days)')}
+            </div>
+          )}
+
+          {activeTab === 'search' && (
+            <div className="user-search">
+              <div className="search-input-wrapper">
+                <label htmlFor="user-search-input">Search Users:</label>
+                <input
+                  type="text"
+                  id="user-search-input"
+                  placeholder="Type part of an email or name..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  autoComplete="off"
+                />
+              </div>
+
+              {searching ? (
+                <div className="loading">Searching users...</div>
+              ) : searchTerm.trim().length < 2 ? (
+                <p className="no-users">Type at least 2 characters to search</p>
+              ) : hasSearched ? (
+                renderUserList(searchResults, `Search Results`)
+              ) : null}
             </div>
           )}
         </div>
