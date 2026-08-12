@@ -319,9 +319,11 @@ const LandingPageV3 = () => {
       <div className="lp3-canvas">
         <header className="lp3-nav">
           <div className="lp3-shell lp3-nav-inner">
-            <Link to="/" className="lp3-brand" aria-label="UltraSATPrep home">
+            {/* Brand shown as SATPractice for the temporary student site;
+                full repo-wide rename from UltraSATPrep to come later. */}
+            <Link to="/" className="lp3-brand" aria-label="SATPractice home">
               <span className="lp3-brand-mark" aria-hidden="true"></span>
-              <span className="lp3-brand-word">UltraSATPrep</span>
+              <span className="lp3-brand-word">SATPractice</span>
             </Link>
 
             <button
@@ -393,9 +395,15 @@ const LandingPageV3 = () => {
                 </p>
               )}
 
-              <h1 className="lp3-h1">
-                Practice on the<br />real past Digital<br />SAT exams.
-              </h1>
+              {STUDENT_HERO ? (
+                <h1 className="lp3-h1">
+                  Train for the<br />Digital SAT,<br />skill by skill.
+                </h1>
+              ) : (
+                <h1 className="lp3-h1">
+                  Practice on the<br />real past Digital<br />SAT exams.
+                </h1>
+              )}
 
               {STUDENT_HERO ? (
                 <ul className="lp3-hero-list">
