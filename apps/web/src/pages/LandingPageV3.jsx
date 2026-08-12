@@ -16,6 +16,14 @@ import '../styles/LandingPageV3.css';
 // current students. Set to true to bring pricing back — nothing else to change.
 const SHOW_PRICING = false;
 
+// Temporarily hides everything between the hero and the footer (sections 01–06
+// and the final CTA) while the site is students-only. Set to true to bring the
+// full landing page back; pricing stays controlled by SHOW_PRICING above.
+const SHOW_MARKETING_SECTIONS = false;
+
+// Hides the site footer on the landing page for now. Set to true to restore.
+const SHOW_FOOTER = false;
+
 // Shorter labels for the skill map, so 29 names fit three columns cleanly.
 const SHORT_NAMES = {
   1: 'Central Ideas and Details',
@@ -393,7 +401,9 @@ const LandingPageV3 = () => {
                   <span>Start a full practice test</span>
                   <span className="lp3-arrow" aria-hidden="true">&rarr;</span>
                 </button>
-                <a href="#inside" className="lp3-btn-ghost">See what&rsquo;s inside</a>
+                {SHOW_MARKETING_SECTIONS && (
+                  <a href="#inside" className="lp3-btn-ghost">See what&rsquo;s inside</a>
+                )}
               </div>
 
               <p className="lp3-micro">Free full-length diagnostic &middot; 2h 14m</p>
@@ -465,6 +475,8 @@ const LandingPageV3 = () => {
           </div>
         </section>
 
+        {SHOW_MARKETING_SECTIONS && (
+        <>
         <section className="lp3-inside" id="inside">
           <div className="lp3-shell lp3-inside-grid">
             <div>
@@ -909,8 +921,10 @@ const LandingPageV3 = () => {
             </div>
           </div>
         </section>
+        </>
+        )}
 
-        <SiteFooter />
+        {SHOW_FOOTER && <SiteFooter />}
       </div>
 
       <ExamAuthModal
