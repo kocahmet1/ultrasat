@@ -13,6 +13,7 @@ import ReportQuestionModal from './ReportQuestionModal';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import useIsMobile from '../hooks/useIsMobile';
+import WordSaver from './WordSaver';
 
 function ExamModule({ 
   moduleNumber, 
@@ -617,7 +618,22 @@ function ExamModule({
       
       <div className="main-content">
         {/* Tools container removed since we're using the button in the Question component */}
-        
+
+        {/* Select any word in the passage/question to save it to the Word Bank.
+            Silent save (no definition shown) so the timed exam isn't assisted.
+            Answer choices are deliberately excluded: selecting inside the
+            option <label> could toggle the student's answer. */}
+        <WordSaver
+          selector=".question-passage, .question-text"
+          source="practice-exam"
+          metadata={{
+            moduleNumber,
+            questionId: enrichedQuestions[currentQuestion]?.id,
+            subcategory: enrichedQuestions[currentQuestion]?.subcategory,
+          }}
+          showDefinition={false}
+        />
+
         <div className="question-wrapper">
           {enrichedQuestions.length > 0 && currentQuestion < enrichedQuestions.length && (
             <Question

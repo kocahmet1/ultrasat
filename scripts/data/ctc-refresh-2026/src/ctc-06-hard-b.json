@@ -1,0 +1,283 @@
+[
+  {
+    "id": "CTC-H11",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Dark streaks lengthen down certain Martian slopes each spring and fade by winter. Planetary geologist Oyelaran Fadipe notes that the streaks appear only on slopes where perchlorate salts have been detected, that perchlorates lower the freezing point of water dramatically, and that the seasonal timing of the streaks matches the interval when surface temperatures cross that lowered threshold. He concludes that the streaks are flows of briny liquid.",
+    "text2": "Planetary geologist Suvi Karhunen finds that streak-bearing slopes cluster tightly around the angle at which loose Martian sand begins to slide, and that individual streaks stop abruptly at that angle rather than tapering downslope or pooling as a liquid would. She grants that perchlorates would keep a brine liquid at the temperatures Fadipe cites, and that his seasonal correlation is real and well documented.",
+    "stem": "Based on the texts, how would Karhunen (Text 2) most likely respond to Fadipe's conclusion in Text 1?",
+    "options": [
+      "By accepting the conditions he describes as favorable to brine while arguing that the streaks' geometry points to dry material sliding instead",
+      "By disputing his claim that perchlorates lower the freezing point of water sufficiently for brine to persist at Martian surface temperatures",
+      "By conceding that the streaks are liquid flows while contending that their seasonal timing is governed by slope angle rather than by temperature",
+      "By granting that the streaks form on perchlorate-bearing slopes but denying that surface temperatures on those slopes vary seasonally"
+    ],
+    "key": 0,
+    "keyWhy": "it matches the two concessions Text 2 makes and the one thing it withholds. Karhunen \"grants that perchlorates would keep a brine liquid at the temperatures Fadipe cites, and that his seasonal correlation is real.\" What she adds is geometric: streak-bearing slopes \"cluster tightly around the angle at which loose Martian sand begins to slide,\" and the streaks \"stop abruptly at that angle rather than tapering downslope or pooling as a liquid would.\" Fadipe's conditions are satisfied and still do not settle what the streaks are made of.",
+    "rebuttals": {
+      "B": "Text 2 states the opposite in so many words. Karhunen grants that perchlorates would keep a brine liquid at those temperatures, so the chemistry is not where she objects.",
+      "C": "conceding that the streaks are liquid flows would concede Fadipe's conclusion outright. Karhunen's slope-angle evidence is offered against a liquid, not as a rival explanation of the timing of one.",
+      "D": "seasonal variation in surface temperature is common ground; Karhunen accepts Fadipe's seasonal correlation as real. Denying it would remove the phenomenon both are trying to explain."
+    },
+    "steps": [
+      "Step 1: List what Karhunen explicitly grants — the perchlorate chemistry and the seasonal correlation.",
+      "Step 2: Any choice that disputes a granted item is out. That eliminates three of the four.",
+      "Step 3: What she adds is the angle and the abrupt termination, which point to dry sliding — Choice A."
+    ],
+    "remember": "When Text 2 says what it grants, use those concessions to eliminate. A choice that contradicts an explicit concession is always wrong."
+  },
+  {
+    "id": "CTC-H12",
+    "difficulty": "hard",
+    "lane": "humanities-arts",
+    "family": "regard",
+    "text1": "Models of destroyed monuments are usually built from tourist photographs, and photographs cluster on the facades people found worth photographing. Archaeologist Hana Petrosyan argues that this is a manageable limitation rather than a disqualifying one: a model can mark its poorly evidenced surfaces as provisional, and a viewer who is told which walls are conjecture is better served than a viewer given nothing at all.",
+    "text2": "Archaeologist Duarte Vilanova showed four hundred visitors either a reconstruction with conjectural surfaces flagged or the same model without flags. Immediately afterward, the flagged group expressed less confidence in the marked walls, as intended. A week later, however, they remembered only that the model was generally uncertain and identified the conjectural walls no more accurately than the unflagged group; both groups rated those particular walls as well supported.",
+    "stem": "Based on the texts, how would Vilanova (Text 2) most likely regard the remedy Petrosyan proposes in Text 1?",
+    "options": [
+      "As improving viewers' immediate calibration but failing to preserve the surface-specific distinction on which Petrosyan's remedy depends",
+      "As fully successful because remembering that the model was generally uncertain fulfills the remedy's purpose even when viewers misidentify the weak surfaces",
+      "As ineffective at first but increasingly useful once viewers replace memories of individual flags with a general impression of uncertainty",
+      "As unnecessary because viewers of the unflagged reconstruction later identified the conjectural walls as accurately as the flagged group did"
+    ],
+    "key": 0,
+    "keyWhy": "it distinguishes an immediate effect from the durable, surface-specific understanding Petrosyan's proposal requires. The flags initially lower confidence in the marked walls, so the remedy is not simply ineffective. But a week later viewers retain only a vague sense that the model is uncertain and cannot identify which walls are conjectural. Since Petrosyan's defense depends on telling viewers which surfaces lack evidence, the delayed result exposes a specific limitation.",
+    "rebuttals": {
+      "B": "Petrosyan's remedy is explicitly surface-specific: viewers should know which walls are conjectural. General uncertainty does not fulfill that purpose when the same viewers later rate those walls as well supported.",
+      "C": "the order is reversed. Flags improve immediate confidence judgments, but their surface-specific effect is gone a week later.",
+      "D": "equal delayed accuracy does not show that flags were unnecessary; both groups perform poorly. It shows that the flags' initial advantage did not endure."
+    },
+    "steps": [
+      "Step 1: Identify the remedy's precise goal: mark which surfaces are conjectural, not merely make the entire model seem uncertain.",
+      "Step 2: Separate Vilanova's time points: the flags work immediately, but the specific mapping is lost after a week.",
+      "Step 3: The remedy improves initial calibration yet fails durably at its defining task - Choice A."
+    ],
+    "remember": "A warning can affect immediate judgment but fail in memory. Match the evaluation to the remedy's exact target and the time at which that target is measured."
+  },
+  {
+    "id": "CTC-H13",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Biologist Rina Okafor exposed rural sparrows to streetlight-level illumination before dawn. Lit birds began nesting earlier than unlit birds, and their nighttime melatonin rhythms also shifted. Among the lit birds, larger melatonin shifts were associated with earlier nesting. <u>Okafor concludes that the extra light advances breeding by resetting the birds' internal seasonal clock.</u>",
+    "text2": "Biologist Leo Martens repeated the treatment but noticed that the lights also attracted insects. When fine mesh kept insects away from lit enclosures, melatonin still shifted but nesting did not advance. Unlit birds given the same increase in insects nested early despite unchanged melatonin. Temperature, total daylight, and nesting material were held constant across the conditions. Martens concludes that the clock responds to light but that food availability governs the observed nesting date.",
+    "stem": "Based on the texts, how would Martens (Text 2) most likely respond to the underlined conclusion in Text 1?",
+    "options": [
+      "By accepting that light resets the internal clock but arguing that extra food, not the reset, advances nesting",
+      "By accepting that light advances nesting while denying that it produces any measurable change in the birds' internal clock",
+      "By arguing that a shifted internal clock is sufficient to advance nesting even when the light does not increase food availability",
+      "By suggesting that additional insects delay nesting in unlit birds but accelerate it in birds exposed to light"
+    ],
+    "key": 0,
+    "keyWhy": "it separates two effects that occurred together in Okafor's study. Martens confirms that light shifts melatonin, so he accepts that the internal clock responds. But lit birds do not nest early when insects are excluded, whereas unlit birds do nest early when insects are added without a clock shift. Those crossed results make the food increase, rather than the clock reset, the supported cause of the nesting change.",
+    "rebuttals": {
+      "B": "melatonin still shifts in lit enclosures when insects are excluded, so Martens accepts a measurable clock response. What he rejects is the proposed link from that response to nesting date.",
+      "C": "lit birds with shifted melatonin do not nest early when insects are excluded. The clock shift is therefore not sufficient under the tested conditions.",
+      "D": "added insects make unlit birds nest earlier, not later. Text 2 gives no evidence that the effect of insects reverses depending on exposure to light."
+    },
+    "steps": [
+      "Step 1: Separate Okafor's chain into light changing the clock and the changed clock advancing nesting.",
+      "Step 2: In Martens's lit, insect-free condition, the first link remains but the nesting outcome disappears.",
+      "Step 3: Added insects reproduce early nesting without a clock shift, supporting food as the intervening cause - Choice A."
+    ],
+    "remember": "When two changes occur together, crossed treatments can separate them: remove one while keeping the other, then reproduce the outcome with the removed factor alone."
+  },
+  {
+    "id": "CTC-H14",
+    "difficulty": "hard",
+    "lane": "literature",
+    "family": "agree",
+    "intro": "In Text 1, Ellen has just inherited her uncle's house and its contents.",
+    "text1": "Ellen had expected the rooms to close around her, but they seemed merely available. Her uncle's cabinets stood where his eye had placed them. She could move any one, and nothing would follow: no permission sought, no protest made. The thought felt like freedom, though the silence after it was less like welcome than like not being noticed.",
+    "text2": "Some readers interpret Ellen's inheritance simply as release from dependence. A literary critic argues that the passage makes this freedom unstable. Ellen experiences liberty as an absence of consequences, but the closing comparison suggests that the same absence may register her new isolation: no one constrains her because no one is attending to what she does.",
+    "stem": "Which statement about Ellen's experience is best supported by both texts?",
+    "options": [
+      "Ellen initially experiences the lack of response to her choices as freedom, while the passage leaves open a less reassuring meaning for that lack.",
+      "Ellen's sense of freedom comes from rejecting her uncle's taste rather than from being able to act without permission or protest.",
+      "The silence surrounding Ellen confirms that other people welcome her newly independent choices even though they do not direct them.",
+      "The possibility that Ellen is isolated contradicts, rather than complicates, the passage's association of consequence-free action with freedom."
+    ],
+    "key": 0,
+    "keyWhy": "it preserves the double meaning established in each text. Text 1 explicitly links Ellen's ability to act without permission or protest to a feeling of freedom, then compares the surrounding silence to being unnoticed rather than welcomed. Text 2 reads the same sequence as unstable: an absence of consequences can register both liberty and isolation. Neither text requires choosing only one meaning.",
+    "rebuttals": {
+      "B": "Text 1 does not say that Ellen rejects her uncle's taste; the cabinets matter because she can move them without anyone responding. Text 2 likewise centers consequences and attention, not aesthetics.",
+      "C": "the final comparison makes the silence feel like a lack of notice, not approval. Text 2 interprets it as possible isolation rather than social welcome.",
+      "D": "Text 2 explicitly treats isolation as the less reassuring implication of the same consequence-free condition Ellen experiences as freedom. The meanings complicate each other; they are not logically incompatible."
+    },
+    "steps": [
+      "Step 1: Trace the shift in Text 1 from freedom to the possibility of being unnoticed.",
+      "Step 2: Use Text 2 to identify those as two interpretations of the same absence of consequences.",
+      "Step 3: Choose the answer that retains both meanings instead of forcing a contradiction - Choice A."
+    ],
+    "remember": "A hard literary item may turn on double valence: the same detail can support a character's hopeful interpretation and a critic's less reassuring one."
+  },
+  {
+    "id": "CTC-H15",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "joint",
+    "text1": "Fungal threads link the roots of neighboring trees, and labeled carbon injected into one tree turns up within days in others. Forest ecologist Sunniva Aalto traced labeled carbon from mature birches into nearby birch seedlings across four plots and found that seedlings growing under the deepest shade received the largest share. She concluded that mature trees direct carbon toward the seedlings that most need it.",
+    "text2": "Forest ecologist Jamal Rutherford repeated the tracing in comparable plots using a fungal partner that colonizes birch roots readily but cannot use birch sugars for its own growth. Labeled carbon still moved between trees at similar rates, but the amounts each seedling received tracked how densely the fungus had colonized its roots, and shaded seedlings, whose root systems were sparsest, received the least of all.",
+    "stem": "Based on the texts, if Aalto (Text 1) and Rutherford (Text 2) were aware of the findings of both studies, they would most likely agree with which statement?",
+    "options": [
+      "How much labeled carbon a seedling receives depends on properties of the fungal connection rather than on the seedling's condition alone.",
+      "Mature birches allocate carbon preferentially to those birch seedlings that are growing under the deepest shade and receiving the least light.",
+      "Fungal partners that cannot use birch sugars transfer carbon between trees more efficiently than partners that can.",
+      "Shaded birch seedlings draw carbon from mature trees at a higher rate than unshaded seedlings do."
+    ],
+    "key": 0,
+    "keyWhy": "it is the statement both sets of findings support once they are placed side by side. Aalto's shaded seedlings received the most; Rutherford's shaded seedlings, whose roots were most sparsely colonized, received the least. The two outcomes differ in direction, but the variable that changed between the studies is the fungal partner, and in Rutherford's study the amount received \"tracked how densely the fungus had colonized its roots.\" Taken together, the results make the properties of the connection, not the seedling's need, the factor that has to be specified.",
+    "rebuttals": {
+      "B": "Rutherford's shaded seedlings received the least, so this holds in one study and fails in the other. Aalto alone could assert it; the pair cannot.",
+      "C": "no comparison of efficiency between fungal partners is available. Rutherford's fungus was chosen because it cannot use birch sugars, not because it transfers more, and neither text reports total transfer for the two systems.",
+      "D": "the direction of movement is not measured in either study. Both trace labeled carbon arriving at seedlings; neither distinguishes carbon pushed by the mature tree from carbon pulled by the seedling."
+    },
+    "steps": [
+      "Step 1: Put the two results next to each other: shaded seedlings get the most in one study, the least in the other.",
+      "Step 2: Identify what differed between the studies — the fungal partner — and what Rutherford's amounts tracked: colonization density.",
+      "Step 3: Only a statement that makes the connection the operative variable survives both results — Choice A."
+    ],
+    "remember": "On joint-inference items, the answer must be consistent with both experiments at once. Anything true of only one of them is a distractor."
+  },
+  {
+    "id": "CTC-H16",
+    "difficulty": "hard",
+    "lane": "humanities-arts",
+    "family": "relate",
+    "text1": "A copper-red glaze appears at three coastal sites and, four centuries later, at an inland site eight hundred kilometers away. Archaeologist Nils Ferreira notes that both recipes use boron-rich plant ash, an uncommon additive that helps glaze melt, and firing with restricted oxygen. Because a trade corridor linked the regions, Ferreira argues that the inland potters received the coastal technique.",
+    "text2": "Archaeologist Halvor Tsuruoka finds that saltwort growing around saline springs in both regions yields boron-rich ash. In experiments, inland clay mixed with local saltwort ash and fired in a tightly packed kiln produced the same glaze without following coastal instructions. Inland vessel shapes and construction methods also show no coastal influence. Tsuruoka therefore proposes separate discovery from similar local materials and kiln conditions.",
+    "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+    "options": [
+      "Text 1 uses a shared material-and-firing signature to infer technical transfer, whereas Text 2 supplies a local route to that signature and notes that other technical traits do not match.",
+      "Text 1 uses the glaze's chronology to infer movement inland, whereas Text 2 accepts transfer but argues that the inland potters changed the coastal technique substantially.",
+      "Text 1 treats the trade corridor as evidence of contact, whereas Text 2 argues that the use of local saltwort proves that no goods moved along that corridor.",
+      "Text 1 attributes the glaze partly to boron-rich ash, whereas Text 2 denies that inland potters used any material containing boron."
+    ],
+    "key": 0,
+    "keyWhy": "it describes both stages of the exchange. Ferreira treats the shared boron-rich ash and restricted-oxygen firing as an uncommon signature of transmission. Tsuruoka explains how each region could reach that signature independently: the same kind of locally available plant produces the ash, and local materials reproduce the glaze in a tightly packed kiln. The lack of matching vessel forms and construction methods further weakens the transfer inference.",
+    "rebuttals": {
+      "B": "Tsuruoka proposes separate discovery, not a modified version of a transferred technique. He does not revise the dates or accept transfer in either direction.",
+      "C": "local saltwort explains how the glaze recipe could arise without technical transfer, but it does not show that no goods traveled along the corridor. Contact and transfer of this particular technique are different claims.",
+      "D": "Tsuruoka confirms that local saltwort yields boron-rich ash and uses that ash in the successful experiment. He disputes the source of the recipe, not the presence of boron."
+    },
+    "steps": [
+      "Step 1: Identify Ferreira's signature: the same uncommon additive plus the same firing condition.",
+      "Step 2: Tsuruoka reproduces both from local materials and ordinary kiln packing, then adds evidence that other production traits differ.",
+      "Step 3: Text 2 offers independent convergence rather than transferred technique - Choice A."
+    ],
+    "remember": "A shared technical signature supports transfer only if independent routes to the same combination are unlikely. Check whether Text 2 supplies such a route and an external comparison."
+  },
+  {
+    "id": "CTC-H17",
+    "difficulty": "hard",
+    "lane": "social-science",
+    "family": "respond",
+    "text1": "When a large insurer moved its claims division to remote work, output per employee rose eleven percent within a year. Management scholar Priya Venkataraman attributes the gain to the removal of interruption: the division's work is individual and precisely measurable, and employees working at home were no longer pulled away from a file by the ambient demands of an open floor.",
+    "text2": "Management scholar Dieter Lindqvist tracked the division for four years. System logs show that initial gains were greatest among employees whose office work had involved the most unscheduled switches between files, supporting Venkataraman's interruption account. Yet the gain faded as turnover rose. New hires who had never worked beside their colleagues took roughly three times as long to reach full productivity as new hires had before remote work.",
+    "stem": "Based on the texts, how would Lindqvist (Text 2) most likely respond to Venkataraman's account of the productivity gain in Text 1?",
+    "options": [
+      "By accepting her explanation of the initial gain while arguing that it omits a learning cost that grows visible as experienced staff are replaced",
+      "By rejecting her explanation of the initial gain because employees with the fewest office interruptions improved the most after the move",
+      "By accepting that remote work slowed new hires' progress while arguing that this slowdown caused the first-year rise in output",
+      "By treating the initial gain as a measurement artifact, since later turnover changed the mix of employees in the division"
+    ],
+    "key": 0,
+    "keyWhy": "it is supported by evidence about both mechanism and time. Lindqvist does not merely reproduce the initial outcome: the largest gains occur among employees who previously experienced the most unscheduled file switching, directly supporting reduced interruption as the source of the early improvement. His longer window then reveals a separate cost, slow development of new hires, that expands as turnover replaces experienced staff and erodes the gain.",
+    "rebuttals": {
+      "B": "Lindqvist finds the reverse pattern: initial gains are greatest among employees who had experienced the most interruptions. That relationship supports rather than rejects Venkataraman's explanation.",
+      "C": "the new-hire slowdown appears as turnover rises after the initial gain. A later cost cannot explain why output increased in the first year, and Text 2 does not present it as doing so.",
+      "D": "Lindqvist provides mechanism-level evidence for the initial gain, so he does not treat it as an artifact. Turnover explains why a real gain later fades, not why it was falsely measured."
+    },
+    "steps": [
+      "Step 1: Use Lindqvist's file-switching pattern to test Venkataraman's proposed cause, not merely her reported outcome.",
+      "Step 2: Then separate the later turnover pattern from that initial mechanism: replacement staff take longer to become productive.",
+      "Step 3: The early explanation survives, but it is incomplete as a long-run account - Choice A."
+    ],
+    "remember": "Confirming an outcome is not the same as confirming its cause. Look for a pattern tied specifically to the proposed mechanism before saying Text 2 accepts the explanation."
+  },
+  {
+    "id": "CTC-H18",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "characterize",
+    "text1": "DNA recovered from cave sediment can identify species that left no bones behind, and has become a standard tool at sites with poor bone preservation. Archaeologist Ilaria Bergqvist recovered horse and hyena DNA from a sediment layer at Vent Cave dated to forty thousand years ago and, finding no DNA from either species in any of the layers above it, concluded that both animals disappeared from the surrounding valley at that time.",
+    "text2": "Archaeologist Petrus Nakamura notes that DNA in cave sediment binds tightly to clay particles, that water moving through a cave floor carries fine clay steadily downward, and that the concentration of ancient DNA at Vent Cave rises with depth in a manner closely tracking the clay fraction. He adds that DNA recovery from the upper layers, which are sandy and porous, is poor for every species tested.",
+    "stem": "Based on the texts, how would Nakamura (Text 2) most likely characterize Bergqvist's conclusion in Text 1?",
+    "options": [
+      "As relying on nondetection in layers whose composition makes nondetection too likely to establish when the species disappeared",
+      "As understating the age of the layer in which the horse and hyena DNA at Vent Cave was recovered",
+      "As correct for hyenas but not for horses, since the two species differ in how readily their DNA binds to clay particles",
+      "As overlooking the possibility that the horse and hyena DNA in the lower layer was carried there from layers deposited earlier"
+    ],
+    "key": 0,
+    "keyWhy": "it identifies what Bergqvist's conclusion rests on and why Text 2 makes that evidence inconclusive. Her inference runs from finding no horse or hyena DNA in the upper layers to dating both species' disappearance. Nakamura shows that recovery is generally poor in those sandy, porous layers and that DNA concentration tracks the clay fraction. Nondetection there could therefore reflect low preservation or recovery rather than absence of the animals, so it cannot securely fix the time of disappearance.",
+    "rebuttals": {
+      "B": "Nakamura raises no objection to the forty-thousand-year date. His argument concerns the distribution of DNA through the profile, not the age assigned to any layer.",
+      "C": "Text 2 states that recovery from the upper layers is poor \"for every species tested,\" which is a general effect. No species-specific difference in clay binding is reported.",
+      "D": "downward movement could redistribute DNA, but this choice proposes movement from earlier layers into the lower layer rather than addressing Bergqvist's decisive evidence: nondetection in the later, sandy upper layers. Text 2 says those layers recover DNA poorly regardless of whether a species was present."
+    },
+    "steps": [
+      "Step 1: Note that Bergqvist's conclusion is built on a negative - no DNA above the layer.",
+      "Step 2: Ask how likely those upper layers are to preserve and yield DNA: recovery is poor for every tested species.",
+      "Step 3: A high chance of nondetection weakens the date inferred from the negative result - Choice A."
+    ],
+    "remember": "An absence is informative only to the extent that the evidence would probably have been detected if present. Poor recovery weakens an inference without proving the opposite."
+  },
+  {
+    "id": "CTC-H19",
+    "difficulty": "hard",
+    "lane": "humanities-arts",
+    "family": "respond",
+    "text1": "The Halversen Hall was built in 1892 with a narrow, high, rectangular plan, and musicians describe its sound as exceptionally warm. Acoustician Miriam Oduya attributes the warmth to the geometry: narrow side walls return early lateral reflections to the listener within the interval in which the ear fuses them with the direct sound rather than hearing them separately, and that fusion is what listeners report as warmth.",
+    "text2": "Acoustician Jarosław Nkemdirim measured nine halls of nearly identical proportions built between 1870 and 1910. Their early reflection patterns were, as expected, closely similar, yet listener ratings of warmth varied more widely across those nine halls than across a set of halls chosen at random. The halls rated warmest had heavy plaster laid over masonry; the coldest had thin panelling over air cavities.",
+    "stem": "Based on the texts, how would Nkemdirim (Text 2) most likely respond to Oduya's explanation of the Halversen Hall's sound in Text 1?",
+    "options": [
+      "By accepting that the hall's proportions produce the reflection pattern she describes while denying that the pattern is what accounts for the warmth",
+      "By arguing that the early lateral reflections in halls of these proportions arrive too late for the ear to fuse them with the direct sound",
+      "By maintaining that listener ratings of warmth are too inconsistent to serve as evidence for any account of a hall's acoustics",
+      "By contending that the Halversen Hall's proportions differ more from those of comparable halls than Oduya's explanation assumes"
+    ],
+    "key": 0,
+    "keyWhy": "it keeps the geometry and detaches it from the outcome. Nkemdirim's nine halls have nearly identical proportions and, \"as expected,\" closely similar early reflection patterns — so he grants Oduya's account of what the shape produces. But warmth ratings across those nine \"varied more widely across those nine halls than across a set of halls chosen at random,\" and the split fell along wall construction: heavy plaster over masonry at the warm end, thin panelling over air cavities at the cold. A property held constant cannot explain a difference that large.",
+    "rebuttals": {
+      "B": "Text 2 accepts the reflection pattern as predicted for these proportions and reports it as found. Nothing there concerns arrival times or the ear's fusion interval.",
+      "C": "Nkemdirim's argument depends on the ratings being informative — it is their systematic variation with wall construction that carries his point. Dismissing them would dismantle his own evidence.",
+      "D": "the Halversen Hall's proportions are not disputed. Nkemdirim's nine halls were selected precisely because they share those proportions, which is what makes the comparison work."
+    },
+    "steps": [
+      "Step 1: Identify Oduya's causal chain: proportions produce early lateral reflections, which produce warmth.",
+      "Step 2: Nkemdirim holds the first link constant across nine halls and finds the outcome varying widely.",
+      "Step 3: A constant cannot explain a variable, so the second link fails — Choice A."
+    ],
+    "remember": "Hold the proposed cause constant and see whether the effect still moves. If it does, the response concedes the cause and rejects the explanation."
+  },
+  {
+    "id": "CTC-H20",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Wild bee abundance in the Corley Valley fell by half between 2004 and 2020. Entomologist Fatoumata Ndiaye's regression across sixty monitored sites finds pesticide application the strongest single predictor of the decline, and notes that the two years of steepest loss each followed a season of unusually heavy spraying. She recommends that recovery efforts concentrate on bringing application rates down.",
+    "text2": "Entomologist Kasper Ravnholt points out that spraying in the Corley Valley is heaviest on the largest farms, which are also the farms that have consolidated their fields and pulled out hedgerows and field margins most aggressively. In his data, application rate and hedgerow loss are nearly indistinguishable statistically, and the handful of large farms that sprayed heavily while retaining their hedgerows lost no bees at all over the period.",
+    "stem": "Based on the texts, how would Ravnholt (Text 2) most likely respond to the recommendation Ndiaye makes in Text 1?",
+    "options": [
+      "By arguing that her regression cannot separate spraying from habitat loss, and that the sites which do separate them point away from spraying",
+      "By accepting that spraying and hedgerow loss are distinct causes of decline but contending that their combined effect is greater than either alone",
+      "By maintaining that the two years of steepest decline in the Corley Valley followed unusual weather rather than unusually heavy spraying",
+      "By conceding that hedgerow loss explains part of the decline while agreeing that reducing application rates is the more practical intervention"
+    ],
+    "key": 0,
+    "keyWhy": "it names both of Ravnholt's moves. The first is statistical: application rate and hedgerow loss are \"nearly indistinguishable statistically\" in the Corley Valley, because the farms that spray most are the farms that cleared most, so a regression cannot assign the decline to one rather than the other. The second is particularly informative: the few farms that broke the pattern by \"sprayed heavily while retaining their hedgerows lost no bees at all.\" Where the two variables come apart, spraying is not what tracks the loss.",
+    "rebuttals": {
+      "B": "Ravnholt's point is that the two cannot be told apart in Ndiaye's data, not that both operate. An interaction between them would still require distinguishing them, which is what he says the data cannot do.",
+      "C": "weather is mentioned in neither text. Ravnholt does not dispute that the steepest declines followed the heaviest spraying seasons; he disputes what that timing establishes.",
+      "D": "this endorses Ndiaye's recommendation, which is the thing Ravnholt's heavy-spraying, hedgerow-retaining farms cut against. Nothing in Text 2 concerns which intervention is easier to carry out."
+    },
+    "steps": [
+      "Step 1: Notice what Ndiaye's regression needs in order to support a recommendation: spraying must be separable from other correlated changes.",
+      "Step 2: Ravnholt shows it is not separable in most of the valley — the same farms did both.",
+      "Step 3: Then find the sites where it is separable: heavy spraying with hedgerows kept, and no losses — Choice A."
+    ],
+    "remember": "When two candidate causes move together, the informative sites are the ones where they come apart. A hard item will usually put a handful of them in Text 2."
+  }
+]

@@ -5,10 +5,168 @@
 const express = require('express');
 const router = express.Router();
 const { requireAuth } = require('./middleware/auth');
+const { getWordDefinition } = require('./helperService');
 
 // Use Firebase Admin from the req object, initialized in server.js
 
 const verifyFirebaseToken = requireAuth();
+
+/**
+ * Normalize a selected term into a stable cache/dedupe key.
+ * Returns null if the selection is not a reasonable word/short phrase.
+ */
+const normalizeTermKey = (raw) => {
+  if (!raw || typeof raw !== 'string') return null;
+  // Trim whitespace and surrounding punctuation/quotes
+  const cleaned = raw
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+  if (!cleaned) return null;
+  if (cleaned.length > 50) return null;
+  const wordCount = cleaned.split(' ').length;
+  if (wordCount > 4) return null;
+  // Must contain at least one letter
+  if (!/\p{L}/u.test(cleaned)) return null;
+  const key = cleaned
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}'’-]+/gu, '_')
+    .replace(/^_+|_+$/g, '');
+  return key ? { cleaned, key } : null;
+};
+
+/**
+ * POST /api/bank/define-and-save
+ * Takes a word the student highlighted (plus surrounding sentence context),
+ * generates a context-aware definition via the AI helper (with a global
+ * Firestore cache since SAT vocabulary repeats), and saves it to the
+ * user's word bank. Deduplicates against words already in the bank.
+ */
+router.post('/define-and-save', verifyFirebaseToken, async (req, res) => {
+  try {
+    const { term, context = '', source = 'highlight', metadata = {} } = req.body;
+    const userId = req.user.uid;
+
+    const normalized = normalizeTermKey(term);
+    if (!normalized) {
+      return res.status(400).json({
+        error: 'Please select a single word or a short phrase (up to 4 words).'
+      });
+    }
+
+    const bankRef = req.db.collection('users').doc(userId).collection('bankItems');
+
+    // Fetch the user's existing word terms once for dedupe (word banks are small)
+    const existingSnapshot = await bankRef.where('type', '==', 'word').select('term', 'definition').get();
+    const existingByTerm = new Map();
+    existingSnapshot.forEach(doc => {
+      const t = (doc.data().term || '').trim().toLowerCase();
+      if (t) existingByTerm.set(t, { id: doc.id, ...doc.data() });
+    });
+
+    const rawLower = normalized.cleaned.toLowerCase();
+    if (existingByTerm.has(rawLower)) {
+      const existing = existingByTerm.get(rawLower);
+      return res.json({
+        success: true,
+        alreadyExists: true,
+        id: existing.id,
+        term: existing.term,
+        definition: existing.definition || '',
+        message: 'Word is already in your Word Bank.'
+      });
+    }
+
+    // Resolve the definition: global cache first, then the AI helper
+    const cacheRef = req.db.collection('wordDefinitions').doc(normalized.key);
+    let term_ = normalized.cleaned;
+    let definition = '';
+
+    const cacheDoc = await cacheRef.get();
+    if (cacheDoc.exists && cacheDoc.data().definition) {
+      term_ = cacheDoc.data().term || term_;
+      definition = cacheDoc.data().definition;
+    } else {
+      const result = await getWordDefinition({ word: normalized.cleaned, context });
+      term_ = result.term || term_;
+      definition = result.definition;
+      // Cache globally (best effort - failure here shouldn't block the save)
+      try {
+        await cacheRef.set({
+          term: term_,
+          definition,
+          contextSample: String(context || '').slice(0, 300),
+          createdAt: req.admin.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (cacheError) {
+        console.error('Error caching word definition:', cacheError);
+      }
+    }
+
+    // The model may have normalized the term (e.g. plural -> base form);
+    // dedupe again on the final term.
+    const finalLower = term_.trim().toLowerCase();
+    if (existingByTerm.has(finalLower)) {
+      const existing = existingByTerm.get(finalLower);
+      return res.json({
+        success: true,
+        alreadyExists: true,
+        id: existing.id,
+        term: existing.term,
+        definition: existing.definition || '',
+        message: 'Word is already in your Word Bank.'
+      });
+    }
+
+    // Deterministic doc ID (from the final term) + create() makes concurrent
+    // saves of the same word race-safe: the second create fails ALREADY_EXISTS.
+    const finalKeyInfo = normalizeTermKey(term_) || normalized;
+    const bankItemRef = bankRef.doc(`hl_${finalKeyInfo.key}`);
+    try {
+      await bankItemRef.create({
+        term: term_.trim(),
+        definition: definition.trim(),
+        type: 'word',
+        source,
+        metadata: {
+          ...metadata,
+          selectedText: normalized.cleaned,
+          contextSnippet: String(context || '').slice(0, 300)
+        },
+        createdAt: req.admin.firestore.FieldValue.serverTimestamp(),
+        lastReviewedAt: null,
+        reviewCount: 0,
+        mastered: false
+      });
+    } catch (createError) {
+      const alreadyExists = createError.code === 6 ||
+        /ALREADY_EXISTS/i.test(String(createError.message || ''));
+      if (alreadyExists) {
+        return res.json({
+          success: true,
+          alreadyExists: true,
+          id: bankItemRef.id,
+          term: term_.trim(),
+          definition: definition.trim(),
+          message: 'Word is already in your Word Bank.'
+        });
+      }
+      throw createError;
+    }
+
+    res.status(201).json({
+      success: true,
+      alreadyExists: false,
+      id: bankItemRef.id,
+      term: term_.trim(),
+      definition: definition.trim(),
+      message: 'Word saved to your Word Bank.'
+    });
+  } catch (error) {
+    console.error('Error in /api/bank/define-and-save POST:', error);
+    res.status(500).json({ error: error.message || 'Failed to save word.' });
+  }
+});
 
 /**
  * POST /api/bank/save

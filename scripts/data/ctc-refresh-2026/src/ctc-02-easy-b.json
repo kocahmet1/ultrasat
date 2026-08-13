@@ -1,0 +1,282 @@
+[
+  {
+    "id": "CTC-E11",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "A slime mold is a single cell with many nuclei and no nervous system, yet in maze experiments it often avoids corridors it has already explored and reaches food by a short route. Biologist Anselm Rideout argues that this behavior shows the organism keeps an internal record of its earlier movements—in effect, a primitive form of memory.",
+    "text2": "Physicist Naledi Mokoena modeled a slime mold as a spreading film that leaves a thin layer of slime wherever it has been. Because coated surfaces hold less water, the film's leading edge turns away from them. The model reproduced the maze behavior even though the organism retained no information internally; only the surrounding environment carried a trace of its earlier movement.",
+    "stem": "Based on the texts, how would Mokoena (Text 2) most likely respond to Rideout's argument in Text 1?",
+    "options": [
+      "By arguing that an external slime trail can guide the organism without an internal record of its movements",
+      "By arguing that slime molds solve mazes more slowly than Rideout's films indicate",
+      "By suggesting that slime molds possess a simple nervous system that has gone unnoticed",
+      "By claiming that the food at the end of the maze has no effect on the path a slime mold takes"
+    ],
+    "key": 0,
+    "keyWhy": "it states the exact difference between the explanations. Rideout says the slime mold keeps a record inside itself. Mokoena's model produces the same maze behavior because slime left in the environment changes where the organism moves next, while the organism retains no information internally. Thus, the behavior can be guided by an external trace rather than internal memory.",
+    "rebuttals": {
+      "B": "Neither text compares maze-solving speed. Mokoena reproduces the reported route behavior; the disagreement is about what produces it.",
+      "C": "Text 1 states that a slime mold has no nervous system, and Text 2 offers an explanation that needs none. Mokoena's position is that less machinery is required, not more.",
+      "D": "both texts treat the food as the target the organism moves toward. Nothing in Mokoena's model removes the food's role in the trial."
+    },
+    "steps": [
+      "Step 1: Identify Rideout's claim: the organism stores an internal record of where it has moved.",
+      "Step 2: Identify Mokoena's alternative: slime left outside the organism changes which surfaces it enters.",
+      "Step 3: Because the external trail produces the behavior without an internal record, Choice A is correct."
+    ],
+    "remember": "Distinguish information stored inside an organism from a trace left in its environment; the two are not the same mechanism."
+  },
+  {
+    "id": "CTC-E12",
+    "difficulty": "easy",
+    "lane": "social-science",
+    "family": "agree",
+    "text1": "Roughly half the world's languages have fewer than ten thousand speakers, and a great many of those speakers are elderly. Linguist Anneke Prinsloo argues that the profession's first duty is documentation: recording speakers, compiling dictionaries, and building searchable archives while fluent speakers are still living, so that a full record of the language survives even if daily use of it comes to an end.",
+    "text2": "Archives are not speakers. Linguist Rangi Whakaeke, who works with three communities running language nests where toddlers spend their days in the care of fluent elders, argues that field money should follow transmission rather than recording. A language that is being passed to children, he notes, generates its own record continuously and at no cost to anyone; one that is only archived generates none at all.",
+    "stem": "Based on the texts, both linguists would most likely agree with which statement?",
+    "options": [
+      "Fluent speakers of a language with few speakers are a resource that may not be available indefinitely.",
+      "Archived recordings are of little value once a language is no longer spoken daily.",
+      "Language nests are the most effective way to keep a language in daily use.",
+      "Most languages with fewer than ten thousand speakers will still be spoken in a century."
+    ],
+    "key": 0,
+    "keyWhy": "both linguists build their programs around the same fact. Prinsloo urges recording \"while fluent speakers are still living.\" Whakaeke wants funding directed to nests where children spend their days \"in the care of fluent elders.\" They differ on what should be done with the time available, but both treat the presence of fluent speakers as a window that may close.",
+    "rebuttals": {
+      "B": "this is closer to Whakaeke's emphasis than to anything both share, and even he does not call archives worthless — he argues that transmission should come first. Prinsloo's entire case rests on archives retaining value.",
+      "C": "language nests appear only in Text 2, and Whakaeke describes them without ranking them against other methods. Prinsloo says nothing about them.",
+      "D": "neither linguist forecasts how many of these languages will survive. Both write as though survival is uncertain, which is why they disagree about priorities."
+    },
+    "steps": [
+      "Step 1: Notice the disagreement — spend on recording or spend on transmission — and set it aside.",
+      "Step 2: Ask what makes either priority urgent. Both writers point to fluent speakers who are alive now.",
+      "Step 3: The statement about that shared premise is Choice A."
+    ],
+    "remember": "Rival recommendations usually rest on a shared factual premise. That premise, not either recommendation, answers a \"both agree\" stem."
+  },
+  {
+    "id": "CTC-E13",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Monarch butterflies fly thousands of kilometers to the same wintering groves each autumn, though no individual has made the trip before and none returns to lead the next generation. Entomologist Priya Raghunathan showed that monarchs held for two weeks under an artificially shifted daylight cycle set off in the wrong compass direction, and concluded that the butterflies steer by the position of the sun.",
+    "text2": "Entomologist Callum Oyelaran flew monarchs in a tethered arena under heavy overcast, with the sun's position unavailable to them at any point in the trial. The butterflies still held a steady southwesterly heading for as long as they were recorded, in some trials more than two hours. When Oyelaran surrounded the arena with a weak reversed magnetic field, the same butterflies turned within minutes and held the opposite heading.",
+    "stem": "Based on the texts, how would Oyelaran (Text 2) most likely respond to Raghunathan's conclusion in Text 1?",
+    "options": [
+      "By noting that monarchs kept a steady heading even when the sun was not available to them",
+      "By arguing that monarchs held under a shifted daylight cycle do not change their direction of travel",
+      "By suggesting that monarchs reach their wintering groves by following older butterflies that have made the trip",
+      "By claiming that overcast skies prevent monarchs from beginning their autumn migration"
+    ],
+    "key": 0,
+    "keyWhy": "it reports the observation that bears on Raghunathan's conclusion. Raghunathan concludes that monarchs \"steer by the position of the sun.\" Oyelaran's butterflies flew under \"heavy overcast, with the sun's position unavailable,\" and still held a steady southwesterly heading, then reversed it when the magnetic field was reversed. A heading maintained without the sun shows that the sun is not the only guide available to them.",
+    "rebuttals": {
+      "B": "Oyelaran does not contest Raghunathan's result. His arena work is separate, and nothing in Text 2 revisits butterflies held under a shifted daylight cycle.",
+      "C": "Text 1 states that no individual monarch has made the trip before, so there are no experienced butterflies to follow. Text 2 does not raise social cues at all.",
+      "D": "Oyelaran's overcast butterflies flew, and held a heading. Text 2 gives no indication that cloud cover stops migration."
+    },
+    "steps": [
+      "Step 1: Fix Raghunathan's claim: the sun is what monarchs steer by.",
+      "Step 2: Find the condition in Text 2 that removes the sun — heavy overcast — and the outcome: a steady heading anyway.",
+      "Step 3: Navigation that survives the loss of the sun is what Oyelaran would raise — Choice A."
+    ],
+    "remember": "If Text 2 removes the very cue Text 1 credits and the behavior persists, that persistence is the response."
+  },
+  {
+    "id": "CTC-E14",
+    "difficulty": "easy",
+    "lane": "humanities-arts",
+    "family": "agree",
+    "text1": "Films of the 1910s were never silent. Musicologist Teodora Vasilescu has collected several hundred of the cue sheets that studios shipped out with their prints, listing a specific piece of music for each scene and often the tempo at which to play it. She argues that these sheets show the studios treating music as part of the film itself, to be reproduced the same way in every theater.",
+    "text2": "Cue sheets tell us what studios wanted, not what audiences heard. Musicologist Hyun-Ki Chang has gathered the ledgers and program books of thirty theaters, which show that a house with a single pianist ignored most of a cue sheet while a house with a thirty-piece orchestra added overtures and interludes of its own. Each theater, Chang argues, effectively scored the film again.",
+    "stem": "Based on the texts, both musicologists would most likely agree with which statement?",
+    "options": [
+      "Music was a planned component of the film exhibitions of the 1910s rather than an incidental addition.",
+      "Audiences in the 1910s heard nearly the same accompaniment to a film wherever they saw it.",
+      "Theaters with larger orchestras attracted larger audiences than theaters with a single pianist.",
+      "The cue sheets shipped by studios in the 1910s have largely been lost."
+    ],
+    "key": 0,
+    "keyWhy": "both scholars treat accompaniment as something deliberately arranged. Vasilescu's cue sheets assign \"a specific piece of music for each scene,\" showing studios planning the music in advance. Chang's ledgers show theaters departing from those sheets, but by scoring the film \"again\" — that is, by making their own deliberate musical choices. They differ over who did the planning, not over whether music was planned.",
+    "rebuttals": {
+      "B": "this is Vasilescu's hope for the cue sheets, and it is exactly what Chang's ledgers contradict. A single pianist and a thirty-piece orchestra did not produce the same accompaniment.",
+      "C": "attendance figures appear in neither text. Chang uses the ledgers to compare what was played, not how many people came.",
+      "D": "Text 1 shows that several hundred cue sheets survive, but neither text states what share of all the cue sheets produced in the 1910s has survived. Thus, neither musicologist makes the broad claim in this choice."
+    },
+    "steps": [
+      "Step 1: Name the disagreement: whether the studio's plan or the theater's practice determined what audiences heard.",
+      "Step 2: Ask what both accounts assume. In each, someone chooses the music on purpose and in advance.",
+      "Step 3: Choice A states that shared assumption without settling who chose."
+    ],
+    "remember": "When two texts fight over who controls something, the thing itself is usually the common ground."
+  },
+  {
+    "id": "CTC-E15",
+    "difficulty": "easy",
+    "lane": "social-science",
+    "family": "difference",
+    "text1": "Three years after the city of Halvern began charging drivers a fee to enter its central district at peak hours, traffic inside that district was down by a fifth and average bus speeds were up by a quarter. Shopfront vacancies had not risen. Transport economist Lucien Barrow points to the figures as evidence that road pricing does what it is designed to do.",
+    "text2": "Halvern's central district got quieter, but the ring road just outside the charging boundary did not. Transport planner Ayesha Nkomo's counts, taken at eleven points around the perimeter, show that a substantial share of the vehicles that stopped entering the center simply rerouted around it, lengthening the average trip by several kilometers and pushing congestion and exhaust onto residential neighborhoods that had no say in the scheme.",
+    "stem": "Which choice best describes a difference in how Barrow and Nkomo view Halvern's road pricing scheme?",
+    "options": [
+      "Barrow judges the scheme by conditions inside the charged district, whereas Nkomo judges it by effects outside that district as well.",
+      "Barrow believes the fee charged in Halvern is too low, whereas Nkomo believes it is too high.",
+      "Barrow relies on figures collected by the city, whereas Nkomo relies on figures collected by drivers.",
+      "Barrow argues that bus speeds are the best measure of a scheme's success, whereas Nkomo argues that traffic volume is."
+    ],
+    "key": 0,
+    "keyWhy": "it names the difference in what each analyst counts. Barrow's evidence is entirely from within the charging zone: traffic down a fifth, bus speeds up a quarter. Nkomo's counts come from \"the ring road just outside the charging boundary,\" where rerouted vehicles lengthened trips and pushed delay onto other neighborhoods. The two are looking at the same scheme across different boundaries.",
+    "rebuttals": {
+      "B": "neither analyst proposes a change to the size of the fee. Nkomo's objection concerns where the traffic went, not what drivers were charged.",
+      "C": "Text 2 attributes the ring-road counts to Nkomo herself; drivers are not described as collecting data in either text.",
+      "D": "Barrow cites both bus speeds and traffic volume, and Nkomo cites neither as the correct measure. Their difference is geographic, not about which statistic matters."
+    },
+    "steps": [
+      "Step 1: List Barrow's evidence and note where all of it was gathered — inside the charged district.",
+      "Step 2: List Nkomo's evidence and note where it was gathered — outside the boundary.",
+      "Step 3: The difference is the boundary each draws around the scheme's effects — Choice A."
+    ],
+    "remember": "A \"difference\" answer often turns on scope: what one writer counts as part of the outcome and the other does not."
+  },
+  {
+    "id": "CTC-E16",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Each species of weaverbird builds a nest of a distinctive shape, generation after generation. Ornithologist Bakary Sanneh raised village weavers in isolation from any adult of their species and found that each bird's first nest had the characteristic domed chamber and long downward entrance tube and remained intact until its chicks left. <u>Weaverbirds therefore need no practice to build sturdy, functional nests.</u>",
+    "text2": "Ornithologist Wren Halloran filmed the first, fifth, and twentieth nests built by twelve individual weavers over a single breeding season. Early nests were loose and often collapsed under their own weight before an egg was laid; later ones were tighter, took half as long to build, and rarely failed. Birds also switched grass types after a nest fell, and afterward stayed with whichever material had held.",
+    "stem": "Based on the texts, how would Halloran (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By noting that individual weavers build stronger, more reliable nests after gaining experience",
+      "By arguing that weavers raised in isolation build nests of a different shape from those raised with adults",
+      "By suggesting that the domed shape of a weaver nest offers no protection to the eggs inside",
+      "By claiming that weavers copy the nest designs of neighboring species when their own nests fail"
+    ],
+    "key": 0,
+    "keyWhy": "it directly challenges Sanneh's claim that practice is unnecessary. Halloran found that the same birds' early nests were loose and often collapsed, whereas their later nests were tighter and rarely failed. This improvement across repeated attempts shows that experience helps weavers become more effective builders.",
+    "rebuttals": {
+      "B": "Text 2 does not study isolated birds and reports no difference in shape. Halloran's nests differ in quality across a single bird's career, not across rearing conditions.",
+      "C": "the protective value of the domed shape is discussed in neither text. Halloran's point concerns how well nests hold together, not what they shield.",
+      "D": "the birds in Text 2 switched grass types, not designs, and they took their cue from their own failed nests rather than from other species."
+    },
+    "steps": [
+      "Step 1: Identify Sanneh's claim: weavers do not need practice to build sturdy nests.",
+      "Step 2: Halloran reports that early nests often collapsed but later nests rarely did.",
+      "Step 3: The improvement with experience directly challenges Sanneh's claim, so Choice A is correct."
+    ],
+    "remember": "Match the claim to the evidence precisely: better results after repeated attempts show that practice matters."
+  },
+  {
+    "id": "CTC-E17",
+    "difficulty": "easy",
+    "lane": "humanities-arts",
+    "family": "characterize",
+    "text1": "Translation scholar Emine Kaptanoglu argues that preserving a foreign novel's unfamiliar rhythms and sentence patterns makes readers slow down and attend more closely to the story. She therefore predicts that readers of a translation that keeps those features will later remember more details about the novel's setting than readers of a fluent, idiomatic translation will.",
+    "text2": "Translation scholar Dario Fenn gave two hundred readers one of two versions of the same novel: one kept the original's unfamiliar sentence patterns, and the other used fluent, idiomatic prose. A week later, readers of the fluent version correctly recalled more details about the novel's setting and remembered more of the characters' names than readers of the other version did.",
+    "stem": "Based on the texts, how would Fenn (Text 2) most likely characterize Kaptanoglu's argument in Text 1?",
+    "options": [
+      "As contradicted by evidence that readers remembered the novel's setting better after reading the fluent version",
+      "As supported by evidence that readers of the version with unfamiliar sentence patterns remembered more character names",
+      "As irrelevant, because few readers today encounter novels in translation at all",
+      "As overly cautious, because readers are willing to tolerate more untranslated words than translators assume"
+    ],
+    "key": 0,
+    "keyWhy": "it accurately compares Kaptanoglu's prediction with Fenn's result. Kaptanoglu predicts that keeping unfamiliar language patterns will improve readers' memory of the setting. Fenn finds the opposite: readers of the fluent version later recalled more setting details. His evidence therefore contradicts her prediction.",
+    "rebuttals": {
+      "B": "this reverses Fenn's finding. Readers of the fluent version, not the version with unfamiliar sentence patterns, remembered more character names.",
+      "C": "how many readers encounter translations is addressed in neither text, and Fenn's study depends on readers who do.",
+      "D": "Fenn did not test readers' tolerance for untranslated words. His study compared how much readers remembered after reading two versions."
+    },
+    "steps": [
+      "Step 1: Identify Kaptanoglu's prediction: unfamiliar sentence patterns will help readers remember the setting.",
+      "Step 2: Identify Fenn's result: readers of the fluent version remembered more setting details.",
+      "Step 3: Because the result is the opposite of the prediction, Choice A is correct."
+    ],
+    "remember": "When one text makes a prediction and the other reports a test, compare the predicted and observed outcomes directly."
+  },
+  {
+    "id": "CTC-E18",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "agree",
+    "text1": "Reef-building corals house microscopic algae in their tissues and expel them when the water grows too warm, turning the coral white. Marine ecologist Sione Tuiavii has tracked eighty reefs through three warm summers and reports that colonies which took up a heat-tolerant strain of algae after bleaching survived the following summer at more than twice the rate of colonies that took up their original strain.",
+    "text2": "Marine ecologist Freya Lindqvist notes that heat-tolerant algae supply their coral hosts with markedly less sugar than the strains they replace. In her surveys of the same region, colonies carrying the tolerant strain grew about a third more slowly over four years and produced fewer eggs each spawning season. Reefs dominated by such colonies, she argues, will rebuild much more slowly after any storm or disease outbreak.",
+    "stem": "Based on the texts, both ecologists would most likely agree with which statement?",
+    "options": [
+      "Which strain of algae a coral colony carries affects how that colony fares afterward.",
+      "Coral colonies carrying heat-tolerant algae will dominate most reefs within a few decades.",
+      "Reefs recover from storms more quickly than they recover from unusually warm summers.",
+      "Corals that expel their algae during a warm summer rarely take up new algae afterward."
+    ],
+    "key": 0,
+    "keyWhy": "both ecologists trace later outcomes to the strain a colony carries. Tuiavii links the heat-tolerant strain to survival \"at more than twice the rate\" through a hot summer. Lindqvist links the same strain to growth \"about a third more slowly\" and fewer eggs. They weigh those consequences differently, but both treat the identity of the algal partner as something that determines how a colony subsequently does.",
+    "rebuttals": {
+      "B": "neither ecologist forecasts which strain will predominate. Tuiavii reports survival through three summers, and Lindqvist describes a cost, not a projection.",
+      "C": "no comparison between storm recovery and heat recovery appears in either text. Lindqvist mentions storms only as an event that reefs must rebuild from.",
+      "D": "Neither text states how often corals take up new algae after bleaching. Text 1 compares outcomes among colonies carrying different strains, but that comparison does not establish whether new uptake is common or rare."
+    },
+    "steps": [
+      "Step 1: Note that the two texts assign opposite values to the same thing — one sees survival, the other sees slow growth.",
+      "Step 2: Both are consequences of a single variable: which algal strain the colony carries.",
+      "Step 3: The statement that names that variable and stops there is Choice A."
+    ],
+    "remember": "A benefit in Text 1 and a cost in Text 2 are still agreement that the factor matters. That agreement is often what the stem is after."
+  },
+  {
+    "id": "CTC-E19",
+    "difficulty": "easy",
+    "lane": "history-civics",
+    "family": "agree",
+    "text1": "The surviving registers of the coopers' guild of Alderbek record every apprentice taken on between 1490 and 1640, with the master's name, the term of years agreed, and the fee paid at enrollment. Historian Marek Dubrowski uses these registers to argue that guild training was a tightly controlled system in which a master could take only one apprentice at a time and could not replace him early.",
+    "text2": "Alderbek's guild registers name only apprentices who were formally enrolled and whose fees were paid. Historian Ottilie Ravnsborg has found household inventories, tax rolls, and two accident reports listing young workers in the town's cooperages who appear nowhere in the registers, several of them in the same years and the same workshops. Guild rules capped enrollment, she argues, but the workshops staffed themselves as their workloads required.",
+    "stem": "Based on the texts, both historians would most likely agree with which statement?",
+    "options": [
+      "The Alderbek guild placed formal limits on how many apprentices a master could enroll.",
+      "The Alderbek registers record every young worker employed in the town's cooperages.",
+      "Cooperages in Alderbek generally employed more workers than cooperages in nearby towns.",
+      "Guild registers are a less reliable historical source than household inventories are."
+    ],
+    "key": 0,
+    "keyWhy": "both historians take the enrollment cap as established. Dubrowski reads the registers as showing \"a master could take only one apprentice at a time.\" Ravnsborg does not deny the rule — she states that \"guild rules capped enrollment\" and argues that workshops staffed themselves beyond it anyway. The dispute is about whether the rule described the workforce, not about whether the rule existed.",
+    "rebuttals": {
+      "B": "this is what Ravnsborg's inventories and tax rolls disprove. She found young workers in cooperages \"who appear nowhere in the registers.\"",
+      "C": "no other town is mentioned in either text, so no such comparison is available.",
+      "D": "Ravnsborg treats the registers as accurate about enrollment and merely incomplete about employment. Neither historian ranks the two kinds of source in general."
+    },
+    "steps": [
+      "Step 1: Notice what Ravnsborg concedes, which is easy to miss: \"guild rules capped enrollment.\"",
+      "Step 2: Notice what she denies: that the capped enrollment equals the whole workforce.",
+      "Step 3: The conceded point is the shared one — Choice A."
+    ],
+    "remember": "Read the disagreeing text for what it grants. On \"both agree\" items the concession is frequently the key."
+  },
+  {
+    "id": "CTC-E20",
+    "difficulty": "easy",
+    "lane": "social-science",
+    "family": "respond",
+    "text1": "Summer afternoons in the Ferngate district run as much as seven degrees hotter than in the leafy neighborhoods across the river, and the gap has widened since 2010. Urban planner Delia Marchetti attributes it to tree cover, noting that Ferngate has one street tree for every nine that the river neighborhoods have, and recommends a large planting program as the district's most effective remedy.",
+    "text2": "Urban planner Kwabena Asare led a two-year trial on thirty otherwise similar blocks in Ferngate. Ten blocks received new street trees, ten had dark asphalt lots replaced with light-colored paving, and ten were left unchanged. By the end of the trial, the tree-planted blocks averaged one degree cooler on summer afternoons, while the resurfaced blocks averaged three degrees cooler and also stayed cooler after sunset. Asare concludes that replacing dark pavement produced the larger temperature reduction in this trial.",
+    "stem": "Based on the texts, how would Asare (Text 2) most likely respond to Marchetti's recommendation in Text 1?",
+    "options": [
+      "By pointing to a local trial in which replacing dark pavement reduced temperatures more than planting trees did",
+      "By arguing that Ferngate already has considerably more tree cover than the leafy neighborhoods on the far side of the river",
+      "By suggesting that street trees raise afternoon temperatures in districts with wide asphalt lots",
+      "By claiming that surface temperature is a poor guide to how hot a district feels"
+    ],
+    "key": 0,
+    "keyWhy": "it states the evidence in Text 2 that directly bears on Marchetti's recommendation. Marchetti calls tree planting Ferngate's most effective remedy, but Asare compared the two remedies on similar local blocks and found a three-degree reduction after resurfacing versus a one-degree reduction after tree planting. He would therefore cite the trial as evidence that replacing pavement produced more cooling under the tested conditions.",
+    "rebuttals": {
+      "B": "Text 1 states that Ferngate has one street tree for every nine across the river, and Text 2 does not dispute the count. Asare's finding concerns pavement, not the tree tally.",
+      "C": "the tree-planted blocks became one degree cooler, so Text 2 indicates that trees reduced temperatures rather than raised them.",
+      "D": "Text 2 never contrasts measured temperature with how hot the district feels, so this claim is unsupported and does not address the direct comparison of remedies."
+    },
+    "steps": [
+      "Step 1: Identify Marchetti's recommendation: plant trees as the most effective remedy.",
+      "Step 2: Compare the tested outcomes in Text 2: one degree of cooling from trees and three degrees from resurfacing.",
+      "Step 3: Asare would use that direct comparison to challenge the recommendation, so Choice A is correct."
+    ],
+    "remember": "When two remedies are tested under similar conditions, compare their measured outcomes to evaluate a claim about which is more effective."
+  }
+]

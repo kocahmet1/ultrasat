@@ -1,0 +1,138 @@
+/* WordSaver — select-to-save vocabulary popover */
+
+.word-saver-popover {
+  position: fixed;
+  z-index: 99999;
+  animation: word-saver-pop 0.12s ease-out;
+  /* Keep the popover from stealing the selection */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Opacity-only: the element's transform is set inline per placement
+   (above vs. below the selection), so the keyframe must not touch it. */
+@keyframes word-saver-pop {
+  from {
+    opacity: 0;
+  }
+}
+
+.word-saver-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--ut-accent, #2456e6);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.28);
+}
+
+.word-saver-btn:hover {
+  filter: brightness(1.08);
+}
+
+.word-saver-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.word-saver-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--ut-card, #fff);
+  color: var(--ut-text, #1e2433);
+  border: 1px solid var(--ut-rule, #e3e7f0);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+}
+
+.word-saver-status svg {
+  width: 14px;
+  height: 14px;
+}
+
+.word-saver-success svg {
+  color: #16a34a;
+}
+
+.word-saver-error {
+  color: #b91c1c;
+}
+
+.word-saver-spinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--ut-rule, #e3e7f0);
+  border-top-color: var(--ut-accent, #2456e6);
+  animation: word-saver-spin 0.7s linear infinite;
+}
+
+@keyframes word-saver-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.word-saver-card {
+  width: 300px;
+  max-width: calc(100vw - 24px);
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--ut-card, #fff);
+  border: 1px solid var(--ut-rule, #e3e7f0);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
+  text-align: left;
+}
+
+.word-saver-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #16a34a;
+  margin-bottom: 6px;
+}
+
+.word-saver-card-head svg {
+  width: 13px;
+  height: 13px;
+}
+
+.word-saver-card-term {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ut-text, #1e2433);
+  margin-bottom: 4px;
+}
+
+.word-saver-card-def {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ut-text, #1e2433);
+  opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+  .word-saver-btn,
+  .word-saver-status {
+    padding: 10px 16px; /* larger touch target */
+    font-size: 14px;
+  }
+}

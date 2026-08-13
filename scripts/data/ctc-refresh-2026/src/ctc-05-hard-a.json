@@ -1,0 +1,283 @@
+[
+  {
+    "id": "CTC-H01",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Some squids and octopuses alter certain RNA messages before proteins are made, so a single gene can yield more than one protein form. Biologist Ingrid Saetre notes that the altered positions have changed less across related species than nearby DNA has, especially in genes active in nervous tissue. She concludes that natural selection preserved those positions because the capacity to alter RNA benefits the animals.",
+    "text2": "Biologist Tarek Boulos compares the same gene segments with those of nautiluses, which do not alter RNA at the positions Saetre studied. Those segments are just as conserved in nautiluses, and laboratory tests show that changing them disrupts the unaltered protein's folding. Boulos therefore argues that selection may preserve the underlying protein structure whether or not RNA alteration is useful.",
+    "stem": "Based on the texts, how would Boulos (Text 2) most likely respond to the inference Saetre draws in Text 1?",
+    "options": [
+      "By granting that the positions are conserved but arguing that the evidence cannot distinguish a benefit of RNA alteration from the importance of the unaltered protein",
+      "By treating conservation in nautiluses as evidence that their ancestors altered RNA at the same positions and later lost the capacity",
+      "By accepting that RNA alteration is beneficial in squids and octopuses while arguing that nautiluses achieve the same benefit by a different process",
+      "By disputing Saetre's observation that the altered positions have changed less across species than the DNA surrounding them"
+    ],
+    "key": 0,
+    "keyWhy": "it identifies the alternative explanation supplied by the comparison group. Saetre treats conservation at altered positions as evidence that RNA alteration is useful. Boulos finds equal conservation in nautiluses, where alteration at those positions does not occur, and shows that mutations there damage the unaltered protein. Thus, the shared observation may reflect selection on protein structure; it does not by itself show that the capacity to alter RNA is adaptive.",
+    "rebuttals": {
+      "B": "Text 2 says that nautiluses do not alter RNA at the studied positions; it gives no evidence that their ancestors did. Conservation without alteration is being used as a comparison, not as a history of a lost capacity.",
+      "C": "Boulos does not identify a different process that provides nautiluses with the same benefit, nor does he accept that RNA alteration is beneficial. He argues only that Saetre's evidence cannot establish that benefit.",
+      "D": "Boulos accepts the conservation pattern and extends it to a group without the alteration. His objection concerns what the pattern explains, not whether Saetre measured it correctly."
+    },
+    "steps": [
+      "Step 1: Separate Saetre's evidence (conservation) from her explanation (RNA alteration is beneficial).",
+      "Step 2: Use Boulos's comparison: the same segments are conserved where the RNA alteration does not occur, and mutations harm the unaltered protein.",
+      "Step 3: Conservation therefore has another supported explanation, so it cannot distinguish the two possibilities - Choice A."
+    ],
+    "remember": "A comparison group can preserve an observation while changing what that observation proves. Look for a factor shared by the groups when the proposed cause is not shared."
+  },
+  {
+    "id": "CTC-H02",
+    "difficulty": "hard",
+    "lane": "humanities-arts",
+    "family": "characterize",
+    "text1": "An unusual procession scene appears in a hill-city palace and, two centuries later, in a coastal council hall: five figures occur in the same order, and the fourth raises the wrong hand for the ritual depicted. Art historian Leila Varma argues that the later patron deliberately quoted the older palace to claim continuity with its rulers; the repeated error makes independent invention unlikely.",
+    "text2": "Conservator Tomas Tejada finds matching pinholes and charcoal guide lines beneath the coastal painting, evidence that its painters enlarged a portable tracing. Workshop accounts show that traveling painters brought bundles of such tracings, including designs they reused for patrons with unrelated political aims. Tejada agrees that the image was copied but cautions that its route into the hall does not reveal what the patron meant by it.",
+    "stem": "Based on the texts, how would Tejada (Text 2) most likely characterize Varma's explanation of the coastal painting?",
+    "options": [
+      "As treating evidence that a design was transmitted as sufficient evidence that the later patron intended to invoke the earlier rulers",
+      "As correctly identifying the later patron's political aim but mistaking a tracing-based method for independent invention",
+      "As overstating the evidence for copying, since pinholes and guide lines indicate that the coastal painters composed the scene freehand",
+      "As wrongly inferring any link between the two paintings, since traveling painters reused designs only for patrons with the same political aims"
+    ],
+    "key": 0,
+    "keyWhy": "it preserves what Tejada accepts and isolates what he disputes. The repeated arrangement and matching preparation marks support Varma's claim that the later image was copied rather than independently invented. But the workshop accounts show that painters reused transmitted designs for patrons with unrelated aims. The route of the design therefore establishes transmission without establishing that the coastal patron meant to invoke the earlier rulers.",
+    "rebuttals": {
+      "B": "Tejada does not accept Varma's account of the patron's aim. Moreover, the tracing evidence supports copying, so it cannot show that the painters invented the scene independently.",
+      "C": "pinholes and charcoal guides are presented as evidence that painters enlarged a tracing, not that they composed the design freehand. Tejada agrees that copying occurred.",
+      "D": "the workshop accounts say painters reused designs for patrons with unrelated political aims, not only for patrons with matching aims. Tejada accepts a link between the images while limiting what that link reveals."
+    },
+    "steps": [
+      "Step 1: Separate Varma's claim into transmission of the design and the later patron's reason for using it.",
+      "Step 2: Tejada's physical evidence supports transmission, but the workshop records show that transmitted designs could serve unrelated patrons.",
+      "Step 3: The evidence establishes how the image traveled, not what the patron intended it to mean - Choice A."
+    ],
+    "remember": "Evidence that a form was copied does not automatically establish why a patron chose it. Distinguish transmission of a design from transmission of its meaning."
+  },
+  {
+    "id": "CTC-H03",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "As permafrost thaws, microbes release carbon that has long been frozen. Climate scientist Ravil Yusupov's century-long projection adjusts microbial emissions as temperature changes from decade to decade but holds plant uptake at the rate measured in existing low tundra vegetation. Because annual emissions from thawed soil exceed that fixed uptake, the model counts the difference as a continuing addition to the atmosphere.",
+    "text2": "Thawed soil is warmer, wetter, and richer in nutrients, and shrubs colonize it within a decade. Climate scientist Amara Oyinlola's plot data and growth model show plant uptake rising for roughly forty years after thaw and offsetting between a third and a half of cumulative emissions during that period. Uptake then levels off, while the soil remains a net carbon source.",
+    "stem": "Based on the texts, how would Oyinlola (Text 2) most likely respond to Yusupov's projection in Text 1?",
+    "options": [
+      "By accepting that thawed soil remains a net carbon source while arguing that the projection overstates its contribution during decades when thaw itself increases plant uptake",
+      "By arguing that shrub growth turns thawed soil into a net carbon sink until plant uptake levels off after roughly forty years",
+      "By accepting the fixed-uptake assumption for the first decades after thaw but arguing that it becomes inaccurate only after shrub growth levels off",
+      "By contending that the projection understates net emissions because the shrubs do not begin colonizing until about a decade after thaw"
+    ],
+    "key": 0,
+    "keyWhy": "it preserves the direction of Yusupov's result while revising its magnitude and timing. Yusupov holds plant uptake fixed at the low-tundra rate. Oyinlola shows that thaw changes that quantity: shrubs arrive, and their rising uptake offsets one-third to one-half of emissions for about forty years. Because the soil remains a net source, she would not reverse the projection's sign; she would argue that its fixed assumption exaggerates the addition during the period of shrub growth.",
+    "rebuttals": {
+      "B": "Text 2 explicitly says that the soil remains a net carbon source. Offsetting a fraction of emissions reduces a source; it does not turn the source into a sink.",
+      "C": "the fixed-uptake assumption becomes inaccurate when shrubs arrive and uptake begins rising, not only after that rise has ended. Leveling off limits the correction rather than initiating it.",
+      "D": "the decade before shrubs arrive leaves part of Yusupov's estimate unchanged, but the subsequent offset lowers cumulative net emissions. Nothing in Text 2 indicates that the projection's total is too low."
+    },
+    "steps": [
+      "Step 1: Locate Yusupov's fixed assumption: post-thaw uptake remains at the preexisting low-tundra rate.",
+      "Step 2: Oyinlola changes that assumption but not the sign of the result: uptake rises substantially, yet the soil stays a net source.",
+      "Step 3: The projection therefore overstates the source during the rising-uptake period rather than reversing it - Choice A."
+    ],
+    "remember": "When Text 2 changes a model's fixed input, track both sign and size. A large offset can reduce a projected effect without reversing it."
+  },
+  {
+    "id": "CTC-H04",
+    "difficulty": "hard",
+    "lane": "literature",
+    "family": "say-about",
+    "intro": "In Text 1, Mara is writing to her cousin after receiving an offer to sell the family shop.",
+    "text1": "I began this letter intending to ask whether I should accept. Yet on rereading the first page, I find that I have explained the buyer's delay as though it were an obstacle, not a chance to reconsider. I had not said to myself that the shop was sold. Apparently I needed to say it to you before I could hear that I had.",
+    "text2": "Some critics treat a private letter as a report of thoughts already formed. Another view is that a letter's anticipated reader helps produce the position it seems merely to disclose: in choosing what must be explained, defended, or taken for granted, a writer can discover a commitment that was not fully available before the writing began.",
+    "stem": "Based on the texts, what would an advocate of the second view in Text 2 most likely say about Mara's first page?",
+    "options": [
+      "It illustrates how addressing another person can reveal a commitment the writer had not explicitly recognized before writing.",
+      "It supports the view that letters report thoughts already formed, since Mara recognizes the commitment while rereading the page alone.",
+      "It shows that an anticipated reader can change how a writer defends a decision but cannot affect whether the writer has made that decision.",
+      "It complicates the second view because Mara discovers only what her cousin is likely to advise, not what Mara herself has decided."
+    ],
+    "key": 0,
+    "keyWhy": "Mara begins with the conscious intention to ask for advice, but the choices she makes while addressing her cousin cast the buyer's delay as an obstacle. Rereading that presentation lets her recognize that she already treats the sale as settled. This matches Text 2's second view: selecting what to explain or take for granted for a reader can make a previously unarticulated commitment available to the writer.",
+    "rebuttals": {
+      "B": "the relevant composition happened while Mara was addressing her cousin, even though recognition came during rereading. Her initial intention to seek advice shows that the commitment was not already available to her as a formed thought.",
+      "C": "Mara's explanation of the delay does more than defend a consciously settled decision: it is the evidence through which she recognizes that she treats the sale as settled.",
+      "D": "Mara learns nothing about her cousin's likely advice. What the page reveals is her own framing of the delay and, through it, her own commitment."
+    },
+    "steps": [
+      "Step 1: Contrast Mara's intention before writing with the assumption built into her written explanation.",
+      "Step 2: Connect that assumption to Text 2's claim that choices made for a reader can produce a position rather than merely report one.",
+      "Step 3: Mara's page reveals a commitment that she had not explicitly recognized - Choice A."
+    ],
+    "remember": "In a literary cross-text item, distinguish when a position is expressed from when the writer becomes aware of it; the anticipated reader can matter before any reply arrives."
+  },
+  {
+    "id": "CTC-H05",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "disagree-q",
+    "text1": "Sterane molecules of a type produced today only by demosponges appear in rocks from the Aldabri Basin dated to 640 million years ago, well before the oldest known animal body fossils. Geobiologist Wilhelmina Osei concludes that demosponges were living in these basins at that time and that the animal lineage therefore extends considerably further back than the body-fossil record on its own would indicate.",
+    "text2": "Geobiologist Rustam Iskandarov cultured several lineages of marine algae under the low-oxygen conditions thought to prevail in that period and recovered the same steranes, in comparable proportions, from three of them. He also notes that the Aldabri rocks were buried to depths at which fluids move freely between layers and along bedding planes, so that compounds now found together need not have been deposited together.",
+    "stem": "Based on the texts, Osei (Text 1) and Iskandarov (Text 2) would most likely disagree about the answer to which question concerning the steranes in the Aldabri Basin rocks?",
+    "options": [
+      "Is the presence of these steranes in the rocks sufficient to establish that demosponges lived in the basin 640 million years ago?",
+      "Are steranes of this type produced under present-day conditions by any organism other than a demosponge living in the ocean?",
+      "Do the oldest known animal body fossils postdate the Aldabri Basin rocks in which these steranes were found?",
+      "Were the Aldabri Basin rocks buried deeply enough for fluids to move between the layers within them?"
+    ],
+    "key": 0,
+    "keyWhy": "each researcher gives a different answer to this and to no other question on the list. Osei treats the steranes as sufficient: their presence in 640-million-year-old rock means demosponges were living there. Iskandarov attacks the sufficiency twice over — algae grown in low oxygen yielded \"the same steranes, in comparable proportions,\" so the molecules are not diagnostic; and the rocks sat at depths where \"fluids move freely between layers,\" so the molecules need not date from the layer that holds them.",
+    "rebuttals": {
+      "B": "Osei's premise is about what produces these steranes \"today,\" and Iskandarov's algae were cultured under low-oxygen conditions unlike the present-day ocean. Text 2 does not contradict the modern claim, so no disagreement is available here.",
+      "C": "both texts accept this. Osei states that the steranes predate \"the oldest known animal body fossils,\" and Iskandarov nowhere revises the fossil chronology.",
+      "D": "this is asserted only in Text 2, and Osei says nothing about burial depth. A point one researcher raises and the other never addresses is not a disagreement."
+    },
+    "steps": [
+      "Step 1: For each question, ask whether both researchers commit to an answer. Drop any question only one of them addresses.",
+      "Step 2: Drop any question they answer the same way — the fossil chronology is shared ground.",
+      "Step 3: What remains is whether the steranes settle the presence of demosponges, and there they divide — Choice A."
+    ],
+    "remember": "A disagreement requires two positions. A point raised by one text and ignored by the other is not one, however contentious it sounds."
+  },
+  {
+    "id": "CTC-H06",
+    "difficulty": "hard",
+    "lane": "humanities-arts",
+    "family": "respond",
+    "text1": "When a monument commemorates something a community has come to reject, one common remedy is to leave it standing and add an explanatory panel nearby. Curator Ilse Brantwood defends the practice: removal erases the evidence that the thing was once publicly honored, whereas the annotated monument keeps that evidence in view and makes the shift in judgment part of what the site now teaches its visitors.",
+    "text2": "Curator Nathaniel Obiora studied visitors at eleven annotated monuments. Only 16 percent read the panels; those readers usually understood the changed judgment the panels described. Visitors who skipped them interpreted the monuments no differently from visitors at unannotated sites, and online photographs almost never included the panels. Obiora observes that a monument makes its claim automatically through scale and placement, while a panel corrects that claim only for people who opt in.",
+    "stem": "Based on the texts, how would Obiora (Text 2) most likely respond to Brantwood's defense of annotation in Text 1?",
+    "options": [
+      "By granting that panels can convey changed judgment to their readers while arguing that their presence does not make that judgment part of what most visitors encounter",
+      "By agreeing that annotation reaches only a minority while maintaining that this minority's understanding is enough to show that the site as a whole teaches the change",
+      "By concluding that the panels fail because even visitors who choose to read them misunderstand the community's changed judgment",
+      "By accepting that annotation works for visitors at the site while limiting his concern to viewers of photographs posted online"
+    ],
+    "key": 0,
+    "keyWhy": "it distinguishes the panel's effect conditional on being read from the annotated site's default public effect. Obiora finds that readers generally understand the correction, so he need not deny that a panel can teach changed judgment. But most visitors do not read it, those visitors respond as they do at unannotated sites, and photographs omit it. Thus, keeping both monument and panel visible does not ensure that most viewers receive both messages.",
+    "rebuttals": {
+      "B": "Brantwood treats the site's teaching as a public effect, not merely an effect on a self-selecting minority. Obiora's comparison shows that most visitors encounter the old assertion without the correction.",
+      "C": "readers usually understand the panels. Obiora's criticism concerns reach: the correction works after a visitor opts in, but few visitors do so.",
+      "D": "Obiora finds the same limitation on site: visitors who skip the panel interpret the monument like visitors at an unannotated site. Online photographs extend rather than create the problem."
+    },
+    "steps": [
+      "Step 1: Separate whether a panel can communicate the correction from whether the annotated site generally does so.",
+      "Step 2: Obiora's readers understand the panel, but nonreaders form the same interpretation seen at unannotated sites.",
+      "Step 3: The remedy works conditionally yet fails to make the correction the site's default lesson - Choice A."
+    ],
+    "remember": "Do not confuse an intervention's effect on people who receive it with its effect on the full audience. Reach and efficacy are different claims."
+  },
+  {
+    "id": "CTC-H07",
+    "difficulty": "hard",
+    "lane": "natural-science",
+    "family": "model-apply",
+    "text1": "On the moon Vesken, liquid methane collects in polar basins. Planetary scientist Bo-Ram Yun's model holds that a basin's shoreline advances or retreats according to the balance between methane rainfall over the basin's drainage area and evaporation from the exposed liquid surface. Rainfall on Vesken is concentrated in a summer season lasting a fraction of the long orbital year; evaporation runs continuously and scales with the area of liquid exposed.",
+    "text2": "Radar passes over two Vesken basins across fourteen years recorded contrasting behavior. Basin Aru, broad and shallow, lost a tenth of its surface area over the period, its shoreline creeping inward on every side. Basin Nel, narrow and steep-sided, held its shoreline almost exactly, though the two basins receive similar rainfall totals and drain catchments of comparable size.",
+    "stem": "Based on the texts, which choice best explains the difference between the two basins observed in Text 2 using the model presented in Text 1?",
+    "options": [
+      "A broad, shallow basin exposes far more surface per unit of volume, so Aru's continuous evaporative loss outran its rainfall while Nel's, exposing far less, did not.",
+      "Rainfall falls only in summer, so Aru's shoreline retreated in the seasons without rain, while Nel received enough rain outside that season to hold its shoreline steady.",
+      "Because evaporation scales with exposed surface, Nel lost more liquid per unit of surface than Aru did, and its steep sides concealed a retreat the radar could not resolve.",
+      "Since the two basins drain catchments of comparable size, the difference must reflect a difference in rainfall totals over the fourteen years rather than a difference in shape."
+    ],
+    "key": 0,
+    "keyWhy": "it runs Yun's model on the one variable the two basins do not share. In the model, gain depends on rainfall over the drainage area and loss depends on \"the area of liquid exposed.\" Text 2 holds rainfall totals and catchment size roughly equal, leaving shape: Aru is \"broad and shallow\" and Nel \"narrow and steep-sided.\" A broad, shallow basin presents much more surface for a given volume, so its continuous evaporative loss is larger while its gain is not. That is the imbalance the model predicts, and Aru is the basin that shrank.",
+    "rebuttals": {
+      "B": "the seasonal concentration of rainfall applies to the whole moon, so it cannot distinguish two basins on it. Text 2 states that both receive similar rainfall totals, which rules out Nel having rain outside the summer season that Aru lacks.",
+      "C": "this misapplies the model's scaling. Loss scales with exposed area, so the steep-sided basin exposes less surface and loses less, not more. It also contradicts Text 2, which reports Nel's shoreline as held rather than concealed.",
+      "D": "Text 2 explicitly equalizes rainfall totals as well as catchment size, so the difference cannot be assigned to rainfall. The choice also abandons the model instead of applying it."
+    },
+    "steps": [
+      "Step 1: Write the model as a balance: gain from rainfall over the catchment, loss from evaporation over the exposed surface.",
+      "Step 2: Cross out every variable Text 2 equalizes — rainfall totals and catchment size.",
+      "Step 3: Shape is what remains, and it acts on the loss term through exposed area — Choice A."
+    ],
+    "remember": "On model-application items, list the model's variables, delete the ones the experiment holds equal, and build the answer from what is left."
+  },
+  {
+    "id": "CTC-H08",
+    "difficulty": "hard",
+    "lane": "social-science",
+    "family": "respond",
+    "text1": "Linguist Aurélie Kwarteng charts the grammatical accuracy of ten thousand immigrants against their age on arrival and finds a steady decline that steepens noticeably after about age twelve. She reads the shape of the curve, and particularly the location of that inflection, as evidence of a maturational limit: a neural capacity for acquiring grammar that is fully available in childhood and progressively lost thereafter.",
+    "text2": "Linguist Hendrik Zoltán observes that age on arrival is confounded with almost everything that determines how a person then lives. Later arrivals in his sample enrolled less often in schooling conducted in the new language, worked in settings where the first language predominated, and reported fewer close ties with native speakers. Adjusting for these, the decline in his data flattened markedly but did not disappear.",
+    "stem": "Based on the texts, how would Zoltán (Text 2) most likely respond to Kwarteng's reading of her curve in Text 1?",
+    "options": [
+      "By arguing that much of the decline reflects differences in circumstance that accompany later arrival, while allowing that some portion of it remains unaccounted for",
+      "By contending that the decline Kwarteng documents disappears once differences in schooling, workplace, and social contact among later arrivals are taken into account",
+      "By maintaining that grammatical accuracy is a poor measure of language acquisition and that Kwarteng's curve would take a different shape under a better one",
+      "By accepting that a maturational limit exists while disputing Kwarteng's placement of its onset at approximately age twelve"
+    ],
+    "key": 0,
+    "keyWhy": "it reports Zoltán's result with the precision Text 2 gives it. Kwarteng infers a maturational limit from the shape of her curve. Zoltán identifies confounds that travel with age on arrival — schooling in the new language, workplace language, close ties with native speakers — and finds that adjusting for them left the decline \"flattened markedly but did not disappear.\" Those circumstances explain a substantial portion of the decline, while some portion remains unaccounted for.",
+    "rebuttals": {
+      "B": "Text 2 states directly that the decline \"did not disappear.\" This choice overstates Zoltán's own finding in the direction he was arguing, which is the easiest error to make here.",
+      "C": "Zoltán uses grammatical accuracy himself; his adjusted analysis is of the same measure. Nothing in Text 2 questions the measure.",
+      "D": "Zoltán does not accept a maturational limit and does not discuss when one might begin. Relocating the onset would concede the explanation he is contesting."
+    },
+    "steps": [
+      "Step 1: Fix Kwarteng's inference: the curve's shape shows a maturational limit.",
+      "Step 2: Read Zoltán's outcome exactly — \"flattened markedly but did not disappear.\"",
+      "Step 3: Match the choice with both halves: mostly circumstance, some residue — Choice A."
+    ],
+    "remember": "When Text 2 partially explains away an effect, the answer states the partiality. Choices that finish the job for the second author are traps."
+  },
+  {
+    "id": "CTC-H09",
+    "difficulty": "hard",
+    "lane": "humanities-arts",
+    "family": "difference",
+    "text1": "The Kereni harvest epics repeatedly place the same phrases at the ends of lines during communal performances. Folklorist Zainab Osoba notes that each phrase fills a difficult metrical pattern and argues that singers composing in performance use it as a ready-made solution. Local audiences have learned to anticipate the phrases, but Osoba regards that anticipation as an effect of their repeated use, not its purpose.",
+    "text2": "Folklorist Mihail Draganov recorded the same singers before local listeners and before outsiders. With local listeners, singers preserved the familiar phrases exactly; with outsiders, they replaced them with metrically equivalent wording. Because the meter was satisfied in both settings, Draganov concludes that a phrase recurs exactly when its familiarity allows the audience to anticipate and join it.",
+    "stem": "Which choice best describes a difference in how Osoba and Draganov view the repeated phrases of the Kereni epics?",
+    "options": [
+      "Osoba sees audience anticipation as a consequence of singers' reuse of the phrases, whereas Draganov sees that anticipation as a condition that helps explain exact reuse.",
+      "Osoba regards exact wording as the only way to satisfy the meter, whereas Draganov finds that changing the wording necessarily disrupts that meter.",
+      "Osoba attributes exact recurrence to singers' aim of involving local audiences, whereas Draganov attributes it to the pressure of composing metrically in real time.",
+      "Osoba regards local and outsider audiences as equally familiar with the phrases, whereas Draganov argues that neither group can anticipate them."
+    ],
+    "key": 0,
+    "keyWhy": "it captures the reversed causal direction in the two accounts. Osoba thinks performers reuse the phrases to solve a compositional problem, with audience anticipation developing afterward through repeated exposure. Draganov holds the metrical demand constant: singers use alternative wording before outsiders but preserve exact wording before listeners who can join in. For him, existing audience familiarity helps cause the exact recurrence.",
+    "rebuttals": {
+      "B": "Draganov's singers replace the familiar phrases with metrically equivalent wording, so exact wording is not necessary to satisfy the meter and variation does not necessarily disrupt it. Osoba calls the formulas a ready-made solution, not the only possible solution.",
+      "C": "this reverses the explanations. Real-time composition is Osoba's cause; audience participation is Draganov's cause.",
+      "D": "Text 1 says local audiences have learned to anticipate the phrases, and Text 2 distinguishes those listeners from outsiders. Neither scholar denies anticipation to both groups."
+    },
+    "steps": [
+      "Step 1: In Osoba's account, order the events: singers reuse a metrical solution, then audiences learn to anticipate it.",
+      "Step 2: In Draganov's comparison, meter stays satisfied while exact wording changes with audience familiarity.",
+      "Step 3: Anticipation is an effect for Osoba but an explanatory condition for Draganov - Choice A."
+    ],
+    "remember": "When two texts connect the same factors, check causal direction. One author may treat B as an effect of A while the other treats B as a reason for A."
+  },
+  {
+    "id": "CTC-H10",
+    "difficulty": "hard",
+    "lane": "social-science",
+    "family": "agree",
+    "text1": "After Lydon introduced a fee for cars entering its central district, the number of retail visits fell 7 percent, but spending per visit rose enough that total downtown retail revenue was unchanged. The district's overall business-closure rate also remained near its earlier level. Economist Salma Oruc argues that the fee mainly eliminated low-spending discretionary trips and therefore reduced traffic without imposing a commercial cost on downtown businesses.",
+    "text2": "Economist Gabriel Mensah separates the district by business type. Revenue rose sharply among destination restaurants and luxury shops but fell among grocers, pharmacies, and other stores serving nearby residents; the opposing changes produced the unchanged total. Mensah argues that an aggregate capable of hiding losses concentrated in one group cannot establish that the policy was commercially harmless.",
+    "stem": "Based on the texts, Oruc (Text 1) and Mensah (Text 2) would most likely agree with which statement about the entry fee?",
+    "options": [
+      "The unchanged total revenue is compatible with substantial offsetting changes in the composition or distribution of downtown spending.",
+      "The unchanged total revenue indicates that the fee affected how people reached downtown but not where they spent money once there.",
+      "The rise in spending per visit occurred chiefly because nearby residents shifted their purchases to grocers and pharmacies downtown.",
+      "The decline in retail visits is sufficient to show that every type of downtown business faced some commercial cost."
+    ],
+    "key": 0,
+    "keyWhy": "it captures the structural point shared by both accounts. Oruc explains unchanged total revenue as fewer visits offset by more spending per visit. Mensah explains the same total as losses at resident-serving stores offset by gains at destination businesses. They disagree about whether the policy was commercially harmless, but both treat the stable aggregate as the product of substantial movements in opposite directions.",
+    "rebuttals": {
+      "B": "neither text compares modes of travel after people enter downtown. Both texts report changes in spending patterns, and Mensah specifically finds that where revenue accrued changed across business types.",
+      "C": "Mensah reports falling revenue at grocers and pharmacies, not a shift toward them. Oruc does not identify which business types account for the higher spending per visit.",
+      "D": "Oruc argues that the lost visits were low-spending and imposed no overall commercial cost. Mensah finds costs concentrated in some businesses, but not in every type; destination businesses gained revenue."
+    },
+    "steps": [
+      "Step 1: Identify the common aggregate: total downtown retail revenue did not change.",
+      "Step 2: Track each decomposition. Oruc pairs fewer visits with more spending per visit; Mensah pairs losses in one business group with gains in another.",
+      "Step 3: Both accounts therefore require offsetting changes beneath the unchanged total - Choice A."
+    ],
+    "remember": "Two authors can dispute what a stable total means while agreeing that the total conceals offsetting changes. Compare the structure of their explanations, not just their conclusions."
+  }
+]

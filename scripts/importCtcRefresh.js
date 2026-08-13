@@ -4,6 +4,8 @@
  *
  *   node scripts/importCtcRefresh.js            # dry run (default)
  *   node scripts/importCtcRefresh.js --apply    # write the 60 questions
+ *   node scripts/importCtcRefresh.js --update   # dry-run changed existing items
+ *   node scripts/importCtcRefresh.js --update --apply # update changed items in place
  *   node scripts/importCtcRefresh.js --remove   # delete this set (by contentSetVersion)
  *
  * Reads scripts/data/ctc-refresh-2026/cross-text-connections-60.json (built and
@@ -11,9 +13,12 @@
  * collection with server timestamps, mirroring the schema the admin import API
  * produces (apps/api/questionsAPI.js importQuestionsFromData).
  *
- * Idempotent: an item is skipped if a doc with the same contentSetVersion and
- * authoringRef already exists, so re-running after a partial failure is safe
- * and never duplicates.
+ * Idempotent: the default import skips an item if a doc with the same
+ * contentSetVersion and authoringRef already exists, so re-running after a
+ * partial failure is safe and never duplicates. `--update` is fail-closed: it
+ * requires one and only one existing document for every authoringRef, changes
+ * only authored fields, preserves createdAt and questionStats, and verifies
+ * the written payload before exiting.
  */
 
 const fs = require('fs');
@@ -26,6 +31,11 @@ const SRC = path.join(__dirname, 'data', 'ctc-refresh-2026', 'cross-text-connect
 const args = process.argv.slice(2);
 const APPLY = args.includes('--apply');
 const REMOVE = args.includes('--remove');
+const UPDATE = args.includes('--update');
+
+if (REMOVE && UPDATE) {
+  throw new Error('--remove and --update cannot be used together');
+}
 
 const keyPath =
   process.env.GOOGLE_APPLICATION_CREDENTIALS ||
@@ -52,7 +62,18 @@ const db = admin.firestore();
 
   const existing = await db.collection('questions').where('contentSetVersion', '==', SET_VERSION).get();
   const existingRefs = new Map();
-  existing.forEach((doc) => existingRefs.set(doc.data().authoringRef, doc.id));
+  const duplicateRefs = [];
+  existing.forEach((doc) => {
+    const data = doc.data();
+    const authoringRef = data.authoringRef;
+    if (!authoringRef) throw new Error(`existing document ${doc.id} has no authoringRef`);
+    if (existingRefs.has(authoringRef)) duplicateRefs.push(authoringRef);
+    existingRefs.set(authoringRef, { id: doc.id, ref: doc.ref, data });
+  });
+
+  if (duplicateRefs.length) {
+    throw new Error(`duplicate live authoringRef values: ${Array.from(new Set(duplicateRefs)).join(', ')}`);
+  }
 
   if (REMOVE) {
     console.log(`\n${existing.size} doc(s) carry contentSetVersion ${SET_VERSION}.`);
@@ -64,6 +85,90 @@ const db = admin.firestore();
     existing.forEach((doc) => batch.delete(doc.ref));
     await batch.commit();
     console.log(`✓ deleted ${existing.size} doc(s).\n`);
+    process.exit(0);
+  }
+
+  const authoredPayload = (item, data = item) => {
+    const payload = {};
+    Object.keys(item).sort().forEach((key) => { payload[key] = data[key]; });
+    return payload;
+  };
+  const canonicalize = (value) => {
+    if (Array.isArray(value)) return value.map(canonicalize);
+    if (value && typeof value === 'object') {
+      const result = {};
+      Object.keys(value).sort().forEach((key) => { result[key] = canonicalize(value[key]); });
+      return result;
+    }
+    return value;
+  };
+  const authoredPayloadMatches = (item, data) =>
+    JSON.stringify(canonicalize(authoredPayload(item))) ===
+    JSON.stringify(canonicalize(authoredPayload(item, data)));
+
+  if (UPDATE) {
+    const expectedRefs = new Set(items.map((q) => q.authoringRef));
+    const missing = items.filter((q) => !existingRefs.has(q.authoringRef)).map((q) => q.authoringRef);
+    const unexpected = Array.from(existingRefs.keys()).filter((ref) => !expectedRefs.has(ref));
+    if (missing.length || unexpected.length || existing.size !== items.length) {
+      throw new Error(
+        `refusing update: expected exactly ${items.length} live items; ` +
+        `found ${existing.size}; missing=[${missing.join(', ')}]; unexpected=[${unexpected.join(', ')}]`
+      );
+    }
+
+    const toUpdate = items.filter((q) => !authoredPayloadMatches(q, existingRefs.get(q.authoringRef).data));
+    const byDiff = {};
+    toUpdate.forEach((q) => { byDiff[q.difficulty] = (byDiff[q.difficulty] || 0) + 1; });
+
+    console.log(`\nSet ${SET_VERSION}: ${items.length} items in file and ${existing.size} exact refs in Firestore.`);
+    console.log(`  changed authored payloads : ${toUpdate.length}  ${JSON.stringify(byDiff)}`);
+    if (toUpdate.length) console.log(`  refs to update            : ${toUpdate.map((q) => q.authoringRef).join(', ')}`);
+    console.log('');
+
+    if (!APPLY) {
+      console.log('DRY RUN - nothing written. Re-run with --update --apply to commit.\n');
+      process.exit(0);
+    }
+
+    const backupDir = path.join(__dirname, 'data', 'ctc-refresh-2026', 'backups');
+    const backupStamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupPath = path.join(backupDir, `live-before-${backupStamp}.json`);
+    const backup = items.map((q) => {
+      const live = existingRefs.get(q.authoringRef);
+      return {
+        documentId: live.id,
+        authoringRef: q.authoringRef,
+        payload: authoredPayload(q, live.data),
+      };
+    });
+    fs.mkdirSync(backupDir, { recursive: true });
+    fs.writeFileSync(backupPath, `${JSON.stringify(backup, null, 2)}\n`, 'utf8');
+    console.log(`  backed up current authored payloads to ${path.relative(process.cwd(), backupPath)}`);
+
+    for (let i = 0; i < toUpdate.length; i += 400) {
+      const batch = db.batch();
+      toUpdate.slice(i, i + 400).forEach((q) => {
+        batch.update(existingRefs.get(q.authoringRef).ref, {
+          ...q,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+      });
+      await batch.commit();
+      console.log(`  committed ${Math.min(i + 400, toUpdate.length)}/${toUpdate.length}`);
+    }
+
+    const verificationFailures = [];
+    await Promise.all(toUpdate.map(async (q) => {
+      const snap = await existingRefs.get(q.authoringRef).ref.get();
+      if (!snap.exists || !authoredPayloadMatches(q, snap.data())) verificationFailures.push(q.authoringRef);
+    }));
+    if (verificationFailures.length) {
+      throw new Error(`post-write verification failed for: ${verificationFailures.join(', ')}`);
+    }
+
+    console.log(`\nupdated and verified ${toUpdate.length} question(s) in place.`);
+    console.log('  Document IDs, createdAt values, and questionStats history were preserved.\n');
     process.exit(0);
   }
 

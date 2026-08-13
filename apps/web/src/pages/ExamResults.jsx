@@ -8,6 +8,7 @@ import { examScores } from '../utils/scoring';
 import { processTextMarkup } from '../utils/textProcessing';
 import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
 import ReportQuestionModal from '../components/ReportQuestionModal';
+import WordSaver from '../components/WordSaver';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import '../styles/Results.css';
@@ -478,6 +479,13 @@ function ExamResults() {
             
             {splitView && activeReviewModule !== null && (
               <div className="module-review-panel">
+                {/* Select any word in the reviewed questions to save it to the Word Bank */}
+                <WordSaver
+                  selector=".question-container-review"
+                  source="exam-review"
+                  metadata={{ examId }}
+                  showDefinition
+                />
                 <div className="module-review-header">
                   <h2>Review: {activeReviewModule?.title || 'Module'}</h2>
                   <button 

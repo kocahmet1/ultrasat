@@ -15,7 +15,7 @@ function HelpPage() {
         },
         {
           question: "How do I add words to the Word Bank?",
-          answer: "Words are added to your Word Bank automatically. When you are taking a Smart Quiz, you will see a list of 'Key Words'. Simply save any of those words, and they will be added to your personal Word Bank for future study."
+          answer: "While taking a Smart Quiz, practice test, or reviewing your results, simply highlight any word in the passage, question, or answer choices. An 'Add to Word Bank' button will appear — click it and the word is saved with an automatically generated definition based on how it was used in context."
         }
       ]
     },
@@ -24,7 +24,7 @@ function HelpPage() {
       faqs: [
         {
           question: "What is a 'Smart Quiz'?",
-          answer: "A 'Smart Quiz' is an adaptive quiz that focuses on your weakest areas. The quiz system adjusts to your skill level, meaning the questions will get easier or harder depending on your performance. This is designed to help you improve your skills in a targeted and efficient way. When you are taking a Smart Quiz, you will also see a list of 'Key Words' that you can save to your personal Word Bank for future study."
+          answer: "A 'Smart Quiz' is an adaptive quiz that focuses on your weakest areas. The quiz system adjusts to your skill level, meaning the questions will get easier or harder depending on your performance. This is designed to help you improve your skills in a targeted and efficient way. While taking a Smart Quiz, you can also highlight any unfamiliar word to save it to your personal Word Bank for future study."
         }
       ]
     },

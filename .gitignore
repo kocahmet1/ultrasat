@@ -35,6 +35,14 @@ yarn-error.log*
 !apps/web/src/components/lesson/samples/*.sample.json
 !apps/web/src/content/lessons/*.lesson.json
 !apps/web/src/data/subcategoryTaxonomy.json
+# Authored Cross-Text Connections bank and generated import payload. These are
+# production content, not credentials or transient exports.
+!scripts/data/ctc-refresh-2026/cross-text-connections-60.json
+!scripts/data/ctc-refresh-2026/src/
+!scripts/data/ctc-refresh-2026/src/ctc-*.json
+!scripts/data/ctc-refresh-2026/src/official-proper-nouns.json
+scripts/data/ctc-refresh-2026/src/_patch-*.json
+scripts/data/ctc-refresh-2026/backups/
 ultrasat-5e4c4-369f564bdaef.json
 
 # Backup files

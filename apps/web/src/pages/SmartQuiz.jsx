@@ -39,6 +39,7 @@ import {
 import ExplanationCard from '../components/ExplanationCard';
 import MathText from '../components/MathText';
 import ReportQuestionModal from '../components/ReportQuestionModal';
+import WordSaver from '../components/WordSaver';
 import { reportQuestion } from '../api/reportClient';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -698,6 +699,19 @@ export default function SmartQuiz() {
         </header>
 
         <main className="sqr-main">
+          {/* Select any word in the passage/prompt to save it to the Word Bank.
+              Option text is excluded: it sits inside the answer <button>, where
+              selection is blocked and clicks would change the answer. */}
+          <WordSaver
+            selector=".sqr-passage, .sqr-prompt"
+            source="smart-quiz"
+            metadata={{
+              quizId,
+              questionId: currentQuestion?.id,
+              subcategory: currentQuestion?.subcategory || currentQuestion?.subcategoryId || quiz?.subcategoryId,
+            }}
+            showDefinition
+          />
           <div className="sqr-column">
             <h1 className="sqr-skill-title">{skillLabel}</h1>
 

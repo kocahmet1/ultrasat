@@ -185,6 +185,38 @@ export const saveBankItem = async (term, definition, type = 'word', source = 'qu
 };
 
 /**
+ * Save a word the student highlighted to their word bank. The server
+ * generates a context-aware definition via the AI helper (cached globally)
+ * and deduplicates against words already in the bank.
+ * @param {string} term - The selected word or short phrase
+ * @param {string} context - Surrounding sentence/passage text for context
+ * @param {string} source - Where the selection happened (e.g. 'smart-quiz', 'practice-exam', 'exam-review')
+ * @param {Object} metadata - Additional metadata (questionId, quizId, examId, subcategory...)
+ * @returns {Promise<{id: string, term: string, definition: string, alreadyExists: boolean}>}
+ */
+export const saveWordFromSelection = async (term, context = '', source = 'highlight', metadata = {}) => {
+  const token = await getAuthToken();
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+
+  const response = await fetch(`${getApiUrl()}/api/bank/define-and-save`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ term, context, source, metadata })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to save word.');
+  }
+  return data;
+};
+
+/**
  * Get all flashcard decks for the current user
  * @returns {Promise<Array>} Array of deck objects
  */

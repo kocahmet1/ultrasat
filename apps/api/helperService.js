@@ -149,6 +149,56 @@ VERY IMPORTANT: Only respond with the valid JSON array. Do not include any other
 };
 
 /**
+ * Get a definition for a single word selected by a student, using the
+ * surrounding sentence for context.
+ * @param {Object} params
+ * @param {string} params.word - The word (or short phrase) the student selected
+ * @param {string} [params.context] - The sentence/passage text surrounding the selection
+ * @returns {Promise<{term: string, definition: string}>}
+ */
+exports.getWordDefinition = async ({ word, context = '' }) => {
+  const modelName = getModelName();
+
+  try {
+    const trimmedContext = String(context || '').slice(0, 800);
+    const prompt = `You are an SAT vocabulary assistant. A student highlighted the word or phrase "${word}" while reading${trimmedContext ? ` the following text:\n\n"${trimmedContext}"` : '.'}
+
+Provide a flashcard-style entry for it:
+- "term": the dictionary base form of the word (e.g. "abandoning" -> "abandon"), keeping the student's phrase intact if it is a fixed expression.
+- "definition": start with the part of speech in parentheses, then a concise general dictionary definition (25 words max) of the sense that fits the context. Use the context only to pick the right sense — the definition itself must stand alone as a reusable flashcard, not reference the passage. If helpful, append a short example clause after a semicolon.
+
+Format your response as a valid JSON object, for example:
+{
+  "term": "prodigious",
+  "definition": "(adj.) remarkably great in extent or degree; a prodigious appetite"
+}
+
+VERY IMPORTANT: Only respond with the valid JSON object. No other text, explanations, or markdown code fences.`;
+
+    const responseText = await callHelperModel(prompt, { modelName, maxOutputTokens: 400 });
+
+    // Extract the JSON object from the response
+    let jsonText = responseText.trim();
+    const startIndex = jsonText.indexOf('{');
+    const endIndex = jsonText.lastIndexOf('}');
+    if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+      jsonText = jsonText.substring(startIndex, endIndex + 1);
+    }
+
+    const parsed = JSON.parse(jsonText);
+    const term = String(parsed.term || word).trim();
+    const definition = String(parsed.definition || '').trim();
+    if (!definition) {
+      throw new Error('No definition returned from helper model.');
+    }
+    return { term, definition };
+  } catch (error) {
+    console.error('Error getting word definition from OpenAI:', error);
+    throw new Error('Failed to generate a definition. Please try again.');
+  }
+};
+
+/**
  * Get concept explanations relevant to a question using predefined concepts
  * @param {Object} params - Parameters for analysis
  * @param {Object} params.questionContent - The question content to analyze

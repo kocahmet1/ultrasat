@@ -26,7 +26,7 @@ const LETTERS = ['A', 'B', 'C', 'D'];
 const PASSAGE_BOUNDS = { easy: [112, 156], medium: [120, 160], hard: [122, 176] };
 const OPTION_MEAN_BOUNDS = { easy: [7, 20], medium: [10, 26], hard: [12, 28] };
 
-const TARGET_DIFFICULTY = { easy: 20, medium: 20, hard: 20 };
+const TARGET_DIFFICULTY = { easy: 21, medium: 20, hard: 19 };
 const KEYS_PER_LETTER = 15;
 
 // Families whose choices are sentence fragments ("By arguing…", "As premature, …")
@@ -103,8 +103,10 @@ items.forEach((it) => {
 
 // Deterministic but pattern-free. A greedy "most remaining capacity" walk emits a
 // clean ABCDABCD… cycle, which a student can learn; so instead we seed a small PRNG,
-// shuffle 5 of each letter within each 20-item difficulty block (keeping the spread
-// exact at every difficulty), and reject any draw containing a run of three or a
+// Shuffle 5 of each letter within each canonical 20-item ID block. Keeping these
+// assignments tied to E01-E20 / M01-M20 / H01-H20 (rather than to the editable
+// difficulty labels) prevents a reclassification from needlessly changing answer
+// positions across the live bank. Reject any draw containing a run of three or a
 // repeating 4-cycle.
 const SEED = 20260805;
 function makeRng(seed) {
@@ -136,19 +138,22 @@ function hasCycle(seq) {
   });
 }
 
-const blockOf = (d) => LETTERS.flatMap((L) => Array(KEYS_PER_LETTER / 3).fill(L)); // 5 of each per 20-item block
+const blockOf = () => LETTERS.flatMap((L) => Array(KEYS_PER_LETTER / 3).fill(L)); // 5 of each per canonical ID block
 const rng = makeRng(SEED);
 let assigned = null;
 for (let attempt = 0; attempt < 2000 && !assigned; attempt += 1) {
-  const draw = ['easy', 'medium', 'hard'].flatMap((d) => shuffle(blockOf(d), rng));
+  const draw = ['E', 'M', 'H'].flatMap(() => shuffle(blockOf(), rng));
   if (!hasRunOfThree(draw) && !hasCycle(draw)) assigned = draw;
 }
 if (!assigned) throw new Error('could not find a clean answer-key assignment');
 
-// Sanity: the source files must actually be ordered easy(20) / medium(20) / hard(20).
+// Sanity: source items stay in canonical ID order so the stable answer-position
+// assignment above remains deterministic even when an item's difficulty changes.
 items.forEach((it, i) => {
-  const expected = i < 20 ? 'easy' : i < 40 ? 'medium' : 'hard';
-  if (it.difficulty !== expected) fail(`${it.id}: item ${i} is ${it.difficulty}, expected ${expected} — the key balancer assumes difficulty-ordered files`);
+  const prefix = i < 20 ? 'E' : i < 40 ? 'M' : 'H';
+  const number = String((i % 20) + 1).padStart(2, '0');
+  const expectedId = `CTC-${prefix}${number}`;
+  if (it.id !== expectedId) fail(`${it.id}: item ${i} must be ${expectedId} — the key balancer assumes canonical ID order`);
   it._targetIndex = LETTERS.indexOf(assigned[i]);
 });
 if (errors.length) {

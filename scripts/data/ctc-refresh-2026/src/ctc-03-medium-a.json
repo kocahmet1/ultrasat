@@ -1,0 +1,282 @@
+[
+  {
+    "id": "CTC-M01",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Some bacterial infections return weeks after a course of antibiotics has apparently cleared them. Microbiologist Halvard Enger attributes these relapses to resistance: a few cells in the original population carry mutations that let them grow in the presence of the drug, and the treatment simply clears the way for their descendants. <u>Relapse, on this account, always means that the surviving lineage differs genetically from the population that was treated.</u>",
+    "text2": "Working with a strain carrying no resistance mutations, microbiologist Ines Kolarova exposed a growing culture to a high dose of antibiotic and recovered a small fraction of cells that had entered a dormant, non-dividing state before the dose arrived. Regrown to full density and re-treated, their descendants died at the same rate as the original culture. Dormancy, not any inherited change, had carried them through.",
+    "stem": "Based on the texts, how would Kolarova (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By pointing out that cells can survive treatment through a temporary state that leaves no genetic difference behind",
+      "By arguing that resistance mutations arise far more often during a course of treatment than Enger's account allows",
+      "By noting that dormant cells eventually acquire the same mutations that resistant cells carry",
+      "By observing that relapses occur less frequently than the frequency of resistance mutations would predict"
+    ],
+    "key": 0,
+    "keyWhy": "it identifies the precise feature of Kolarova's survivors that the underlined claim excludes. Enger holds that a surviving lineage \"differs genetically from the population that was treated.\" Kolarova began with a strain \"carrying no resistance mutations,\" recovered survivors that had merely gone dormant, and found that their descendants \"died at the same rate as the original culture\" when treated again. Survival without any heritable change is exactly what the underlined sentence rules out.",
+    "rebuttals": {
+      "B": "the rate at which mutations arise is not what Kolarova measured, and a higher rate would support Enger's mechanism rather than qualify it. Her survivors carried no mutations at all.",
+      "C": "Text 2 reports the opposite outcome. The descendants of the dormant cells were as vulnerable as the original culture, which means no resistance had been acquired.",
+      "D": "neither text gives a frequency for relapse or for mutation, so no such comparison is available. Kolarova's objection concerns the mechanism of survival, not how often relapse occurs."
+    },
+    "steps": [
+      "Step 1: The stem points to one sentence, so read it for what it forbids: a survivor that is genetically identical to the treated population.",
+      "Step 2: Kolarova supplies exactly that survivor — no resistance mutations, dormancy only, descendants as vulnerable as before.",
+      "Step 3: The response is that survival need not be heritable — Choice A."
+    ],
+    "remember": "A sentence containing \"always\" is answered by a single case that falls outside it. Look for the case rather than for a general counterargument."
+  },
+  {
+    "id": "CTC-M02",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "say-about",
+    "text1": "The osage-thorn tree of the central plains produces a heavy, sugar-rich fruit that no living animal eats and that rots where it falls, often within a few meters of the trunk. Botanist Ileana Duarte argues that the fruit evolved for the giant ground sloths and other large mammals that vanished from the region about twelve thousand years ago, and that the tree is now stranded without a disperser.",
+    "text2": "Ecologist Marcus Oyelowo tracked osage-thorn seedlings across nine ranches and found nearly all of them growing along cattle trails, sometimes several kilometers from the nearest parent tree. Cattle, introduced to the region roughly four centuries ago, swallow the fruit whole and pass the seeds intact. Germination rates for gut-passed seeds were more than three times those of seeds left inside a fallen fruit.",
+    "stem": "Based on the texts, what would Oyelowo (Text 2) most likely say about Duarte's characterization of the osage-thorn tree in Text 1?",
+    "options": [
+      "It overlooks a species that has taken over the role Duarte assigns to the vanished mammals.",
+      "It is confirmed by the poor germination of seeds that remain inside a fallen fruit.",
+      "It mistakes the age of the tree, which is unlikely to have existed alongside giant ground sloths.",
+      "It applies to the central plains but not to regions where cattle were never introduced."
+    ],
+    "key": 0,
+    "keyWhy": "Oyelowo's seedlings undercut the word \"stranded.\" Duarte describes a tree left \"without a disperser\" after its original partners disappeared. Oyelowo found seedlings \"along cattle trails, sometimes several kilometers from the nearest parent tree,\" with gut-passed seeds germinating more than three times as often as seeds left in fallen fruit. Cattle are doing what Duarte says nothing does, so the tree is not stranded.",
+    "rebuttals": {
+      "B": "the germination figure is the contrast Oyelowo uses against Duarte, not a confirmation of her. It shows how much better the seeds do when an animal moves them, which is precisely what cattle now accomplish.",
+      "C": "Oyelowo raises no objection to Duarte's timeline, but he neither confirms nor disputes it. His evidence concerns what happens now: cattle disperse the tree's seeds effectively.",
+      "D": "Text 2 confines itself to the central plains, where cattle were introduced. It offers no observations from regions without cattle, so it cannot support a limitation of that kind."
+    },
+    "steps": [
+      "Step 1: Fix the load-bearing word in Duarte's account: the tree is \"stranded\" — no disperser at all.",
+      "Step 2: Oyelowo's seedlings appear along cattle trails, kilometers from parent trees, with far better germination after gut passage.",
+      "Step 3: A substitute disperser exists, so the characterization is out of date — Choice A."
+    ],
+    "remember": "When Text 1 says something no longer happens, check whether Text 2 shows a different agent doing it."
+  },
+  {
+    "id": "CTC-M03",
+    "difficulty": "medium",
+    "lane": "humanities-arts",
+    "family": "respond",
+    "text1": "The anonymous 1611 tragedy The Warden's Daughter has long been assigned to the playwright Thomas Grieve. Scholar Rosalind Achebe fed the play into a program that counts how often an author uses common function words — of, but, which, upon — and reports that its profile sits closer to Grieve's signed plays than to those of any other dramatist writing for the London stage in that decade.",
+    "text2": "Function-word counts identify the hand that set a text down, which in the commercial theater of 1611 was often not the hand that composed it. Scholar Piet Vandenbroucke notes that playhouse scribes copying a script routinely normalized spelling, contractions, and connective words to their own habits, and that Grieve worked for six years as a scribe in the company that owned The Warden's Daughter.",
+    "stem": "Based on the texts, how would Vandenbroucke (Text 2) most likely respond to Achebe's finding in Text 1?",
+    "options": [
+      "By suggesting that the profile may record Grieve's copying of the play rather than his composition of it",
+      "By arguing that function-word counts cannot distinguish one dramatist of the period from another",
+      "By contending that The Warden's Daughter was probably composed by a scribe employed elsewhere",
+      "By noting that Grieve's own signed plays were themselves copied out by playhouse scribes before they ever reached print"
+    ],
+    "key": 0,
+    "keyWhy": "it applies Vandenbroucke's point to the specific case. Achebe treats the function-word profile as evidence of authorship. Vandenbroucke observes that such counts \"identify the hand that set a text down,\" that scribes \"normalized spelling, contractions, and connective words to their own habits,\" and that Grieve was a scribe for the company that owned this very play. The same measurement is therefore consistent with Grieve having copied the text rather than written it.",
+    "rebuttals": {
+      "B": "Vandenbroucke does not question the method's power to discriminate. He questions what the thing it discriminates actually is — the copyist rather than the author.",
+      "C": "Text 2 offers no candidate author and no rival scribe. Vandenbroucke's argument is that the evidence underdetermines the question, not that it points elsewhere.",
+      "D": "Text 2 says that playhouse scribes routinely normalized scripts, but it never says that other scribes copied Grieve's signed plays. More importantly, that possibility would not specifically explain why the anonymous play matches Grieve; the evidence instead identifies Grieve himself as a possible copyist of this play."
+    },
+    "steps": [
+      "Step 1: Ask what Achebe's measurement literally detects: patterns of function words on the page.",
+      "Step 2: Vandenbroucke supplies a second person who could produce those patterns — a scribe — and places Grieve in that role for this company.",
+      "Step 3: One body of evidence, two explanations, so the response is that the profile may reflect copying — Choice A."
+    ],
+    "remember": "A common medium structure: Text 2 accepts Text 1's data and disputes what the data is measuring."
+  },
+  {
+    "id": "CTC-M04",
+    "difficulty": "medium",
+    "lane": "social-science",
+    "family": "difference",
+    "text1": "Economist Farida Nasrallah evaluated a small-loan program in twenty districts, comparing households that borrowed with applicants who had been placed on a waiting list by lottery. Two years on, borrowing households were no better off in income, consumption, or children's schooling. Nasrallah concludes that small loans do not lift households out of poverty and that the program's planned expansion cannot be justified on those grounds.",
+    "text2": "Economist Ravi Deshmukh, reanalyzing the same twenty districts with the same waiting-list comparison, agrees that average income was flat over the period. He notes, however, that borrowing households cut back sharply on high-interest emergency lending and were far less likely to sell a plow, a cart, or livestock after an illness or a poor harvest. What the loans bought, he argues, was not growth but a floor.",
+    "stem": "Which choice best describes a difference in how Nasrallah and Deshmukh view the small-loan program?",
+    "options": [
+      "Nasrallah evaluates the program against gains in household well-being, whereas Deshmukh evaluates it against losses the program helped households avoid.",
+      "Nasrallah finds that average income among borrowers was flat, whereas Deshmukh finds that it rose modestly over the same period.",
+      "Nasrallah argues that the program should be expanded to more districts, whereas Deshmukh argues that it should be discontinued.",
+      "Nasrallah relies on comparisons with waiting-list applicants, whereas Deshmukh relies on comparisons with households in districts the program never reached."
+    ],
+    "key": 0,
+    "keyWhy": "it states what each economist counts as the program's effect. Nasrallah measures income, consumption, and schooling — gains — and finds none. Deshmukh accepts that average income was flat but points to what borrowers avoided: costly emergency borrowing and the sale of productive assets during a shock. He calls this \"not growth but a floor.\" Both look at the same districts and differ over what an effect would look like.",
+    "rebuttals": {
+      "B": "Text 2 states directly that Deshmukh \"agrees that average income was flat.\" He reports no rise, which is why his case rests on avoided losses instead.",
+      "C": "Nasrallah argues against expansion, not for it, and Deshmukh does not call for the program to end. The choice reverses the first position and invents the second.",
+      "D": "Text 2 describes Deshmukh \"reanalyzing the same twenty districts.\" No comparison group outside the program is mentioned in either text."
+    },
+    "steps": [
+      "Step 1: Write down Nasrallah's outcome measures: income, consumption, schooling.",
+      "Step 2: Write down Deshmukh's: emergency borrowing avoided, assets not sold.",
+      "Step 3: One counts gains, the other counts prevented losses — Choice A."
+    ],
+    "remember": "Two analysts can share every number and still disagree, because they disagree about which number counts as the result."
+  },
+  {
+    "id": "CTC-M05",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "characterize",
+    "text1": "The dark, glossy coating that forms on exposed rock in arid regions takes many thousands of years to develop and is unusually rich in manganese, which is scarce in the underlying stone. Geochemist Tomas Weckstrom argues that microbes living on the rock surface concentrate manganese from windblown dust as a byproduct of their metabolism, and that the coating is therefore a biological deposit.",
+    "text2": "Geochemist Lin Haoyu produced coatings indistinguishable from the natural ones, in chemistry and in layering, by cycling sterile rock chips through repeated wetting and drying in a manganese-bearing solution for eight months. Haoyu notes that the microbes Weckstrom describes are present in comparable numbers on nearly every exposed surface in these regions, including the shaded undersides and recent rockfall faces that never develop a coating at all.",
+    "stem": "Based on the texts, how would Haoyu (Text 2) most likely characterize Weckstrom's argument in Text 1?",
+    "options": [
+      "As unwarranted, because the coating can form without microbes and microbes are present where no coating forms",
+      "As incomplete, because it fails to specify which of the many microbial species on desert rock deposits the manganese",
+      "As plausible, because sterile laboratory conditions cannot reproduce the chemistry of a natural rock surface",
+      "As surprising, because manganese is rarely abundant enough in windblown dust to accumulate on exposed rock"
+    ],
+    "key": 0,
+    "keyWhy": "it names both halves of Haoyu's objection. Weckstrom infers a biological origin from the presence of microbes and manganese together. Haoyu produced indistinguishable coatings on sterile rock chips, establishing a nonbiological way for such coatings to form. He also observes that the microbes occur on shaded undersides and recent rockfall faces that never develop a coating. Together, those results show that the association Weckstrom cites does not justify his conclusion.",
+    "rebuttals": {
+      "B": "identifying a particular species would matter only if a microbial origin were granted. Haoyu's sterile chips are meant to show that no species is required.",
+      "C": "this reverses Text 2's logic. Haoyu offers the laboratory result as evidence against Weckstrom, so he plainly regards it as informative about natural coatings.",
+      "D": "Haoyu's own procedure used a manganese-bearing solution and worked, and neither text suggests manganese is too scarce in dust. Scarcity is not his objection."
+    },
+    "steps": [
+      "Step 1: Name the inference under attack: microbes plus manganese, therefore biological origin.",
+      "Step 2: Haoyu's sterile chips show the coating forms without microbes.",
+      "Step 3: His field observation shows microbes on surfaces without a coating. An alternative mechanism plus that mismatch makes Weckstrom's inference unwarranted — Choice A."
+    ],
+    "remember": "To challenge a causal inference, look for an alternative way to produce the result and for cases in which the proposed cause appears without the result."
+  },
+  {
+    "id": "CTC-M06",
+    "difficulty": "medium",
+    "lane": "social-science",
+    "family": "respond",
+    "text1": "People often persist with a costly project simply because they have already put money into it. Behavioral scientist Aurelio Bassett trained starlings to work at a perch for a food reward and then made the reward far less frequent. <u>Birds that had invested many pecks in a perch kept returning to it longer than birds that had invested few, which shows the sunk-cost effect operating in a non-human animal.</u>",
+    "text2": "Behavioral scientist Noor Haddadin points out that a starling's past effort at a perch is also its best available evidence about that perch: a bird that has been fed there has every reason to expect food there again. In her trials, birds that had worked hard at a perch abandoned it just as quickly as any other bird once she gave them a brief, unambiguous demonstration that the perch was now empty.",
+    "stem": "Based on the texts, how would Haddadin (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By suggesting that the birds' persistence may reflect what their past effort told them rather than the effort itself",
+      "By arguing that starlings are unable to detect a change in how often a reward is delivered",
+      "By contending that birds which invested few pecks should have persisted longer than birds which invested many",
+      "By noting that the sunk-cost effect has been demonstrated far more clearly in species other than the starling"
+    ],
+    "key": 0,
+    "keyWhy": "it separates the two things Bassett's design leaves fused. Bassett treats prolonged returning as persistence caused by past investment. Haddadin observes that \"a starling's past effort at a perch is also its best available evidence about that perch\" — a bird that has been rewarded there has reason to expect reward again. When she removed the evidential value with \"a brief, unambiguous demonstration that the perch was now empty,\" the heavily invested birds left as fast as the others.",
+    "rebuttals": {
+      "B": "Haddadin's own result depends on the birds detecting change; they abandoned the perch as soon as she made the change unmistakable. Her point is about how long detection takes, not whether it happens.",
+      "C": "neither scientist expects low-investment birds to persist longer. This reverses Bassett's finding without engaging Haddadin's explanation of it.",
+      "D": "no other species appears in either text, and Haddadin does not compare starlings with anything. Her objection concerns what the starling result means."
+    },
+    "steps": [
+      "Step 1: Notice what past effort does in Bassett's setup: it is both the cost incurred and the history of reward.",
+      "Step 2: Haddadin's demonstration strips out the informational half, leaving the cost.",
+      "Step 3: Persistence disappeared, so the effect may have been informational all along — Choice A."
+    ],
+    "remember": "When one variable in Text 1 carries two meanings, Text 2 usually separates them. The answer names the meaning Text 1 overlooked."
+  },
+  {
+    "id": "CTC-M07",
+    "difficulty": "medium",
+    "lane": "humanities-arts",
+    "family": "regard",
+    "text1": "The concrete civic buildings of the 1960s are widely disliked and increasingly demolished. Architectural historian Solveig Marner argues that public dislike is not an argument: the same buildings were admired by the councils that commissioned them, taste in architecture reliably reverses within two or three generations, and a building torn down now cannot be reassessed later by anyone.",
+    "text2": "Architectural historian Idris Okonjo agrees that taste changes, and adds that many of these buildings have already been reassessed — favorably, and at length — by the architects and critics who write about them. Their users have not changed their minds. Okonjo's surveys of the people who work in these buildings daily record the same complaints about darkness, noise, and cold that municipal records show were being made in the 1970s.",
+    "stem": "Based on the texts, how would Okonjo (Text 2) most likely regard Marner's argument in Text 1?",
+    "options": [
+      "As too quick, because the reversal of taste Marner anticipates has occurred among critics without occurring among users",
+      "As unpersuasive, because architectural taste is in fact far more stable across generations than Marner claims",
+      "As sound, because the complaints recorded in the 1970s show that early judgments of these buildings were unreliable",
+      "As misdirected, because the buildings Marner defends were commissioned by officials rather than designed for critics"
+    ],
+    "key": 0,
+    "keyWhy": "it captures both what Okonjo grants and what he withholds. Marner's argument runs: taste reverses, so wait. Okonjo \"agrees that taste changes\" and reports that the reversal has already arrived \"by the architects and critics who write about them.\" But his surveys of daily users record \"the same complaints about darkness, noise, and cold\" as in the 1970s. The predicted reassessment happened in one population and not in the other, so Marner's argument moves too fast.",
+    "rebuttals": {
+      "B": "Text 2 states plainly that Okonjo \"agrees that taste changes\" and reports a favorable reassessment among critics. He does not argue that taste is stable; he distinguishes critics, whose views changed, from users, whose complaints persisted.",
+      "C": "the persistence of the 1970s complaints is Okonjo's evidence against waiting, not for it. Unchanged complaints suggest the early judgment was durable rather than unreliable.",
+      "D": "who commissioned the buildings is mentioned in Text 1 only as evidence that they were once admired. Okonjo's surveys are of users, and he draws no contrast between officials and critics."
+    },
+    "steps": [
+      "Step 1: Set out Marner's argument as a prediction: taste will reverse, so preserve and wait.",
+      "Step 2: Okonjo splits the audience — critics have reversed, users have not.",
+      "Step 3: A prediction half fulfilled does not carry the conclusion, so the verdict is \"too quick\" — Choice A."
+    ],
+    "remember": "When Text 2 opens by agreeing, the answer almost always keeps that agreement and limits it. A choice that denies the shared point is usually wrong."
+  },
+  {
+    "id": "CTC-M08",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Around 700 million years ago, glacial deposits formed at latitudes that were then tropical, and they appear on every continent for which rock of that age survives. Geologist Elke Ravensworth takes this as evidence that ice sheets reached the equator and the ocean froze over from pole to pole. <u>Because open water anywhere would have kept the tropics too warm for glaciers, the deposits require a completely frozen ocean.</u>",
+    "text2": "Geologist Nnamdi Falade's circulation model produces tropical glaciers while a belt of open water persists near the equator. In the model, thick sea ice creeping in from both poles drives such vigorous currents beneath it that heat is pulled away from the belt and released at high latitudes, chilling the tropical land margins to freezing even as the belt of water itself stays permanently ice-free.",
+    "stem": "Based on the texts, how would Falade (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By showing that tropical glaciers can coexist with open water elsewhere in the ocean",
+      "By arguing that the glacial deposits in question formed at higher latitudes than Ravensworth assumes",
+      "By demonstrating that a completely frozen ocean would have been impossible to escape from",
+      "By noting that circulation models of this period disagree about the thickness of polar sea ice"
+    ],
+    "key": 0,
+    "keyWhy": "it addresses the conditional the underlined sentence rests on. Ravensworth's claim is that open water anywhere would have kept the tropics too warm for glaciers, which is what makes a total freeze necessary. Falade's model produces \"tropical glaciers while a belt of open water persists near the equator,\" because circulation beneath thick sea ice draws heat out of that belt. The premise fails, so the requirement does not follow.",
+    "rebuttals": {
+      "B": "Falade accepts the deposits as tropical; his model is built to produce glaciers at those latitudes. Relocating them would abandon the phenomenon he is explaining.",
+      "C": "Text 2 says nothing about how a completely frozen ocean might thaw. Falade's model concerns how tropical glaciers and open water can coexist, not how the glacial episode ended.",
+      "D": "disagreement among models is not raised in either text, and it would not answer the underlined claim, which is about what open water entails rather than about model agreement."
+    },
+    "steps": [
+      "Step 1: The underlined sentence is a conditional: open water anywhere implies no tropical glaciers.",
+      "Step 2: Falade's model realizes the case the conditional forbids — glaciers in the tropics with an ice-free equatorial belt.",
+      "Step 3: The response is that the two can coexist — Choice A."
+    ],
+    "remember": "To answer a \"because X, therefore Y\" sentence, look for the text that supplies X-and-not-Y."
+  },
+  {
+    "id": "CTC-M09",
+    "difficulty": "medium",
+    "lane": "social-science",
+    "family": "agree",
+    "text1": "Ask a large crowd to guess the number of beans in a jar and the average guess will land remarkably close to the truth, even though almost no individual in the crowd comes near it. Decision scientist Oksana Brydzka attributes this to independence: each person's error is drawn separately, some too high and some too low, and independent errors cancel out when they are averaged together.",
+    "text2": "Decision scientist Aleksy Wren ran the same estimation task with four hundred participants while showing each one a running average of the guesses already submitted. The spread of answers narrowed sharply within the first fifty responses, and the group's average drifted steadily away from the true value thereafter. Confidence, measured after each guess, rose as the answers converged, even as accuracy fell.",
+    "stem": "Based on the texts, both scientists would most likely agree with which statement?",
+    "options": [
+      "How accurate a group's average estimate is depends on the relationship among the individual estimates.",
+      "Individuals who see the guesses of others become less confident in their own estimates.",
+      "A group's average estimate is generally more accurate than the estimate of its most skilled member.",
+      "Groups estimate quantities more accurately when their members are able to discuss the task."
+    ],
+    "key": 0,
+    "keyWhy": "both scientists explain group accuracy by the same variable. Brydzka credits the crowd's accuracy to independence, so that \"independent errors cancel out when they are averaged together.\" Wren removed that independence by showing each participant a running average, and the group's estimate \"drifted steadily away from the true value.\" One shows accuracy when estimates are unrelated, the other shows it collapsing when they are not; both locate the cause in how the estimates relate to one another.",
+    "rebuttals": {
+      "B": "Text 2 reports the opposite: \"rose as the answers converged, even as accuracy fell.\" Brydzka says nothing about confidence at all.",
+      "C": "neither text compares the group average with any individual. Text 1 notes only that almost no individual guesses well, which is not a claim about the best member.",
+      "D": "discussion is not tested in either text. Wren's participants saw a running average rather than talking with each other, and that exposure made the group less accurate."
+    },
+    "steps": [
+      "Step 1: Identify Brydzka's causal claim: independence produces accuracy.",
+      "Step 2: Identify what Wren manipulated: the independence of the estimates, with accuracy falling as a result.",
+      "Step 3: Both make accuracy depend on how the estimates relate to one another — Choice A."
+    ],
+    "remember": "A demonstration and a sabotage of the same mechanism count as agreement about that mechanism."
+  },
+  {
+    "id": "CTC-M10",
+    "difficulty": "medium",
+    "lane": "humanities-arts",
+    "family": "relate",
+    "text1": "Medieval readers wrote in their books constantly — correcting scribes, arguing with the author in the margin, drawing little pointing hands beside passages they wanted to find again. Literary historian Bettina Oldenburg has catalogued the marginalia in four hundred surviving manuscripts and argues that reading in this period was an act of open engagement, carried out with a pen in hand.",
+    "text2": "Oldenburg's four hundred manuscripts are the ones that happened to be kept. Literary historian Callum Reyes points out that heavily annotated copies were prized by later collectors, who paid well for a book that showed signs of use by a named earlier reader, while clean copies were more often broken up for their parchment or their bindings. The surviving record may show us what collectors valued rather than how medieval readers read.",
+    "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+    "options": [
+      "Text 1 draws a conclusion about medieval reading from surviving manuscripts, and Text 2 argues that those manuscripts survived because of the feature the conclusion rests on.",
+      "Text 1 describes a practice common among medieval readers, and Text 2 gives evidence that it was confined to a small group of unusually wealthy readers.",
+      "Text 1 catalogues the marginalia in four hundred manuscripts, and Text 2 questions whether medieval readers or later collectors added those annotations.",
+      "Text 1 argues that medieval reading was an active practice, and Text 2 argues that later collectors read in much the same way."
+    ],
+    "key": 0,
+    "keyWhy": "it describes what each text is doing. Oldenburg generalizes about medieval reading from four hundred annotated manuscripts. Reyes does not dispute the annotations; he argues that annotation is why those particular books survived, since \"heavily annotated copies were prized by later collectors\" while clean copies were destroyed. The evidence was selected by the very trait it is being used to establish, which is the relationship the choice names.",
+    "rebuttals": {
+      "B": "wealth is not mentioned in either text. Reyes's argument concerns which manuscripts survived, not which readers could afford books.",
+      "C": "Reyes accepts that medieval readers made the annotations. His claim is about later collectors' preservation choices, not about later collectors' pens.",
+      "D": "Text 2 says nothing about how collectors read. It describes what they kept, and it does not compare their reading practices with anyone's."
+    },
+    "steps": [
+      "Step 1: Say in plain terms what Text 1 does — infers a general practice from a surviving sample.",
+      "Step 2: Say what Text 2 does — argues the sample survived because it has the trait in question.",
+      "Step 3: Match the choice that states both jobs correctly, without adding claims neither text makes — Choice A."
+    ],
+    "remember": "On \"how do the texts relate\" items, describe each text's job before reading the choices. Wrong choices usually get one job right and invent the other."
+  }
+]

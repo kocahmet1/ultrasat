@@ -12,6 +12,7 @@ import { FiChevronDown, FiChevronUp, FiMinusCircle, FiBookOpen, FiUsers } from '
 import { getStatsForQuestions, formatStats, formatPeerSeconds } from '../firebase/questionStatsServices';
 import ExplanationCard from '../components/ExplanationCard';
 import ReportQuestionModal from '../components/ReportQuestionModal';
+import WordSaver from '../components/WordSaver';
 import CoachDebrief from '../components/coach/CoachDebrief';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
@@ -253,6 +254,13 @@ export default function SmartQuizResults() {
 
         {/* Right Column: Question Review */}
         <div className="results-card question-review-panel">
+          {/* Select any word in the reviewed questions to save it to the Word Bank */}
+          <WordSaver
+            selector=".question-container-review"
+            source="quiz-review"
+            metadata={{ quizId }}
+            showDefinition
+          />
           <h2>Question Review</h2>
           <div className="questions-list">
             {questions.map((q, index) => {

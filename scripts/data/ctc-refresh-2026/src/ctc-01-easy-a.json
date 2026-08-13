@@ -1,0 +1,282 @@
+[
+  {
+    "id": "CTC-E01",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Kelp forests along rocky coastlines are often stripped bare by sea urchins, which graze on the anchoring stalks that hold each frond to the seafloor. Marine biologist Renata Sorvik has shown that wherever sunflower sea stars are abundant, urchin numbers stay low and kelp grows back within two seasons. <u>A damaged kelp forest therefore cannot recover unless its sea star population is restored.</u>",
+    "text2": "A three-year survey of barren coastline by ecologist Tomas Arrieta found that kelp returned at eleven sites where sea stars were still absent. At those sites an unusually long season of cold upwelling water had lowered temperatures by several degrees, and the urchins there nearly stopped feeding for months at a stretch. Arrieta notes that the cold water alone suppressed grazing long enough for young kelp to take hold.",
+    "stem": "Based on the texts, how would Arrieta (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By observing that kelp has recovered at sites where sea stars were not present",
+      "By arguing that sea stars control urchins more effectively in cold water than in warm water",
+      "By pointing out that sea urchins feed on organisms other than kelp",
+      "By claiming that seasons of cold upwelling have become less frequent along rocky coastlines"
+    ],
+    "key": 0,
+    "keyWhy": "it identifies a direct exception to Sorvik's claim. Text 1 says a damaged kelp forest cannot recover unless sea stars return. Text 2 reports that kelp did recover at eleven sites where sea stars were still absent because cold water suppressed urchin grazing. Arrieta would therefore point to those sites as evidence that sea stars are not required for recovery.",
+    "rebuttals": {
+      "B": "Arrieta's sites had no sea stars in them, so he offers no comparison of how well sea stars perform at different temperatures. This choice is unsupported and does not address his evidence that recovery occurred without sea stars.",
+      "C": "neither text says anything about what else urchins eat. Text 1 mentions only kelp stalks, and Text 2 reports that the urchins nearly stopped feeding, not that they switched foods.",
+      "D": "Text 2 describes one unusually long upwelling season at the survey sites. It makes no claim about whether such seasons are becoming more or less common, and the frequency of upwelling is not what Sorvik's conclusion turns on."
+    },
+    "steps": [
+      "Step 1: Pin the target. Sorvik says kelp cannot recover without restored sea stars.",
+      "Step 2: Find the relevant result in Text 2. Arrieta observed kelp recovery while sea stars were still absent.",
+      "Step 3: That result directly contradicts the claim that sea stars are necessary, so Choice A is correct."
+    ],
+    "remember": "A single clear exception can disprove a claim that something cannot happen without a particular condition."
+  },
+  {
+    "id": "CTC-E02",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "agree",
+    "text1": "Tardigrades, microscopic animals often called water bears, can survive being dried out for years at a time and resume normal activity within hours of being rewetted. Biologist Camila Otero has found that tardigrades flood their tissues with a sugar called trehalose as they dry. She argues that the sugar hardens into a glasslike coating that holds the contents of each cell in place until water returns.",
+    "text2": "Several tardigrade species make very little trehalose, yet they survive drying just as well as species that make a great deal of it. Biochemist Ingrid Vandermeer has identified a family of unusually loose, flexible proteins that spread through the cells of a drying tardigrade and stiffen into a supporting mesh as the last water leaves. Vandermeer suggests that these proteins, not any one sugar, are what keep the animals intact.",
+    "stem": "Based on the texts, both researchers would most likely agree with which statement?",
+    "options": [
+      "Tardigrades depend on the sugar trehalose in order to survive long periods without any water at all.",
+      "A substance helps stabilize tardigrade cells while the animals are dried out.",
+      "Tardigrades that have been dried out need several weeks to become active again.",
+      "Most tardigrade species produce roughly the same amount of trehalose."
+    ],
+    "key": 1,
+    "keyWhy": "it states the premise the two researchers share while leaving open the point on which they differ. Otero credits trehalose with holding cell contents in place, whereas Vandermeer credits proteins with forming a supporting mesh. Both propose that a substance stabilizes tardigrade cells during drying, but they disagree about which substance does so.",
+    "rebuttals": {
+      "A": "this is Otero's position alone, and it is the claim Vandermeer's evidence is aimed at. Text 2 reports species that make very little trehalose and survive drying anyway.",
+      "C": "Text 1 states that tardigrades resume normal activity \"within hours\" of rewetting, and Text 2 does not contradict that. Neither researcher describes a recovery lasting weeks.",
+      "D": "Text 2 says the opposite — that several species make very little trehalose while others make a great deal. Text 1 makes no claim about how the amount varies across species."
+    },
+    "steps": [
+      "Step 1: Separate the shared ground from the dispute. The dispute is trehalose versus protein; that is where three of the four choices will try to pull you.",
+      "Step 2: Ask what has to be true for either account to work. Both describe a substance that physically stabilizes the cells while they are dry.",
+      "Step 3: The choice that states only that much, and takes no side, is Choice B."
+    ],
+    "remember": "On \"both would agree\" items, the answer is usually the most modest statement offered. Anything that settles the argument between the two texts is too strong."
+  },
+  {
+    "id": "CTC-E03",
+    "difficulty": "easy",
+    "lane": "humanities-arts",
+    "family": "difference",
+    "text1": "When conservators cleaned the ceiling paintings of the Palazzo Ferrante in 2019, decades of darkened varnish came away and pale golds and greens reappeared that no living person had seen. Art historian Beatriz Ocampo argues that the cleaning returned the room to the appearance its painter intended, and that visitors standing beneath it today can respond to the ceiling much as its first audiences did in the 1620s.",
+    "text2": "The varnish taken off the Palazzo Ferrante ceiling was not simply grime. Some of it was brushed on by the painter's own workshop to soften the joins between figures and to knock back the brightest passages, and conservators cannot always tell those early coatings from later ones. Art historian Peter Nkemelu argues that the cleaned ceiling now shows us the colors the painter mixed but not the surface he approved.",
+    "stem": "Which choice best describes a difference in how Ocampo and Nkemelu view the cleaned ceiling of the Palazzo Ferrante?",
+    "options": [
+      "Ocampo holds that the cleaning revealed the appearance the painter intended, whereas Nkemelu holds that part of that intended appearance was removed.",
+      "Ocampo believes the ceiling was painted by one artist working alone, whereas Nkemelu believes a workshop of assistants carried out the work.",
+      "Ocampo claims the ceiling's colors were originally dark, whereas Nkemelu claims they were originally pale.",
+      "Ocampo argues that the cleaning should never have been attempted, whereas Nkemelu argues that it was overdue."
+    ],
+    "key": 0,
+    "keyWhy": "each half of the choice matches its text. Ocampo says the cleaning \"returned the room to the appearance its painter intended.\" Nkemelu says some of the varnish was applied by the painter's own workshop, so the cleaned ceiling shows \"the colors the painter mixed but not the surface he approved\" — that is, the cleaning took away something the painter had wanted there.",
+    "rebuttals": {
+      "B": "Text 2 mentions the painter's workshop, but neither text disputes who executed the ceiling. Ocampo's claim concerns the painter's intention, not the number of hands involved.",
+      "C": "this reverses both texts. Text 1 states that the cleaning uncovered pale golds and greens beneath darkened varnish; neither historian argues that the original colors were dark.",
+      "D": "neither historian takes the position assigned to them here. Ocampo praises the outcome of the cleaning, and Nkemelu questions what it removed rather than calling it overdue."
+    },
+    "steps": [
+      "Step 1: On a difference item, treat each choice as two separate claims that both have to hold.",
+      "Step 2: Fix Ocampo's half: the cleaning recovered the painter's intended appearance.",
+      "Step 3: Fix Nkemelu's half: some removed varnish was the painter's own, so the intended surface is now gone. Only Choice A gets both halves right."
+    ],
+    "remember": "\"Difference\" choices fail more often on one half than on both. Check the Text 1 clause and the Text 2 clause separately before deciding."
+  },
+  {
+    "id": "CTC-E04",
+    "difficulty": "easy",
+    "lane": "social-science",
+    "family": "respond",
+    "text1": "Several school districts have pushed the start of the high school day from 7:30 a.m. to 8:45 a.m. Education researcher Halima Boubacar surveyed nearly four thousand students at these schools in the spring after the change and found that they reported sleeping about forty minutes longer on school nights than they had the year before. <u>A later start therefore gives teenagers substantially more sleep.</u>",
+    "text2": "Sleep scientist Jonah Preece followed students at four districts with later start times using wrist monitors that record when a person actually falls asleep rather than when the lights go out. The students did wake later, but most also went to bed later, and the average gain came to about ten minutes a night. Preece notes that students asked to recall their own sleep tend to overstate any change.",
+    "stem": "Based on the texts, how would Preece (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By pointing out that the gain in sleep is much smaller when it is measured directly",
+      "By arguing that students at schools with later start times do not wake up any later than before",
+      "By suggesting that surveys are the most accurate available way to measure how long students sleep",
+      "By concluding that later start times cause teenagers to sleep less than they did before"
+    ],
+    "key": 0,
+    "keyWhy": "it captures the specific correction Text 2 supplies. Boubacar reports a forty-minute gain from what students said about themselves. Preece measured sleep with wrist monitors and found \"about ten minutes a night,\" adding that students \"tend to overstate any change\" when asked to recall it. Preece therefore accepts that there is a gain but places it far below the surveyed figure.",
+    "rebuttals": {
+      "B": "Text 2 states plainly that the students \"did wake later.\" Preece's objection is that they also went to bed later, not that their waking time was unchanged.",
+      "C": "Preece's whole point runs the other way. He treats direct measurement as the more trustworthy method and describes self-reported sleep as overstated.",
+      "D": "Text 2 reports a gain of roughly ten minutes, which is a smaller increase, not a loss. Nothing in either text suggests teenagers ended up with less sleep than before."
+    },
+    "steps": [
+      "Step 1: Note what Boubacar's number rests on — what students said about their own sleep.",
+      "Step 2: Note what Preece's number rests on — wrist monitors, giving about ten minutes.",
+      "Step 3: The response is not that the change is imaginary but that it is far smaller than the survey implied — Choice A."
+    ],
+    "remember": "When Text 2 measures the same thing a different way, the answer is usually about the size of the effect, not its existence."
+  },
+  {
+    "id": "CTC-E05",
+    "difficulty": "easy",
+    "lane": "history-civics",
+    "family": "agree",
+    "text1": "Europe's first printing shops opened in cities that already had universities, and their earliest output was overwhelmingly textbooks, legal manuals, and the reference works students were required to own. Historian Yosef Almeida argues that printers went where a paying readership was already waiting. On his account the press did not create an appetite for books so much as supply an appetite that hand copyists could no longer keep up with.",
+    "text2": "Within forty years of the first printed books, presses had reached small market towns with no universities at all. Historian Wen Jiaying has traced the accounts of forty such shops and finds that most stayed in business by turning out calendars, pamphlets, and devotional images for customers who owned no other books. Printing, she argues, found ordinary readers far sooner than historians once assumed.",
+    "stem": "Based on the texts, both historians would most likely agree with which statement?",
+    "options": [
+      "Printers chose where to set up and what to produce according to who was likely to buy from them.",
+      "The earliest printing shops in Europe were established in small market towns that had no universities of their own.",
+      "Printed calendars and pamphlets proved more profitable than textbooks and legal manuals.",
+      "Hand copyists produced most of Europe's books for more than a century after printing began."
+    ],
+    "key": 0,
+    "keyWhy": "both historians explain the location and output of early presses by reference to an available market. Almeida says printers \"went where a paying readership was already waiting\" and produced textbooks and legal manuals for university towns. Wen describes shops in towns without universities staying open by printing calendars and devotional images for customers who owned no other books. The two disagree about how quickly printing reached ordinary readers, but both treat the buyer as what determined a shop's location and product.",
+    "rebuttals": {
+      "B": "Text 1 states the opposite about the earliest shops, which opened in university cities. Wen's towns without universities are the later wave, reached \"within forty years.\"",
+      "C": "neither text compares the profits of the two kinds of printing. Wen says only that calendars and pamphlets kept small-town shops in business.",
+      "D": "Text 1 says hand copyists could no longer meet demand, and Text 2 describes printing spreading quickly. Neither historian assigns copyists the majority of Europe's book production after printing arrived."
+    },
+    "steps": [
+      "Step 1: Identify the disagreement so you can set it aside — how soon printing reached readers outside university towns.",
+      "Step 2: Look at what each historian uses to explain the shops he or she studies. Both point to the customers available in a given place.",
+      "Step 3: The statement that captures only that shared explanation is Choice A."
+    ],
+    "remember": "Two texts can reach opposite conclusions from the same assumption. On \"both agree\" items, the assumption is the answer."
+  },
+  {
+    "id": "CTC-E06",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Why do zebras have stripes? Zoologist Marguerite Vasseur measured skin temperature in zebras and in similarly sized plain-coated antelope grazing beside them on the same open ground, and found the striped animals consistently cooler through the middle of the day. Vasseur proposes that alternating black and white bands set small swirls of air moving just above the coat, and that stripes are therefore a system for shedding heat.",
+    "text2": "Biologist Devon Achterberg fitted half of a herd of horses with striped cloth coats and the rest with plain coats of identical fabric, weight, and cut. Over six weeks, biting flies landed on the plain-coated horses roughly four times as often as on the striped ones. Achterberg recorded no difference in skin temperature between the two groups and concludes that stripes work chiefly against insects.",
+    "stem": "Based on the texts, how would Achterberg (Text 2) most likely respond to Vasseur's proposal in Text 1?",
+    "options": [
+      "By noting that stripes produced no temperature difference in a test where the coats were otherwise identical",
+      "By observing that biting flies are more active in midday sun than at other times of day",
+      "By arguing that antelope tolerate high temperatures less well than zebras do",
+      "By suggesting that the width of a zebra's stripes varies more than earlier studies recognized"
+    ],
+    "key": 0,
+    "keyWhy": "it draws on the feature of Achterberg's design that speaks to Vasseur's proposal. Vasseur infers a cooling function from zebras being cooler than antelope, two different animals. Achterberg compared striped and plain coats \"of identical fabric, weight, and cut\" on the same herd of horses and \"recorded no difference in skin temperature.\" With everything but the stripes held constant, the cooling effect disappears.",
+    "rebuttals": {
+      "B": "neither text reports when during the day flies are most active. Text 2 measures how often flies landed, not the hour at which they did so.",
+      "C": "Text 2 studies horses and does not mention antelope at all. Vasseur's antelope comparison is in Text 1, and Achterberg offers no claim about antelope heat tolerance.",
+      "D": "stripe width appears in neither text. Achterberg's coats were simply striped or plain, and his objection concerns temperature, not pattern detail."
+    },
+    "steps": [
+      "Step 1: Notice what Vasseur compared — zebras against antelope, animals that differ in many ways besides stripes.",
+      "Step 2: Notice what Achterberg compared — striped and plain coats of the same fabric on one herd, which isolates the stripes.",
+      "Step 3: In that cleaner test the temperature effect vanished, so that is what Achterberg would raise — Choice A."
+    ],
+    "remember": "When Text 2 runs a controlled version of the comparison behind Text 1's claim, the answer is normally the result of that controlled version."
+  },
+  {
+    "id": "CTC-E07",
+    "difficulty": "easy",
+    "lane": "humanities-arts",
+    "family": "regard",
+    "text1": "Jazz musicians of the 1940s learned their craft on the bandstand. Trumpeter Odile Marchetti, who came up in that world and never took a formal lesson, says written instruction had nothing to do with it: a young player listened, imitated, failed in public, and eventually found a voice. Marchetti maintains that jazz cannot be taught in a classroom, because it was never learned in one.",
+    "text2": "Conservatory programs are now the ordinary route into jazz, and most working players under forty have passed through one. Saxophonist and teacher Amara Diallo points out that these programs largely formalize what bandstand training always did: students copy recordings by ear, play nightly in small groups, and are corrected in front of one another. What has changed, Diallo says, is the room the learning happens in, not the way it happens.",
+    "stem": "Based on the texts, how would Diallo (Text 2) most likely regard Marchetti's position in Text 1?",
+    "options": [
+      "As mistaken, because the training a jazz program provides is not fundamentally different from the training Marchetti describes",
+      "As reasonable, because few of the jazz musicians who defined the music in the 1940s ever attended a conservatory",
+      "As outdated, because audiences today no longer expect jazz musicians to improvise",
+      "As unfair, because classroom instruction has produced more accomplished players than bandstand training did"
+    ],
+    "key": 0,
+    "keyWhy": "the adjective and the reason both match Text 2. Marchetti holds that jazz \"cannot be taught in a classroom.\" Diallo answers that conservatories \"formalize what bandstand training always did\" — copying by ear, nightly playing, public correction — and that only \"the room the learning happens in\" has changed. If the method is the same, Marchetti's objection to the classroom does not stand.",
+    "rebuttals": {
+      "B": "this endorses Marchetti rather than answering her, and it treats the 1940s as settling the question. Diallo's point is about what conservatories do now, not about who attended one eighty years ago.",
+      "C": "neither text mentions audience expectations, and Text 2 describes students copying recordings by ear — the opposite of abandoning improvisation.",
+      "D": "Diallo claims that the two kinds of training work alike, not that one produces better players. Ranking them would go beyond anything Text 2 asserts."
+    },
+    "steps": [
+      "Step 1: State Marchetti's claim exactly: the classroom cannot teach jazz because jazz was never learned that way.",
+      "Step 2: State Diallo's answer: the classroom now uses the same practices the bandstand did.",
+      "Step 3: That makes Marchetti's reason fail, so the judgment is \"mistaken,\" for that reason — Choice A."
+    ],
+    "remember": "In \"As {adjective}, because …\" choices, both parts are scored. A choice can carry the right verdict and still be wrong on the reason attached to it."
+  },
+  {
+    "id": "CTC-E08",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "agree",
+    "text1": "When a whale carcass settles on the deep seafloor it becomes a small, temporary ecosystem. Marine biologist Rafael Quintero has catalogued the animals that arrive at these \"whale falls\": sleeper sharks and hagfish strip the flesh within months, and dense mats of worms then colonize the bared bones and the oil-soaked sediment around them. Quintero estimates that a single carcass can sustain such a community for several decades.",
+    "text2": "Whale falls are often described as isolated islands of life, but surveys by chemist Nadia Bergstrom suggest something else. The bacteria she finds living on whale bones are nearly identical to those at hydrothermal vents hundreds of kilometers away, down to the enzymes they use to process sulfur. Bergstrom argues that whale falls act as stepping-stones, letting vent organisms cross long stretches of ocean floor from one vent field to the next.",
+    "stem": "Based on the texts, both researchers would most likely agree with which statement?",
+    "options": [
+      "A whale carcass on the deep seafloor supports organisms that would not otherwise be living at that spot.",
+      "Most of the organisms found living at a whale fall are also found at hydrothermal vents hundreds of kilometers away.",
+      "Whale carcasses are the main source of food for deep-sea sharks and hagfish.",
+      "Communities on the deep seafloor recover from disturbance more quickly than shallow-water communities do."
+    ],
+    "key": 0,
+    "keyWhy": "it holds under both accounts of what a whale fall is. Quintero describes a carcass drawing in sharks, hagfish, and worm mats and sustaining them \"for several decades.\" Bergstrom describes vent bacteria settling on the same bones and using them to reach the next vent field. The two disagree about whether the resulting community is isolated, but both describe organisms living at a spot on the seafloor only because the carcass arrived there.",
+    "rebuttals": {
+      "B": "this is Bergstrom's finding about bacteria, extended to organisms generally. Quintero's sharks, hagfish, and worms are not reported at vents, and Text 1 makes no comparison to vent communities.",
+      "C": "Text 1 says sharks and hagfish strip a carcass within months. It does not claim that carcasses supply most of what these animals eat, and Text 2 does not address their diet.",
+      "D": "recovery from disturbance is discussed in neither text, and no comparison between deep and shallow water appears in either one."
+    },
+    "steps": [
+      "Step 1: Set the disagreement aside — whether a whale fall is an island or a stepping-stone.",
+      "Step 2: Ask what both descriptions require. In each, a carcass brings organisms to a patch of seafloor that would not otherwise hold them.",
+      "Step 3: Choice A states exactly that and nothing more."
+    ],
+    "remember": "The shared statement is often the one that sounds almost too obvious. Distractors on these items borrow a specific finding from one text and present it as common ground."
+  },
+  {
+    "id": "CTC-E09",
+    "difficulty": "easy",
+    "lane": "social-science",
+    "family": "say-about",
+    "text1": "A city that wants residents to compost usually begins with a campaign explaining why composting matters. Policy analyst Idris Halloway studied twelve such campaigns, each running at least six months, and found that they raised the share of residents who called composting important but barely changed how much material actually reached the compost facility. <u>Information campaigns do not on their own change what households do.</u>",
+    "text2": "When the city of Vardenholm placed a small covered bin in every kitchen and began collecting it on the same day as ordinary garbage, participation climbed from nine percent of households to sixty-one within a year. The city ran no advertising at all and printed nothing beyond a card explaining which day to set the bin out. Sanitation director Petra Solheim credits the rise to removing the small daily inconveniences that had been discouraging residents.",
+    "stem": "Based on the texts, what would Solheim (Text 2) most likely say about the underlined claim in Text 1?",
+    "options": [
+      "It fits what happened in Vardenholm, where behavior changed once composting was made easier rather than better explained.",
+      "It underestimates how much the residents of most cities already understand about the environmental benefits of composting.",
+      "It applies only to cities that collect compost on a different day from ordinary garbage.",
+      "It is contradicted by Vardenholm's campaign, which raised participation by explaining why composting matters."
+    ],
+    "key": 0,
+    "keyWhy": "Vardenholm's result is an instance of the pattern Halloway describes. Halloway concludes that explaining why composting matters does not by itself change behavior. Vardenholm changed behavior sharply — from nine percent of households to sixty-one — while running \"no advertising at all,\" by supplying bins and matching the collection day. Solheim's own explanation, that the city removed \"small daily inconveniences,\" supports rather than challenges Halloway.",
+    "rebuttals": {
+      "B": "how much residents already know is not the issue in either text. Halloway found that campaigns did raise the share who called composting important; what did not follow was the behavior.",
+      "C": "Vardenholm changed its collection day as part of the intervention, so Halloway's conclusion is not restricted to cities that have not. Nothing in Text 1 limits the finding by collection schedule.",
+      "D": "Text 2 states that Vardenholm \"ran no advertising at all.\" There was no campaign of the kind Halloway studied, so the city's result cannot contradict him in the way this choice describes."
+    },
+    "steps": [
+      "Step 1: Read Halloway's conclusion narrowly: information alone does not move behavior.",
+      "Step 2: Check what Vardenholm actually did — bins and a matched collection day, with no advertising.",
+      "Step 3: A large behavior change produced without information supports Halloway rather than undercutting him — Choice A."
+    ],
+    "remember": "Not every second text disagrees. Read Text 2's design before assuming it was built to refute Text 1."
+  },
+  {
+    "id": "CTC-E10",
+    "difficulty": "easy",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "A honeybee returning from a rich patch of flowers performs a looping \"waggle dance\" on the vertical face of the comb, sometimes repeating it a hundred times. The angle of the dance indicates the direction of the food and its duration indicates the distance. <u>Because the dance encodes both pieces of information precisely, a bee that watches it can fly straight to the patch without any further guidance.</u>",
+    "text2": "Zoologist Sun-Woo Bae released marked bees that had just watched a waggle dance and followed each of them by radar. Most flew in the right direction and about the right distance, then circled for several minutes over open ground before locating the flowers. Bees that had watched a dance and could also smell the flowers' scent on the dancer's body reached the patch far more quickly.",
+    "stem": "Based on the texts, how would Bae (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By noting that bees following a dance still need other cues in order to find the flowers themselves",
+      "By arguing that the angle of the waggle dance does not reliably indicate the direction of the food",
+      "By suggesting that bees seldom watch the dances performed by other bees",
+      "By claiming that scent is the only information a returning bee conveys to the hive"
+    ],
+    "key": 0,
+    "keyWhy": "it matches what Bae's radar tracking actually showed. The underlined claim is that the dance alone is sufficient — a bee can fly \"straight to the patch without any further guidance.\" Bae found that dance-following bees arrived in the right area but then \"circled for several minutes,\" while bees that had also picked up the flowers' scent \"reached the patch far more quickly.\" The dance gets a bee close; something else completes the trip.",
+    "rebuttals": {
+      "B": "Text 2 reports that most bees \"flew in the right direction,\" which confirms the angle rather than casting doubt on it. Bae's finding concerns the last stage of the flight, not the heading.",
+      "C": "Bae's bees are described as having just watched a dance, and Text 1 treats dance-watching as routine. Neither text suggests the behavior is rare.",
+      "D": "Text 2 shows that scent shortens the search, not that it replaces the dance. Bees without scent still flew the correct direction and distance, so the dance plainly carried information."
+    },
+    "steps": [
+      "Step 1: Read the underlined sentence for its strength. The word doing the work is \"without any further guidance.\"",
+      "Step 2: Bae's bees arrived near the patch on dance information alone but then circled; scent cut the search short.",
+      "Step 3: So the dance is informative but not sufficient, which is the qualification in Choice A."
+    ],
+    "remember": "When the stem points to an underlined sentence, the answer must respond to that sentence's exact strength — here, the word \"without.\""
+  }
+]

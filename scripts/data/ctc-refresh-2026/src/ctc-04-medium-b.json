@@ -1,0 +1,282 @@
+[
+  {
+    "id": "CTC-M11",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "The icy moon Rhelka vents plumes of water vapor from fractures near its south pole. A spacecraft flying through one plume in 2019 detected methane at concentrations more than forty times what the moon's rock chemistry alone should yield. Planetary scientist Dilnoza Rakhimova argues that the excess points to microbial communities in the ocean beneath the ice, since such an imbalance is difficult to sustain without life.",
+    "text2": "Geochemist Owen Baptiste modeled hot water circulating through fractured rock on Rhelka's ocean floor at the pressures the moon's interior would impose. Under those conditions, methane forms from carbon dioxide and hydrogen faster than it can escape through the ice, and accumulates over a few million years to the plume concentrations Rakhimova cites. Baptiste notes that the reaction requires only heat, water, and minerals already known to be present.",
+    "stem": "Based on the texts, how would Baptiste (Text 2) most likely respond to Rakhimova's argument in Text 1?",
+    "options": [
+      "By showing that the observed methane concentrations can be produced without any biological source",
+      "By arguing that the 2019 spacecraft measurements overstated the amount of methane in Rhelka's plumes",
+      "By suggesting that microbial communities in Rhelka's ocean would produce far more methane than was detected",
+      "By pointing out that methane is a poor indicator of life because it is common throughout the outer solar system"
+    ],
+    "key": 0,
+    "keyWhy": "it identifies what Baptiste's model accomplishes. Rakhimova's argument depends on the imbalance being \"difficult to sustain without life.\" Baptiste's model generates methane from carbon dioxide and hydrogen at Rhelka's own pressures, accumulating \"to the plume concentrations Rakhimova cites,\" using \"only heat, water, and minerals already known to be present.\" A purely geochemical route to the same numbers removes the difficulty that Rakhimova's inference rests on.",
+    "rebuttals": {
+      "B": "Baptiste takes the measured concentrations as his target and matches them. Disputing the measurement would undo the agreement his model is built to demonstrate.",
+      "C": "no estimate of microbial output appears in either text. Baptiste offers an alternative to a biological source rather than a quantitative argument against one.",
+      "D": "the abundance of methane elsewhere in the solar system is not mentioned in either text, and Baptiste's case is specific to conditions inside Rhelka."
+    },
+    "steps": [
+      "Step 1: Locate the word carrying Rakhimova's inference: the imbalance is \"difficult to sustain without life.\"",
+      "Step 2: Baptiste's model sustains it with heat, water, and known minerals, reaching the same concentrations.",
+      "Step 3: The inference loses its warrant, which is Choice A."
+    ],
+    "remember": "An argument of the form \"only life explains this\" is answered by any complete alternative explanation, not by an attack on the observation."
+  },
+  {
+    "id": "CTC-M12",
+    "difficulty": "medium",
+    "lane": "social-science",
+    "family": "agree",
+    "text1": "Psychologist Marisol Etxeberria has long held that lifelong bilingualism strengthens the brain's control of attention, because a bilingual speaker must continually suppress one language while using the other. In her laboratory studies, bilingual adults switch between conflicting tasks a fraction of a second faster than monolingual adults matched for age, education, and income, and the gap widens with age.",
+    "text2": "Psychologist Deng Wenqing assembled twenty-two attempts to replicate the bilingual switching advantage and found that studies with fewer than sixty participants reported it far more often, and at far greater magnitude, than larger studies did. Pooling all the data from all twenty-two, the advantage shrank to a few milliseconds. Deng notes that the effect appears reliably only in samples too small to measure it precisely.",
+    "stem": "Based on the texts, both psychologists would most likely agree with which statement?",
+    "options": [
+      "Comparisons of bilingual and monolingual adults on switching tasks have yielded differences favoring bilingual adults.",
+      "Bilingual adults control their attention substantially better than monolingual adults do.",
+      "Studies with small samples measure differences in switching speed more precisely than large studies do.",
+      "Suppressing one language while speaking another has no measurable effect on how the brain controls attention."
+    ],
+    "key": 0,
+    "keyWhy": "it states the finding neither psychologist disputes. Etxeberria's studies show bilingual adults switching \"a fraction of a second faster.\" Deng's pooled analysis still leaves an advantage, though it \"shrank to a few milliseconds.\" They disagree sharply about how large and how meaningful the difference is, but both describe comparisons in which the difference ran in the bilingual direction.",
+    "rebuttals": {
+      "B": "\"Substantially\" is exactly what Deng's pooled analysis removes. A few milliseconds is the opposite of a substantial advantage, so this cannot be common ground.",
+      "C": "Text 2 says the reverse — the advantage appears in samples \"too small to measure it precisely.\" Deng treats small studies as less precise, not more.",
+      "D": "Deng does not report a null result. The pooled advantage is small rather than absent, and Etxeberria would reject this outright."
+    },
+    "steps": [
+      "Step 1: Note that Deng is arguing about the size of an effect, not denying that anything was found.",
+      "Step 2: Etxeberria reports an advantage; Deng reports a much smaller one. The direction is shared.",
+      "Step 3: The statement that reports the direction without committing to a size is Choice A."
+    ],
+    "remember": "When Text 2 shrinks an effect rather than erasing it, the shared statement describes the effect's direction, never its magnitude."
+  },
+  {
+    "id": "CTC-M13",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Flooded rice fields release large amounts of methane, produced by microbes feeding in the waterlogged soil. Agronomist Sanjay Vellore compared a newly bred rice variety with standard rice in replicate field plots across two growing seasons. <u>He reports that the new variety cuts methane emissions by nearly forty percent and credits its unusually small roots, which leak less of the sugar those microbes depend on.</u>",
+    "text2": "Agronomist Petra Lindqvist measured methane and nitrous oxide escaping from matching plots and found that although methane fell by about the margin Vellore reported, nitrous oxide emissions rose sharply. The variety's small roots draw less nitrogen from the soil, leaving more for the bacteria that generate nitrous oxide, a more potent heat-trapping gas than methane.",
+    "stem": "Based on the texts, how would Lindqvist (Text 2) most likely respond to the underlined portion of Text 1?",
+    "options": [
+      "By noting that the same root trait Vellore credits also increases emissions of a more potent gas",
+      "By arguing that the reduction in methane Vellore measured was smaller than his figure indicates",
+      "By suggesting that the new variety's roots draw more nitrogen from the soil than conventional varieties do",
+      "By contending that microbes in waterlogged soil are not the principal source of methane in rice fields"
+    ],
+    "key": 0,
+    "keyWhy": "it follows the single trait through both of its effects. Vellore credits the variety's unusually small root system with cutting methane by leaking less sugar. Lindqvist finds that the same small roots draw less nitrogen from the soil, leaving more for nitrous-oxide-producing bacteria, and identifies nitrous oxide as the more heat-trapping gas. The result qualifies Vellore's account of the trait's benefit. It does not establish the variety's overall climate effect, since the texts do not provide enough information to compare the total warming effects of the two emission changes.",
+    "rebuttals": {
+      "B": "Text 2 states that methane fell, and Lindqvist offers no competing figure. Her measurements concern a different gas.",
+      "C": "this reverses Text 2. Lindqvist's mechanism depends on the small roots drawing less nitrogen, which is what leaves nitrogen available to the bacteria.",
+      "D": "Text 2 does not revisit the source of methane. Lindqvist accepts Vellore's account of the methane reduction and adds a consequence he did not measure."
+    },
+    "steps": [
+      "Step 1: Isolate the causal chain in Text 1: small roots, less sugar leaked, less methane.",
+      "Step 2: Lindqvist extends the same chain: small roots, less nitrogen taken up, more nitrous oxide.",
+      "Step 3: One trait lowers one gas while raising a more heat-trapping gas — Choice A. No conclusion about the net climate effect is required."
+    ],
+    "remember": "A second consequence can qualify a claimed benefit without proving that the consequence outweighs the benefit overall."
+  },
+  {
+    "id": "CTC-M14",
+    "difficulty": "medium",
+    "lane": "humanities-arts",
+    "family": "difference",
+    "text1": "Museum conservator Halima Sy has argued for lowering gallery lighting to the dimmest level at which visitors can still make out a painting's detail. Light drives the chemical reactions that fade organic pigments, and the damage accumulates permanently across every hour of display and cannot be reversed. On her calculations, halving illumination roughly doubles the working life of a light-sensitive work.",
+    "text2": "Conservator Tobias Ferreira notes that the fading of most historical pigments depends on the wavelengths present rather than on total intensity, and that modern filtered lamps remove almost all of the short wavelengths that do the damage. Under such lamps, he argues, a gallery can be lit brightly enough for visitors to see a painting's modeling and surface as its maker intended, without meaningfully shortening its life.",
+    "stem": "Which choice best describes a difference in how Sy and Ferreira view the lighting of paintings in galleries?",
+    "options": [
+      "Sy treats the amount of light as the factor that determines damage, whereas Ferreira treats the composition of the light as the determining factor.",
+      "Sy believes that the fading of a pigment is permanent, whereas Ferreira believes that faded pigments can be chemically restored to their original color.",
+      "Sy is concerned with how visitors experience a painting, whereas Ferreira is concerned only with the painting's physical condition.",
+      "Sy recommends filtered lamps for light-sensitive works, whereas Ferreira recommends them for all works on display."
+    ],
+    "key": 0,
+    "keyWhy": "it locates the disagreement in what each conservator takes damage to depend on. Sy's calculation runs on intensity alone: \"halving illumination roughly doubles the working life.\" Ferreira holds that fading \"depends on the wavelengths present rather than on total intensity,\" which is why filtered lamps let a gallery be bright without cost. Same goal, different variable.",
+    "rebuttals": {
+      "B": "restoration of faded pigment is proposed by neither conservator. Ferreira's case is that the damage can be prevented, not reversed.",
+      "C": "this reverses part of Ferreira's position. He explicitly wants visitors to see the work \"as its maker intended,\" and Sy's dimming standard is itself set by what visitors can make out.",
+      "D": "filtered lamps appear only in Text 2. Sy recommends dimming rather than filtering, so the first half of the choice misassigns her position."
+    },
+    "steps": [
+      "Step 1: Identify the variable in Sy's rule — intensity, halved and doubled.",
+      "Step 2: Identify Ferreira's — wavelength, with intensity explicitly set aside.",
+      "Step 3: The difference is which property of light causes the damage — Choice A."
+    ],
+    "remember": "When two experts want the same outcome, the difference is usually the variable each thinks controls it."
+  },
+  {
+    "id": "CTC-M15",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "An electric eel stuns prey with a burst of high-voltage pulses. Zoologist Priit Kaskema has shown that these pulses trigger involuntary twitching in a hidden fish's muscles, revealing its position, and that the eel then delivers a longer volley that leaves the fish immobile for several seconds. <u>The eel's high-voltage discharge therefore serves two functions: locating prey and paralyzing it.</u>",
+    "text2": "Zoologist Marion Delacroix recorded eels hunting in tanks fitted with sensitive electrodes on all four walls and on the floor. Before any high-voltage burst, each eel emitted a train of very weak pulses and swept its head slowly back and forth across the tank floor. Eels whose weak pulses were masked by background electrical noise failed to find concealed prey even when they discharged at full strength, and eventually stopped hunting altogether.",
+    "stem": "Based on the texts, how would Delacroix (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By noting that eels locate concealed prey using weak pulses that precede the high-voltage discharge",
+      "By arguing that the high-voltage discharge does not in fact immobilize an eel's prey",
+      "By suggesting that involuntary twitching in prey occurs only in tanks fitted with electrodes",
+      "By contending that eels discharge at full strength more often than Kaskema's account implies"
+    ],
+    "key": 0,
+    "keyWhy": "it targets the locating half of the underlined claim, which is the half Delacroix's recordings bear on. Kaskema assigns the high-voltage discharge both functions. Delacroix found that \"before any high-voltage burst\" each eel emitted \"a train of very weak pulses\" while sweeping the tank floor, and that eels whose weak pulses were masked \"failed to find concealed prey even when they discharged at full strength.\" Location is accomplished by a separate, low-voltage system.",
+    "rebuttals": {
+      "B": "Text 2 does not test or dispute immobilization. Delacroix's masked eels discharged at full strength; what they could not do was find the prey in the first place.",
+      "C": "the electrodes in Text 2 record the eels' own output and are not described as affecting prey. Nothing suggests the twitching Kaskema reports is an artifact.",
+      "D": "how often eels discharge at full strength is not at issue. Delacroix's finding concerns what the discharge accomplishes, not its frequency."
+    },
+    "steps": [
+      "Step 1: The underlined sentence makes two claims. Ask which one Text 2 actually tests.",
+      "Step 2: Delacroix masks the weak pulses and prey-finding fails, while full-strength discharge remains available.",
+      "Step 3: So the locating function belongs to the weak pulses, not the high-voltage burst — Choice A."
+    ],
+    "remember": "When an underlined claim bundles two functions, the response usually detaches one of them. Check which one the second text has evidence about."
+  },
+  {
+    "id": "CTC-M16",
+    "difficulty": "medium",
+    "lane": "history-civics",
+    "family": "agree",
+    "text1": "The earliest tablets from the city of Tell Ashara are inventories: so many measures of barley, so many head of cattle, each entry set beside the impression of a personal seal. Archaeologist Yusuf Karaman argues that writing began as an accounting technology, invented by administrators who needed to track goods moving in and out of a storehouse and only later extended to law, letters, and everything else.",
+    "text2": "Archaeologist Sofia Bergqvist observes that the seals pressed beside those inventories carry symbols that also appear, three centuries earlier, on temple offering vessels excavated from the same region and on the clay stoppers that sealed them. The notation Karaman calls accounting, she argues, was assembled out of a sign system already in use for recording dedications made to a deity.",
+    "stem": "Based on the texts, both archaeologists would most likely agree with which statement?",
+    "options": [
+      "The earliest writing at Tell Ashara was used to keep track of specific goods and the people associated with them.",
+      "Administrators at Tell Ashara invented the symbols that appear on the earliest inventory tablets.",
+      "Temple dedications were recorded in writing at Tell Ashara before goods were.",
+      "The sign system used on the temple offering vessels of the region was considerably more elaborate than the one used on the inventory tablets."
+    ],
+    "key": 0,
+    "keyWhy": "both archaeologists accept what the tablets record. Karaman describes inventories listing measures of barley and head of cattle \"each entry set beside the impression of a personal seal,\" and reads them as an accounting technology. Bergqvist does not dispute what the tablets say; she disputes where their symbols came from. Her argument in fact depends on those seals appearing beside the inventoried goods.",
+    "rebuttals": {
+      "B": "this is Karaman's position and precisely what Bergqvist denies. She traces the symbols to a sign system \"already in use\" on temple vessels centuries earlier.",
+      "C": "Bergqvist's earlier vessels carry symbols, but Text 2 does not call that writing — the point at issue is whether such marks count as the origin of the script. Karaman would reject this outright.",
+      "D": "no comparison of elaborateness is offered in either text. Bergqvist claims overlap between the two sign sets, not superiority of one."
+    },
+    "steps": [
+      "Step 1: Separate the two questions in play: what the tablets record, and where their symbols came from.",
+      "Step 2: The dispute is entirely about the second question.",
+      "Step 3: The first question yields the shared statement — Choice A."
+    ],
+    "remember": "When two texts argue about the origin of something, they usually agree about what that thing is. Look there for the shared claim."
+  },
+  {
+    "id": "CTC-M17",
+    "difficulty": "medium",
+    "lane": "literature",
+    "family": "say-about",
+    "text1": "The poet Aurora Bell published \"The Salt Line\" four times between 1931 and 1958, cutting it from ninety lines to thirty-one. Critic Desmond Achterberg treats the final version as definitive, arguing that Bell spent twenty-seven years removing what was inessential and that a reader who prefers the longer versions is preferring the poet's false starts to her own considered judgment.",
+    "text2": "Bell's letters show that her publisher asked for both the 1946 and the 1958 cuts in order to fit the poem into anthologies with fixed page counts, and that she agreed reluctantly each time, calling the last round \"the amputation\" in a note to her sister. Critic Nadia Ilves adds that Bell restored eleven of the cut lines by hand in a reading copy she annotated for herself in 1961.",
+    "stem": "Based on the texts, what would Ilves (Text 2) most likely say about Achterberg's treatment of the final version of \"The Salt Line\"?",
+    "options": [
+      "It attributes to Bell's judgment a set of cuts that the evidence suggests were made under external pressure.",
+      "It is well founded, since Bell restored only eleven of the lines she had removed from the poem.",
+      "It undervalues the 1931 version, which Bell's letters describe as the version she most admired.",
+      "It wrongly assumes that Bell was involved in preparing the anthology printings of the poem."
+    ],
+    "key": 0,
+    "keyWhy": "it names the specific assumption Ilves's evidence undermines. Achterberg reads the shortened poem as \"her own considered judgment,\" arrived at over twenty-seven years. Bell's letters show that her publisher \"asked for both the 1946 and the 1958 cuts\" to fit fixed page counts and that she agreed \"reluctantly,\" calling the last round \"the amputation\"; she later restored eleven lines in her own copy. The cuts look less like refinement than like accommodation.",
+    "rebuttals": {
+      "B": "the restored lines cut against Achterberg rather than for him. That Bell put any lines back indicates she did not regard the short version as final.",
+      "C": "Text 2 records Bell's distaste for the last round of cuts, not a preference for the 1931 version. No version is named as her favorite in either text.",
+      "D": "Text 2 shows Bell participating — she agreed to the cuts, however reluctantly. Achterberg's error is about her motive, not about whether she was involved."
+    },
+    "steps": [
+      "Step 1: Identify what Achterberg's reading requires: that the cuts express Bell's own considered judgment.",
+      "Step 2: Ilves supplies a publisher's page-count demand, reluctant agreement, the word \"amputation,\" and eleven restored lines.",
+      "Step 3: The requirement fails, so the treatment misreads the cause of the cuts — Choice A."
+    ],
+    "remember": "A revision argument turns on why the change was made. Evidence about the circumstances of a revision beats evidence about its result."
+  },
+  {
+    "id": "CTC-M18",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "respond",
+    "text1": "Naked mole-rats survive in sealed underground burrows where oxygen falls to levels that would kill a mouse in minutes. Physiologist Ekow Danquah found that in low oxygen the animals switch their brain cells from glucose to fructose, which can be broken down without oxygen at all. <u>This metabolic switch is what allows a colony to occupy sealed burrows in the first place.</u>",
+    "text2": "Physiologist Runa Solheim reports that naked mole-rats in low oxygen also drop their body temperature by several degrees within minutes and go almost completely still, cutting their oxygen demand to about a fifth of its resting level. Individuals held on a warmed floor so that they could not cool died within minutes despite showing the same rise in fructose use in their brain tissue as the animals that survived.",
+    "stem": "Based on the texts, how would Solheim (Text 2) most likely respond to the underlined claim in Text 1?",
+    "options": [
+      "By noting that the metabolic switch is not sufficient on its own to keep the animals alive in low oxygen",
+      "By arguing that naked mole-rats do not in fact switch from glucose to fructose when the oxygen in a burrow falls",
+      "By suggesting that the drop in body temperature is caused by the switch from glucose to fructose",
+      "By contending that oxygen in sealed burrows does not fall as low as Danquah's account assumes"
+    ],
+    "key": 0,
+    "keyWhy": "it draws the conclusion Solheim's control condition supports. Danquah treats the fructose switch as what allows the animals to occupy sealed burrows. Solheim reports a second response — a temperature drop and near-total stillness that cut oxygen demand \"to about a fifth\" — and, decisively, that animals \"held on a warmed floor so that they could not cool died within minutes despite showing the same rise in fructose use.\" The switch was present and did not save them.",
+    "rebuttals": {
+      "B": "Text 2 confirms the switch. Solheim's dying animals showed \"the same rise in fructose use,\" which is exactly why her result is informative.",
+      "C": "no causal link between the two responses is proposed in either text. Solheim reports them as separate responses, one of which proved necessary.",
+      "D": "the severity of low oxygen in burrows is not contested. Solheim's own animals were tested in low oxygen and died when they could not cool."
+    },
+    "steps": [
+      "Step 1: Read Danquah's claim as a sufficiency claim: the switch is what allows survival.",
+      "Step 2: Solheim's blocked-cooling animals have the switch and die anyway.",
+      "Step 3: A factor that is present while the animal dies is not sufficient — Choice A."
+    ],
+    "remember": "A condition that appears in the survivors may still be insufficient. Look for the group in Text 2 that has it and fails anyway."
+  },
+  {
+    "id": "CTC-M19",
+    "difficulty": "medium",
+    "lane": "social-science",
+    "family": "respond",
+    "text1": "Platforms that dispatch work by app often describe their couriers as independent contractors, pointing out that no one tells them when to log on or how long to stay. Labor economist Beatriz Ferrão surveyed six thousand delivery couriers across four cities and found that most reported choosing their own hours and valuing that freedom above pay, benefits, and every other feature of the work.",
+    "text2": "Labor economist Anders Rosenqvist obtained one platform's dispatch logs and found that couriers who declined more than two offers in an hour received markedly fewer offers for the rest of that shift, and that offers clustered during the hours the platform most needed covered. Couriers were never told of the rule, and most of those Rosenqvist interviewed described the pattern as bad luck.",
+    "stem": "Based on the texts, how would Rosenqvist (Text 2) most likely respond to the survey results Ferrão reports in Text 1?",
+    "options": [
+      "By suggesting that couriers may not perceive the constraints that shape when they are able to work",
+      "By arguing that most couriers would prefer a fixed schedule to the freedom to choose their own hours",
+      "By contending that couriers who decline offers are removed from the platform altogether",
+      "By noting that surveys of couriers typically reach only those who work the largest number of hours"
+    ],
+    "key": 0,
+    "keyWhy": "it explains how Ferrão's finding and Rosenqvist's can both be true. Ferrão reports that couriers say they choose their own hours. Rosenqvist's dispatch logs show a penalty for declining offers and a clustering of offers during hours the platform needed, with couriers \"never told of the rule\" and describing the pattern \"as bad luck.\" The couriers' reports are sincere; what they do not see is the mechanism steering their choices.",
+    "rebuttals": {
+      "B": "no preference for fixed schedules is reported in either text. Rosenqvist questions how free the choice is, not what couriers would rather have.",
+      "C": "the logs show reduced offers for the remainder of a shift, not removal from the platform. This overstates the penalty Text 2 describes.",
+      "D": "sampling is not raised in Text 2, and Rosenqvist's evidence comes from platform logs rather than from a competing survey."
+    },
+    "steps": [
+      "Step 1: Notice that Ferrão's data are self-reports and Rosenqvist's are platform records.",
+      "Step 2: The records show an unannounced penalty steering when couriers work.",
+      "Step 3: Both can hold at once if the steering is invisible to the workers — Choice A."
+    ],
+    "remember": "When Text 1 reports what people say and Text 2 reports what a system does, the answer usually reconciles them rather than calling one false."
+  },
+  {
+    "id": "CTC-M20",
+    "difficulty": "medium",
+    "lane": "natural-science",
+    "family": "agree",
+    "text1": "Bowhead whales live longer than any other mammal, some past two hundred years. Geneticist Anouk Vermeer has identified duplicated copies of two DNA repair genes in the bowhead genome and shown that cultured bowhead cells correct a standard dose of induced damage several times faster than cells from shorter-lived whales do. She argues that superior repair is what explains the animal's extreme longevity.",
+    "text2": "Geneticist Kwame Adjei points out that bowhead cells also divide unusually slowly and that the animals maintain a core body temperature two degrees below that of related species, both of which reduce how much damage arises in the first place. In his cultures, bowhead cells held at the warmer temperature of a related whale accumulated damage at nearly the ordinary rate despite carrying the duplicated repair genes.",
+    "stem": "Based on the texts, both geneticists would most likely agree with which statement about bowhead whales?",
+    "options": [
+      "Features of bowhead cells help limit the amount of DNA damage those cells carry over time.",
+      "The duplication of DNA repair genes is the principal reason bowhead whales live so long.",
+      "Bowhead cells divide more slowly than the cells of other long-lived mammals do.",
+      "Lowering a whale's body temperature increases the rate at which its cells repair DNA."
+    ],
+    "key": 0,
+    "keyWhy": "both geneticists describe cellular features that hold damage down, differing only over which features matter most. Vermeer's bowhead cells \"correct a standard dose of induced damage several times faster\" thanks to duplicated repair genes. Adjei's bowhead cells divide slowly and run cool, \"both of which reduce how much damage arises in the first place.\" Repair and prevention are different routes to the same outcome, and each geneticist documents one.",
+    "rebuttals": {
+      "B": "this is Vermeer's conclusion and the specific claim Adjei's warm-culture result challenges. Cells with the repair genes accumulated damage \"at nearly the ordinary rate\" once the temperature was raised.",
+      "C": "Text 2 compares bowhead cells with those of related species, not with other long-lived mammals. No such comparison appears in either text.",
+      "D": "Adjei's temperature effect works by reducing how much damage arises, not by speeding repair. Neither text links temperature to repair rate."
+    },
+    "steps": [
+      "Step 1: Note the two routes on offer — repairing damage faster and generating less of it.",
+      "Step 2: Each geneticist documents one route, and neither denies the other's observations.",
+      "Step 3: The statement covering both routes without ranking them is Choice A."
+    ],
+    "remember": "\"Both agree\" answers often sit one level above the dispute — a category that includes each side's mechanism."
+  }
+]
