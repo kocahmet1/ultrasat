@@ -3,12 +3,14 @@ import { collection, getDocs, doc, updateDoc, query, orderBy, limit } from 'fire
 import { db } from '../../firebase/config';
 import { getTierInfo } from '../../utils/membershipUtils';
 import { MembershipBadge } from '../membership';
+import { deleteUserAccount } from '../../api/adminUserClient';
 import './MembershipManagement.css';
 
 const MembershipManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(null);
+  const [deleting, setDeleting] = useState(null);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -71,6 +73,36 @@ const MembershipManagement = () => {
       alert('Failed to update membership');
     } finally {
       setUpdating(null);
+    }
+  };
+
+  const handleDeleteUser = async (user) => {
+    const label = user.email || user.name || user.id;
+
+    const confirmation = window.prompt(
+      `⚠️ PERMANENTLY DELETE this user?\n\n` +
+      `${label}\n\n` +
+      `This removes their login, profile, exams, quizzes and all progress. ` +
+      `It CANNOT be undone.\n\n` +
+      `Type DELETE to confirm:`
+    );
+
+    if (confirmation === null) return; // cancelled
+    if (confirmation.trim().toUpperCase() !== 'DELETE') {
+      alert('Deletion cancelled — you must type DELETE to confirm.');
+      return;
+    }
+
+    try {
+      setDeleting(user.id);
+      await deleteUserAccount(user.id);
+      setUsers(prevUsers => prevUsers.filter(u => u.id !== user.id));
+      alert(`User ${label} has been permanently deleted.`);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Failed to delete user: ' + error.message);
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -213,6 +245,14 @@ const MembershipManagement = () => {
                           {updating === user.id ? 'Updating...' : 'Set Max'}
                         </button>
                       )}
+                      <button
+                        className="action-btn delete"
+                        onClick={() => handleDeleteUser(user)}
+                        disabled={deleting === user.id || updating === user.id}
+                        title="Permanently delete this user and all their data"
+                      >
+                        {deleting === user.id ? 'Deleting...' : 'Delete'}
+                      </button>
                     </div>
                   </td>
                 </tr>

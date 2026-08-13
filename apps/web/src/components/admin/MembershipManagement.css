@@ -205,6 +205,17 @@
   color: #475569;
 }
 
+.action-btn.delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.action-btn.delete:hover:not(:disabled) {
+  background: #dc2626;
+  color: white;
+}
+
 .action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;

@@ -40,6 +40,7 @@ function loadDefaultRouters() {
     companionRouter: require('./companionRouter'),
     coachRouter: require('./coach/coachRoutes'),
     ingestRouter: require('./ingestRoutes'),
+    adminUsersRouter: require('./adminUserRoutes'),
   };
 }
 
@@ -293,6 +294,9 @@ function createServerApp(options = {}) {
   app.use('/api/companion', attachFirebaseAdmin, routers.companionRouter);
   app.use('/api/coach', attachFirebaseAdmin, routers.coachRouter);
   app.use('/api/ingest', attachFirebaseAdmin, routers.ingestRouter);
+  if (routers.adminUsersRouter) {
+    app.use('/api/admin/users', attachFirebaseAdmin, routers.adminUsersRouter);
+  }
 
   logger.log(
     `AI Companion features ${process.env.OPENAI_API_KEY ? 'enabled' : 'disabled (no OPENAI_API_KEY)'}`,
