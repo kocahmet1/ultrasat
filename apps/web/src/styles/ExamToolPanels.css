@@ -1,0 +1,391 @@
+/* ExamToolPanels.css — floating math tools for the Bluebook-style exam:
+   the Desmos calculator panel, the reference-sheet panel, and the
+   Calculator / Reference buttons added to the exam header.
+
+   Everything is scoped under `.app.exam-bb` (the exam root), matching
+   BluebookExam.css, so nothing leaks into the rest of the site. */
+
+/* ═══════════════ HEADER TOOL BUTTONS ═══════════════ */
+
+.app.exam-bb .math-tool-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-right: 8px;
+}
+
+.app.exam-bb .math-tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1e1e1e;
+  font-family: var(--bb-chrome-font, 'Roboto', Arial, sans-serif);
+  font-size: 11.5px;
+  line-height: 1;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.app.exam-bb .math-tool-btn:hover {
+  background: #ebebeb;
+}
+
+/* Open tool: underlined label, like Bluebook's active header tool */
+.app.exam-bb .math-tool-btn.active .math-tool-btn-label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 700;
+}
+
+.app.exam-bb .math-tool-btn-icon {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+/* The "x²" glyph used for the Reference button */
+.app.exam-bb .math-tool-btn-icon.icon-x2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.app.exam-bb .math-tool-btn-icon.icon-x2 sup {
+  font-size: 9px;
+}
+
+/* ═══════════════ SHARED FLOATING PANEL ═══════════════ */
+
+.app.exam-bb .exam-tool-panel {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #c4c4c4;
+  border-radius: 10px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  font-family: var(--bb-chrome-font, 'Roboto', Arial, sans-serif);
+}
+
+.app.exam-bb .etp-header {
+  position: relative;
+  flex: 0 0 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 6px;
+  background: #ffffff;
+  border-bottom: 1px solid #e3e3e3;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.app.exam-bb .etp-header:active {
+  cursor: grabbing;
+}
+
+.app.exam-bb .etp-header-side {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  z-index: 1; /* above the centered drag dots */
+}
+
+.app.exam-bb .etp-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e1e1e;
+  padding: 0 8px;
+}
+
+/* Centered 2×3 drag-dots, the Bluebook "grab here" affordance */
+.app.exam-bb .etp-drag-dots {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: repeat(3, 4px);
+  gap: 3px;
+  pointer-events: none;
+}
+
+.app.exam-bb .etp-drag-dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #8a8a8a;
+}
+
+.app.exam-bb .etp-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1e1e1e;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 7px 9px;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.app.exam-bb .etp-icon-btn:hover {
+  background: #f0f0f0;
+}
+
+.app.exam-bb .etp-body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* Dark-chrome variant (reference sheet header, like Bluebook's) */
+.app.exam-bb .etp-dark .etp-header {
+  background: #1e1e1e;
+  border-bottom-color: #1e1e1e;
+}
+
+.app.exam-bb .etp-dark .etp-title {
+  color: #ffffff;
+}
+
+.app.exam-bb .etp-dark .etp-drag-dots span {
+  background: #d9d9d9;
+}
+
+.app.exam-bb .etp-dark .etp-icon-btn {
+  color: #ffffff;
+}
+
+.app.exam-bb .etp-dark .etp-icon-btn:hover {
+  background: #3a3a3a;
+}
+
+/* ═══════════════ CALCULATOR PANEL ═══════════════ */
+
+.app.exam-bb .calc-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app.exam-bb .calc-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #1e1e1e;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+}
+
+.app.exam-bb .calc-tab:hover {
+  background: #f0f0f0;
+}
+
+.app.exam-bb .calc-tab.active {
+  border-color: #1e1e1e;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.app.exam-bb .calc-body {
+  position: absolute;
+  inset: 0;
+}
+
+.app.exam-bb .calc-instance {
+  position: absolute;
+  inset: 0;
+}
+
+.app.exam-bb .calc-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #505050;
+  font-size: 14px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.app.exam-bb .calc-status p {
+  margin: 0;
+}
+
+.app.exam-bb .calc-spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #e3e3e3;
+  border-top-color: #324dc7;
+  border-radius: 50%;
+  animation: etp-spin 0.9s linear infinite;
+}
+
+@keyframes etp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.app.exam-bb .calc-retry-btn {
+  background: #324dc7;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.app.exam-bb .calc-retry-btn:hover {
+  background: #2a3fa8;
+}
+
+/* ═══════════════ REFERENCE SHEET PANEL ═══════════════ */
+
+.app.exam-bb .ref-body {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 20px 24px 24px;
+  background: #ffffff;
+}
+
+.app.exam-bb .ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 20px 12px;
+  align-items: end;
+}
+
+.app.exam-bb .ref-fig {
+  text-align: center;
+}
+
+.app.exam-bb .ref-fig-wide {
+  grid-column: span 2;
+}
+
+.app.exam-bb .ref-art svg {
+  display: block;
+  width: 100%;
+  max-width: 132px;
+  height: auto;
+  margin: 0 auto 4px;
+}
+
+.app.exam-bb .ref-fig-wide .ref-art svg {
+  max-width: 268px;
+}
+
+.app.exam-bb .ref-formulas {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #1e1e1e;
+}
+
+.app.exam-bb .ref-formulas sup {
+  font-size: 0.7em;
+}
+
+.app.exam-bb .ref-caption {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: #1e1e1e;
+  margin-top: 2px;
+}
+
+/* Small stacked fraction (½, ⅓, ⁴⁄₃) used inside formulas */
+.app.exam-bb .frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: -0.4em;
+  line-height: 1.15;
+  font-size: 0.66em;
+  text-align: center;
+  margin: 0 2px 0 1px;
+}
+
+.app.exam-bb .frac > span:first-child {
+  border-bottom: 1px solid currentColor;
+  padding: 0 2px;
+}
+
+.app.exam-bb .ref-notes {
+  margin-top: 22px;
+  border-top: 1px solid #e3e3e3;
+  padding-top: 14px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #1e1e1e;
+}
+
+.app.exam-bb .ref-notes p {
+  margin: 0 0 8px;
+}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+
+@media (max-width: 1200px) {
+  .app.exam-bb .math-tool-btn {
+    padding: 4px 7px;
+    font-size: 10.5px;
+  }
+
+  .app.exam-bb .math-tool-btn-icon {
+    font-size: 13px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app.exam-bb .math-tool-btn {
+    padding: 3px 5px;
+    font-size: 9.5px;
+    gap: 2px;
+  }
+
+  .app.exam-bb .etp-header {
+    flex: 0 0 40px;
+    height: 40px;
+  }
+
+  .app.exam-bb .etp-icon-btn-label {
+    display: none; /* icons only on small screens */
+  }
+
+  .app.exam-bb .ref-grid {
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  }
+}

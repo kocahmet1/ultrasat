@@ -1,8 +1,25 @@
 import React from 'react';
+import { FaCalculator } from 'react-icons/fa';
 import '../styles/Header.css';
 import useIsMobile from '../hooks/useIsMobile';
 
-const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock, isPaused, togglePause, isFullscreen, toggleFullscreen, onReportQuestion }) => {
+const Header = ({
+  sectionTitle,
+  timeRemaining,
+  clockVisible,
+  toggleClock,
+  isPaused,
+  togglePause,
+  isFullscreen,
+  toggleFullscreen,
+  onReportQuestion,
+  // Math-module tools (Bluebook-style Calculator + Reference buttons)
+  mathTools = false,
+  calculatorOpen = false,
+  referenceOpen = false,
+  onToggleCalculator,
+  onToggleReference
+}) => {
   const isMobile = useIsMobile();
   // Format time as mm:ss
   const formatTime = (seconds) => {
@@ -35,6 +52,28 @@ const Header = ({ sectionTitle, timeRemaining, clockVisible, toggleClock, isPaus
           )}
         </div>
         <div className="header-controls">
+          {mathTools && (
+            <div className="math-tool-buttons">
+              <button
+                className={`math-tool-btn ${calculatorOpen ? 'active' : ''}`}
+                onClick={onToggleCalculator}
+                aria-pressed={calculatorOpen}
+                aria-label={calculatorOpen ? 'Close calculator' : 'Open calculator'}
+              >
+                <span className="math-tool-btn-icon"><FaCalculator aria-hidden="true" /></span>
+                <span className="math-tool-btn-label">Calculator</span>
+              </button>
+              <button
+                className={`math-tool-btn ${referenceOpen ? 'active' : ''}`}
+                onClick={onToggleReference}
+                aria-pressed={referenceOpen}
+                aria-label={referenceOpen ? 'Close reference sheet' : 'Open reference sheet'}
+              >
+                <span className="math-tool-btn-icon icon-x2" aria-hidden="true">x<sup>2</sup></span>
+                <span className="math-tool-btn-label">Reference</span>
+              </button>
+            </div>
+          )}
           {isMobile ? (
             // On mobile: Show Hide button instead of Report Question
             <button className="timer-toggle-btn-mobile" onClick={toggleClock}>

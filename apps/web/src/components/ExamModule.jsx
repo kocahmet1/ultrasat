@@ -15,6 +15,8 @@ import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import useIsMobile from '../hooks/useIsMobile';
 import WordSaver from './WordSaver';
+import CalculatorPanel from './CalculatorPanel';
+import ReferenceSheetPanel from './ReferenceSheetPanel';
 
 function ExamModule({ 
   moduleNumber, 
@@ -35,6 +37,17 @@ function ExamModule({
   // Determine whether to show fullscreen modal for this module (only modules 1 and 3)
   const moduleNumForModal = parseInt(moduleNumber, 10);
   const shouldShowFullscreenPrompt = moduleNumForModal === 1 || moduleNumForModal === 3;
+
+  // Math modules get the Bluebook tools (Desmos calculator + reference sheet).
+  // Detected from the module flag, the title, or the standard SAT layout
+  // (modules 3–4 are Math) so diagnostics with a "Math" module also match.
+  const isMathModule = Boolean(
+    calculatorAllowed ||
+    moduleNumForModal >= 3 ||
+    /math/i.test(moduleTitle || '')
+  );
+  const [calculatorOpen, setCalculatorOpen] = useState(false);
+  const [referenceOpen, setReferenceOpen] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(initialQuestionIndex || 0);
   const [selectedAnswer, setSelectedAnswer] = useState(Array.isArray(userAnswers) ? userAnswers[0] : (userAnswers[0] || ''));
   const [timeRemaining, setTimeRemaining] = useState(initialTimeRemaining || 32 * 60); // allow resume
@@ -126,6 +139,10 @@ function ExamModule({
     setTimeout(() => {
       setModuleAnimation('');  // Remove animation class after it completes
     }, 1000);
+
+    // Each module starts with the math tools closed
+    setCalculatorOpen(false);
+    setReferenceOpen(false);
   }, [moduleNumber, questions]);
 
   // Ensure modal visibility is recalculated when the module changes
@@ -615,6 +632,11 @@ function ExamModule({
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}
         onReportQuestion={() => setIsReportModalOpen(true)}
+        mathTools={isMathModule}
+        calculatorOpen={calculatorOpen}
+        referenceOpen={referenceOpen}
+        onToggleCalculator={() => setCalculatorOpen(prev => !prev)}
+        onToggleReference={() => setReferenceOpen(prev => !prev)}
       />
       
       <div className="main-content">
@@ -704,10 +726,19 @@ function ExamModule({
         markedForReview={markedForReview}
       />
       
-      {calculatorAllowed && (
-        <div className="calculator-indicator">
-          <span>Calculator Allowed</span>
-        </div>
+      {/* Bluebook-style math tools: kept mounted while the module is open so
+          Desmos expressions and panel positions survive close/reopen. */}
+      {isMathModule && (
+        <>
+          <CalculatorPanel
+            isOpen={calculatorOpen}
+            onClose={() => setCalculatorOpen(false)}
+          />
+          <ReferenceSheetPanel
+            isOpen={referenceOpen}
+            onClose={() => setReferenceOpen(false)}
+          />
+        </>
       )}
     </div>
   );

@@ -37,9 +37,9 @@
 /* ═══════════════ HEADER ═══════════════ */
 
 .app.exam-bb .header {
-  background-color: #F7F7F7;                /* was periwinkle #e6ecff */
+  background-color: #E6EAF5;                /* Bluebook's light blue-grey chrome tint */
   box-shadow: none;
-  border-bottom: 1px solid #D8D8D8;
+  border-bottom: none;                      /* the dashed rule below does the separating */
   height: 66px;                             /* fits timer + Hide pill, like Bluebook's two-row center */
   flex-shrink: 0;                           /* .app is a column flexbox: without this the
                                                header gets squeezed to its content height
@@ -50,8 +50,8 @@
 
 .app.exam-bb .section-title {
   font-family: var(--bb-chrome-font);
-  font-size: 16px !important;
-  font-weight: 600;
+  font-size: 17px !important;
+  font-weight: 700;
   color: #1E1E1E;
   margin-top: 0 !important;
   margin-bottom: 0;
@@ -63,8 +63,8 @@
   background-color: transparent;
   box-shadow: none;
   font-family: var(--bb-chrome-font);
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 500;                         /* Bluebook's timer is medium, not bold */
   color: #1E1E1E;
   padding: 0;
   gap: 10px;
@@ -102,14 +102,14 @@
   font-family: var(--bb-chrome-font);
 }
 
-/* Practice banner: Bluebook navy, a touch taller, no dashed rule above it
-   (Bluebook's dashes live under the question bar and above the footer only) */
+/* Practice banner: Bluebook navy, with the full-width dashed rule running
+   under the header, tucked behind the banner (per the Bluebook reference) */
 .app.exam-bb .practice-test-banner {
   background-color: #262A6A;                /* was #1a237e */
   width: calc(100% - 48px);
-  height: 20px;
+  height: 24px;
   flex-shrink: 0;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   font-family: var(--bb-chrome-font);
@@ -118,7 +118,10 @@
 }
 
 .app.exam-bb .practice-test-banner::before {
-  display: none;
+  height: 3px;
+  top: -3px;
+  background-image: linear-gradient(to right, #1E1E1E 12px, transparent 12px);
+  background-size: 18px 3px;
 }
 
 /* ═══════════════ QUESTION BAR (number + Mark for Review + ABC) ═══════════════ */
@@ -190,10 +193,11 @@
   padding: 0 30px;
 }
 
-/* Divider between passage and question: thin and dark, like Bluebook */
+/* Divider between passage and question: per the Bluebook reference shots,
+   a touch wider and mid-grey */
 .app.exam-bb .separator-line {
-  width: 1px;
-  background-color: #4A4A4A;
+  width: 2px;
+  background-color: #9A9A9A;
 }
 
 /* Taller chrome (66px header + banner) → keep the scrollable columns clear
@@ -292,10 +296,12 @@
   font-weight: 400;
 }
 
-/* Selected option: thick blue border + filled blue letter circle */
+/* Selected option: thick blue border + filled blue letter circle, plus the
+   light-blue outer ring visible in the Bluebook reference */
 .app.exam-bb .option:has(.option-label.selected) {
   border: 2px solid var(--ut-accent);
   padding: 11px 13px;
+  box-shadow: 0 0 0 2px #C3CDF3;
 }
 
 .app.exam-bb .option:has(.option-label.selected) .option-letter {
@@ -358,7 +364,7 @@
 /* ═══════════════ FOOTER ═══════════════ */
 
 .app.exam-bb .footer {
-  background-color: #FFFFFF;                /* was periwinkle */
+  background-color: #E6EAF5;                /* Bluebook's light blue-grey chrome tint */
   border-top: none;
   height: 64px;
   padding: 0 24px;
@@ -372,8 +378,8 @@
   left: 0;
   right: 0;
   height: 3px;
-  background-image: linear-gradient(to right, #1E1E1E 8px, transparent 8px);
-  background-size: 12px 3px;
+  background-image: linear-gradient(to right, #1E1E1E 12px, transparent 12px);
+  background-size: 18px 3px;
   background-repeat: repeat-x;
 }
 
@@ -423,6 +429,27 @@
   border-color: #1E1E1E;
   box-shadow: none;
   transform: none;
+}
+
+/* ═══════════════ SHELL OVERLAYS DURING THE EXAM ═══════════════ */
+/* The app shell renders floating chrome OUTSIDE the exam root (the profile
+   avatar in .top-bar, the AI-coach dock). While the exam screen is mounted,
+   hide them from the body via :has() — Bluebook shows no such overlays.
+   Intro, intermission, and results pages are unaffected (no .exam-bb there). */
+
+body:has(.app.exam-bb) .top-bar {
+  display: none;
+}
+
+body:has(.app.exam-bb) .coach-dock {
+  display: none;
+}
+
+/* "Verify your email" notice — both the top banner and its minimized yellow
+   badge (the gold circle whose top peeks above the footer at bottom right) */
+body:has(.app.exam-bb) .email-verify-banner,
+body:has(.app.exam-bb) .email-verify-badge {
+  display: none;
 }
 
 /* ═══════════════ QUESTION TRACKER POPUP ═══════════════ */
