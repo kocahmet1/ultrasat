@@ -131,19 +131,21 @@ const Question = ({
     </div>
   );
 
+  // Used by the single-column math layout only: graph + (rare) passage + stem
+  // rendered together, exactly as before.
   const renderQuestionText = () => (
     <div className="question-text" style={{ fontSize: '1.8rem', lineHeight: '1.6' }}>
       {/* Display graph ABOVE the question text if available */}
       {graphUrl && (
         <div className="question-graph-container">
-          <img 
-            src={graphUrl} 
+          <img
+            src={graphUrl}
             alt={getVisualAltText(graphDescription)}
-            className="question-graph mb-4 max-h-72 mx-auto" 
+            className="question-graph mb-4 max-h-72 mx-auto"
           />
         </div>
       )}
-      
+
       {/* Display passage ABOVE the question stem for R&W questions */}
       {passage && (
         <div className="question-passage" style={{
@@ -157,11 +159,62 @@ const Question = ({
           <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(passage) }} />
         </div>
       )}
-      
+
       <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(questionText) }} />
-      
+
       {/* Graph description removed - no longer displayed */}
     </div>
+  );
+
+  // Bluebook-style R&W layout: the left column holds ONLY the stimulus
+  // (figure and/or passage); the question stem moves to the right column,
+  // above the answer choices (see renderStem).
+  //
+  // Legacy fallback: a few older questions store passage+stem combined in
+  // `text` with no separate passage or graph. For those, `hasSeparateStimulus`
+  // is false and the full `text` stays on the left — identical to the old
+  // rendering — so un-split data never shows an empty left column.
+  const hasSeparateStimulus = Boolean(
+    (passage && String(passage).trim()) || graphUrl
+  );
+
+  const renderStimulus = () => (
+    <div className="question-text" style={{ fontSize: '1.8rem', lineHeight: '1.6' }}>
+      {graphUrl && (
+        <div className="question-graph-container">
+          <img
+            src={graphUrl}
+            alt={getVisualAltText(graphDescription)}
+            className="question-graph mb-4 max-h-72 mx-auto"
+          />
+        </div>
+      )}
+
+      {passage && (
+        <div className="question-passage" style={{
+          fontSize: '1.6rem',
+          lineHeight: '1.8',
+          whiteSpace: 'pre-wrap',
+        }}>
+          <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(passage) }} />
+        </div>
+      )}
+
+      {!hasSeparateStimulus && (
+        <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(questionText) }} />
+      )}
+    </div>
+  );
+
+  const renderStem = () => (
+    hasSeparateStimulus ? (
+      <div
+        className="question-text question-stem"
+        style={{ fontSize: '1.8rem', lineHeight: '1.6', marginBottom: '1.8rem' }}
+      >
+        <div dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(questionText) }} />
+      </div>
+    ) : null
   );
 
   const renderControls = () => (
@@ -211,13 +264,14 @@ const Question = ({
       ) : (
         <div className="question-content">
           <div className="left-column">
-            {renderQuestionText()}
+            {renderStimulus()}
           </div>
           <div className="separator-line-container">
             <div className="separator-line"></div>
           </div>
           <div className="right-column">
             {renderControls()}
+            {renderStem()}
             {questionType === 'multiple-choice' ? renderMultipleChoiceOptions() : renderUserInput()}
           </div>
         </div>
