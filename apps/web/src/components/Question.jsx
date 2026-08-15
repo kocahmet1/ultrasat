@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
+import { FiBookmark } from 'react-icons/fi';
+import { FaBookmark } from 'react-icons/fa';
 import { processTextMarkup } from '../utils/textProcessing';
 import useIsMobile from '../hooks/useIsMobile';
 import '../styles/Question.css';
@@ -95,11 +97,15 @@ const Question = ({
               </div>
             </div>
             {showCrossOut && (
-              <button 
+              <button
                 className={`cross-out-btn ${isOptionCrossedOut(optionLetter) ? 'active' : ''}`}
                 onClick={() => toggleCrossOutOption(questionNumber, optionLetter)}
+                aria-label={isOptionCrossedOut(optionLetter)
+                  ? `Undo cross out for option ${optionLetter}`
+                  : `Cross out option ${optionLetter}`}
               >
-                {isOptionCrossedOut(optionLetter) ? 'Undo' : 'Cross Out'}
+                {/* Bluebook style: the letter with a strikethrough; "Undo" once crossed */}
+                {isOptionCrossedOut(optionLetter) ? 'Undo' : optionLetter}
               </button>
             )}
           </div>
@@ -222,11 +228,13 @@ const Question = ({
       <div className="left-controls">
         <div className="question-number">{questionNumber + 1}</div>
         <div className="mark-review-container">
-          <button 
+          <button
             className={`mark-review-btn ${markedForReview ? 'marked' : ''}`}
             onClick={toggleMarkedForReview}
           >
-            <span className="bookmark-icon">{markedForReview ? '★' : '☆'}</span>
+            <span className="bookmark-icon">
+              {markedForReview ? <FaBookmark /> : <FiBookmark />}
+            </span>
             Mark for Review
           </button>
         </div>

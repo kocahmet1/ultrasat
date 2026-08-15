@@ -7,6 +7,7 @@ import QuestionTracker from './QuestionTracker';
 import { enrichQuestionsWithNewCategories, ensureQuestionsHaveSubcategoryIds } from '../utils/categoryUtils';
 import '../styles/App.css';
 import '../styles/Transitions.css';
+import '../styles/BluebookExam.css'; // Bluebook-lookalike theme, scoped to .app.exam-bb
 import FullscreenModal from './FullscreenModal';
 import ConfirmationModal from './ConfirmationModal';
 import ReportQuestionModal from './ReportQuestionModal';
@@ -582,7 +583,7 @@ function ExamModule({
   };
 
   return (
-    <div className={`app ${moduleAnimation}`}>
+    <div className={`app exam-bb ${moduleAnimation}`}>
       <FullscreenModal
         isOpen={isModalOpen}
         onSwitch={handleSwitchFullscreen}

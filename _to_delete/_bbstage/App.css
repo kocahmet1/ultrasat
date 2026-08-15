@@ -1,0 +1,219 @@
+/* App.css - Main styling for the application */
+
+/* General app layout (Overhaul Phase F: V3 design language via tokens.css) */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: var(--ut-font-body);
+  background-color: var(--ut-bg);
+  color: var(--ut-text);
+  font-size: 18px;
+  overflow: hidden;
+}
+
+/* Base font for all elements (pages with intentional typography — e.g. the
+   exam interface's serif passages — override this in their own stylesheets) */
+*, button, input, select, textarea {
+  font-family: var(--ut-font-body, 'Schibsted Grotesk', system-ui, sans-serif);
+}
+
+/* Main content area */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Phase F: the old dashed-black page borders are gone — clean V3 surfaces */
+.main-content::before,
+.main-content::after {
+  display: none;
+}
+
+/* Main content - full width for exam pages */
+.main-content {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  flex: 1;
+}
+
+.question-wrapper {
+  display: flex;
+  flex: 1;
+  position: relative;
+  width: 100%;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Ensure the question content takes full height and is centered */
+.question-content {
+  height: 100%;
+  display: flex;
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Tools container for ABC cross-out button */
+.tools-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 20px;
+  background-color: #f8f8f8;
+  border-top: 1px solid #eaeaea;
+}
+
+
+
+/* Loading and error states */
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Results screen */
+.results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.restart-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3a66b7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.restart-button:hover {
+  background-color: #2a4a8a;
+}
+
+/* Add your global styles here */
+
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  z-index: 60;
+}
+
+/* Add these styles for the sidebar layout */
+.app-container {
+  display: flex; /* Use flexbox for sidebar and main content layout */
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.main-content {
+  margin-left: 240px; /* Default sidebar width */
+  padding: 20px; /* Add some padding to the main content area */
+  width: calc(100% - 240px); /* Take up remaining width */
+  min-height: 100vh; /* Ensure it takes full viewport height */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  transition: margin-left 0.3s ease, width 0.3s ease; /* Smooth transition for sidebar changes */
+  max-width: calc(100vw - 240px);
+}
+
+/* Collapsed sidebar state */
+.app-container.sidebar-collapsed .main-content {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+  max-width: calc(100vw - 80px);
+}
+
+/* Hidden sidebar state - for full screen exam mode */
+.app-container.sidebar-hidden .main-content {
+  margin-left: 0;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  
+  .main-content {
+    margin-left: 0 !important; /* Remove margin on mobile */
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 15px; /* Reduce padding on mobile */
+    overflow-x: hidden;
+    padding-top: 70px; /* Account for fixed TopNavBar */
+  }
+  
+  /* Override the collapsed state margin for mobile */
+  .app-container.sidebar-mobile .main-content,
+  .app-container.sidebar-mobile.sidebar-collapsed .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+  
+  /* Hide or adjust top-bar on mobile since we have TopNavBar */
+  .top-bar {
+    top: 60px; /* Position below TopNavBar */
+    right: 10px;
+    padding: 5px;
+  }
+}
+
+/* Tablet responsive - adjust for collapsed sidebar */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content {
+    margin-left: 80px; /* Collapsed sidebar width */
+    width: calc(100% - 80px);
+    max-width: calc(100vw - 80px);
+  }
+  
+  .app-container.sidebar-collapsed .main-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+    max-width: calc(100vw - 80px);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 10px;
+  }
+}
+
+.app-container.custom-page-shell .main-content {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  padding: 0 !important;
+  overflow: visible;
+}
+
+.app-container.custom-page-shell .main-content::after {
+  display: none;
+}

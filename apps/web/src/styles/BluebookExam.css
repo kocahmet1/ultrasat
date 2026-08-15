@@ -1,0 +1,518 @@
+/* BluebookExam.css — Bluebook-lookalike theme for the practice exam interface.
+   ─────────────────────────────────────────────────────────────────────────────
+   EVERYTHING in this file is scoped under `.app.exam-bb`, the root class that
+   ExamModule adds. Tokens are re-declared inside that scope only, so the rest
+   of the site keeps the global "Scholar Blue" palette from tokens.css.
+
+   Reference: the Bluebook (College Board) digital SAT interface —
+   white content on a neutral-grey chrome, indigo #324DC7 actions, serif
+   passage/stem/answer text, circled answer letters, and the signature thick
+   dashed rules under the question bar and above the footer. */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,700;1,400&family=Roboto:wght@400;500;700&display=swap');
+
+.app.exam-bb {
+  /* ---- scoped token overrides (exam only) ---- */
+  --ut-bg: #FFFFFF;             /* Bluebook content area is white, not grey */
+  --ut-bg-alt: #F0F0F0;         /* question-number bar: neutral grey, not blue-grey */
+  --ut-card: #FFFFFF;
+  --ut-card-soft: #F7F7F7;      /* hovers go neutral */
+  --ut-rule: #E3E3E3;
+  --ut-rule-strong: #BDBDBD;
+  --ut-text: #1E1E1E;           /* neutral near-black (no navy tint) */
+  --ut-text-soft: #505050;
+  --ut-muted: #6E6E6E;
+  --ut-ink: #1E1E1E;            /* question-number chip */
+  --ut-accent: #324DC7;         /* THE Bluebook indigo-blue */
+  --ut-accent-dark: #2A3FA8;
+  --ut-accent-soft: #E9EDFA;
+  --ut-accent-rule: #C7D0F0;
+  --ut-on-accent: #FFFFFF;
+  --ut-font-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --bb-chrome-font: 'Roboto', Arial, 'Helvetica Neue', sans-serif;
+
+  background-color: #FFFFFF;
+}
+
+/* ═══════════════ HEADER ═══════════════ */
+
+.app.exam-bb .header {
+  background-color: #F7F7F7;                /* was periwinkle #e6ecff */
+  box-shadow: none;
+  border-bottom: 1px solid #D8D8D8;
+  height: 66px;                             /* fits timer + Hide pill, like Bluebook's two-row center */
+  flex-shrink: 0;                           /* .app is a column flexbox: without this the
+                                               header gets squeezed to its content height
+                                               and the height above never applies */
+  padding: 8px 18px;
+  font-family: var(--bb-chrome-font);
+}
+
+.app.exam-bb .section-title {
+  font-family: var(--bb-chrome-font);
+  font-size: 16px !important;
+  font-weight: 600;
+  color: #1E1E1E;
+  margin-top: 0 !important;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+/* Timer: big bold black digits, no white chip behind them */
+.app.exam-bb .timer {
+  background-color: transparent;
+  box-shadow: none;
+  font-family: var(--bb-chrome-font);
+  font-size: 20px;
+  font-weight: 700;
+  color: #1E1E1E;
+  padding: 0;
+  gap: 10px;
+}
+
+.app.exam-bb .pause-btn {
+  font-size: 11px;
+  color: #6E6E6E;
+}
+
+/* "Hide" becomes the Bluebook outlined pill under the timer */
+.app.exam-bb .timer-toggle-btn,
+.app.exam-bb .timer-toggle-btn-mobile {
+  background-color: #FFFFFF;
+  border: 1px solid #1E1E1E;
+  border-radius: 999px;
+  padding: 3px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1E1E1E;
+  font-family: var(--bb-chrome-font);
+  margin-top: 4px;
+}
+
+.app.exam-bb .timer-toggle-btn:hover,
+.app.exam-bb .timer-toggle-btn-mobile:hover {
+  background-color: #F0F0F0;
+}
+
+.app.exam-bb .report-btn,
+.app.exam-bb .fullscreen-btn,
+.app.exam-bb .more-btn {
+  color: #1E1E1E;
+  font-size: 12.5px;
+  font-family: var(--bb-chrome-font);
+}
+
+/* Practice banner: Bluebook navy, a touch taller, no dashed rule above it
+   (Bluebook's dashes live under the question bar and above the footer only) */
+.app.exam-bb .practice-test-banner {
+  background-color: #262A6A;                /* was #1a237e */
+  width: calc(100% - 48px);
+  height: 20px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-family: var(--bb-chrome-font);
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 12px;
+}
+
+.app.exam-bb .practice-test-banner::before {
+  display: none;
+}
+
+/* ═══════════════ QUESTION BAR (number + Mark for Review + ABC) ═══════════════ */
+
+.app.exam-bb .question-number-container {
+  background-color: #F0F0F0;
+  padding: 6px 10px;
+  margin-bottom: 18px;
+}
+
+/* Bluebook's signature dashed rule under the bar: ~8px dashes, 3px thick */
+.app.exam-bb .question-number-container::after {
+  height: 3px;
+  background-image: linear-gradient(to right, #1E1E1E 8px, transparent 8px);
+  background-size: 12px 3px;
+}
+
+.app.exam-bb .question-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px !important;
+  font-size: 16px;
+  font-family: var(--bb-chrome-font);
+  font-weight: 700;
+}
+
+.app.exam-bb .mark-review-btn {
+  font-family: var(--bb-chrome-font);
+  font-size: 13.5px;
+  color: #1E1E1E;
+  gap: 6px;
+}
+
+/* Bookmark icon (JSX swaps the star for a bookmark) — dark outline, red fill
+   when marked, like Bluebook */
+.app.exam-bb .bookmark-icon {
+  color: #1E1E1E;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.app.exam-bb .mark-review-btn.marked .bookmark-icon {
+  color: #C13145;
+}
+
+/* ABC (answer-eliminator) toggle: white struck-through ABC on the blue chip */
+.app.exam-bb .cross-out-toggle {
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 4px 9px;
+  font-family: var(--bb-chrome-font);
+}
+
+.app.exam-bb .cross-out-toggle::after {
+  border-top: 1.5px solid #FFFFFF;
+  transform: none;
+  left: 6px;
+  right: 6px;
+}
+
+/* ═══════════════ COLUMNS ═══════════════ */
+
+/* Bluebook uses the full window width for the two columns */
+.app.exam-bb .question-content {
+  max-width: none;
+  padding: 0 30px;
+}
+
+/* Divider between passage and question: thin and dark, like Bluebook */
+.app.exam-bb .separator-line {
+  width: 1px;
+  background-color: #4A4A4A;
+}
+
+/* Taller chrome (66px header + banner) → keep the scrollable columns clear
+   of the fixed footer */
+.app.exam-bb .left-column,
+.app.exam-bb .right-column {
+  max-height: calc(100vh - 180px);
+}
+
+/* ═══════════════ PASSAGE + STEM TYPE ═══════════════ */
+/* (!important needed only to beat the component's inline sizes) */
+
+/* Serif for the reading stimulus AND the stem, like Bluebook. The global
+   App.css `*` rule re-applies the body font to nested divs, so this must
+   target descendants too. Scoped to .question-content = the R&W two-column
+   layout only (math uses .question-content-math and keeps its sans stems). */
+.app.exam-bb .question-content .question-text,
+.app.exam-bb .question-content .question-text * {
+  font-family: var(--ut-font-serif);
+}
+
+.app.exam-bb .left-column .question-text {
+  font-size: 16px !important;
+  color: #1E1E1E;
+}
+
+.app.exam-bb .question-passage {
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  color: #1E1E1E;
+}
+
+.app.exam-bb .question-stem {
+  font-family: var(--ut-font-serif);
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+  margin-bottom: 16px !important;
+  color: #1E1E1E;
+}
+
+/* ═══════════════ ANSWER OPTIONS ═══════════════ */
+
+.app.exam-bb .options-container {
+  gap: 12px;
+}
+
+.app.exam-bb .option {
+  border: 1px solid #757575;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background-color: #FFFFFF;
+}
+
+.app.exam-bb .option:hover {
+  background-color: #FAFAFA;
+}
+
+/* Circled answer letter, regular weight — the Bluebook Ⓐ */
+.app.exam-bb .option-letter {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border: 2px solid #1E1E1E;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--bb-chrome-font);
+  color: #1E1E1E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  box-sizing: border-box;
+}
+
+/* The circle IS the radio — hide the native input (kept for accessibility) */
+.app.exam-bb .option-radio {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Answer text: serif, never bold (selection is shown by the border instead) */
+.app.exam-bb .option-text {
+  font-family: var(--ut-font-serif);
+  font-size: 16px !important;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #1E1E1E;
+}
+
+.app.exam-bb .option-label.selected {
+  font-weight: 400;
+}
+
+/* Selected option: thick blue border + filled blue letter circle */
+.app.exam-bb .option:has(.option-label.selected) {
+  border: 2px solid var(--ut-accent);
+  padding: 11px 13px;
+}
+
+.app.exam-bb .option:has(.option-label.selected) .option-letter {
+  background-color: var(--ut-accent);
+  border-color: var(--ut-accent);
+  color: #FFFFFF;
+}
+
+/* Crossed-out option: strike the text, not a line across the whole card */
+.app.exam-bb .option.crossed-out::after {
+  display: none;
+}
+
+.app.exam-bb .option.crossed-out .option-text {
+  text-decoration: line-through;
+  color: #9A9A9A;
+}
+
+.app.exam-bb .option.crossed-out .option-letter {
+  border-color: #9A9A9A;
+  color: #9A9A9A;
+}
+
+/* Per-option eliminator: circle with the struck-through letter; once crossed
+   it turns into an underlined "Undo" text link (JSX supplies the label) */
+.app.exam-bb .cross-out-btn {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border: 1.5px solid #1E1E1E;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  color: #1E1E1E;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--bb-chrome-font);
+  padding: 0;
+}
+
+.app.exam-bb .cross-out-btn::after {
+  left: 2px;
+  right: 2px;
+  border-top: 1.5px solid #1E1E1E;
+}
+
+.app.exam-bb .cross-out-btn.active {
+  width: auto;
+  min-width: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  text-decoration: underline;
+  font-size: 12.5px;
+}
+
+.app.exam-bb .cross-out-btn.active::after {
+  display: none;
+}
+
+/* ═══════════════ FOOTER ═══════════════ */
+
+.app.exam-bb .footer {
+  background-color: #FFFFFF;                /* was periwinkle */
+  border-top: none;
+  height: 64px;
+  padding: 0 24px;
+}
+
+/* Thick dashed rule across the top of the footer — Bluebook signature */
+.app.exam-bb .footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-image: linear-gradient(to right, #1E1E1E 8px, transparent 8px);
+  background-size: 12px 3px;
+  background-repeat: repeat-x;
+}
+
+.app.exam-bb .tracker-button {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 6px;
+  font-size: 14.5px;
+  font-weight: 500;
+  font-family: var(--bb-chrome-font);
+  background-color: #1E1E1E;
+  border-color: #1E1E1E;
+}
+
+.app.exam-bb .dropdown-arrow {
+  font-size: 9px;
+}
+
+.app.exam-bb .footer-nav-button {
+  background-color: var(--ut-accent) !important;
+  height: 44px;
+  padding: 0 30px;
+  font-size: 15px;
+  font-weight: 500 !important;
+  font-family: var(--bb-chrome-font);
+}
+
+.app.exam-bb .footer-nav-button:hover {
+  background-color: var(--ut-accent-dark) !important;
+}
+
+.app.exam-bb .footer-nav-button:disabled {
+  background-color: #A9B4E4 !important;
+  color: #F2F2F2 !important;
+}
+
+.app.exam-bb .exit-exam-button {
+  background-color: #FFFFFF;
+  border: 1px solid #757575;
+  color: #1E1E1E;
+  font-weight: 500;
+  font-family: var(--bb-chrome-font);
+}
+
+.app.exam-bb .exit-exam-button:hover {
+  background-color: #F0F0F0;
+  border-color: #1E1E1E;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ═══════════════ QUESTION TRACKER POPUP ═══════════════ */
+
+.app.exam-bb .question-button:hover {
+  background-color: var(--ut-accent-soft);
+  border-color: var(--ut-accent);
+}
+
+.app.exam-bb .question-button.current,
+.app.exam-bb .legend-color.current {
+  background-color: var(--ut-accent);
+  border-color: var(--ut-accent);
+}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+/* These overrides out-rank the base files' small-screen rules, so restore
+   compact sizing at the same breakpoints. */
+
+@media (max-width: 1200px) {
+  .app.exam-bb .header {
+    height: 52px;
+    padding: 4px 10px;
+  }
+
+  .app.exam-bb .question-content {
+    padding: 0 12px;
+  }
+
+  .app.exam-bb .left-column,
+  .app.exam-bb .right-column {
+    max-height: calc(100vh - 150px);
+  }
+
+  .app.exam-bb .section-title {
+    font-size: 13px !important;
+  }
+
+  .app.exam-bb .timer {
+    font-size: 15px;
+  }
+
+  .app.exam-bb .timer-toggle-btn {
+    font-size: 10px;
+    padding: 2px 10px;
+  }
+
+  .app.exam-bb .footer {
+    height: 54px;
+    padding: 0 16px;
+  }
+
+  .app.exam-bb .tracker-button {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 12.5px;
+  }
+
+  .app.exam-bb .footer-nav-button {
+    height: 36px;
+    padding: 0 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app.exam-bb .header {
+    height: 42px;
+    padding: 3px 6px;
+  }
+
+  .app.exam-bb .section-title {
+    font-size: 11px !important;
+  }
+
+  .app.exam-bb .timer {
+    font-size: 12px;
+  }
+
+  .app.exam-bb .question-passage,
+  .app.exam-bb .question-stem,
+  .app.exam-bb .option-text,
+  .app.exam-bb .left-column .question-text {
+    font-size: 14px !important;
+  }
+
+  .app.exam-bb .option-letter {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    font-size: 11px;
+  }
+}

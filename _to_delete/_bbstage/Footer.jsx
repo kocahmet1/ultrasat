@@ -33,7 +33,7 @@ const Footer = ({
             }
           }}
         >
-          Question {questionNumber + 1} of {totalQuestions} <span className="dropdown-arrow">▲</span>
+          Question {questionNumber + 1} of {totalQuestions} <span className="dropdown-arrow">▼</span>
         </button>
       </div>
 

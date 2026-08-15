@@ -1,0 +1,359 @@
+/* Header.css - Styling for the Header component */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px;
+  background-color: #e6ecff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  height: 48px;
+  font-family: Arial, sans-serif;
+}
+
+@media (max-width: 1200px) {
+  .header {
+    height: 38px;
+    padding: 4px 6px;
+  }
+  .section-title {
+    font-size: 13px;
+  }
+  .timer {
+    font-size: 11px;
+  }
+  .timer-toggle-btn {
+    font-size: 10px;
+    padding: 3px 7px;
+  }
+}
+
+/* Mobile-specific adjustments for very small screens */
+@media (max-width: 768px) {
+  .header {
+    height: 36px;
+    padding: 3px 4px;
+  }
+  
+  .left-section {
+    margin-right: 5px;
+    max-width: 25%;
+  }
+  
+  .section-title {
+    font-size: 11px !important;
+    margin-top: 8px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .timer-container {
+    transform: translateX(-50%);
+    max-width: 30%;
+  }
+  
+  .timer {
+    font-size: 10px;
+    padding: 2px 5px;
+    gap: 3px;
+    margin-right: 2px;
+  }
+  
+  .pause-btn {
+    font-size: 8px;
+  }
+}
+
+
+.section-title {
+  font-family: Arial, sans-serif;
+  font-size: 17px !important;
+  font-weight: bold;
+  color: #333333;
+  margin-top: 12px !important;
+  margin-bottom: 2px;
+  display: block;
+  text-align: center;
+  position: relative;
+  z-index: 20;
+}
+
+@media (max-width: 1200px) {
+  .section-title {
+    font-size: 12px;
+    margin-bottom: 1px;
+  }
+}
+
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.timer {
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 6px;
+  background-color: #ffffff;
+  padding: 3px 7px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 1200px) {
+  .timer {
+    font-size: 10px;
+    padding: 1px 4px;
+    margin-right: 3px;
+    gap: 4px;
+  }
+}
+
+.pause-btn {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: Arial, sans-serif;
+  text-decoration: underline;
+  padding: 0;
+  margin: 0;
+  transition: color 0.2s ease;
+}
+
+.pause-btn:hover {
+  color: #333;
+}
+
+@media (max-width: 1200px) {
+  .pause-btn {
+    font-size: 9px;
+  }
+}
+
+.timer-toggle-btn {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  padding: 3px 7px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 2px;
+  font-family: Arial, sans-serif;
+}
+
+@media (max-width: 1200px) {
+  .timer-toggle-btn {
+    font-size: 8px;
+    padding: 1px 3px;
+    margin-top: 1px;
+  }
+}
+
+.timer-toggle-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.practice-test-banner {
+  background-color: #1a237e;
+  color: white;
+  text-align: center;
+  padding: 1px 0;
+  font-weight: bold;
+  font-size: 10px;
+  width: calc(100% - 20px);
+  margin: 0 auto;
+  border-radius: 0 0 8px 8px;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 8px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1200px) {
+  .practice-test-banner {
+    font-size: 8px;
+    height: 10px;
+    margin-bottom: 4px;
+  }
+}
+
+
+/* Add dotted line above banner using wide dashes - making it much more visible */
+.practice-test-banner::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -3px;
+  height: 3px;
+  background-image: linear-gradient(to right, #000 8px, transparent 8px);
+  background-size: 16px 3px;
+  background-repeat: repeat-x;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  right: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.timer-toggle-btn-mobile {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: Arial, sans-serif;
+  white-space: nowrap;
+}
+
+.timer-toggle-btn-mobile:hover {
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .header-controls {
+    right: 5px;
+    gap: 5px;
+  }
+  
+  .timer-toggle-btn-mobile {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .fullscreen-btn {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 15px;
+}
+
+.directions-dropdown {
+  position: relative;
+  margin-top: 8px;
+  margin-right: 15px;
+}
+
+.directions-btn {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  box-shadow: none;
+}
+
+.directions-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.fullscreen-btn, .more-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+}
+
+.fullscreen-btn:hover {
+  text-decoration: underline;
+}
+
+.report-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  margin-right: 10px;
+}
+
+.report-btn:hover {
+  text-decoration: underline;
+}
+
+.more-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 15px;
+  font-family: Arial, sans-serif;
+}
+
+/* Additional mobile adjustments */
+@media (max-width: 480px) {
+  .header {
+    height: 34px;
+    padding: 2px 3px;
+  }
+  
+  .section-title {
+    font-size: 10px !important;
+    margin-top: 6px !important;
+  }
+  
+  .timer {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+  
+  .timer-toggle-btn-mobile {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .fullscreen-btn {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .header-controls {
+    right: 3px;
+    gap: 3px;
+  }
+}
