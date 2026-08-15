@@ -237,7 +237,7 @@ const EXPECTED_TRANSITION_RELATIONSHIPS = {
   '1:24': 'cause-result',
   '2:23': 'addition',
   '2:24': 'similarity',
-  '2:25': 'restatement',
+  '2:25': 'synthesis',
 };
 
 function normalizeTransition(value) {

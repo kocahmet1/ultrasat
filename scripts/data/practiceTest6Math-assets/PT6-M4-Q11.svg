@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 310" width="380" height="310" font-family="Georgia, serif">
+  <g stroke="#000000" stroke-width="1.6" fill="none">
+    <path d="M 150 250 L 238 250 L 150 90 Z"/>
+  </g>
+  <g stroke="#000000" stroke-width="1.2" fill="none">
+    <path d="M 150 236 L 164 236 L 164 250"/>
+  </g>
+  <g font-size="14" fill="#000000" font-style="italic">
+    <text x="150" y="82" text-anchor="middle">R</text>
+    <text x="246" y="256">S</text>
+    <text x="142" y="264" text-anchor="end">T</text>
+  </g>
+  <g font-size="13" fill="#000000">
+    <text x="194" y="270" text-anchor="middle">11</text>
+    <text x="142" y="174" text-anchor="end">20</text>
+  </g>
+  <text x="190" y="294" text-anchor="middle" font-size="12" fill="#000000">Note: Figure not drawn to scale.</text>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 220" width="380" height="220" font-family="Georgia, serif">
+  <defs>
+    <marker id="ah7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+  </defs>
+  <text x="190" y="22" text-anchor="middle" font-size="13" fill="#000000">Games Won by Chess Club Members</text>
+  <line x1="48" y1="170" x2="324" y2="170" stroke="#000000" stroke-width="1.4" marker-start="url(#ah7)" marker-end="url(#ah7)"/>
+  <g stroke="#000000" stroke-width="1.2">
+    <line x1="60" y1="170" x2="60" y2="176"/>
+    <line x1="96" y1="170" x2="96" y2="176"/>
+    <line x1="132" y1="170" x2="132" y2="176"/>
+    <line x1="168" y1="170" x2="168" y2="176"/>
+    <line x1="204" y1="170" x2="204" y2="176"/>
+    <line x1="240" y1="170" x2="240" y2="176"/>
+    <line x1="276" y1="170" x2="276" y2="176"/>
+    <line x1="312" y1="170" x2="312" y2="176"/>
+  </g>
+  <g fill="#000000">
+    <circle cx="96" cy="156" r="4.5"/>
+    <circle cx="96" cy="141" r="4.5"/>
+    <circle cx="96" cy="126" r="4.5"/>
+    <circle cx="132" cy="156" r="4.5"/>
+    <circle cx="132" cy="141" r="4.5"/>
+    <circle cx="132" cy="126" r="4.5"/>
+    <circle cx="132" cy="111" r="4.5"/>
+    <circle cx="132" cy="96" r="4.5"/>
+    <circle cx="168" cy="156" r="4.5"/>
+    <circle cx="168" cy="141" r="4.5"/>
+    <circle cx="168" cy="126" r="4.5"/>
+    <circle cx="168" cy="111" r="4.5"/>
+    <circle cx="168" cy="96" r="4.5"/>
+    <circle cx="168" cy="81" r="4.5"/>
+    <circle cx="168" cy="66" r="4.5"/>
+    <circle cx="204" cy="156" r="4.5"/>
+    <circle cx="204" cy="141" r="4.5"/>
+    <circle cx="204" cy="126" r="4.5"/>
+    <circle cx="204" cy="111" r="4.5"/>
+    <circle cx="240" cy="156" r="4.5"/>
+    <circle cx="240" cy="141" r="4.5"/>
+    <circle cx="240" cy="126" r="4.5"/>
+    <circle cx="276" cy="156" r="4.5"/>
+    <circle cx="276" cy="141" r="4.5"/>
+  </g>
+  <g font-size="11" fill="#000000">
+    <text x="60" y="190" text-anchor="middle">1</text>
+    <text x="96" y="190" text-anchor="middle">2</text>
+    <text x="132" y="190" text-anchor="middle">3</text>
+    <text x="168" y="190" text-anchor="middle">4</text>
+    <text x="204" y="190" text-anchor="middle">5</text>
+    <text x="240" y="190" text-anchor="middle">6</text>
+    <text x="276" y="190" text-anchor="middle">7</text>
+    <text x="312" y="190" text-anchor="middle">8</text>
+  </g>
+  <text x="186" y="210" text-anchor="middle" font-size="12" fill="#000000">Number of games won</text>
+</svg>

@@ -70,7 +70,7 @@ TRANSITION_RELATION_BY_TEXT = {
 }
 EXPECTED_TRANSITION_RELATIONSHIPS = {
     '1:22': 'example', '1:23': 'contrast-concession', '1:24': 'cause-result',
-    '2:23': 'addition', '2:24': 'similarity', '2:25': 'restatement',
+    '2:23': 'addition', '2:24': 'similarity', '2:25': 'synthesis',
 }
 
 WORD_RE = re.compile(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*")

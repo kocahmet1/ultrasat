@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 345" width="380" height="345" font-family="Georgia, serif">
+  <defs>
+    <marker id="ahq12" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+  </defs>
+  <g stroke="#cccccc" stroke-width="1">
+    <line x1="80" y1="20" x2="80" y2="308"/>
+    <line x1="110" y1="20" x2="110" y2="308"/>
+    <line x1="140" y1="20" x2="140" y2="308"/>
+    <line x1="170" y1="20" x2="170" y2="308"/>
+    <line x1="200" y1="20" x2="200" y2="308"/>
+    <line x1="230" y1="20" x2="230" y2="308"/>
+    <line x1="260" y1="20" x2="260" y2="308"/>
+    <line x1="290" y1="20" x2="290" y2="308"/>
+    <line x1="50" y1="20" x2="290" y2="20"/>
+    <line x1="50" y1="56" x2="290" y2="56"/>
+    <line x1="50" y1="92" x2="290" y2="92"/>
+    <line x1="50" y1="128" x2="290" y2="128"/>
+    <line x1="50" y1="164" x2="290" y2="164"/>
+    <line x1="50" y1="200" x2="290" y2="200"/>
+    <line x1="50" y1="236" x2="290" y2="236"/>
+    <line x1="50" y1="272" x2="290" y2="272"/>
+  </g>
+  <g stroke="#000000" stroke-width="1.4">
+    <line x1="40" y1="308" x2="300" y2="308" marker-start="url(#ahq12)" marker-end="url(#ahq12)"/>
+    <line x1="50" y1="318" x2="50" y2="10" marker-start="url(#ahq12)" marker-end="url(#ahq12)"/>
+  </g>
+  <polyline fill="none" stroke="#000000" stroke-width="2" points="50,248.8 65,242.7 80,236.0 95,228.6 110,220.4 125,211.3 140,201.4 155,190.3 170,178.2 185,164.8 200,150.0 215,133.7 230,115.7 245,95.9 260,74.0 275,49.8 290,23.2"/>
+  <g fill="#000000">
+    <circle cx="80" cy="236" r="3.5"/>
+    <circle cx="260" cy="74" r="3.5"/>
+  </g>
+  <g font-size="12" fill="#000000">
+    <text x="103" y="253" text-anchor="middle">(1, 4)</text>
+    <text x="231" y="65" text-anchor="middle">(7, 13)</text>
+  </g>
+  <g font-size="10" fill="#000000">
+    <text x="80" y="322" text-anchor="middle">1</text>
+    <text x="110" y="322" text-anchor="middle">2</text>
+    <text x="140" y="322" text-anchor="middle">3</text>
+    <text x="170" y="322" text-anchor="middle">4</text>
+    <text x="200" y="322" text-anchor="middle">5</text>
+    <text x="230" y="322" text-anchor="middle">6</text>
+    <text x="260" y="322" text-anchor="middle">7</text>
+    <text x="290" y="322" text-anchor="middle">8</text>
+    <text x="43" y="276" text-anchor="end">2</text>
+    <text x="43" y="240" text-anchor="end">4</text>
+    <text x="43" y="204" text-anchor="end">6</text>
+    <text x="43" y="168" text-anchor="end">8</text>
+    <text x="43" y="132" text-anchor="end">10</text>
+    <text x="43" y="96" text-anchor="end">12</text>
+    <text x="43" y="60" text-anchor="end">14</text>
+    <text x="43" y="24" text-anchor="end">16</text>
+  </g>
+  <g font-size="13" font-style="italic" fill="#000000">
+    <text x="308" y="312">x</text>
+    <text x="56" y="9">y</text>
+    <text x="45" y="322" text-anchor="end">O</text>
+  </g>
+</svg>

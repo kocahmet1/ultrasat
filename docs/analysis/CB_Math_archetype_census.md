@@ -1,0 +1,434 @@
+# Attested archetype census — 400 official College Board question-bank items
+
+## LINEAR EQUATIONS IN ONE VARIABLE
+- [E] SPR: one-step bare solve (clear the fractional coefficient, then subtract); integer key 17
+- [E] MC: wrong-target — divide the whole equation by a constant to read a multiple of x without solving; 'This is the value of x, not [target]'
+- [E] MC: 'Which equation has the same solution as the given equation?' — divide through by the common factor; wrong choices dismissed by showing what distributing actually yields
+- [E] MC: two-step bare solve; each wrong choice dismissed as 'This value of x satisfies [a neighboring equation]'
+- [E] MC: wrong-target — add constants to both sides to expose an expression's value without isolating x; 'This is the value of x, not [target]'
+- [E] SPR: one-step division producing a non-integer; key 8.6 (43/5) with the entry-forms note
+- [E] MC: divide each side by the coefficient; one distractor named as 'the value of x, not [the asked multiple]'
+- [E] SPR: combine like terms on one side, then subtract; key 130
+- [E] MC: one-step subtraction solve; two distractors dismissed as solutions of neighboring equations
+- [E] MC: two-step bare solve with all-generic dismissals
+- [E] SPR: subtract, then divide; key 40
+- [E] MC: down payment plus n equal monthly payments -> 'which of the following equations represents this situation'; generic dismissals
+- [E] MC: fixed item plus a per-pound purchase -> 'which equation can be used to find p'; parenthetical '(Assume there is no sales tax.)'; conceptual-error dismissals
+- [H] SPR: two declared constants with an order condition; infinitely-many-solutions forces BOTH coefficient matching and constant matching after distributing; engineered 3-digit key (403)
+- [H] MC: constant-rate depletion word problem; compute the rate from a 5-hour observation, then solve for the time at a target remaining amount; every distractor dismissed by recomputing the amount remaining at that time
+- [H] MC: three-product verbal chain (three pan sizes, one count a multiple of another, one fixed) summing to a daily total -> 'which equation represents this situation'; all generic dismissals
+- [H] MC: 'k is a positive integer; if the equation has exactly one solution, what CANNOT be the value of k' — collect like terms and forbid the zero coefficient; CANNOT capitalized; generic dismissals
+
+## LINEAR FUNCTIONS
+- [E] MC: evaluate a defined f at a stated input; the three distractors are f evaluated at the stem's other anchor values ('This is the value of f(b), not f(a)' x3)
+- [E] MC: invert a defined function ('For what value of x does f(x) = c?'); distractors are the x-values that make f equal the stem's other numbers
+- [E] MC: weekly savings deposits — starting balance plus rate times number of weeks; distractors named as 'withdraws rather than deposits' and the wrong week index
+- [E] MC: model-building ('eat r calories per pound plus an additional c') — which equation; all three distractors are alternate-world sentences with a different rate or a missing additive term
+- [E] MC: applied forward evaluation of a two-variable cost model (car lease) at a stated monthly payment; all three dismissals generic
+- [E] MC: evaluate an applied depletion model (diesel remaining after miles) at a given input; each distractor is the value at a different input ('...when x = m, not when x = n')
+- [E] MC: build h = b + ms from 'starts 15 feet up, rises 8 feet per second'; one distractor named as switching the rate with the initial height
+- [E] SPR: evaluate a defined linear function at a stated input; key 69
+- [E] MC: evaluate a linear function written as a single rational expression; distractors named as 'not multiplying x by 2 in the numerator', 'dividing then subtracting', 'evaluating only the numerator'
+- [E] MC: best interpretation of the coefficient in an applied d = rt equation; four parallel options permuting total-vs-rate across the two numbers; one distractor is the interpretation of the OTHER number
+- [E] SPR: invert a proportional function — 'for what value of x is f(x) = c'; key 9
+- [E] MC: read the x-intercept off a drawn line whose function carries a domain restriction; generic dismissals
+- [E] MC: read the y-intercept off a drawn line; the x-intercept is the named distractor
+- [E] MC: verbal translation 'the number x is c less than the number y' -> which equation; sign-and-order option set; conceptual-error dismissals
+- [E] MC: evaluate a defined function; two distractors are the values a neighboring function rule would produce ('the value of f(a) for the function g, not f')
+- [E] SPR: substitute a stated input into a defined equation; key 30
+- [E] MC: fixed pass cost plus n identical items -> cost of one item; distractors are the per-item costs obtained by ignoring the fixed cost or the total
+- [E] MC: best interpretation of the constant term of an applied linear model; options are initial value / final value / daily change / time to zero; the daily-change option is refuted with the actual coefficient
+- [M] MC: linear function carrying an unknown constant; one given value f(a) = b recovers it; each distractor dismissed by substituting it back and reporting the value it actually produces
+- [M] MC: compute both intercepts of a defined linear function, given as (a, 0) and (0, b), then report a composite of a and b; 'This is the value of b, not [composite]' dismissal
+- [M] SPR: verbal-to-equation translation ('adding 0.6 to four times the body weight') then evaluate at 0.5; decimal key 2.6 with 13/5 offered as an alternate entry form
+- [M] SPR: recover an embedded constant from one function value, then evaluate the completed function at a second input; key 67
+- [M] MC: which value-table matches a given linear function — 'f(x) must equal [expression] for all values of x'; conceptual-error dismissals only
+- [M] MC: two points plus a domain restriction define f; the three distractors are functions with the slope or intercept individually perturbed, each narrated as 'a graph with slope m and y-intercept b'
+- [M] SPR: identify which constant of y = a + bx the question asks for (rate vs initial value) with no computation whatsoever; key 241
+- [H] MC: tiered fee — flat charge for the first two hours plus an unknown hourly fee recovered from one (hours, total) datum; options are functions with a domain restriction; distractors narrated as alternate flat/hourly pairs
+- [H] MC: two (selling price, demand) points define the model; predict at a third price; near-miss numeric distractors dismissed generically
+- [H] SPR: two-row table with symbolic entries yields a system for slope and intercept; then evaluate the recovered equation at a given point; key 65/4 (16.25)
+- [H] MC: first-day price plus per-additional-day fee with domain 'd is a positive integer and d <= n'; the (d - 1) indexing is the whole difficulty; lead distractor is an alternate first-day price
+- [H] MC: three-row table whose entries contain a constant k; compute the symbolic slope and intercept and pick the matching equation; all generic dismissals
+
+## LINEAR EQUATIONS IN TWO VARIABLES
+- [E] MC: interpret which piece of an applied ax + by = c is a unit price; distractors are the two total-sales expressions and the other item's price
+- [E] MC: perpendicular slope read directly off slope-intercept form with an integer slope; rationale uses the 'opposite reciprocal' wording variant; generic dismissals
+- [E] MC: two-component mixture with known total and one known part; the distractors are the total itself and the given part, each named
+- [E] SPR: applied ax + by = c (coin collection); one variable's value is given, solve for the other; key 13
+- [E] MC: which value-table matches a given equation; each wrong table is dismissed by naming the equation it DOES satisfy
+- [E] MC: two percent-by-weight mixtures combining to a target percent -> which equation; each distractor is an alternate world with two perturbed percentages at once (a 2x2 grid of mis-mappings)
+- [E] MC: applied ax + by = c shipping equation with one variable given; the three wrong choices are dismissed jointly by substituting each and showing the contradiction it forces
+- [E] MC: line through a given point parallel to a given graph; each distractor dismissed by naming the point it actually passes through and its actual slope
+- [M] SPR: perpendicular slope read straight off slope-intercept form, but the slope is a fraction so the key is 3/17 with four accepted entry forms
+- [M] MC: perpendicular slope where the line is in standard form; the option set is literally the standing trio — line k's own slope, the plain reciprocal, and the plain negative — plus the key
+- [M] MC: best interpretation of a point on a first-quadrant constraint graph (length/width at fixed perimeter); options permute 'is L' vs 'is L less than the perimeter' across both coordinates; one distractor interprets the reversed point
+- [M] MC: parallel slope read off slope-intercept form; the y-coordinate of the y-intercept is the named distractor
+- [M] SPR: applied ax + by = c; interpret both coefficients as unit prices and report how much MORE one costs than the other; key 1/4 (0.25) with the entry-forms note
+- [H] SPR: table of two points; the y-intercept is written as an expression in constants; equate slopes computed two ways and solve; key 33
+- [H] MC: line written in a parameterized non-slope-intercept form with constants a and k; recognizing that one given point IS the y-intercept collapses it to one division for k
+- [H] SPR: perpendicular slope where the line is given in standard form and must be rearranged first; key 1/4 (0.25)
+- [H] MC: three-row table defines a line; translate it down k units; report the NEW x-intercept (two-step composition, all generic dismissals)
+- [H] SPR: applied ax + by = c; interpret a and b as per-course hour counts and report their DIFFERENCE, never solving for x or y; key 5
+- [H] MC: first-quadrant constraint graph for a two-item mass budget; read the x-intercept, divide the total by it, answer 'closest to'; the other star type's value is the named adjacent-quantity distractor
+- [H] SPR: perpendicular slope from standard form (parameter-swapped clone of the other Hard version); key 1/2 (.5)
+- [H] SPR: percent-solution mixing equation where the total-volume constraint must convert the second variable before substituting; parenthetical assumption clause supplied; key 210
+
+## SYSTEMS OF TWO LINEAR EQUATIONS IN TWO VARIABLES
+- [E] SPR: one equation already isolates a variable; substitute and solve in one step; key 30
+- [E] MC: two people, two item types, two totals -> 'which system represents'; distractors are exactly the swapped-totals, swapped-item-counts, and both-swapped variants, each named
+- [E] MC: add the two equations so the sum directly gives the composite target (x + y); one distractor named as 'the value of x'
+- [E] MC: read the intersection of two drawn lines as an ordered pair; generic dismissals
+- [E] MC: substitution; the ordered-pair-reversal distractor is named explicitly ('This is the solution (b, a), not (a, b)')
+- [M] MC: add corresponding sides to eliminate y; the sum equation is itself the answer; grouped dismissal 'may be the result of errors when solving the system'
+- [M] MC: fixed group size plus two per-person revenues; eliminate to get the CHILDREN count; the adults count is the named adjacent-quantity distractor
+- [M] MC: count intersections of two slope-intercept lines with different slopes; wrong choices refuted by the standing fact that two lines have only 0, 1, or infinitely many intersection points
+- [M] MC: the first equation already gives one variable; substitute it into a composite expression rather than solving the system; generic dismissals
+- [M] MC: two-totals capacity problem (60 tents, 202 people, 2- vs 4-person) solved for the smaller type; an 'Alternate approach' difference argument is supplied; each wrong choice dismissed by recomputing the headcount it implies
+- [H] MC: two lines drawn on a grid; reconstruct each line from its two plotted points via point-slope, then match the pair of equations; all three wrong choices dismissed generically
+- [H] SPR: add the equations to eliminate, back-substitute, then evaluate a composite expression in x and y (wrong-target)
+- [H] MC: one equation given, pick the second so the system has NO solution; each wrong choice rewritten and narrated as producing exactly one or infinitely many solutions instead
+- [H] SPR: legacy 'system above' wording; add corresponding sides so the left sides collapse to 4y directly; key 3/2 (1.5)
+- [H] SPR: no-solution parameter via standard-form proportionality (a1/a2 = b1/b2 but not equal to c1/c2) after clearing fractions in both equations; key 6
+- [H] MC: system with two unknown constants plus a stated intersection point; scale-and-add eliminates one constant so the point yields the other
+- [H] SPR: infinitely-many-solutions parameter — scale the first equation until the right sides match, then equate both coefficients and report a ratio; key 2/7
+- [H] MC: the two equations are scalar multiples, so the question is which point parameterized by an arbitrary real number lies on both; each wrong choice dismissed by substituting and reporting the point that would actually work
+- [H] MC: solution-count option set 'Exactly one / Exactly two / Infinitely many / Zero'; rearrange both to slope-intercept, then an Alternate approach eliminates to a false statement
+- [H] SPR: 'in August the dealer completed n more than k times September's sales' plus a two-month total; solve for the SMALLER month; key 87
+- [H] SPR: no-solution parameter found by matching proportional coefficients after moving both equations to standard form; negative key (-28)
+
+## LINEAR INEQUALITIES IN ONE OR TWO VARIABLES
+- [E] MC: shaded half-plane on a numbered grid; read the boundary from two lattice points and pick the direction; generic dismissals (figure item)
+- [E] MC: which system of inequalities has a given point as a solution — the four options are the four quadrant sign-pairs; an 'Alternate approach' substitutes and verifies
+- [E] MC: minimum and maximum recorded rate -> compound inequality a <= r <= b; generic dismissals
+- [E] MC: 'varied between a and b' -> compound inequality, with the at-least/at-most reasoning spelled out step by step; generic dismissals
+- [E] MC: two percentage subgroups combining to 'at least 400' -> 0.3x + 0.7y >= 400; distractors flip the inequality and leave the percents undecimalized ('the percentages were not converted to decimals')
+- [E] MC: budget with two unit costs -> ax + by <= B; the at-least/at-most flip is the named distractor
+- [E] MC: service fee plus hourly rental with a maximum spend -> which inequality; 'the rental fee, not the total cost, is at most' is the named distractor
+- [M] MC: two-constraint integer optimization (at least 10 packages, at most 1,100 lb) — maximize the heavy count by minimizing the light one; grouped dismissal naming 'incorrectly creating or solving the system of inequalities'
+- [M] MC: four candidate tables share the same x-values; substitute each x to derive the y-bound, then check every row; each wrong table is dismissed by naming the single row that fails
+- [H] MC: shaded region above a horizontal boundary; rewrite ky > c into y > c/k to recover the constant (the multiplication direction is the entire load)
+- [H] MC: model a comparison as an inequality (wait + ride vs walk) where the DIRECTION must be reasoned, not transcribed; distractors use w - 5 and the reversed sign, dismissed with 'because' counterfacts
+
+## NONLINEAR FUNCTIONS
+- [E] Interpret the y-intercept of a shown value-vs-months decay graph (tablet); distractors are the value at the last shown month and the total decrease over that span, each dismissed with the true number restated.
+- [E] Translate a shown graph up k units and pick the resulting graph from four answer-graphs; distractors are the down / left / right translations, each named as such.
+- [E] Interpret a marked point on a launched-ball height-vs-time graph; distractors reverse the coordinates and recast the point as initial height plus initial velocity.
+- [E] Read the y-intercept off a shown graph; two distractors are the y-intercepts of graphs crossing the y-axis at other points.
+- [E] Shown ocean-water-level graph -> which ANSWER TABLE lists three (t, y) pairs that lie on the model; visual lives in the choices.
+- [E] Interpret 'f(a) is approximately equal to b' for a country-population model with t = years after a base year; distractors swap 'in [year]' for '[years] after' and permute the two numbers.
+- [E] Evaluate a radical-containing function at a perfect-square input; distractors C and D are the correctly computed values at two other inputs.
+- [E] Evaluate a defined nonlinear function at a given input; distractor D is the value at a different input.
+- [E] Choose a doubling model N0 * 2^(t/d) for bacteria in milk; distractors halve, decrease by two-thirds, and triple every d minutes, each named as such.
+- [E] SPR: read the x-intercept (a, 0) off a shown graph and report a = 7 (the file's only Easy SPR).
+- [E] Table (0,0), (1,1), (2,8), (3,27) -> choose the ANSWER GRAPH passing through all four points (cubic); wrong graphs grouped-dismissed by naming the single point they miss.
+- [M] Interpret an inner factor of a geometric-word quadratic A(w) for a rectangle whose length is k times its width; options are length / area / difference of length and width / width.
+- [M] Exponential depreciation model of a piece of equipment: value at purchase = substitute t = 0; distractor B is the value one year after purchase.
+- [M] Minimum value of a function whose defining equation must first be rearranged into y = ax^2 + bx + c, then read via the standard minimum formula.
+- [M] Interpret the vertex of a toy-rocket height model given in vertex form; two distractors read the leading coefficient as the height/time, one interprets a sign-flipped version of the equation.
+- [M] Rosa's savings-account table (years, dollars) with a stated exponential relationship: recover a at t = 0 and b from a second row, then choose the matching equation.
+- [M] Table of four (x, f(x)) pairs for an exponential f: recover a at x = 0, then b from a second row; each distractor dismissed with 'For this function, f(0) is equal to ___, not ___.'
+- [M] Hana's pole-vault table: increasing exponential; recover a at t = 0 then b from a second row; distractors dismissed as decreasing rather than increasing, or as having the wrong initial value.
+- [M] Interpret the leading coefficient of an exponential decay model for an invasive beetle population; the four options are initial value / value at t = n / percent decrease per year / percent decrease every n years, each wrong one dismissed with the recomputed true value.
+- [M] Doubling time from an exponential with base 2 and exponent t/n: the answer is n; distractors are the base itself, the time to double twice, and the initial count.
+- [M] Build a monthly percent-growth model a(1 + r)^t for newsletter subscribers; each distractor narrated as 'a situation where the increase was p%, not q%' (one of them a decrease).
+- [M] Volleyball court, area 162 sq m, length twice width -> 2w^2 = 162, w = 9; distractors are the LENGTH (18), 162 treated as perimeter (27), and solving 3w^2 = 162 (54).
+- [M] Which of four equivalent exponential forms DISPLAYS a named value (f at a shifted input) as the coefficient or base; each distractor 'shows the value of f(other input), not k, as the coefficient.'
+- [M] Salary model I(1 + r)^n with a 4% annual increase -> a = 1.04; choices 0.04, 0.4, 1.04, 1.4; single grouped dismissal ('incorrectly representing the annual increase').
+- [M] Interpret the leading coefficient of an exponential population-reduction model; same four-option menu as the beetle item (initial / later value / per-year percent / per-n-year percent) reordered so the key moves from A to D.
+- [M] Interpret the coefficient 5,640 in D = 5,640(1.9)^t (global data traffic, t years after 2010) as the 2010 value; distractors are the yearly amount of increase, the 90% rate, and D itself.
+- [M] Which equation could match a shown polynomial graph: first match the three x-intercepts, then use the PARITY of the sum of the factor exponents to decide the sign behavior outside the outer roots.
+- [M] Count the solutions of f(x) = 0 by counting where the SHOWN graph touches the x-axis; option set One/Two/Three/Four, key Three.
+- [H] Solution-count by structure, not algebra: how many times an exponential-minus-constant curve crosses the x-axis given b > 1 and positive constants; option set Zero/One/Two/Three; all dismissals generic.
+- [H] SPR word-problem quadratic: product of two positive integers with 'first is c greater than twice the second'; substitute, factor, discard the non-positive-integer root, report the SMALLER integer (14).
+- [H] SPR two-constant untangling: evaluate the defined function at two anchor inputs under a stated condition, solve for each constant, report the PRODUCT ab (609).
+- [H] Table gives three values of x and of a transformed expression involving a linear f; recover two points on f, compute the slope, then the y-intercept; distractors = the other function's y-intercept, the slope, and the x-coordinate of the x-intercept.
+- [H] Quadratic h crosses the x-axis at (0, 0) and (t, 0); set h(t) = 0, isolate the square, take the root, solve for t = 8; choices 1, 2, 4, 8 grouped-dismissed as calculation errors.
+- [H] SPR: minimum value of a quadratic by completing the square into a(x - h)^2 + k; answer is the engineered large integer 1728.
+- [H] y-intercept of a defined function: substitute x = 0; distractor D dismissed as 'the y-intercept for [a related function], not f.'
+- [H] Applied revenue quadratic (auditorium seats, ticket-price increase, fewer tickets sold): find the x-value of the maximum via -b/(2a) after noting the negative leading coefficient.
+- [H] Interpret the y-intercept of an applied exponential (advertisements per year since a base year); two distractors mislabel the same value as a MINIMUM over the period, one names the wrong year.
+- [H] Geometric sequence: first term given, each later term r times the preceding; pick a_n = a*r^(n-1); each distractor narrated as an alternate world ('describes a sequence whose first term is X rather than A and whose ratio is Y rather than r').
+- [H] Roman-numeral I/II structure item: do either of two algebraically equivalent rewrites of an exponential f DISPLAY the y-coordinate of the y-intercept as a constant or coefficient? Key = Neither I nor II.
+- [H] SPR: function with constants a and b, a y-intercept point given AND the product ab supplied; solve for one constant from the intercept, then divide into the product (20).
+- [H] 'For what value of x does f reach its minimum': expand to standard form and use -b/(2a); distractors are the two x-intercepts and the y-coordinate of the vertex.
+- [H] SPR: vertical shift g(x) = f(x) + k, then evaluate g at a given input to obtain the point's y-coordinate (48).
+- [H] Build a vertex-form projectile equation from 'maximum height h at t1' and 'hits the ground at t2': set the vertex, then solve for a using the ground point; two distractors narrated as alternate worlds with swapped max height / max time.
+- [H] SPR: function with constants a and b, both an x-intercept and a y-intercept given as points; substitute the y-intercept to solve for the requested constant (-324).
+- [H] Verbal interpretation of a nonzero x-intercept of a revenue-vs-unit-price quadratic; the four options permute revenue-at-price-0 / price-at-max-revenue / price-giving-revenue-0 / max-revenue, and each dismissal names which feature of the graph really represents it.
+- [H] Bacteria-per-milliliter table doubling daily (2.5x10^5, 5.0x10^5, 10^6): solve 10^6 * 2^(d-3) = 5.12x10^8 by rewriting 512 as 2^9 -> Day 12; choices Day 5, 9, 11, 12 grouped-dismissed.
+- [H] Roman-numeral must-be-true item: upward parabola with vertex (c, d) plus two constraints; use the symmetry fact (the vertex x is halfway between two inputs with equal outputs) and vertex form to refute both statements -> Neither I nor II.
+- [H] Exponential with exponent t/n: 'the population increases by p% every m months' - convert the fractional exponent to a fraction of a year and then to months; each distractor is the month-count corresponding to a different base.
+- [H] Composite definition: f built from another function g - expand, distribute, combine, complete the square, and report the x at which f reaches its minimum; distractors B and D are the minimizers of the component functions.
+- [H] SPR: parabola shown - use the y-intercept to fix one constant, a second lattice point to fix the other, then report a composite of them (-24); rationale carries an 'Alternate approach' via vertex form.
+
+## NONLINEAR EQUATIONS IN ONE VARIABLE AND SYSTEMS OF EQUATIONS IN TWO VARIABLES
+- [E] Divide both sides of a displayed nonlinear inequality by 3; the three wrong choices are grouped-dismissed by exhibiting one ordered pair that solves the given inequality but none of them.
+- [E] Discriminant count: substitute a, b, c into b^2 - 4ac, get a positive value, conclude exactly two distinct real solutions; option set Exactly one / Exactly two / Infinitely many / Zero.
+- [E] Two graphs intersect at (x, y): substitute the value supplied by the first equation into the second and evaluate the requested coordinate.
+- [E] Absolute-value equation split into two linear equations; report the positive solution; all dismissals generic.
+- [E] Literal rearrangement: subtract a term, then divide, to express one variable in terms of two others; all dismissals generic.
+- [E] Graphs intersect at (x, y): substitute, take a square root to get two values, only one of which is offered; distractor D is the y-coordinate of the intersection point.
+- [E] Which ordered pair solves a linear-nonlinear system: substitute the linear equation in, factor out a common factor, use the zero-product property, back-substitute.
+- [M] Literal rearrangement among three distinct positive numbers: multiply both sides by a variable to express one in terms of the other two; each distractor dismissed as 'This equation is equivalent to [a different rearrangement].'
+- [M] Count solutions of a graphed quadratic-plus-linear system by counting intersection points (2); options 0/1/2/3, with D dismissed as geometrically impossible for a line and a parabola.
+- [M] Which value could be x for the system y = x^2 + 1, y = x^2 + x: equate, solve, get x = +/-1, only -1 offered; each wrong choice dismissed by substitution producing a false statement.
+- [M] Apply the quadratic formula to a displayed quadratic; choices are +/- solution pairs; distractors from mis-factoring, mis-applying the formula, and a sign error.
+- [M] Discriminant count for a quadratic supplied in non-standard form; key 'Exactly two', with the option set deliberately unsorted (Exactly two / Exactly one / Zero / Infinitely many).
+- [M] Literal rearrangement among positive numbers: divide both sides, then subtract, to isolate the requested variable; all dismissals generic.
+- [M] 'How many distinct real solutions' answered by structure rather than discriminant: the square of a real number is never negative -> Zero.
+- [M] SPR: add a constant to both sides to get a product of two factors equal to 0; zero-product gives two solutions; either 30 or -30 accepted.
+- [H] SPR: absolute-value equation with a leading coefficient - divide first, then split into two linear cases; report the positive solution (9).
+- [H] 'One solution can be written as [radical template with constant k]': complete the square and match the radicand; rationale carries an 'Alternate approach' that substitutes the template back into the equation.
+- [H] SPR tangency: a line meets a parabola at exactly one point - substitute, set the discriminant to 0, take the positive root of the constant (6).
+- [H] Which ordered pair solves a linear-nonlinear system: solve the linear equation for x, substitute, expand and solve; every wrong pair dismissed by substitution yielding a false statement.
+- [H] SPR discriminant inequality with an integer constant: force b^2 - 4ac < 0, solve to an irrational bound, then take the largest integer k = 16.
+- [H] 'If x is a solution, which is a possible value of [an expression in x]': clear the denominator, isolate the square, take +/- roots, then evaluate the asked expression; wrong choices grouped-dismissed.
+- [H] SPR: radical equation with a constant - square both sides, impose discriminant = 0 for exactly one real solution, then verify the candidate against the sign condition to rule out an extraneous root; minimum value 231.
+- [H] SPR literal rearrangement of a physics definition (average acceleration over a 5-second interval, initial velocity 12 m/s) into the form v_f = xa + y; report x = 5.
+- [H] SPR: apply the quadratic formula, simplify, and match one solution to the template (a +/- sqrt(k))/c; report k = 120.
+- [H] Which choice is a solution: apply the quadratic formula, simplify sqrt(4k) = 2 sqrt(k), then cancel a factor of 2 from numerator and denominator; distractors from a mis-stated quadratic formula and a mis-simplified radical.
+- [H] SPR tangency with a non-integer answer: line y = c meets a parabola at exactly one point, discriminant = 0 -> c = 81/4, with 81/4 and 20.25 both accepted.
+
+## EQUIVALENT EXPRESSIONS
+- [E] Product of powers with the same base (all variables positive): apply commutativity, add exponents; distractor A = multiplied the exponents instead of adding.
+- [E] Factor out the common monomial factor of a two-term expression; each distractor labeled 'This expression is equivalent to [another expression].'
+- [E] Add two polynomials via associative/commutative properties; the three distractors are each 'the result of adding [a different pair of terms].'
+- [E] Rewrite and combine like terms in a two-term expression; all three dismissals generic.
+- [E] Combine like terms in a two-term expression; all dismissals generic.
+- [E] Rewrite a power/radical expression into an equivalent form; two distractors labeled 'equivalent to [a different expression].'
+- [E] Combine two constant multiples of the same power/radical term; each distractor labeled 'equivalent to [a different sum].'
+- [E] Add two like terms; the three distractors are each labeled as the equivalent of a different sum.
+- [M] Recognize a perfect-square trinomial (first and last terms are squares, middle term is twice their roots' product) and name a binomial factor; distractors from mis-factoring, GCF-dividing two terms, and not factoring the coefficients.
+- [M] Substitute two supplied single-term values for p and v into a compound expression, multiply, distribute, combine like terms; distractors = subtract instead of add, stop at the product, distribute the wrong factor.
+- [M] Simplify a rational expression by cancelling a common factor, with the stated domain restriction used explicitly to justify that the factor is nonzero.
+- [M] Factor a quadratic in x^2 (x^4 - x^2 - 6) by finding factors of the constant that sum to the x^2 coefficient; distractors use factor pairs with the wrong sum.
+- [M] Expand a displayed product and combine like terms by first rewriting one factor; distractors grouped as distributive-property or like-term errors, with the two specific mis-rewrites named.
+- [M] Factor a difference of squares x^2 - 25; distractor D is (x + 5)(x - 1), re-expanded in the dismissal to x^2 + 4x - 5 to show it is not equivalent.
+- [M] Factor out the common factor from a multi-term expression; each distractor labeled 'This expression is equivalent to [a different expression].'
+- [M] SPR: distribute a binomial factor and match corresponding coefficients to recover the constant k = 6 (two matching equations, either one solves it).
+- [M] Expand a product, distribute a factor through a second expression, regroup and combine; single grouped dismissal for A, B, D.
+- [H] Identity 'true for all x': multiply out the left side, match the x-coefficient, solve for the constants and report ab = 24; each dismissal recomputes the coefficient the offered ab would produce.
+- [H] Roman-numeral 'which expression(s) is(are) a factor' of a quadratic with a leading coefficient; factor by grouping (ac method); key = II only.
+- [H] SPR rational exponents: rewrite a quotient of fractional powers, subtract exponents; answer 7/6 with truncated and rounded decimal entry forms noted.
+- [H] SPR: sum of two rational expressions rewritten over a common denominator and matched numerator-coefficient by numerator-coefficient to a target; answer 27.
+- [H] Identity true for all x: add two rational expressions over a common denominator, match numerators, solve for r and t, report rt = 20; distractors from a sign error on one constant and from failing to distribute the two coefficients.
+- [H] SPR: convert a radical to a rational exponent, combine powers, and solve for the constant making the expression equal a target power; answer 4/225 with five accepted entry forms listed.
+- [H] SPR: distribute, combine like terms, and match to a*x^2 + b*x + c; report one coefficient (-419).
+
+## RATIOS, RATES, PROPORTIONAL RELATIONSHIPS, AND UNITS
+- [E] One-hop unit-rate conversion, per minute to per hour (x60), SPR 4-digit integer 2,520.
+- [E] Sample-to-population scale-up written as a fraction times the total; the raw sample count is the named distractor, the other two dismissed generically.
+- [E] Given ratio 1 to 5, solve a proportion at a stated value (25 seconds -> 5 miles); all three wrong choices dismissed in one grouped calculation-errors sentence.
+- [E] Total cost divided by price per pound; SPR 9.
+- [E] Constant rate x time, solved once as a formal proportion and again in an 'Alternate approach' one-line multiplication; SPR 180.
+- [E] Total distance over total days -> miles per day; distractors are the reciprocal rate (days per mile), an arithmetic slip, and 24 (hours in a day, a context-number echo).
+- [E] Part-to-part ratio with one part given -> the other part; distractors are the ratio number itself, the given count, and the answer under the REVERSED ratio.
+- [E] Inverse density: population divided by people-per-square-mile gives area; all distractors generic.
+- [E] Revolutions divided by minutes -> revolutions per minute; all three dismissals generic.
+- [E] Count divided by area -> population density (raccoons per square mile); the named distractor is the area value itself.
+- [E] Constant y-to-x ratio table -> find k; distractors are the y-value at a different x, 40 - 4 (subtract instead of multiply), and an inverted proportion.
+- [E] Segment-length ratio with one length given; distractors are the other segment's length, the answer under the reversed ratio, and the answer for a different given length.
+- [E] Ratio 1 to 2 with t given -> solve for u; distractors are the answer under the reversed ratio, the value of t itself, and u for a different t.
+- [E] Exotic-unit conversion with the factor supplied in the item (1 fathom = 6 feet); SPR 348.
+- [M] miles per second to miles per hour using the two-step 60 x 60 = 3,600 factor; distractors are the per-minute rate and its x2 and x3 (partial conversion).
+- [M] Change in density x area = change in population; rationale offers an 'Alternate approach' computing both populations and subtracting; distractors = the later population, ratio instead of difference, half the earlier population.
+- [M] Equivalent-ratios equation cleared by two multiplications and a division; SPR 980.
+- [M] Two-hop unit conversion (quarts to cups to fluid ounces) with both factors supplied; SPR 2,432.
+- [M] Rewrite a given proportional equation into y = kx form, substitute the given value, solve; SPR 24.
+- [M] Chain two unit rates by multiplication (ounces per cubic inch x dollars per ounce -> dollars per cubic inch); SPR decimal 4.44 with NO entry-forms note.
+- [M] Equivalent ratios rearranged into y = kx, then evaluated at a stated x; SPR 90.
+
+## PERCENTAGES
+- [E] 'What percentage of A is B?' -- part over whole times 100; the complement percentage is the named distractor.
+- [E] Percent increase between two rows of a table ($1.00 -> $1.60 = 60%); distractors come from averaging the two values first, from expressing one as a percent of the other (62.5%), and from a calculation error.
+- [E] 'What percentage of A is B?' solved by an equation in p; each dismissal recomputes p percent of A and reports the mismatch ('p% of A is m, not B').
+- [E] Price plus sales tax; distractors come from not multiplying by the price, dividing by 10 instead of 100, and reading '5%' as $5.
+- [E] This year's enrollment = p% of last year's (single multiplier, no reversal); all dismissals generic.
+- [E] 'B is p% of what number?' -- reverse percent solved with a one-variable equation; each dismissal recomputes p% of the wrong number.
+- [M] Reverse percent: p% of the sample is faulty and the faulty count is given -> find the total; SPR 110.
+- [M] Two chained percent-of-percent steps applied forward across three sessions of attendance; SPR 324.
+- [M] A monthly percent applied across a 6-month period; distractors are the 1-month total, the 5-month total, and the units NOT returned.
+- [H] Nutrition-label context: one serving = 5% of the daily allowance, so p = 5x; choose the linear expression; distractors decimalize the 5% unnecessarily or make the relationship exponential.
+- [H] 'The expression represents the result of decreasing a positive quantity by what percent?' -- factor the quantity out of the multiplier, solve for p; each dismissal recomputes the wrong percent's expression ('Decreasing the quantity by [p] yields [expr], not [target]').
+- [H] Percent parts summing to 100 with the leftover count given (6 individuals = the remaining 15%): back-solve the total, then report a difference of two parts; SPR 8.
+- [H] Scale drawing enlarged so each side is p% longer: 1 inch becomes (1 + p/100) inches, so the miles-per-inch scale divides; 'closest to' answer, all dismissals generic.
+- [H] Fully abstract percent chain with letters: x is p% of the sum (y + z), and y is q% of z -> what percent of z is x.
+- [H] Percent-increase projection: an observed 5% increase, halved to 2.5%, applied as a multiplier to the later value; distractors add value-increments instead of applying the multiplier, or double instead of halve.
+- [H] Percent decrease read off a line graph (40 inches -> 10 inches) with the answer packaged as 'p%' so the entry is the bare number; SPR 75.
+- [H] Three-link abstract percent chain answered with 'closest to'; each dismissal describes the alternate world that would make that choice right ('this is closest if x is greater than y, rather than p% of y').
+
+## ONE-VARIABLE DATA: DISTRIBUTIONS AND MEASURES OF CENTER AND SPREAD
+- [E] Median of seven already-sorted values (the 4th); distractors are exactly the mode, the mean, and the range.
+- [E] Bar-graph read-off (number of days at a stated charge); distractors are the charge value itself, a sum across several bars, and a neighboring bar.
+- [E] 'Which frequency table correctly represents the data listed?' with table-valued options; distractors interchange the Number and Frequency columns or use the data values as frequencies.
+- [E] Bar-graph difference between two categories (drama minus chess); the three distractors are each bar alone and their sum.
+- [E] Two five-value data sets with equal means -> solve for the missing value x; wrong choices grouped as calculation errors.
+- [E] Which statistic CAN be computed from a total and a count -- only the mean; median, max and min require the individual values (grouped dismissal).
+- [E] Bar-graph frequency read-off; distractors are the neighboring bar, the total of all bars, and the category label itself.
+- [E] Bar-graph INVERSE read-off: which category has the stated frequency; each dismissal supplies the wrong category's approximate count.
+- [E] Add a sixth value smaller than every original value -> the mean decreases; pure reasoning, no computation; the Latin binomial is glossed in-line ('a type of sea turtle').
+- [M] Median of an 8-value list printed UNSORTED; the standing distractor trio is the midpoint of the two middle values as listed, the mean, and the range.
+- [M] Frequency table with one high outlier (age 30): order mode < median < mean; the 'Alternate approach' uses balance-of-deviation reasoning instead of computing the mean.
+- [M] Read the maximum data value from a frequency table in which one row has frequency zero above the true max; SPR 14.
+- [M] Two samples with identical n and identical mean but different standard deviations -> only the spread comparison is true; distractors claim identical data sets, the tallest participant, and a median comparison.
+- [M] Five numbers with one unknown constrained by mean = median -> which value is NOT possible (capitalized NOT); the wrong three are dismissed jointly as all producing equality.
+- [M] 'Which list has the smallest standard deviation?' judged by spread about a shared symmetric center; no standard deviation is ever computed.
+- [H] Two box plots: only the MEDIAN comparison is determinable; both mean statements are dismissed with 'cannot be determined from the box plots'.
+- [H] Histogram plus one added below-minimum value: Roman-numeral I/II must-be-true on median vs mean; the median MAY be unchanged (tie at the two middle values), so 'II only'.
+- [H] Remove one erroneous value from a frequency-table data set: the median is UNCHANGED because the even-n straddling pair repeats the same value; a 'not enough information' option is offered as bait.
+- [H] Integer-constrained missing value: nine values shown with a known mean, the mean of ten must be an integer greater than that, all values are positive integers under a cap -> ones-digit argument pins the tenth value; SPR 52.
+- [H] Compare the means of two data sets given only as parallel frequency columns; requires two weighted sums (sum of value x frequency over n) with no shortcut.
+- [H] Symmetric perturbation about the median (+7 to every value above, -7 to every value below): median, mean and sum are invariant, standard deviation is the only measure that changes (capitalized NOT stem).
+
+## TWO-VARIABLE DATA: MODELS AND SCATTERPLOTS
+- [E] Pick the equation whose graph best models the scatterplot (upward parabola, y-intercept and vertex x = 2.5); the grouped dismissal evaluates every wrong equation at two x-values.
+- [E] Cooling-coffee time series: which 10-minute interval has the greatest average rate of decrease -- equal delta-x reduces it to 'greatest temperature drop'.
+- [E] Match a drawn line of best fit to an equation using only the SIGN of the slope and the SIGN of the y-intercept; each distractor violates exactly one of the two sign conditions.
+- [E] Predict y from the line of best fit at a stated x (elevation 8,500 ft -> 39 F); each dismissal names the elevation the wrong temperature actually corresponds to.
+- [E] Line-graph minimum read-off ('for what model year is the percent smallest').
+- [E] 'Which graph shows the most appropriate model?' with graph-valued options; dismissals cite shape (not linear), direction (decreasing), and balance (all data points below the model).
+- [E] Classify a drawn curve on the increasing/decreasing x linear/exponential 2x2 option grid; dismissals restate the definition each wrong label violates.
+- [M] Residual read: the difference between an observed y-coordinate and the value the line of best fit predicts at that x; the observed y itself is the far distractor.
+- [M] Average rate of change between two graph points in a physics context (momentum, newton-seconds per second); SPR 0.5, 1/2 with the entry-forms note.
+- [M] 'Closest to the slope of the line of best fit' -- negative slope computed from two approximate lattice points named in the rationale; two of the distractors are eliminated by sign alone.
+- [M] Compare a linear and an exponential expression over x >= 0: they cross at a constant c = 3; the option grid pairs two 'for all x' claims against two 'there is a constant c' claims with the inequality directions swapped.
+- [M] Average rate of change per minute read from a fully labeled scatterplot (Temperature (C) vs Time (minutes), axis ticks 0-30 by 2); SPR integer 5.
+- [M] Slope of a drawn line of best fit, 'closest to', negative; the two positive-slope options are dismissed by sign alone before any computation.
+- [H] Exponential model y = a(b)^x fitted to a DECREASING scatter -> 0 < b < 1; answered purely by elimination with no arithmetic, all wrong choices dismissed generically.
+- [H] Transform a data set by multiplying every y-coordinate by k -> BOTH the slope and the intercept of the best-fit line scale by k; the untransformed equation is the named bait ('this could be a line of best fit for data set E, not data set F').
+- [H] Interpret the SLOPE of a best-fit line whose x-axis is in 10-year increments: the option set is the 2x2 menu of (slope vs y-intercept) x (per year vs per 10 years).
+
+## PROBABILITY AND CONDITIONAL PROBABILITY
+- [E] Fair n-sided die, P(one labeled face) = 1/n; distractors are 'no greater than', 'greater than', and the complement probability.
+- [E] Frequency table by color: one category over the total; the three distractors are the complement, another category, and that category's complement.
+- [E] Two-way table marginal probability (row total over grand total); ALL three distractors are conditionals built on a wrong denominator.
+- [E] Multi-year table: fraction of one year's column belonging to one school; distractors are the difference over the total, the other school's fraction, and the school-to-school ratio.
+- [E] Frequency table of voice types -> P(baritone) = 10/25 = 0.40; distractors are 0.10 (if the total were 100), 0.60 (complement), 0.67 (if the total were 15).
+- [E] Two-way table with one missing cell: subtract the three known cells from the grand total; every distractor is dismissed by re-summing the table to a wrong grand total (substitute-and-fail applied to a table).
+- [E] Two-way table of mascot votes x grade level: one row total over the grand total, with the rationale noting each student voted exactly once; all dismissals generic.
+- [E] Frequency table by rock classification: one category over the total; the three distractors are category-to-category ratios and the complement as denominator.
+- [M] Two-way table (hybrid x price threshold): joint-cell probability over the grand total; the three distractors are the other cell and the two row/column conditionals.
+- [M] Two-way table conditional ('fraction of the chocolate-colored kittens with deep blue eyes'); distractors are the marginal fraction, the transposed conditional, and the other row's conditional; legacy semicolon dismissals ('Choice A is incorrect; this is ...').
+- [M] Two-way table printed WITHOUT total row/column (four cells must be summed first) -> joint probability 5/37; the three distractors are the three wrong-denominator conditionals.
+- [M] 'Neither blue nor yellow' complement phrasing -> sum the two remaining categories over the total; the standing distractor is the complement probability itself.
+- [H] Two-way table with an unknown cell x and a GIVEN conditional probability -> set up the conditional and solve for x; SPR 8.
+- [H] Build the table from prose (rows of birch and rows of maple trees, each row split by height band), aggregate, then compute a conditional P(maple|at least h feet tall).
+- [H] Three-group x three-diameter-band table: conditional probability given 'not in group 2', requiring two aggregations across non-adjacent rows; SPR fraction with the '(Express your answer as a decimal or fraction, not as a percent.)' parenthetical and answer line '.9538, 62/65'.
+
+## INFERENCE FROM SAMPLE STATISTICS AND MARGIN OF ERROR
+- [E] Sample proportion scaled up to a population total; distractor trio = the percentage instead of the count, the complement count, and the population size itself.
+- [E] Sample proportion 6/20 scaled to 50 council members -> 15; distractors are the sample count 6, a computational 9, and 30 (the members NOT polled).
+- [E] Estimated mean weight with a margin of error -> 'the MEAN weight of all handbags is between L and U'; distractors apply the interval to the actual weights of all items, to the sample's items, or assert the exact value.
+- [M] Given the sample mean and the resulting interval endpoints, recover the margin of error as half the interval width; distractors are the interval's lower bound and the sample mean.
+- [M] Generalize a 30% result from a 150-largemouth-bass sample only to largemouth bass in the pond, not to all fish; the three wrong choices dismissed in one grouped sentence.
+- [M] Estimated mean 4.5 miles with margin of error 0.5 -> 'It is plausible that the MEAN distance for all visitors is between 4 and 5'; distractors apply the interval to individual visitors or claim impossibility outside it.
+- [H] Two-way table stimulus plus a point estimate (30%) and margin of error (3%): pick the only true statement; the four canonical MoE misreadings ARE the option set (accuracy-of-reporting, 'not possible' outside the interval, exact-value claim, and the hedged 'it is doubtful' key).
+
+## AREA AND VOLUME
+- [E] Area of a rectangle = length × width; distractor A = the sum, D = twice the area.
+- [E] Area of a square from its side length; distractor B = the perimeter, not the area.
+- [E] Composite total area: Triangle R's area given + Square S's side length → sum; all-generic dismissals.
+- [E] Similar triangles: perimeter scale factor equals the corresponding-side scale factor → perimeter of the second triangle; all-generic dismissals.
+- [E] Side length of a square from its area (positive square root); distractor C = the area itself restated as a length.
+- [E] Volume of a right rectangular prism from l, w, h; SPR 880.
+- [E] Area of a shown rectangle from labeled length and width; all-generic dismissals.
+- [E] Width of a rectangle = area ÷ length; the three distractors are area − length, length², and area × length (all three wrong binary operations on the same two givens).
+- [M] Open box (no lid) of square faces: surface area = 5e², not 6e²; formula-fragment omission trap; SPR 4205.
+- [M] Cylinder volume (in π) with height 5 → radius; distractors 4.5 (divided 9 by 2 instead of √), 9 (r²), 40 (solved for h).
+- [M] Square with the same area as a circle of radius 2 → side 2√π; distractor A = the radius itself; B and D dismissed jointly as radical mis-simplifications.
+- [M] Perimeter of Square Y is k× perimeter of Square X → side of Y (perimeter scale = LENGTH scale, not area scale); all-generic dismissals.
+- [M] Area of a circle from its radius; distractors = areas for two other radii and the circumference.
+- [M] Composite: Circle N's area from its radius plus Circle M's given area → total in terms of π; all-generic dismissals.
+- [M] Three plotted points define a circle: find the equidistant center → radius → circumference kπ; distractors = the radius, the center's x-coordinate, and the k that would give the AREA.
+- [M] Volume of a right rectangular prism, 4 × 9 × 10; SPR 360; two-sentence legacy rationale with no formula recitation.
+- [M] Cylinder height = volume ÷ base area, with the BASE AREA handed over directly (no radius step); SPR 29.
+- [M] Area of a right triangle from the two legs shown; SPR non-integer 7.5 / 15/2 closing with 'Note that 15/2 and 7.5 are examples of ways to enter a correct answer.'
+- [M] Volume of a cube from its edge; the three distractors are literally the perimeter, one face's area, and the surface area (the full cube ladder).
+- [M] Right square prism: volume and base edge → height; distractors A and C are heights for a DIFFERENT volume, B = the base area.
+- [M] Cylinder volume where the DIAMETER is given → halve first; distractor D = used the diameter as the radius, B = a different radius slip.
+- [M] Square A's sides k× Square B's → area factor (MC twin of the Hard SPR version; Medium purely because it is MC and skips the root-sign step).
+- [M] Applied: two cylindrical containers, h = 50, r_A = 16, r_B is 25% longer (= 20) → volume of B; distractors = r_A·r_B instead of r_B², ×25 instead of squaring, r_B read as 25.
+- [M] Volume of a sphere from its radius, answer in terms of π; distractor B = the volume for a different radius.
+- [M] Cylinder volume from height and radius, answer in terms of π; distractor C = radius and height swapped.
+- [H] Square A's sides are k× Square B's → area factor k²; SPR with a 5-digit answer 27556; rationale inserts an explicit 'the value must be positive, so it does not equal −k' step.
+- [H] Right square prism: volume ÷ height → base edge by square root; SPR 12; both roots named and the negative explicitly rejected.
+- [H] Cylinder: circumference of the base → radius → volume; distractor B = lateral surface area, D = used the diameter as the radius.
+- [H] TABLE of areas and perimeters of two similar rectangles with a constant: area ratio → k, then perimeter ratio = k; distractor C dismissed as 'using the area scale factor instead of the side length scale factor'.
+- [H] Sphere inscribed in a cube touching the center of each face: cube volume − sphere volume, 'to the nearest cubic inch'; all-generic dismissals.
+- [H] Symbolic cylinder scaling: which (radius in terms of r, height in terms of h) pair makes the volume n× larger; every dismissal substitutes the choice and reports the factor it actually yields.
+- [H] Rectangle formed by four plotted points (tilted on the grid): distance formula on two adjacent sides → area; SPR 50.
+- [H] Similar right rectangular prisms: surface-area ratio → k, volume ratio k³ → volume of X, then the SUM of both volumes (composite target); SPR 1260.
+- [H] Similar rectangles: area ratio → side scale factor k → longest side of the other; distractor A = used the area factor as the length factor, B = the area factor itself, D = the given rectangle's own side.
+- [H] Three plotted points define a circle → equidistant center → circumference kπ; SPR twin of the Medium MC version, answer 8.
+
+## LINES, ANGLES, AND TRIANGLES
+- [E] Congruent triangles with an explicitly stated vertex correspondence; report the corresponding angle; distractor A = the other given angle.
+- [E] Parallel lines cut by a transversal, corresponding angles congruent → x; rationale defines 'transversal' and 'corresponding' before concluding.
+- [E] Alternate interior angles between parallel segments; distractors = the other variable, the complement, and the supplement of the correct value.
+- [E] Marked congruent angle + triangle sum → x = 46; grouped dismissal 'Choices A, C, and D are incorrect and may result from calculation errors.'
+- [E] Similar right triangles with stated correspondence: transfer one angle, use the right angle, then triangle sum; distractor A = the given angle, D = the sum of two angles.
+- [E] Two transversals across parallel lines forming a small triangle: corresponding angles + angle sum → x = 100; options DESCENDING; each dismissal names a specific false assumption.
+- [E] Triangle angle sum with two given angles; distractor C = the sum of the two given angles.
+- [E] Parallel lines / transversal corresponding angles → x; word-for-word rationale clone of the earlier parallel-lines Easy item with different constants.
+- [M] Bare fact: sum of two angles of a triangle given → third = 180 − sum; all three dismissals generic.
+- [M] Sufficiency: 'which additional piece of information is sufficient to prove lines ℓ and m are parallel?'; two distractors are linear-pair identities true regardless of parallelism.
+- [M] Parallel lines with a transversal: vertical angle then same-side interior supplementary → linear equation in x; SPR 57.
+- [M] Three parallel segments → similar quadrilaterals; proportion with 18.5 and 9 → length 'to the nearest tenth' = 17.5; grouped dismissal 'errors made when setting up the proportion'.
+- [M] Applied similar triangles: two trees perpendicular to flat ground with shadows → proportion for the other tree's height; distractors = difference of shadow lengths, height-minus-shadow difference.
+- [M] Similar triangles in a figure (one right angle, one equal marked angle) → set up the correct proportion; each distractor is dismissed as 'the result of solving [a different proportion]'.
+- [M] Similar triangles with stated correspondence, two sides in one triangle and one in the other → missing side; distractor C = the other side's length.
+- [M] Equilateral triangle S scaled by k to T with 'each side of T is greater' → 'which could be the value of k' (k > 1); dismissals spell out what k = 1 and k < 1 would produce.
+- [M] Two right triangles with 32°/58° angles → AA similarity → which ratio equals the given side ratio; 'Alternate approach:' restates it with sin/cos; dismissals use 'is incorrect because … is the reciprocal of the ratio'.
+- [M] Nested similar triangles sharing a vertex with right angles marked: corresponding-angle chain shows the asked angle equals the given one; three 'conceptual errors' dismissals.
+- [H] Figure with a marked congruent-side pair: isosceles base angles + triangle sum + a straight-line supplement, chained three deep; SPR 83.
+- [H] Figure with four collinear points and an intersecting segment; four-step chain alternating triangle-sum and supplementary pairs; SPR 123.
+- [H] Three intersecting lines r, s, t (legacy figure): supplement, then exterior-angle theorem; SPR 97, answer given only inside the rationale.
+- [H] Two segments intersecting at P with an isosceles marking: supplement → triangle sum → halve; SPR 30; closes with 'An alternate approach … exterior angle theorem'; legacy '(Disregard the degree symbol when gridding your answer.)'.
+- [H] Similarity sufficiency: correct choice supplies two ANGLE measures (AA); distractor D gives an angle forcing a non-matching third angle, refuted by computing it.
+- [H] Altitude in a triangle creating two AA-similar sub-triangles; one length given and another 'n greater than' it → value of a RATIO; distractor A = the other (reciprocal) ratio.
+- [H] Figure with a congruent-side mark: supplementary pair → triangle sum → isosceles halving → x; SPR 156.
+- [H] Two triangles meeting at a vertical-angle pair plus a second pair of equal marked angles → AA similarity → proportion for a side; SPR 54.
+- [H] Congruence sufficiency: two angle pairs already give similarity, so only a pair of corresponding SIDE lengths settles congruence; distractor D = 'No additional information is necessary.'
+- [H] Similarity sufficiency with a side-ratio distractor set: correct choice gives two angle measures; dismissals cite SAS-similarity and note the given angle is 'not included between the proportional sides'.
+
+## RIGHT TRIANGLES AND TRIGONOMETRY
+- [E] Legs shown → 'Which of the following is closest to the length of the hypotenuse?' (non-perfect square); all-generic dismissals.
+- [E] 'Which equation shows the relationship between the side lengths of the given triangle?' — write a² + b² = c² with the labeled sides; all-generic dismissals.
+- [E] tan of a marked angle read off a shown triangle — the Easy twin of the Hard 16/23 SPR item, same stem sentence; all-generic dismissals.
+- [M] Similar right triangles with stated correspondence: sin of the corresponding angle equals the given value; distractors = the cosine and the two reciprocals.
+- [M] Cofunction: two acute angles of a right triangle sum to 90° → sin of one equals cos of the other; the three distractors are the other three ratios of the same angle.
+- [M] 'Which of the following has the same value as sin(X)?' — cofunction identity read off a shown right triangle; three 'conceptual errors' dismissals.
+- [M] Read tan(A) off a labeled right triangle (opposite 20, adjacent 21); distractors are exactly sin(A), cos(A), tan(B).
+- [M] Read cos of a labeled acute angle (adjacent/hypotenuse) from a shown right triangle; distractor A = the sine of the same angle.
+- [M] sin of a labeled angle from a shown right triangle; distractor C = the reciprocal ratio, D = the hypotenuse length itself.
+- [M] cos of an acute angle given as a ratio → legs as multiples, Pythagoras recovers the third ratio member → scale to the given side; distractor A = the scale factor itself, C and D = other sides.
+- [M] Figure with a segment parallel to a side: Pythagoras for the missing leg, then AA similarity transfers the tangent ratio; distractor B = the value for the other angle.
+- [H] Rectangle with a given diagonal and one side 'n more than' the other; Pythagoras → quadratic → complete the square → longer side; SPR 38.
+- [H] tan of an acute angle plus one leg → other leg → hypotenuse by Pythagoras → PERIMETER (composite target); one dismissal names the alternate triangle it would fit.
+- [H] Right triangle with a special angle and one leg: tan → other leg → area expressed as k√3 → report k; SPR 338.
+- [H] sin B given as a fraction with hypotenuse 26 → one leg 24, then Pythagoras for the third side; SPR (legacy, answer only in the rationale).
+- [H] Isosceles right triangle: perimeter given → leg via division by (2 + √2) and rationalizing → hypotenuse; two distractors dismissed by back-computing the perimeter each would produce.
+- [H] 30-60-90 recovered from one marked angle in a shown right triangle: express both legs via the hypotenuse → tan of the UNLABELED acute angle; distractor B = tan of the other angle, D = a leg length.
+- [H] sin of a marked angle read off a shown triangle → non-integer SPR 16/23 with five accepted entry forms (16/23, .6956, .6957, 0.695, 0.696).
+- [H] Altitude configuration producing three similar right triangles; the tangent of a corresponding angle transfers → segment length; SPR 6.5 / 13/2 with the entry-forms note.
+- [H] Applied: logo trapezoid of three congruent equilateral triangles, perimeter 20 cm → 30-60-90 height 2√3 → shaded area of two triangles = 8√3; 'Alternate approach:' via the trapezoid area formula; distractor A = the height, B = one triangle's area, D = 16 (height taken as 4).
+- [H] Equilateral triangle given by its HEIGHT: altitude splits it into 30-60-90 → side = 2h/√3 → perimeter; all-generic dismissals.
+
+## CIRCLES
+- [M] Circle equation given, point (a, k) on it → 'Which of the following is NOT a possible value of a?' via h ± r bounds; the other three dismissed by verifying they satisfy the inequality.
+- [M] 'Which of the following is a possible value for a?' for a point (a, k) on a given circle — polarity twin of the 'NOT a possible value' item; three generic dismissals.
+- [H] Circle shown with a given center: one plotted point supplies the radius, a second point (a, k) solves for k; ± resolved by 'lies above the x-axis'; distractor C = an x-intercept's x-coordinate.
+- [H] Tangent ⊥ radius: center + point of tangency → radius slope → negative reciprocal → which listed point lies on the tangent; each dismissal recomputes that choice's slope ('…is m, not m′').
+- [H] Two points on a circle of center O: two triangle sides are radii → chord = perimeter − 2r; all-generic dismissals.
+- [H] Expanded circle equation containing a constant: complete both squares, set the radius equal to the given value → solve for the constant; all-generic dismissals.
+- [H] Arc-length proportionality: arc subtended by a 100° central angle given → the MAJOR arc (260°); distractors = half the circle, the full circumference, half the correct arc.
+- [H] General-form circle equation → complete the square in both variables → radius; SPR 10; rationale narrates 'half the coefficient … the square of half the coefficient' explicitly.
+- [H] Unit circle: a point at (−1, 0) and another at (1, k) forces k = 0; the angle is an odd integer multiple of π; each dismissal names which terminal point that choice would correspond to.
+- [H] Expanded circle equation → complete both squares (needing +100 and +64) → coordinates of the CENTER; grouped dismissal of A, C, D as completing-the-square errors.
+- [H] Isosceles triangle formed by two radii: base angles → central angle in RADIANS → arc length = rθ with r = 18; grouped generic dismissal.
+- [H] Diameter endpoints given plus the circle's equation with a positive constant r → distance from center to an endpoint; SPR 5.
+- [H] Concentric circle with double the radius: standard form → r, then r_B = 2r → the constant on the right-hand side; SPR 100.
+- [H] Concentric-radius-doubling twin of the previous item (stem reproduced verbatim, different constants); SPR 16.
+- [H] Circle centered at the origin in x² + y² = r² form → the DIAMETER; distractor A = the radius, C = r².
+- [H] Center and radius given → 'Which equation represents this circle?'; every distractor dismissed as 'This equation represents a circle with radius [r], not [r]' (the r-vs-r² slot).

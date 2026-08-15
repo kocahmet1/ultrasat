@@ -1,0 +1,507 @@
+# Context firewall — burned by official CB forms/bank, or by shipped ULTRASAT PT4/PT5
+
+## Official CB contexts (231)
+- 25 men registered for singing lessons: countertenor, tenor, baritone, bass voice types
+- 40 fourth-grade students at a certain school surveyed about the morning announcements
+- Adam's school: a 20-minute walk or a 5-minute bus ride, bus every 30 minutes, wait time w between 0 and 30
+- Amaya's science project on evaporation: height of a liquid in a container, in cm, over days
+- BORDERLINE (exhibit only): a table giving the areas and perimeters of two similar rectangles, Rectangle A and Rectangle B (Area and volume, Hard)
+- BORDERLINE (physical object, no human/economic act): a cube with a solid sphere inside touching the center of each face; volume of the space not taken up (Area and volume, Hard)
+- Gabriella making a fixed deposit in a savings account at the end of each week of a year
+- Hana's pole-vault training: table of years since she started training vs estimated height, in meters, of her best vault that year
+- Hector using an auger to remove corn from a storage bin at a constant rate (bushels)
+- Himalayan kittens available for adoption: coat color (cream-tortoiseshell/chocolate) x eye color (deep blue/light brown)
+- Hiro and Sofia buying shirts and pairs of pants at a store (two totals)
+- International Space Station orbiting Earth at 4.76 miles per second, converted to miles per hour
+- Isabel ordering topsoil, in cubic yards, and crushed stone, in tons, for her garden at a total cost
+- Jennifer buys a box of Crunchy Grain cereal; nutrition facts give serving size in cups, 210 calories, 50 from fat, 180 mg potassium = 5% of an adult's daily allowance
+- John paying for a microscope with a down payment plus equal monthly payments
+- Josie buying a nature-preserve tour pass plus identical stickers for her nieces and nephews
+- Kaylani buying fabric, in yards, to make suits for a men's choir (M1 Q18)
+- Lake Tahoe Basin: high temperature on a certain day vs. elevation of 8 different locations
+- Leo at a packing store buying containers and rolls of tape with a fixed amount of money
+- Lorenzo buying a box of cereal and strawberries by the pound at a grocery store (assume no sales tax)
+- M1 Q1 - after-school activity vote: bar graph of number of students voting for each of five activities
+- M1 Q10 - scatterplot of two unnamed variables x and y (no context; 'the relationship between two variables')
+- M1 Q10: a manager ordering supplies for a shaved ice shop; paper-cup inventory drawn down from 4,500 at 70 per day to 1,700
+- M1 Q11 - a pet care business: number of birds and number of reptiles that can be cared for on a given day
+- M1 Q12 - a single line drawn in the xy-plane (exhibit only)
+- M1 Q15: number of active projects a company was working on, x months after the end of November 2012 (0 <= x <= 6), read from a curve
+- M1 Q16 - value in dollars of a certain bank account by the end of each year from 1957 through 1972 (exponential model)
+- M1 Q17 - a certain rectangular region: length-to-width ratio maintained when the width increases
+- M1 Q18 - squares P and Q: side length, perimeter difference, area function
+- M1 Q19: number of employees at each of the 17 restaurants in a town, as a grouped-frequency table (intervals 2 to 7 ... 26 to 31)
+- M1 Q20 - a circle with center O, arc RS and its associated central angle ROS
+- M1 Q22 - a right triangle with radical side lengths (verbal figure)
+- M1 Q22: Zinah's yearly earnings - 2008 is 14% more than 2007, 2009 is 4% more than 2008 (compound-percent multiplier)
+- M1 Q25 - an isosceles right triangle with a given hypotenuse (verbal figure)
+- M1 Q25: comments on an article first featured on the home page of a news website, growing 190% per hour for t <= 4 hours (from 40 comments)
+- M1 Q26 - a parabola in the xy-plane with a given vertex that intersects the x-axis at two points
+- M1 Q4: a small airplane's cruising speed varying between 150 and 170 miles per hour during a portion of a flight (inequality model)
+- M1 Q5 - Hana's bank account: a fixed amount deposited each month, amount in dollars after t monthly deposits
+- M1 Q5: an object launched upward from a platform; graph of height above ground, in meters, vs. time in seconds (0-10 s, y-axis to 60)
+- M1 Q6 - a customer buying oranges at a fixed price per pound
+- M1 Q6: bare unit conversion, inches to yards, factor given in parentheses (1,116 inches; 1 yard = 36 inches) - no human actor
+- M1 Q7 - Nasir buying 9 identical storage bins, coupon for a flat amount off the entire purchase
+- M1 Q7: total cost, in dollars, of attending an arcade as a function of games played (f(x) = 14 + 4x; budget $58)
+- M1 Q9 - similar right triangles PQR and STU with corresponding vertices (labeled two-figure exhibit, no real-world dressing)
+- M1 Q9: estimated number of marine mammals in a certain area, t years since a study began (exponential P(t) = 1,800(1.02)^t) - generic 'marine mammals', no species named
+- M2 Q1 - estimated number of chipmunks in a state park on April 1 of each year from 1989 to 1999 (line graph)
+- M2 Q10 - a random sample from a population, estimated proportion with a certain characteristic plus margin of error
+- M2 Q11 - a moving truck towing a trailer loaded with boxes, combined-weight limit
+- M2 Q11: estimated length, in inches, of a vine plant t months after Tavon purchased it (f(t) = 14t + 9)
+- M2 Q13 - 100 tiles of equal area classified by color (red/blue/yellow) and shape (square/pentagon), two-way table
+- M2 Q13: Brian saving 2/5 of the $215 he earns each week from his job, over 9 weeks
+- M2 Q14: a rectangle of area 155 square inches whose length is 4 inches less than 7 times its width (quadratic word problem)
+- M2 Q15 - a proposal for a new library on an election ballot; a radio show and a social media post each report a vote relationship
+- M2 Q16 - two parallel lines m and n cut by a transversal t (geometry figure)
+- M2 Q19 - a metal ball's height above the ground, in inches, x seconds after it started moving on a track
+- M2 Q19: a commuter train - number of cars c vs. maximum number of passengers and crew p the train can carry (3/174, 5/284, 10/559 table)
+- M2 Q2 - a fish swimming a distance in yards, converted to miles
+- M2 Q20 - triangle JKL with a right angle at J (cosine of the other acute angle)
+- M2 Q22 - a graphed two-line system to which a third linear equation is added
+- M2 Q23 - value in dollars of a certain piece of equipment after x months of use (depreciation)
+- M2 Q24 - dot plot of data set A and a data set B created by adding a constant to every value
+- M2 Q25 - circle A in the xy-plane shifted down to produce circle B
+- M2 Q26 - two identical rectangular prisms with square bases glued together along a square base
+- M2 Q26: 'data set E' and 'data set F' in a scatterplot with a line of best fit, F built by multiplying every y-coordinate of E by 3.9
+- M2 Q3: a street with 7 houses of which 2 are blue; one house selected at random (simple probability)
+- M2 Q5 - the point (8, 2) in the xy-plane tested against systems of inequalities
+- M2 Q7 - a company retreat: total number of people as a function of number of managers
+- M2 Q7: Hanna's food-order bill of $50 and a tip of 20% of the bill
+- Mount Jefferson: temperature (°F) vs. distance above sea level (feet) at 6 locations, with line of best fit (M1 Q1, scatterplot)
+- NOTE: 96 of 100 items carry NO real-world context at all — geometry stems are pure figures, named polygons, and 'in the xy-plane' statements
+- OBJECT-NAMING ONLY (no context): Square A / Square B scale-factor pair (2 items)
+- OBJECT-NAMING ONLY: Circle A and Circle B, concentric, radius doubled (2 near-identical items)
+- OBJECT-NAMING ONLY: Circle N (radius given) + Circle M (area given), total area
+- OBJECT-NAMING ONLY: Square X / Square Y perimeter-scale pair
+- OBJECT-NAMING ONLY: Triangle R (area given) + Square S (side given), total area
+- OBJECT-NAMING ONLY: equilateral triangle S scaled by k to create equilateral triangle T
+- OBJECT-NAMING ONLY: right rectangular prism X similar to right rectangular prism Y (surface areas and volumes)
+- Rosa's savings account at a bank: table of time in years vs total amount in dollars, no deposits or withdrawals
+- Scott samples 20 of a company's 400 employees; count enrolled in exactly three professional development courses (M1 Q10)
+- Spanish club students: random sample surveyed about intent to enroll in a new study program
+- US minimum wage in dollars per hour for 1960, 1970, 1980, 1990, 2000, 2010
+- Valentina's two containers of beads, 30% red in the first and 70% red in the second, at least 400 red total
+- a certain apprentice enrolled in on-site and online training courses, total hours
+- a certain open star cluster containing M-type and K-type stars, total estimated mass in quettagrams
+- a company newsletter: subscribers in January of a given year, growing a fixed percent each month for the next n months
+- a company selling smartphone units, 15% of which are returned, over a 6-month period
+- a company that designs and makes handbags; mean weight of one day's production estimated from a random sample
+- a competitive diver diving from a platform: height above water (meters) vs. time (seconds) graph (M2 Q9)
+- a graphic designer creating a logo for a company: trapezoid-shaped logo made of three congruent equilateral triangles, perimeter 20 cm, shaded region asked (Right triangles and trigonometry, Hard)
+- a grove with rows of birch trees and rows of maple trees, each row split into trees at least h feet tall and shorter than h feet
+- a heated cup of coffee removed from a heat source, cooling in a constant-temperature room, temperature in °F at 10-minute intervals
+- a lidless box with square sides, 29-inch edges; exterior surface area (M2 Q14 — applied-lite object)
+- a manufacturing company producing two sizes of cylindrical containers, A and B, each 50 cm tall; container B's radius is 25% longer than container A's (Area and volume, Medium)
+- a particular track meet: ratio of coaches to athletes (M1 Q17)
+- a store selling two different-sized containers of a certain Greek yogurt, monthly sales total in dollars
+- a store selling two different-sized containers of blueberries; last month's total sales in dollars (M1 Q14)
+- a veterinarian's daily calorie recommendation for a certain rabbit: calories per pound plus a flat additional amount (M2 Q5)
+- abstract-with-object items carrying no real-world scenario (right circular cylinder, right rectangular prism, similar rectangles ABCD/EFGH, rectangle inscribed in a circle, triangle RST, scatterplot of "two variables x and y") — listed to mark that these are NOT contexts in this form
+- ages of the 20 students enrolled in a college class (frequency table with a single 30-year-old)
+- an online news service: subscriptions sold in 2012 and 2013, manager's projection for 2014
+- annual salary, in dollars, of an employee n years after starting a job, increasing 4% each year
+- annual snowfall, in inches, recorded in Washington, DC from 2003 to 2015 (line graph)
+- argon in a constant-volume container: estimated pressure (psi) vs. temperature (kelvins) graph (M2 Q2)
+- auditorium with a fixed number of seats: each $1 ticket-price increase sells fewer tickets; revenue from ticket sales
+- auto dealership's website: 14 cars listed for sale, hybrid/nonhybrid x priced at no more than / greater than $25,000
+- average acceleration, in meters per second squared, of an object over a 5-second interval with initial velocity 12 meters per second and final velocity v_f
+- bacteria in a population t minutes after an initial observation, doubling time (M1 Q18)
+- bag of red, white, blue, and yellow cubes
+- bar graph of the charge, in kilowatt-hours (kWh), a battery received each day
+- bar graph of the number of walnuts per container at a grocery store
+- battery: charge in kilowatt-hours received each day for 15 days (M1 Q5, bar graph with categories 0/8/9/11/16/23/35 kWh)
+- box of pens with a black-to-red ratio
+- box plots of the masses, in kilograms, of two groups of gazelles
+- box without a lid: exterior surface area of its 5 congruent square faces (Area and volume, Medium, SPR 4205)
+- buttons classified by group (1, 2, 3) and diameter band in millimeters
+- cable provider surveying randomly selected customers about interest in a new service plan
+- car dealer's sales in August and September ('more than [k] times' plus a two-month total)
+- car dealer: August sales are 15 more than 3 times September sales, 363 sales combined (M1 Q21)
+- cargo helicopter carrying 100-pound and 120-pound packages (at least 10 packages, at most 1,100 pounds)
+- carpet-cleaner rental: $52 for the first day and $26 for each additional day, cost C(d) for d days (M1 Q26)
+- cell-phone use study: 799 randomly selected US teens, texting behavior (light/medium/heavy) x talks on cell phone daily (two-way table)
+- cells of a certain bacteria doubling every n minutes in a medium of milk in a controlled laboratory environment
+- charity event: 165 total contributors as either donor or volunteer, 130 donors (M2 Q1)
+- chemist mixing a low-salt and a high-salt mixture, in kilograms, by percent salt by weight
+- city council of 50 members; a reporter polls 20 about a specific bill
+- coin collection of premium grade Log Cabin Pennies and select grade Lincoln Pennies worth a stated total
+- collection of rocks classified as igneous, metamorphic, or sedimentary (frequency table)
+- conservation scientist's program to reduce the population of a certain species in an area, t years after a base year
+- cost of a certain shirt, $20 before a 5% sales tax
+- customer spending a total amount to buy oranges at a price per pound
+- distance from a flash of lightning vs. the seconds until the thunder is heard (m to k ratio 1 to 5)
+- distance, in inches, of an object versus the number of seconds since it started moving
+- distribution of blood type (A, B, AB, O) x rhesus factor for a group of people
+- dropped object: height in feet above the ground t seconds after being dropped from 3,364 feet (M2 Q19)
+- economist modeling demand for a certain product as a linear function of selling price (units vs dollars per unit)
+- electric flux of an electric field through a flat surface made of two adjacent squares (M2 Q27)
+- entomologist's program to reduce a certain invasive beetle population in an area, t years after a base year
+- estimated diesel, in gallons, remaining in a truck's gas tank after being driven a number of miles
+- estimated value, in dollars, of a certain piece of equipment t years after it was purchased (exponential depreciation)
+- estimated value, in dollars, of a tablet as a function of months since purchase (decay graph, axes Value (dollars) 0-350 by 50s / Number of months after purchase 0-24 by 4s)
+- fair n-sided die with a different number on each face, rolled once
+- faulty items in a manufacturing sample
+- federal-mandated minimum wage every 10 years from 1940 to 2010 with a line of best fit (scatterplot)
+- film club membership: 90 members on day 1, 10 new members join each day (M1 Q2)
+- five Eretmochelys imbricata sea turtle nests and the number of eggs in each; a sixth nest added
+- five Eretmochelys imbricata sea turtles' nests and the number of eggs laid in each (M2 Q15)
+- fluid ounces equivalent to quarts (quarts to cups to fluid ounces)
+- front of a roller-coaster car 15 feet above the ground rising at 8 feet per second up a hill
+- gas station customers on Tuesday: gasoline purchased x beverage purchased (two-way table, 135 customers)
+- global data traffic, in terabytes, for the year that is t years after 2010
+- graph of possible length-and-width combinations, in meters, for a rectangle of fixed perimeter
+- graph of the momentum, in newton-seconds, of an object t seconds after it started moving
+- grocery store: box of cereal at $2 flat plus strawberries at $1.90 per pound, $9.60 total, solve for pounds p (M1 Q4)
+- growth of a culture of bacteria: table of number of bacteria per milliliter at end of day 1, 2, 3
+- height above ground, in meters, of a ball t seconds after being launched upward from a platform (graph with one marked point)
+- histogram of points per player earned by players of a game; a new low-scoring player is added
+- history professors selected at random from the California State Universities, surveyed about their textbook publishers
+- insurance company's series of three information sessions and attendance at each
+- investment account opened at $890 with value doubling every 10 years (M2 Q15)
+- kinetic energy, in joules, of a 9-kilogram object traveling at v meters per second (M2 Q10)
+- list of 7 test scores, range asked (M1 Q7 — minimal context, "the 7 scores shown")
+- machine launching a softball from ground level: maximum height in meters at a given second, hits the ground at a later second
+- manufacturing plant making three sizes of frying pans (one count a multiple of another, one fixed, given a daily total)
+- marbles in a bag by color: red, blue, green
+- mechanical device in a workshop producing items at a constant rate per hour
+- minutes of daylight vs. non-daylight on a particular day in Oak Park, Illinois (M1 Q9)
+- mixing a volume of one percent-strength solution with a volume of another to produce a target solution (gallons)
+- mixture consisting of only vitamin D and calcium with a given total mass in grams
+- model predicting a certain animal's weight in pounds at birth plus pounds gained per day in its first year
+- monarch butterflies migrating from Chicago, Illinois to Michoacan, Mexico, 2,100 miles in 120 days
+- movie theater with 350 customers distributed among theater A, theater B, theater C (M2 Q12)
+- number of advertisements a company sent to its clients each year, t years since a base year
+- number of bacteria in a population t minutes after an initial observation (doubling time)
+- number of deliveries received by an office each day (frequency table; one value recorded in error)
+- number of times each color appears in a data set (bar graph)
+- ocean water levels at a certain location recorded over a period of hours, with y = 0 representing sea level (graph)
+- overnight camping trip: 202 people, 60 tents, some 2-person and the rest 4-person, all filled to capacity
+- paper clips, some of which are size large
+- park ranger asking a random sample of visitors how far they hiked
+- park with 250 trees of which 6% are birch trees (M2 Q2)
+- percent of cars for sale at a used car lot by model year (line graph)
+- physics class experiment with a toy rocket: estimated height, in feet, t seconds after launch
+- population density and area of Worthington
+- population density of Iceland, 1990 vs 2014, over a land area of 100,250 square kilometers
+- population, in thousands, of a certain city t years after 2003, modeled exponentially (M2 Q25)
+- population, in thousands, of a certain city t years after a base year, predicted to increase p% every m months
+- predicted population, in millions, of a certain country over a stated span of years, t years after a base year
+- printer producing posters at a constant rate, posters per minute converted to posters per hour
+- pure beeswax sold online: density 0.555 ounce per cubic inch at $8.00 per ounce
+- raccoon population density: 2,358 raccoons estimated in a 131-square-mile area (M2 Q4)
+- raccoons estimated in a square-mile area (population density)
+- random selection from a three-number data set (−11, −9, 26), probability of a positive number (M2 Q5, semi-abstract)
+- ratio of the lengths of two line segments, in inches
+- rectangle P of 72 square inches with a 20-square-inch rectangle removed (M1 Q2, semi-abstract geometry framing)
+- rectangle whose length is a stated multiple of its width; area function in square feet
+- rectangular volleyball court of area 162 square meters whose length is twice its width
+- renting a backhoe for up to a number of days: one price for the first day, another for each additional day
+- renting a surfboard: service fee plus a per-hour rental fee with a maximum intended spend
+- researchers measuring the mean length, in millimeters, of a fish species at a certain location
+- revenue, in dollars, a company receives from sales of a product, as a function of the unit price in dollars
+- school district committee for a new high school: parents, teachers, school and district administrators, and 6 students
+- school fund-raiser: 10 students sold a total of 90 boxes of cookies
+- shipping company charging $25 to ship some small boxes and some large boxes
+- small airplane's cruising speed, in miles per hour, during a portion of a flight
+- snowstorm in a certain town: minimum and maximum recorded rate of snowfall in inches per hour
+- snowstorm in a certain town: minimum and maximum recorded rate of snowfall, in inches per hour (M1 Q12)
+- special camera for underwater ocean research at a depth in fathoms converted to feet
+- square scale drawing where 1 inch represents a distance in miles, reprinted at a larger side length
+- state fair: attendee wins S square tokens and C circle tokens worth 1,120 points total, 80S + 90C = 1,120 (M2 Q11)
+- state parks in a certain state: camping facilities x bicycle paths
+- storage facility: monthly fee f(x) = 45x + 600 dollars to keep x crates in storage, 50 crates (M2 Q6)
+- students enrolled in an interior design program, this year vs last year
+- students from Foothill and Valley High Schools completing summer internships, 2008-2012
+- students in four extracurricular activities at a high school (chess, drama, robotics, yearbook) shown in a bar graph
+- study chamber: recorded air temperature in °C vs. minutes after the start of the study (M1 Q20, scatterplot, average rate of change)
+- survey of 1,000 students about playing school sports (male/female x plays/does not play)
+- tablet: estimated value in dollars as a function of months since purchase (M1 Q8, decay curve, y-intercept interpretation)
+- temperature, in °C, of the air in a chamber recorded minutes after the start of a study (scatterplot)
+- total cost to lease a car for a number of months from a particular car dealership, given a monthly payment
+- town residents surveyed about satisfaction with the concession stand at the local park (random sample of 200, 87% satisfied)
+- two independent surveys of men's height: sample size, mean, and standard deviation in centimeters
+- two nearby trees perpendicular to flat ground, each with a shadow; heights and shadow lengths proportional (Lines/angles/triangles, Medium)
+- two positive integers whose product is given, the first being a stated amount greater than twice the second
+- vehicle whose speed increases at 7.3 meters per second squared, converted to miles per minute squared (M2 Q26)
+- veterinarian's daily calorie recommendation for a certain rabbit: calories per pound of weight plus an additional amount
+- votes for a new school mascot (badger, lion, longhorn, tiger) by grade level (sixth/seventh/eighth)
+- weights of fish in a pond; random sample of 150 largemouth bass, 30% over 2 pounds
+- whale-watching tour company with fixed group size and separate revenue per adult and per child
+- wind turbine completing revolutions in a number of minutes
+- window repair specialist charging a flat amount for the first two hours plus an hourly fee for each additional hour
+- worker bumblebee head width in millimeters estimated from body weight in grams
+
+## Person names used officially
+- Adam, Amaya, Brian, Gabriella, Hana, Hanna, Hector, Hiro, Isabel, Jennifer, John, Josie, Kaylani, Leo, Lorenzo, Nasir, Rosa, Scott, Sofia, Tavon, Valentina, Zinah
+
+## Latin binomials used officially
+- Eretmochelys imbricata
+
+## Recognizable official number sets
+- film club: 90 members + 10 per day, 4 days later → 130; option set 400 / 130 / 94 / 90 (descending)
+- s + 7r = 27 with r = 3 → (r, s) = (3, 6); reversal distractors (6, 3), (3, 27), (27, 3)
+- table x = −1, 0, 1, 2 → f(x) = 16, 17, 18, 19 (classify as increasing linear)
+- score list 23, 27, 27, 32, 35, 36, 52 → range 29
+- parallel lines m ∥ n cut by k; every option compares x to 145 ("less than / greater than / equal to 145 / cannot be determined")
+- x + y = 1,440 daylight/non-daylight minutes; 670 given → 770; distractors 670, 1,373, 1,440
+- 20 employees sampled from 400; 16 in sample → 320; distractors 4, 380, 384
+- 4x − 28 = −24, asked for x − 7 → −6; options −24, −22, −6, −1
+- snowfall min 0.6 and max 1.8 in/hr → 0.6 ≤ s ≤ 1.8; trap bound s ≥ 2.4 (the sum)
+- system y = 4x, y = x² − 12, positive root → x = 6
+- 4.51x + 6.07y = 896.86 (blueberry containers) → SPR answer 4.51 read straight off a coefficient
+- cylinder base diameter 22 cm, height 6 cm → 726π; distractors 132π, 264π, 2,904π
+- coaches : athletes = 1 to 26 with x coaches → 26x; distractors x/26, x + 26, 26/x
+- y − 5x = 6 with 5 yards of fabric per suit; interpret the constant 6
+- tan(92π/3) → √3; option grid −√3, −√3/3, √3/3, √3
+- g(x) = (x + 14)(t − x) through (24, 0) → t = 24, g(0) = 336
+- (x + 4)² + (y − 19)² = 121; possible x-coordinate → −14; distractors −16 (one unit outside the bound), 11 (= r), 19 (= center's k)
+- prism height 9 in., base length x = width + 7 → V(x) = 9x(x − 7); distractors x(x+9)(x+7), x(x+9)(x−7), 9x(x+7)
+- Roman-numeral pair I. f(x) = −6(3)^x − 3, II. g(x) = −3(6)^x, "minimum value at −3"
+- increasing x by 400% gives 60 → x = 12; distractors 15, 240, 340
+- f(x) = ax² + bx + c through (7, 0) and (−3, 0), a an integer greater than 1 → a + b = −6 (options −6, −3, 4, 5)
+- g(x) = x(x − 2)(x + 6)², g(7 − w) = 0 → w ∈ {7, 5, 13}, sum 25
+- easy bare-solve cluster: 20% of 440 = 88 (options 44/88/880/1,760); f(x) = 4x − 3 → f(10) = 37 (options −30/37/40/43); 6n = 12 → n + 4 = 6; 4√(2x) = 16 → 6x = 48 (options 24/48/72/96)
+- K(v) = (9/2)v², K(34) = 5,202 for a 9-kg object; interpretation distractors reuse 340 and 23,409
+- 16x³y² + 14xy → 2xy(8x²y + 7); and (8x³ + 8) − (x³ − 2) → 7x³ + 10; and 42a/k + 42ak → 42a(k² + 1)/k
+- 350 theater customers with P(A) = 0.48, P(B) = 0.24 → 98 in theater C; distractors 28, 40, 84
+- y = (1/3)(29x + 10) + 5x → slope 44/3; and box edge 29 in. with 5 faces → 4,205 sq in.
+- turtle-nest egg counts 149, 144, 148, 136, 139 plus a sixth nest of 121 (mean comparison)
+- 2x − y > 883 with the four option tables permuting x ∈ {440, 441, 442} against y ∈ {0, −2, −4}
+- 5y = 10x + 11 and −5y = 5x − 21 → x = 2/3, target 30x = 20
+- inscribed rectangle, diagonal = 2 × shortest side, area 1,089√3 → short side 33, diameter 66
+- similar rectangles, side scale 6, area of ABCD = 54 → 1,944; distractors 9, 36, 324 (k, k², reciprocal family)
+- no-real-solutions scan: x² + 14x − 49, x² − 14x + 49, 5x² − 14x − 49, 5x² − 14x + 49 (only the leading coefficient and two signs vary)
+- P(t) = 260(1.04)^((6/4)t), t years after 2003, increase of 4% every n months → n = 8; distractors 12, 18, 72
+- circle center (−1, 1), tangent at (5, −4) → radius slope −5/6, tangent slope 6/5, point (10, 2); distractors (0, 6/5), (4, 7), (11, 1)
+- electric flux: side ratio 1 : 3 → area ratio 1 : 9, strength 29.00 V/m, total 4,640 volts·meters → 4,176
+- ∠R = 63° in △RST, "could be the measure of ∠S" → 116; distractors 118, 126, 180 (feasible bound is 117)
+- M1 Q3: x^2/25 = 36 -> x = 30; options 6, 30, 450, 900
+- M1 Q4: '3 more than 8 times a number x is equal to 83' -> 8x + 3 = 83; distractors (3)(8)x = 83, 8x = 83 + 3, 3x + 8 = 83
+- M1 Q5: f(t) = 100 + 25t, dollars after t monthly deposits, interpret the 25
+- M1 Q6 + Q7: $27 spent on oranges at $3 per pound -> 9 lb; 9 storage bins, $63 coupon, $27 net -> $10 per bin (27 reused one item later)
+- M1 Q8: table (0,29), (1,32), (2,35) -> f(x) = 3x + 29; distractors 29x + 32, 35x + 29, 32x + 35
+- M1 Q9: similar right triangles, angle Q = 18 deg -> angle S = 72 deg; options 18, 72, 82, 162
+- M1 Q10: linear-model option set y = 0.9 + 9.4x / 0.9 - 9.4x / 9.4 + 0.9x / 9.4 - 0.9x
+- M1 Q11: 2.5b + 5r = 80 with r = 16 -> b = 0; options 0, 5, 40, 80
+- M1 Q12: line options y = -2x - 8, x - 8, -x - 8, 2x - 8 (intercept fixed at -8)
+- M1 Q13: x/8 = 5 -> value of 8/x = 1/5 (SPR reciprocal target)
+- M1 Q14: 24x + y = 48 and 6x + y = 72 -> x = -4/3, asked y = 80 (SPR)
+- M1 Q15: slope -1/3 through (9, 10) -> y = -x/3 + 13; distractors 13x - 1/3, 9x + 10, -x/3 + 10
+- M1 Q16: f(x) = 206(1.034)^x over 1957-1972, 'f(5) is approximately equal to 243' -> 243 dollars in 1962
+- M1 Q17: length-to-width ratio 35 to 10, width increases by 7 units -> length must increase by 24.5 units
+- M1 Q18: square Q perimeter 176 in greater than square P -> f(x) = (x + 44)^2; distractors (x+176)^2, (176x+44)^2, (176x+176)^2
+- M1 Q19: literal radical solve on 14x/(7y) with +19 -> option template w = (28x/14y)^2 - 19 (deliberately unreduced 28/14 is the surface form)
+- M1 Q20: arc RS = 100 deg -> central angle ROS = 100 (SPR)
+- M1 Q21: radical product built on 35x^45 and 28x (constants 6, 5, 8) rewritten as ax^b, asked a + b (SPR)
+- M1 Q22: right triangle with sides 2√2, 6√2, √80 -> area 12; options 8√2 + √80, 12, 24√80, 24
+- M1 Q23: 4x^2 + bx - 45 = (hx + k)(x + j) -> 45/k must be an integer; options b/h, b/k, 45/h, 45/k
+- M1 Q24: y = 2x^2 - 21x + 64 and y = 3x + a tangent -> x = 6; options -8, -6, 6, 8
+- M1 Q25: isosceles right triangle, hypotenuse 58 in -> perimeter 58 + 58√2; options 29√2, 58√2, 58 + 58√2, 58 + 116√2
+- M1 Q26: parabola vertex (9, -14) with two x-intercepts -> a + b + c = 64a - 14 > -14; options -23, -19, -14, -12
+- M1 Q27: f(x) = -a^x + b; graph of f(x) - 15 has y-intercept (0, -99/7); ab = 65/7 -> a = 5 (SPR)
+- M2 Q2: 5,104 yards -> miles with (1 mile = 1,760 yards); options 0.3, 2.9, 3,344, 6,864
+- M2 Q3: 12x^3 - 5x^3 -> 7x^3; options 7x^6, 17x^3, 7x^3, 17x^6
+- M2 Q4: x + y = 18 and 5y = x -> (15, 3); options (15,3), (16,2), (17,1), (18,0)
+- M2 Q6 + Q14: |x - 5| = 10 -> 15 or -5 ('one possible solution', SPR); f(x) = 2x + 3, slope of a parallel line -> 2 (SPR)
+- M2 Q7: f(x) = 7x + 1 evaluated at 7 managers -> 50 (input equals the coefficient)
+- M2 Q8: h(x) = x^2 - 3 at x = 1, 2, 3 -> -2, 1, 6; wrong tables 4/5/6, -1/1/3, -2/1/3
+- M2 Q9: f(x) = 270(0.1)^x -> f(0) = 270; options 0, 1, 27, 270
+- M2 Q10: estimated proportion 0.49 with margin of error 0.04 -> plausible between 0.45 and 0.53
+- M2 Q11: 4,600 lb combined limit, 500 lb trailer, 120 lb per box -> 34; options 34, 35, 38, 39
+- M2 Q12: -4x^2 - 7x = -36 -> positive solution 9/4; options 7/4, 9/4, 4, 7
+- M2 Q13: two-way table of 100 tiles - Square 10/20/25 = 55, Pentagon 20/10/15 = 45, totals 30/30/40 -> P(red) = 0.3 (SPR)
+- M2 Q15: 3 times as many in favor, 15,000 more in favor -> 7,500 against; options 7,500, 15,000, 22,500, 45,000
+- M2 Q16: parallel lines with x = 6k + 13, y = 8k - 29 -> k = 21, x = 139, z = 41; options 3, 21, 41, 139 (every intermediate value is an option)
+- M2 Q17: -3x + 21px = 84 with no solution -> p = 1/7; options 0, 1/7, 4/3, 4
+- M2 Q18: f(x) = (x - 10)(x + 13) -> minimum at x = -3/2; options -130, -13, -23/2, -3/2
+- M2 Q19: f(x) = (1/9)(x - 7)^2 + 3 on 0 <= x <= 10, metal ball height in inches -> minimum height 3 in
+- M2 Q20: cos(K) = 24/51 with right angle at J -> cos(L) = 15/17 (8-15-17 scaled by 3) (SPR)
+- M2 Q21: -x^2 + bx - 676 = 0, b a positive integer, no real solution -> greatest b = 51 (SPR)
+- M2 Q22: third equation x + 4y = -16 added to a graphed two-line system -> Zero / Exactly one / Exactly two / Infinitely many
+- M2 Q23: f(x) = 5,470(0.64)^(x/12) -> yearly decrease p = 36; options 4, 5, 36, 64
+- M2 Q24: dot plot spanning 22-26 with 15 values; data set B adds 56 to each value
+- M2 Q25: x^2 + (y - 1)^2 = 49 shifted down 2 -> x^2 + (y + 1)^2 = 49; distractors (x-2)^2+(y-1)^2, x^2+(y-3)^2, (x+2)^2+(y-1)^2
+- M2 Q26: identical prisms of height 90 cm, surface area K, glued -> (92/47)K -> square base side 8 cm; options 4, 8, 9, 16
+- M2 Q27: 210 is p% greater than 30 -> p = 600 (SPR closer)
+- (p + 3) + 8 = 10, p = -1; options -1, 5, 15, 21 (module opener, negative answer)
+- k^2 - 53 = 91, positive solution 12; options listed DESCENDING 144, 72, 38, 12 (144 = k^2, 91-53 = 38, 144/2 = 72)
+- cruising speed 150 <= s <= 170 mph; distractor s <= 20 built from the difference of the bounds
+- 1,116 inches to yards with '(1 yard = 36 inches)'; SPR answer 31
+- f(x) = 14 + 4x with total cost $58; SPR answer 11 games
+- f(x) = x + b, f(0) = 30 so b = 30; options -30, -1/30, 1/30, 30 (sign x reciprocal 2x2)
+- P(t) = 1,800(1.02)^t marine mammals; interpretation distractors mine the digits of the base as the number '102'
+- 4,500 paper cups less 70 per day reaching 1,700 in 40 days; options 20, 40, 60, 80
+- y > 4x + 8 tested against four x|y tables: (2,19)(4,30)(6,41) correct vs (2,8)(4,16)(6,24), (2,13)(4,18)(6,23), (2,13)(4,21)(6,29)
+- (x^2 + 11)^2 + (x - 5)(x + 5) = x^4 + 23x^2 + 96; options x^4+23x^2-14, x^4+23x^2+96, x^4+12x^2+121, x^4+x^2+146
+- h(x) = 8/(5x + 6), h(2) = 0.5 (denominator engineered to hit 16 = 2*8); SPR decimal
+- right-triangle legs 3 and 5 (inches, figure not to scale), area 7.5 square inches; SPR decimal
+- P = N(19 - C) solved as C = 19 - P/N; distractors (19+P)/N, (19-P)/N, 19 + P/N
+- w^2 + 12w - 40 = 0 giving -6 + 2(sqrt 19); options 6 - 2(sqrt19), 2(sqrt19), sqrt19, -6 + 2(sqrt19)
+- 17 restaurants, employee-count intervals 2 to 7:2, 8 to 13:4, 14 to 19:2, 20 to 25:7, 26 to 31:2; 'could be the median' options 2, 9, 15, 21
+- 3x/7 = -5y/9 + 21; y-coordinate of the y-intercept is 37.8 (SPR decimal from 21*9/5)
+- y = 2x^2 + bx + c read off a drawn parabola with SPR target bc (composite of two graph reads)
+- 14% then 4% compounding to 1.1856; options 0.5600 (0.14*4), 1.0056 (1+0.14*0.04), 1.1800 (additive), 1.1856
+- circle (x + 2)^2 + y^2 = 9 shifted down 6 with radius doubled: (x + 2)^2 + (y + 6)^2 = (4)(9) - right side left as an unmultiplied product
+- 40 comments increasing 190% per hour, t <= 4: C = 40(2.9)^t; options 1.19, 1.9, 19, 2.9 as the only varying slot
+- table (-27, 3), (-9, 0), (21, 5) with g(x) = f(x)/(x + 3), f linear; y-intercept (0, 36); options (0,36), (0,12), (0,4), (0,-9)
+- right triangle with BC = 162 (unitless), DE parallel to BC and CE = 2AE, giving DE = 54 (1:3 ratio, not 1:2); hard SPR closer
+- XY : ZV = 6 to 1 with XY = 102 inches so ZV = 17; options 17, 96, 102, 612 (102-6, verbatim 102, 102*6)
+- 7(2x - 3) = 63 equivalent to 2x - 3 = 9; distractors 2x - 3 = 56, 2x - 21 = 63, 2x - 21 = 78
+- (x + 2)(x - 5)(x + 9) = 0 with 'a positive solution' 5; options 3, 4, 5, 18
+- (2/5) of $215 per week over 9 weeks = 774 (SPR 3-digit); rectangle area 155 with length 7w - 4 giving width 5 (SPR)
+- data set 4, 10, 18, 4, 4, 5, 6, 5 with median 5; options 4, 5, 7, 14 (mode, median, midrange-ish, mean-ish)
+- cylinder volume 432 cubic cm with base area 24 square cm, height 18; options 18, 24, 216, 10,368 (432*24)
+- x^2 = -841 answered 'Zero'; and line k: y = 7x + 1/8 with perpendicular slope -1/7, options -8, -1/7, 1/8, 7 (-8 = negative reciprocal of the INTERCEPT)
+- train table (3, 174), (5, 284), (10, 559) giving 55c - p = -9; options 55c-p=-9, 55c-p=9, 55p-c=-9, 55p-c=9
+- 4^(8c) = cube root of 4^7, c = 7/24 (SPR fraction); and (x-2) - 4(y+7) = 117 with (x-2) + 4(y+7) = 442 giving 6(x-2) = 1,677 (SPR 4-digit)
+- legs 10(sqrt37) and 24(sqrt37), hypotenuse 26(sqrt37); options 14(sqrt37), 26(sqrt37), 34(sqrt37), sqrt(34*37)
+- f(x) = (1.84)^(x/4) rewritten as (1 + p/100)^x, p closest to 16; options 16, 21 (=84/4), 46 (=184/4), 96
+- circle centered (h, k) with A at (h + 1, k + sqrt102) and right angle ACB: AB = sqrt206; options sqrt206, 2(sqrt102), 103(sqrt2), 103(sqrt3) (r^2 = 103 used as r)
+- line of best fit y = 12 + 1.5x with every y multiplied by 3.9 giving y = 46.8 + 5.9x; options cross 46.8/12 with 5.9/1.5
+- 48x - 64y = 48y + 24 paired with ry = -12x + 1/8, no solution, r = -28 (negative SPR closer; requires collecting the y terms first)
+- |p| + 61 = 65, answer 4; options 65/61, 4, 126, 130 (unsimplified stem-quotient as the lead distractor)
+- 1.90p + 2 = 9.60 (cereal $2, strawberries $1.90/lb, $9.60 total); wrong-slot template family 1.90p−2, 1.90+2p, 1.90−2p
+- rectangle areas 72 − 20 = 52; options 92, 84, 80, 52
+- y = 3(x − 14)(x + 5)(x + 4); x-intercepts 14, −5, −4 (SPR accepts any of three)
+- line with slope 9 through (0, −5), y = px + r, report p = 9
+- tablet graph: y-intercept $225 over a 0–24 month axis; decoy rate '2.25% each year' recycling the same digits
+- f(x) = (1/2)(x + 6), f(4) = 5; options 20, 12, 10, 5
+- congruent triangles EFG ≅ JKL, ∠E = 45°, ∠F = 20°, ∠J = 45°; options 20°, 45°, 135°, 160°
+- absolute-value/line system with options (0, 8), (7/2, 9/2), (−7/2, 9/2), (−3, 4)
+- y = 6x + 3 infinitely many solutions; option family y=2(6x)+3, y=2(6x+3), 2(y)=2(6x)+3, 2(y)=2(6x+3)
+- (6/7)p + 18 = 54 → p = 42 → 7p = 294 (SPR)
+- system y = 9x + 12 and x + 7y = 20 → x = −1, y = 3 (SPR)
+- (x − 13)² + (y − k)² = 64 → center (13, k), radius 8; options permute (13,k)/(k,13) × 8/64
+- f(x) = |x − 4x| with f(5) − f(a) = −15 → a = ±10, only 10 offered; options −20, 5, 10, 45
+- four equivalent exponentials all with f(0) = 33: 22(1.5)^(x+1), 33(1.5)^x, 49.5(1.5)^(x−1), 74.25(1.5)^(x−2)
+- f(t) = 40,000(2)^(t/790), doubling time 790; options 2, 790, 1,580, 40,000
+- 12/n − 2/t = −2/w → n = 6tw/(w − t); options 12tw, 6(t−w), (w−t)/(6tw), 6tw/(w−t)
+- circle radius 9 with triangle PQR perimeter 31 → chord QR = 13; options 13√2, 13, 9√2, 9 (descending)
+- four consecutive odd integers from x: 12(x + 6) ≤ x + (x + 4) − 26
+- parametric table (−2s, 24), (−s, 21), (s, 15) → 3x + sy = 18s; options permute s between the x- and y-coefficients and the constant
+- (sin 24°)(cos 66°) + (cos 24°)(sin 66°) → (cos 66°)² + (cos 24°)²; near-miss (cos 66°)² + (sin 24°)²
+- $52 first day + $26 per additional day → C(d) = 26d + 26; options 26d+26, 26d+52, 52d−26, 52d+78
+- f(x) = (x − 2)(x + 15), minimum at x = −13/2 = −6.5 (SPR closer)
+- 8x = 6 → 72x = 54; options 3, 15, 54, 57
+- f(x) = 5(1/4 − x)² + 11/4 evaluated at x = 1/4 → 11/4 (SPR)
+- 80S + 90C = 1,120 → circle token worth 10 more; options 950, 90, 80, 10 (descending)
+- circle radius 2.1 inches → area 4.41π, b = 4.41 (SPR decimal)
+- 890(2)^(t/10) doubling every 10 years; option family (1/2)^(t/10), 890(1/10)^(t/2), 890(2)^(t/10), 890(10)^(t/2)
+- h¹⁵q⁷ ÷ (h⁵q²¹) → h¹⁰/q¹⁴; options h¹⁰/q¹⁴, h³/q³, h¹⁰q¹⁴, h³q³
+- 3y = 4x + 17 and −3y = 9x − 23 → x = 6/13, 39x = 18; options −18, −6, 6, 18
+- h(t) = −16t² + 3,364 → t = 14.5 s; options 7.25, 14.50, 105.13, 210.25 (210.25 = skip-the-√ trap)
+- 2x² − 8x − 7 = 0 with root (8 − √k)/4 → k = 120 (SPR)
+- transversal angles: acute (9x − 560)°, acute + three obtuse = (−18x + w)° → w = 1,660 (SPR)
+- linear table x = −4, −19/5, −18/5 with f(x) = 0, 1, 2 → f(x) = 5x + 20, h(x) = f(x) − 13 = 5x + 7
+- g(x) = b − 15x with g(c + 7) = c/4 → b = 61c/4 + 105; options 15c/4, 19c/4 + 7, 61c/4 + 105, 15c + 105
+- tan X = 12/35 with YZ = 24 → 24-70-74 triangle, perimeter 168; options 188, 168, 84, 71 (descending)
+- x² + 14x + y² = 6y + 109 → radius √167; options √109, √149, √167, √341
+- 7.3 m/s² with 1 mile = 1,609 meters → 16.3 mi/min²; options 0.3, 16.3, 195.8, 220.4
+- y = −2.5 with y = x² + 8x + k, no real solutions, least positive integer k = 14 (SPR closer)
+- auger depletion: 24,000 bushels start, 19,350 remain after 5 hours (rate 930/hour), 12,840 remain -> 12 hours; dismissals recompute 21,210 / 17,490 / 16,560
+- demand model through (40, 20,000) and (60, 15,000): slope -250, intercept 30,000; at P = 55 -> 16,250; distractors 16,500 / 16,750 / 17,500
+- two-totals purchase system: 4x + 2y = 86 and 3x + 5y = 166 (4 shirts + 2 pants; 3 shirts + 5 pants)
+- capacity system: x + y = 60, 2x + 4y = 202 -> 19 two-person tents; alternate route (240 - 202)/2 = 19
+- linear build from verbal rate: h = 15 + 8s (15 feet up, 8 feet per second)
+- verbal-model evaluate: head width = 4w + 0.6 at w = 0.5 -> 2.6 (13/5 also accepted)
+- two-percentage inequality: 0.3x + 0.7y >= 400 (30% red, 70% red, at least 400 red beads)
+- integer optimization: 100-lb and 120-lb packages, at least 10 packages, at most 1,100 pounds -> maximum 5 of the 120-lb
+- direction-of-inequality model: w + 5 > 20 (20-minute walk vs 5-minute ride plus wait w, 0 to 30)
+- applied ax + by = c: 3a + 4b = 25 shipping equation with a = 3 -> b = 4
+- linear-equation-one-variable, infinitely many solutions, two constants, engineered 3-digit SPR key 403
+- perpendicular-slope clone family SPR keys: 3/17 (.1764, .1765, 0.176), 1/4 (0.25), 1/2 (.5)
+- systems parameter hunts: no solution -> k = 6 and k = -28; infinitely many -> 2/7 (.2857, 0.285, 0.286)
+- table-to-line SPR keys: y-intercept constant 33; evaluate-at-a-third-point 65/4 = 16.25
+- two-month sales split ('n more than k times September' + total) -> September = 87
+- percent-solution mixing by volume -> 210 gallons
+- recover-the-constant keys: 67 (f(a) known -> constant -> f(c)) and 241 (read the rate constant off y = a + bx, no computation)
+- bare-solve / evaluate SPR keys: 17, 30, 40, 130, 9, 69, 13, and 8.6 (43/5)
+- composite-target system keys: 3 (expression in x and y after adding equations) and 3/2 = 1.5 (sum of sides gives 4y)
+- applied ax + by = c 'how much more' difference targets: 5 hours (online minus on-site) and 0.25 dollars = 1/4 (crushed stone minus topsoil)
+- y = x^2 + 1 and y = x^2 + x, 'could be the value of x' -> x = -1; choices -1, 0, 2, 3 (each dismissed by substitution)
+- quadratic h with x-intercepts (0,0) and (t,0); +32 to both sides, divide by 2, take root, add 4 -> t = 8; choices 1, 2, 4, 8
+- minimum value of a quadratic by completing the square = 1728 (SPR)
+- product of two positive integers, first is c greater than twice the second; smaller integer = 14 (SPR)
+- f defined with constants a and b; product of a and b = 609 (SPR)
+- absolute-value equation with a leading coefficient; positive solution = 9 (SPR)
+- line meets parabola at exactly one point; positive constant = 6 (SPR, discriminant = 0)
+- identity true for all x; ab = 24; choices 18, 20, 24, 40 (each dismissed by recomputing the resulting x-coefficient)
+- x^2 - 25 = (x + 5)(x - 5); distractor (x + 5)(x - 1) re-expanded to x^2 + 4x - 5 to show failure
+- x^4 - x^2 - 6: factor -6 as (-3)(2) since they add to -1, the x^2 coefficient
+- rational-exponent quotient -> exponent 7/6; accepted entries 7/6, 1.166, 1.167
+- y-intercept point plus a supplied product ab -> a = 20 (SPR)
+- integer constant k, no real solutions, discriminant < 0 with an irrational bound -> largest k = 16 (SPR)
+- radical equation squared with extraneous check; exactly one real solution -> minimum value 231 (SPR)
+- graph shifted up k units, resulting graph crosses (a, 48) -> 48 (SPR)
+- volleyball court area 162 sq m with l = 2w -> 2w^2 = 162, w = 9; choices 9, 18 (the length), 27 (162 as perimeter), 54 (solving 3w^2 = 162)
+- sum of two rational expressions matched to a target numerator -> constant 27 (SPR)
+- function with given x-intercept and y-intercept points -> constant -324 (SPR)
+- salary model I(1 + r)^n with a 4% annual increase -> a = 1.04; choices 0.04, 0.4, 1.04, 1.4
+- a = (v_f - 12)/5 rewritten as v_f = xa + y -> x = 5, y = 12 (SPR)
+- identity true for all x on a sum of two rational expressions -> rt = 20; choices (negative), 15, 20, 60
+- bacteria per milliliter 2.5x10^5 (day 1), 5.0x10^5 (day 2), 10^6 (day 3); reaches 5.12x10^8 = 512x10^6 = 2^9 x 10^6 on Day 12; choices Day 5, 9, 11, 12
+- quadratic-formula solution matched to the template (a +/- sqrt(k))/c -> k = 120 (SPR)
+- D = 5,640(1.9)^t, t years after 2010; 5,640 = the 2010 value; 90% yearly percent increase named in a dismissal
+- radical-to-rational-exponent equivalence -> 4/225; accepted entries 4/225, .0177, .0178, 0.017, 0.018
+- line y = c meets parabola at exactly one point -> c = 81/4; accepted entries 81/4 and 20.25 (SPR)
+- factored equation set to zero -> solutions 30 and -30; accepted entries -30 and 30 (SPR)
+- table (0,0), (1,1), (2,8), (3,27) -> cubic y = x^3, pick the matching answer-graph
+- distribute-and-combine matched to ax^2 + bx + c -> coefficient -419 (SPR)
+- parabola shown; y-intercept gives one constant, a second lattice point the other -> composite value -24 (SPR)
+- Texting two-way table 110/146/256, 139/164/303, 166/74/240, totals 415/384/799; estimate 30% with margin of error 3% -> interval 27%-33%; distractor claim 35%
+- International Space Station 4.76 miles per second -> 17,136.0 miles per hour; distractors 285.6, 571.2, 856.8 (per-minute, x2, x3)
+- Iceland population density 2.5 (1990) -> 3.3 (2014), land area 100,250 sq km -> increase 80,200; distractors 330,825 / 132,330 / 125,312
+- Cars for sale: nonhybrid 5/3/8, hybrid 2/4/6, totals 7/7/14, threshold $25,000 -> P = 2/14
+- Gas station: 60/25/85, 35/15/50, totals 90/40/135 -> P(no gasoline) = 50/135
+- Himalayan kittens: cream-tortoiseshell 16/16/32, chocolate 12/4/16, totals 28/20/48 -> 12/16
+- Marbles red 8, blue 10, green 22, total 40 -> 10/40
+- Singers countertenor 4, tenor 6, baritone 10, bass 5, total 25 -> 0.40; distractors 0.10, 0.60, 0.67
+- Summer internships: Foothill 87/80/75/76/70, Valley 44/54/65/76/82, totals 131/134/140/152/152 -> 65/140 for 2010
+- Ages of 20 college students: 18(6), 19(5), 20(4), 21(2), 22(1), 23(1), 30(1) -> mode 18 < median 19 < mean 20
+- US minimum wage 1960 $1.00, 1970 $1.60, 1980 $3.10, 1990 $3.80, 2000 $5.15, 2010 $7.25 -> 60% increase 1960-1970; distractors 30%, 62.5%, 120%
+- Minimum-wage line of best fit y = 0.096x + 0.49 (0.488 variant) over 1940-2010, 70-year period -> 0.096 dollars per year
+- Subscriptions 5,600 (2012) -> 5,880 (2013) = 5%; half that = 2.5% -> 6,027; distractors 6,020 / 6,440 / 6,468
+- School committee 15% parents / 45% teachers / 25% administrators / remaining 6 students -> 40 invited, SPR answer 8
+- Smartphones 1,300,000 units, 15% returned, 6 months -> 1,170,000; distractors 195,000 (1 month), 975,000 (5 months), 6,630,000 (units kept)
+- Men's height surveys: Group A n=2,500, mean 186 cm, SD 12.5; Group B n=2,500, mean 186 cm, SD 19.1
+- 27 different numbers, mean 33 = median 33, +7 above / -7 below the median -> only the standard deviation changes
+- 15, 14, 18, 17, x with mean = median -> x = 6 is NOT possible; options 6, 11, 16, 21
+- Monarch butterflies 2,100 miles / 120 days -> 17.5 miles per day; distractors 0.057 (days per mile), 0.729, 24 (hours in a day)
+- Beeswax 0.555 ounce per cubic inch x $8.00 per ounce -> SPR 4.44 dollars per cubic inch
+- Constant-ratio table x = 1,3,5,40 with y = 4,12,20,k -> k = 160; distractors 28, 36 (40-4), 80
+- Shirt $20 + 5% sales tax -> $21; distractors $20.05, $20.50, $25.00
+- Blood type x rhesus: A 33/7, B 9/2, AB 3/1, O 37/x with P(type B | rhesus negative) given -> SPR x = 8
+- Washington DC snowfall 40 inches (2003) -> 10 inches (2007) -> SPR p = 75 percent decrease
+- City council 50 members, 6 of 20 polled support -> 15; distractors 6, 9, 30
+- School-sports table 312 + 220 + 216 of 1,000 -> 252 males who do not play; distractors 109, 468, 688
+- State parks 20 / 5 / 8 / 4 with NO total row -> total 37, answer 5/37
+- SPR answer census in this export: 2520, 980, 9, 180, 2432, 14, 24, 110, 0.5|1/2, 52, 90, 324, 5, 348, .9538|62/65, plus 4.44, 8, 75, 8
+- open box, 5 square faces, exterior surface area SPR 4205 (= 5 × 29²)
+- Square A sides k× Square B → area factor asked; SPR answer 27556 (= 166²) — largest answer in the file
+- right rectangular prism 4 cm × 9 cm × 10 cm = 360 cubic centimeters (SPR, legacy item)
+- right rectangular prism volume SPR 880 cubic meters
+- right square prism, volume ÷ height → base edge SPR 12 (both roots named, negative rejected)
+- cylinder: volume and base AREA given (no radius step) → height SPR 29
+- cylinder volume in π with height 5 → radius 3; option set 3 / 4.5 / 9 / 40 (÷2 slip, r², solved-for-h)
+- manufacturing containers: h = 50 cm, r_A = 16 cm, r_B 25% longer = 20 cm → volume of B
+- similar prisms X and Y: surface-area ratio → k = 2, volume ratio k³ = 8; sum of volumes SPR 1260 (= 140 + 1,120)
+- tilted rectangle from four plotted points on a grid labeled −8…8 both axes; distance formula → area SPR 50
+- three plotted points define a circle, circumference = kπ → k = 8 (radius 4); MC twin asks the same k
+- logo trapezoid of 3 congruent equilateral triangles, perimeter 20 cm → side 4 cm, 30-60-90 height 2√3, shaded area 8√3; distractor D = 16 (height taken as 4)
+- right triangle, tan of a special angle with one leg → area written as k√3, SPR k = 338 (= ½ · 26²)
+- sin B given with hypotenuse 26 → leg 24, other leg 10 (2× the 5-12-13 triple); SPR 24
+- tan A read off a labeled right triangle as 20/21 (20-21-29 triple); distractors sin A, cos A, tan B
+- sin of a marked angle = 16/23 → accepted entries listed as 16/23, .6956, .6957, 0.695, 0.696
+- right-triangle legs → area SPR 15/2 = 7.5 (accepted forms '7.5, 15/2')
+- tangent transferred through three similar right triangles → length SPR 13/2 = 6.5
+- three parallel segments → similar quadrilaterals, proportion using 18.5 and 9 → 17.5 to the nearest tenth; options 16.8 / 17.5 / 18.4 / 19.6
+- corresponding angle + triangle sum, two angles totaling 134 → x = 46; options 36 / 46 / 58 / 70
+- parallel lines with two transversals → x = 100; options listed DESCENDING 120 / 100 / 90 / 80
+- right triangles ABC and DEF with 32° and 58° acute angles → AA similarity, which ratio equals AB-ratio
+- arc-length proportion: minor arc subtended by 100°, major arc by 360 − 100 = 260, reduced ratio 5/18
+- isosceles triangle from two radii, radius 18 → central angle in RADIANS → arc length rθ
+- completing the square requiring +100 and +64 added to both sides → circle center; other circle answers: radius SPR 10, r SPR 5 from diameter endpoints, concentric-doubling constants SPR 100 and SPR 16
+- square with the same area as a circle of radius 2 → side 2√π (distractor A = 2, the radius itself)
+- SPR angle-measure answers cluster small: 83, 123, 156, 57, 54, 97, 30, 38

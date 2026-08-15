@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 250" width="380" height="250" font-family="Georgia, serif">
+  <g stroke="#000000" stroke-width="1.5" fill="none">
+    <line x1="40" y1="82" x2="340" y2="82"/>
+    <line x1="40" y1="172" x2="340" y2="172"/>
+    <line x1="92.7" y1="38" x2="203.1" y2="216"/>
+  </g>
+  <g font-size="14" font-style="italic" fill="#000000">
+    <text x="352" y="87" text-anchor="middle">j</text>
+    <text x="352" y="177" text-anchor="middle">k</text>
+    <text x="87.8" y="30" text-anchor="middle">t</text>
+  </g>
+  <g font-size="13" fill="#000000">
+    <text x="156.0" y="70" text-anchor="middle">126°</text>
+    <text x="199.8" y="160" text-anchor="start">(<tspan font-style="italic">x</tspan> + 14)°</text>
+  </g>
+  <text x="190" y="236" text-anchor="middle" font-size="12" fill="#000000">Note: Figure not drawn to scale.</text>
+</svg>

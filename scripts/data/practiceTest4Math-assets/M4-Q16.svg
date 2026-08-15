@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 352" width="380" height="352" font-family="Georgia, serif">
+  <defs>
+    <marker id="ah16" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+  </defs>
+  <g stroke="#cccccc" stroke-width="1">
+    <line x1="84" y1="60" x2="84" y2="300"/>
+    <line x1="108" y1="60" x2="108" y2="300"/>
+    <line x1="132" y1="60" x2="132" y2="300"/>
+    <line x1="156" y1="60" x2="156" y2="300"/>
+    <line x1="180" y1="60" x2="180" y2="300"/>
+    <line x1="204" y1="60" x2="204" y2="300"/>
+    <line x1="228" y1="60" x2="228" y2="300"/>
+    <line x1="252" y1="60" x2="252" y2="300"/>
+    <line x1="276" y1="60" x2="276" y2="300"/>
+    <line x1="300" y1="60" x2="300" y2="300"/>
+    <line x1="60" y1="270" x2="300" y2="270"/>
+    <line x1="60" y1="240" x2="300" y2="240"/>
+    <line x1="60" y1="210" x2="300" y2="210"/>
+    <line x1="60" y1="180" x2="300" y2="180"/>
+    <line x1="60" y1="150" x2="300" y2="150"/>
+    <line x1="60" y1="120" x2="300" y2="120"/>
+    <line x1="60" y1="90" x2="300" y2="90"/>
+    <line x1="60" y1="60" x2="300" y2="60"/>
+  </g>
+  <g stroke="#000000" stroke-width="1.4">
+    <line x1="60" y1="300" x2="310" y2="300" marker-end="url(#ah16)"/>
+    <line x1="60" y1="300" x2="60" y2="50" marker-end="url(#ah16)"/>
+  </g>
+  <line x1="60" y1="90" x2="300" y2="240" stroke="#000000" stroke-width="1.8"/>
+  <g fill="#000000">
+    <circle cx="84" cy="100" r="3.2"/>
+    <circle cx="108" cy="125" r="3.2"/>
+    <circle cx="132" cy="130" r="3.2"/>
+    <circle cx="156" cy="155" r="3.2"/>
+    <circle cx="180" cy="160" r="3.2"/>
+    <circle cx="204" cy="185" r="3.2"/>
+    <circle cx="228" cy="195" r="3.2"/>
+    <circle cx="252" cy="205" r="3.2"/>
+    <circle cx="276" cy="225" r="3.2"/>
+    <circle cx="300" cy="235" r="3.2"/>
+  </g>
+  <g font-size="10" fill="#000000">
+    <text x="60" y="316" text-anchor="middle">0</text>
+    <text x="108" y="316" text-anchor="middle">2</text>
+    <text x="156" y="316" text-anchor="middle">4</text>
+    <text x="204" y="316" text-anchor="middle">6</text>
+    <text x="252" y="316" text-anchor="middle">8</text>
+    <text x="300" y="316" text-anchor="middle">10</text>
+    <text x="54" y="244" text-anchor="end">60</text>
+    <text x="54" y="184" text-anchor="end">120</text>
+    <text x="54" y="124" text-anchor="end">180</text>
+    <text x="54" y="64" text-anchor="end">240</text>
+  </g>
+  <g font-size="12" fill="#000000">
+    <text x="185" y="342" text-anchor="middle">Age (years)</text>
+    <text x="16" y="180" text-anchor="middle" transform="rotate(-90 16 180)">Resale price (dollars)</text>
+  </g>
+</svg>

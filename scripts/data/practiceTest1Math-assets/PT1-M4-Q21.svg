@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 352" width="380" height="352" font-family="Georgia, serif">
+  <defs>
+    <marker id="ahpt1q21" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+  </defs>
+  <g stroke="#cccccc" stroke-width="1">
+    <line x1="84" y1="60" x2="84" y2="300"/>
+    <line x1="108" y1="60" x2="108" y2="300"/>
+    <line x1="132" y1="60" x2="132" y2="300"/>
+    <line x1="156" y1="60" x2="156" y2="300"/>
+    <line x1="180" y1="60" x2="180" y2="300"/>
+    <line x1="204" y1="60" x2="204" y2="300"/>
+    <line x1="228" y1="60" x2="228" y2="300"/>
+    <line x1="252" y1="60" x2="252" y2="300"/>
+    <line x1="276" y1="60" x2="276" y2="300"/>
+    <line x1="60" y1="252" x2="300" y2="252"/>
+    <line x1="60" y1="204" x2="300" y2="204"/>
+    <line x1="60" y1="156" x2="300" y2="156"/>
+    <line x1="60" y1="108" x2="300" y2="108"/>
+    <line x1="60" y1="60" x2="300" y2="60"/>
+  </g>
+  <g stroke="#000000" stroke-width="1.4">
+    <line x1="60" y1="300" x2="312" y2="300" marker-end="url(#ahpt1q21)"/>
+    <line x1="60" y1="300" x2="60" y2="48" marker-end="url(#ahpt1q21)"/>
+  </g>
+  <g fill="#000000">
+    <circle cx="60" cy="69.6" r="3.2"/>
+    <circle cx="84" cy="112.8" r="3.2"/>
+    <circle cx="108" cy="156" r="3.2"/>
+    <circle cx="132" cy="180" r="3.2"/>
+    <circle cx="156" cy="208.8" r="3.2"/>
+    <circle cx="180" cy="223.2" r="3.2"/>
+    <circle cx="204" cy="242.4" r="3.2"/>
+    <circle cx="228" cy="249.6" r="3.2"/>
+    <circle cx="252" cy="262.6" r="3.2"/>
+    <circle cx="276" cy="268.3" r="3.2"/>
+  </g>
+  <g font-size="10" fill="#000000">
+    <text x="84" y="316" text-anchor="middle">1</text>
+    <text x="108" y="316" text-anchor="middle">2</text>
+    <text x="132" y="316" text-anchor="middle">3</text>
+    <text x="156" y="316" text-anchor="middle">4</text>
+    <text x="180" y="316" text-anchor="middle">5</text>
+    <text x="204" y="316" text-anchor="middle">6</text>
+    <text x="228" y="316" text-anchor="middle">7</text>
+    <text x="252" y="316" text-anchor="middle">8</text>
+    <text x="276" y="316" text-anchor="middle">9</text>
+    <text x="54" y="256" text-anchor="end">100</text>
+    <text x="54" y="208" text-anchor="end">200</text>
+    <text x="54" y="160" text-anchor="end">300</text>
+    <text x="54" y="112" text-anchor="end">400</text>
+    <text x="54" y="64" text-anchor="end">500</text>
+  </g>
+  <g font-size="13" font-style="italic" fill="#000000">
+    <text x="52" y="315" text-anchor="end">O</text>
+  </g>
+  <g font-size="12" fill="#000000">
+    <text x="186" y="340" text-anchor="middle">Years after 2010</text>
+    <text x="14" y="180" text-anchor="middle" transform="rotate(-90 14 180)">Estimated number of beetles</text>
+  </g>
+</svg>

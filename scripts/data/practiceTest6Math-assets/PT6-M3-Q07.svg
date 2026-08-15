@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 320" width="380" height="320" font-family="Georgia, serif">
+  <text x="200" y="24" text-anchor="middle" font-size="13" fill="#000000">Snails Counted in Each Tide Pool</text>
+  <g stroke="#cccccc" stroke-width="1">
+    <line x1="60" y1="220" x2="340" y2="220"/>
+    <line x1="60" y1="190" x2="340" y2="190"/>
+    <line x1="60" y1="160" x2="340" y2="160"/>
+    <line x1="60" y1="130" x2="340" y2="130"/>
+    <line x1="60" y1="100" x2="340" y2="100"/>
+    <line x1="60" y1="70" x2="340" y2="70"/>
+  </g>
+  <g fill="#999999" stroke="#000000" stroke-width="1.2">
+    <rect x="72" y="142" width="32" height="108"/>
+    <rect x="128" y="70" width="32" height="180"/>
+    <rect x="184" y="178" width="32" height="72"/>
+    <rect x="240" y="106" width="32" height="144"/>
+    <rect x="296" y="214" width="32" height="36"/>
+  </g>
+  <g stroke="#000000" stroke-width="1.4">
+    <line x1="60" y1="250" x2="340" y2="250"/>
+    <line x1="60" y1="250" x2="60" y2="60"/>
+  </g>
+  <g stroke="#000000" stroke-width="1.2">
+    <line x1="60" y1="250" x2="55" y2="250"/>
+    <line x1="60" y1="220" x2="55" y2="220"/>
+    <line x1="60" y1="190" x2="55" y2="190"/>
+    <line x1="60" y1="160" x2="55" y2="160"/>
+    <line x1="60" y1="130" x2="55" y2="130"/>
+    <line x1="60" y1="100" x2="55" y2="100"/>
+    <line x1="60" y1="70" x2="55" y2="70"/>
+  </g>
+  <g font-size="11" fill="#000000">
+    <text x="50" y="254" text-anchor="end">0</text>
+    <text x="50" y="224" text-anchor="end">5</text>
+    <text x="50" y="194" text-anchor="end">10</text>
+    <text x="50" y="164" text-anchor="end">15</text>
+    <text x="50" y="134" text-anchor="end">20</text>
+    <text x="50" y="104" text-anchor="end">25</text>
+    <text x="50" y="74" text-anchor="end">30</text>
+  </g>
+  <g font-size="11" fill="#000000">
+    <text x="88" y="266" text-anchor="middle">Pool 1</text>
+    <text x="144" y="266" text-anchor="middle">Pool 2</text>
+    <text x="200" y="266" text-anchor="middle">Pool 3</text>
+    <text x="256" y="266" text-anchor="middle">Pool 4</text>
+    <text x="312" y="266" text-anchor="middle">Pool 5</text>
+  </g>
+  <g font-size="12" fill="#000000">
+    <text x="200" y="292" text-anchor="middle">Tide pool</text>
+    <text x="18" y="155" text-anchor="middle" transform="rotate(-90 18 155)">Number of snails</text>
+  </g>
+</svg>

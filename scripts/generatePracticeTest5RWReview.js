@@ -32,7 +32,8 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
-// Passages are trusted authored content and may intentionally contain table HTML.
+// Passages are trusted authored content and may intentionally contain table or
+// SVG graphics. Production still sanitizes this content before rendering it.
 function renderPassage(value) {
   return String(value)
     .replace(/\[UNDERLINED\]([\s\S]*?)\[\/UNDERLINED\]/g, '<u>$1</u>')
