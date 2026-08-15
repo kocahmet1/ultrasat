@@ -14,7 +14,7 @@ import ReportQuestionModal from './ReportQuestionModal';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import useIsMobile from '../hooks/useIsMobile';
-import WordSaver from './WordSaver';
+import ExamHighlighter from './ExamHighlighter';
 import CalculatorPanel from './CalculatorPanel';
 import ReferenceSheetPanel from './ReferenceSheetPanel';
 
@@ -642,19 +642,19 @@ function ExamModule({
       <div className="main-content">
         {/* Tools container removed since we're using the button in the Question component */}
 
-        {/* Select any word in the passage/question to save it to the Word Bank.
-            Silent save (no definition shown) so the timed exam isn't assisted.
-            Answer choices are deliberately excluded: selecting inside the
+        {/* Bluebook-style highlighting: select text in the passage or stem for
+            a toolbar with three highlight colors, plus the Word Bank bookmark
+            (silent save — no definition shown, so the timed exam isn't
+            assisted). This replaces the old WordSaver popover in the exam;
+            answer choices remain deliberately excluded: selecting inside the
             option <label> could toggle the student's answer. */}
-        <WordSaver
-          selector=".question-passage, .question-text"
-          source="practice-exam"
+        <ExamHighlighter
+          questionIndex={currentQuestion}
           metadata={{
             moduleNumber,
             questionId: enrichedQuestions[currentQuestion]?.id,
             subcategory: enrichedQuestions[currentQuestion]?.subcategory,
           }}
-          showDefinition={false}
         />
 
         <div className="question-wrapper">

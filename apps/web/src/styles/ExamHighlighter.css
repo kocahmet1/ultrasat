@@ -1,0 +1,105 @@
+/* ExamHighlighter.css — Bluebook-style highlights + selection toolbar.
+   The <mark> styles are global on purpose (marks are injected into the
+   passage/stem DOM), but namespaced with .bb-hl so nothing else is hit. */
+
+/* ---- highlight marks (Bluebook palette) ---- */
+
+mark.bb-hl {
+  padding: 0;
+  color: inherit;
+  border-radius: 2px;
+  cursor: pointer;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+mark.bb-hl-yellow { background-color: #F9E14D; }
+mark.bb-hl-blue   { background-color: #B4D9F8; }
+mark.bb-hl-pink   { background-color: #F8C6DE; }
+
+/* ---- floating toolbar ---- */
+
+.exam-hl-toolbar {
+  position: fixed;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #FFFFFF;
+  border: 1px solid #D5D5D5;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(20, 24, 48, 0.18);
+  font-family: 'Roboto', Arial, 'Helvetica Neue', sans-serif;
+}
+
+.exam-hl-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(30, 30, 30, 0.35);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+
+.exam-hl-dot:hover {
+  transform: scale(1.15);
+  border-color: #1E1E1E;
+}
+
+.exam-hl-dot--yellow { background-color: #F9E14D; }
+.exam-hl-dot--blue   { background-color: #B4D9F8; }
+.exam-hl-dot--pink   { background-color: #F8C6DE; }
+
+.exam-hl-sep {
+  width: 1px;
+  height: 20px;
+  background: #DDDDDD;
+}
+
+.exam-hl-book,
+.exam-hl-remove {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #1E1E1E;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 4px;
+}
+
+.exam-hl-book svg,
+.exam-hl-remove svg {
+  width: 16px;
+  height: 16px;
+}
+
+.exam-hl-book:hover,
+.exam-hl-remove:hover {
+  color: #324DC7;
+}
+
+.exam-hl-book:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.exam-hl-book-label {
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .exam-hl-toolbar {
+    gap: 8px;
+    padding: 6px 9px;
+  }
+
+  .exam-hl-dot {
+    width: 26px;   /* bigger touch targets on mobile */
+    height: 26px;
+  }
+}
