@@ -1,21 +1,123 @@
-import React, { useCallback, useEffect, useState } from 'react';
+/* ExamResults — "Score Details" (V3 redesign).
+ *
+ * College-Board-style score report in the app's design language:
+ *   - ink hero: total + section scores
+ *   - section tabs (All / Reading & Writing / Math)
+ *   - Knowledge & Skills: correctness across the 8 content domains
+ *   - Questions Overview: stat tiles + sortable, paginated question table
+ *     with a "Show correct answers" toggle (answers hidden by default so
+ *     students can re-attempt before peeking)
+ *   - fullscreen review modal: question left (serif, choice verdicts),
+ *     answer banner + rationale right, Previous/Next navigation,
+ *     "Study this skill" lesson cross-link, report-question flag
+ *
+ * Data contract is unchanged: getExamResultById / getLatestExamResult /
+ * localStorage fallback, canonical scoring via utils/scoring.js, stored
+ * scores preferred so this page never disagrees with the exam list.
+ * Styles live in styles/Results.css (.xr- page / .xrm- modal).
+ */
+
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DOMPurify from 'dompurify';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation, Link } from 'react-router-dom';
+import {
+  FiAlertCircle,
+  FiArrowDown,
+  FiArrowRight,
+  FiArrowUp,
+  FiBookOpen,
+  FiCheck,
+  FiCheckCircle,
+  FiFlag,
+  FiLock,
+  FiX,
+  FiXCircle,
+} from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { useCoach } from '../contexts/CoachContext';
-import { FiFlag } from 'react-icons/fi';
 import { examScores } from '../utils/scoring';
 import { processTextMarkup } from '../utils/textProcessing';
 import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
+import { DOMAINS, getSubcategoryMeta } from '../utils/subcategoryTaxonomy';
+import { loadKatexAutoRender, containsMathDelimiters } from '../utils/katexLoader';
 import ReportQuestionModal from '../components/ReportQuestionModal';
 import WordSaver from '../components/WordSaver';
 import { reportQuestion } from '../api/reportClient';
 import { toast } from 'react-toastify';
 import '../styles/Results.css';
 
-const getSafeProcessedMarkup = (value) => (
-  DOMPurify.sanitize(processTextMarkup(value) || '')
-);
+/* ---------------------------------------------------------------- helpers */
+
+const KATEX_DELIMITERS = [
+  { left: '$$', right: '$$', display: true },
+  { left: '\\[', right: '\\]', display: true },
+  { left: '\\(', right: '\\)', display: false },
+  { left: '$', right: '$', display: false },
+];
+
+const SECTION_LABELS = {
+  'reading-writing': 'Reading & Writing',
+  math: 'Math',
+};
+
+const STATUS_RANK = { incorrect: 0, omitted: 1, correct: 2 };
+
+const getSafeMarkup = (value) => DOMPurify.sanitize(processTextMarkup(value) || '');
+
+const letterFor = (index) => String.fromCharCode(65 + index);
+
+/** Match a response to a question, tolerating every historical id format. */
+const findResponseForQuestion = (module, question, questionIndex) =>
+  (module.responses || []).find((resp) => {
+    if (resp.questionId === question.id) return true;
+    if (resp.question && resp.question.id === question.id) return true;
+    const indexBasedId = `practice-${module.id}-q-${questionIndex}`;
+    if (resp.questionId === indexBasedId) return true;
+    if (resp.moduleIndex === questionIndex) return true;
+    if (resp.question && resp.question.text === question.text) return true;
+    return false;
+  });
+
+const isMultipleChoice = (question) => {
+  if (question?.questionType) return question.questionType === 'multiple-choice';
+  return Array.isArray(question?.options) && question.options.length > 0;
+};
+
+/** Firestore Timestamp | ISO string | Date -> "Aug 12, 2026" (or null). */
+const formatExamDate = (value) => {
+  if (!value) return null;
+  let date = null;
+  if (typeof value?.toDate === 'function') date = value.toDate();
+  else if (value instanceof Date) date = value;
+  else if (typeof value === 'string' || typeof value === 'number') {
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) date = parsed;
+  }
+  if (!date) return null;
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+};
+
+/** Ordered domain lists per section, from the canonical taxonomy. */
+const DOMAIN_GROUPS = (() => {
+  const groups = { 'reading-writing': [], math: [] };
+  Object.entries(DOMAINS).forEach(([id, domain]) => {
+    if (groups[domain.section]) groups[domain.section].push({ id, name: domain.name });
+  });
+  return groups;
+})();
+
+/** Windowed pager model: [1, '…', 4, 5, 6, '…', 12] */
+const buildPageItems = (totalPages, page) => {
+  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+  const items = [1];
+  if (page > 3) items.push('…');
+  for (let p = Math.max(2, page - 1); p <= Math.min(totalPages - 1, page + 1); p += 1) items.push(p);
+  if (page < totalPages - 2) items.push('…');
+  items.push(totalPages);
+  return items;
+};
+
+/* ------------------------------------------------------------- component */
 
 function ExamResults() {
   const navigate = useNavigate();
@@ -23,212 +125,130 @@ function ExamResults() {
   const { examId } = useParams();
   const { currentUser, getExamResultById, getLatestExamResult } = useAuth();
   const coach = useCoach();
-  
+
   const [examDetails, setExamDetails] = useState(null);
-  const [, setScore] = useState(0);
+  const [moduleData, setModuleData] = useState([]);
   const [readingWritingScore, setReadingWritingScore] = useState(0);
   const [mathScore, setMathScore] = useState(0);
-  const [, setAnswered] = useState(0);
-  const [, setTotal] = useState(0);
-  const [moduleData, setModuleData] = useState([]);
-  const [, setSavedToFirebase] = useState(false);
-  const [savingError] = useState('');
-  const [activeReviewModule, setActiveReviewModule] = useState(null);
-  const [showExplanation, setShowExplanation] = useState({});
-  const [splitView, setSplitView] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pageError, setPageError] = useState(null);
-  const [, setWeakSubcats] = useState([]);
 
-  // Report modal state
+  const [activeTab, setActiveTab] = useState('all');
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [sort, setSort] = useState({ key: 'number', dir: 1 });
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
+  const [reviewIndex, setReviewIndex] = useState(null);
+
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportLoading, setReportLoading] = useState(false);
   const [selectedQuestionForReport, setSelectedQuestionForReport] = useState(null);
 
-  // Helper function to identify the weakest subcategories based on exam performance
-  const getWeakSubcategories = useCallback((modules) => {
-    const scores = {};
-    
-    // Gather all subcategory performance data
-    modules.forEach(module => {
-      if (module.responses) {
-        module.responses.forEach(response => {
-          // Get the subcategory from the question or response
-          const subcategoryId = response.subcategoryId || 
-            (response.question && response.question.subcategoryId);
-          const subcategory = response.subcategory || 
-            (response.question && response.question.subcategory);
-          
-          if (subcategoryId && subcategory) {
-            if (!scores[subcategoryId]) {
-              scores[subcategoryId] = { 
-                correct: 0, 
-                total: 0, 
-                name: subcategory 
-              };
-            }
-            
-            if (response.isCorrect) {
-              scores[subcategoryId].correct++;
-            }
-            scores[subcategoryId].total++;
-          }
-        });
+  const modalBodyRef = useRef(null);
+
+  /* ---------------------------------------------------------- data load */
+
+  const processModuleData = useCallback((modules, responses) => {
+    if (!modules || modules.length === 0) return [];
+    const byId = {};
+    modules.forEach((module) => {
+      byId[module.id] = { ...module, responses: [] };
+    });
+    responses.forEach((response) => {
+      if (response.moduleId && byId[response.moduleId]) {
+        byId[response.moduleId].responses.push(response);
       }
     });
-    
-    // Convert to array, calculate accuracy rates, and sort by lowest accuracy
-    return Object.entries(scores)
-      .map(([id, s]) => ({
-        id, 
-        name: s.name, 
-        rate: s.correct / s.total,
-        correct: s.correct,
-        total: s.total
-      }))
-      .sort((a, b) => a.rate - b.rate)
-      .slice(0, 3); // Return the 3 weakest subcategories
+    // Reading & Writing modules first, then Math, each by module number.
+    return Object.values(byId).sort((a, b) => {
+      const aIsRW = a.moduleNumber <= 2;
+      const bIsRW = b.moduleNumber <= 2;
+      if (aIsRW !== bIsRW) return aIsRW ? -1 : 1;
+      return a.moduleNumber - b.moduleNumber;
+    });
   }, []);
 
-  const processModuleData = useCallback((modules, responses) => { // modules here is examModules
-    console.log('[ExamResults] processModuleData - Initial examModules (raw):', modules);
-    if (!modules || modules.length === 0) { 
-      console.warn('[ExamResults] processModuleData - examModules is null or empty.');
-      return [];
-    }
-    
-    const moduleResponses = {}; 
-    
-    modules.forEach((module, index) => { 
-      console.log(`[ExamResults] processModuleData - Processing module ${index} (raw object):`, module);
-      console.log(`[ExamResults] processModuleData - Module ${index} ID: ${module.id}, Title: ${module.title}`);
-      console.log(`[ExamResults] processModuleData - Does module ${index} have 'questions'?`, module && module.hasOwnProperty('questions') ? 'Yes, length: ' + (module.questions ? module.questions.length : 'undefined') : 'No');
-      moduleResponses[module.id] = {
-        ...module, 
-        responses: []
-      };
-    });
-    
-    // Log unique moduleIds from responses
-    const uniqueModuleIds = [...new Set(responses.map(r => r.moduleId))];
-    console.log('[ExamResults] processModuleData - Unique moduleIds in responses:', uniqueModuleIds);
-    console.log('[ExamResults] processModuleData - Module IDs from modules:', modules.map(m => m.id));
-    
-    responses.forEach(response => {
-      if (response.moduleId && moduleResponses[response.moduleId]) {
-        moduleResponses[response.moduleId].responses.push(response);
-      } else if (response.moduleId) {
-        console.warn(`[ExamResults] processModuleData - Response with moduleId ${response.moduleId} doesn't match any module`);
-      }
-    });
-    
-    const resultModuleData = Object.values(moduleResponses);
-    console.log('[ExamResults] processModuleData - Resulting moduleData (raw object):', resultModuleData);
-    // Log response counts per module
-    resultModuleData.forEach((module, index) => {
-      console.log(`[ExamResults] processModuleData - Module ${index} (${module.title}) has ${module.responses.length} responses`);
-    });
-    return resultModuleData;
-  }, []);
-
-  // Overhaul Phase D: ONE scoring implementation (utils/scoring.js).
-  // Prefer the scores the exam was SAVED with (so this page can never disagree
-  // with the exam list); recompute through the canonical module only when a
-  // legacy result has no stored scores. The old weighted recompute also broke
-  // kebab-tagged questions into the wrong section — the module fixes that.
-  const calculateScoresFromExamData = useCallback((modules, storedScores) => {
+  // ONE scoring implementation (utils/scoring.js). Prefer the scores the exam
+  // was SAVED with; recompute only for legacy results without stored scores.
+  const calculateScores = useCallback((modules, storedScores) => {
     if (storedScores && (storedScores.readingWriting || storedScores.math)) {
       return {
-        readingWritingScore: storedScores.readingWriting || 200,
-        mathScore: storedScores.math || 200,
-        totalScore: (storedScores.readingWriting || 200) + (storedScores.math || 200),
+        rw: storedScores.readingWriting || 200,
+        m: storedScores.math || 200,
       };
     }
-    const allResponses = modules.flatMap((m) => m.responses || []);
-    const scores = examScores(allResponses);
-    return {
-      readingWritingScore: scores.readingWriting,
-      mathScore: scores.math,
-      totalScore: scores.total,
-    };
+    const scores = examScores(modules.flatMap((mod) => mod.responses || []));
+    return { rw: scores.readingWriting, m: scores.math };
   }, []);
 
-  const processAndSetExamData = useCallback((data) => {
-    if (!data || !data.modules || !data.responses) {
-      setPageError("Failed to process exam data because it was incomplete.");
-      setIsLoading(false);
-      return;
-    }
+  const processAndSetExamData = useCallback(
+    (data) => {
+      if (!data || !data.modules || !data.responses) {
+        setPageError('Failed to process exam data because it was incomplete.');
+        setIsLoading(false);
+        return;
+      }
 
-    const { exam, modules: examModules, responses: examResponses } = data;
+      const processed = processModuleData(data.modules, data.responses);
+      setModuleData(processed);
 
-    setExamDetails(exam);
+      const { rw, m } = calculateScores(processed, data.scores || data.examSummary?.scores);
+      setReadingWritingScore(rw);
+      setMathScore(m);
 
-    const processedModuleData = processModuleData(examModules, examResponses);
-    setModuleData(processedModuleData);
+      setExamDetails({
+        title: data.examTitle || data.exam?.title || 'Practice Exam',
+        isDiagnostic: Boolean(data.isDiagnostic || data.exam?.isDiagnostic),
+        dateLabel: formatExamDate(data.completedAt || data.examDate || data.exam?.completedAt),
+      });
+    },
+    [calculateScores, processModuleData]
+  );
 
-    const { readingWritingScore, mathScore, totalScore } = calculateScoresFromExamData(processedModuleData, data.scores || data.examSummary?.scores);
-    setReadingWritingScore(readingWritingScore);
-    setMathScore(mathScore);
-    setScore(totalScore);
-
-    const totalAnswered = examResponses.length;
-    const totalQuestions = examModules.reduce((acc, module) => acc + (module.questions ? module.questions.length : 0), 0);
-    setAnswered(totalAnswered);
-    setTotal(totalQuestions);
-
-    const weakAreas = getWeakSubcategories(processedModuleData);
-    setWeakSubcats(weakAreas);
-  }, [calculateScoresFromExamData, getWeakSubcategories, processModuleData]);
-  
   useEffect(() => {
     setIsLoading(true);
     setPageError(null);
-    
+
     const fetchExamData = async () => {
       try {
         let examData;
-        
+
         if (examId) {
           examData = await getExamResultById(examId, true);
           if (!examData) {
-            setPageError("Exam result not found.");
+            setPageError('Exam result not found.');
             setIsLoading(false);
             return;
           }
         } else if (location?.state?.examId) {
           examData = await getExamResultById(location.state.examId, true);
         }
-        
+
         if (!examData && currentUser) {
           examData = await getLatestExamResult();
         }
-        
+
         if (!examData) {
           const responsesFromStorage = JSON.parse(localStorage.getItem('examResponses') || '[]');
-          const allModulesFromStorage = JSON.parse(localStorage.getItem('examModules') || '[]');
-
-          if (responsesFromStorage.length > 0 && allModulesFromStorage.length > 0) {
+          const modulesFromStorage = JSON.parse(localStorage.getItem('examModules') || '[]');
+          if (responsesFromStorage.length > 0 && modulesFromStorage.length > 0) {
             examData = {
               responses: responsesFromStorage,
-              modules: allModulesFromStorage,
-              completedAt: new Date()
+              modules: modulesFromStorage,
+              completedAt: new Date(),
             };
           }
         }
-        
-        if (examData) {
-            processAndSetExamData(examData);
-            setSavedToFirebase(true);
-            // Scroll to top when results are loaded
-            window.scrollTo(0, 0);
-            // AI Coach (Phase 2): exam-completed boundary — the Observer decides
-            // whether to speak; the note lands in the coach panel with a badge.
-            if (coach?.observe) coach.observe('exam_completed', examId || null);
-        } else {
-            setPageError("No exam data found to display.");
-        }
 
+        if (examData) {
+          processAndSetExamData(examData);
+          window.scrollTo(0, 0);
+          // AI Coach (Phase 2): exam-completed boundary — the Observer decides
+          // whether to speak; the note lands in the coach panel with a badge.
+          if (coach?.observe) coach.observe('exam_completed', examId || null);
+        } else {
+          setPageError('No exam data found to display.');
+        }
       } catch (error) {
         console.error('Error loading exam data:', error);
         setPageError('An error occurred while loading exam data.');
@@ -236,47 +256,173 @@ function ExamResults() {
         setIsLoading(false);
       }
     };
-    
+
     fetchExamData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [examId, location, currentUser, getExamResultById, getLatestExamResult, processAndSetExamData]);
 
-  const returnHome = () => {
-    navigate('/progress');
+  /* ------------------------------------------------------- derived rows */
+
+  const rows = useMemo(() => {
+    const counters = { 'reading-writing': 0, math: 0 };
+    const result = [];
+    moduleData.forEach((module) => {
+      const sectionId = module.moduleNumber <= 2 ? 'reading-writing' : 'math';
+      const moduleLabel = `Module ${((module.moduleNumber - 1) % 2) + 1}`;
+      (module.questions || []).forEach((question, questionIndex) => {
+        if (!question || !question.text) return;
+        counters[sectionId] += 1;
+        const response = findResponseForQuestion(module, question, questionIndex);
+        const status = !response ? 'omitted' : response.isCorrect ? 'correct' : 'incorrect';
+        // First candidate the canonical taxonomy recognizes wins (any format).
+        const subMeta = [
+          question.subcategoryId,
+          question.subcategory,
+          response?.subcategoryId,
+          response?.subcategory,
+        ].reduce((acc, candidate) => acc || getSubcategoryMeta(candidate), null);
+
+        const multipleChoice = isMultipleChoice(question);
+        const options = multipleChoice ? question.options : null;
+        const keyText = multipleChoice
+          ? resolveMultipleChoiceKey(question.correctAnswer ?? question.answer, options)
+          : question.correctAnswer ?? question.answer;
+        const keyIndex = multipleChoice ? options.findIndex((opt) => opt === keyText) : -1;
+        const userIndex =
+          multipleChoice && response ? options.findIndex((opt) => opt === response.userAnswer) : -1;
+
+        result.push({
+          uid: `${module.id}-${question.id || questionIndex}`,
+          number: counters[sectionId],
+          sectionId,
+          sectionLabel: SECTION_LABELS[sectionId],
+          sectionOrder: sectionId === 'reading-writing' ? 0 : 1,
+          moduleLabel,
+          domainId: subMeta?.domain || null,
+          domainName: subMeta?.domainName || null,
+          skillId: subMeta?.id || null,
+          skillName: subMeta?.name || null,
+          question,
+          response,
+          status,
+          multipleChoice,
+          keyIndex,
+          keyDisplay: multipleChoice
+            ? keyIndex >= 0
+              ? letterFor(keyIndex)
+              : String(keyText ?? '—')
+            : String(keyText ?? '—'),
+          userIndex,
+          userDisplay: response
+            ? multipleChoice
+              ? userIndex >= 0
+                ? letterFor(userIndex)
+                : String(response.userAnswer)
+              : String(response.userAnswer)
+            : null,
+        });
+      });
+    });
+    return result;
+  }, [moduleData]);
+
+  const counts = useMemo(() => {
+    const c = {
+      all: rows.length,
+      'reading-writing': 0,
+      math: 0,
+      correct: 0,
+      incorrect: 0,
+      omitted: 0,
+    };
+    rows.forEach((row) => {
+      c[row.sectionId] += 1;
+      c[row.status] += 1;
+    });
+    return c;
+  }, [rows]);
+
+  const domainStats = useMemo(() => {
+    const stats = {};
+    rows.forEach((row) => {
+      if (!row.domainId) return;
+      if (!stats[row.domainId]) stats[row.domainId] = { correct: 0, total: 0 };
+      stats[row.domainId].total += 1;
+      if (row.status === 'correct') stats[row.domainId].correct += 1;
+    });
+    return stats;
+  }, [rows]);
+
+  const sortedRows = useMemo(() => {
+    const filtered = activeTab === 'all' ? rows : rows.filter((row) => row.sectionId === activeTab);
+    const sorted = [...filtered];
+    sorted.sort((a, b) => {
+      let cmp = 0;
+      if (sort.key === 'number') {
+        cmp = a.sectionOrder - b.sectionOrder || a.number - b.number;
+      } else if (sort.key === 'domain') {
+        cmp = (a.domainName || '\uffff').localeCompare(b.domainName || '\uffff');
+        if (cmp === 0) cmp = a.sectionOrder - b.sectionOrder || a.number - b.number;
+      } else if (sort.key === 'status') {
+        cmp = STATUS_RANK[a.status] - STATUS_RANK[b.status];
+        if (cmp === 0) cmp = a.sectionOrder - b.sectionOrder || a.number - b.number;
+      }
+      return cmp * sort.dir;
+    });
+    return sorted;
+  }, [rows, activeTab, sort]);
+
+  const totalPages = pageSize === 'all' ? 1 : Math.max(1, Math.ceil(sortedRows.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const pagedRows = useMemo(
+    () =>
+      pageSize === 'all'
+        ? sortedRows
+        : sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize),
+    [sortedRows, currentPage, pageSize]
+  );
+
+  const reviewRow = reviewIndex !== null ? sortedRows[reviewIndex] : null;
+
+  /* ------------------------------------------------------------- events */
+
+  const handleSort = (key) => {
+    setSort((prev) => (prev.key === key ? { key, dir: -prev.dir } : { key, dir: 1 }));
+    setPage(1);
   };
 
-  const handleReviewModule = (moduleIndex) => {
-    if (!moduleData || moduleIndex < 0 || moduleIndex >= moduleData.length) {
-      console.error('[ExamResults] handleReviewModule - Invalid moduleIndex or moduleData is not populated correctly.');
-      setActiveReviewModule(null);
-      setSplitView(false);
-      return;
-    }
-    const moduleToReview = moduleData[moduleIndex];
-    console.log('[ExamResults] handleReviewModule - Selected moduleData[moduleIndex] for review (raw object):', moduleToReview);
-    console.log(`[ExamResults] handleReviewModule - Does moduleToReview have 'questions'?`, moduleToReview && moduleToReview.hasOwnProperty('questions') ? 'Yes, length: ' + (moduleToReview.questions ? moduleToReview.questions.length : 'undefined') : 'No');
-    console.log('[ExamResults] handleReviewModule - Selected moduleData[moduleIndex] for review (JSON):', JSON.stringify(moduleToReview, null, 2));
-    setActiveReviewModule(moduleToReview);
-    setSplitView(true); 
-    setShowExplanation({}); 
+  const handleTab = (tab) => {
+    setActiveTab(tab);
+    setPage(1);
+    setReviewIndex(null);
   };
 
-  const closeReviewPanel = () => {
-    setActiveReviewModule(null);
-    setSplitView(false); 
-    setShowExplanation({}); 
+  const handlePageSize = (size) => {
+    setPageSize(size);
+    setPage(1);
   };
 
-  const toggleExplanation = (questionId) => {
-    setShowExplanation(prev => ({
-      ...prev,
-      [questionId]: !prev[questionId]
-    }));
+  const openReview = (row) => {
+    const index = sortedRows.findIndex((r) => r.uid === row.uid);
+    if (index >= 0) setReviewIndex(index);
   };
 
-  // Report question handlers
+  const closeReview = useCallback(() => setReviewIndex(null), []);
+
+  const stepReview = useCallback(
+    (delta) => {
+      setReviewIndex((prev) => {
+        if (prev === null) return prev;
+        const next = prev + delta;
+        if (next < 0 || next >= sortedRows.length) return prev;
+        return next;
+      });
+    },
+    [sortedRows.length]
+  );
+
   const handleReportQuestion = async (reason) => {
     if (!selectedQuestionForReport) return;
-    
     setReportLoading(true);
     try {
       await reportQuestion(selectedQuestionForReport.id, examId, reason);
@@ -291,16 +437,62 @@ function ExamResults() {
     }
   };
 
-  const openReportModal = (question) => {
-    setSelectedQuestionForReport(question);
-    setIsReportModalOpen(true);
-  };
+  /* -- modal: keyboard nav + scroll lock -- */
+  useEffect(() => {
+    if (reviewIndex === null) return undefined;
+    const onKey = (event) => {
+      if (event.key === 'Escape') closeReview();
+      if (event.key === 'ArrowRight') stepReview(1);
+      if (event.key === 'ArrowLeft') stepReview(-1);
+    };
+    document.addEventListener('keydown', onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [reviewIndex, closeReview, stepReview]);
+
+  /* -- modal: KaTeX auto-render (lazy CDN load, only when math is present) -- */
+  useEffect(() => {
+    if (!reviewRow || !modalBodyRef.current) return;
+    const { question } = reviewRow;
+    const haystack = [
+      question.text,
+      question.explanation,
+      question.reasoning,
+      question.graphDescription,
+      ...(question.options || []),
+    ]
+      .filter(Boolean)
+      .join(' ');
+    if (!containsMathDelimiters(haystack)) return;
+    loadKatexAutoRender()
+      .then((renderMathInElement) => {
+        if (!modalBodyRef.current) return;
+        try {
+          renderMathInElement(modalBodyRef.current, {
+            delimiters: KATEX_DELIMITERS,
+            throwOnError: false,
+          });
+        } catch (err) {
+          // Malformed TeX — plain text stays visible.
+        }
+      })
+      .catch(() => {
+        // CDN unavailable — equations degrade to readable TeX text.
+      });
+  }, [reviewRow, showAnswers]);
+
+  /* ------------------------------------------------------------- render */
 
   if (isLoading) {
     return (
-      <div className="ut-page" role="status" aria-label="Loading results">
+      <div className="xr" role="status" aria-label="Loading results">
         <div className="ut-skeleton ut-skeleton--text" style={{ width: 110, marginBottom: 12 }} />
         <div className="ut-skeleton ut-skeleton--title" style={{ width: 240, marginBottom: 26 }} />
+        <div className="ut-skeleton ut-skeleton--card" style={{ height: 170, marginBottom: 26 }} />
         <div className="ut-grid ut-grid--4" style={{ marginBottom: 22 }}>
           <div className="ut-skeleton ut-skeleton--stat" />
           <div className="ut-skeleton ut-skeleton--stat" />
@@ -308,25 +500,50 @@ function ExamResults() {
           <div className="ut-skeleton ut-skeleton--stat" />
         </div>
         <div className="ut-skeleton-stack">
-          <div className="ut-skeleton ut-skeleton--card" />
-          <div className="ut-skeleton ut-skeleton--card" />
-          <div className="ut-skeleton ut-skeleton--card" />
+          <div className="ut-skeleton ut-skeleton--row" />
+          <div className="ut-skeleton ut-skeleton--row" />
+          <div className="ut-skeleton ut-skeleton--row" />
+          <div className="ut-skeleton ut-skeleton--row" />
         </div>
       </div>
     );
   }
 
   if (pageError) {
-    return <div className="error-container"><p>{pageError}</p><button onClick={returnHome}>Go Home</button></div>;
+    return (
+      <div className="error-container">
+        <p>{pageError}</p>
+        <button onClick={() => navigate('/progress')}>Go Home</button>
+      </div>
+    );
   }
 
-  // Debug log for moduleData at render time
-  console.log('[ExamResults] Rendering with moduleData:', moduleData);
-  console.log('[ExamResults] moduleData length:', moduleData?.length);
-  console.log('[ExamResults] moduleData type:', typeof moduleData);
+  const totalScore = readingWritingScore + mathScore;
+  const heroChips = [
+    examDetails?.dateLabel,
+    counts.all > 0 ? `${counts.all} questions` : null,
+  ].filter(Boolean);
+
+  const tabs = [
+    { id: 'all', label: 'All Questions', count: counts.all },
+    { id: 'reading-writing', label: 'Reading & Writing', count: counts['reading-writing'] },
+    { id: 'math', label: 'Math', count: counts.math },
+  ];
+
+  const visibleGroups =
+    activeTab === 'all' ? ['reading-writing', 'math'] : [activeTab];
+
+  const sortIcon = (key) =>
+    sort.key === key ? (
+      sort.dir === 1 ? (
+        <FiArrowUp aria-hidden="true" />
+      ) : (
+        <FiArrowDown aria-hidden="true" />
+      )
+    ) : null;
 
   return (
-    <div className="results-container">
+    <div className="xr">
       <ReportQuestionModal
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
@@ -334,404 +551,582 @@ function ExamResults() {
         loading={reportLoading}
       />
 
-      <header className="results-page-head">
-        <span className="ut-eyebrow">Results</span>
-        <h1 className="ut-page-title">Exam Results</h1>
-        <p className="ut-page-sub">Section scores plus a question-by-question review of every module.</p>
+      {/* ── page head ── */}
+      <header className="xr-head">
+        <div className="xr-head-main">
+          <span className="ut-eyebrow">Results</span>
+          <h1 className="ut-page-title">Score Details</h1>
+          <p className="ut-page-sub">
+            {examDetails?.title ? `${examDetails.title} · ` : ''}
+            question-by-question review of every module.
+          </p>
+        </div>
+        <div className="xr-head-actions">
+          <button
+            type="button"
+            className="ut-btn ut-btn--ghost ut-btn--sm"
+            onClick={() => navigate('/all-results')}
+          >
+            All exam results
+          </button>
+          <button
+            type="button"
+            className="ut-btn ut-btn--ghost ut-btn--sm"
+            onClick={() => navigate('/progress')}
+          >
+            Back to home
+          </button>
+        </div>
       </header>
 
-      <div className={`results-content ${splitView ? 'split-view' : ''}`}>
-        {savingError ? (
-          <div className="error-message">
-            <p>Error saving results: {savingError}</p>
-            <p>Your results have not been saved to your account.</p>
+      {/* ── score hero ── */}
+      <section className="xr-hero" aria-label="Scores">
+        <div>
+          <p className="xr-hero__label">Total Score</p>
+          <p className="xr-hero__score">
+            {totalScore}
+            <small>/ 1600</small>
+          </p>
+          {(heroChips.length > 0 || examDetails?.isDiagnostic) && (
+            <div className="xr-hero__chips">
+              {examDetails?.isDiagnostic && <span className="xr-hero__chip">Diagnostic Test</span>}
+              {heroChips.map((chip) => (
+                <span key={chip} className="xr-hero__chip">
+                  {chip}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="xr-hero__sections">
+          {[
+            { label: 'Reading & Writing', score: readingWritingScore },
+            { label: 'Math', score: mathScore },
+          ].map(({ label, score }) => (
+            <div key={label} className="xr-hero__section">
+              <span className="xr-hero__section-name">{label}</span>
+              <span className="xr-hero__section-score">
+                {score} <small>/ 800</small>
+              </span>
+              <div className="xr-hero__bar">
+                <div
+                  className="xr-hero__bar-fill"
+                  style={{ width: `${Math.max(0, Math.min(100, ((score - 200) / 600) * 100))}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── section tabs ── */}
+      <nav className="xr-tabs" aria-label="Filter by section">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={`xr-tab${activeTab === tab.id ? ' xr-tab--active' : ''}`}
+            onClick={() => handleTab(tab.id)}
+          >
+            {tab.label} <span className="xr-tab__count">{tab.count}</span>
+          </button>
+        ))}
+      </nav>
+
+      {rows.length === 0 ? (
+        <div className="xr-empty">
+          <b>Question review isn't available for this exam</b>
+          The question data for this attempt is missing, so the module-by-module review can't be
+          shown. Your section scores above are still saved.
+        </div>
+      ) : (
+        <>
+          {/* ── knowledge & skills ── */}
+          <div className="xr-section-head">
+            <h2 className="xr-section-title">Knowledge &amp; Skills</h2>
           </div>
-        ) : (
-          <>
-            <div className={`results-card ${splitView ? 'results-summary' : ''}`}>
-              <div className="total-score-container">
-                <h2>Total Score</h2>
-                {examDetails?.isDiagnostic && (
-                  <div className="diagnostic-indicator">
-                    <span className="diagnostic-badge">Diagnostic Test</span>
-                  </div>
-                )}
-                <p>{readingWritingScore + mathScore} / 1600</p>
-              </div>
-              <div className="scores-row">
-                <div className="score-card reading-writing">
-                  <h2>Reading & Writing</h2>
-                  <p>{readingWritingScore}/800</p>
-                </div>
-                <div className="score-card math">
-                  <h2>Math</h2>
-                  <p>{mathScore}/800</p>
-                </div>
-              </div>
-              <div className="review-modules-section">
-                <h2>Review Questions by Module</h2>
-                <div className="module-review-buttons">
-                  {moduleData && moduleData.length > 0 ? (
-                    // Sort modules: Reading & Writing first (moduleNumber <= 2), then Math (moduleNumber > 2)
-                    moduleData
-                      .map((module, originalIndex) => ({ ...module, originalIndex }))
-                      .sort((a, b) => {
-                        // First sort by subject (Reading & Writing vs Math)
-                        const aIsRW = a.moduleNumber <= 2;
-                        const bIsRW = b.moduleNumber <= 2;
-                        if (aIsRW && !bIsRW) return -1; // Reading & Writing comes first
-                        if (!aIsRW && bIsRW) return 1;  // Math comes second
-                        // If same subject, sort by module number
-                        return a.moduleNumber - b.moduleNumber;
-                      })
-                      .map((module, index) => (
-                        <button 
-                          key={module.originalIndex} 
-                          className={`module-review-button ${activeReviewModule === moduleData[module.originalIndex] ? 'active' : ''}`}
-                          onClick={() => handleReviewModule(module.originalIndex)}
-                        >
-                          Review {module.moduleNumber <= 2 ? 'Reading & Writing' : 'Math'} Module {((module.moduleNumber - 1) % 2) + 1}
-                        </button>
-                      ))
-                  ) : (
-                    // Fallback buttons when moduleData is empty - ordered correctly
-                    <>
-                      <button 
-                        className="module-review-button"
-                        onClick={() => alert('Module review data is not available for this exam.')}
-                      >
-                        Review Reading & Writing Module 1
-                      </button>
-                      <button 
-                        className="module-review-button"
-                        onClick={() => alert('Module review data is not available for this exam.')}
-                      >
-                        Review Reading & Writing Module 2
-                      </button>
-                      <button 
-                        className="module-review-button"
-                        onClick={() => alert('Module review data is not available for this exam.')}
-                      >
-                        Review Math Module 1
-                      </button>
-                      <button 
-                        className="module-review-button"
-                        onClick={() => alert('Module review data is not available for this exam.')}
-                      >
-                        Review Math Module 2
-                      </button>
-                    </>
-                  )}
-                </div>
-                {moduleData && moduleData.length === 0 && (
-                  <p style={{ color: 'var(--ut-muted)', fontStyle: 'italic', marginTop: '1rem' }}>
-                    Module review is not available for this exam. This may be due to missing question data.
-                  </p>
-                )}
-              </div>
-              {!splitView && (
-                <>
-                  {/* Focus Areas section */}
-                  {/* {weakSubcats && weakSubcats.length > 0 && (
-                    <div className="focus-areas-container">
-                      <h2>Your Focus Areas</h2>
-                      <p>We've identified these subcategories as needing improvement based on your performance.</p>
-                      <div className="focus-areas-list">
-                        {weakSubcats.map(subcategory => (
-                          <div key={subcategory.id} className="focus-area-card">
-                            <div className="focus-area-content">
-                              <h3>{subcategory.name}</h3>
-                              <div className="subcategory-stats">
-                                <div className="score-pill">
-                                  {Math.round(subcategory.rate * 100)}%
-                                </div>
-                                <span className="score-details">
-                                  {subcategory.correct} / {subcategory.total} correct
-                                </span>
-                              </div>
-                            </div>
-                            <button 
-                              className="start-adaptive-quiz-button"
-                              onClick={() => navigate(`/adaptive-quiz?subcategory=${subcategory.id}&level=easy`)}
-                            >
-                              Start Adaptive Quiz <FaArrowRight />
-                            </button>
-                          </div>
+          <p className="xr-section-sub">
+            Your performance across the content domains measured on the SAT.
+          </p>
+
+          {visibleGroups.map((sectionId) => (
+            <div key={sectionId} className="xr-skills-group">
+              <div className="xr-skills-group__name">{SECTION_LABELS[sectionId]}</div>
+              <div className="xr-domains">
+                {DOMAIN_GROUPS[sectionId].map((domain) => {
+                  const stat = domainStats[domain.id];
+                  if (!stat || stat.total === 0) {
+                    return (
+                      <div key={domain.id} className="xr-domain xr-domain--empty">
+                        <div className="xr-domain__top">
+                          <h3 className="xr-domain__name">{domain.name}</h3>
+                          <span className="xr-domain__pct">—</span>
+                        </div>
+                        <p className="xr-domain__meta">No questions in this exam</p>
+                        <div className="xr-segbar">
+                          {Array.from({ length: 8 }, (_, i) => (
+                            <span key={i} className="xr-segbar__seg" />
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
+                  const pct = Math.round((stat.correct / stat.total) * 100);
+                  const tier = pct < 50 ? 'weak' : pct < 75 ? 'moderate' : 'strong';
+                  const litSegments = Math.round((pct / 100) * 8);
+                  return (
+                    <div key={domain.id} className="xr-domain">
+                      <div className="xr-domain__top">
+                        <h3 className="xr-domain__name">{domain.name}</h3>
+                        <span className="xr-domain__pct">{pct}%</span>
+                      </div>
+                      <p className="xr-domain__meta">
+                        {stat.correct} of {stat.total} correct
+                      </p>
+                      <div className={`xr-segbar xr-segbar--${tier}`}>
+                        {Array.from({ length: 8 }, (_, i) => (
+                          <span
+                            key={i}
+                            className={`xr-segbar__seg${i < litSegments ? ' xr-segbar__seg--on' : ''}`}
+                          />
                         ))}
                       </div>
                     </div>
-                  )} */}
-                </>
-              )}
-
-              {/* Consolidated Action Buttons Section */}
-              <div className="action-buttons-container">
-                <div className="secondary-actions">
-                  <button className="secondary-button" onClick={() => navigate('/all-results')}>
-                    VIEW ALL EXAM RESULTS
-                  </button>
-                  <button className="secondary-button" onClick={returnHome}>
-                    BACK TO HOME
-                  </button>
-                </div>
+                  );
+                })}
               </div>
             </div>
-            
-            {splitView && activeReviewModule !== null && (
-              <div className="module-review-panel">
-                {/* Select any word in the reviewed questions to save it to the Word Bank */}
-                <WordSaver
-                  selector=".question-container-review"
-                  source="exam-review"
-                  metadata={{ examId }}
-                  showDefinition
-                />
-                <div className="module-review-header">
-                  <h2>Review: {activeReviewModule?.title || 'Module'}</h2>
-                  <button 
-                    className="close-review-button"
-                    onClick={closeReviewPanel}
+          ))}
+
+          {/* ── questions overview ── */}
+          <div className="xr-section-head">
+            <h2 className="xr-section-title">Questions Overview</h2>
+          </div>
+          <p className="xr-section-sub">Review your result for each question from this exam.</p>
+
+          <div className="xr-overview">
+            <div className="xr-stat xr-stat--total">
+              <span className="xr-stat__value">{counts.all}</span>
+              <span className="xr-stat__label">Total Questions</span>
+            </div>
+            <div className="xr-stat xr-stat--correct">
+              <span className="xr-stat__value">{counts.correct}</span>
+              <span className="xr-stat__label">Correct</span>
+            </div>
+            <div className="xr-stat xr-stat--incorrect">
+              <span className="xr-stat__value">{counts.incorrect}</span>
+              <span className="xr-stat__label">Incorrect</span>
+            </div>
+            <div className="xr-stat xr-stat--omitted">
+              <span className="xr-stat__value">{counts.omitted}</span>
+              <span className="xr-stat__label">Omitted</span>
+            </div>
+          </div>
+
+          {/* ── toolbar ── */}
+          <div className="xr-toolbar">
+            <button
+              type="button"
+              className={`xr-switch${showAnswers ? ' xr-switch--on' : ''}`}
+              aria-pressed={showAnswers}
+              onClick={() => setShowAnswers((prev) => !prev)}
+            >
+              <span className="xr-switch__track" />
+              Show correct answers
+            </button>
+            <div className="xr-view">
+              <span className="xr-view__label">View</span>
+              {[10, 30, 'all'].map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  className={`xr-view__opt${pageSize === size ? ' xr-view__opt--active' : ''}`}
+                  onClick={() => handlePageSize(size)}
+                >
+                  {size === 'all' ? 'All' : size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── table ── */}
+          {sortedRows.length === 0 ? (
+            <div className="xr-empty">
+              <b>No questions in this section</b>
+              This exam has no {activeTab === 'math' ? 'Math' : 'Reading & Writing'} questions to
+              review.
+            </div>
+          ) : (
+          <div className="xr-tablewrap">
+            <table className="xr-table">
+              <thead>
+                <tr>
+                  <th>
+                    <button
+                      type="button"
+                      className={`xr-th-sort${sort.key === 'number' ? ' xr-th-sort--active' : ''}`}
+                      onClick={() => handleSort('number')}
+                    >
+                      Question {sortIcon('number')}
+                    </button>
+                  </th>
+                  <th>Section</th>
+                  <th>
+                    <button
+                      type="button"
+                      className={`xr-th-sort${sort.key === 'domain' ? ' xr-th-sort--active' : ''}`}
+                      onClick={() => handleSort('domain')}
+                    >
+                      Domain {sortIcon('domain')}
+                    </button>
+                  </th>
+                  <th>Correct Answer</th>
+                  <th>
+                    <button
+                      type="button"
+                      className={`xr-th-sort${sort.key === 'status' ? ' xr-th-sort--active' : ''}`}
+                      onClick={() => handleSort('status')}
+                    >
+                      Your Answer {sortIcon('status')}
+                    </button>
+                  </th>
+                  <th aria-label="Actions" />
+                </tr>
+              </thead>
+              <tbody>
+                {pagedRows.map((row) => (
+                  <tr key={row.uid}>
+                    <td className="xr-td-num">{String(row.number).padStart(2, '0')}</td>
+                    <td className="xr-td-section">
+                      <b>{row.sectionLabel}</b>
+                      <span>{row.moduleLabel}</span>
+                    </td>
+                    <td className="xr-td-domain">{row.domainName || '—'}</td>
+                    <td>
+                      {showAnswers ? (
+                        <span className="xr-ans xr-ans--key">{row.keyDisplay}</span>
+                      ) : (
+                        <span className="xr-ans--hidden">Hidden</span>
+                      )}
+                    </td>
+                    <td>
+                      {row.status === 'correct' && (
+                        <span className="xr-ans xr-ans--correct">
+                          <FiCheck aria-hidden="true" /> {row.userDisplay}
+                        </span>
+                      )}
+                      {row.status === 'incorrect' && (
+                        <span className="xr-ans xr-ans--incorrect">
+                          <FiX aria-hidden="true" /> {row.userDisplay}
+                        </span>
+                      )}
+                      {row.status === 'omitted' && (
+                        <span className="xr-ans xr-ans--omitted">Omitted</span>
+                      )}
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <button type="button" className="xr-review-btn" onClick={() => openReview(row)}>
+                        Review <FiArrowRight aria-hidden="true" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          )}
+
+          {/* ── pager ── */}
+          {totalPages > 1 && (
+            <div className="xr-pager">
+              <button
+                type="button"
+                className="xr-pager__btn"
+                disabled={currentPage === 1}
+                onClick={() => setPage(currentPage - 1)}
+                aria-label="Previous page"
+              >
+                ‹
+              </button>
+              {buildPageItems(totalPages, currentPage).map((item, index) =>
+                item === '…' ? (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <span key={`gap-${index}`} className="xr-pager__gap">
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={item}
+                    type="button"
+                    className={`xr-pager__btn${item === currentPage ? ' xr-pager__btn--active' : ''}`}
+                    onClick={() => setPage(item)}
                   >
-                    Close
+                    {item}
                   </button>
-                </div>
-                
-                <div className="module-questions-review">
-                  {activeReviewModule?.questions?.map((question, questionIndex) => {
-                    // Find the response for the current question from the original module definition
-                    // Try multiple ways to match the response to handle different ID formats
-                    const response = activeReviewModule.responses?.find(resp => {
-                      // First try exact ID match
-                      if (resp.questionId === question.id) return true;
-                      
-                      // Then try matching by question content if both have it
-                      if (resp.question && resp.question.id === question.id) return true;
-                      
-                      // Try matching by index-based ID pattern
-                      const indexBasedId = `practice-${activeReviewModule.id}-q-${questionIndex}`;
-                      if (resp.questionId === indexBasedId) return true;
-                      
-                      // Try matching by moduleIndex if available
-                      if (resp.moduleIndex === questionIndex) return true;
-                      
-                      // Last resort: match by question text (for questions without proper IDs)
-                      if (resp.question && resp.question.text === question.text) return true;
-                      
-                      return false;
-                    });
+                )
+              )}
+              <button
+                type="button"
+                className="xr-pager__btn"
+                disabled={currentPage === totalPages}
+                onClick={() => setPage(currentPage + 1)}
+                aria-label="Next page"
+              >
+                ›
+              </button>
+            </div>
+          )}
+        </>
+      )}
 
-                    console.log(`[ExamResults] Reviewing Question ${questionIndex + 1} (ID: ${question.id}):`, question);
-                    if (response) {
-                        console.log(`[ExamResults] Found response for Question ${question.id}:`, response);
-                    } else {
-                        console.log(`[ExamResults] No response found for Question ${question.id} (Skipped).`);
-                        // Debug: Log all response questionIds for this module
-                        if (questionIndex === 0 && activeReviewModule.responses) {
-                          console.log(`[ExamResults] Module ${activeReviewModule.title} - All response questionIds:`, 
-                            activeReviewModule.responses.map(r => r.questionId));
-                          console.log(`[ExamResults] Module ${activeReviewModule.title} - All question ids:`, 
-                            activeReviewModule.questions.map(q => q.id));
-                        }
-                    }
-                    
-                    // Determine if the question was answered and if it was correct
-                    const isAnswered = !!response;
-                    const isCorrect = response?.isCorrect || false;
+      {/* ═══════════ review modal ═══════════ */}
+      {reviewRow && (
+        <div className="xrm-scrim" onMouseDown={(e) => e.target === e.currentTarget && closeReview()}>
+          <div className="xrm" role="dialog" aria-modal="true" aria-label="Question review">
+            <WordSaver
+              selector=".xrm-pane--question"
+              source="exam-review"
+              metadata={{ examId }}
+              showDefinition
+            />
 
-                    // Guard against undefined question (but allow questions without options)
-                    if (!question || !question.text) {
-                      console.error(`[ExamResults] Invalid question object or missing text at index ${questionIndex}:`, question);
-                      return (
-                        <div key={`error-q-${questionIndex}`} className="question-container-review error">
-                          <p>Error: Question data is incomplete for this item.</p>
-                        </div>
-                      );
-                    }
-                    
-                    // Determine question type using smart detection
-                    let questionType = question.questionType;
-                    if (!questionType) {
-                      if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
-                        questionType = 'user-input';
-                      } else {
-                        questionType = 'multiple-choice';
-                      }
-                    }
-                    
-                    return (
-                      <div key={question.id || questionIndex} className="question-container-review">
-                        <div className="question-review-header">
-                          <div className="question-review-left">
-                            <span className="question-number">Question {questionIndex + 1}</span>
-                          </div>
-                          <div className="question-review-center">
-                            <button
-                              className="report-button-results"
-                              onClick={() => openReportModal(question)}
-                              title="Report this question"
-                            >
-                              <FiFlag />
-                            </button>
-                          </div>
-                          <div className="question-review-right">
-                            <span className={`question-status ${!isAnswered ? 'not-answered' : isCorrect ? 'correct' : 'incorrect'}`}>
-                              {!isAnswered ? 'Not Answered' : isCorrect ? 'Correct' : 'Incorrect'}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <div 
-                          className="question-text"
-                          dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.text) }}
-                        />
-                        
-                        {question.graphDescription && (
-                          <div className="question-graph-description">
-                            <h4>Graph Description:</h4>
-                            <div 
-                              className="graph-description-text"
-                              dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.graphDescription) }}
-                            />
-                          </div>
-                        )}
-                        
-                        {question.graphUrl && (
-                          <div className="question-graph">
-                            <img
-                              src={question.graphUrl}
-                              alt={question.graphDescription || 'Question graph'}
-                            />
-                          </div>
-                        )}
-                        
-                        {/* Conditional rendering based on question type */}
-                        {questionType === 'multiple-choice' ? (
-                          // Multiple choice questions display
-                          <div className="question-options">
-                            {question.options.map((optionText, optionIndex) => {
-                              const userAnswer = response?.userAnswer;
-                              
-                              let isUserSelectedOption = false;
-                              if (isAnswered) {
-                                  // If userAnswer is stored as the option text itself:
-                                  isUserSelectedOption = userAnswer === optionText;
-                              }
-
-                              const correctOption = resolveMultipleChoiceKey(
-                                question.correctAnswer,
-                                question.options,
-                              );
-                              const isCorrectOption = optionText === correctOption;
-                              
-                              let backgroundColor = 'var(--ut-card-soft)'; // Default for unselected options
-
-                              if (isCorrectOption) {
-                                // Highlight the correct answer regardless of user selection
-                                backgroundColor = 'var(--ut-accent-soft)'; // Green tint for correct option
-                              }
-                              
-                              if (isUserSelectedOption) {
-                                if (isCorrectOption) {
-                                  // User selected the correct answer (already light green)
-                                } else {
-                                  // User selected an incorrect answer
-                                  backgroundColor = 'var(--ut-danger-soft)'; // Danger tint for user's incorrect selection
-                                }
-                              }
-                              
-                              const optionStyle = {
-                                padding: '10px 15px',
-                                borderRadius: '4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: '8px',
-                                backgroundColor: backgroundColor,
-                                border: '1px solid var(--ut-rule)'
-                              };
-                              
-                              return (
-                                <div key={optionIndex} style={optionStyle}>
-                                  <span style={{fontWeight: 'bold', marginRight: '10px', width: '20px'}}>
-                                    {String.fromCharCode(65 + optionIndex)}.
-                                  </span>
-                                  <span style={{flex: 1}}>{optionText}</span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ) : (
-                          // User input questions display
-                          <div className="user-input-review">
-                            <div style={{marginBottom: '15px'}}>
-                              <div style={{
-                                padding: '10px 15px',
-                                borderRadius: '4px',
-                                backgroundColor: isAnswered ? (isCorrect ? 'var(--ut-accent-soft)' : 'var(--ut-danger-soft)') : 'var(--ut-card-soft)',
-                                border: '1px solid var(--ut-rule)',
-                                marginBottom: '8px'
-                              }}>
-                                <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Your Answer:</div>
-                                <div style={{fontSize: '16px'}}>
-                                  {isAnswered ? response.userAnswer : 'Not answered'}
-                                </div>
-                              </div>
-                              
-                              <div style={{
-                                padding: '10px 15px',
-                                borderRadius: '4px',
-                                backgroundColor: 'var(--ut-accent-soft)', // Always green for correct answer
-                                border: '1px solid var(--ut-rule)'
-                              }}>
-                                <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Correct Answer:</div>
-                                <div style={{fontSize: '16px'}}>
-                                  {question.correctAnswer}
-                                </div>
-                              </div>
-                              
-                              {question.acceptedAnswers && question.acceptedAnswers.length > 0 && (
-                                <div style={{
-                                  padding: '10px 15px',
-                                  borderRadius: '4px',
-                                  backgroundColor: 'var(--ut-card-soft)',
-                                  border: '1px solid var(--ut-accent-rule)',
-                                  marginTop: '8px'
-                                }}>
-                                  <div style={{fontWeight: 'bold', marginBottom: '5px'}}>Also Accepted:</div>
-                                  <div style={{fontSize: '14px', color: 'var(--ut-muted)'}}>
-                                    {question.acceptedAnswers.join(', ')}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                        
-                        {isAnswered && (
-                          <div className="question-footer">
-                            <button 
-                              className="explanation-button"
-                              onClick={() => toggleExplanation(question.id)}
-                            >
-                              {showExplanation[question.id] ? 'Hide Explanation' : 'Show Explanation'}
-                            </button>
-                          </div>
-                        )}
-                        
-                        {isAnswered && showExplanation[question.id] && (
-                          <div className="question-explanation">
-                            <h4>Explanation</h4>
-                            <p dangerouslySetInnerHTML={{ __html: getSafeProcessedMarkup(question.explanation || `The correct answer is "${question.correctAnswer}". ${question.reasoning || ''}`) }} />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+            <header className="xrm-head">
+              <div className="xrm-head__main">
+                <p className="xrm-head__eyebrow">
+                  {examDetails?.title || 'Practice Exam'}
+                  {examDetails?.dateLabel ? ` · ${examDetails.dateLabel}` : ''}
+                </p>
+                <h2 className="xrm-head__title">
+                  {reviewRow.sectionLabel} · {reviewRow.moduleLabel} — Question {reviewRow.number}
+                </h2>
               </div>
-            )}
-          </>
-        )}
-      </div>
+              <div className="xrm-head__side">
+                {reviewRow.domainName && (
+                  <span className="xrm-head__domain">{reviewRow.domainName}</span>
+                )}
+                <button
+                  type="button"
+                  className="xrm-iconbtn xrm-iconbtn--flag"
+                  title="Report this question"
+                  onClick={() => {
+                    setSelectedQuestionForReport(reviewRow.question);
+                    setIsReportModalOpen(true);
+                  }}
+                >
+                  <FiFlag aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="xrm-iconbtn"
+                  title="Close"
+                  aria-label="Close review"
+                  onClick={closeReview}
+                >
+                  <FiX aria-hidden="true" />
+                </button>
+              </div>
+            </header>
+
+            <div className="xrm-body" ref={modalBodyRef}>
+              {/* ── question pane ── */}
+              <section className="xrm-pane xrm-pane--question">
+                <p className="xrm-qlabel">Question {reviewRow.number}</p>
+                <div
+                  className="xrm-qtext"
+                  dangerouslySetInnerHTML={{ __html: getSafeMarkup(reviewRow.question.text) }}
+                />
+
+                {reviewRow.question.graphDescription && (
+                  <div className="xrm-graphdesc">
+                    <b>Graph description</b>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: getSafeMarkup(reviewRow.question.graphDescription),
+                      }}
+                    />
+                  </div>
+                )}
+
+                {reviewRow.question.graphUrl && (
+                  <div className="xrm-graph">
+                    <img
+                      src={reviewRow.question.graphUrl}
+                      alt={reviewRow.question.graphDescription || 'Question graph'}
+                    />
+                  </div>
+                )}
+
+                {reviewRow.multipleChoice && (
+                  <ol className="xrm-choices">
+                    {reviewRow.question.options.map((optionText, optionIndex) => {
+                      const isKey = showAnswers && optionIndex === reviewRow.keyIndex;
+                      const isPickedWrong =
+                        showAnswers &&
+                        optionIndex === reviewRow.userIndex &&
+                        optionIndex !== reviewRow.keyIndex;
+                      const isPicked = optionIndex === reviewRow.userIndex;
+                      let className = 'xrm-choice';
+                      if (isKey) className += ' xrm-choice--key';
+                      if (isPickedWrong) className += ' xrm-choice--picked-wrong';
+                      return (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <li key={optionIndex} className={className}>
+                          {isKey && (
+                            <span className="xrm-choice__tag">
+                              {isPicked ? 'Your answer' : 'Correct answer'}
+                            </span>
+                          )}
+                          {isPickedWrong && <span className="xrm-choice__tag">Your answer</span>}
+                          <span className="xrm-choice__letter">{letterFor(optionIndex)}</span>
+                          <span
+                            className="xrm-choice__text"
+                            dangerouslySetInnerHTML={{ __html: getSafeMarkup(optionText) }}
+                          />
+                          {isKey && (
+                            <span className="xrm-choice__mark">
+                              <FiCheck aria-hidden="true" />
+                            </span>
+                          )}
+                          {isPickedWrong && (
+                            <span className="xrm-choice__mark">
+                              <FiX aria-hidden="true" />
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ol>
+                )}
+              </section>
+
+              {/* ── answer pane ── */}
+              <section className="xrm-pane xrm-pane--answer">
+                <p className="xrm-alabel">Answer</p>
+
+                {showAnswers ? (
+                  <>
+                    {reviewRow.status === 'correct' && (
+                      <div className="xrm-banner xrm-banner--correct">
+                        <FiCheckCircle aria-hidden="true" />
+                        <span>You answered {reviewRow.userDisplay} — correct.</span>
+                      </div>
+                    )}
+                    {reviewRow.status === 'incorrect' && (
+                      <div className="xrm-banner xrm-banner--incorrect">
+                        <FiXCircle aria-hidden="true" />
+                        <span>
+                          You answered {reviewRow.userDisplay}. The correct answer is{' '}
+                          {reviewRow.keyDisplay}.
+                        </span>
+                      </div>
+                    )}
+                    {reviewRow.status === 'omitted' && (
+                      <div className="xrm-banner xrm-banner--omitted">
+                        <FiAlertCircle aria-hidden="true" />
+                        <span>
+                          You omitted this question. The correct answer is {reviewRow.keyDisplay}.
+                        </span>
+                      </div>
+                    )}
+
+                    {!reviewRow.multipleChoice && (
+                      <div className="xrm-answers">
+                        <div
+                          className={`xrm-answers__row ${
+                            reviewRow.status === 'correct'
+                              ? 'xrm-answers__row--good'
+                              : reviewRow.status === 'incorrect'
+                                ? 'xrm-answers__row--bad'
+                                : ''
+                          }`}
+                        >
+                          <b>Your answer</b>
+                          <span>{reviewRow.userDisplay ?? '—'}</span>
+                        </div>
+                        <div className="xrm-answers__row xrm-answers__row--good">
+                          <b>Correct answer</b>
+                          <span>{reviewRow.keyDisplay}</span>
+                        </div>
+                        {Array.isArray(reviewRow.question.acceptedAnswers) &&
+                          reviewRow.question.acceptedAnswers.length > 0 && (
+                            <div className="xrm-answers__row xrm-answers__row--accepted">
+                              <b>Also accepted</b>
+                              <span>{reviewRow.question.acceptedAnswers.join(', ')}</span>
+                            </div>
+                          )}
+                      </div>
+                    )}
+
+                    <div className="xrm-rationale">
+                      <h3 className="xrm-rationale__title">Rationale</h3>
+                      <div
+                        className="xrm-rationale__body"
+                        dangerouslySetInnerHTML={{
+                          __html: getSafeMarkup(
+                            reviewRow.question.explanation ||
+                              `The correct answer is "${reviewRow.keyDisplay}". ${
+                                reviewRow.question.reasoning || ''
+                              }`
+                          ),
+                        }}
+                      />
+                    </div>
+
+                    {reviewRow.skillId && reviewRow.skillName && (
+                      <Link className="xrm-study" to={`/learn/${reviewRow.skillId}`}>
+                        <FiBookOpen aria-hidden="true" />
+                        Study this skill: {reviewRow.skillName}
+                      </Link>
+                    )}
+                  </>
+                ) : (
+                  <div className="xrm-hidden">
+                    <FiLock aria-hidden="true" />
+                    <b>Answer hidden</b>
+                    Try the question again on your own, then turn on “Show correct answer and
+                    explanation” below to reveal the key and rationale.
+                  </div>
+                )}
+              </section>
+            </div>
+
+            <footer className="xrm-foot">
+              <label className="xrm-check">
+                <input
+                  type="checkbox"
+                  checked={showAnswers}
+                  onChange={(e) => setShowAnswers(e.target.checked)}
+                />
+                <span className="xrm-check__box">
+                  <FiCheck aria-hidden="true" />
+                </span>
+                Show correct answer and explanation
+              </label>
+              <div className="xrm-foot__nav">
+                <span className="xrm-foot__count">
+                  Question {reviewIndex + 1} of {sortedRows.length}
+                </span>
+                <button
+                  type="button"
+                  className="ut-btn ut-btn--ghost"
+                  disabled={reviewIndex === 0}
+                  onClick={() => stepReview(-1)}
+                >
+                  Previous
+                </button>
+                <button
+                  type="button"
+                  className="ut-btn ut-btn--primary"
+                  disabled={reviewIndex >= sortedRows.length - 1}
+                  onClick={() => stepReview(1)}
+                >
+                  Next
+                </button>
+              </div>
+            </footer>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
