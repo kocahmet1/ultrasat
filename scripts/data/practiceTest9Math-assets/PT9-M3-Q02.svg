@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 310" width="420" height="310" font-family="Georgia, serif" shape-rendering="geometricPrecision">
+  <text x="210" y="28" text-anchor="middle" font-size="15">New Leaves on Plant Cuttings</text>
+  <line x1="65" y1="245" x2="365" y2="245" stroke="#000" stroke-width="1.6"/>
+  <g stroke="#000" stroke-width="1.2" font-size="12" text-anchor="middle">
+    <line x1="90" y1="239" x2="90" y2="251"/><text x="90" y="270" stroke="none">3</text>
+    <line x1="150" y1="239" x2="150" y2="251"/><text x="150" y="270" stroke="none">4</text>
+    <line x1="210" y1="239" x2="210" y2="251"/><text x="210" y="270" stroke="none">5</text>
+    <line x1="270" y1="239" x2="270" y2="251"/><text x="270" y="270" stroke="none">6</text>
+    <line x1="330" y1="239" x2="330" y2="251"/><text x="330" y="270" stroke="none">7</text>
+  </g>
+  <g fill="#555" stroke="#000" stroke-width="1">
+    <circle cx="90" cy="225" r="6"/><circle cx="90" cy="207" r="6"/>
+    <circle cx="150" cy="225" r="6"/><circle cx="150" cy="207" r="6"/><circle cx="150" cy="189" r="6"/><circle cx="150" cy="171" r="6"/>
+    <circle cx="210" cy="225" r="6"/><circle cx="210" cy="207" r="6"/><circle cx="210" cy="189" r="6"/><circle cx="210" cy="171" r="6"/><circle cx="210" cy="153" r="6"/><circle cx="210" cy="135" r="6"/>
+    <circle cx="270" cy="225" r="6"/><circle cx="270" cy="207" r="6"/>
+    <circle cx="330" cy="225" r="6"/>
+  </g>
+  <text x="210" y="296" text-anchor="middle" font-size="13">Number of new leaves</text>
+</svg>

@@ -1,0 +1,873 @@
+{
+  "examSlug": "exam9-math-v1",
+  "targetExamTitle": "Exam 9",
+  "note": "Original Math replacement modules for Practice Test 9. Authored from the supplied official-form and Question Bank measurements. Figures are in practiceTest9Math-assets and are inlined by replaceExam9Math.js.",
+  "modules": [
+    {
+      "moduleNumber": 3,
+      "title": "Exam 9, Module 3",
+      "description": "Practice Test 9 - Math, Module 1 (22 questions)",
+      "section": "Math",
+      "calculatorAllowed": true,
+      "timeLimit": 2100,
+      "questions": [
+        {
+          "originalQuestionNumber": 1,
+          "passage": null,
+          "text": "A telescope records 540 images in 12 minutes at a constant rate. At this rate, how many images does the telescope record in 7 minutes?",
+          "questionType": "multiple-choice",
+          "options": [
+            "45",
+            "84",
+            "315",
+            "3,780"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "ratios-rates-proportions",
+          "subcategoryId": 19,
+          "explanation": "Choice C is correct. Dividing 540 images by 12 minutes yields 45 images per minute. Multiplying 45 images per minute by 7 minutes yields 315 images. Therefore, the telescope records 315 images in 7 minutes. Choice A is incorrect. This is the number of images recorded in 1 minute, not 7 minutes. Choice B is incorrect and may result from multiplying 12 by 7. Choice D is incorrect and may result from multiplying the 12-minute total, 540, by 7 instead of first finding the unit rate.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 2,
+          "passage": "<p>The dot plot shows the number of new leaves on each of 15 plant cuttings after one week.</p>",
+          "text": "What is the mode of the numbers of new leaves?",
+          "questionType": "multiple-choice",
+          "options": [
+            "3",
+            "4",
+            "5",
+            "15"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "one-variable-data",
+          "subcategoryId": 21,
+          "explanation": "Choice C is correct. The mode of a data set is the value that occurs most often. In the dot plot, 5 has six dots above it, more than any other value. Therefore, the mode of the numbers of new leaves is 5. Choice A is incorrect. This is the least number of leaves shown, not the mode. Choice B is incorrect. Four cuttings had 4 new leaves, but 5 occurs more often. Choice D is incorrect. This is the total number of cuttings represented, not the mode.",
+          "graphAsset": "PT9-M3-Q02.svg",
+          "graphDescription": "A dot plot titled New Leaves on Plant Cuttings has a horizontal axis labeled Number of new leaves with values 3, 4, 5, 6, and 7. There are 2 dots above 3, 4 dots above 4, 6 dots above 5, 2 dots above 6, and 1 dot above 7, for a total of 15 dots."
+        },
+        {
+          "originalQuestionNumber": 3,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">5(2x - 1) = 35</div>",
+          "text": "If x is the solution to the given equation, what is the value of 4x?",
+          "questionType": "multiple-choice",
+          "options": [
+            "4",
+            "16",
+            "32",
+            "35"
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "linear-equations-one-variable",
+          "subcategoryId": 11,
+          "explanation": "Choice B is correct. Dividing both sides of the given equation by 5 yields 2x - 1 = 7. Adding 1 to both sides of this equation yields 2x = 8. Multiplying both sides of 2x = 8 by 2 yields 4x = 16. Therefore, the value of 4x is 16. Choice A is incorrect. This is the value of x, not the value of 4x. Choice C is incorrect and may result from multiplying 8 by 4 instead of multiplying it by 2 to obtain the value of 4x. Choice D is incorrect. This is the value on the right-hand side of the original equation, not the value of 4x.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 4,
+          "passage": null,
+          "text": "A shipment contains 250 optical filters. Of these, 220 passed an inspection. What percentage of the optical filters did not pass the inspection?",
+          "questionType": "multiple-choice",
+          "options": [
+            "12%",
+            "30%",
+            "88%",
+            "220%"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "percentages",
+          "subcategoryId": 20,
+          "explanation": "Choice A is correct. Of the 250 optical filters, 250 - 220 = 30 did not pass the inspection. The percentage that did not pass was (30/250)(100%) = 12%. Choice B is incorrect. This is the number of filters that did not pass, treated as a percentage. Choice C is incorrect. This is the percentage that passed the inspection. Choice D is incorrect. This is the number of filters that passed, treated as a percentage.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 5,
+          "passage": null,
+          "text": "The function f is defined by f(x) = x<sup>2</sup> - 6x + 11. What is the value of f(2)?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "3",
+          "acceptedAnswers": [
+            "3"
+          ],
+          "difficulty": "easy",
+          "subcategory": "nonlinear-functions",
+          "subcategoryId": 16,
+          "explanation": "The correct answer is 3. Substituting 2 for x in the definition of f yields f(2) = 2² - 6(2) + 11, or f(2) = 4 - 12 + 11. Simplifying this expression yields f(2) = 3. Therefore, the value of f(2) is 3.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 6,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">5x + 2y = 24</div>",
+          "text": "The point (p, -3) lies on the line defined by the given equation. What is the value of p?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "6",
+          "acceptedAnswers": [
+            "6"
+          ],
+          "difficulty": "easy",
+          "subcategory": "linear-equations-two-variables",
+          "subcategoryId": 13,
+          "explanation": "The correct answer is 6. Since (p, -3) lies on the line, substituting p for x and -3 for y in the given equation yields 5p + 2(-3) = 24, or 5p - 6 = 24. Adding 6 to both sides gives 5p = 30. Dividing both sides by 5 gives p = 6.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 7,
+          "passage": "<p>For the linear function f, the table shows three values of x and their corresponding values of f(x).</p><table style=\"border-collapse:collapse; margin:10px auto; text-align:center;\"><tr><th style=\"border:1px solid #000; padding:6px 12px;\">x</th><th style=\"border:1px solid #000; padding:6px 12px;\">-1</th><th style=\"border:1px solid #000; padding:6px 12px;\">0</th><th style=\"border:1px solid #000; padding:6px 12px;\">1</th></tr><tr><th style=\"border:1px solid #000; padding:6px 12px;\">f(x)</th><td style=\"border:1px solid #000; padding:6px 12px;\">9</td><td style=\"border:1px solid #000; padding:6px 12px;\">6</td><td style=\"border:1px solid #000; padding:6px 12px;\">3</td></tr></table>",
+          "text": "What is the value of f(0)?",
+          "questionType": "multiple-choice",
+          "options": [
+            "-3",
+            "0",
+            "3",
+            "6"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "linear-functions",
+          "subcategoryId": 12,
+          "explanation": "Choice D is correct. The table shows that when x = 0, f(x) = 6. Therefore, f(0) = 6. Choice A is incorrect. This is the constant rate of change of f, not f(0). Choice B is incorrect. This is the input at which f is evaluated, not the output. Choice C is incorrect. This is the value of f(1), not f(0).",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 8,
+          "passage": "<p>In the figure shown, two lines intersect. The measures of a pair of vertical angles are (3x + 8)° and (5x - 24)°.</p>",
+          "text": "What is the value of x?",
+          "questionType": "multiple-choice",
+          "options": [
+            "8",
+            "16",
+            "32",
+            "56"
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "lines-angles-triangles",
+          "subcategoryId": 27,
+          "explanation": "Choice B is correct. Vertical angles have equal measures, so 3x + 8 = 5x - 24. Adding 24 to both sides and subtracting 3x from both sides yields 32 = 2x. Dividing both sides by 2 yields x = 16. Therefore, the value of x is 16. Choice A is incorrect and may result from dividing 16 by 2 after solving. Choice C is incorrect. This is the value of 2x, not x. Choice D is incorrect. This is the measure, in degrees, of each marked angle when x = 16, not the value of x.",
+          "graphAsset": "PT9-M3-Q08.svg",
+          "graphDescription": "Two straight lines intersect at point P. The acute angle to the left of P is labeled (3x + 8) degrees, and its vertical angle to the right of P is labeled (5x - 24) degrees. A note below the figure states that the figure is not drawn to scale."
+        },
+        {
+          "originalQuestionNumber": 9,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">(x - 4)<sup>2</sup> + (y + 1)<sup>2</sup> = 36</div>",
+          "text": "The graph of the given equation in the xy-plane is a circle. What is the diameter of the circle?",
+          "questionType": "multiple-choice",
+          "options": [
+            "4",
+            "6",
+            "10",
+            "12"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "circles",
+          "subcategoryId": 29,
+          "explanation": "Choice D is correct. An equation of a circle with center (h, k) and radius r is (x - h)² + (y - k)² = r². In the given equation, r² = 36, so r = 6. The diameter is twice the radius, so the diameter is 12. Choice A is incorrect. This is the x-coordinate of the center. Choice B is incorrect. This is the radius, not the diameter. Choice C is incorrect. This is the x-coordinate of the circle's rightmost point, 4 + 6, not the diameter.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 10,
+          "passage": null,
+          "text": "Which expression is equivalent to (3x<sup>2</sup>y)(4xy<sup>3</sup>)?",
+          "questionType": "multiple-choice",
+          "options": [
+            "12x³y⁴",
+            "7x³y⁴",
+            "12x²y³",
+            "12x³y³"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "equivalent-expressions",
+          "subcategoryId": 18,
+          "explanation": "Choice A is correct. Multiplying the coefficients 3 and 4 yields 12. When powers with the same base are multiplied, their exponents are added. Thus, x² times x is x³, and y times y³ is y⁴. Therefore, (3x²y)(4xy³) is equivalent to 12x³y⁴. Choice B is incorrect and may result from adding the coefficients instead of multiplying them. Choice C is incorrect and may result from multiplying the exponents of like bases instead of adding them. Choice D is incorrect and may result from omitting the exponent 1 on the first factor of y when adding exponents.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 11,
+          "passage": "<p>The function L is defined by L(t) = 860 - 18t, where L(t) is the length, in meters, of cable remaining on a spool t minutes after a machine begins using the cable.</p>",
+          "text": "What is the best interpretation of 18 in this context?",
+          "questionType": "multiple-choice",
+          "options": [
+            "Before the machine begins, 18 meters of cable are on the spool.",
+            "For each minute, the length of cable on the spool decreases by 18 meters.",
+            "After 18 minutes, 860 meters of cable are on the spool.",
+            "The machine uses the cable for 860 minutes at a rate of 18 meters per minute."
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "linear-functions",
+          "subcategoryId": 12,
+          "explanation": "Choice B is correct. In L(t) = 860 - 18t, the coefficient of t is -18, so the output decreases by 18 for each increase of 1 in t. Since L(t) is measured in meters and t is measured in minutes, the length of cable on the spool decreases by 18 meters per minute. Choice A is incorrect. The initial length is 860 meters, not 18 meters. Choice C is incorrect because 860 is L(0), not L(18). Choice D is incorrect because 860 represents an amount of cable, not a number of minutes.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 12,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">2√(3r) = 10</div>",
+          "text": "What is the value of r?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "25/3",
+          "acceptedAnswers": [
+            "25/3",
+            "8.333"
+          ],
+          "difficulty": "medium",
+          "subcategory": "nonlinear-equations",
+          "subcategoryId": 17,
+          "explanation": "The correct answer is 25/3. Dividing both sides of the equation by 2 gives √(3r) = 5. Squaring both sides gives 3r = 25. Dividing both sides by 3 gives r = 25/3. Note that 25/3 and 8.333 are examples of ways to enter a correct answer.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 13,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">3x + 2y = 19</div><div style=\"text-align:center; margin:8px 0;\">x - 2y = 1</div>",
+          "text": "The solution to the given system of equations is (x, y). What is the value of x + y?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "7",
+          "acceptedAnswers": [
+            "7"
+          ],
+          "difficulty": "medium",
+          "subcategory": "systems-linear-equations",
+          "subcategoryId": 14,
+          "explanation": "The correct answer is 7. Adding the second equation to the first equation eliminates y and yields 4x = 20. Dividing both sides by 4 yields x = 5. Substituting 5 for x in x - 2y = 1 yields 5 - 2y = 1. Subtracting 5 from both sides yields -2y = -4, so y = 2. Substituting 5 for x and 2 for y in x + y yields 7. Therefore, the value of x + y is 7.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 14,
+          "passage": "<p>The brightness of a phosphorescent coating is initially 1,800 millicandelas and decreases by 12% every 3 minutes.</p>",
+          "text": "Which function B gives the brightness, in millicandelas, of the coating t minutes after the brightness is first measured?",
+          "questionType": "multiple-choice",
+          "options": [
+            "B(t) = 1,800(0.12)ᵗ⁄³",
+            "B(t) = 1,800(0.88)³ᵗ",
+            "B(t) = 1,800(1.12)ᵗ⁄³",
+            "B(t) = 1,800(0.88)ᵗ⁄³"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "nonlinear-functions",
+          "subcategoryId": 16,
+          "explanation": "Choice D is correct. A decrease of 12% corresponds to multiplying by 1 - 0.12, or 0.88. Since the decrease occurs every 3 minutes, the number of 3-minute periods in t minutes is t/3. Therefore, B(t) = 1,800(0.88)ᵗ⁄³. Choice A is incorrect and may result from using the percent decrease as the decay factor. Choice B is incorrect because 3t does not represent the number of 3-minute periods. Choice C is incorrect because 1.12 represents a 12% increase, not a 12% decrease.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 15,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">5x + 2y = 18</div>",
+          "text": "In the xy-plane, what is the y-coordinate of the y-intercept of the line defined by the given equation?",
+          "questionType": "multiple-choice",
+          "options": [
+            "-5/2",
+            "0",
+            "9",
+            "18"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "linear-equations-two-variables",
+          "subcategoryId": 13,
+          "explanation": "Choice C is correct. At the y-intercept of a line in the xy-plane, x = 0. Substituting 0 for x in the given equation yields 5(0) + 2y = 18, or 2y = 18. Dividing both sides by 2 yields y = 9. Therefore, the y-coordinate of the y-intercept is 9. Choice A is incorrect. This is the slope of the line, not the y-coordinate of its y-intercept. Choice B is incorrect. This is the x-coordinate of the y-intercept. Choice D is incorrect and may result from not dividing 18 by the coefficient 2.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 16,
+          "passage": "<p>The scatterplot shows the width, in millimeters, and breaking force, in newtons, for 10 composite strips. A line of best fit is also shown.</p>",
+          "text": "Which equation best represents the line of best fit shown?",
+          "questionType": "multiple-choice",
+          "options": [
+            "y = 12 - 3x",
+            "y = 12x + 3",
+            "y = 3x + 18",
+            "y = 3x + 12"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "two-variable-data",
+          "subcategoryId": 22,
+          "explanation": "Choice D is correct. The line of best fit passes through (2, 18) and (10, 42), so its slope is (42 - 18)/(10 - 2) = 3. Substituting (2, 18) into y = 3x + b gives b = 12. Therefore, y = 3x + 12 best represents the line. Choice A is incorrect because the association has a positive slope, not a negative slope. Choice B is incorrect and may result from interchanging the slope and y-intercept. Choice C is incorrect and may result from treating the y-value 18 at x = 2 as the y-intercept.",
+          "graphAsset": "PT9-M3-Q16.svg",
+          "graphDescription": "A scatterplot has a horizontal axis labeled Strip width (millimeters), from 0 to 10, and a vertical axis labeled Breaking force (newtons), from 10 to 45. The ten plotted points are (1, 16), (2, 17), (3, 22), (4, 23), (5, 29), (6, 29), (7, 34), (8, 35), (9, 40), and (10, 41). An unlabeled line of best fit passes through (2, 18) and (10, 42)."
+        },
+        {
+          "originalQuestionNumber": 17,
+          "passage": null,
+          "text": "A right square prism has volume 648 cubic centimeters. Its height is 3 times the side length of its square base. What is the side length, in centimeters, of the base?",
+          "questionType": "multiple-choice",
+          "options": [
+            "6",
+            "18",
+            "216",
+            "648"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "area-volume",
+          "subcategoryId": 26,
+          "explanation": "Choice A is correct. Let s be the side length, in centimeters, of the square base. The area of the base is s² square centimeters, and the height is 3s centimeters. Thus, the volume is (s²)(3s), or 3s³, cubic centimeters. Setting this expression equal to 648 yields 3s³ = 648. Dividing by 3 yields s³ = 216. Taking the cube root yields s = 6. Choice B is incorrect. This is the height, 3s. Choice C is incorrect. This is s³, not s. Choice D is incorrect. This is the volume, not a side length.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 18,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">f(x) = a(b)<sup>x</sup></div>",
+          "text": "In the given equation, a and b are positive constants. If f(0) = 6 and f(2) = 150, what is the value of a + b?",
+          "questionType": "multiple-choice",
+          "options": [
+            "5",
+            "6",
+            "11",
+            "25"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "nonlinear-functions",
+          "subcategoryId": 16,
+          "explanation": "Choice C is correct. Substituting 0 for x yields f(0) = a(b⁰), or f(0) = a. Since f(0) = 6, a = 6. Substituting 2 for x and 6 for a yields 150 = 6b². Dividing both sides by 6 yields b² = 25. Since b is positive, b = 5. Therefore, a + b = 6 + 5, or 11. Choice A is incorrect. This is b, not a + b. Choice B is incorrect. This is a, not a + b. Choice D is incorrect. This is b², not a + b.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 19,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">y = x<sup>2</sup> - 4x + 7</div><div style=\"text-align:center; margin:8px 0;\">y = 2x + k</div>",
+          "text": "In the given system of equations, k is a constant. If the graphs intersect at exactly one point, what is the value of k?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "-2",
+          "acceptedAnswers": [
+            "-2"
+          ],
+          "difficulty": "hard",
+          "subcategory": "nonlinear-equations",
+          "subcategoryId": 17,
+          "explanation": "The correct answer is -2. At an intersection point, x² - 4x + 7 = 2x + k. Rearranging yields x² - 6x + (7 - k) = 0. The graphs intersect at exactly one point when this quadratic equation has exactly one real solution, so its discriminant equals 0. Thus, (-6)² - 4(1)(7 - k) = 0. Simplifying yields 36 - 28 + 4k = 0, or 8 + 4k = 0. Subtracting 8 and dividing by 4 yields k = -2. Therefore, the value of k is -2.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 20,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">f(x) = 2x<sup>2</sup> + bx + c</div>",
+          "text": "In the given equation, b and c are constants. The graph of y = f(x) has its vertex at an x-coordinate of 3 and has y-intercept (0, 20). What is the minimum value of f?",
+          "questionType": "multiple-choice",
+          "options": [
+            "-12",
+            "2",
+            "3",
+            "20"
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "nonlinear-functions",
+          "subcategoryId": 16,
+          "explanation": "Choice B is correct. For f(x) = ax² + bx + c, the x-coordinate of the vertex is -b/(2a). Here, a = 2 and the vertex has x-coordinate 3, so -b/4 = 3, which yields b = -12. The y-intercept is (0, c), so c = 20. Substituting 3 for x yields f(3) = 2(3²) - 12(3) + 20, or 18 - 36 + 20, which equals 2. Since the parabola opens upward, this is the minimum value. Choice A is incorrect. This is the value of b, not the minimum value of f. Choice C is incorrect. This is the x-coordinate of the vertex. Choice D is incorrect. This is the y-intercept.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 21,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">x + y ≥ 18</div><div style=\"text-align:center; margin:8px 0;\">4x + 7y ≤ 96</div>",
+          "text": "The nonnegative integers x and y satisfy the given inequalities. What is the greatest possible value of y?",
+          "questionType": "multiple-choice",
+          "options": [
+            "8",
+            "13",
+            "18",
+            "24"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "linear-inequalities",
+          "subcategoryId": 15,
+          "explanation": "Choice A is correct. Since x + y ≥ 18, it follows that 4(x + y) + 3y ≥ 72 + 3y. Also, 4x + 7y = 4(x + y) + 3y ≤ 96. Therefore, 72 + 3y ≤ 96, so y ≤ 8. The value y = 8 is possible when x = 10, since both inequalities are satisfied. Choice B is incorrect and can result from ignoring x + y ≥ 18 and using x = 0. Choice C is incorrect. This is the required minimum of x + y, not a possible maximum for y. Choice D is incorrect and can result from maximizing x in the second inequality when y = 0 instead of maximizing y.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 22,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">ax - 7 = bx + 5</div>",
+          "text": "In the given equation, a and b are constants, a = 2b, and x = 3 is the solution. What is the value of a + b?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "12",
+          "acceptedAnswers": [
+            "12"
+          ],
+          "difficulty": "hard",
+          "subcategory": "linear-equations-one-variable",
+          "subcategoryId": 11,
+          "explanation": "The correct answer is 12. Since x = 3 is the solution, substituting 3 for x gives 3a - 7 = 3b + 5. Adding 7 to both sides and subtracting 3b from both sides yields 3(a - b) = 12, so a - b = 4. The condition a = 2b then gives 2b - b = 4, so b = 4 and a = 8. Therefore, a + b = 8 + 4, or 12.",
+          "graphAsset": null,
+          "graphDescription": null
+        }
+      ]
+    },
+    {
+      "moduleNumber": 4,
+      "title": "Exam 9, Module 4",
+      "description": "Practice Test 9 - Math, Module 2 (22 questions)",
+      "section": "Math",
+      "calculatorAllowed": true,
+      "timeLimit": 2100,
+      "questions": [
+        {
+          "originalQuestionNumber": 1,
+          "passage": null,
+          "text": "A tank contains 42 liters of water when a pump begins adding water at a constant rate of 6 liters per minute. Which function W gives the amount of water, in liters, in the tank t minutes after the pump begins?",
+          "questionType": "multiple-choice",
+          "options": [
+            "W(t) = 42 + 6t",
+            "W(t) = 6 + 42t",
+            "W(t) = 42 - 6t",
+            "W(t) = 42(6)ᵗ"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "linear-functions",
+          "subcategoryId": 12,
+          "explanation": "Choice A is correct. The tank initially contains 42 liters, so W(0) = 42. The pump adds 6 liters per minute, so after t minutes it adds 6t liters. Therefore, W(t) = 42 + 6t. Choice B is incorrect because it interchanges the initial amount and the rate. Choice C is incorrect because it models water being removed rather than added. Choice D is incorrect because a constant amount is added each minute, so the relationship is linear, not exponential.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 2,
+          "passage": null,
+          "text": "A robotic arm moves at a rate of 150 centimeters per second. What is this rate, in meters per second? (1 meter = 100 centimeters)",
+          "questionType": "multiple-choice",
+          "options": [
+            "0.015",
+            "1.5",
+            "150",
+            "15,000"
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "ratios-rates-proportions",
+          "subcategoryId": 19,
+          "explanation": "Choice B is correct. Since 1 meter equals 100 centimeters, dividing 150 centimeters per second by 100 centimeters per meter yields 1.5 meters per second. Choice A is incorrect and may result from dividing by 100 twice. Choice C is incorrect and may result from leaving the numerical rate unchanged when converting centimeters to meters. Choice D is incorrect and may result from reversing the conversion factor and multiplying 150 by 100.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 3,
+          "passage": null,
+          "text": "Which expression is equivalent to 5x(3x<sup>2</sup> - 4) + 2x?",
+          "questionType": "multiple-choice",
+          "options": [
+            "15x³ - 18x",
+            "15x³ - 22x",
+            "15x³ - 20x² + 2x",
+            "17x³ - 20x"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "equivalent-expressions",
+          "subcategoryId": 18,
+          "explanation": "Choice A is correct. Applying the distributive property yields 5x(3x² - 4) + 2x = 15x³ - 20x + 2x. Combining the like terms -20x and 2x yields -18x. Therefore, the expression is equivalent to 15x³ - 18x. Choice B is incorrect and may result from subtracting 2x instead of adding it. Choice C is incorrect and may result from treating the constant -4 as -4x, which makes 5x(-4x) equal to -20x². Choice D is incorrect and may result from combining 15x³ and 2x even though they are not like terms.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 4,
+          "passage": "<p>The graph of the function f in the xy-plane is shown.</p>",
+          "text": "For what value of x is f(x) = 16?",
+          "questionType": "multiple-choice",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "nonlinear-functions",
+          "subcategoryId": 16,
+          "explanation": "Choice D is correct. The point (4, 16) is on the graph of y = f(x). Therefore, f(4) = 16, so the requested value of x is 4. Choice A is incorrect. The graph shows that f(1) = 2. Choice B is incorrect. The graph shows that f(2) = 4. Choice C is incorrect. The graph shows that f(3) = 8.",
+          "graphAsset": "PT9-M4-Q04.svg",
+          "graphDescription": "A smooth increasing exponential curve is shown in the xy-plane for x-values from -1 to slightly greater than 4. The curve passes through the plotted points (0, 1), (1, 2), (2, 4), (3, 8), and (4, 16). The x-axis is labeled from -1 to 5, and the y-axis has labels at 4, 8, 12, and 16."
+        },
+        {
+          "originalQuestionNumber": 5,
+          "passage": null,
+          "text": "A square patio has an area of 324 square feet. What is the side length, in feet, of the patio?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "18",
+          "acceptedAnswers": [
+            "18"
+          ],
+          "difficulty": "easy",
+          "subcategory": "area-volume",
+          "subcategoryId": 26,
+          "explanation": "The correct answer is 18. If s is the side length, in feet, of the square, its area is s² square feet. Thus, s² = 324. Since a side length is positive, taking the positive square root of both sides yields s = 18. Therefore, the side length of the patio is 18 feet.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 6,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">y = 2x - 3</div><div style=\"text-align:center; margin:8px 0;\">x + y = 18</div>",
+          "text": "The solution to the given system of equations is (x, y). What is the value of x?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "7",
+          "acceptedAnswers": [
+            "7"
+          ],
+          "difficulty": "easy",
+          "subcategory": "systems-linear-equations",
+          "subcategoryId": 14,
+          "explanation": "The correct answer is 7. Substituting 2x - 3 for y in x + y = 18 yields x + 2x - 3 = 18. Combining like terms and adding 3 to both sides yields 3x = 21. Dividing both sides by 3 yields x = 7. Therefore, the value of x is 7.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 7,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">4x + 7 ≤ 31</div>",
+          "text": "What is the greatest integer value of x that satisfies the given inequality?",
+          "questionType": "multiple-choice",
+          "options": [
+            "4",
+            "5",
+            "6",
+            "7"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "linear-inequalities",
+          "subcategoryId": 15,
+          "explanation": "Choice C is correct. Subtracting 7 from both sides of the given inequality yields 4x ≤ 24. Dividing both sides by 4 yields x ≤ 6. Therefore, the greatest integer value of x that satisfies the inequality is 6. Choice A and Choice B are incorrect because each is a solution but is not the greatest integer solution. Choice D is incorrect because substituting 7 for x yields 35 ≤ 31, which is not a true statement.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 8,
+          "passage": "<p>The function P is defined by P(d) = 120 + 7.5d, where P(d) is the number of pages, in thousands, that an archive has digitized d days after a project begins.</p>",
+          "text": "What is the best interpretation of 120 in this context?",
+          "questionType": "multiple-choice",
+          "options": [
+            "The archive digitizes 120 thousand pages each day.",
+            "The archive has digitized 120 thousand pages when the project begins.",
+            "After 120 days, the archive has digitized 7.5 thousand pages.",
+            "The project lasts 120 days, and 7.5 thousand pages were digitized before it began."
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "linear-functions",
+          "subcategoryId": 12,
+          "explanation": "Choice B is correct. In P(d) = 120 + 7.5d, substituting 0 for d yields P(0) = 120. Since d = 0 is the beginning of the project, the archive has already digitized 120 thousand pages at that time. Choice A is incorrect. The daily increase is 7.5 thousand pages, not 120 thousand pages. Choice C is incorrect because it interchanges the input and output roles of 120 and 7.5. Choice D is incorrect because 120 represents an initial number of pages, not a duration.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 9,
+          "passage": "<p>Right triangle ABC is shown, where angle C is a right angle.</p>",
+          "text": "What is the value of tan B?",
+          "questionType": "multiple-choice",
+          "options": [
+            "65/97",
+            "72/97",
+            "65/72",
+            "72/65"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "right-triangles-trigonometry",
+          "subcategoryId": 28,
+          "explanation": "Choice C is correct. In a right triangle, the tangent of an acute angle is the length of the leg opposite the angle divided by the length of the adjacent leg. The leg opposite angle B is AC, which has length 65, and the leg adjacent to angle B is BC, which has length 72. Therefore, tan B = 65/72. Choice A is incorrect. This is sin B. Choice B is incorrect. This is cos B. Choice D is incorrect. This is the reciprocal of tan B.",
+          "graphAsset": "PT9-M4-Q09.svg",
+          "graphDescription": "A right triangle ABC has a right angle at C. The horizontal leg AC is labeled 65, the vertical leg BC is labeled 72, and the hypotenuse AB is labeled 97. A note below states that the figure is not drawn to scale."
+        },
+        {
+          "originalQuestionNumber": 10,
+          "passage": "<p>The table summarizes whether 50 cut tiles met a thickness standard.</p><table style=\"border-collapse:collapse; margin:10px auto; text-align:center;\"><tr><th style=\"border:1px solid #000; padding:6px 10px;\"></th><th style=\"border:1px solid #000; padding:6px 10px;\">Met standard</th><th style=\"border:1px solid #000; padding:6px 10px;\">Did not meet standard</th><th style=\"border:1px solid #000; padding:6px 10px;\">Total</th></tr><tr><th style=\"border:1px solid #000; padding:6px 10px;\">Hand-cut</th><td style=\"border:1px solid #000; padding:6px 10px;\">18</td><td style=\"border:1px solid #000; padding:6px 10px;\">12</td><td style=\"border:1px solid #000; padding:6px 10px;\">30</td></tr><tr><th style=\"border:1px solid #000; padding:6px 10px;\">Machine-cut</th><td style=\"border:1px solid #000; padding:6px 10px;\">6</td><td style=\"border:1px solid #000; padding:6px 10px;\">14</td><td style=\"border:1px solid #000; padding:6px 10px;\">20</td></tr><tr><th style=\"border:1px solid #000; padding:6px 10px;\">Total</th><td style=\"border:1px solid #000; padding:6px 10px;\">24</td><td style=\"border:1px solid #000; padding:6px 10px;\">26</td><td style=\"border:1px solid #000; padding:6px 10px;\">50</td></tr></table>",
+          "text": "If one of the tiles that met the standard is selected at random, what is the probability of selecting a hand-cut tile?",
+          "questionType": "multiple-choice",
+          "options": [
+            "6/50",
+            "18/50",
+            "24/50",
+            "18/24"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "easy",
+          "subcategory": "probability",
+          "subcategoryId": 23,
+          "explanation": "Choice D is correct. The condition limits the selection to the 24 tiles that met the standard. Of those 24 tiles, 18 are hand-cut. Therefore, the probability of selecting a hand-cut tile is 18/24. Choice A is incorrect. The numerator counts machine-cut tiles that met the standard, and the denominator includes tiles that did not meet it. Choice B is incorrect because 50 is the total number of tiles, not the number that met the standard. Choice C is incorrect. This is the probability that a randomly selected tile met the standard, not the conditional probability asked for.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 11,
+          "passage": "<p>A random sample of 100 registered voters in a county was surveyed, and 58% of those surveyed said they planned to vote by mail.</p><p>I. Exactly 58% of all registered voters in the county plan to vote by mail.<br>II. If a second random sample of 100 registered voters in the county is surveyed, exactly 58% of those surveyed will say they plan to vote by mail.</p>",
+          "text": "Which of the statements must be true?",
+          "questionType": "multiple-choice",
+          "options": [
+            "I only",
+            "II only",
+            "I and II",
+            "Neither I nor II"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "evaluating-statistical-claims",
+          "subcategoryId": 25,
+          "explanation": "Choice D is correct. A result from a random sample can be used to estimate a population percentage, but it does not establish that percentage exactly. Therefore, statement I need not be true. Random samples from the same population can contain different individuals and produce different sample percentages. Therefore, statement II also need not be true. It follows that neither statement I nor statement II must be true. Choice A is incorrect because statement I need not be true. Choice B is incorrect because statement II need not be true. Choice C is incorrect because neither statement must be true.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 12,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">y = -(3/5)x + b</div>",
+          "text": "In the given equation, b is a constant. The line defined by the equation passes through (10, -1). What is the value of b?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "5",
+          "acceptedAnswers": [
+            "5"
+          ],
+          "difficulty": "medium",
+          "subcategory": "linear-equations-two-variables",
+          "subcategoryId": 13,
+          "explanation": "The correct answer is 5. Substituting 10 for x and -1 for y in the given equation yields -1 = -(3/5)(10) + b, or -1 = -6 + b. Adding 6 to both sides yields b = 5. Therefore, the value of b is 5.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 13,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">3(x - 2)<sup>2</sup> = 75</div>",
+          "text": "What is the positive solution to the given equation?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "7",
+          "acceptedAnswers": [
+            "7"
+          ],
+          "difficulty": "medium",
+          "subcategory": "nonlinear-equations",
+          "subcategoryId": 17,
+          "explanation": "The correct answer is 7. Dividing both sides of the given equation by 3 yields (x - 2)² = 25. Taking the square root of both sides yields x - 2 = 5 or x - 2 = -5. Adding 2 yields x = 7 or x = -3. The positive solution is 7. Therefore, the positive solution to the given equation is 7.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 14,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">3x + y = -1</div>",
+          "text": "The given equation is one equation in a system of two linear equations whose solution is (-2, 5). Which equation can be the second equation in the system?",
+          "questionType": "multiple-choice",
+          "options": [
+            "4x - y = -13",
+            "4x + y = -13",
+            "4x - y = 13",
+            "x - 4y = -13"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "systems-linear-equations",
+          "subcategoryId": 14,
+          "explanation": "Choice A is correct. Substituting -2 for x and 5 for y in 4x - y = -13 gives 4(-2) - 5 = -13, so (-2, 5) lies on this line. Its slope is 4, which differs from the slope -3 of the given line, so the lines intersect only at (-2, 5). Choice B is incorrect because its left-hand side is -3 at (-2, 5), not -13. Choice C is incorrect because its left-hand side is -13 at (-2, 5), not 13. Choice D is incorrect because its left-hand side is -22 at (-2, 5), not -13.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 15,
+          "passage": "<p>The graph of y = f(x) and four labeled graphs are shown.</p>",
+          "text": "Which labeled graph represents y = f(x - 2) + 1?",
+          "questionType": "multiple-choice",
+          "options": [
+            "Graph A",
+            "Graph B",
+            "Graph C",
+            "Graph D"
+          ],
+          "correctAnswer": 0,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "nonlinear-functions",
+          "subcategoryId": 16,
+          "explanation": "Choice A is correct. Replacing x with x - 2 shifts the graph of y = f(x) 2 units to the right. Adding 1 outside the function shifts the graph 1 unit up. The original graph has vertex (-1, 0), so the translated graph has vertex (1, 1). Graph A has this vertex and the same V-shape as the original graph. Graph B is shifted left and up. Graph C is shifted right and down. Graph D is shifted left and down.",
+          "graphAsset": "PT9-M4-Q15.svg",
+          "graphDescription": "Five small coordinate grids are shown. The original graph y = f(x) is V-shaped with vertex (-1, 0). Candidate Graph A has vertex (1, 1), Graph B has vertex (-3, 1), Graph C has vertex (1, -1), and Graph D has vertex (-3, -1). All five V-shapes have slopes -1 and 1 on their two branches."
+        },
+        {
+          "originalQuestionNumber": 16,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">(2x + 3)(x + k) = 2x<sup>2</sup> + 11x + 12</div>",
+          "text": "The given equation is true for all values of x, where k is a constant. What is the value of k?",
+          "questionType": "multiple-choice",
+          "options": [
+            "3",
+            "4",
+            "8",
+            "12"
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "medium",
+          "subcategory": "equivalent-expressions",
+          "subcategoryId": 18,
+          "explanation": "Choice B is correct. Applying the distributive property to the left-hand side yields 2x² + (2k + 3)x + 3k. Since the equation is true for all x, corresponding coefficients are equal. Thus, 2k + 3 = 11. Subtracting 3 and dividing by 2 yields k = 4. The constant terms also agree because 3(4) = 12. Choice A is incorrect and gives an x-coefficient of 9. Choice C is incorrect and gives an x-coefficient of 19. Choice D is incorrect and may result from identifying the constant term 12 as k rather than 3k.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 17,
+          "passage": null,
+          "text": "Triangle ABC is isosceles, where AB = AC. The measure of the exterior angle at A is 104°. BC is extended through B. What is the measure, in degrees, of the exterior angle at B?",
+          "questionType": "multiple-choice",
+          "options": [
+            "52",
+            "76",
+            "104",
+            "128"
+          ],
+          "correctAnswer": 3,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "lines-angles-triangles",
+          "subcategoryId": 27,
+          "explanation": "Choice D is correct. The interior angle at A and its exterior angle are supplementary, so the measure of angle A is 180° - 104°, or 76°. Since AB = AC, angles B and C have equal measures. Their measures sum to 180° - 76°, or 104°, so each measures 52°. The exterior angle at B is supplementary to angle B, so it measures 180° - 52°, or 128°. Choice A is incorrect. This is the measure of angle B. Choice B is incorrect. This is the measure of angle A. Choice C is incorrect. This is the exterior angle at A.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 18,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">f(x) = ab<sup>x</sup></div>",
+          "text": "In the given equation, a and b are positive constants. If f(5)/f(2) = 125/27, what is the value of f(x + 2)/f(x) for any real value of x?",
+          "questionType": "multiple-choice",
+          "options": [
+            "5/3",
+            "25/9",
+            "125/27",
+            "625/81"
+          ],
+          "correctAnswer": 1,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "nonlinear-functions",
+          "subcategoryId": 16,
+          "explanation": "Choice B is correct. From f(x) = abˣ, f(5)/f(2) = (ab⁵)/(ab²) = b³. Thus, b³ = 125/27, so b = 5/3. Also, f(x + 2)/f(x) = (abˣ⁺²)/(abˣ) = b². Therefore, f(x + 2)/f(x) = (5/3)² = 25/9. Choice A is incorrect. This is b, not b². Choice C is incorrect. This is b³, the given ratio. Choice D is incorrect. This is b⁴.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 19,
+          "passage": null,
+          "text": "In the xy-plane, a circle with center (4, c), where c > 0, is tangent to the x-axis at (4, 0) and passes through (10, 8). What is the value of c?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "25/4",
+          "acceptedAnswers": [
+            "25/4",
+            "6.25"
+          ],
+          "difficulty": "hard",
+          "subcategory": "circles",
+          "subcategoryId": 29,
+          "explanation": "The correct answer is 25/4. Since the circle is tangent to the x-axis at (4, 0) and its center is (4, c), its radius is c. Because (10, 8) lies on the circle, the distance from (4, c) to (10, 8) also equals c. Therefore, (10 - 4)² + (8 - c)² = c². Expanding and simplifying yields 36 + 64 - 16c + c² = c², or 100 = 16c. Dividing by 16 yields c = 25/4. Therefore, the value of c is 25/4. Note that 25/4 and 6.25 are examples of ways to enter a correct answer.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 20,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">(k<sup>2</sup> - 9)x = 2k + 6</div>",
+          "text": "In the given equation, k is a constant. For which value of k does the equation have no solution?",
+          "questionType": "multiple-choice",
+          "options": [
+            "-3",
+            "0",
+            "3",
+            "6"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "linear-equations-one-variable",
+          "subcategoryId": 11,
+          "explanation": "Choice C is correct. A linear equation has no solution when the coefficient of x is 0 but the constant on the other side is nonzero. If k = 3, then k² - 9 = 0 and 2k + 6 = 12, so the equation becomes 0x = 12, which has no solution. Choice A is incorrect. If k = -3, the equation becomes 0x = 0 and has infinitely many solutions. Choices B and D are incorrect because each makes k² - 9 nonzero, so each resulting equation has exactly one solution.",
+          "graphAsset": null,
+          "graphDescription": null
+        },
+        {
+          "originalQuestionNumber": 21,
+          "passage": "<p>A sensor was tested at 8 input settings. The scatterplot shows the input x and recorded output y for the tests, and its line of best fit is y = 6 + 2.5x. A new data set is created by multiplying every x-coordinate by 4 while leaving every y-coordinate unchanged.</p>",
+          "text": "Which equation is a line of best fit for the new data set?",
+          "questionType": "multiple-choice",
+          "options": [
+            "y = 24 + 2.5x",
+            "y = 6 + 10x",
+            "y = 6 + 0.625x",
+            "y = 24 + 0.625x"
+          ],
+          "correctAnswer": 2,
+          "acceptedAnswers": null,
+          "difficulty": "hard",
+          "subcategory": "two-variable-data",
+          "subcategoryId": 22,
+          "explanation": "Choice C is correct. Let X represent an x-coordinate in the new data set. Since each original x-coordinate is multiplied by 4, the corresponding original coordinate is X/4. Substituting X/4 for x in y = 6 + 2.5x gives y = 6 + 2.5(X/4), or y = 6 + 0.625X. Thus, the y-intercept remains 6 and the slope is divided by 4. Choice A is incorrect because it changes the intercept but not the slope. Choice B is incorrect because it multiplies the slope by 4. Choice D is incorrect because it changes the intercept as well as dividing the slope.",
+          "graphAsset": "PT9-M4-Q21.svg",
+          "graphDescription": "A scatterplot of sensor input x and recorded output y has axes from 0 to 8 and 0 to 30, respectively. The eight plotted points are (0, 5), (1, 8), (2, 9), (3, 13), (4, 14), (5, 18), (6, 19), and (7, 24). A line of best fit labeled y = 6 + 2.5x crosses the y-axis at 6 and has slope 2.5."
+        },
+        {
+          "originalQuestionNumber": 22,
+          "passage": "<div style=\"text-align:center; margin:8px 0;\">3x<sup>2</sup> - kx + 24 = 0</div>",
+          "text": "In the given equation, k is a positive constant. The equation has two positive solutions, and one solution is twice the other. What is the value of k?",
+          "questionType": "user-input",
+          "options": [],
+          "correctAnswer": "18",
+          "acceptedAnswers": [
+            "18"
+          ],
+          "difficulty": "hard",
+          "subcategory": "nonlinear-equations",
+          "subcategoryId": 17,
+          "explanation": "The correct answer is 18. Let the smaller positive solution be r. The other solution is then 2r. For 3x² - kx + 24 = 0, the product of the solutions is 24/3, or 8. Therefore, r(2r) = 8, so r² = 4 and r = 2 because the solutions are positive. The solutions are 2 and 4, whose sum is 6. Their sum also equals k/3, so k/3 = 6 and k = 18.",
+          "graphAsset": null,
+          "graphDescription": null
+        }
+      ]
+    }
+  ]
+}

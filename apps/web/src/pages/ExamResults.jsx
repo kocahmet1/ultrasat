@@ -39,6 +39,7 @@ import { examScores } from '../utils/scoring';
 import { processTextMarkup } from '../utils/textProcessing';
 import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
 import { DOMAINS, getSubcategoryMeta } from '../utils/subcategoryTaxonomy';
+import { parseRationale } from '../utils/rationale';
 import { loadKatexAutoRender, containsMathDelimiters } from '../utils/katexLoader';
 import ReportQuestionModal from '../components/ReportQuestionModal';
 import WordSaver from '../components/WordSaver';
@@ -65,6 +66,21 @@ const STATUS_RANK = { incorrect: 0, omitted: 1, correct: 2 };
 const getSafeMarkup = (value) => DOMPurify.sanitize(processTextMarkup(value) || '');
 
 const letterFor = (index) => String.fromCharCode(65 + index);
+
+const clampText = (value, max = 24) => {
+  const str = String(value);
+  return str.length > max ? `${str.slice(0, max - 1)}…` : str;
+};
+
+/** Sanitized HTML for a rationale block, with the verdict lead-in bolded. */
+const rationaleBlockHtml = (block) => {
+  if (block.leadLength > 0 && block.leadLength < block.text.length) {
+    return `<strong>${getSafeMarkup(block.text.slice(0, block.leadLength))}</strong>${getSafeMarkup(
+      block.text.slice(block.leadLength)
+    )}`;
+  }
+  return getSafeMarkup(block.text);
+};
 
 /** Match a response to a question, tolerating every historical id format. */
 const findResponseForQuestion = (module, question, questionIndex) =>
@@ -273,7 +289,12 @@ function ExamResults() {
         if (!question || !question.text) return;
         counters[sectionId] += 1;
         const response = findResponseForQuestion(module, question, questionIndex);
-        const status = !response ? 'omitted' : response.isCorrect ? 'correct' : 'incorrect';
+        // A blank recorded answer is an omission, not a wrong answer — some
+        // legacy controllers stored '' for questions left unanswered.
+        const rawAnswer = response?.userAnswer;
+        const hasAnswer =
+          response != null && rawAnswer != null && String(rawAnswer).trim() !== '';
+        const status = !hasAnswer ? 'omitted' : response.isCorrect ? 'correct' : 'incorrect';
         // First candidate the canonical taxonomy recognizes wins (any format).
         const subMeta = [
           question.subcategoryId,
@@ -289,7 +310,7 @@ function ExamResults() {
           : question.correctAnswer ?? question.answer;
         const keyIndex = multipleChoice ? options.findIndex((opt) => opt === keyText) : -1;
         const userIndex =
-          multipleChoice && response ? options.findIndex((opt) => opt === response.userAnswer) : -1;
+          multipleChoice && hasAnswer ? options.findIndex((opt) => opt === rawAnswer) : -1;
 
         result.push({
           uid: `${module.id}-${question.id || questionIndex}`,
@@ -313,12 +334,10 @@ function ExamResults() {
               : String(keyText ?? '—')
             : String(keyText ?? '—'),
           userIndex,
-          userDisplay: response
-            ? multipleChoice
-              ? userIndex >= 0
-                ? letterFor(userIndex)
-                : String(response.userAnswer)
-              : String(response.userAnswer)
+          userDisplay: hasAnswer
+            ? multipleChoice && userIndex >= 0
+              ? letterFor(userIndex)
+              : clampText(rawAnswer)
             : null,
         });
       });
@@ -460,6 +479,7 @@ function ExamResults() {
     const { question } = reviewRow;
     const haystack = [
       question.text,
+      question.passage,
       question.explanation,
       question.reasoning,
       question.graphDescription,
@@ -519,6 +539,17 @@ function ExamResults() {
   }
 
   const totalScore = readingWritingScore + mathScore;
+
+  // Rationale, split into verdict blocks at render time (content untouched —
+  // the parser only decides where to cut; unrecognized voices fall back to
+  // one well-set paragraph). See utils/rationale.js.
+  const rationaleBlocks = reviewRow
+    ? parseRationale(
+        reviewRow.question.explanation ||
+          `The correct answer is "${reviewRow.keyDisplay}". ${reviewRow.question.reasoning || ''}`
+      ).blocks
+    : [];
+
   const heroChips = [
     examDetails?.dateLabel,
     counts.all > 0 ? `${counts.all} questions` : null,
@@ -928,17 +959,28 @@ function ExamResults() {
             </header>
 
             <div className="xrm-body" ref={modalBodyRef}>
-              {/* ── question pane ── */}
+              {/* ── question pane ──
+                  Same content order as the exam itself (components/Question.jsx):
+                  figure → passage → stem → choices. graphDescription is the
+                  figure's alt text when an image exists and is shown as a
+                  described-figure box only when there is no image. Legacy
+                  questions that store passage+stem combined in `text` render
+                  unchanged through the stem slot. */}
               <section className="xrm-pane xrm-pane--question">
                 <p className="xrm-qlabel">Question {reviewRow.number}</p>
-                <div
-                  className="xrm-qtext"
-                  dangerouslySetInnerHTML={{ __html: getSafeMarkup(reviewRow.question.text) }}
-                />
 
-                {reviewRow.question.graphDescription && (
+                {reviewRow.question.graphUrl && (
+                  <div className="xrm-graph">
+                    <img
+                      src={reviewRow.question.graphUrl}
+                      alt={reviewRow.question.graphDescription || 'Question figure'}
+                    />
+                  </div>
+                )}
+
+                {!reviewRow.question.graphUrl && reviewRow.question.graphDescription && (
                   <div className="xrm-graphdesc">
-                    <b>Graph description</b>
+                    <b>Figure description</b>
                     <div
                       dangerouslySetInnerHTML={{
                         __html: getSafeMarkup(reviewRow.question.graphDescription),
@@ -947,14 +989,17 @@ function ExamResults() {
                   </div>
                 )}
 
-                {reviewRow.question.graphUrl && (
-                  <div className="xrm-graph">
-                    <img
-                      src={reviewRow.question.graphUrl}
-                      alt={reviewRow.question.graphDescription || 'Question graph'}
-                    />
-                  </div>
+                {reviewRow.question.passage && String(reviewRow.question.passage).trim() && (
+                  <div
+                    className="xrm-passage"
+                    dangerouslySetInnerHTML={{ __html: getSafeMarkup(reviewRow.question.passage) }}
+                  />
                 )}
+
+                <div
+                  className="xrm-qtext"
+                  dangerouslySetInnerHTML={{ __html: getSafeMarkup(reviewRow.question.text) }}
+                />
 
                 {reviewRow.multipleChoice && (
                   <ol className="xrm-choices">
@@ -1059,17 +1104,49 @@ function ExamResults() {
 
                     <div className="xrm-rationale">
                       <h3 className="xrm-rationale__title">Rationale</h3>
-                      <div
-                        className="xrm-rationale__body"
-                        dangerouslySetInnerHTML={{
-                          __html: getSafeMarkup(
-                            reviewRow.question.explanation ||
-                              `The correct answer is "${reviewRow.keyDisplay}". ${
-                                reviewRow.question.reasoning || ''
-                              }`
-                          ),
-                        }}
-                      />
+                      <div className="xrm-rat">
+                        {rationaleBlocks.map((block, blockIndex) => {
+                          if (block.kind === 'choice') {
+                            return (
+                              <div
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={blockIndex}
+                                className={`xrm-rat__choice xrm-rat__choice--${block.verdict}`}
+                              >
+                                <span className="xrm-rat__mark">
+                                  {block.verdict === 'correct' ? (
+                                    <FiCheck aria-hidden="true" />
+                                  ) : (
+                                    <FiX aria-hidden="true" />
+                                  )}
+                                </span>
+                                <div
+                                  className="xrm-rat__text"
+                                  dangerouslySetInnerHTML={{ __html: rationaleBlockHtml(block) }}
+                                />
+                              </div>
+                            );
+                          }
+                          if (block.kind === 'note') {
+                            return (
+                              <div
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={blockIndex}
+                                className="xrm-rat__note"
+                                dangerouslySetInnerHTML={{ __html: getSafeMarkup(block.text) }}
+                              />
+                            );
+                          }
+                          return (
+                            <div
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={blockIndex}
+                              className="xrm-rat__p"
+                              dangerouslySetInnerHTML={{ __html: rationaleBlockHtml(block) }}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
 
                     {reviewRow.skillId && reviewRow.skillName && (

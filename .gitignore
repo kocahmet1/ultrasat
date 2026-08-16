@@ -29,6 +29,9 @@ yarn-error.log*
 !package.json
 !package-lock.json
 
+# Canonical authored payload for the Practice Test 9 Math replacement
+!scripts/data/practiceTest9Math.json
+
 # Runtime JSON required by the deployed web and API applications
 !apps/api/data/subcategoryTaxonomy.json
 !apps/web/public/manifest.json
@@ -59,6 +62,8 @@ pglite-debug.log
 # Temporary and test files
 temp/
 tmp/
+__pycache__/
+*.py[cod]
 test_*.js
 *_test.js
 git_output.txt
