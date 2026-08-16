@@ -28,6 +28,7 @@ import {
   FiBookOpen,
   FiCheck,
   FiCheckCircle,
+  FiChevronDown,
   FiFlag,
   FiLock,
   FiX,
@@ -38,7 +39,7 @@ import { useCoach } from '../contexts/CoachContext';
 import { examScores } from '../utils/scoring';
 import { processTextMarkup } from '../utils/textProcessing';
 import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
-import { DOMAINS, getSubcategoryMeta } from '../utils/subcategoryTaxonomy';
+import { DOMAINS, SUBCATEGORIES, getSubcategoryMeta } from '../utils/subcategoryTaxonomy';
 import { parseRationale } from '../utils/rationale';
 import { loadKatexAutoRender, containsMathDelimiters } from '../utils/katexLoader';
 import ReportQuestionModal from '../components/ReportQuestionModal';
@@ -122,6 +123,18 @@ const DOMAIN_GROUPS = (() => {
   return groups;
 })();
 
+/** Ordered subcategory (skill) lists per domain. */
+const DOMAIN_SKILLS = (() => {
+  const map = {};
+  SUBCATEGORIES.forEach((sub) => {
+    if (!map[sub.domain]) map[sub.domain] = [];
+    map[sub.domain].push({ id: sub.id, name: sub.name });
+  });
+  return map;
+})();
+
+const accuracyTier = (pct) => (pct < 50 ? 'weak' : pct < 75 ? 'moderate' : 'strong');
+
 /** Windowed pager model: [1, '…', 4, 5, 6, '…', 12] */
 const buildPageItems = (totalPages, page) => {
   if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -150,6 +163,7 @@ function ExamResults() {
   const [pageError, setPageError] = useState(null);
 
   const [activeTab, setActiveTab] = useState('all');
+  const [openDomains, setOpenDomains] = useState(() => new Set());
   const [showAnswers, setShowAnswers] = useState(false);
   const [sort, setSort] = useState({ key: 'number', dir: 1 });
   const [pageSize, setPageSize] = useState(10);
@@ -280,14 +294,17 @@ function ExamResults() {
   /* ------------------------------------------------------- derived rows */
 
   const rows = useMemo(() => {
-    const counters = { 'reading-writing': 0, math: 0 };
+    // `number` restarts at 1 inside each module (matching the numbering the
+    // student saw during the exam); `order` is the global exam order used for
+    // sorting so modules never interleave.
+    let order = 0;
     const result = [];
     moduleData.forEach((module) => {
       const sectionId = module.moduleNumber <= 2 ? 'reading-writing' : 'math';
       const moduleLabel = `Module ${((module.moduleNumber - 1) % 2) + 1}`;
       (module.questions || []).forEach((question, questionIndex) => {
         if (!question || !question.text) return;
-        counters[sectionId] += 1;
+        order += 1;
         const response = findResponseForQuestion(module, question, questionIndex);
         // A blank recorded answer is an omission, not a wrong answer — some
         // legacy controllers stored '' for questions left unanswered.
@@ -314,10 +331,10 @@ function ExamResults() {
 
         result.push({
           uid: `${module.id}-${question.id || questionIndex}`,
-          number: counters[sectionId],
+          number: questionIndex + 1,
+          order,
           sectionId,
           sectionLabel: SECTION_LABELS[sectionId],
-          sectionOrder: sectionId === 'reading-writing' ? 0 : 1,
           moduleLabel,
           domainId: subMeta?.domain || null,
           domainName: subMeta?.domainName || null,
@@ -372,19 +389,39 @@ function ExamResults() {
     return stats;
   }, [rows]);
 
+  const skillStats = useMemo(() => {
+    const stats = {};
+    rows.forEach((row) => {
+      if (!row.skillId) return;
+      if (!stats[row.skillId]) stats[row.skillId] = { correct: 0, total: 0 };
+      stats[row.skillId].total += 1;
+      if (row.status === 'correct') stats[row.skillId].correct += 1;
+    });
+    return stats;
+  }, [rows]);
+
+  const toggleDomain = (domainId) => {
+    setOpenDomains((prev) => {
+      const next = new Set(prev);
+      if (next.has(domainId)) next.delete(domainId);
+      else next.add(domainId);
+      return next;
+    });
+  };
+
   const sortedRows = useMemo(() => {
     const filtered = activeTab === 'all' ? rows : rows.filter((row) => row.sectionId === activeTab);
     const sorted = [...filtered];
     sorted.sort((a, b) => {
       let cmp = 0;
       if (sort.key === 'number') {
-        cmp = a.sectionOrder - b.sectionOrder || a.number - b.number;
+        cmp = a.order - b.order;
       } else if (sort.key === 'domain') {
         cmp = (a.domainName || '\uffff').localeCompare(b.domainName || '\uffff');
-        if (cmp === 0) cmp = a.sectionOrder - b.sectionOrder || a.number - b.number;
+        if (cmp === 0) cmp = a.order - b.order;
       } else if (sort.key === 'status') {
         cmp = STATUS_RANK[a.status] - STATUS_RANK[b.status];
-        if (cmp === 0) cmp = a.sectionOrder - b.sectionOrder || a.number - b.number;
+        if (cmp === 0) cmp = a.order - b.order;
       }
       return cmp * sort.dir;
     });
@@ -703,25 +740,83 @@ function ExamResults() {
                     );
                   }
                   const pct = Math.round((stat.correct / stat.total) * 100);
-                  const tier = pct < 50 ? 'weak' : pct < 75 ? 'moderate' : 'strong';
+                  const tier = accuracyTier(pct);
                   const litSegments = Math.round((pct / 100) * 8);
+                  const isOpen = openDomains.has(domain.id);
+                  const skills = DOMAIN_SKILLS[domain.id] || [];
                   return (
-                    <div key={domain.id} className="xr-domain">
-                      <div className="xr-domain__top">
-                        <h3 className="xr-domain__name">{domain.name}</h3>
-                        <span className="xr-domain__pct">{pct}%</span>
-                      </div>
-                      <p className="xr-domain__meta">
-                        {stat.correct} of {stat.total} correct
-                      </p>
-                      <div className={`xr-segbar xr-segbar--${tier}`}>
-                        {Array.from({ length: 8 }, (_, i) => (
-                          <span
-                            key={i}
-                            className={`xr-segbar__seg${i < litSegments ? ' xr-segbar__seg--on' : ''}`}
-                          />
-                        ))}
-                      </div>
+                    <div
+                      key={domain.id}
+                      className={`xr-domain xr-domain--expandable${isOpen ? ' xr-domain--open' : ''}`}
+                    >
+                      <button
+                        type="button"
+                        className="xr-domain__toggle"
+                        aria-expanded={isOpen}
+                        onClick={() => toggleDomain(domain.id)}
+                      >
+                        <div className="xr-domain__top">
+                          <h3 className="xr-domain__name">{domain.name}</h3>
+                          <span className="xr-domain__pct">
+                            {pct}%
+                            <FiChevronDown className="xr-domain__chev" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <p className="xr-domain__meta">
+                          {stat.correct} of {stat.total} correct
+                        </p>
+                        <div className={`xr-segbar xr-segbar--${tier}`}>
+                          {Array.from({ length: 8 }, (_, i) => (
+                            <span
+                              key={i}
+                              className={`xr-segbar__seg${i < litSegments ? ' xr-segbar__seg--on' : ''}`}
+                            />
+                          ))}
+                        </div>
+                      </button>
+
+                      {isOpen && (
+                        <div className="xr-domain__skills">
+                          {skills.map((skill) => {
+                            const sStat = skillStats[skill.id];
+                            if (!sStat || sStat.total === 0) {
+                              return (
+                                <div key={skill.id} className="xr-skill xr-skill--empty">
+                                  <div className="xr-skill__head">
+                                    <span className="xr-skill__name">{skill.name}</span>
+                                    <span className="xr-skill__stat">No questions</span>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            const sPct = Math.round((sStat.correct / sStat.total) * 100);
+                            const sTier = accuracyTier(sPct);
+                            return (
+                              <div key={skill.id} className="xr-skill">
+                                <div className="xr-skill__head">
+                                  <Link
+                                    className="xr-skill__name xr-skill__name--link"
+                                    to={`/learn/${skill.id}`}
+                                    title={`Study ${skill.name}`}
+                                  >
+                                    {skill.name}
+                                  </Link>
+                                  <span className="xr-skill__stat">
+                                    {sStat.correct}/{sStat.total}
+                                    <b>{sPct}%</b>
+                                  </span>
+                                </div>
+                                <div className="xr-skill__bar">
+                                  <div
+                                    className={`xr-skill__fill xr-skill__fill--${sTier}`}
+                                    style={{ width: `${Math.max(sPct, 4)}%` }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
