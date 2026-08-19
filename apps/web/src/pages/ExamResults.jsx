@@ -39,6 +39,10 @@ import { useCoach } from '../contexts/CoachContext';
 import { examScores } from '../utils/scoring';
 import { processTextMarkup } from '../utils/textProcessing';
 import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
+import {
+  findResponseForQuestion,
+  sortResponsesIntoQuestionOrder,
+} from '../utils/examResponseMatching';
 import { DOMAINS, SUBCATEGORIES, getSubcategoryMeta } from '../utils/subcategoryTaxonomy';
 import { parseRationale } from '../utils/rationale';
 import { loadKatexAutoRender, containsMathDelimiters } from '../utils/katexLoader';
@@ -82,18 +86,6 @@ const rationaleBlockHtml = (block) => {
   }
   return getSafeMarkup(block.text);
 };
-
-/** Match a response to a question, tolerating every historical id format. */
-const findResponseForQuestion = (module, question, questionIndex) =>
-  (module.responses || []).find((resp) => {
-    if (resp.questionId === question.id) return true;
-    if (resp.question && resp.question.id === question.id) return true;
-    const indexBasedId = `practice-${module.id}-q-${questionIndex}`;
-    if (resp.questionId === indexBasedId) return true;
-    if (resp.moduleIndex === questionIndex) return true;
-    if (resp.question && resp.question.text === question.text) return true;
-    return false;
-  });
 
 const isMultipleChoice = (question) => {
   if (question?.questionType) return question.questionType === 'multiple-choice';
@@ -188,6 +180,12 @@ function ExamResults() {
       if (response.moduleId && byId[response.moduleId]) {
         byId[response.moduleId].responses.push(response);
       }
+    });
+    // Firestore returns the responses subcollection in document-id order —
+    // effectively random relative to question order. Restore question order
+    // so response matching stays deterministic (utils/examResponseMatching).
+    Object.values(byId).forEach((module) => {
+      sortResponsesIntoQuestionOrder(module.responses);
     });
     // Reading & Writing modules first, then Math, each by module number.
     return Object.values(byId).sort((a, b) => {
@@ -326,8 +324,21 @@ function ExamResults() {
           ? resolveMultipleChoiceKey(question.correctAnswer ?? question.answer, options)
           : question.correctAnswer ?? question.answer;
         const keyIndex = multipleChoice ? options.findIndex((opt) => opt === keyText) : -1;
-        const userIndex =
-          multipleChoice && hasAnswer ? options.findIndex((opt) => opt === rawAnswer) : -1;
+        // Exact option-text match first (answers are stored as option text).
+        // Legacy letter/index-stored answers resolve through the same
+        // canonical resolver used for keys — but only AFTER the exact-text
+        // check, so literal numeric option text ("2") is never re-read as an
+        // index.
+        let userIndex = -1;
+        if (multipleChoice && hasAnswer) {
+          userIndex = options.findIndex((opt) => opt === rawAnswer);
+          if (userIndex === -1) {
+            const resolvedUserAnswer = resolveMultipleChoiceKey(rawAnswer, options);
+            if (resolvedUserAnswer !== rawAnswer) {
+              userIndex = options.findIndex((opt) => opt === resolvedUserAnswer);
+            }
+          }
+        }
 
         result.push({
           uid: `${module.id}-${question.id || questionIndex}`,
