@@ -47,22 +47,30 @@ async function assembleStudentContext(db, uid, surface = {}) {
   const vocab = vocabSnap.exists ? vocabSnap.data() : null;
 
   // Recent completions from the event stream (single-field index on userId).
+  //
+  // Events belonging to a result the student excluded from coaching (or that is
+  // mid-delete) carry `coachExcluded` and must be invisible here — the coach has
+  // to behave as though that sitting never happened. We over-fetch and then trim
+  // back to RECENT_EVENT_WINDOW so exclusions do not silently shrink the window.
+  const RECENT_EVENT_WINDOW = 20;
+  const isCoachVisible = (e) => e && e.coachExcluded !== true;
   let recentEvents = [];
   try {
     const evSnap = await db
       .collection('activityEvents')
       .where('userId', '==', uid)
       .orderBy('clientTs', 'desc')
-      .limit(20)
+      .limit(RECENT_EVENT_WINDOW * 3)
       .get();
-    recentEvents = evSnap.docs.map((d) => d.data());
+    recentEvents = evSnap.docs.map((d) => d.data()).filter(isCoachVisible).slice(0, RECENT_EVENT_WINDOW);
   } catch (e) {
     // Composite index may not exist yet — fall back to unordered fetch.
-    const evSnap = await db.collection('activityEvents').where('userId', '==', uid).limit(60).get();
+    const evSnap = await db.collection('activityEvents').where('userId', '==', uid).limit(180).get();
     recentEvents = evSnap.docs
       .map((d) => d.data())
+      .filter(isCoachVisible)
       .sort((a, b) => (b.clientTs || 0) - (a.clientTs || 0))
-      .slice(0, 20);
+      .slice(0, RECENT_EVENT_WINDOW);
   }
   const recentCompletions = recentEvents.filter((e) =>
     ['quiz_completed', 'exam_completed', 'drill_completed', 'flashcard_session', 'lesson_viewed'].includes(e.type)
@@ -142,8 +150,21 @@ async function assembleStudentContext(db, uid, surface = {}) {
       const p = e.payload || {};
       if (e.type === 'quiz_completed')
         lines.push(`- ${fmtDate(e.clientTs)}: SmartQuiz (${(p.subcategoryIds || []).map((s) => getDisplayName(s) || s).join(', ')}) — ${p.correctCount}/${p.questionCount}${p.passed ? ', passed' : ''}`);
-      else if (e.type === 'exam_completed')
-        lines.push(`- ${fmtDate(e.clientTs)}: ${p.isDiagnostic ? 'Diagnostic' : 'Practice exam'} — ${p.correctCount}/${p.questionCount}${p.scores?.total ? `, scaled ~${p.scores.total}` : ''}`);
+      else if (e.type === 'exam_completed') {
+        // A partial sitting is NOT a practice-test score. Say so explicitly:
+        // the model is told to reason only from this text, so an unqualified
+        // "scaled ~410" from a single module would be read as a real result.
+        const partial = p.isPartial
+          ? ` — PARTIAL SITTING: only ${p.attemptedModuleCount ?? 'some'} of ${
+              p.totalModuleCount ?? 'the'
+            } modules were attempted; treat this as module practice, not a full practice test`
+          : '';
+        lines.push(
+          `- ${fmtDate(e.clientTs)}: ${p.isDiagnostic ? 'Diagnostic' : 'Practice exam'} — ${p.correctCount}/${p.questionCount}${
+            p.scores?.total ? `, scaled ~${p.scores.total}` : ''
+          }${partial}`
+        );
+      }
       else if (e.type === 'drill_completed')
         lines.push(`- ${fmtDate(e.clientTs)}: Concept drill (${p.conceptId}) — ${p.correctCount}/${p.questionCount}`);
       else if (e.type === 'flashcard_session')

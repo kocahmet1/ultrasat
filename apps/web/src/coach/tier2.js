@@ -1,7 +1,8 @@
 /**
  * AI Coach — Tier-2 derived student state: PERSISTENCE layer (web).
  *
- * All logic lives in coach/tier2Reducers.js (pure, dependency-free) so that
+ * All logic lives in coach/tier2Reducers.mjs (pure, dependency-free, ESM so the
+ * CommonJS API can import it too) so that
  * incremental updates here and full rebuilds (scripts/backfill-coach-events.js)
  * share one implementation and can never drift.
  *
@@ -27,7 +28,7 @@ import {
   reduceHabits,
   reduceVocab,
   computeTrend,
-} from './tier2Reducers';
+} from './tier2Reducers.mjs';
 
 // Re-export the pure API so existing imports (tests, future callers) keep working.
 export {

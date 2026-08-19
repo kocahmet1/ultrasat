@@ -32,6 +32,14 @@ body {
     border-radius: var(--ut-radius);
 }
 
+.hint {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ut-muted);
+    margin: 0 0 18px;
+    max-width: 62ch;
+}
+
 .examList {
     list-style: none;
     padding: 0;
@@ -51,10 +59,29 @@ body {
     box-shadow: var(--ut-shadow-sm);
 }
 
+/* A result the coach has been told to ignore: still yours, visibly set aside. */
+.examItemExcluded {
+    background-color: var(--ut-card-soft);
+    border-style: dashed;
+}
+
+.examItemExcluded .examName,
+.examItemExcluded .examScore {
+    opacity: 0.7;
+}
+
+.examRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .examLink {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
     padding: 18px 22px;
     text-decoration: none;
     color: var(--ut-text);
@@ -64,6 +91,7 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    min-width: 0;
 }
 
 .examName {
@@ -83,6 +111,40 @@ body {
     color: var(--ut-mono-muted);
 }
 
+.badgeRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.badgeRow:empty {
+    display: none;
+}
+
+.badgePartial,
+.badgeHidden {
+    font-family: var(--ut-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.badgePartial {
+    color: var(--ut-warn-dark);
+    background-color: var(--ut-warn-soft);
+    border: 1px solid var(--ut-warn-rule);
+}
+
+.badgeHidden {
+    color: var(--ut-mono-muted);
+    background-color: var(--ut-bg-alt);
+    border: 1px solid var(--ut-rule-strong);
+}
+
 .examScore {
     font-family: var(--ut-font-mono);
     font-size: 13px;
@@ -96,10 +158,112 @@ body {
     margin-left: 15px;
 }
 
+.examActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 16px 0 0;
+    flex-shrink: 0;
+}
+
+.actionButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--ut-font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ut-text-soft);
+    background-color: transparent;
+    border: 1px solid var(--ut-rule);
+    border-radius: var(--ut-radius-sm);
+    padding: 7px 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.actionButton:hover:not(:disabled) {
+    color: var(--ut-accent-dark);
+    border-color: var(--ut-accent-rule);
+    background-color: var(--ut-accent-soft);
+}
+
+.actionButton:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.actionDanger:hover:not(:disabled) {
+    color: var(--ut-danger-dark);
+    border-color: var(--ut-danger-rule);
+    background-color: var(--ut-danger-soft);
+}
+
+.confirmBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 16px 16px;
+    padding: 12px 14px;
+    background-color: var(--ut-danger-soft);
+    border: 1px solid var(--ut-danger-rule);
+    border-radius: var(--ut-radius-sm);
+}
+
+.confirmText {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--ut-danger-dark);
+    flex: 1 1 240px;
+}
+
+.confirmActions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.confirmCancel,
+.confirmDelete {
+    font-family: var(--ut-font-body);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--ut-radius-sm);
+    padding: 7px 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.confirmCancel {
+    color: var(--ut-text-soft);
+    background-color: var(--ut-card);
+    border: 1px solid var(--ut-rule-strong);
+}
+
+.confirmDelete {
+    color: var(--ut-on-accent);
+    background-color: var(--ut-danger);
+    border: 1px solid var(--ut-danger);
+}
+
+.confirmCancel:disabled,
+.confirmDelete:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
 
 @media (max-width: 768px) {
     .container {
         padding: 20px 16px 70px;
+    }
+
+    .examRow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
     }
 
     .examLink {
@@ -115,5 +279,28 @@ body {
 
     .examName {
         font-size: 15px;
+    }
+
+    .examActions {
+        padding: 0 22px 16px;
+        gap: 8px;
+    }
+
+    .actionButton {
+        flex: 1 1 0;
+        justify-content: center;
+    }
+
+    .confirmBar {
+        margin: 0 16px 16px;
+    }
+
+    .confirmActions {
+        width: 100%;
+    }
+
+    .confirmCancel,
+    .confirmDelete {
+        flex: 1 1 0;
     }
 }

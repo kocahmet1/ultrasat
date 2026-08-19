@@ -5,7 +5,7 @@
  * Converts historical activity into canonical activityEvents (Tier 1) with
  * CORRECTED subcategory attribution (via the canonical taxonomy), then rebuilds
  * Tier-2 derived state by replaying ALL of a user's events through the same
- * pure reducers the live app uses (apps/web/src/coach/tier2Reducers.js).
+ * pure reducers the live app uses (apps/web/src/coach/tier2Reducers.mjs).
  *
  * Sources:
  *   - smartQuizzes (completed)            -> question_attempt × N + quiz_completed
@@ -353,7 +353,7 @@ async function main() {
   console.log(`Credentials: ${credPath}\n`);
 
   // Load the pure reducers (ESM) shared with the web app.
-  const reducersUrl = pathToFileURL(path.join(__dirname, '..', 'apps', 'web', 'src', 'coach', 'tier2Reducers.js')).href;
+  const reducersUrl = pathToFileURL(path.join(__dirname, '..', 'apps', 'web', 'src', 'coach', 'tier2Reducers.mjs')).href;
   const { replayEvents } = await import(reducersUrl);
 
   const withTimeout = (promise, ms, label) =>

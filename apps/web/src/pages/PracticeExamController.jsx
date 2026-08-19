@@ -505,14 +505,42 @@ const PracticeExamController = () => {
     let mathCorrect = 0; 
     let mathTotal = 0;
     
-    // Process each module of the exam. Iterate the exam's own module list —
-    // not just modules with recorded answers — so questions the student never
-    // answered still count toward the section totals. Like the real digital
-    // SAT, a blank earns no credit but stays in the denominator. (Previously,
-    // unanswered questions were skipped entirely, which inflated scaled
-    // scores on exams with many omitted questions.)
-    modules.forEach((module) => {
-      if (!module || !module.questions) return;
+    // === Attempted vs. skipped modules =====================================
+    // Within a module the student actually sat, a blank earns no credit but
+    // stays in the denominator — same as the real digital SAT. (Skipping blanks
+    // entirely used to inflate scaled scores on exams with many omissions.)
+    //
+    // A module with ZERO answered questions is a different animal: the student
+    // never took it. Scoring those buried a real 700 Reading & Writing under
+    // three modules of blanks, and fed that bogus total to the AI coach as if
+    // it were a performance signal. Such modules are left out of the score, the
+    // denominator, and the saved responses entirely; the result is flagged
+    // `isPartial` so every consumer knows only part of the exam was sat.
+    const countAnswers = (moduleData) => {
+      const answers = moduleData?.answers;
+      if (!answers) return 0;
+      const values = Array.isArray(answers) ? answers : Object.values(answers);
+      return values.filter((a) => a !== undefined && a !== null && String(a).trim() !== '').length;
+    };
+
+    const scorableModules = modules.filter((m) => m && m.questions);
+    const attemptedModules = scorableModules.filter((m) => countAnswers(responsesToProcess[m.id]) > 0);
+    const skippedModules = scorableModules.filter((m) => !attemptedModules.includes(m));
+
+    // If nothing at all was answered there is no attempted subset to isolate —
+    // score the exam as it stands so a genuine all-blank sitting still records.
+    const modulesToScore = attemptedModules.length > 0 ? attemptedModules : scorableModules;
+    const isPartial = attemptedModules.length > 0 && skippedModules.length > 0;
+
+    if (isPartial) {
+      console.log(
+        `PracticeExamController: partial sitting — scoring ${modulesToScore.length}/${scorableModules.length} modules,`,
+        'skipped:', skippedModules.map((m) => m.title || m.id)
+      );
+    }
+
+    // Process each attempted module of the exam.
+    modulesToScore.forEach((module) => {
       const moduleId = module.id;
       const moduleData = responsesToProcess[moduleId] || {};
       const moduleAnswers = moduleData.answers || {};
@@ -597,9 +625,13 @@ const PracticeExamController = () => {
     // Calculate score as percentage
     const percentageScore = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
     
-    // Canonical scaled section scores (Overhaul Phase D: utils/scoring.js)
-    const readingWritingScore = scaledSectionScore(readingWritingCorrect, readingWritingTotal);
-    const mathScore = scaledSectionScore(mathCorrect, mathTotal);
+    // Canonical scaled section scores (Overhaul Phase D: utils/scoring.js).
+    // A section with no attempted module scores null rather than a floor of
+    // 200 — "not attempted" and "got everything wrong" are not the same claim,
+    // and 200 is the one that misleads the student and the coach alike.
+    const readingWritingScore =
+      readingWritingTotal > 0 ? scaledSectionScore(readingWritingCorrect, readingWritingTotal) : null;
+    const mathScore = mathTotal > 0 ? scaledSectionScore(mathCorrect, mathTotal) : null;
     
     console.log('Calculated scores:', {
       percentageScore, 
@@ -637,6 +669,12 @@ const PracticeExamController = () => {
       correctAnswers: totalCorrect,
       practiceExamId: examId,
       isDiagnostic,
+      // Partial-sitting record: what was actually sat, and what was not.
+      isPartial,
+      attemptedModuleCount: modulesToScore.length,
+      totalModuleCount: scorableModules.length,
+      attemptedModuleIds: modulesToScore.map((m) => m.id),
+      skippedModuleIds: isPartial ? skippedModules.map((m) => m.id) : [],
       modules: modules.map(module => ({
         id: module.id,
         title: module.title,

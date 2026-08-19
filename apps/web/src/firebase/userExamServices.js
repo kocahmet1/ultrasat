@@ -280,6 +280,13 @@ export const saveComprehensiveExamResult = async (userId, examSummary, responses
           questionCount: safeResponses.length,
           correctCount,
           scores: examSummary?.scores || null,
+          // A sitting where the student did some modules and skipped the rest.
+          // Only the attempted modules are scored or counted above, but the
+          // coach still needs to know it was a partial sitting so it does not
+          // read a one-module score as a full practice-test result.
+          isPartial: !!examSummary?.isPartial,
+          attemptedModuleCount: examSummary?.attemptedModuleCount ?? null,
+          totalModuleCount: examSummary?.totalModuleCount ?? null,
         },
       };
 

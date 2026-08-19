@@ -187,8 +187,16 @@ function ExamResults() {
     Object.values(byId).forEach((module) => {
       sortResponsesIntoQuestionOrder(module.responses);
     });
+    // A partial sitting saves no responses for modules the student never sat —
+    // rendering those as empty groups would imply they were taken and bombed.
+    // Fallback guard: if NOTHING matched (legacy results whose responses carry
+    // no moduleId), keep every module rather than rendering a blank page.
+    const groups = Object.values(byId);
+    const answered = groups.filter((g) => g.responses.length > 0);
+    const visible = answered.length > 0 ? answered : groups;
+
     // Reading & Writing modules first, then Math, each by module number.
-    return Object.values(byId).sort((a, b) => {
+    return visible.sort((a, b) => {
       const aIsRW = a.moduleNumber <= 2;
       const bIsRW = b.moduleNumber <= 2;
       if (aIsRW !== bIsRW) return aIsRW ? -1 : 1;
@@ -200,9 +208,11 @@ function ExamResults() {
   // was SAVED with; recompute only for legacy results without stored scores.
   const calculateScores = useCallback((modules, storedScores) => {
     if (storedScores && (storedScores.readingWriting || storedScores.math)) {
+      // null is meaningful here: the section had no attempted module. Keep it
+      // distinct from a legacy 0/undefined, which still floors to 200.
       return {
-        rw: storedScores.readingWriting || 200,
-        m: storedScores.math || 200,
+        rw: storedScores.readingWriting === null ? null : storedScores.readingWriting || 200,
+        m: storedScores.math === null ? null : storedScores.math || 200,
       };
     }
     const scores = examScores(modules.flatMap((mod) => mod.responses || []));
@@ -228,6 +238,9 @@ function ExamResults() {
         title: data.examTitle || data.exam?.title || 'Practice Exam',
         isDiagnostic: Boolean(data.isDiagnostic || data.exam?.isDiagnostic),
         dateLabel: formatExamDate(data.completedAt || data.examDate || data.exam?.completedAt),
+        isPartial: Boolean(data.isPartial),
+        attemptedModuleCount: data.attemptedModuleCount ?? null,
+        totalModuleCount: data.totalModuleCount ?? null,
       });
     },
     [calculateScores, processModuleData]
@@ -273,7 +286,14 @@ function ExamResults() {
           window.scrollTo(0, 0);
           // AI Coach (Phase 2): exam-completed boundary — the Observer decides
           // whether to speak; the note lands in the coach panel with a badge.
-          if (coach?.observe) coach.observe('exam_completed', examId || null);
+          //
+          // Never for a result the student hid from the coach. Its activity is
+          // already filtered out of the coach's context, so waking the Observer
+          // here would only spend quota to write a note about a sitting the
+          // student explicitly asked it to ignore.
+          if (coach?.observe && !examData.excludedFromCoach) {
+            coach.observe('exam_completed', examId || null);
+          }
         } else {
           setPageError('No exam data found to display.');
         }
@@ -586,7 +606,16 @@ function ExamResults() {
     );
   }
 
-  const totalScore = readingWritingScore + mathScore;
+  // Sections the student never sat carry a null score. They contribute neither
+  // points nor 800 to the denominator — a one-module sitting reads "620 / 800",
+  // not "620 / 1600", which would look like a catastrophic full test.
+  const sectionScores = [
+    { label: 'Reading & Writing', score: readingWritingScore },
+    { label: 'Math', score: mathScore },
+  ];
+  const attemptedSections = sectionScores.filter((s) => typeof s.score === 'number');
+  const totalScore = attemptedSections.reduce((sum, s) => sum + s.score, 0);
+  const totalScoreMax = attemptedSections.length > 0 ? attemptedSections.length * 800 : 1600;
 
   // Rationale, split into verdict blocks at render time (content untouched —
   // the parser only decides where to cut; unrecognized voices fall back to
@@ -601,6 +630,11 @@ function ExamResults() {
   const heroChips = [
     examDetails?.dateLabel,
     counts.all > 0 ? `${counts.all} questions` : null,
+    examDetails?.isPartial
+      ? `Partial · ${examDetails.attemptedModuleCount ?? '?'} of ${
+          examDetails.totalModuleCount ?? '?'
+        } modules attempted`
+      : null,
   ].filter(Boolean);
 
   const tabs = [
@@ -664,7 +698,7 @@ function ExamResults() {
           <p className="xr-hero__label">Total Score</p>
           <p className="xr-hero__score">
             {totalScore}
-            <small>/ 1600</small>
+            <small>/ {totalScoreMax}</small>
           </p>
           {(heroChips.length > 0 || examDetails?.isDiagnostic) && (
             <div className="xr-hero__chips">
@@ -678,23 +712,33 @@ function ExamResults() {
           )}
         </div>
         <div className="xr-hero__sections">
-          {[
-            { label: 'Reading & Writing', score: readingWritingScore },
-            { label: 'Math', score: mathScore },
-          ].map(({ label, score }) => (
-            <div key={label} className="xr-hero__section">
-              <span className="xr-hero__section-name">{label}</span>
-              <span className="xr-hero__section-score">
-                {score} <small>/ 800</small>
-              </span>
-              <div className="xr-hero__bar">
-                <div
-                  className="xr-hero__bar-fill"
-                  style={{ width: `${Math.max(0, Math.min(100, ((score - 200) / 600) * 100))}%` }}
-                />
+          {sectionScores.map(({ label, score }) => {
+            const attempted = typeof score === 'number';
+            return (
+              <div key={label} className="xr-hero__section">
+                <span className="xr-hero__section-name">{label}</span>
+                <span className="xr-hero__section-score">
+                  {attempted ? (
+                    <>
+                      {score} <small>/ 800</small>
+                    </>
+                  ) : (
+                    <small>Not attempted</small>
+                  )}
+                </span>
+                <div className="xr-hero__bar">
+                  <div
+                    className="xr-hero__bar-fill"
+                    style={{
+                      width: attempted
+                        ? `${Math.max(0, Math.min(100, ((score - 200) / 600) * 100))}%`
+                        : '0%',
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

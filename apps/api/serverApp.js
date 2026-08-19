@@ -39,6 +39,7 @@ function loadDefaultRouters() {
     emailRouter: require('./emailRoutes'),
     companionRouter: require('./companionRouter'),
     coachRouter: require('./coach/coachRoutes'),
+    examResultsRouter: require('./examResultRoutes'),
     ingestRouter: require('./ingestRoutes'),
     adminUsersRouter: require('./adminUserRoutes'),
   };
@@ -293,6 +294,7 @@ function createServerApp(options = {}) {
   app.use('/api/email', attachFirebaseAdmin, routers.emailRouter);
   app.use('/api/companion', attachFirebaseAdmin, routers.companionRouter);
   app.use('/api/coach', attachFirebaseAdmin, routers.coachRouter);
+  app.use('/api/exam-results', attachFirebaseAdmin, routers.examResultsRouter);
   app.use('/api/ingest', attachFirebaseAdmin, routers.ingestRouter);
   if (routers.adminUsersRouter) {
     app.use('/api/admin/users', attachFirebaseAdmin, routers.adminUsersRouter);
