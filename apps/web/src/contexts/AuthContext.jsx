@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import posthog from 'posthog-js';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -144,6 +145,8 @@ export function AuthProvider({ children }) {
         setNotificationsEnabled(false);
       }
 
+      posthog.capture('user_logged_out');
+      posthog.reset();
       await signOut(auth);
       window.location.href = '/';
     } catch (logoutError) {
@@ -259,6 +262,10 @@ export function AuthProvider({ children }) {
     return initializeNotifications(currentUser.uid);
   }
 
+  // Track whether we have already identified this uid in the current session
+  // so returning visitors on page refresh are re-identified without double-firing.
+  const identifiedUidRef = useRef(null);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
@@ -266,6 +273,11 @@ export function AuthProvider({ children }) {
       if (user) {
         await getUserMembership(user);
         initializeNotifications(user.uid);
+        // Re-identify on page refresh so returning sessions are linked.
+        if (identifiedUidRef.current !== user.uid) {
+          identifiedUidRef.current = user.uid;
+          posthog.identify(user.uid, { email: user.email, name: user.displayName });
+        }
       } else {
         setUserMembership(null);
       }

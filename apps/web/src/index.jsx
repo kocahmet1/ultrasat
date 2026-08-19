@@ -7,13 +7,34 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AppErrorBoundary from './components/errors/AppErrorBoundary';
 import { register as registerSW, cacheManager } from './utils/serviceWorkerRegistration';
+import posthog from 'posthog-js';
+import { PostHogProvider } from '@posthog/react';
+
+// Initialize PostHog — keys are read from environment variables and guarded
+// so a missing config never breaks the app in production.
+const POSTHOG_TOKEN = import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN;
+const POSTHOG_HOST = import.meta.env.VITE_PUBLIC_POSTHOG_HOST;
+
+if (POSTHOG_TOKEN && POSTHOG_HOST) {
+  posthog.init(POSTHOG_TOKEN, {
+    api_host: POSTHOG_HOST,
+    defaults: '2026-01-30',
+  });
+} else if (import.meta.env.DEV) {
+  // Loudly warn in development so misconfigured envs are caught early.
+  console.error(
+    'VITE_PUBLIC_POSTHOG_PROJECT_TOKEN or VITE_PUBLIC_POSTHOG_HOST variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once both variables are configured.'
+  );
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AppErrorBoundary>
-      <App />
-    </AppErrorBoundary>
+    <PostHogProvider client={posthog}>
+      <AppErrorBoundary>
+        <App />
+      </AppErrorBoundary>
+    </PostHogProvider>
   </React.StrictMode>
 );
 

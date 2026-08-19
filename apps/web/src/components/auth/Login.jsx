@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePostHog } from '@posthog/react';
 import '../../styles/Auth.css';
 
 function Login() {
@@ -11,6 +12,7 @@ function Login() {
   const { login, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const posthog = usePostHog();
 
   const handlePostLogin = () => {
     // Check if coming from a protected route (PrivateRoute redirect).
@@ -105,7 +107,11 @@ function Login() {
     try {
       setError('');
       setLoading(true);
-      await login(email, password);
+      const user = await login(email, password);
+      if (posthog && user) {
+        posthog.identify(user.uid, { email: user.email, name: user.displayName });
+        posthog.capture('user_logged_in', { method: 'email' });
+      }
       handlePostLogin();
     } catch (err) {
       setError('Failed to sign in. Please check your credentials.');
@@ -119,7 +125,11 @@ function Login() {
     try {
       setError('');
       setLoading(true);
-      await signInWithGoogle();
+      const user = await signInWithGoogle();
+      if (posthog && user) {
+        posthog.identify(user.uid, { email: user.email, name: user.displayName });
+        posthog.capture('user_logged_in', { method: 'google' });
+      }
       handlePostLogin();
     } catch (err) {
       setError('Failed to sign in with Google.');

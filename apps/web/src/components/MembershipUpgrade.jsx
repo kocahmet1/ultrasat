@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { usePostHog } from '@posthog/react';
 import { loadStripe } from '@stripe/stripe-js';
 import './MembershipUpgrade.css';
 
@@ -21,6 +22,7 @@ const LoadingSpinner = () => <div className="loading-spinner"></div>;
 
 const MembershipUpgrade = () => {
   const { currentUser, userMembership, getMembershipDisplayName } = useAuth();
+  const posthog = usePostHog();
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [loading, setLoading] = useState({ plus: false, max: false });
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
@@ -59,6 +61,15 @@ const MembershipUpgrade = () => {
       fetchSubscriptionStatus();
     }
   }, [currentUser, fetchSubscriptionStatus]);
+
+  useEffect(() => {
+    posthog?.capture('membership_upgrade_viewed', {
+      current_tier: userMembership?.tier,
+      purchases_enabled: PURCHASES_ENABLED,
+    });
+    // Run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const validateCoupon = async () => {
     if (!couponCode.trim()) {
@@ -106,6 +117,12 @@ const MembershipUpgrade = () => {
 
   const handleCheckout = async (tier) => {
     if (!currentUser) return;
+
+    posthog?.capture('membership_checkout_started', {
+      tier,
+      billing_cycle: billingCycle,
+      coupon_applied: !!validatedCoupon,
+    });
 
     setLoading(prev => ({ ...prev, [tier]: true }));
     try {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiBookOpen, FiInfo } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
+import { usePostHog } from '@posthog/react';
 import { createSmartQuiz, getUserLevel } from '../utils/smartQuizUtils';
 import '../styles/DynamicQuizGenerator.css';
 
@@ -14,6 +15,7 @@ function SmartQuizGenerator() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const posthog = usePostHog();
   const { subcategoryId, accuracyRate = 0, forceLevel, userCurrentLevel } = location.state || {};
 
   const [status, setStatus] = useState({
@@ -54,6 +56,13 @@ function SmartQuizGenerator() {
           level,
           userCurrentLevel,
         );
+
+        posthog?.capture('smart_quiz_started', {
+          subcategory_id: subcategoryId,
+          level,
+          force_level: !!forceLevel,
+          quiz_id: quizId,
+        });
 
         navigate('/smart-quiz-intro', {
           state: {

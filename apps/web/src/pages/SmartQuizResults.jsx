@@ -19,6 +19,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import DOMPurify from 'dompurify';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { usePostHog } from '@posthog/react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { DIFFICULTY_FOR_LEVEL } from '../utils/smartQuizUtils';
@@ -114,6 +115,7 @@ export default function SmartQuizResults() {
   const { quizId } = useParams();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const posthog = usePostHog();
 
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -190,9 +192,20 @@ export default function SmartQuizResults() {
           questionsData = data.questions; // Legacy support
         }
 
-        setQuiz({ id: snap.id, ...data, questions: questionsData });
+        const quizData = { id: snap.id, ...data, questions: questionsData };
+        setQuiz(quizData);
         setLoading(false);
         window.scrollTo(0, 0);
+
+        // Capture quiz completion event with score and pass/fail outcome.
+        posthog?.capture('smart_quiz_completed', {
+          quiz_id: snap.id,
+          subcategory_id: data.subcategoryId,
+          level: data.level,
+          score: data.score,
+          passed: data.passed,
+          question_count: data.questionCount,
+        });
       } catch (err) {
         console.error('Error fetching quiz results:', err);
         setError('Failed to load quiz results');

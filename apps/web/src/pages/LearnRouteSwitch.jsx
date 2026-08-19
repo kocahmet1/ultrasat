@@ -7,8 +7,9 @@
  * stays reachable for admins at /admin/legacy-learn/:subcategoryId.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { usePostHog } from '@posthog/react';
 import { toCanonicalSubcategoryId } from '../utils/subcategoryTaxonomy';
 import { hasLessonV2 } from '../content/lessons';
 
@@ -17,6 +18,20 @@ const SubcategoryLearnPage = React.lazy(() => import('./SubcategoryLearnPage'));
 
 export default function LearnRouteSwitch() {
   const { subcategoryId } = useParams();
+  const posthog = usePostHog();
   const canonicalId = toCanonicalSubcategoryId(subcategoryId) || subcategoryId;
-  return hasLessonV2(canonicalId) ? <LessonPage /> : <SubcategoryLearnPage />;
+  const usesV2 = hasLessonV2(canonicalId);
+
+  useEffect(() => {
+    // lesson_viewed is a genuine page-load side effect — syncing with the
+    // external analytics system — which is the legitimate useEffect use case.
+    posthog?.capture('lesson_viewed', {
+      subcategory_id: canonicalId,
+      lesson_version: usesV2 ? 'v2' : 'v1',
+    });
+    // Capture once when the lesson route mounts or the subcategory changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canonicalId]);
+
+  return usesV2 ? <LessonPage /> : <SubcategoryLearnPage />;
 }

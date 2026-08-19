@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePostHog } from '@posthog/react';
 import '../../styles/Auth.css';
 
 function Signup() {
@@ -13,6 +14,7 @@ function Signup() {
   const { signup, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const posthog = usePostHog();
 
   const handlePostSignup = () => {
     // Coming from a protected route (PrivateRoute / auth-notice): honor the
@@ -114,7 +116,11 @@ function Signup() {
     try {
       setError('');
       setLoading(true);
-      await signup(email, password, name);
+      const user = await signup(email, password, name);
+      if (posthog && user) {
+        posthog.identify(user.uid, { email: user.email, name: user.displayName || name });
+        posthog.capture('user_signed_up', { method: 'email' });
+      }
       // Let the user into the app immediately; verification reminder will show later
       handlePostSignup();
     } catch (err) {
@@ -129,7 +135,11 @@ function Signup() {
     try {
       setError('');
       setLoading(true);
-      await signInWithGoogle();
+      const user = await signInWithGoogle();
+      if (posthog && user) {
+        posthog.identify(user.uid, { email: user.email, name: user.displayName });
+        posthog.capture('user_signed_up', { method: 'google' });
+      }
       handlePostSignup();
     } catch (err) {
       setError('Failed to sign in with Google.');

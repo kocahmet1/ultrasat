@@ -238,6 +238,14 @@ const PracticeExamController = () => {
 
     setExamStatus('in-progress');
     setCurrentModuleIndex(0);
+
+    posthog?.capture('practice_exam_started', {
+      exam_id: examId,
+      exam_title: exam?.title,
+      module_count: modules.length,
+      is_diagnostic: !!exam?.isDiagnostic,
+    });
+
     // Hide sidebar completely during exam
     setSidebarHidden(true);
   };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { usePostHog } from '@posthog/react';
 import './PaymentSuccess.css';
 import { FiCheck, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
@@ -8,6 +9,7 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { currentUser, getUserMembership } = useAuth();
+  const posthog = usePostHog();
   const [verificationStatus, setVerificationStatus] = useState('verifying');
   const [sessionData, setSessionData] = useState(null);
   const [error, setError] = useState(null);
@@ -60,7 +62,13 @@ const PaymentSuccess = () => {
       if (data.success) {
         setSessionData(data);
         setVerificationStatus('success');
-        
+
+        posthog?.capture('payment_completed', {
+          tier: data.session?.metadata?.tier,
+          billing: data.session?.metadata?.billing,
+          session_id: targetSessionId,
+        });
+
         // Wait for webhook to update membership with retry logic
         if (currentUser) {
           await waitForMembershipUpdate(data.session.metadata.tier);
