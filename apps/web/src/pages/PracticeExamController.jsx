@@ -505,16 +505,23 @@ const PracticeExamController = () => {
     let mathCorrect = 0; 
     let mathTotal = 0;
     
-    // Process each module's responses
-    Object.entries(responsesToProcess).forEach(([moduleId, moduleData]) => {
-      const module = modules.find(m => m.id === moduleId);
+    // Process each module of the exam. Iterate the exam's own module list —
+    // not just modules with recorded answers — so questions the student never
+    // answered still count toward the section totals. Like the real digital
+    // SAT, a blank earns no credit but stays in the denominator. (Previously,
+    // unanswered questions were skipped entirely, which inflated scaled
+    // scores on exams with many omitted questions.)
+    modules.forEach((module) => {
       if (!module || !module.questions) return;
-      
+      const moduleId = module.id;
+      const moduleData = responsesToProcess[moduleId] || {};
+      const moduleAnswers = moduleData.answers || {};
+
       console.log(`Processing module ${module.title} with moduleId: ${moduleId}`);
       console.log(`  - Module has ${module.questions.length} questions`);
-      console.log(`  - ModuleData answers:`, Array.isArray(moduleData.answers) ? 
-        `Array of ${moduleData.answers.length}` : 
-        `Object with ${Object.keys(moduleData.answers).length} keys`);
+      console.log(`  - ModuleData answers:`, Array.isArray(moduleAnswers) ?
+        `Array of ${moduleAnswers.length}` :
+        `Object with ${Object.keys(moduleAnswers).length} keys`);
       
       // Determine if this is a reading/writing or math module
       // Usually modules 1-2 are Reading/Writing, 3-4 are Math
@@ -522,14 +529,19 @@ const PracticeExamController = () => {
         (module.moduleNumber && module.moduleNumber <= 2) || 
         (module.title && module.title.toLowerCase().includes('reading'));
       
-      // Count correct answers
+      // Score every question in the module, answered or not
       module.questions.forEach((question, index) => {
-        const userAnswer = moduleData.answers[index];
-        if (userAnswer === undefined || userAnswer === null) return; // Skip unanswered questions
-        
+        const rawAnswer = moduleAnswers[index];
+        // Blank/whitespace-only answers are omissions (legacy modules saved
+        // '' for unanswered questions). Omitted questions score as incorrect
+        // but are still recorded so the review page can label them "Omitted".
+        const isOmitted =
+          rawAnswer === undefined || rawAnswer === null || String(rawAnswer).trim() === '';
+        const userAnswer = isOmitted ? null : rawAnswer;
+
         // Check if answer is correct based on question type
         const correctAnswer = question.correctAnswer !== undefined ? question.correctAnswer : question.answer;
-        const isCorrect = isPracticeExamAnswerCorrect(question, userAnswer);
+        const isCorrect = !isOmitted && isPracticeExamAnswerCorrect(question, userAnswer);
         
         // Count correct answers by section
         if (isCorrect) {
@@ -566,12 +578,13 @@ const PracticeExamController = () => {
             id: question.id || `practice-${moduleId}-q-${index}`
           },
           questionId: question.id || `practice-${moduleId}-q-${index}`,
-          userAnswer, // User's answer
+          userAnswer, // User's answer (null when the question was omitted)
           correctAnswer, // The correct answer
-          isCorrect, // Whether user got it correct
+          isCorrect, // Whether user got it correct (omitted counts as incorrect)
+          omitted: isOmitted, // Student left this question blank
           moduleId, // Which module this belongs to
           moduleIndex: index, // Add the question index for fallback matching
-          timeSpent: 60 + Math.floor(Math.random() * 60), // Default time spent
+          timeSpent: isOmitted ? 0 : 60 + Math.floor(Math.random() * 60), // Default time spent
           subcategory,
           subcategoryId,
           category,

@@ -222,6 +222,12 @@ export const saveComprehensiveExamResult = async (userId, examSummary, responses
           createdAt: serverTimestamp(),
         });
 
+        // Omitted (blank) questions are part of the exam record and count
+        // against its score, but they are NOT question attempts — keep them
+        // out of the attempts log so per-skill accuracy keeps reflecting only
+        // questions the student actually engaged with.
+        if (response.omitted) return;
+
         const attemptRef = doc(collection(db, 'questionAttempts'));
         batch.set(attemptRef, {
           ...response,
@@ -247,6 +253,9 @@ export const saveComprehensiveExamResult = async (userId, examSummary, responses
     // resolve through the canonical taxonomy). Fire-and-forget: never blocks saving.
     try {
       const attemptEvents = safeResponses
+        // Same rule as the attempts log above: omitted questions are not
+        // attempts, so they must not drag down Tier-2 skill accuracy.
+        .filter((r) => !r.omitted)
         .map((r) => ({
           source: ATTEMPT_SOURCES.EXAM,
           questionId: r.questionId || r.question?.id,
