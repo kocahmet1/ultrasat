@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 350" width="430" height="350" font-family="Georgia, serif">
+  <g stroke="#dddddd" stroke-width="1">
+    <line x1="45" y1="40" x2="375" y2="40"/><line x1="45" y1="90" x2="375" y2="90"/>
+    <line x1="45" y1="140" x2="375" y2="140"/><line x1="45" y1="190" x2="375" y2="190"/>
+    <line x1="45" y1="240" x2="375" y2="240"/><line x1="45" y1="290" x2="375" y2="290"/>
+    <line x1="45" y1="40" x2="45" y2="290"/><line x1="100" y1="40" x2="100" y2="290"/>
+    <line x1="155" y1="40" x2="155" y2="290"/><line x1="210" y1="40" x2="210" y2="290"/>
+    <line x1="265" y1="40" x2="265" y2="290"/><line x1="320" y1="40" x2="320" y2="290"/>
+    <line x1="375" y1="40" x2="375" y2="290"/>
+  </g>
+  <line x1="38" y1="290" x2="392" y2="290" stroke="#000" stroke-width="1.6"/>
+  <line x1="210" y1="305" x2="210" y2="27" stroke="#000" stroke-width="1.6"/>
+  <path d="M45 40 Q210 490 375 40" fill="none" stroke="#000" stroke-width="2.4"/>
+  <g fill="#000">
+    <circle cx="100" cy="165" r="3.5"/><circle cx="155" cy="240" r="3.5"/><circle cx="210" cy="265" r="3.5"/>
+    <circle cx="265" cy="240" r="3.5"/><circle cx="320" cy="165" r="3.5"/>
+  </g>
+  <g font-size="12" text-anchor="middle">
+    <text x="45" y="310">-3</text><text x="100" y="310">-2</text><text x="155" y="310">-1</text>
+    <text x="265" y="310">1</text><text x="320" y="310">2</text><text x="375" y="310">3</text>
+  </g>
+  <g font-size="12" text-anchor="end">
+    <text x="201" y="294">0</text><text x="201" y="269">1</text><text x="201" y="244">2</text>
+    <text x="201" y="169">5</text><text x="201" y="44">10</text>
+  </g>
+  <text x="385" y="281" font-size="14" font-style="italic">x</text>
+  <text x="220" y="32" font-size="14" font-style="italic">y</text>
+  <text x="338" y="78" font-size="16" font-style="italic">f</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" width="480" height="360" font-family="Georgia, serif">
+  <g stroke="#d7d7d7" stroke-width="1">
+    <line x1="75" y1="300" x2="430" y2="300"/><line x1="75" y1="250" x2="430" y2="250"/>
+    <line x1="75" y1="200" x2="430" y2="200"/><line x1="75" y1="150" x2="430" y2="150"/>
+    <line x1="75" y1="100" x2="430" y2="100"/><line x1="75" y1="50" x2="430" y2="50"/>
+    <line x1="75" y1="50" x2="75" y2="300"/><line x1="146" y1="50" x2="146" y2="300"/>
+    <line x1="217" y1="50" x2="217" y2="300"/><line x1="288" y1="50" x2="288" y2="300"/>
+    <line x1="359" y1="50" x2="359" y2="300"/><line x1="430" y1="50" x2="430" y2="300"/>
+  </g>
+  <line x1="70" y1="300" x2="442" y2="300" stroke="#000" stroke-width="1.6"/>
+  <line x1="75" y1="308" x2="75" y2="35" stroke="#000" stroke-width="1.6"/>
+  <line x1="75" y1="150" x2="430" y2="25" stroke="#000" stroke-width="2.3"/>
+  <g fill="#000"><circle cx="75" cy="150" r="4.5"/><circle cx="288" cy="75" r="4.5"/></g>
+  <g font-size="12" text-anchor="middle">
+    <text x="75" y="320">0</text><text x="146" y="320">1</text><text x="217" y="320">2</text>
+    <text x="288" y="320">3</text><text x="359" y="320">4</text><text x="430" y="320">5</text>
+  </g>
+  <g font-size="12" text-anchor="end">
+    <text x="66" y="304">0</text><text x="66" y="254">10</text><text x="66" y="204">20</text>
+    <text x="66" y="154">30</text><text x="66" y="104">40</text><text x="66" y="54">50</text>
+  </g>
+  <text x="255" y="350" text-anchor="middle" font-size="13">Time (hours), t</text>
+  <text x="19" y="175" text-anchor="middle" font-size="13" transform="rotate(-90 19 175)">Energy (watt-hours), E</text>
+</svg>

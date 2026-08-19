@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 360" width="500" height="360" font-family="Georgia, serif">
+  <text x="265" y="28" text-anchor="middle" font-size="18">Recalibration Attempts</text>
+  <g stroke="#d2d2d2" stroke-width="1">
+    <line x1="70" y1="285" x2="455" y2="285"/><line x1="70" y1="247" x2="455" y2="247"/>
+    <line x1="70" y1="209" x2="455" y2="209"/><line x1="70" y1="171" x2="455" y2="171"/>
+    <line x1="70" y1="133" x2="455" y2="133"/><line x1="70" y1="95" x2="455" y2="95"/>
+    <line x1="70" y1="57" x2="455" y2="57"/>
+  </g>
+  <line x1="70" y1="285" x2="460" y2="285" stroke="#000" stroke-width="1.6"/>
+  <line x1="70" y1="290" x2="70" y2="50" stroke="#000" stroke-width="1.6"/>
+  <g fill="#d9d9d9" stroke="#000" stroke-width="1.4">
+    <rect x="91" y="209" width="40" height="76"/>
+    <rect x="151" y="95" width="40" height="190"/>
+    <rect x="211" y="57" width="40" height="228"/>
+    <rect x="271" y="133" width="40" height="152"/>
+    <rect x="331" y="209" width="40" height="76"/>
+    <rect x="391" y="247" width="40" height="38"/>
+  </g>
+  <g font-size="13" text-anchor="middle">
+    <text x="111" y="305">1</text><text x="171" y="305">2</text><text x="231" y="305">3</text>
+    <text x="291" y="305">4</text><text x="351" y="305">5</text><text x="411" y="305">6</text>
+  </g>
+  <g font-size="12" text-anchor="end">
+    <text x="61" y="289">0</text><text x="61" y="251">1</text><text x="61" y="213">2</text>
+    <text x="61" y="175">3</text><text x="61" y="137">4</text><text x="61" y="99">5</text><text x="61" y="61">6</text>
+  </g>
+  <text x="265" y="337" text-anchor="middle" font-size="14">Number of attempts</text>
+  <text x="18" y="170" text-anchor="middle" font-size="14" transform="rotate(-90 18 170)">Number of gauges</text>
+</svg>

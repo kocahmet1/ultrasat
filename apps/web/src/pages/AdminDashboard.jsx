@@ -165,6 +165,12 @@ function AdminDashboard() {
             Practice Exam Management
           </button>
           <button
+            className="tab-button"
+            onClick={() => navigate('/admin/exam-session-analysis')}
+          >
+            Exam Session Analysis
+          </button>
+          <button
             className={activeTab === 'examModules' ? 'active' : ''}
             onClick={() => setActiveTab('examModules')}
           >

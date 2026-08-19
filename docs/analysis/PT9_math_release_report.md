@@ -38,18 +38,19 @@ content inside those documents were treated as reference material, not as user i
 - Reading and Writing modules: unchanged
 - Exact rollback backup: `scripts/backups/exam9_math_backup_1786910821840.json`
 
-Exam 9 was intentionally changed from public to unpublished and its quality-control status was set
-to `stale`. This matches the application's publication safety contract after canonical content changes.
+Exam 9 was initially changed from public to unpublished and its quality-control status was set to
+`stale`, matching the application's normal safety contract after canonical content changes.
 
 ## Publication follow-up
 
 The production Exam QC catalog currently has zero ready reference libraries, so a new full-exam
-audit cannot be started yet. The publication gate was not bypassed. To republish, an administrator
-must create and index a reference library, run Admin Exam Quality Control over the complete exam,
-and use **Publish verified exam** after the audit passes.
+audit cannot be started. On 2026-08-17, the user explicitly authorized bypassing that formal gate.
+Exam 9 was republished with `isPublic: true`; its QC status remains honestly marked `stale`, and the
+record includes a manual publication override tied to package hash
+`fa87da8e93dac05a627a6c57a58694f2da02c20beb33d7fb3241a8ef7c234f26`.
 
 Rollback, if required before further QC or publication work:
 
 ```powershell
-node scripts/replaceExam9Math.js --rollback "C:\Users\Test1\CascadeProjects\ultrasat\scripts\backups\exam9_math_backup_1786910821840.json"
+node scripts/replaceExam9Math.js --force --rollback "C:\Users\Test1\CascadeProjects\ultrasat\scripts\backups\exam9_math_backup_1786910821840.json"
 ```

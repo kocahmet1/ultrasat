@@ -32,6 +32,9 @@ yarn-error.log*
 # Canonical authored payload for the Practice Test 9 Math replacement
 !scripts/data/practiceTest9Math.json
 
+# Canonical authored payload for the Practice Test 10 Math replacement
+!scripts/data/practiceTest10Math.json
+
 # Runtime JSON required by the deployed web and API applications
 !apps/api/data/subcategoryTaxonomy.json
 !apps/web/public/manifest.json
