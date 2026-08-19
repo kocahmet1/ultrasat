@@ -385,6 +385,7 @@ function AdminExamSessionAnalysis() {
   const [selectedExamKey, setSelectedExamKey] = useState(null);
   const [activeView, setActiveView] = useState('questions');
   const [questionSort, setQuestionSort] = useState('missed');
+  const [moduleFilter, setModuleFilter] = useState('all');
   const [expandedQuestions, setExpandedQuestions] = useState(() => new Set());
   const [expandedStudents, setExpandedStudents] = useState(() => new Set());
   const [highlightKey, setHighlightKey] = useState(null);
@@ -470,8 +471,14 @@ function AdminExamSessionAnalysis() {
   );
 
   /* ------------------------------- lazy-load the exam's full question list */
+  // Loaded for the analyzed group AND as soon as a specific test is picked in
+  // the dropdown, so the Module selector fills in before/without analysis.
+  const targetPracticeExamId =
+    selectedGroup?.practiceExamId ||
+    (examFilter !== 'all' ? examFilter : null);
+
   useEffect(() => {
-    const practiceExamId = selectedGroup?.practiceExamId;
+    const practiceExamId = targetPracticeExamId;
     if (!practiceExamId || modulesCache[practiceExamId]) return;
     setModulesCache((previous) => ({
       ...previous,
@@ -494,11 +501,55 @@ function AdminExamSessionAnalysis() {
           [practiceExamId]: { status: 'error', modules: null },
         }));
       });
-  }, [selectedGroup, modulesCache]);
+  }, [targetPracticeExamId, modulesCache]);
 
-  const modulesEntry = selectedGroup?.practiceExamId
-    ? modulesCache[selectedGroup.practiceExamId]
+  const modulesEntry = targetPracticeExamId
+    ? modulesCache[targetPracticeExamId]
     : null;
+
+  /* --------------------------------------------------------- module filter */
+  // Modules of the exam in scope: from the analyzed roster's metadata plus
+  // the exam definition (whichever is available first).
+  const moduleOptions = useMemo(() => {
+    const metaById = new Map();
+    if (selectedGroup) {
+      selectedGroup.roster.forEach((session) => {
+        (session.modulesMeta || []).forEach((meta) => {
+          if (meta && meta.id && !metaById.has(meta.id)) {
+            metaById.set(meta.id, {
+              id: meta.id,
+              title: meta.title,
+              moduleNumber: meta.moduleNumber,
+            });
+          }
+        });
+      });
+    }
+    (modulesEntry?.modules || []).forEach((module) => {
+      if (module && module.id) {
+        metaById.set(module.id, {
+          id: module.id,
+          title: module.title,
+          moduleNumber: module.moduleNumber,
+        });
+      }
+    });
+    return [...metaById.values()].sort(
+      (a, b) =>
+        (a.moduleNumber ?? 99) - (b.moduleNumber ?? 99) ||
+        String(a.title || '').localeCompare(String(b.title || '')),
+    );
+  }, [selectedGroup, modulesEntry]);
+
+  // If the scope changes (other exam picked/selected) drop a stale module pick.
+  useEffect(() => {
+    if (
+      moduleFilter !== 'all' &&
+      !moduleOptions.some((module) => module.id === moduleFilter)
+    ) {
+      setModuleFilter('all');
+    }
+  }, [moduleOptions, moduleFilter]);
 
   /* ------------------------------------------------------ derived analysis */
   const questionAnalysis = useMemo(
@@ -506,40 +557,52 @@ function AdminExamSessionAnalysis() {
     [selectedGroup, modulesEntry],
   );
 
+  // Everything downstream (lists, stats, CSV) respects the module filter.
+  const filteredAnalysis = useMemo(() => {
+    if (moduleFilter === 'all') return questionAnalysis;
+    return {
+      allRows: questionAnalysis.allRows.filter(
+        (row) => row.moduleId === moduleFilter,
+      ),
+      missedRows: questionAnalysis.missedRows.filter(
+        (row) => row.moduleId === moduleFilter,
+      ),
+    };
+  }, [questionAnalysis, moduleFilter]);
+
   const sortedMissedRows = useMemo(() => {
-    const rows = [...questionAnalysis.missedRows];
+    const rows = [...filteredAnalysis.missedRows];
     if (questionSort === 'missed') {
       rows.sort((a, b) => b.missed.length - a.missed.length || a.sortPos - b.sortPos);
     } else {
       rows.sort((a, b) => a.sortPos - b.sortPos);
     }
     return rows;
-  }, [questionAnalysis, questionSort]);
+  }, [filteredAnalysis, questionSort]);
 
   const studentRows = useMemo(
-    () => buildStudentRows(selectedGroup, questionAnalysis.allRows),
-    [selectedGroup, questionAnalysis],
+    () => buildStudentRows(selectedGroup, filteredAnalysis.allRows),
+    [selectedGroup, filteredAnalysis],
   );
 
   const summary = useMemo(() => {
     if (!selectedGroup) return null;
     const rosterSize = selectedGroup.roster.length;
-    const totalQuestions = questionAnalysis.allRows.length;
-    const missedCount = questionAnalysis.missedRows.length;
-    const hardest = [...questionAnalysis.missedRows].sort(
+    const totalQuestions = filteredAnalysis.allRows.length;
+    const missedCount = filteredAnalysis.missedRows.length;
+    const hardest = [...filteredAnalysis.missedRows].sort(
       (a, b) => b.missed.length - a.missed.length || a.sortPos - b.sortPos,
     )[0];
+    // Average correct within the current scope (whole exam or one module),
+    // computed from the same rows the lists show.
+    const totalCorrectEntries = filteredAnalysis.allRows.reduce(
+      (sum, row) => sum + row.correct.length,
+      0,
+    );
     const averageCorrect =
-      rosterSize > 0
-        ? Math.round(
-            selectedGroup.roster.reduce(
-              (sum, session) => sum + (session.correctAnswers || 0),
-              0,
-            ) / rosterSize,
-          )
-        : 0;
+      rosterSize > 0 ? Math.round(totalCorrectEntries / rosterSize) : 0;
     return { rosterSize, totalQuestions, missedCount, hardest, averageCorrect };
-  }, [selectedGroup, questionAnalysis]);
+  }, [selectedGroup, filteredAnalysis]);
 
   /* -------------------------------------------- KaTeX for expanded content */
   useEffect(() => {
@@ -822,8 +885,9 @@ function AdminExamSessionAnalysis() {
         <div className="esa-empty">
           <h3>No missed questions 🎉</h3>
           <p>
-            Every student in this session answered every recorded question
-            correctly.
+            {moduleFilter === 'all'
+              ? 'Every student in this session answered every recorded question correctly.'
+              : 'Every student in this session answered every recorded question of this module correctly. Pick another module (or “All modules”) above.'}
           </p>
         </div>
       );
@@ -1105,9 +1169,11 @@ function AdminExamSessionAnalysis() {
             See how a group of students did on the same practice test. Pick the
             test and a time window, then Analyze: you&apos;ll get every missed
             question with who missed it (and what they picked), plus a
-            per-student breakdown. Unanswered questions count as missed and are
-            tagged “no answer”. Only tests <strong>finished</strong> inside the
-            window appear.
+            per-student breakdown. Use <strong>Module</strong> to focus on a
+            single module instead of the whole test — every list, stat and CSV
+            follows it. Unanswered questions count as missed and are tagged “no
+            answer”. Only tests <strong>finished</strong> inside the window
+            appear.
           </p>
         </div>
 
@@ -1123,6 +1189,25 @@ function AdminExamSessionAnalysis() {
               {catalogExams.map((exam) => (
                 <option key={exam.id} value={exam.id}>
                   {exam.title || exam.id}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="esa-control esa-control-module">
+            <span>Module</span>
+            <select
+              value={moduleFilter}
+              onChange={(event) => setModuleFilter(event.target.value)}
+              disabled={moduleOptions.length === 0}
+            >
+              <option value="all">
+                {moduleOptions.length === 0 && modulesEntry?.status === 'loading'
+                  ? 'Loading modules…'
+                  : 'All modules (whole test)'}
+              </option>
+              {moduleOptions.map((module) => (
+                <option key={module.id} value={module.id}>
+                  {`M${module.moduleNumber ?? '?'} — ${module.title || module.id}`}
                 </option>
               ))}
             </select>
@@ -1261,7 +1346,7 @@ function AdminExamSessionAnalysis() {
                         className={activeView === 'questions' ? 'active' : ''}
                         onClick={() => setActiveView('questions')}
                       >
-                        Missed questions ({questionAnalysis.missedRows.length})
+                        Missed questions ({filteredAnalysis.missedRows.length})
                       </button>
                       <button
                         type="button"

@@ -28,14 +28,50 @@ import {
   limit,
   orderBy,
   query,
+  startAfter,
   Timestamp,
   where,
 } from 'firebase/firestore';
 
-// ~200 full-length sittings; far above anything a tutoring session produces.
-// The query is ordered newest-first, so if the cap is ever hit we keep the
-// newest attempts and report `truncated` so the UI can say so.
-const ATTEMPT_FETCH_LIMIT = 20000;
+// Firestore rejects any query limit() above 10,000, so attempts are fetched
+// in pages well under that cap and stitched together.
+const ATTEMPT_PAGE_SIZE = 5000;
+// Overall safety cap (~400 full-length sittings — far above any tutoring
+// session). Ordered newest-first, so if it's ever hit we keep the newest
+// attempts and report `truncated` so the UI can say so.
+const ATTEMPT_FETCH_LIMIT = 40000;
+
+/** Page through questionAttempts newest-first until the window is covered. */
+const fetchAttemptDocs = async (cutoffMs) => {
+  const attemptDocs = [];
+  let cursor = null;
+  let truncated = false;
+
+  for (;;) {
+    const constraints = [
+      where('attemptedAt', '>=', Timestamp.fromMillis(cutoffMs)),
+      orderBy('attemptedAt', 'desc'),
+      limit(ATTEMPT_PAGE_SIZE),
+    ];
+    if (cursor) {
+      constraints.push(startAfter(cursor));
+    }
+    // eslint-disable-next-line no-await-in-loop
+    const snapshot = await getDocs(
+      query(collection(db, 'questionAttempts'), ...constraints),
+    );
+    attemptDocs.push(...snapshot.docs);
+
+    if (snapshot.size < ATTEMPT_PAGE_SIZE) break; // window fully covered
+    if (attemptDocs.length >= ATTEMPT_FETCH_LIMIT) {
+      truncated = true;
+      break;
+    }
+    cursor = snapshot.docs[snapshot.docs.length - 1];
+  }
+
+  return { attemptDocs, truncated };
+};
 
 /** Firestore Timestamp | Date | ISO string | millis -> millis (or null). */
 const toMillis = (value) => {
@@ -66,19 +102,11 @@ export const fetchExamSessionData = async (hoursBack) => {
     : 1;
   const cutoffMs = Date.now() - safeHours * 60 * 60 * 1000;
 
-  const attemptsQuery = query(
-    collection(db, 'questionAttempts'),
-    where('attemptedAt', '>=', Timestamp.fromMillis(cutoffMs)),
-    orderBy('attemptedAt', 'desc'),
-    limit(ATTEMPT_FETCH_LIMIT),
-  );
-
-  const attemptsSnapshot = await getDocs(attemptsQuery);
-  const truncated = attemptsSnapshot.size >= ATTEMPT_FETCH_LIMIT;
+  const { attemptDocs, truncated } = await fetchAttemptDocs(cutoffMs);
 
   // Group raw attempts into one bucket per (userId, resultDocId).
   const attemptGroups = new Map();
-  attemptsSnapshot.docs.forEach((attemptDoc) => {
+  attemptDocs.forEach((attemptDoc) => {
     const attempt = attemptDoc.data();
     if (!attempt.userId || !attempt.examId) return;
     const key = `${attempt.userId}|${attempt.examId}`;
