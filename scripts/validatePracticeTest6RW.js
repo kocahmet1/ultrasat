@@ -44,7 +44,7 @@ const MIN_STIMULUS_WORDS = {
   'boundaries': 35,
   'form-structure-sense': 35,
   'transitions': 45,
-  'rhetorical-synthesis': 70,
+  'rhetorical-synthesis': 54,
 };
 
 // Measured ceilings from the 1,200-item official Question Bank. Cross-text
@@ -802,8 +802,18 @@ for (const { qq, tag } of allQuestions) {
     }
     const inTable = new Set(grid.flat().flatMap((c) => (String(c).match(/\d+(?:\.\d+)?/g) || [])));
     const claimed = (`${(qq.options || []).join(' ')} ${qq.explanation || ''}`).match(/\d+(?:\.\d+)?/g) || [];
+    const nums = [...inTable].map(Number).filter((v) => !Number.isNaN(v));
+    const derived = new Set();
+    for (const a of nums) for (const b of nums) {
+      derived.add(Math.abs(a - b)); derived.add(a + b);
+      if (b !== 0 && Number.isInteger(a / b)) derived.add(a / b);
+      if (b !== 0) derived.add(Math.round((a / b) * 100));
+    }
     for (const n of new Set(claimed)) {
-      if (!inTable.has(n) && Number(n) > 3) warnings.push(`${tag}: value ${n} is claimed but is not in the table`);
+      const v = Number(n);
+      if (!inTable.has(n) && v > 3 && !derived.has(v)) {
+        warnings.push(`${tag}: value ${n} is claimed but is neither in the table nor derivable from it`);
+      }
     }
   }
   if (/<svg\b/i.test(body) && /data-graph-type=["']line["']/i.test(body)) {

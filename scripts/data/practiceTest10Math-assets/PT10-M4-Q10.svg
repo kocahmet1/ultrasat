@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 250" width="380" height="250" font-family="Georgia, serif">
+  <g stroke="#000000" stroke-width="1.5" fill="none">
+    <line x1="56" y1="62" x2="324" y2="182"/>
+    <line x1="56" y1="186" x2="324" y2="58"/>
+    <line x1="56" y1="62" x2="56" y2="186"/>
+    <line x1="324" y1="182" x2="324" y2="58"/>
+  </g>
+  <g font-size="14" font-style="italic" fill="#000000">
+    <text x="43" y="59" text-anchor="middle">A</text>
+    <text x="43" y="198" text-anchor="middle">B</text>
+    <text x="337" y="194" text-anchor="middle">C</text>
+    <text x="337" y="56" text-anchor="middle">D</text>
+    <text x="188" y="111" text-anchor="middle">E</text>
+  </g>
+  <g font-size="13" fill="#000000">
+    <text x="156" y="129" text-anchor="middle">40°</text>
+    <text x="301" y="153" text-anchor="middle">55°</text>
+    <text x="302" y="96" text-anchor="middle"><tspan font-style="italic">x</tspan>°</text>
+  </g>
+  <text x="190" y="236" text-anchor="middle" font-size="12" fill="#000000">Note: Figure not drawn to scale.</text>
+</svg>

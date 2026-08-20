@@ -1,5 +1,5 @@
 /**
- * Replace the two Reading & Writing modules of "Exam 8" (Practice Test 8) with
+ * Replace the two Reading & Writing modules of "Exam 8" (Practice Test 4) with
  * the 27+27 questions authored in scripts/data/practiceTest8RW.json.
  *
  * The two R&W examModule documents are kept (their IDs, titles, moduleNumbers do

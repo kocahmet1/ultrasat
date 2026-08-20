@@ -29,6 +29,23 @@ export { EVENT_TYPES, ATTEMPT_SOURCES } from './eventTypes';
 
 const eventsCol = () => collection(db, 'activityEvents');
 
+/**
+ * Broadcast a just-logged event on window so live UI (the coach's mission
+ * ticks on the Home briefing, for one) can react without polling Firestore.
+ * Best-effort: a listener throwing must never reach the logging surface.
+ */
+function broadcastEvent(eventDoc) {
+  try {
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(
+        new CustomEvent('ultrasat:activity', { detail: { type: eventDoc.type, payload: eventDoc.payload } })
+      );
+    }
+  } catch (err) {
+    // never let a UI listener break event logging
+  }
+}
+
 /** Normalize any subcategory fields in a payload to canonical kebab ids. */
 function normalizePayload(payload) {
   const p = { ...payload };
@@ -81,6 +98,7 @@ export async function logEvent(type, payload = {}) {
 
     // Tier-2 update — intentionally not awaited by callers; errors self-log.
     applyEventToDerivedState(user.uid, eventDoc);
+    broadcastEvent(eventDoc);
 
     return { ok: true, id: ref.id };
   } catch (err) {
@@ -136,6 +154,7 @@ export async function logQuestionAttempts(attempts, completion = null) {
         await applyEventToDerivedState(user.uid, eventDoc);
       }
     })();
+    docs.forEach(broadcastEvent);
 
     return { ok: true, count: docs.length };
   } catch (err) {

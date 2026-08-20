@@ -15,6 +15,7 @@
 const { complete, parseJsonResponse } = require('./modelAdapter');
 const { assembleStudentContext } = require('./contextAssembler');
 const { getNotebook, saveNotebook, NOTEBOOK_CONTRACT } = require('./notebook');
+const { BLOCKS_GUIDE, sanitizeBlocks, hydrateBlocks, sanitizeCommitments } = require('./blocks');
 
 const DAY = 86400000;
 const dayKey = (ms) => new Date(ms).toISOString().slice(0, 10);
@@ -64,8 +65,14 @@ async function checkSignificance(db, uid, trigger, data, meta) {
  * Caller handles quota + ledger.
  */
 async function runObserver(db, uid, trigger, refId, ledger, beforeModel) {
+  // At the exam boundary the client sends the practiceExams doc id as refId —
+  // pass it through so the assembler reads the authoritative result directly
+  // ("## The exam that just finished"). The results page can only fire this
+  // ping after that document was saved and re-read, so unlike the
+  // fire-and-forget event batch there is no race to lose.
+  const surface = trigger === 'exam_completed' && refId ? { examResultId: refId } : {};
   const [{ contextText, data }, notebook] = await Promise.all([
-    assembleStudentContext(db, uid, {}),
+    assembleStudentContext(db, uid, surface),
     getNotebook(db, uid),
   ]);
 
@@ -80,9 +87,9 @@ async function runObserver(db, uid, trigger, refId, ledger, beforeModel) {
   const surfaceHint = trigger === 'exam_completed' ? 'exam-results' : 'briefing';
   const taskByTrigger = {
     session_start:
-      'Write a session-start note for the student (this appears when they open the app). Base it on the trigger reasons: greet briefly, surface the single most valuable thing right now (a new regression beats everything; otherwise the weekly picture, a gap, or exam countdown), and offer at most 2 actions. 2-4 sentences.',
+      'Write the session-start BRIEFING for the student (this renders as the Home hero — cards, not chat). Base it on the trigger reasons: surface the single most valuable thing right now (a new regression beats everything; otherwise the weekly picture, a gap, or exam countdown). Blocks: a "verdict" (tone: "fix" for a regression/slip day, "win" when celebrating a level-up or record, "exam" inside the last 14 days, else "steady"), a "plan" with 2-3 items ordered by value (a regression fix first; every item grounded in the data and carrying an action where possible), and a "stat" block (kind "pace" normally, "streak" when the streak is the story). "message" stays 2-4 sentences for legacy surfaces.',
     exam_completed:
-      'The student just finished a full practice exam (see Recent activity for the result). Write the coach note: what the result means against their history and target, the top thing to fix, and at most 2 actions. 3-5 sentences.',
+      'The student just finished a practice exam. The authoritative result is under "## The exam that just finished" (or, if that section is absent, the newest entry in "## Practice-exam history"). Write the coach note: what the scaled score means against their exam history and target (compare with earlier exams where available; respect any PARTIAL SITTING label), the top thing to fix, and at most 2 actions. 3-5 sentences. Blocks: a "verdict" with evidence citing the exam, a "stat" (kind "pace"), and a "history" block if a Concept alert explains the losses.',
   };
 
   const result = await complete('primary', {
@@ -90,13 +97,16 @@ async function runObserver(db, uid, trigger, refId, ledger, beforeModel) {
     // rewrites the durable notebook, so give it room to think.
     effort: process.env.COACH_OBSERVE_REASONING_EFFORT || 'medium',
     system:
-      `You are the student's SAT coach ("Coach") inside UltraSAT. Warm, direct, specific; second person; never invent facts — reference only the STUDENT CONTEXT and NOTEBOOK.\n\n${NOTEBOOK_CONTRACT}\n\n` +
-      `OUTPUT a single JSON object:\n{\n  "note": { "message": "...", "actions": [up to 2 of {"type":"quiz","subcategoryId":"<kebab>","level":1|2|3?,"label":"..."} | {"type":"link","route":"<allow-listed>","label":"..."} | {"type":"lesson","conceptId":"<id>","subcategoryId":"<kebab>?","label":"..."}] },\n  "notebook": "<the FULL updated notebook markdown>"\n}`,
+      `You are the student's SAT coach ("Coach") inside UltraSAT. Warm, direct, specific; second person; never invent facts — reference only the STUDENT CONTEXT and NOTEBOOK.\n\n${BLOCKS_GUIDE}\n\n${NOTEBOOK_CONTRACT}\n\n` +
+      `OUTPUT a single JSON object:\n{\n  "note": { "message": "...", "actions": [up to 2 of {"type":"quiz","subcategoryId":"<kebab>","level":1|2|3?,"label":"..."} | {"type":"link","route":"<allow-listed>","label":"..."} | {"type":"lesson","conceptId":"<id>","subcategoryId":"<kebab>?","label":"..."}], "blocks": [...] },\n  "commitments": [full current list of {"label":"...","dueDate":"YYYY-MM-DD","source":"..."} — add dated re-checks you promise, prune done/stale, ≤ 6],\n  "notebook": "<the FULL updated notebook markdown>"\n}`,
     messages: [
       {
         role: 'user',
         content:
           `NOTEBOOK (your memory of this student):\n${notebook.text}\n\n` +
+          `CURRENT COMMITMENTS (structured follow-ups you owe the student):\n${JSON.stringify(
+            notebook.meta.commitments || []
+          )}\n\n` +
           `STUDENT CONTEXT (current, authoritative):\n${contextText}\n\n` +
           `TRIGGER: ${trigger} · significance reasons: ${sig.reasons.join(', ')}` +
           (sig.newRegressions.length ? ` · NEW regressions to address: ${sig.newRegressions.join(', ')}` : '') +
@@ -104,13 +114,14 @@ async function runObserver(db, uid, trigger, refId, ledger, beforeModel) {
       },
     ],
     json: true,
-    maxTokens: 2200,
+    maxTokens: 3000,
   });
   if (ledger) await ledger(result);
 
   const parsed = parseJsonResponse(result.text) || {};
   const noteRaw = parsed.note || {};
   const now = Date.now();
+  const commitments = sanitizeCommitments(parsed.commitments);
 
   // Persist notebook + meta (mechanical acks so we don't re-note the same regression daily)
   await saveNotebook(db, uid, {
@@ -119,6 +130,7 @@ async function runObserver(db, uid, trigger, refId, ledger, beforeModel) {
       lastObserveAt: now,
       ...(sig.reasons.includes('weekly_summary_due') ? { lastWeeklyNoteAt: now } : {}),
       ...(trigger === 'session_start' ? { lastBriefingDay: dayKey(now) } : {}),
+      ...(commitments !== null ? { commitments } : {}),
       acknowledgedRegressions: Array.from(
         new Set([...(notebook.meta.acknowledgedRegressions || []), ...sig.newRegressions])
       ).slice(-50),
@@ -133,6 +145,9 @@ async function runObserver(db, uid, trigger, refId, ledger, beforeModel) {
     refId: refId || null,
     message: String(noteRaw.message).slice(0, 1200),
     actionsRaw: Array.isArray(noteRaw.actions) ? noteRaw.actions : [],
+    // Typed blocks (UI v2): sanitized against the contract, then hydrated with
+    // server-owned numbers from the SAME data the prompt was grounded in.
+    blocks: hydrateBlocks(sanitizeBlocks(noteRaw.blocks), data),
     reasons: sig.reasons,
     createdAt: new Date(),
     read: false,

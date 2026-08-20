@@ -14,6 +14,7 @@ import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
 import { getDisplayName } from '../utils/subcategoryTaxonomy';
 import ExamDateCard, { ExamDateInline } from '../components/ExamDateCard';
+import BriefingHero from '../components/coach/BriefingHero';
 import { getStudyPlan, getPlanStats, buildPracticeQuizConfig } from '../firebase/studyPlanServices';
 import { createCustomSmartQuiz } from '../utils/smartQuizUtils';
 import {
@@ -109,8 +110,6 @@ const Dashboard = () => {
   };
 
   const firstName = (currentUser?.displayName || profile?.displayName || 'there').split(' ')[0];
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
   const launchers = [
     { label: 'Practice Test', sub: 'Full-length exam', Icon: FiCheckSquare, to: '/practice-exams' },
@@ -118,12 +117,6 @@ const Dashboard = () => {
     { label: 'Diagnostic', sub: 'Find your level, free', Icon: FiFlag, to: '/predictive-exam' },
     { label: 'Lectures', sub: 'Learn a skill', Icon: FiBookOpen, to: '/lectures' },
   ];
-
-  const heroSub = examCountdown
-    ? <>Your exam is coming up — stay on the plan and it will pay off.</>
-    : profile?.targetScore
-      ? <>Target score <b>{profile.targetScore}</b>. Every session moves you closer.</>
-      : <>Set a target score with your <b>coach</b> to personalize your plan.</>;
 
   if (loading) {
     return (
@@ -145,66 +138,44 @@ const Dashboard = () => {
 
   return (
     <div className="ut-page">
-      {/* ---------------------------------------------------------- hero -- */}
-      <section className="hm-hero">
-        <div className="hm-hero-top">
-          <div>
-            <span className="ut-label ut-label--on-ink">Home</span>
-            <h1 className="hm-hero-greeting">{greeting}, {firstName}</h1>
-            <p className="hm-hero-sub">{heroSub}</p>
-            <div className="hm-hero-cta">
-              {inProgressExams.length > 0 ? (
-                <button
-                  className="ut-btn ut-btn--primary"
-                  onClick={() => navigate(`/practice-exam/${inProgressExams[0].practiceExamId || inProgressExams[0].id}`, { state: { resume: true } })}
-                >
-                  <FiPlay /> Resume your test
-                </button>
-              ) : (
-                <button className="ut-btn ut-btn--primary" onClick={() => navigate(isNewUser ? '/predictive-exam' : '/subject-quizzes')}>
-                  {isNewUser ? 'Start the free diagnostic' : 'Practice now'}
-                </button>
-              )}
+      {/* ------------------------------------------- hero = coach briefing --
+          UI v2: the hero renders the coach's current briefing note (typed
+          blocks, tone-tinted) with a mechanical Tier-2 fallback on quiet days.
+          CTA buttons and the exam-date editor stay owned by this page. */}
+      <BriefingHero
+        firstName={firstName}
+        profile={profile}
+        habits={habits}
+        skills={skills}
+        examCount={examCount}
+        totalAnswered={totalAnswered}
+        ctaButtons={
+          <>
+            {inProgressExams.length > 0 ? (
               <button
-                className="ut-btn ut-btn--ghost"
-                style={{ borderColor: 'var(--ut-rule-on-ink)', color: 'var(--ut-on-ink)' }}
-                onClick={() => navigate('/coach')}
+                className="ut-btn ut-btn--primary"
+                onClick={() => navigate(`/practice-exam/${inProgressExams[0].practiceExamId || inProgressExams[0].id}`, { state: { resume: true } })}
               >
-                <FiZap /> Open Coach
+                <FiPlay /> Resume your test
               </button>
-            </div>
-          </div>
-
-          {examCountdown && (
-            <div className="edc-countdown-col">
-              <div className="hm-countdown">
-                <div className="hm-countdown-num">{examCountdown}</div>
-                <div className="hm-countdown-label">days to exam</div>
-              </div>
-              <ExamDateInline examDate={profile?.examDate} onChange={() => setEditingExam(true)} />
-            </div>
-          )}
-        </div>
-
-        <div className="hm-hero-stats">
-          <div className="hm-hero-stat">
-            <span className="hm-hero-stat-value"><em>{habits?.streakDays || 0}</em></span>
-            <span className="hm-hero-stat-label">Day streak</span>
-          </div>
-          <div className="hm-hero-stat">
-            <span className="hm-hero-stat-value">{totalAnswered}</span>
-            <span className="hm-hero-stat-label">Questions practiced</span>
-          </div>
-          <div className="hm-hero-stat">
-            <span className="hm-hero-stat-value">{examCount}</span>
-            <span className="hm-hero-stat-label">Exams completed</span>
-          </div>
-          <div className="hm-hero-stat">
-            <span className="hm-hero-stat-value">{skills.length}</span>
-            <span className="hm-hero-stat-label">Skills tracked</span>
-          </div>
-        </div>
-      </section>
+            ) : (
+              <button className="ut-btn ut-btn--primary" onClick={() => navigate(isNewUser ? '/predictive-exam' : '/subject-quizzes')}>
+                {isNewUser ? 'Start the free diagnostic' : 'Practice now'}
+              </button>
+            )}
+            <button
+              className="ut-btn ut-btn--ghost"
+              style={{ borderColor: 'var(--ut-rule-on-ink)', color: 'var(--ut-on-ink)' }}
+              onClick={() => navigate('/coach')}
+            >
+              <FiZap /> Open Coach
+            </button>
+          </>
+        }
+        examDateEditor={
+          examCountdown ? <ExamDateInline examDate={profile?.examDate} onChange={() => setEditingExam(true)} /> : null
+        }
+      />
 
       {/* ---- exam plan: the one place examDate / targetScore get set ---- */}
       {!loading && (!examCountdown || editingExam) && (

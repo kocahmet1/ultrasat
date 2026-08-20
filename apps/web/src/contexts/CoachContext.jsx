@@ -18,7 +18,39 @@ import {
   fetchCoachThread,
   observeCoach,
   requestMicroLessonApi,
+  fetchLatestBriefing,
 } from '../api/coachClient';
+import { logEvent, EVENT_TYPES } from '../coach/events';
+
+/* ---------------------------------------------------------------------------
+ * Mission ticks (UI v2) — which briefing plan-items the student completed.
+ * Kept client-side (localStorage) keyed noteId:itemId; the durable record is
+ * the coach_interaction event each tick emits, which is what the coach itself
+ * reads back ("did they take the advice?").
+ * ------------------------------------------------------------------------- */
+const MISSIONS_LS_KEY = 'ultrasat.coachMissions.v1';
+
+function readMissionStore() {
+  try {
+    const raw = window.localStorage.getItem(MISSIONS_LS_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function writeMissionStore(store) {
+  try {
+    // Prune to the newest ~60 ticks so the key can't grow forever.
+    const entries = Object.entries(store)
+      .sort((a, b) => (b[1] || 0) - (a[1] || 0))
+      .slice(0, 60);
+    window.localStorage.setItem(MISSIONS_LS_KEY, JSON.stringify(Object.fromEntries(entries)));
+  } catch (e) {
+    // storage unavailable — ticks survive in memory for this session only
+  }
+}
 
 const CoachContext = createContext(null);
 export const useCoach = () => useContext(CoachContext);
@@ -38,6 +70,13 @@ export const CoachProvider = ({ children }) => {
   const [thread, setThread] = useState([]);
   const [threadLoaded, setThreadLoaded] = useState(false);
   const [sending, setSending] = useState(false);
+  // UI v2: the newest proactive note (blocks) + the dock's one-line peek +
+  // which briefing missions are ticked.
+  const [latestBriefing, setLatestBriefing] = useState(null);
+  const [peek, setPeek] = useState(null); // { id, message, actions, surface }
+  const [missionDone, setMissionDone] = useState(() =>
+    typeof window === 'undefined' ? {} : readMissionStore()
+  );
   const debriefCache = useRef({}); // quizId -> note
   const sessionObservedRef = useRef(false);
 
@@ -49,6 +88,8 @@ export const CoachProvider = ({ children }) => {
       setThread([]);
       setThreadLoaded(false);
       setUnread(0);
+      setLatestBriefing(null);
+      setPeek(null);
       debriefCache.current = {};
       return undefined;
     }
@@ -59,6 +100,20 @@ export const CoachProvider = ({ children }) => {
       cancelled = true;
     };
   }, [currentUser]);
+
+  // The newest proactive note (briefing / exam-note) with its blocks — the
+  // Home hero and HQ "Today's brief" render from this. Read-only endpoint;
+  // when it's empty or stale the surfaces build their mechanical fallback.
+  useEffect(() => {
+    let cancelled = false;
+    if (!currentUser || !available) return undefined;
+    fetchLatestBriefing()
+      .then(({ note }) => !cancelled && note && setLatestBriefing(note))
+      .catch(() => {}); // fallback surfaces handle absence
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUser, available]);
 
   const loadThread = useCallback(async () => {
     if (!currentUser) return;
@@ -83,14 +138,24 @@ export const CoachProvider = ({ children }) => {
     else openPanel();
   }, [panelOpen, openPanel]);
 
-  /** Append an assistant note/message into the local thread + badge. */
+  /** Append an assistant note/message into the local thread + badge.
+      With the panel closed the note also becomes the dock's one-line PEEK
+      (UI v2) — the dock still never auto-opens; the peek slides out once,
+      then retracts to the badge. */
   const receiveNote = useCallback((entry) => {
     setThread((t) => [...t, { id: `note-${Date.now()}`, role: 'assistant', actions: [], ...entry, at: Date.now() }]);
     setPanelOpen((open) => {
-      if (!open) setUnread((u) => u + 1);
+      if (!open) {
+        setUnread((u) => u + 1);
+        if (!entry.error) {
+          setPeek({ id: `peek-${Date.now()}`, message: entry.content, actions: entry.actions || [], surface: entry.surface || null });
+        }
+      }
       return open;
     });
   }, []);
+
+  const dismissPeek = useCallback(() => setPeek(null), []);
 
   /**
    * Ping the Observer at a boundary. The server's significance rules decide
@@ -103,6 +168,9 @@ export const CoachProvider = ({ children }) => {
         const { note } = await observeCoach(trigger, refId);
         if (note && note.message) {
           receiveNote({ content: note.message, actions: note.actions || [], surface: note.surfaceHint });
+          if (['briefing', 'exam-note'].includes(note.kind)) {
+            setLatestBriefing({ ...note, createdAt: note.createdAt || Date.now() });
+          }
         }
         return note || null;
       } catch (e) {
@@ -118,6 +186,75 @@ export const CoachProvider = ({ children }) => {
     sessionObservedRef.current = true;
     observe('session_start');
   }, [currentUser, available, observe]);
+
+  /**
+   * Tick a briefing plan item (manual tick or auto-detected completion).
+   * Emits coach_interaction — the closed loop: the coach can later see which
+   * of its suggestions were actually taken.
+   */
+  const markMission = useCallback(
+    (noteId, item, done, how = 'manual') => {
+      if (!noteId || !item) return;
+      const key = `${noteId}:${item.id}`;
+      setMissionDone((prev) => {
+        if (!!prev[key] === done) return prev;
+        const next = { ...prev };
+        if (done) next[key] = Date.now();
+        else delete next[key];
+        writeMissionStore(next);
+        return next;
+      });
+      logEvent(EVENT_TYPES.COACH_INTERACTION, {
+        kind: done ? 'mission_done' : 'mission_undone',
+        noteId,
+        adviceSummary: String(item.label || '').slice(0, 120),
+        actionOffered: item.action ? item.action.type : 'none',
+        actionTaken: done,
+        how, // 'manual' tick vs 'auto' (matching quiz completed)
+      });
+    },
+    []
+  );
+
+  /** Done-map for one note: { itemId: true } — what PlanBlock consumes. */
+  const missionsFor = useCallback(
+    (noteId) => {
+      const out = {};
+      if (!noteId) return out;
+      const prefix = `${noteId}:`;
+      for (const key of Object.keys(missionDone)) {
+        if (key.startsWith(prefix)) out[key.slice(prefix.length)] = true;
+      }
+      return out;
+    },
+    [missionDone]
+  );
+
+  // Auto-tick: when a quiz completes for a subcategory the current briefing's
+  // plan recommended, the mission marks itself done. events.js broadcasts every
+  // logged activity event on window as 'ultrasat:activity'.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !latestBriefing) return undefined;
+    const plan = (latestBriefing.blocks || []).find((b) => b.type === 'plan');
+    if (!plan) return undefined;
+    const handler = (e) => {
+      const ev = e.detail;
+      if (!ev || ev.type !== 'quiz_completed') return;
+      const subs = (ev.payload && ev.payload.subcategoryIds) || [];
+      for (const item of plan.items) {
+        if (
+          item.action &&
+          item.action.type === 'quiz' &&
+          subs.includes(item.action.subcategoryId) &&
+          !missionDone[`${latestBriefing.id}:${item.id}`]
+        ) {
+          markMission(latestBriefing.id, item, true, 'auto');
+        }
+      }
+    };
+    window.addEventListener('ultrasat:activity', handler);
+    return () => window.removeEventListener('ultrasat:activity', handler);
+  }, [latestBriefing, missionDone, markMission]);
   useEffect(() => {
     if (!currentUser) sessionObservedRef.current = false;
   }, [currentUser]);
@@ -228,6 +365,12 @@ export const CoachProvider = ({ children }) => {
     sendMessage,
     observe,
     requestMicroLesson,
+    // UI v2
+    latestBriefing,
+    peek,
+    dismissPeek,
+    markMission,
+    missionsFor,
   };
 
   return <CoachContext.Provider value={value}>{children}</CoachContext.Provider>;

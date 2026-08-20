@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UltraSAT — Coach Interface v2 · "The coach is the interface"</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Schibsted+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================ tokens ==== */
+:root{
+  --ut-ink:#0A1226; --ut-panel:#0F1E3D; --ut-panel-top:#0C1830;
+  --ut-bg:#F4F6F9; --ut-bg-alt:#EAEEF3; --ut-card:#FFFFFF; --ut-card-soft:#F8FAFC;
+  --ut-text:#16202F; --ut-text-soft:#35435C; --ut-muted:#4E5B70; --ut-mono-muted:#5E6B80;
+  --ut-rule:#DCE1E9; --ut-rule-strong:#C9D0DC;
+  --ut-accent:#2B59D8; --ut-accent-bright:#86A4F5; --ut-accent-dark:#1D3FA8;
+  --ut-accent-soft:#E8EEFB; --ut-accent-rule:#C9D6F0; --ut-on-accent:#FFFFFF;
+  --ut-success:#17A45C; --ut-success-bright:#6FDCA8; --ut-success-dark:#0E6B3C; --ut-success-soft:#E3F5EB; --ut-success-rule:#BFE5CF;
+  --ut-danger:#CC4141; --ut-danger-dark:#A03434; --ut-danger-soft:#FBEEEE; --ut-danger-rule:#EECACA;
+  --ut-warn:#C99A2E; --ut-warn-dark:#8A6D1D; --ut-warn-soft:#FAF3DF; --ut-warn-rule:#EAD9B0;
+  --ut-on-ink:#F2F5FA; --ut-on-ink-bright:#F8FAFD; --ut-on-ink-muted:rgba(242,245,250,.62);
+  --ut-rule-on-ink:rgba(237,241,248,.12);
+  --ut-font-display:'Space Grotesk',system-ui,sans-serif;
+  --ut-font-body:'Schibsted Grotesk',system-ui,sans-serif;
+  --ut-font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --ut-label-size:10.5px; --ut-label-tracking:.1em;
+  --ut-radius-sm:6px; --ut-radius:10px; --ut-radius-lg:12px;
+  --ut-shadow-sm:0 1px 2px rgba(12,24,48,.06);
+  --ut-shadow:0 4px 12px rgba(12,24,48,.08);
+  --ut-shadow-lg:0 12px 32px rgba(12,24,48,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--ut-font-body);background:var(--ut-bg);color:var(--ut-text);font-size:14px;line-height:1.55}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+svg{display:block}
+
+/* ================================================== proposal chrome ==== */
+.pv-topbar{
+  position:sticky;top:0;z-index:60;background:var(--ut-ink);color:var(--ut-on-ink);
+  border-bottom:1px solid rgba(43,89,216,.35);
+  padding:0 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+}
+.pv-brand{display:flex;align-items:center;gap:10px;padding:13px 0;}
+.pv-brand-logo{width:26px;height:26px;border-radius:7px;background:var(--ut-accent);display:inline-flex;align-items:center;justify-content:center;font-family:var(--ut-font-mono);font-size:9px;font-weight:500;color:#fff;letter-spacing:.04em}
+.pv-brand b{font-family:var(--ut-font-display);font-size:15px;letter-spacing:-.01em;color:var(--ut-on-ink-bright)}
+.pv-brand span{font-family:var(--ut-font-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ut-on-ink-muted)}
+.pv-tabs{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.pv-tab{
+  font-family:var(--ut-font-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ut-on-ink-muted);padding:9px 13px;border-radius:8px;border:1px solid transparent;
+}
+.pv-tab:hover{color:var(--ut-on-ink-bright)}
+.pv-tab.active{color:#fff;background:rgba(43,89,216,.28);border-color:rgba(134,164,245,.4)}
+.pv-ribbon{
+  background:var(--ut-panel-top);color:var(--ut-on-ink-muted);
+  font-family:var(--ut-font-mono);font-size:10px;letter-spacing:.06em;
+  padding:7px 22px;border-bottom:1px solid var(--ut-rule-on-ink);
+  display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+}
+.pv-ribbon b{color:var(--ut-accent-bright);font-weight:500}
+.pv-wrap{max-width:1120px;margin:0 auto;padding:26px 26px 110px}
+.pv-explain{
+  border:1px dashed var(--ut-accent-rule);background:var(--ut-accent-soft);
+  border-radius:var(--ut-radius-lg);padding:14px 18px;margin-bottom:22px;
+  font-size:13px;color:var(--ut-accent-dark);line-height:1.6;
+}
+.pv-explain b{font-weight:700}
+section[data-view]{display:none}
+section[data-view].on{display:block;animation:pv-in .25s ease}
+@keyframes pv-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* payload inspector */
+.pv-inspector{margin:18px 0 0;border:1px solid var(--ut-rule);border-radius:var(--ut-radius-lg);background:var(--ut-ink);overflow:hidden}
+.pv-inspector summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;
+  padding:11px 16px;font-family:var(--ut-font-mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ut-accent-bright);user-select:none;
+}
+.pv-inspector summary::-webkit-details-marker{display:none}
+.pv-inspector summary::after{content:'▾';margin-left:auto;transition:transform .2s}
+.pv-inspector[open] summary::after{transform:rotate(180deg)}
+.pv-inspector pre{
+  margin:0;padding:16px 18px;border-top:1px solid rgba(134,164,245,.18);
+  font-family:var(--ut-font-mono);font-size:11px;line-height:1.6;color:#C7D4F2;
+  overflow:auto;max-height:420px;white-space:pre;
+}
+.pv-inspector .k{color:#86A4F5}.pv-inspector .s{color:#8FD9B0}.pv-inspector .n{color:#F0C674}
+
+/* ======================================================== kit subset ==== */
+.ut-label{font-family:var(--ut-font-mono);font-size:var(--ut-label-size);letter-spacing:var(--ut-label-tracking);text-transform:uppercase;font-weight:500;color:var(--ut-mono-muted)}
+.ut-label--on-ink{color:var(--ut-on-ink-muted)}
+.ut-label--accent{color:var(--ut-accent-dark)}
+.ut-eyebrow{font-family:var(--ut-font-mono);font-size:var(--ut-label-size);letter-spacing:var(--ut-label-tracking);text-transform:uppercase;color:var(--ut-accent-dark);margin:0 0 10px;display:inline-flex;align-items:center;gap:8px}
+.ut-eyebrow::before{content:'';width:7px;height:7px;border-radius:2px;background:var(--ut-accent);display:inline-block}
+.ut-page-title{font-family:var(--ut-font-display);font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-.02em;margin:0}
+.ut-page-sub{margin:8px 0 0;font-size:14px;color:var(--ut-muted);max-width:640px}
+.ut-card{background:var(--ut-card);border:1px solid var(--ut-rule);border-radius:var(--ut-radius-lg);padding:20px 22px;box-shadow:var(--ut-shadow-sm)}
+.ut-card--soft{background:var(--ut-card-soft);box-shadow:none}
+.ut-card-title{font-family:var(--ut-font-display);font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px}
+.ut-card-sub{font-size:13px;line-height:1.5;color:var(--ut-muted);margin:0}
+.ut-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:var(--ut-radius-sm);font-family:var(--ut-font-body);font-size:13.5px;font-weight:700;line-height:1;padding:10px 16px;white-space:nowrap;transition:all .15s ease;text-decoration:none}
+.ut-btn--primary{background:var(--ut-accent);color:#fff}
+.ut-btn--primary:hover{background:var(--ut-accent-dark);box-shadow:0 0 0 4px rgba(43,89,216,.18)}
+.ut-btn--soft{background:var(--ut-accent-soft);color:var(--ut-accent-dark)}
+.ut-btn--soft:hover{background:var(--ut-accent-rule)}
+.ut-btn--ghost{background:transparent;border-color:var(--ut-rule-strong);color:var(--ut-text-soft)}
+.ut-btn--ghost:hover{border-color:var(--ut-text-soft);color:var(--ut-text)}
+.ut-btn--ink{background:var(--ut-ink);color:var(--ut-on-ink-bright)}
+.ut-btn--sm{padding:7px 12px;font-size:12.5px}
+.ut-link{color:var(--ut-accent-dark);font-weight:600;font-size:13.5px}
+.ut-link:hover{text-decoration:underline}
+.ut-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3.5px 10px;font-family:var(--ut-font-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;border:1px solid var(--ut-rule-strong);color:var(--ut-text-soft);background:var(--ut-card);white-space:nowrap}
+.ut-chip--accent{border-color:var(--ut-accent-rule);background:var(--ut-accent-soft);color:var(--ut-accent-dark)}
+.ut-chip--ink{border-color:var(--ut-rule-on-ink);background:rgba(237,240,241,.06);color:var(--ut-on-ink-muted)}
+.ut-chip--good{border-color:var(--ut-success-rule);background:var(--ut-success-soft);color:var(--ut-success-dark)}
+.ut-chip--warn{border-color:var(--ut-warn-rule);background:var(--ut-warn-soft);color:var(--ut-warn-dark)}
+.ut-chip--bad{border-color:var(--ut-danger-rule);background:var(--ut-danger-soft);color:var(--ut-danger-dark)}
+.ut-progress{position:relative;height:10px;border-radius:999px;background:var(--ut-bg-alt);border:1px solid var(--ut-rule);overflow:hidden}
+.ut-progress-fill{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(90deg,var(--ut-accent-dark),var(--ut-accent));min-width:6px;transition:width .4s ease}
+.ut-progress--on-ink{background:rgba(237,240,241,.08);border-color:var(--ut-rule-on-ink)}
+.ut-progress--on-ink .ut-progress-fill{background:linear-gradient(90deg,var(--ut-accent),var(--ut-accent-bright));box-shadow:0 0 12px rgba(43,89,216,.35)}
+.ut-divider{height:1px;background:var(--ut-rule);border:none;margin:16px 0}
+.ut-grid{display:grid;gap:14px}
+.ut-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ut-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pv-dim{opacity:.45;pointer-events:none;filter:saturate(.7)}
+.pv-dim-note{text-align:center;font-family:var(--ut-font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ut-mono-muted);margin:10px 0 8px}
+
+/* ================================================= scenario switcher ==== */
+.sc-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.sc-bar .ut-label{margin-right:4px}
+.sc-btn{
+  font-family:var(--ut-font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  padding:8px 13px;border-radius:999px;border:1px solid var(--ut-rule-strong);color:var(--ut-text-soft);background:var(--ut-card);
+  transition:all .15s ease;
+}
+.sc-btn:hover{border-color:var(--ut-accent)}
+.sc-btn.active{background:var(--ut-ink);color:var(--ut-accent-bright);border-color:var(--ut-ink)}
+
+/* ============================================ briefing hero (Home) ===== */
+.cb-hero{
+  position:relative;overflow:hidden;border-radius:var(--ut-radius-lg);color:var(--ut-on-ink);
+  border:1px solid rgba(43,89,216,.18);padding:26px 28px 0;margin-bottom:16px;
+  background:
+    radial-gradient(ellipse 640px 360px at 92% -20%, rgba(43,89,216,.2), transparent 62%),
+    radial-gradient(ellipse 480px 300px at -10% 120%, rgba(43,89,216,.08), transparent 60%),
+    linear-gradient(180deg,var(--ut-panel) 0%,var(--ut-panel-top) 100%);
+  transition:border-color .3s ease;
+}
+.cb-hero.tone-fix{border-color:rgba(201,154,46,.4)}
+.cb-hero.tone-win{border-color:rgba(23,164,92,.45)}
+.cb-hero.tone-exam{border-color:rgba(134,164,245,.5)}
+.cb-hero-top{display:flex;justify-content:space-between;gap:24px;align-items:flex-start}
+.cb-hero-main{min-width:0;max-width:640px;padding-bottom:22px}
+.cb-kicker{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.cb-kicker .glyph{width:26px;height:26px;border-radius:8px;background:var(--ut-ink);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(43,89,216,.35);flex-shrink:0}
+.cb-greet{font-family:var(--ut-font-display);font-size:27px;font-weight:700;letter-spacing:-.02em;color:var(--ut-on-ink-bright);line-height:1.12;margin-bottom:10px}
+.cb-verdict{font-size:14.5px;line-height:1.6;color:var(--ut-on-ink);max-width:600px}
+.cb-verdict b{color:var(--ut-accent-bright);font-weight:600}
+.cb-verdict .hl-warn{color:#F0C674;font-weight:600}
+.cb-verdict .hl-good{color:var(--ut-success-bright);font-weight:600}
+.cb-evidence{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.cb-evd{
+  font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ut-on-ink-muted);border:1px solid var(--ut-rule-on-ink);background:rgba(237,240,241,.05);
+  border-radius:6px;padding:4px 9px;cursor:pointer;transition:all .15s;
+}
+.cb-evd:hover{color:var(--ut-accent-bright);border-color:rgba(134,164,245,.5)}
+.cb-evd::before{content:'⌕ ';opacity:.7}
+.cb-side{flex-shrink:0;display:flex;flex-direction:column;gap:10px;align-items:stretch;padding-bottom:22px}
+.cb-count{
+  text-align:center;border:1px solid var(--ut-rule-on-ink);border-radius:var(--ut-radius);
+  padding:14px 20px 12px;background:rgba(237,240,241,.04);min-width:128px;
+}
+.cb-count-num{font-family:var(--ut-font-display);font-size:32px;font-weight:700;line-height:1;color:var(--ut-accent-bright);text-shadow:0 0 22px rgba(43,89,216,.45)}
+.cb-count.exam .cb-count-num{font-size:40px}
+.cb-count-label{font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ut-on-ink-muted);margin-top:6px}
+.cb-pace{font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.05em;color:var(--ut-on-ink-muted);text-align:center;line-height:1.7}
+.cb-pace b{color:var(--ut-on-ink-bright);font-weight:500}
+
+/* mission rail inside hero */
+.cb-missions{border-top:1px solid var(--ut-rule-on-ink);margin:0 -28px;padding:16px 28px 20px}
+.cb-missions-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.cb-missions-head .ut-label--on-ink{display:flex;align-items:center;gap:8px}
+.cb-missions-meta{margin-left:auto;font-family:var(--ut-font-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--ut-on-ink-muted)}
+.cb-missions-meta b{color:var(--ut-accent-bright);font-weight:500}
+.cb-mission-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cb-mission{
+  text-align:left;border:1px solid var(--ut-rule-on-ink);background:rgba(237,240,241,.05);
+  border-radius:var(--ut-radius);padding:13px 14px;display:flex;flex-direction:column;gap:8px;
+  transition:all .18s ease;position:relative;overflow:hidden;
+}
+.cb-mission:hover{border-color:rgba(134,164,245,.55);background:rgba(43,89,216,.12);transform:translateY(-1px)}
+.cb-mission-top{display:flex;align-items:center;gap:8px}
+.cb-tick{
+  width:18px;height:18px;border-radius:6px;border:1.5px solid rgba(237,241,248,.35);flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:#fff;transition:all .18s;
+}
+.cb-mission-title{font-weight:600;font-size:13.5px;color:var(--ut-on-ink-bright);line-height:1.3}
+.cb-mission-why{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cb-why{
+  font-family:var(--ut-font-mono);font-size:9px;letter-spacing:.07em;text-transform:uppercase;
+  border-radius:5px;padding:2.5px 7px;font-weight:500;
+}
+.cb-why.regression{background:rgba(204,65,65,.2);color:#F1A9A9;border:1px solid rgba(204,65,65,.4)}
+.cb-why.slipping{background:rgba(201,154,46,.16);color:#EBD08A;border:1px solid rgba(201,154,46,.4)}
+.cb-why.stale{background:rgba(94,107,128,.3);color:#B8C2D4;border:1px solid rgba(148,160,180,.35)}
+.cb-why.new{background:rgba(43,89,216,.22);color:#A9BEF5;border:1px solid rgba(134,164,245,.4)}
+.cb-why.win{background:rgba(23,164,92,.2);color:#8FD9B0;border:1px solid rgba(23,164,92,.45)}
+.cb-mission-min{margin-left:auto;font-family:var(--ut-font-mono);font-size:9.5px;color:var(--ut-on-ink-muted)}
+.cb-mission-sub{font-size:12px;color:var(--ut-on-ink-muted);line-height:1.5}
+.cb-mission.done{opacity:.55}
+.cb-mission.done .cb-tick{background:var(--ut-success);border-color:var(--ut-success)}
+.cb-mission.done .cb-mission-title{text-decoration:line-through;text-decoration-thickness:1px}
+.cb-hero-foot{
+  border-top:1px solid var(--ut-rule-on-ink);margin:0 -28px;padding:0 12px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.cb-stat{padding:13px 18px 15px;display:flex;flex-direction:column;gap:4px}
+.cb-stat+.cb-stat{border-left:1px solid var(--ut-rule-on-ink)}
+.cb-stat-v{font-family:var(--ut-font-display);font-size:21px;font-weight:700;letter-spacing:-.02em;color:var(--ut-on-ink-bright);line-height:1}
+.cb-stat-v em{font-style:normal;color:var(--ut-accent-bright)}
+.cb-stat-v .up{font-size:12px;color:var(--ut-success-bright)}
+.cb-stat-l{font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ut-on-ink-muted)}
+.cb-quiet-note{
+  display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ut-on-ink-muted);
+  padding:4px 0 2px;line-height:1.55;max-width:600px;
+}
+.cb-src{
+  font-family:var(--ut-font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 8px;border-radius:5px;border:1px solid var(--ut-rule-on-ink);color:var(--ut-on-ink-muted);
+}
+.cb-src.live{border-color:rgba(134,164,245,.45);color:var(--ut-accent-bright)}
+
+/* under-hero strip on home */
+.cbh-under{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;align-items:start}
+.focus-row{display:flex;align-items:center;gap:12px;width:100%;padding:10px 2px;text-align:left;border-radius:6px;border-top:1px solid var(--ut-rule)}
+.focus-row:first-of-type{border-top:none}
+.focus-row:hover{background:var(--ut-card-soft)}
+.focus-name{flex:1;min-width:0;font-weight:600;font-size:13.5px;color:var(--ut-text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focus-acc{font-family:var(--ut-font-mono);font-size:11.5px;color:var(--ut-mono-muted);min-width:38px;text-align:right}
+
+/* ===================================================== sparklines ====== */
+.spark{display:inline-flex;align-items:flex-end;gap:2.5px;height:16px}
+.spark i{width:5px;border-radius:2px;background:var(--ut-accent);display:inline-block}
+.spark i.miss{height:6px !important;background:var(--ut-danger);opacity:.8}
+.spark i.na{height:4px !important;background:var(--ut-rule-strong)}
+
+/* ========================================================== HQ page ==== */
+.hq-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.hq-headline{display:flex;align-items:center;gap:14px}
+.hq-glyph{width:44px;height:44px;border-radius:12px;background:var(--ut-ink);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(43,89,216,.3);flex-shrink:0}
+.hq-dial{display:inline-flex;border:1px solid var(--ut-rule-strong);border-radius:999px;overflow:hidden;background:var(--ut-card)}
+.hq-dial button{font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;padding:7px 12px;color:var(--ut-mono-muted)}
+.hq-dial button.on{background:var(--ut-ink);color:var(--ut-accent-bright)}
+.hq-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:14px;align-items:start}
+.hq-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.hq-sec-label{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hq-sec-label::after{content:'';flex:1;height:1px;background:var(--ut-rule)}
+
+/* trajectory */
+.traj-wrap{position:relative}
+.traj-tip{
+  position:absolute;pointer-events:none;background:var(--ut-ink);color:var(--ut-on-ink-bright);
+  font-family:var(--ut-font-mono);font-size:10.5px;padding:7px 10px;border-radius:7px;opacity:0;
+  transform:translate(-50%,-118%);transition:opacity .12s;white-space:nowrap;z-index:5;box-shadow:var(--ut-shadow);
+}
+.traj-tip b{color:var(--ut-accent-bright);font-weight:500}
+.traj-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.traj-key{display:inline-flex;align-items:center;gap:7px;font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ut-mono-muted)}
+.traj-key i{width:16px;height:0;border-top:2px solid var(--ut-accent);display:inline-block}
+.traj-key i.proj{border-top-style:dashed}
+.traj-key i.tgt{border-top:2px dashed var(--ut-rule-strong);border-top-color:#98A3B5}
+
+/* focus queue */
+.queue-card{display:flex;flex-direction:column;gap:9px;border:1px solid var(--ut-rule);border-radius:var(--ut-radius);padding:14px 16px;background:var(--ut-card);transition:all .15s}
+.queue-card:hover{border-color:var(--ut-accent);box-shadow:var(--ut-shadow-sm)}
+.queue-card+.queue-card{margin-top:10px}
+.queue-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.queue-rank{
+  font-family:var(--ut-font-mono);font-size:10px;color:var(--ut-accent-dark);background:var(--ut-accent-soft);
+  width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-weight:500;flex-shrink:0;
+}
+.queue-name{font-weight:700;font-size:14px;font-family:var(--ut-font-display);letter-spacing:-.01em}
+.queue-nums{margin-left:auto;display:flex;align-items:center;gap:10px}
+.queue-acc{font-family:var(--ut-font-mono);font-size:11px;color:var(--ut-mono-muted)}
+.queue-why-line{font-size:12.5px;color:var(--ut-muted);line-height:1.55}
+.queue-why-line b{color:var(--ut-text-soft)}
+.queue-actions{display:flex;gap:8px;flex-wrap:wrap}
+.queue-card.flag{border-left:3px solid var(--ut-danger)}
+.queue-card.flag.w{border-left-color:var(--ut-warn)}
+
+/* wins/watch, commitments, journey, memory */
+.ww-item{display:flex;align-items:center;gap:9px;padding:8px 0;font-size:13px;color:var(--ut-text-soft);border-top:1px solid var(--ut-rule)}
+.ww-item:first-of-type{border-top:none}
+.ww-item b{font-weight:600}
+.ww-item .spark{margin-left:auto}
+.cmt{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-top:1px solid var(--ut-rule)}
+.cmt:first-of-type{border-top:none;padding-top:2px}
+.cmt-date{
+  flex-shrink:0;text-align:center;border:1px solid var(--ut-rule);border-radius:8px;padding:5px 9px;min-width:52px;background:var(--ut-card-soft);
+}
+.cmt-date b{display:block;font-family:var(--ut-font-display);font-size:15px;line-height:1.1}
+.cmt-date span{font-family:var(--ut-font-mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ut-mono-muted)}
+.cmt.due .cmt-date{border-color:var(--ut-accent);background:var(--ut-accent-soft)}
+.cmt.due .cmt-date b{color:var(--ut-accent-dark)}
+.cmt-body{flex:1;min-width:0;font-size:13px;color:var(--ut-text-soft);line-height:1.5}
+.cmt-body .src{font-family:var(--ut-font-mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ut-mono-muted);display:block;margin-top:2px}
+.jn{position:relative;padding-left:20px}
+.jn::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--ut-rule);border-radius:2px}
+.jn-item{position:relative;padding:7px 0 7px 6px;font-size:12.5px;color:var(--ut-muted)}
+.jn-item::before{content:'';position:absolute;left:-19px;top:13px;width:8px;height:8px;border-radius:3px;background:var(--ut-rule-strong)}
+.jn-item.good::before{background:var(--ut-success)}
+.jn-item.bad::before{background:var(--ut-danger)}
+.jn-item.exam::before{background:var(--ut-accent)}
+.jn-item b{color:var(--ut-text-soft);font-weight:600}
+.jn-date{font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ut-mono-muted);margin-right:7px}
+.mem-sec{padding:10px 0;border-top:1px solid var(--ut-rule)}
+.mem-sec:first-of-type{border-top:none;padding-top:0}
+.mem-sec h4{font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ut-accent-dark);font-weight:500;margin-bottom:6px}
+.mem-sec p, .mem-sec li{font-size:12.5px;color:var(--ut-muted);line-height:1.6}
+.mem-sec ul{list-style:none}
+.mem-sec li{padding:3px 0;border-bottom:1px dashed var(--ut-rule)}
+.mem-sec li:last-child{border-bottom:none}
+.mem-fix{font-family:var(--ut-font-mono);font-size:9px;color:var(--ut-mono-muted);letter-spacing:.05em}
+.mem-fix button{color:var(--ut-accent-dark);text-decoration:underline;font:inherit}
+
+/* ask bar + drawer */
+.askbar{
+  position:sticky;bottom:14px;z-index:40;margin-top:22px;
+  display:flex;align-items:center;gap:10px;background:var(--ut-ink);border:1px solid rgba(43,89,216,.4);
+  border-radius:14px;padding:10px 12px;box-shadow:var(--ut-shadow-lg);
+}
+.askbar input{
+  flex:1;background:transparent;border:none;outline:none;color:var(--ut-on-ink-bright);
+  font-family:var(--ut-font-body);font-size:14px;padding:6px 4px;
+}
+.askbar input::placeholder{color:var(--ut-on-ink-muted)}
+.askbar .hint{display:flex;gap:6px;flex-wrap:wrap}
+.askbar .hint button{
+  font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ut-on-ink-muted);border:1px solid var(--ut-rule-on-ink);border-radius:999px;padding:5px 10px;
+}
+.askbar .hint button:hover{color:var(--ut-accent-bright);border-color:rgba(134,164,245,.5)}
+.askbar .send{background:var(--ut-accent);color:#fff;border-radius:9px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.askbar .thread{
+  font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ut-on-ink-muted);border:1px solid var(--ut-rule-on-ink);border-radius:9px;padding:8px 11px;flex-shrink:0;
+}
+.askbar .thread:hover{color:var(--ut-accent-bright)}
+.drawer-scrim{position:fixed;inset:0;background:rgba(10,18,38,.45);z-index:70;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer{position:fixed;top:0;right:-430px;bottom:0;width:410px;max-width:92vw;background:var(--ut-card);z-index:71;box-shadow:var(--ut-shadow-lg);transition:right .25s ease;display:flex;flex-direction:column}
+body.drawer-open .drawer{right:0}
+body.drawer-open .drawer-scrim{opacity:1;pointer-events:auto}
+.drawer-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--ut-rule)}
+.drawer-head .x{margin-left:auto;font-size:18px;color:var(--ut-mono-muted);width:30px;height:30px;border-radius:8px}
+.drawer-head .x:hover{background:var(--ut-bg-alt)}
+.drawer-feed{flex:1;overflow:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.dmsg{max-width:88%;border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.55}
+.dmsg.coach{background:var(--ut-card-soft);border:1px solid var(--ut-rule);color:var(--ut-text-soft);align-self:flex-start}
+.dmsg.user{background:var(--ut-ink);color:var(--ut-on-ink-bright);align-self:flex-end}
+.dmsg .when{display:block;font-family:var(--ut-font-mono);font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ut-mono-muted);margin-bottom:5px}
+.dmsg .acts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+
+/* ===================================================== debrief view ==== */
+.db-stage{max-width:760px;margin:0 auto}
+.db-scorecard{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.db-ring{position:relative;width:96px;height:96px;flex-shrink:0}
+.db-ring svg{transform:rotate(-90deg)}
+.db-ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--ut-font-display)}
+.db-ring .num b{font-size:24px;line-height:1}
+.db-ring .num span{font-family:var(--ut-font-mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ut-mono-muted);margin-top:3px}
+.db-reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+.db-reveal.in{opacity:1;transform:none}
+.db-qstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.db-q{border:1px solid var(--ut-rule);border-radius:var(--ut-radius);padding:10px 11px;background:var(--ut-card);text-align:left;transition:all .15s;position:relative}
+.db-q:hover{border-color:var(--ut-accent)}
+.db-q .n{font-family:var(--ut-font-mono);font-size:9.5px;color:var(--ut-mono-muted);display:flex;align-items:center;gap:6px}
+.db-q .mark{width:16px;height:16px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
+.db-q.ok .mark{background:var(--ut-success)}
+.db-q.miss .mark{background:var(--ut-danger)}
+.db-q .tag{display:block;margin-top:7px;font-family:var(--ut-font-mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ut-mono-muted);line-height:1.5}
+.db-q.miss .tag{color:var(--ut-danger-dark)}
+.db-q.miss{background:var(--ut-danger-soft);border-color:var(--ut-danger-rule)}
+.db-q.pulse{animation:db-pulse 1.6s ease 2}
+@keyframes db-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 5px rgba(204,65,65,.18)}}
+.db-pattern{border-left:3px solid var(--ut-danger)}
+.db-history{display:flex;align-items:center;gap:0;margin:14px 0 6px;flex-wrap:wrap}
+.db-hnode{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:88px}
+.db-hnode .dot{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.db-hnode.bad .dot{background:var(--ut-danger)}
+.db-hnode.good .dot{background:var(--ut-success)}
+.db-hnode .d{font-family:var(--ut-font-mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ut-mono-muted)}
+.db-hnode .t{font-size:11px;color:var(--ut-text-soft);font-weight:600;text-align:center;line-height:1.3}
+.db-harrow{flex:1;height:2px;background:var(--ut-rule-strong);min-width:26px;margin:0 4px 34px;position:relative}
+.db-harrow::after{content:'';position:absolute;right:-1px;top:-3px;border:4px solid transparent;border-left-color:var(--ut-rule-strong)}
+.lesson{border:1px solid var(--ut-accent-rule);background:linear-gradient(180deg,#FBFCFF, #F3F6FE);border-radius:var(--ut-radius-lg);padding:18px 20px}
+.lesson-title{font-family:var(--ut-font-display);font-weight:700;font-size:15px;margin-bottom:8px}
+.lesson p{font-size:13px;color:var(--ut-text-soft);line-height:1.6;margin-bottom:10px}
+.lesson .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.lesson .pair div{border:1px solid var(--ut-rule);border-radius:var(--ut-radius);background:var(--ut-card);padding:11px 13px;font-size:13px}
+.lesson .pair b{font-family:var(--ut-font-mono);font-size:12px}
+.lesson .pair span{display:block;font-family:var(--ut-font-mono);font-size:9.5px;color:var(--ut-mono-muted);margin-top:5px;letter-spacing:.04em}
+.lesson .check-opt{display:block;width:100%;text-align:left;border:1px solid var(--ut-rule-strong);border-radius:var(--ut-radius-sm);background:var(--ut-card);padding:10px 13px;font-size:13px;margin-top:8px;transition:all .15s}
+.lesson .check-opt:hover{border-color:var(--ut-accent)}
+.lesson .check-opt.right{border-color:var(--ut-success);background:var(--ut-success-soft)}
+.lesson .check-opt.wrong{border-color:var(--ut-danger);background:var(--ut-danger-soft)}
+.lesson .fb{margin-top:10px;font-size:12.5px;border-radius:var(--ut-radius-sm);padding:9px 12px;display:none}
+.lesson .fb.on{display:block}
+.lesson .fb.ok{background:var(--ut-success-soft);color:var(--ut-success-dark)}
+.lesson .fb.no{background:var(--ut-danger-soft);color:var(--ut-danger-dark)}
+
+/* ========================================================= dock view ==== */
+.dock-sim{position:relative;border:1px solid var(--ut-rule);border-radius:var(--ut-radius-lg);background:var(--ut-bg);min-height:430px;overflow:hidden}
+.dock-fakepage{padding:22px;filter:saturate(.9)}
+.dock-fakepage .bar{height:12px;border-radius:6px;background:var(--ut-bg-alt);margin-bottom:10px}
+.dock-zone{position:absolute;right:18px;bottom:18px;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.dock-peek{
+  display:flex;align-items:center;gap:10px;background:var(--ut-ink);color:var(--ut-on-ink-bright);
+  border:1px solid rgba(43,89,216,.5);border-radius:13px;padding:11px 14px;max-width:340px;
+  box-shadow:var(--ut-shadow-lg);opacity:0;transform:translateY(8px) scale(.98);transition:all .3s ease;pointer-events:none;
+}
+.dock-peek.on{opacity:1;transform:none;pointer-events:auto}
+.dock-peek p{font-size:12.5px;line-height:1.5;color:var(--ut-on-ink)}
+.dock-peek p b{color:var(--ut-accent-bright)}
+.dock-peek .acts{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.dock-btn{
+  width:46px;height:46px;border-radius:15px;background:var(--ut-ink);display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 18px rgba(10,18,38,.35), 0 0 18px rgba(43,89,216,.25);position:relative;transition:transform .15s;
+}
+.dock-btn:hover{transform:translateY(-2px)}
+.dock-btn .badge{
+  position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;border-radius:999px;background:var(--ut-danger);
+  color:#fff;font-family:var(--ut-font-mono);font-size:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;
+  opacity:0;transform:scale(.6);transition:all .2s;
+}
+.dock-btn .badge.on{opacity:1;transform:none}
+.dock-btn.hidden-state{opacity:0;pointer-events:none;transform:scale(.8)}
+.dock-exam-note{
+  position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(10,18,38,.78);color:var(--ut-on-ink);
+  font-family:var(--ut-font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-align:center;line-height:2;
+}
+.dock-exam-note.on{display:flex}
+
+/* ======================================================= system view ==== */
+.sys-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.sys-table th{font-family:var(--ut-font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ut-mono-muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--ut-rule-strong);font-weight:500}
+.sys-table td{padding:9px 10px;border-bottom:1px solid var(--ut-rule);color:var(--ut-text-soft);vertical-align:top;line-height:1.5}
+.sys-table code{font-family:var(--ut-font-mono);font-size:11px;background:var(--ut-accent-soft);color:var(--ut-accent-dark);border-radius:4px;padding:1.5px 5px}
+.sys-flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:6px 0 2px}
+.sys-node{flex:1;min-width:150px;border:1px solid var(--ut-rule);border-radius:var(--ut-radius);background:var(--ut-card);padding:12px 14px}
+.sys-node h5{font-family:var(--ut-font-display);font-size:13px;margin-bottom:4px}
+.sys-node p{font-size:11.5px;color:var(--ut-muted);line-height:1.5}
+.sys-arrow{align-self:center;padding:0 8px;color:var(--ut-mono-muted);font-size:15px}
+.sys-phase{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--ut-rule)}
+.sys-phase:first-of-type{border-top:none}
+.sys-phase .n{width:30px;height:30px;border-radius:9px;background:var(--ut-ink);color:var(--ut-accent-bright);display:inline-flex;align-items:center;justify-content:center;font-family:var(--ut-font-display);font-weight:700;font-size:13px;flex-shrink:0}
+.sys-phase h4{font-family:var(--ut-font-display);font-size:13.5px;margin-bottom:3px}
+.sys-phase p{font-size:12.5px;color:var(--ut-muted);line-height:1.55}
+.sys-phase code{font-family:var(--ut-font-mono);font-size:11px;background:var(--ut-bg-alt);border-radius:4px;padding:1px 5px}
+
+@media (max-width: 960px){
+  .cb-mission-row{grid-template-columns:1fr}
+  .cb-hero-foot{grid-template-columns:repeat(2,1fr)}
+  .cbh-under{grid-template-columns:1fr}
+  .hq-grid{grid-template-columns:1fr}
+  .db-qstrip{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ proposal chrome ══ -->
+<header class="pv-topbar">
+  <div class="pv-brand">
+    <span class="pv-brand-logo">SAT</span>
+    <b>UltraSAT</b>
+    <span>· Coach UI v2 proposal</span>
+  </div>
+  <nav class="pv-tabs" id="tabs">
+    <button class="pv-tab active" data-tab="home">1 · Home briefing</button>
+    <button class="pv-tab" data-tab="hq">2 · Coach HQ</button>
+    <button class="pv-tab" data-tab="debrief">3 · Quiz debrief</button>
+    <button class="pv-tab" data-tab="dock">4 · Dock peek</button>
+    <button class="pv-tab" data-tab="system">5 · How it works</button>
+  </nav>
+</header>
+<div class="pv-ribbon">
+  <span><b>Thesis:</b> the coach stops sending paragraphs and starts emitting <b>typed blocks</b> — the pages render them. Same engine, new costume.</span>
+  <span style="margin-left:auto">simulated data · Aug 20, 2026 · student: Ahmet</span>
+</div>
+
+<main class="pv-wrap">
+
+<!-- ══════════════════════════════════════════════ 1 · HOME ══ -->
+<section data-view="home" class="on">
+  <div class="pv-explain">
+    <b>The homepage hero is no longer a static greeting — it renders the coach's current briefing note.</b>
+    Switch the scenario below: the same component tree re-renders from a different coach payload, and the
+    whole hero changes its layout, tone and actions. Open the payload inspector to see the exact JSON driving the screen.
+  </div>
+
+  <div class="sc-bar">
+    <span class="ut-label">Coach state →</span>
+    <button class="sc-btn active" data-sc="regression">Regression day</button>
+    <button class="sc-btn" data-sc="quiet">Quiet day · no LLM call</button>
+    <button class="sc-btn" data-sc="milestone">Milestone</button>
+    <button class="sc-btn" data-sc="examweek">Exam week</button>
+  </div>
+
+  <div id="hero-mount"></div>
+
+  <div class="cbh-under">
+    <div class="ut-card">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+        <span class="ut-label">Focus skills</span>
+        <span class="ut-label" style="font-size:9px">same Tier-2 the coach reads — never contradicts it</span>
+      </div>
+      <div style="margin-top:8px" id="home-focus"></div>
+      <hr class="ut-divider">
+      <button class="ut-link">See your full progress analytics →</button>
+    </div>
+    <div class="ut-card" id="home-coach-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span class="ut-label">From your coach</span>
+        <span class="cb-src live" style="border-color:var(--ut-accent-rule);color:var(--ut-accent-dark)">observer note</span>
+      </div>
+      <p class="ut-card-sub" style="font-size:13px;color:var(--ut-text-soft)" id="home-coach-line"></p>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap" id="home-coach-actions"></div>
+    </div>
+  </div>
+
+  <div class="pv-dim-note">▼ rest of the page (study plan widget, launchers) unchanged ▼</div>
+  <div class="pv-dim">
+    <div class="ut-grid ut-grid--3">
+      <div class="ut-card" style="height:74px"></div>
+      <div class="ut-card" style="height:74px"></div>
+      <div class="ut-card" style="height:74px"></div>
+    </div>
+  </div>
+
+  <details class="pv-inspector" id="inspector">
+    <summary>payload inspector — the JSON this screen is rendered from</summary>
+    <pre id="inspector-pre"></pre>
+  </details>
+</section>
+
+<!-- ══════════════════════════════════════════ 2 · COACH HQ ══ -->
+<section data-view="hq">
+  <div class="pv-explain">
+    <b>/coach stops being a chat log and becomes headquarters.</b> Everything on this page is a rendering of
+    state the engine already keeps: Tier-2 skill/concept state, the notebook, coach notes, commitments.
+    Chat is still here — demoted to the ask bar at the bottom, with the full thread in a drawer.
+  </div>
+
+  <div class="hq-head">
+    <div class="hq-headline">
+      <span class="hq-glyph">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/><circle cx="18.5" cy="17" r="2.2" fill="#fff" opacity=".85"/></svg>
+      </span>
+      <div>
+        <span class="ut-eyebrow" style="margin-bottom:4px">Coach · HQ</span>
+        <h1 class="ut-page-title" style="font-size:23px">28 days to a 1400. Here's the state of it.</h1>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="ut-label">Proactivity</span>
+      <div class="hq-dial">
+        <button>Quiet</button><button class="on">Normal</button><button>Chatty</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hq-grid">
+    <!-- ─────────── left column -->
+    <div class="hq-col">
+
+      <div class="ut-card">
+        <div class="hq-sec-label"><span class="ut-label">Trajectory</span><span class="ut-label" style="font-size:9px;color:var(--ut-mono-muted)">practice-exam scaled scores · hover the points</span></div>
+        <div class="traj-wrap" id="traj"></div>
+        <div class="traj-legend">
+          <span class="traj-key"><i></i>Sittings</span>
+          <span class="traj-key"><i class="proj"></i>Projection at current pace</span>
+          <span class="traj-key"><i class="tgt"></i>Target 1400</span>
+        </div>
+        <hr class="ut-divider">
+        <p class="ut-card-sub">At the current slope you land around <b style="color:var(--ut-text)">1120</b> on Sep 17 — about
+          <b style="color:var(--ut-danger-dark)">280 short</b>. The queue below is sequenced to bend this line: conventions
+          and algebra first, because that's where the cheapest points are.
+          <button class="cb-evd" style="border-color:var(--ut-rule-strong);color:var(--ut-mono-muted)">how this is computed</button></p>
+      </div>
+
+      <div>
+        <div class="hq-sec-label"><span class="ut-label">Focus queue — ranked by the coach</span></div>
+        <div id="queue-mount"></div>
+      </div>
+
+      <div class="ut-card">
+        <div class="hq-sec-label"><span class="ut-label">Journey</span><span class="ut-label" style="font-size:9px">milestones, not scrollback</span></div>
+        <div class="jn">
+          <div class="jn-item bad"><span class="jn-date">Aug 19</span><b>Boundaries 3/5</b> — plural-possessive regression flagged (same slip as June)</div>
+          <div class="jn-item good"><span class="jn-date">Aug 16</span><b>Cross-Text Connections → Level 3</b> after three passed quizzes</div>
+          <div class="jn-item exam"><span class="jn-date">Aug 9</span><b>Practice Test 4: 880</b> (−30) — pacing collapsed in Math module 2</div>
+          <div class="jn-item bad"><span class="jn-date">Jul 29</span><b>Inferences slip detected</b> — 5/5 → 3/5, twice in a row</div>
+          <div class="jn-item exam"><span class="jn-date">Jul 26</span><b>Practice Test 3: 910</b> (+50) — best yet</div>
+          <div class="jn-item good"><span class="jn-date">Jul 10</span><b>Possessives fixed</b> — 5/5 after the June misses</div>
+          <div class="jn-item exam"><span class="jn-date">Jul 2</span><b>Diagnostic: 820</b> — journey starts</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─────────── right column -->
+    <div class="hq-col">
+
+      <div class="ut-card" style="border-color:var(--ut-accent-rule)">
+        <div class="hq-sec-label"><span class="ut-label ut-label--accent">Today's brief</span><span class="cb-src live" style="border-color:var(--ut-accent-rule);color:var(--ut-accent-dark)">observer · 06:40</span></div>
+        <p style="font-size:13.5px;color:var(--ut-text-soft);line-height:1.6">Yesterday re-opened <b>plural possessives</b> — the exact slip you fixed in July.
+          Fix it again today (12 min) and I'll schedule a re-check for Monday so it stays fixed this time.</p>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="ut-btn ut-btn--primary ut-btn--sm">Start the 12-min fix</button>
+          <button class="ut-btn ut-btn--soft ut-btn--sm">Full plan on Home</button>
+        </div>
+      </div>
+
+      <div class="ut-card">
+        <div class="hq-sec-label"><span class="ut-label">Commitments</span><span class="ut-label" style="font-size:9px">the coach follows up — that's the memory</span></div>
+        <div class="cmt due">
+          <div class="cmt-date"><b>24</b><span>Mon</span></div>
+          <div class="cmt-body">Re-check <b>plural possessives</b> with a clean 5-question drill — did the fix stick?
+            <span class="src">auto-created from yesterday's debrief</span></div>
+          <button class="ut-btn ut-btn--soft ut-btn--sm">Do it early</button>
+        </div>
+        <div class="cmt">
+          <div class="cmt-date"><b>22</b><span>Sat</span></div>
+          <div class="cmt-body">Full practice exam — module 2 pacing is the thing to watch.
+            <span class="src">agreed in chat · Aug 14</span></div>
+        </div>
+        <div class="cmt">
+          <div class="cmt-date"><b>26</b><span>Wed</span></div>
+          <div class="cmt-body">Flashcard backlog: <b>120 saved · 14 reviewed</b>. Fifteen minutes clears a month of debt.
+            <span class="src">from vocab state</span></div>
+        </div>
+      </div>
+
+      <div class="ut-grid ut-grid--2">
+        <div class="ut-card" style="padding:16px 18px">
+          <div class="hq-sec-label" style="margin-bottom:8px"><span class="ut-label" style="color:var(--ut-success-dark)">Wins</span></div>
+          <div class="ww-item"><span class="ut-chip ut-chip--good">▲</span><span><b>Cross-Text</b> 40→72%</span></div>
+          <div class="ww-item"><span class="ut-chip ut-chip--good">▲</span><span><b>Transitions</b> 90% last 10</span></div>
+          <div class="ww-item"><span class="ut-chip ut-chip--good">▲</span><span><b>Streak</b> 8 days — longest yet</span></div>
+        </div>
+        <div class="ut-card" style="padding:16px 18px">
+          <div class="hq-sec-label" style="margin-bottom:8px"><span class="ut-label" style="color:var(--ut-danger-dark)">Watchlist</span></div>
+          <div class="ww-item"><span class="ut-chip ut-chip--bad">↩</span><span><b>Possessives</b> regressed</span></div>
+          <div class="ww-item"><span class="ut-chip ut-chip--warn">▼</span><span><b>Inferences</b> 76→60%</span></div>
+          <div class="ww-item"><span class="ut-chip ut-chip--warn">z</span><span><b>Linear Eq. (two-var)</b> 9d idle</span></div>
+        </div>
+      </div>
+
+      <div class="ut-card">
+        <div class="hq-sec-label">
+          <span class="ut-label">What I know about you</span>
+          <button class="ut-link" style="font-size:11px" id="mem-toggle">show notebook</button>
+        </div>
+        <div id="mem-closed">
+          <p class="ut-card-sub">My working notes — goals, patterns, follow-ups. Everything traces to your actual activity;
+          nothing is invented. You can correct any line.</p>
+        </div>
+        <div id="mem-open" style="display:none">
+          <div class="mem-sec">
+            <h4>Goals &amp; logistics</h4>
+            <p>Target <b>1400</b> · exam <b>Sep 17</b> · ~6 study days/week, evenings. Prefers short drills over long sets.</p>
+          </div>
+          <div class="mem-sec">
+            <h4>Working observations</h4>
+            <ul>
+              <li>plural-possessive: Jun 30 struggled (apostrophe-before-s) → Jul 10 recovered → <b>Aug 19 REGRESSED</b> (2 misses, same pattern) <span class="mem-fix"><button>not right?</button></span></li>
+              <li>inferences: steady 76% lifetime → 60% over last 10 since Jul 29; misses cluster on "most strongly supports" stems</li>
+              <li>math module 2: pacing collapses after Q15 — last two exams left 4+ blank</li>
+            </ul>
+          </div>
+          <div class="mem-sec">
+            <h4>Commitments &amp; follow-ups</h4>
+            <p>Re-check possessives ~Aug 24 · full exam Sat Aug 22 · flashcard backlog nudge if untouched by Aug 26.</p>
+          </div>
+          <div class="mem-sec">
+            <h4>Preferences</h4>
+            <p>Responds to concrete evidence, dislikes cheerleading. Studies 19:00–22:00. Timed pressure raises errors — introduce gradually.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ask bar -->
+  <div class="askbar">
+    <span style="width:30px;height:30px;border-radius:9px;background:var(--ut-accent);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg>
+    </span>
+    <input id="ask-input" placeholder="Ask your coach anything — it answers with cards, not essays…">
+    <span class="hint">
+      <button data-ask="Why is my projection only 1120?">why 1120?</button>
+      <button data-ask="Plan my weekend">plan my weekend</button>
+    </span>
+    <button class="send" id="ask-send">➤</button>
+    <button class="thread" id="drawer-open">Thread</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ 3 · QUIZ DEBRIEF ══ -->
+<section data-view="debrief">
+  <div class="pv-explain">
+    <b>The debrief becomes a staged takeover of the results page, not a comment in a box.</b>
+    The verdict, the evidence, the pattern's history and the one next action reveal in sequence while the score
+    animation plays (the model call runs during the scoring transition, so it feels instant).
+    <button class="ut-link" style="font-size:12px" id="db-replay">▶ replay the reveal</button>
+  </div>
+
+  <div class="db-stage">
+    <div class="ut-card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <span class="ut-eyebrow">Quiz results</span>
+          <h2 class="ut-page-title" style="font-size:20px">Boundaries · Level 2</h2>
+        </div>
+        <span class="ut-label">Aug 19 · 21:42 · 4:12 total</span>
+      </div>
+      <hr class="ut-divider">
+      <div class="db-scorecard">
+        <div class="db-ring">
+          <svg width="96" height="96" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="41" fill="none" stroke="var(--ut-bg-alt)" stroke-width="9"/>
+            <circle id="db-arc" cx="48" cy="48" r="41" fill="none" stroke="var(--ut-accent)" stroke-width="9"
+              stroke-linecap="round" stroke-dasharray="257.6" stroke-dashoffset="257.6"/>
+          </svg>
+          <div class="num"><b id="db-score">0%</b><span>3 of 5</span></div>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <div class="db-qstrip" id="db-qstrip">
+            <button class="db-q ok"><span class="n"><span class="mark">✓</span>Q1</span><span class="tag">semicolon join</span></button>
+            <button class="db-q miss" data-miss><span class="n"><span class="mark">✕</span>Q2</span><span class="tag">plural possessive</span></button>
+            <button class="db-q ok"><span class="n"><span class="mark">✓</span>Q3</span><span class="tag">clause boundary</span></button>
+            <button class="db-q ok"><span class="n"><span class="mark">✓</span>Q4</span><span class="tag">singular possessive</span></button>
+            <button class="db-q miss" data-miss><span class="n"><span class="mark">✕</span>Q5</span><span class="tag">plural possessive</span></button>
+          </div>
+          <p class="ut-card-sub" style="margin-top:9px;font-size:11.5px">each attempt is tagged with its concept — that tagging is what lets the coach see patterns, not just scores</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ut-card db-reveal" id="db-r1" style="margin-bottom:14px;border-color:var(--ut-accent-rule)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+        <span style="width:26px;height:26px;border-radius:8px;background:var(--ut-ink);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg>
+        </span>
+        <span class="ut-label ut-label--accent">Coach's read</span>
+        <span class="ut-label" style="font-size:9px;margin-left:auto">grounded in this quiz + your history</span>
+      </div>
+      <p style="font-size:14px;line-height:1.65;color:var(--ut-text-soft)">Both misses are the <b style="color:var(--ut-text)">same slip</b> — apostrophe placed before the
+        <i>-s</i> on a plural noun. You've beaten this once already, so this is a <b style="color:var(--ut-text)">quick fix, not a weak skill</b>.
+        One focused drill locks it in; I'll re-check Monday.</p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:11px">
+        <button class="cb-evd" style="color:var(--ut-mono-muted);border-color:var(--ut-rule-strong)">Q2 · your answer</button>
+        <button class="cb-evd" style="color:var(--ut-mono-muted);border-color:var(--ut-rule-strong)">Q5 · your answer</button>
+        <button class="cb-evd" style="color:var(--ut-mono-muted);border-color:var(--ut-rule-strong)">Jun 30 quiz · 2 similar misses</button>
+      </div>
+    </div>
+
+    <div class="ut-card db-pattern db-reveal" id="db-r2" style="margin-bottom:14px">
+      <span class="ut-label" style="color:var(--ut-danger-dark)">The pattern — plural possessives</span>
+      <div class="db-history">
+        <div class="db-hnode bad"><span class="dot">✕✕</span><span class="d">Jun 30</span><span class="t">2 misses<br>first seen</span></div>
+        <div class="db-harrow"></div>
+        <div class="db-hnode good"><span class="dot">✓</span><span class="d">Jul 10</span><span class="t">5/5<br>recovered</span></div>
+        <div class="db-harrow"></div>
+        <div class="db-hnode bad"><span class="dot">✕✕</span><span class="d">Aug 19</span><span class="t">slipped again<br>same pattern</span></div>
+        <div class="db-harrow" style="background:var(--ut-accent);"></div>
+        <div class="db-hnode"><span class="dot" style="background:var(--ut-accent)">?</span><span class="d">Aug 24</span><span class="t">re-check<br>scheduled</span></div>
+      </div>
+      <p class="ut-card-sub" style="margin-top:8px">A recovered-then-regressed concept outranks everything else in the coach's queue — it's the cheapest score you're leaving on the table.</p>
+    </div>
+
+    <div class="db-reveal" id="db-r3" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="ut-btn ut-btn--primary">Start the 5-question possessives drill</button>
+      <button class="ut-btn ut-btn--soft" id="lesson-toggle">Read the 60-second fix</button>
+      <button class="ut-btn ut-btn--ghost">Not now — remind me tonight</button>
+    </div>
+
+    <div class="lesson db-reveal" id="db-lesson" style="display:none">
+      <span class="ut-label ut-label--accent">Micro-lesson · written for you</span>
+      <div class="lesson-title" style="margin-top:6px">Singular vs. plural possessives — the 60-second version</div>
+      <p><b>Why now:</b> twice tonight (and twice on Jun 30) you placed the apostrophe before the <i>-s</i> on a plural noun. One small rule, and it keeps costing you Boundaries points.</p>
+      <p><b>The rule:</b> build the noun first, then attach the possessive. If the plural already ends in <i>-s</i>, the apostrophe goes <b>after</b> it.</p>
+      <div class="pair">
+        <div><b>the student's book</b><span>one student → student + 's</span></div>
+        <div><b>the students' books</b><span>many students → students + '</span></div>
+      </div>
+      <p><b>Your sentence, fixed:</b> you chose <i>"the three visitor's badges."</i> Three visitors → plural first (<i>visitors</i>), then the apostrophe: <i>"the three <b>visitors'</b> badges."</i></p>
+      <div style="margin-top:6px">
+        <span class="ut-label">Quick check</span>
+        <button class="check-opt" data-check="wrong">Both senator's offices released statements.</button>
+        <button class="check-opt" data-check="right">Both senators' offices released statements.</button>
+        <div class="fb ok" id="fb-ok">Exactly — several senators, plural first, apostrophe after the -s. That's the whole rule.</div>
+        <div class="fb no" id="fb-no">Not quite — there are several senators, so the plural comes first: senators + ' .</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="ut-btn ut-btn--primary ut-btn--sm">Lock it in: 5-question drill</button>
+        <button class="ut-btn ut-btn--ghost ut-btn--sm">Save to my concept bank</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ 4 · DOCK PEEK ══ -->
+<section data-view="dock">
+  <div class="pv-explain">
+    <b>The floating button stops being a chat launcher and becomes a peek ticker.</b> At a boundary the coach
+    slides out one line with its actions, then retracts to a badge. Tapping it deep-links to the relevant surface
+    (the debrief, the plan) — chat is inside if you want it, but it's never the front door. Try the states:
+  </div>
+
+  <div class="sc-bar">
+    <span class="ut-label">Simulate →</span>
+    <button class="sc-btn active" data-dock="idle">Idle</button>
+    <button class="sc-btn" data-dock="note">Quiz just finished</button>
+    <button class="sc-btn" data-dock="badge">Peek dismissed → badge</button>
+    <button class="sc-btn" data-dock="exam">Timed exam module</button>
+  </div>
+
+  <div class="dock-sim">
+    <div class="dock-fakepage">
+      <span class="ut-label">Question bank — any page, the coach rides along</span>
+      <div style="margin-top:14px" class="ut-grid ut-grid--2">
+        <div class="ut-card"><div class="bar" style="width:55%"></div><div class="bar" style="width:80%"></div><div class="bar" style="width:35%"></div></div>
+        <div class="ut-card"><div class="bar" style="width:65%"></div><div class="bar" style="width:45%"></div><div class="bar" style="width:75%"></div></div>
+        <div class="ut-card"><div class="bar" style="width:70%"></div><div class="bar" style="width:50%"></div><div class="bar" style="width:60%"></div></div>
+        <div class="ut-card"><div class="bar" style="width:40%"></div><div class="bar" style="width:85%"></div><div class="bar" style="width:55%"></div></div>
+      </div>
+    </div>
+
+    <div class="dock-exam-note" id="dock-exam-note">
+      timed module in progress<br>the coach is completely hidden — it returns at the break
+    </div>
+
+    <div class="dock-zone">
+      <div class="dock-peek" id="dock-peek">
+        <div>
+          <p><b>Same slip as June</b> in that Boundaries quiz — a 10-minute fix is ready.</p>
+          <div class="acts">
+            <button class="ut-btn ut-btn--primary ut-btn--sm" style="padding:6px 10px;font-size:11.5px">See the read</button>
+            <button class="ut-btn ut-btn--sm" style="padding:6px 10px;font-size:11.5px;background:rgba(237,240,241,.08);color:var(--ut-on-ink)">Later</button>
+          </div>
+        </div>
+      </div>
+      <button class="dock-btn" id="dock-btn">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/><circle cx="18.5" cy="17" r="2.2" fill="#fff" opacity=".85"/></svg>
+        <span class="badge" id="dock-badge">1</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="ut-grid ut-grid--3" style="margin-top:14px">
+    <div class="ut-card ut-card--soft"><span class="ut-label">Rule</span><p class="ut-card-sub" style="margin-top:6px">Never auto-opens. The peek slides out once per note, retracts after 8s, and the badge keeps the count.</p></div>
+    <div class="ut-card ut-card--soft"><span class="ut-label">Rule</span><p class="ut-card-sub" style="margin-top:6px">Tap targets go to the <b>surface</b> (results read, plan, HQ) — the thread is one more tap, never the default.</p></div>
+    <div class="ut-card ut-card--soft"><span class="ut-label">Rule</span><p class="ut-card-sub" style="margin-top:6px">Hidden for guests and during timed modules — absence is part of the pitch and the trust.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ 5 · HOW IT WORKS ══ -->
+<section data-view="system">
+  <div class="pv-explain">
+    <b>What actually changes in the code.</b> The engine stays; the contract between coach and UI grows from
+    <code style="font-family:var(--ut-font-mono);font-size:12px">{message, actions[]}</code> to a small set of typed blocks,
+    and each surface renders blocks with existing kit components. Everything degrades gracefully to today's behavior.
+  </div>
+
+  <div class="ut-card" style="margin-bottom:14px">
+    <div class="hq-sec-label"><span class="ut-label">The render pipeline</span></div>
+    <div class="sys-flow">
+      <div class="sys-node"><h5>Engine (as-is)</h5><p>observer · debrief · chat · micro-lesson<br>Tier-2 + notebook grounding</p></div>
+      <span class="sys-arrow">→</span>
+      <div class="sys-node"><h5>Note with blocks</h5><p><code style="font-family:var(--ut-font-mono)">blocks:[verdict, plan, focus, stat…]</code><br>validated server-side like actions are today</p></div>
+      <span class="sys-arrow">→</span>
+      <div class="sys-node"><h5>Block renderer</h5><p>one React component: <code style="font-family:var(--ut-font-mono)">&lt;CoachBlocks/&gt;</code><br>maps block type → kit component</p></div>
+      <span class="sys-arrow">→</span>
+      <div class="sys-node"><h5>Surfaces</h5><p>Home hero · HQ · results takeover · dock peek — each picks the blocks it wants</p></div>
+    </div>
+    <hr class="ut-divider">
+    <p class="ut-card-sub"><b>Fallback chain (why it never breaks):</b> fresh note with blocks → cached note → <b>mechanical brief</b> rendered
+    straight from Tier-2 with zero LLM (the "quiet day" scenario on tab 1). A message-only note from the current prompt renders as a verdict
+    card — so shipping the UI does not require shipping the new prompt.</p>
+  </div>
+
+  <div class="ut-card" style="margin-bottom:14px">
+    <div class="hq-sec-label"><span class="ut-label">Block contract v1</span></div>
+    <table class="sys-table">
+      <tr><th>Block</th><th>Payload (validated)</th><th>Renders as</th><th>Used on</th></tr>
+      <tr><td><code>verdict</code></td><td>text ≤ 280 chars · tone (fix/steady/win) · evidence[]</td><td>headline paragraph + evidence chips</td><td>hero, HQ brief, results, peek</td></tr>
+      <tr><td><code>plan</code></td><td>title · items[] {label, why, minutes, action, id}</td><td>mission cards with live ticks (completion = existing events)</td><td>hero, HQ</td></tr>
+      <tr><td><code>focus</code></td><td>items[] {subcategoryId, reason: regression/slipping/stale/new}</td><td>ranked queue cards · why-chips · last-10 sparklines</td><td>HQ, hero chips</td></tr>
+      <tr><td><code>stat</code></td><td>kind: pace/streak/estimate · values (server-computed only)</td><td>stat tiles, trajectory annotations</td><td>hero foot, HQ</td></tr>
+      <tr><td><code>history</code></td><td>conceptId · nodes[] {date, state}</td><td>the pattern timeline (Jun 30 → Jul 10 → Aug 19)</td><td>results takeover, HQ</td></tr>
+      <tr><td><code>lesson</code></td><td>existing micro-lesson shape, unchanged</td><td>expandable lesson card with check question</td><td>results, HQ, dock panel</td></tr>
+      <tr><td><code>commit</code></td><td>label · dueDate · source</td><td>commitment cards; due → button activates</td><td>HQ, hero when due</td></tr>
+      <tr><td><code>ask</code></td><td>prompt · choices[] ≤ 3</td><td>coach asks <i>you</i> — one-tap structured reply</td><td>HQ brief, onboarding</td></tr>
+    </table>
+    <p class="ut-card-sub" style="margin-top:10px">Numbers in <code>stat</code>/<code>focus</code>/<code>history</code> blocks are injected
+    server-side from Tier-2, not generated — the model picks <i>which</i> stats to show, never their values. Hallucination surface shrinks as the UI gets richer.</p>
+  </div>
+
+  <div class="ut-grid ut-grid--2" style="margin-bottom:14px">
+    <div class="ut-card">
+      <div class="hq-sec-label"><span class="ut-label">Touched files</span></div>
+      <table class="sys-table">
+        <tr><td><code>coach/coachRoutes.js</code></td><td>extend <code>sanitizeActions</code> → <code>sanitizeBlocks</code>; prompts ask for blocks</td></tr>
+        <tr><td><code>coach/observer.js</code></td><td>briefing task emits <code>verdict+plan+focus</code>; new <code>commit</code> notes from notebook follow-ups</td></tr>
+        <tr><td><code>contextAssembler.js</code></td><td>unchanged (already feeds everything needed)</td></tr>
+        <tr><td><code>CoachContext.jsx</code></td><td>adds <code>latestBriefing</code> + mission-state selectors</td></tr>
+        <tr><td><code>components/coach/</code></td><td>new <code>CoachBlocks.jsx</code> (one renderer) + <code>BriefingHero</code>, <code>DebriefTakeover</code>, <code>DockPeek</code></td></tr>
+        <tr><td><code>pages/CoachPage.jsx</code></td><td>rebuilt as HQ (tab 2) — thread moves to drawer</td></tr>
+        <tr><td><code>pages/Dashboard.jsx</code></td><td>hero renders briefing blocks; mechanical fallback built from the data it already loads</td></tr>
+      </table>
+    </div>
+    <div class="ut-card">
+      <div class="hq-sec-label"><span class="ut-label">Ship it in four cuts</span></div>
+      <div class="sys-phase"><span class="n">A</span><div><h4>Re-costume what exists (no backend change)</h4><p>Render today's <code>{message, actions}</code> as verdict cards; dock peek replaces the chat-first panel opening; results block gets the takeover layout with reveal.</p></div></div>
+      <div class="sys-phase"><span class="n">B</span><div><h4>Blocks in the engine</h4><p><code>sanitizeBlocks</code> + prompt update for debrief &amp; observer; <code>history</code>/<code>plan</code> blocks land; server injects Tier-2 numbers.</p></div></div>
+      <div class="sys-phase"><span class="n">C</span><div><h4>Home hero + HQ page</h4><p>BriefingHero with scenario tones + mechanical fallback; CoachPage → HQ with queue, commitments, journey, memory drawer, ask bar.</p></div></div>
+      <div class="sys-phase"><span class="n">D</span><div><h4>Close the loop</h4><p>Mission ticks emit <code>coach_interaction</code> events (advice taken/ignored) — the coach learns which of its suggestions you actually follow. Fix the exam-score pipe from <code>AI_COACH_DATA_FLOW_REPORT</code> so trajectory is honest.</p></div></div>
+    </div>
+  </div>
+
+  <div class="ut-card ut-card--soft">
+    <span class="ut-label">Why this beats a better chat</span>
+    <p class="ut-card-sub" style="margin-top:8px;font-size:13px;line-height:1.7">
+      A chat box makes the model responsible for <i>presentation</i> — and models present generically. Blocks make the model responsible only for
+      <i>judgment</i> (what matters now, what to do next), which is the part it's actually good at. The UI stays deterministic, on-brand, testable,
+      and cheap to render; the "personality" comes from real specificity — your dates, your misses, your pattern — not from prose style.
+      And every block is one the student can <i>tap</i>: the coach stops narrating the app and starts driving it.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<!-- thread drawer (HQ) -->
+<div class="drawer-scrim" id="drawer-scrim"></div>
+<aside class="drawer" aria-label="Coach thread">
+  <div class="drawer-head">
+    <span style="width:28px;height:28px;border-radius:9px;background:var(--ut-ink);display:inline-flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg>
+    </span>
+    <div>
+      <div style="font-family:var(--ut-font-display);font-weight:700;font-size:14px">Thread</div>
+      <div class="ut-label" style="font-size:9px">one conversation, every page</div>
+    </div>
+    <button class="x" id="drawer-close">×</button>
+  </div>
+  <div class="drawer-feed" id="drawer-feed">
+    <div class="dmsg coach"><span class="when">Aug 19 · after Boundaries quiz</span>Both misses are the same slip — apostrophe before the -s on a plural noun. You've beaten this once; quick fix, not a weak skill.
+      <span class="acts"><button class="ut-btn ut-btn--soft ut-btn--sm">60-second fix</button><button class="ut-btn ut-btn--soft ut-btn--sm">5-question drill</button></span></div>
+    <div class="dmsg user"><span class="when">Aug 19</span>why is it "senators'" and not "senator's"?</div>
+    <div class="dmsg coach"><span class="when">Aug 19</span>Because there are several senators. Build the noun first — senators — then add the possessive. The plural already ends in -s, so just the apostrophe.</div>
+    <div class="dmsg coach"><span class="when">Today · 06:40 briefing</span>Yesterday re-opened plural possessives. Fix it today (12 min) and I'll re-check Monday so it sticks this time.</div>
+  </div>
+  <div style="padding:12px 14px;border-top:1px solid var(--ut-rule)">
+    <div style="display:flex;gap:8px">
+      <input class="askbar-mini" id="drawer-input" placeholder="Message your coach…" style="flex:1;border:1px solid var(--ut-rule-strong);border-radius:9px;padding:9px 12px;font-family:var(--ut-font-body);font-size:13px;outline:none">
+      <button class="ut-btn ut-btn--primary ut-btn--sm" id="drawer-send">➤</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+/* ═══════════════════════════════════════════════ helpers ══ */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const md = (t) => t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+
+/* ═══════════════════════════════ 0 · tab switching ═══════ */
+$('#tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('.pv-tab'); if (!btn) return;
+  $$('.pv-tab').forEach(b => b.classList.toggle('active', b === btn));
+  $$('section[data-view]').forEach(s => s.classList.toggle('on', s.dataset.view === btn.dataset.tab));
+  if (btn.dataset.tab === 'debrief') runDebrief();
+  if (btn.dataset.tab === 'hq' && !window.__trajDrawn) { drawTrajectory(); window.__trajDrawn = true; }
+  window.scrollTo({top:0});
+});
+
+/* ═══════════════ 1 · HOME — briefing payloads + renderer ══ */
+const SCENARIOS = {
+  regression: {
+    kind: 'briefing', source: 'observer', generatedAt: '2026-08-20T06:40+03:00',
+    reasons: ['new_concept_regression', 'weekly_summary_due'],
+    tone: 'fix', greeting: 'Good morning, Ahmet.',
+    blocks: [
+      { type: 'verdict', tone: 'fix',
+        text: "Yesterday's Boundaries quiz re-opened an old wound: **plural possessives** — the exact apostrophe-before-the-s slip you fixed in July. It's a quick fix, not a weak skill: 12 focused minutes today, and I'll re-check on Monday so it sticks this time.",
+        evidence: [{label:'Q2 · Aug 19 quiz', ref:'quiz:bq-819#2'}, {label:'Q5 · Aug 19 quiz', ref:'quiz:bq-819#5'}, {label:'Jun 30 · same pattern', ref:'quiz:bq-630'}] },
+      { type: 'plan', title: 'Today', minutes: 30, items: [
+        { id:'m1', label:'Fix plural possessives', sub:'60-sec lesson + 5-question drill', why:'regression', minutes:12,
+          action:{type:'lesson+quiz', conceptId:'plural-possessive', subcategoryId:'boundaries'} },
+        { id:'m2', label:'Steady Inferences', sub:'5 questions · evidence-first, untimed', why:'slipping', minutes:10,
+          action:{type:'quiz', subcategoryId:'inferences', level:2} },
+        { id:'m3', label:'Wake Linear Equations (2-var)', sub:'5 questions · last touched 9 days ago', why:'stale', minutes:8,
+          action:{type:'quiz', subcategoryId:'linear-equations-in-two-variables'} } ] },
+      { type: 'stat', kind: 'pace', daysToExam: 28, estimate: 920, target: 1400,
+        note: 'projection ~1120 · the plan exists to bend this line' }
+    ],
+    statFoot: [ {v:'8', l:'day streak', em:true}, {v:'941', l:'questions practiced'}, {v:'920', l:'estimated score'}, {v:'1400', l:'target · sep 17'} ],
+    coachCard: { src:'observer note · 06:40', line:'Yesterday re-opened plural possessives — the slip you already beat once. Today\'s plan starts with the 12-minute fix; everything else can wait.', actions:['Start the fix', 'Why this first?'] }
+  },
+
+  quiet: {
+    kind: 'briefing', source: 'mechanical-fallback', generatedAt: '2026-08-20T06:40+03:00',
+    reasons: [], tone: 'steady', greeting: 'Good morning, Ahmet.',
+    blocks: [
+      { type: 'quiet',
+        text: 'Nothing significant since yesterday — no new slips, no due follow-ups. The coach stays silent by design; this brief was assembled mechanically from your skill state, without a model call.' },
+      { type: 'plan', title: 'Auto-picked from your weakest skills', minutes: 25, items: [
+        { id:'m1', label:'Boundaries · Level 2 set', sub:'weakest last-10 (60%)', why:'new', minutes:10, action:{type:'quiz', subcategoryId:'boundaries', level:2} },
+        { id:'m2', label:'Inferences · 5-question set', sub:'holding it steady at 60%', why:'slipping', minutes:10, action:{type:'quiz', subcategoryId:'inferences'} },
+        { id:'m3', label:'Flashcards · 10 minutes', sub:'backlog: 120 saved, 14 reviewed', why:'stale', minutes:5, action:{type:'link', route:'/flashcards'} } ] },
+      { type: 'stat', kind: 'pace', daysToExam: 28, estimate: 920, target: 1400, note: 'quiet week · pace unchanged' }
+    ],
+    statFoot: [ {v:'8', l:'day streak', em:true}, {v:'941', l:'questions practiced'}, {v:'920', l:'estimated score'}, {v:'1400', l:'target · sep 17'} ],
+    coachCard: { src:'no model call', line:'The coach hasn\'t spoken today — nothing crossed its significance rules. Silence is a feature: when it does speak, it means something.', actions:['Ask anyway'] }
+  },
+
+  milestone: {
+    kind: 'briefing', source: 'observer', generatedAt: '2026-08-28T20:12+03:00', simulatedDate: 'Aug 28',
+    reasons: ['level_up', 'streak_record'],
+    tone: 'win', greeting: "That's Level 4, Ahmet.",
+    blocks: [
+      { type: 'verdict', tone: 'win',
+        text: "**Cross-Text Connections just hit Level 4** — 40% to 84% in three weeks, your biggest climb yet. That was your weakest reading skill in July. One thing still open from last week: possessives held at Monday's re-check, so it's officially fixed. Enjoy this one tonight.",
+        evidence: [{label:'CTC · 3 passed quizzes', ref:'skill:cross-text-connections'}, {label:'Aug 24 re-check · 5/5', ref:'quiz:pp-824'}] },
+      { type: 'plan', title: 'Tonight — victory lap, then rest', minutes: 15, items: [
+        { id:'m1', label:'5 hard CTC questions', sub:'prove Level 4 is real', why:'win', minutes:12, action:{type:'quiz', subcategoryId:'cross-text-connections', level:3} },
+        { id:'m2', label:'Confirm Saturday\'s practice exam', sub:'module-2 pacing is the watch item', why:'new', minutes:3, action:{type:'link', route:'/practice-exams'} } ] },
+      { type: 'stat', kind: 'streak', value: 12, note: 'longest streak yet — protect it' }
+    ],
+    statFoot: [ {v:'12', l:'day streak · record', em:true}, {v:'Lv 4', l:'cross-text connections'}, {v:'960', l:'estimated score'}, {v:'1400', l:'target · sep 17'} ],
+    coachCard: { src:'observer note · 20:12', line:'Level 4 on Cross-Text Connections — and the possessives fix held its re-check. Two loops closed in one week. Saturday\'s exam tells us what the new baseline is.', actions:['See the climb'] }
+  },
+
+  examweek: {
+    kind: 'briefing', source: 'observer', generatedAt: '2026-09-14T07:05+03:00', simulatedDate: 'Sep 14',
+    reasons: ['exam_approaching'],
+    tone: 'exam', greeting: '3 days out, Ahmet.',
+    blocks: [
+      { type: 'verdict', tone: 'exam',
+        text: "From here, **no new material** — we rehearse. You're walking in around **1140**: conventions are solid, algebra is up 14 points this month, and module-2 pacing is fixed since the Aug 30 exam. The plan this week is timing, review, and sleep. Trust the work; it's done.",
+        evidence: [{label:'Aug 30 exam · 1080', ref:'exam:pt6'}, {label:'Sep 7 exam · 1140', ref:'exam:pt7'}] },
+      { type: 'plan', title: 'Dress rehearsal · Sep 14', minutes: 45, items: [
+        { id:'m1', label:'Timed RW module', sub:'32 min · real conditions, morning if you can', why:'rehearsal', minutes:32, action:{type:'link', route:'/practice-exams'} },
+        { id:'m2', label:'Review your 14 marked questions', sub:'only the ones you flagged — no rabbit holes', why:'review', minutes:12, action:{type:'link', route:'/all-results'} },
+        { id:'m3', label:'Screens off by 23:00', sub:'pacing lives in your sleep, not your notes', why:'routine', minutes:1, action:null } ] },
+      { type: 'stat', kind: 'pace', daysToExam: 3, estimate: 1140, target: 1400, note: 'taper mode · no new material' }
+    ],
+    statFoot: [ {v:'26', l:'day streak', em:true}, {v:'1140', l:'walking-in estimate'}, {v:'+320', l:'since diagnostic'}, {v:'3', l:'sleeps to go'} ],
+    coachCard: { src:'observer note · 07:05', line:'Taper week: rehearse timing, review only what you flagged, and sleep. The score is already in the bank — this week protects it.', actions:['Rehearsal plan'] }
+  }
+};
+
+const WHY_LABEL = { regression:'regression', slipping:'slipping', stale:'9d idle', new:'next up', win:'victory lap', rehearsal:'rehearsal', review:'review', routine:'routine' };
+const WHY_CLASS = { regression:'regression', slipping:'slipping', stale:'stale', new:'new', win:'win', rehearsal:'new', review:'slipping', routine:'stale' };
+
+const missionState = {}; // id -> done
+
+function renderHero(key) {
+  const p = SCENARIOS[key];
+  const verdict = p.blocks.find(b => b.type === 'verdict');
+  const quiet = p.blocks.find(b => b.type === 'quiet');
+  const plan = p.blocks.find(b => b.type === 'plan');
+  const pace = p.blocks.find(b => b.type === 'stat');
+
+  const doneCount = plan.items.filter(i => missionState[key + i.id]).length;
+  const leftMin = plan.items.filter(i => !missionState[key + i.id]).reduce((s, i) => s + i.minutes, 0);
+
+  const missions = plan.items.map(i => {
+    const done = missionState[key + i.id];
+    return `<button class="cb-mission ${done ? 'done' : ''}" data-mission="${i.id}">
+      <span class="cb-mission-top"><span class="cb-tick">${done ? '✓' : ''}</span>
+      <span class="cb-mission-title">${i.label}</span></span>
+      <span class="cb-mission-sub">${i.sub}</span>
+      <span class="cb-mission-why"><span class="cb-why ${WHY_CLASS[i.why] || 'new'}">${WHY_LABEL[i.why] || i.why}</span>
+      <span class="cb-mission-min">${i.minutes} min</span></span>
+    </button>`;
+  }).join('');
+
+  const evChips = verdict && verdict.evidence ? `<div class="cb-evidence">${verdict.evidence.map(e =>
+    `<button class="cb-evd" title="opens the actual question/quiz">${e.label}</button>`).join('')}</div>` : '';
+
+  const kickChips = [
+    `<span class="cb-src ${p.source === 'observer' ? 'live' : ''}">${p.source === 'observer' ? 'coach briefing · ' + p.generatedAt.slice(11, 16) : 'auto-brief · no model call'}</span>`,
+    ...p.reasons.map(r => `<span class="cb-src">${r.replace(/_/g, ' ')}</span>`),
+    p.simulatedDate ? `<span class="cb-src" style="border-style:dashed">simulated date: ${p.simulatedDate}</span>` : ''
+  ].join('');
+
+  const doneLine = doneCount === plan.items.length
+    ? `<b style="color:var(--ut-success-bright)">Plan cleared — see you at the next check-in.</b>`
+    : `<b>${doneCount}/${plan.items.length}</b> done · ${leftMin} min left`;
+
+  $('#hero-mount').innerHTML = `
+  <div class="cb-hero tone-${p.tone}">
+    <div class="cb-hero-top">
+      <div class="cb-hero-main">
+        <div class="cb-kicker">
+          <span class="glyph"><svg viewBox="0 0 24 24" width="14" height="14" fill="none"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3z" fill="#fff"/></svg></span>
+          ${kickChips}
+        </div>
+        <div class="cb-greet">${p.greeting}</div>
+        ${verdict ? `<p class="cb-verdict">${md(verdict.text)}</p>${evChips}` : ''}
+        ${quiet ? `<p class="cb-quiet-note">${quiet.text}</p>` : ''}
+      </div>
+      <div class="cb-side">
+        <div class="cb-count ${p.tone === 'exam' ? 'exam' : ''}">
+          <div class="cb-count-num">${pace.daysToExam ?? pace.value}</div>
+          <div class="cb-count-label">${pace.kind === 'streak' ? 'day streak' : 'days to exam'}</div>
+        </div>
+        <div class="cb-pace">${pace.kind === 'pace' ? `est <b>${pace.estimate}</b> → target <b>${pace.target}</b><br>` : ''}${pace.note}</div>
+      </div>
+    </div>
+    <div class="cb-missions">
+      <div class="cb-missions-head">
+        <span class="ut-label ut-label--on-ink">${plan.title} · ${plan.minutes} min</span>
+        <span class="cb-missions-meta">${doneLine}</span>
+      </div>
+      <div class="cb-mission-row" style="${plan.items.length === 2 ? 'grid-template-columns:repeat(2,minmax(0,1fr))' : ''}">${missions}</div>
+    </div>
+    <div class="cb-hero-foot">
+      ${p.statFoot.map(s => `<div class="cb-stat"><span class="cb-stat-v">${s.em ? `<em>${s.v}</em>` : s.v}</span><span class="cb-stat-l">${s.l}</span></div>`).join('')}
+    </div>
+  </div>`;
+
+  // mission ticks — completing a mission re-renders the hero from state
+  $$('#hero-mount [data-mission]').forEach(btn => btn.addEventListener('click', () => {
+    const id = key + btn.dataset.mission;
+    missionState[id] = !missionState[id];
+    renderHero(key);
+  }));
+
+  // coach card (right of focus skills)
+  const cc = p.coachCard;
+  $('#home-coach-line').textContent = cc.line;
+  $('#home-coach-card .cb-src').textContent = cc.src;
+  $('#home-coach-actions').innerHTML = cc.actions.map((a, i) =>
+    `<button class="ut-btn ${i === 0 ? 'ut-btn--primary' : 'ut-btn--soft'} ut-btn--sm">${a}</button>`).join('');
+
+  // payload inspector
+  $('#inspector-pre').textContent = JSON.stringify(p, null, 2);
+}
+
+// scenario switcher
+$$('.sc-btn[data-sc]').forEach(b => b.addEventListener('click', () => {
+  $$('.sc-btn[data-sc]').forEach(x => x.classList.toggle('active', x === b));
+  renderHero(b.dataset.sc);
+}));
+
+// focus skills list (light card under hero)
+const FOCUS = [
+  { name: 'Boundaries', acc: '60%', chip: ['bad', '↩ regression'], spark: '0,0,1,1,1,1,1,1,0,0' },
+  { name: 'Inferences', acc: '60%', chip: ['warn', '▼ slipping'], spark: '1,1,1,1,1,0,1,0,0,1' },
+  { name: 'Linear Equations (two-var)', acc: '70%', chip: ['', '9d idle'], spark: '1,0,1,1,1,0,1,1,1,0' },
+  { name: 'Words in Context', acc: '65%', chip: ['', 'steady'], spark: '1,0,1,1,0,1,1,0,1,1' },
+];
+$('#home-focus').innerHTML = FOCUS.map(f => `
+  <button class="focus-row">
+    <span class="focus-name">${f.name}</span>
+    <span class="ut-chip ${f.chip[0] ? 'ut-chip--' + f.chip[0] : ''}">${f.chip[1]}</span>
+    <span class="spark" data-spark="${f.spark}"></span>
+    <span class="focus-acc">${f.acc}</span>
+  </button>`).join('');
+
+/* ══════════════════════════════════ sparkline renderer ══ */
+function drawSparks(root) {
+  $$('.spark[data-spark]', root || document).forEach(el => {
+    if (el.dataset.done) return;
+    el.dataset.done = '1';
+    el.innerHTML = el.dataset.spark.split(',').map(v =>
+      v.trim() === '1' ? '<i style="height:14px"></i>' : '<i class="miss"></i>').join('');
+  });
+}
+
+/* ═══════════════════════ 2 · HQ — trajectory chart ═══════ */
+function drawTrajectory() {
+  const W = 640, H = 230, L = 46, R = 74, T = 16, B = 28;
+  const x0 = Date.parse('2026-06-28'), x1 = Date.parse('2026-09-21');
+  const y0 = 760, y1 = 1460;
+  const X = (d) => L + (Date.parse(d) - x0) / (x1 - x0) * (W - L - R);
+  const Y = (v) => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+
+  const sittings = [
+    { d: '2026-07-02', v: 820, t: 'Diagnostic' },
+    { d: '2026-07-12', v: 850, t: 'Practice Test 2' },
+    { d: '2026-07-26', v: 910, t: 'Practice Test 3' },
+    { d: '2026-08-09', v: 880, t: 'Practice Test 4' },
+  ];
+  const est = { d: '2026-08-20', v: 920, t: "Today's estimate" };
+  const proj = { d: '2026-09-17', v: 1120, t: 'Projected · current pace' };
+
+  const path = sittings.map((p, i) => `${i ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+  const grid = [800, 1000, 1200, 1400].map(v =>
+    `<line x1="${L}" x2="${W - R + 40}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--ut-rule)" stroke-width="1"/>
+     <text x="${L - 8}" y="${Y(v) + 3.5}" text-anchor="end" font-family="var(--ut-font-mono)" font-size="9.5" fill="var(--ut-mono-muted)">${v}</text>`).join('');
+  const months = [['2026-07-01', 'Jul'], ['2026-08-01', 'Aug'], ['2026-09-01', 'Sep']].map(([d, l]) =>
+    `<text x="${X(d)}" y="${H - 8}" font-family="var(--ut-font-mono)" font-size="9.5" fill="var(--ut-mono-muted)">${l}</text>`).join('');
+
+  const pts = [...sittings, est, proj];
+  const dots = pts.map((p, i) => {
+    const hollow = i >= sittings.length;
+    return `<circle cx="${X(p.d)}" cy="${Y(p.v)}" r="4.5" fill="${hollow ? 'var(--ut-card)' : 'var(--ut-accent)'}"
+      stroke="var(--ut-accent)" stroke-width="2" ${i === pts.length - 1 ? 'stroke-dasharray="2 2"' : ''}/>
+      <circle cx="${X(p.d)}" cy="${Y(p.v)}" r="13" fill="transparent" data-pt="${i}" style="cursor:pointer"/>`;
+  }).join('');
+
+  $('#traj').innerHTML = `
+  <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Score trajectory: sittings 820 to 880, today's estimate 920, projection 1120 on Sep 17 versus target 1400">
+    ${grid}${months}
+    <line x1="${L}" x2="${W - R + 40}" y1="${Y(1400)}" y2="${Y(1400)}" stroke="#98A3B5" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="${L + 4}" y="${Y(1400) - 5}" font-family="var(--ut-font-mono)" font-size="9" fill="var(--ut-mono-muted)">TARGET 1400</text>
+    <line x1="${X('2026-09-17')}" x2="${X('2026-09-17')}" y1="${T}" y2="${H - B}" stroke="var(--ut-rule-strong)" stroke-width="1" stroke-dasharray="2 3"/>
+    <text x="${X('2026-09-17')}" y="${T - 4}" text-anchor="middle" font-family="var(--ut-font-mono)" font-size="8.5" fill="var(--ut-mono-muted)">EXAM</text>
+    <path d="${path}" fill="none" stroke="var(--ut-accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M${X(sittings[3].d)},${Y(sittings[3].v)} L${X(est.d)},${Y(est.v)}" fill="none" stroke="var(--ut-accent)" stroke-width="2" stroke-dasharray="1.5 4" stroke-linecap="round"/>
+    <path d="M${X(est.d)},${Y(est.v)} L${X(proj.d)},${Y(proj.v)}" fill="none" stroke="var(--ut-accent)" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round" opacity=".8"/>
+    <line x1="${X(proj.d) + 12}" x2="${X(proj.d) + 12}" y1="${Y(1400)}" y2="${Y(1120)}" stroke="var(--ut-danger)" stroke-width="1.5"/>
+    <text x="${X(proj.d) + 18}" y="${(Y(1400) + Y(1120)) / 2 + 3}" font-family="var(--ut-font-mono)" font-size="9.5" fill="var(--ut-danger-dark)">−280</text>
+    <text x="${X(proj.d) - 6}" y="${Y(proj.v) + 16}" text-anchor="end" font-family="var(--ut-font-mono)" font-size="9.5" fill="var(--ut-accent-dark)">~1120</text>
+    <text x="${X(est.d)}" y="${Y(est.v) - 11}" text-anchor="middle" font-family="var(--ut-font-mono)" font-size="9.5" fill="var(--ut-accent-dark)">920 · today</text>
+    <text x="${X(sittings[0].d)}" y="${Y(sittings[0].v) + 18}" text-anchor="middle" font-family="var(--ut-font-mono)" font-size="9.5" fill="var(--ut-mono-muted)">820</text>
+    <text x="${X(sittings[2].d)}" y="${Y(sittings[2].v) - 10}" text-anchor="middle" font-family="var(--ut-font-mono)" font-size="9.5" fill="var(--ut-mono-muted)">910</text>
+    ${dots}
+  </svg>
+  <div class="traj-tip" id="traj-tip"></div>`;
+
+  const tip = $('#traj-tip'), svg = $('#traj svg');
+  svg.addEventListener('mousemove', (e) => {
+    const hit = e.target.closest('[data-pt]');
+    if (!hit) { tip.style.opacity = 0; return; }
+    const p = pts[+hit.dataset.pt];
+    const box = $('#traj').getBoundingClientRect();
+    tip.innerHTML = `<b>${p.v}</b> · ${p.t}<br>${new Date(p.d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    tip.style.left = (e.clientX - box.left) + 'px';
+    tip.style.top = (e.clientY - box.top - 6) + 'px';
+    tip.style.opacity = 1;
+  });
+  svg.addEventListener('mouseleave', () => tip.style.opacity = 0);
+}
+
+/* ═══════════════════════════ 2 · HQ — focus queue ════════ */
+const QUEUE = [
+  { rank: 1, name: 'Boundaries — plural possessives', flag: 'r', acc: '60% last 10', spark: '0,0,1,1,1,1,1,1,0,0',
+    why: '**Regressed Aug 19** — recovered once in July, so the wiring exists. Both misses were apostrophe-before-the-s. Cheapest points on the board.',
+    actions: [['primary', 'Start the 12-min fix'], ['soft', '60-sec lesson']] },
+  { rank: 2, name: 'Inferences', flag: 'w', acc: '60% vs 76% lifetime', spark: '1,1,1,1,1,0,1,0,0,1',
+    why: 'Slipping since Jul 29. Misses cluster on **"most strongly supports"** stems — you\'re answering from memory of the passage, not from a located line.',
+    actions: [['primary', 'Evidence-first set'], ['soft', 'How to locate lines']] },
+  { rank: 3, name: 'Math module 2 · pacing', flag: 'w', acc: '4+ blank after Q15', spark: '',
+    why: 'Not a skill — a habit. The last two exams collapsed after Q15. One timed **half-module** with a checkpoint at minute 16 rebuilds the clock.',
+    actions: [['primary', 'Timed half-module']] },
+  { rank: 4, name: 'Linear Equations (two-var)', flag: '', acc: '70% · 9d idle', spark: '1,0,1,1,1,0,1,1,1,0',
+    why: 'Nothing wrong — just fading. Skills at this level decay after ~10 idle days; a 5-question wake-up holds it.',
+    actions: [['soft', 'Wake-up set']] },
+];
+$('#queue-mount').innerHTML = QUEUE.map(q => `
+  <div class="queue-card ${q.flag ? 'flag' : ''} ${q.flag === 'w' ? 'w' : ''}">
+    <div class="queue-top">
+      <span class="queue-rank">${q.rank}</span>
+      <span class="queue-name">${q.name}</span>
+      <span class="queue-nums">${q.spark ? `<span class="spark" data-spark="${q.spark}"></span>` : ''}<span class="queue-acc">${q.acc}</span></span>
+    </div>
+    <p class="queue-why-line">${md(q.why)}</p>
+    <div class="queue-actions">${q.actions.map(([k, l]) => `<button class="ut-btn ut-btn--${k} ut-btn--sm">${l}</button>`).join('')}
+      <button class="cb-evd" style="color:var(--ut-mono-muted);border-color:var(--ut-rule-strong);margin-left:auto">evidence</button></div>
+  </div>`).join('');
+
+/* memory drawer toggle */
+$('#mem-toggle').addEventListener('click', () => {
+  const open = $('#mem-open').style.display !== 'none';
+  $('#mem-open').style.display = open ? 'none' : 'block';
+  $('#mem-closed').style.display = open ? 'block' : 'none';
+  $('#mem-toggle').textContent = open ? 'show notebook' : 'hide';
+});
+
+/* ═══════════════════ 2 · HQ — ask bar + thread drawer ════ */
+const openDrawer = () => document.body.classList.add('drawer-open');
+const closeDrawer = () => document.body.classList.remove('drawer-open');
+$('#drawer-open').addEventListener('click', openDrawer);
+$('#drawer-close').addEventListener('click', closeDrawer);
+$('#drawer-scrim').addEventListener('click', closeDrawer);
+
+function askCoach(text) {
+  if (!text.trim()) return;
+  openDrawer();
+  const feed = $('#drawer-feed');
+  feed.insertAdjacentHTML('beforeend', `<div class="dmsg user"><span class="when">just now</span>${text}</div>`);
+  feed.scrollTop = feed.scrollHeight;
+  setTimeout(() => {
+    const canned = text.toLowerCase().includes('1120')
+      ? `Your four sittings climb ~2.1 points a day; 28 days left lands ~1120. But projections assume you keep practicing the <b>same things</b> — the queue front-loads conventions and algebra because they historically move fastest. Do the plan, take Saturday's exam, and I'll re-draw the line.
+         <span class="acts"><button class="ut-btn ut-btn--soft ut-btn--sm">Open trajectory</button><button class="ut-btn ut-btn--soft ut-btn--sm">Saturday's exam</button></span>`
+      : text.toLowerCase().includes('weekend')
+        ? `Saturday: full practice exam, morning, phone in another room — module-2 pacing is the watch item. Sunday: 30-min review of only what you miss, then the possessives re-check a day early if you're keen. Nothing else; rest is part of the plan.
+         <span class="acts"><button class="ut-btn ut-btn--soft ut-btn--sm">Add to plan</button></span>`
+        : `(mock) In the real build this reply comes back as blocks — a verdict plus one-tap actions — through the same <b>/api/coach/chat</b> endpoint you already have.`;
+    feed.insertAdjacentHTML('beforeend', `<div class="dmsg coach"><span class="when">coach · just now</span>${canned}</div>`);
+    feed.scrollTop = feed.scrollHeight;
+  }, 650);
+}
+$('#ask-send').addEventListener('click', () => { askCoach($('#ask-input').value); $('#ask-input').value = ''; });
+$('#ask-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { askCoach(e.target.value); e.target.value = ''; } });
+$$('.askbar .hint button').forEach(b => b.addEventListener('click', () => askCoach(b.dataset.ask)));
+$('#drawer-send').addEventListener('click', () => { askCoach($('#drawer-input').value); $('#drawer-input').value = ''; });
+$('#drawer-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { askCoach(e.target.value); e.target.value = ''; } });
+
+/* ═══════════════════════ 3 · debrief staged reveal ═══════ */
+let debriefTimers = [];
+function runDebrief() {
+  debriefTimers.forEach(clearTimeout); debriefTimers = [];
+  const arc = $('#db-arc'), score = $('#db-score');
+  arc.style.transition = 'none'; arc.style.strokeDashoffset = 257.6; score.textContent = '0%';
+  ['#db-r1', '#db-r2', '#db-r3'].forEach(s => $(s).classList.remove('in'));
+  $('#db-lesson').style.display = 'none';
+  $$('#db-qstrip .db-q').forEach(q => q.classList.remove('pulse'));
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    arc.style.transition = 'stroke-dashoffset 1s ease';
+    arc.style.strokeDashoffset = 257.6 * (1 - 0.6);
+    let n = 0;
+    const cnt = setInterval(() => { n += 4; if (n >= 60) { n = 60; clearInterval(cnt); } score.textContent = n + '%'; }, 55);
+    debriefTimers.push(setTimeout(() => $$('#db-qstrip .db-q[data-miss]').forEach(q => q.classList.add('pulse')), 750));
+    debriefTimers.push(setTimeout(() => $('#db-r1').classList.add('in'), 550));
+    debriefTimers.push(setTimeout(() => $('#db-r2').classList.add('in'), 1150));
+    debriefTimers.push(setTimeout(() => $('#db-r3').classList.add('in'), 1700));
+  }));
+}
+$('#db-replay').addEventListener('click', runDebrief);
+$$('#db-qstrip .db-q[data-miss]').forEach(q => q.addEventListener('click', () => {
+  const pat = $('#db-r2');
+  pat.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  pat.style.boxShadow = '0 0 0 4px rgba(204,65,65,.22)';
+  setTimeout(() => pat.style.boxShadow = '', 1200);
+}));
+$('#lesson-toggle').addEventListener('click', () => {
+  const l = $('#db-lesson');
+  const show = l.style.display === 'none';
+  l.style.display = show ? 'block' : 'none';
+  if (show) { l.classList.add('in'); l.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+});
+$$('.check-opt').forEach(o => o.addEventListener('click', () => {
+  $$('.check-opt').forEach(x => { x.disabled = true; });
+  const right = o.dataset.check === 'right';
+  o.classList.add(right ? 'right' : 'wrong');
+  if (!right) $('.check-opt[data-check="right"]').classList.add('right');
+  $(right ? '#fb-ok' : '#fb-no').classList.add('on');
+}));
+
+/* ═══════════════════════════ 4 · dock state machine ══════ */
+let peekTimer = null;
+function dockState(s) {
+  clearTimeout(peekTimer);
+  const peek = $('#dock-peek'), badge = $('#dock-badge'), btn = $('#dock-btn'), exam = $('#dock-exam-note');
+  peek.classList.remove('on'); badge.classList.remove('on'); btn.classList.remove('hidden-state'); exam.classList.remove('on');
+  if (s === 'note') {
+    peek.classList.add('on');
+    peekTimer = setTimeout(() => { peek.classList.remove('on'); badge.classList.add('on');
+      $$('.sc-btn[data-dock]').forEach(x => x.classList.toggle('active', x.dataset.dock === 'badge')); }, 8000);
+  }
+  if (s === 'badge') badge.classList.add('on');
+  if (s === 'exam') { btn.classList.add('hidden-state'); exam.classList.add('on'); }
+}
+$$('.sc-btn[data-dock]').forEach(b => b.addEventListener('click', () => {
+  $$('.sc-btn[data-dock]').forEach(x => x.classList.toggle('active', x === b));
+  dockState(b.dataset.dock);
+}));
+
+/* ═══════════════════════════════════════════════ boot ════ */
+renderHero('regression');
+drawSparks();
+new MutationObserver(() => drawSparks()).observe(document.body, { childList: true, subtree: true });
+</script>
+</body>
+</html>

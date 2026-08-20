@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 275" width="380" height="275" font-family="Georgia, serif">
+  <g stroke="#000000" stroke-width="2" fill="none">
+    <line x1="55" y1="45" x2="325" y2="230"/>
+    <line x1="55" y1="185" x2="325" y2="20"/>
+    <line x1="55" y1="45" x2="55" y2="185"/>
+    <line x1="325" y1="230" x2="325" y2="20"/>
+  </g>
+  <g stroke="#000000" stroke-width="1.2" fill="none">
+    <path d="M 55 69 A 24 24 0 0 0 76 57"/>
+    <path d="M 325 206 A 24 24 0 0 0 305 216"/>
+  </g>
+  <g font-size="14" font-style="italic" fill="#000000">
+    <text x="46" y="40" text-anchor="end">A</text>
+    <text x="46" y="196" text-anchor="end">B</text>
+    <text x="334" y="16" text-anchor="start">C</text>
+    <text x="334" y="245" text-anchor="start">D</text>
+    <text x="163" y="141" text-anchor="middle">E</text>
+  </g>
+  <g font-size="13" fill="#000000">
+    <text x="42" y="120" text-anchor="end">24</text>
+    <text x="118" y="72" text-anchor="middle">10</text>
+    <text x="236" y="187" text-anchor="middle">15</text>
+  </g>
+  <text x="190" y="263" text-anchor="middle" font-size="12" fill="#000000">Note: Figure not drawn to scale.</text>
+</svg>

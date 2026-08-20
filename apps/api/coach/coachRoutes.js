@@ -23,6 +23,15 @@ const { complete, isConfigured, parseJsonResponse } = require('./modelAdapter');
 const { assembleStudentContext } = require('./contextAssembler');
 const { getNotebook, saveNotebook, NOTEBOOK_CONTRACT } = require('./notebook');
 const { runObserver } = require('./observer');
+const {
+  ALLOWED_LINK_ROUTES,
+  BLOCKS_GUIDE,
+  sanitizeActions,
+  sanitizeBlocks,
+  hydrateBlocks,
+  sanitizeCommitments,
+  wrapLegacyBlocks,
+} = require('./blocks');
 const { toCanonicalSubcategoryId, getDisplayName } = require('../subcategoryTaxonomy');
 
 const router = express.Router();
@@ -62,18 +71,6 @@ const FEATURE_EFFORT = {
   // Background observer + notebook maintenance: nobody is waiting on it.
   observe: process.env.COACH_OBSERVE_REASONING_EFFORT || 'medium',
 };
-
-const ALLOWED_LINK_ROUTES = [
-  '/progress',
-  '/practice-exams',
-  '/predictive-exam',
-  '/subject-quizzes',
-  '/lectures',
-  '/flashcards',
-  '/word-bank',
-  '/concept-bank',
-  '/all-results',
-];
 
 const COACH_SYSTEM_PROMPT = `You are the student's SAT coach inside the UltraSAT app. Working name: "Coach".
 
@@ -146,38 +143,21 @@ async function writeLedger(db, uid, kind, result) {
   }
 }
 
-/** Validate/normalize model-proposed actions. Invalid ones are dropped. */
-function sanitizeActions(actions) {
-  if (!Array.isArray(actions)) return [];
-  const out = [];
-  for (const a of actions.slice(0, 2)) {
-    if (!a || typeof a !== 'object') continue;
-    if (a.type === 'quiz') {
-      const subcategoryId = toCanonicalSubcategoryId(a.subcategoryId);
-      if (!subcategoryId) continue;
-      const level = [1, 2, 3].includes(a.level) ? a.level : undefined;
-      out.push({
-        type: 'quiz',
-        subcategoryId,
-        level,
-        label: String(a.label || `Practice ${getDisplayName(subcategoryId)}`).slice(0, 60),
-      });
-    } else if (a.type === 'link') {
-      if (!ALLOWED_LINK_ROUTES.includes(a.route)) continue;
-      out.push({ type: 'link', route: a.route, label: String(a.label || 'Open').slice(0, 60) });
-    } else if (a.type === 'lesson') {
-      const subcategoryId = toCanonicalSubcategoryId(a.subcategoryId) || undefined;
-      const conceptId = typeof a.conceptId === 'string' && a.conceptId.length <= 80 ? a.conceptId : undefined;
-      if (!conceptId && !subcategoryId) continue;
-      out.push({
-        type: 'lesson',
-        conceptId,
-        subcategoryId,
-        label: String(a.label || '60-second lesson').slice(0, 60),
-      });
-    }
-  }
-  return out;
+// sanitizeActions now lives in ./blocks (shared with the observer and with
+// plan-block items) — imported above, behavior unchanged.
+
+/** Serialize a stored note for the client (Timestamp → ms). */
+function serializeNote(id, note) {
+  return {
+    id,
+    ...note,
+    createdAt:
+      note.createdAt && typeof note.createdAt.toMillis === 'function'
+        ? note.createdAt.toMillis()
+        : note.createdAt instanceof Date
+          ? note.createdAt.getTime()
+          : note.createdAt || null,
+  };
 }
 
 async function appendToThread(db, uid, entries) {
@@ -211,10 +191,33 @@ router.get('/notebook', verifyAuth, async (req, res) => {
   if (!db) return;
   try {
     const nb = await getNotebook(db, req.userId);
-    res.json({ text: nb.text, exists: nb.exists });
+    res.json({ text: nb.text, exists: nb.exists, commitments: nb.meta.commitments || [] });
   } catch (error) {
     console.error('[coach/notebook] failed:', error);
     res.status(500).json({ error: 'Failed to load notebook' });
+  }
+});
+
+/**
+ * GET /briefing — the newest proactive note (briefing / exam-note) with its
+ * blocks, for the Home hero and the HQ "Today's brief" card. Read-only and
+ * cheap: no model call ever happens here; if there is no recent note the
+ * client renders its mechanical Tier-2 fallback instead.
+ */
+router.get('/briefing', verifyAuth, async (req, res) => {
+  const db = requireDb(req, res);
+  if (!db) return;
+  try {
+    const snap = await db
+      .collection(`coachNotes/${req.userId}/notes`)
+      .orderBy('createdAt', 'desc')
+      .limit(8)
+      .get();
+    const doc = snap.docs.find((d) => ['briefing', 'exam-note'].includes(d.data().kind)) || null;
+    res.json({ note: doc ? serializeNote(doc.id, doc.data()) : null });
+  } catch (error) {
+    console.error('[coach/briefing] failed:', error);
+    res.status(500).json({ error: 'Failed to load briefing' });
   }
 });
 
@@ -237,7 +240,7 @@ router.post('/debrief', verifyAuth, async (req, res) => {
       .limit(1)
       .get();
     if (!existing.empty) {
-      return res.json({ note: { id: existing.docs[0].id, ...existing.docs[0].data() }, cached: true });
+      return res.json({ note: serializeNote(existing.docs[0].id, existing.docs[0].data()), cached: true });
     }
 
     if (!(await checkAndBumpQuota(db, uid, 'debrief'))) {
@@ -255,34 +258,42 @@ router.post('/debrief', verifyAuth, async (req, res) => {
       system:
         COACH_SYSTEM_PROMPT +
         `\n\nAllow-listed link routes: ${ALLOWED_LINK_ROUTES.join(', ')}` +
+        `\n\n${BLOCKS_GUIDE}` +
         `\n\n${NOTEBOOK_CONTRACT}`,
       messages: [
         {
           role: 'user',
           content:
             `NOTEBOOK (your memory of this student):\n${notebook.text}\n\n` +
+            `CURRENT COMMITMENTS (structured follow-ups you owe the student):\n${JSON.stringify(notebook.meta.commitments || [])}\n\n` +
             `STUDENT CONTEXT:\n${contextText}\n\n` +
-            `TASK: The student just finished the quiz described in "The quiz that just finished". Write the Coach's read: what the result means given their history — use the notebook to recall past struggles/recoveries and call out patterns ("you had this fixed in early July") — and what to do next. 2-4 sentences. Include at most 2 actions (a "lesson" action is ideal when a specific concept keeps missing). ALSO return the full updated notebook (fold in this quiz; dated observation lines; prune stale ones).\n` +
-            `Output JSON: { "message": "...", "actions": [...], "notebook": "<full updated notebook markdown>" }`,
+            `TASK: The student just finished the quiz described in "The quiz that just finished". Write the Coach's read: what the result means given their history — use the notebook to recall past struggles/recoveries and call out patterns ("you had this fixed in early July") — and what to do next. The "message" is 2-4 sentences; ALSO return "blocks" (verdict with evidence chips; add a "history" block when a Concept alert explains the misses). Include at most 2 actions (a "lesson" action is ideal when a specific concept keeps missing). ALSO return the full updated notebook (fold in this quiz; dated observation lines; prune stale ones) AND the full updated "commitments" list (add a dated re-check when you promise one, e.g. after a fix drill; prune done/stale ones; ≤ 6 items).\n` +
+            `Output JSON: { "message": "...", "actions": [...], "blocks": [...], "commitments": [{"label": "...", "dueDate": "YYYY-MM-DD", "source": "..."}], "notebook": "<full updated notebook markdown>" }`,
         },
       ],
       json: true,
-      maxTokens: 2200,
+      maxTokens: 3000,
     });
     await writeLedger(db, uid, 'debrief', result);
 
     const parsed = parseJsonResponse(result.text) || { message: result.text?.slice(0, 600) || '', actions: [] };
+    const commitments = sanitizeCommitments(parsed.commitments);
     if (typeof parsed.notebook === 'string' && parsed.notebook.trim()) {
-      await saveNotebook(db, uid, { text: parsed.notebook, meta: { lastObserveAt: Date.now() } }).catch((e) =>
-        console.error('[coach/debrief] notebook save failed:', e.message)
-      );
+      await saveNotebook(db, uid, {
+        text: parsed.notebook,
+        meta: { lastObserveAt: Date.now(), ...(commitments !== null ? { commitments } : {}) },
+      }).catch((e) => console.error('[coach/debrief] notebook save failed:', e.message));
     }
+    const message = String(parsed.message || '').slice(0, 1200);
+    let blocks = hydrateBlocks(sanitizeBlocks(parsed.blocks), data);
+    if (!blocks.length) blocks = wrapLegacyBlocks(message);
     const note = {
       kind: 'debrief',
       surfaceHint: 'smart-quiz-results',
       quizId,
-      message: String(parsed.message || '').slice(0, 1200),
+      message,
       actions: sanitizeActions(parsed.actions),
+      blocks,
       createdAt: new Date(),
       read: false,
     };
@@ -291,7 +302,7 @@ router.post('/debrief', verifyAuth, async (req, res) => {
       { role: 'assistant', surface: 'smart-quiz-results', quizId, content: note.message, actions: note.actions },
     ]);
 
-    res.json({ note: { id: ref.id, ...note } });
+    res.json({ note: serializeNote(ref.id, note) });
   } catch (error) {
     console.error('[coach/debrief] failed:', error);
     res.status(500).json({ error: 'Failed to generate debrief' });
@@ -388,6 +399,7 @@ router.post('/observe', verifyAuth, async (req, res) => {
       refId: note.refId,
       message: note.message,
       actions: sanitizeActions(note.actionsRaw),
+      blocks: Array.isArray(note.blocks) && note.blocks.length ? note.blocks : wrapLegacyBlocks(note.message),
       reasons: note.reasons,
       createdAt: note.createdAt,
       read: false,
@@ -396,7 +408,7 @@ router.post('/observe', verifyAuth, async (req, res) => {
     await appendToThread(db, uid, [
       { role: 'assistant', surface: stored.surfaceHint, content: stored.message, actions: stored.actions },
     ]);
-    res.json({ note: { id: ref.id, ...stored } });
+    res.json({ note: serializeNote(ref.id, stored) });
   } catch (error) {
     console.error('[coach/observe] failed:', error);
     res.status(500).json({ error: 'Observer failed' });

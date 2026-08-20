@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UltraSAT AI Coach — Information Sources &amp; the Missing Exam Data</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --hairline: #e1e0d9;
+    --border: rgba(11,11,11,0.10);
+    --blue: #2a78d6;
+    --aqua: #1baf7a;
+    --violet: #4a3aa7;
+    --critical: #d03b3b;
+    --warning: #fab219;
+    --good: #0ca30c;
+    --good-text: #006300;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 40px 28px 80px; }
+  header.doc { border-bottom: 1px solid var(--hairline); padding-bottom: 22px; margin-bottom: 30px; }
+  .kicker { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); font-weight: 600; margin: 0 0 10px; }
+  h1 { font-size: 30px; line-height: 1.25; margin: 0 0 10px; letter-spacing: -0.01em; }
+  .meta { color: var(--muted); font-size: 13px; }
+  h2 { font-size: 21px; margin: 46px 0 6px; letter-spacing: -0.005em; }
+  h2 .secno { color: var(--muted); font-weight: 600; margin-right: 8px; }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 10px 0; color: var(--ink); }
+  p.lede { font-size: 16.5px; }
+  .dim { color: var(--ink-2); }
+  .small { font-size: 13px; }
+  code, .mono {
+    font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    background: #f1f0ec;
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 1px 5px;
+    white-space: nowrap;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 18px 0;
+  }
+  .answerbox { border-left: 3px solid var(--blue); }
+  .figure {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 14px 8px;
+    margin: 20px 0 8px;
+    overflow-x: auto;
+  }
+  .figcap { font-size: 12.5px; color: var(--muted); margin: 6px 4px 26px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 13.5px; }
+  th { text-align: left; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 9px 12px; border-bottom: 1px solid var(--hairline); background: #f6f5f2; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; color: var(--ink); }
+  tr:last-child td { border-bottom: none; }
+  td .sub { color: var(--muted); font-size: 12px; display: block; margin-top: 2px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em; border-radius: 20px; padding: 1.5px 9px; vertical-align: 1px; white-space: nowrap; }
+  .chip.crit { color: #fff; background: var(--critical); }
+  .chip.warn { color: #5c4300; background: #fde6b0; border: 1px solid #e8c14e; }
+  .chip.ok { color: #fff; background: var(--good); }
+  .chip.info { color: #123c6e; background: #dce9fa; border: 1px solid #b7d3f6; }
+  .chip.ghost { color: var(--ink-2); background: #f1f0ec; border: 1px solid var(--hairline); }
+  .flag { font-weight: 700; }
+  .flag.f { color: var(--critical); }
+  ul.tight { margin: 8px 0; padding-left: 22px; }
+  ul.tight li { margin: 5px 0; }
+  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 800px) { .cols2 { grid-template-columns: 1fr; } }
+  footer.doc { margin-top: 56px; border-top: 1px solid var(--hairline); padding-top: 16px; color: var(--muted); font-size: 12.5px; }
+  svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  @media print {
+    body { background: #fff; }
+    .figure { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <p class="kicker">UltraSAT · AI Coach · Diagnostic report</p>
+  <h1>What the coach knows, where it looks, and why your practice-exam scores never reach it</h1>
+  <p class="meta">Prepared 2026-08-20 · Based on a direct read of the code in <span class="mono">apps/api/coach/</span>, <span class="mono">apps/web/src/coach/</span>, the exam pipeline, Firestore rules &amp; index config — every claim carries a file reference.</p>
+</header>
+
+<div class="card answerbox">
+  <h3 style="margin-top:0">The short answer</h3>
+  <p>The coach is behaving exactly as designed — the problem is that <strong>its only source of exam results is a lossy copy, and that copy's delivery pipe is broken in four stacked places</strong>. When you finish a practice exam, the app saves a rich, authoritative result (scaled Reading&nbsp;&amp;&nbsp;Writing + Math scores, per-question responses) to <span class="mono">users/{uid}/practiceExams</span> — <strong>and the coach never reads that collection</strong>. It only sees a summary event written to a separate <span class="mono">activityEvents</span> stream, and that event (1)&nbsp;most likely never makes it into the coach's context because the query that fetches recent events falls back to an arbitrary, effectively frozen 180-document sample when its required Firestore composite index is missing, (2)&nbsp;gets drowned out by the ~98 per-question events written in the same millisecond, (3)&nbsp;is raced by the results page, which pings the coach before the event is even committed, and (4)&nbsp;even in the best case carries no scaled total and no section scores the coach's context builder will render. On top of that, (5)&nbsp;your target score and exam date genuinely are unset in the profile. So the model — which is explicitly forbidden from inventing data — correctly says: <em>"the score and section breakdown are not available here, so I can't compare this result with your history or a target."</em></p>
+  <p class="dim" style="margin-bottom:0">Meanwhile quiz debriefs stay rich and specific because that surface hands the coach a direct pointer (<span class="mono">quizId</span>) and the assembler fetches the full quiz document + questions directly — no event stream involved. That asymmetry is the whole story.</p>
+</div>
+
+<h2><span class="secno">1</span>Every input the coach consumes — the complete map</h2>
+<p>There is exactly <strong>one place</strong> where everything the coach can possibly "know" is assembled: <span class="mono">apps/api/coach/contextAssembler.js</span> (<code>assembleStudentContext</code>). All four coach features — chat, post-quiz debrief, proactive observer notes, micro-lessons — call it, add their own extras (notebook, chat history, trigger reasons), and send the result as text to the model. The model's system prompt then hard-forbids referencing anything outside that text: <em>"You may reference ONLY facts present in the STUDENT CONTEXT below… If the context lacks what you need, say so plainly."</em> That grounding rule is why the coach openly announces missing data instead of guessing.</p>
+
+<div class="figure">
+<svg viewBox="0 0 1120 700" style="width:100%;height:auto;min-width:980px" role="img" aria-label="Data-flow map: app surfaces write to Firestore stores; the context assembler reads the coach pipeline stores and feeds the model; the authoritative exam records are never read.">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#898781"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#2a78d6"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#d03b3b"/>
+    </marker>
+  </defs>
+
+  <!-- column headers -->
+  <text x="120" y="22" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#898781" font-weight="600">SURFACES (WRITERS)</text>
+  <text x="412" y="22" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#898781" font-weight="600">FIRESTORE STORES</text>
+  <text x="712" y="22" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#898781" font-weight="600">ASSEMBLY (SERVER)</text>
+  <text x="1002" y="22" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#898781" font-weight="600">MODEL &amp; OUTPUT</text>
+
+  <!-- ============ COLUMN A: surfaces ============ -->
+  <g font-size="12">
+    <rect x="12" y="40" width="216" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="24" y="59" font-weight="600" fill="#0b0b0b">SmartQuiz results</text>
+    <text x="24" y="76" font-size="10.5" fill="#52514e">quiz finished → attempts + completion</text>
+
+    <rect x="12" y="96" width="216" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="24" y="115" font-weight="600" fill="#0b0b0b">Practice-exam controller</text>
+    <text x="24" y="132" font-size="10.5" fill="#52514e">exam finished → ~99 events in one batch</text>
+
+    <rect x="12" y="152" width="216" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="24" y="171" font-weight="600" fill="#0b0b0b">Concept drills · lessons</text>
+    <text x="24" y="188" font-size="10.5" fill="#52514e">drill_completed · lesson_viewed</text>
+
+    <rect x="12" y="208" width="216" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="24" y="227" font-weight="600" fill="#0b0b0b">Flashcards · word saver</text>
+    <text x="24" y="244" font-size="10.5" fill="#52514e">flashcard_session · word_saved</text>
+
+    <rect x="12" y="264" width="216" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="24" y="283" font-weight="600" fill="#0b0b0b">Dashboard / Planner</text>
+    <text x="24" y="300" font-size="10.5" fill="#52514e">ExamDateCard → targetScore, examDate</text>
+
+    <rect x="12" y="320" width="216" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="24" y="339" font-weight="600" fill="#0b0b0b">Coach UI (dock · page)</text>
+    <text x="24" y="356" font-size="10.5" fill="#52514e">chat · observe pings · debrief requests</text>
+
+    <rect x="12" y="376" width="216" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="24" y="395" font-weight="600" fill="#0b0b0b">All-results page</text>
+    <text x="24" y="412" font-size="10.5" fill="#52514e">"Hide from coach" → coachExcluded flag</text>
+  </g>
+
+  <!-- ============ COLUMN B: stores ============ -->
+  <!-- coach pipeline container -->
+  <rect x="286" y="40" width="252" height="452" rx="10" fill="none" stroke="#2a78d6" stroke-width="1.4"/>
+  <text x="300" y="60" font-size="10.5" letter-spacing="1.2" fill="#2a78d6" font-weight="700">COACH PIPELINE — READ BY THE COACH</text>
+
+  <g font-size="12">
+    <rect x="298" y="70" width="228" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="88" font-weight="600" fill="#0b0b0b">users/{uid} profile</text>
+    <text x="308" y="105" font-size="10.5" fill="#52514e">name · targetScore · examDate · tier</text>
+
+    <rect x="298" y="126" width="228" height="56" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="144" font-weight="600" fill="#0b0b0b">activityEvents — Tier 1</text>
+    <text x="308" y="160" font-size="10.5" fill="#52514e">append-only log: question_attempt,</text>
+    <text x="308" y="174" font-size="10.5" fill="#52514e">quiz/exam/drill_completed, lessons…</text>
+
+    <rect x="298" y="192" width="228" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="210" font-weight="600" fill="#0b0b0b">skillState/* · conceptState/*</text>
+    <text x="308" y="227" font-size="10.5" fill="#52514e">Tier 2: accuracy, trends, regressions</text>
+
+    <rect x="298" y="248" width="228" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="266" font-weight="600" fill="#0b0b0b">habits/summary · vocabState</text>
+    <text x="308" y="283" font-size="10.5" fill="#52514e">Tier 2: streak, minutes, words saved</text>
+
+    <rect x="298" y="304" width="228" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="322" font-weight="600" fill="#0b0b0b">coachNotebook/{uid}</text>
+    <text x="308" y="339" font-size="10.5" fill="#52514e">Tier 3: LLM-written memory, ≤7k chars</text>
+
+    <rect x="298" y="360" width="228" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="378" font-weight="600" fill="#0b0b0b">coachThreads/{uid}/messages</text>
+    <text x="308" y="395" font-size="10.5" fill="#52514e">the one conversation, all surfaces</text>
+
+    <rect x="298" y="416" width="228" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="434" font-weight="600" fill="#0b0b0b">smartQuizzes/{id} + questions</text>
+    <text x="308" y="451" font-size="10.5" fill="#52514e">full quiz detail when quizId is passed</text>
+  </g>
+
+  <!-- authoritative records (never read) -->
+  <rect x="286" y="516" width="252" height="150" rx="10" fill="#fdf4f4" stroke="#d03b3b" stroke-width="1.4" stroke-dasharray="6 4"/>
+  <text x="300" y="536" font-size="10.5" letter-spacing="1" fill="#d03b3b" font-weight="700">✕ AUTHORITATIVE — NEVER READ BY COACH</text>
+  <g font-size="12">
+    <rect x="298" y="546" width="228" height="60" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="564" font-weight="600" fill="#0b0b0b">users/{uid}/practiceExams/*</text>
+    <text x="308" y="580" font-size="10.5" fill="#52514e">scaled RW &amp; Math scores, titles, dates,</text>
+    <text x="308" y="594" font-size="10.5" fill="#52514e">isPartial + per-question /responses</text>
+
+    <rect x="298" y="612" width="228" height="46" rx="7" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="308" y="630" font-weight="600" fill="#0b0b0b">questionAttempts · examProgress</text>
+    <text x="308" y="647" font-size="10.5" fill="#52514e">lessonProgress · studyPlan · rankings…</text>
+  </g>
+
+  <!-- ============ COLUMN C: assembler ============ -->
+  <rect x="590" y="40" width="248" height="336" rx="10" fill="#fcfcfb" stroke="#2a78d6" stroke-width="1.4"/>
+  <text x="604" y="62" font-size="12.5" font-weight="700" fill="#0b0b0b">Context assembler</text>
+  <text x="604" y="78" font-size="10.5" fill="#898781">contextAssembler.js → STUDENT CONTEXT</text>
+  <g font-size="11" fill="#52514e">
+    <text x="604" y="102">· Student: name, target, exam date</text>
+    <text x="604" y="121">· Habits: streak, active days, minutes</text>
+    <text x="604" y="140">· Vocabulary counts</text>
+    <text x="604" y="159">· Skill state: every practiced subcategory</text>
+    <text x="616" y="175" font-size="10" fill="#898781">last-10 %, lifetime %, trend, recency</text>
+    <text x="604" y="194">· Concept alerts: ≤10 flagged</text>
+    <text x="616" y="210" font-size="10" fill="#898781">regressions, miss-streaks, error patterns</text>
+    <text x="604" y="229" font-weight="700" fill="#0b0b0b">· Recent activity: ≤8 completions</text>
+    <text x="616" y="245" font-size="10" fill="#d03b3b">from last-20-events window — the broken pipe</text>
+    <text x="604" y="264">· Quiz detail: meta + ≤30 questions</text>
+    <text x="616" y="280" font-size="10" fill="#898781">only when the surface passes a quizId</text>
+  </g>
+  <text x="604" y="308" font-size="11" fill="#52514e">Feature extras appended per call:</text>
+  <text x="604" y="325" font-size="10.5" fill="#52514e">+ notebook text · + chat tail (last 12, chat)</text>
+  <text x="604" y="341" font-size="10.5" fill="#52514e">+ trigger &amp; significance reasons (observer)</text>
+  <text x="604" y="357" font-size="10.5" fill="#52514e">+ current route (chat)</text>
+
+  <rect x="590" y="392" width="248" height="104" rx="10" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+  <text x="604" y="414" font-size="12.5" font-weight="700" fill="#0b0b0b">Observer significance rules</text>
+  <text x="604" y="430" font-size="10.5" fill="#898781">observer.js — mechanical, no LLM</text>
+  <g font-size="10.5" fill="#52514e">
+    <text x="604" y="449">exam_completed → always significant</text>
+    <text x="604" y="465">session_start → gap ≥3d · weekly due ·</text>
+    <text x="604" y="480">new regression · exam ≤14d · first briefing</text>
+  </g>
+
+  <!-- ============ COLUMN D: model ============ -->
+  <g>
+    <rect x="884" y="40" width="224" height="88" rx="10" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="898" y="62" font-size="12.5" font-weight="700" fill="#0b0b0b">System prompt</text>
+    <g font-size="10.5" fill="#52514e">
+      <text x="898" y="80">grounding: cite only STUDENT CONTEXT</text>
+      <text x="898" y="95">voice · JSON contract · allow-listed</text>
+      <text x="898" y="110">routes · notebook-maintenance contract</text>
+    </g>
+
+    <rect x="884" y="142" width="224" height="88" rx="10" fill="#fcfcfb" stroke="#4a3aa7" stroke-width="1.4"/>
+    <text x="898" y="164" font-size="12.5" font-weight="700" fill="#0b0b0b">LLM — gpt-5.6-luna (OpenAI)</text>
+    <g font-size="10.5" fill="#52514e">
+      <text x="898" y="182">modelAdapter.js · JSON mode · provider-</text>
+      <text x="898" y="197">agnostic · effort: chat low, others medium</text>
+      <text x="898" y="212">output budget floored to 25k (reasoning)</text>
+    </g>
+
+    <rect x="884" y="244" width="224" height="86" rx="10" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+    <text x="898" y="266" font-size="12.5" font-weight="700" fill="#0b0b0b">Guardrails</text>
+    <g font-size="10.5" fill="#52514e">
+      <text x="898" y="284">daily quotas by tier (coachUsage)</text>
+      <text x="898" y="299">tokenLedger cost log · action sanitizer:</text>
+      <text x="898" y="314">canonical subcats, allow-listed links only</text>
+    </g>
+
+    <rect x="884" y="344" width="224" height="100" rx="10" fill="#fcfcfb" stroke="#1baf7a" stroke-width="1.4"/>
+    <text x="898" y="366" font-size="12.5" font-weight="700" fill="#0b0b0b">Output</text>
+    <g font-size="10.5" fill="#52514e">
+      <text x="898" y="384">message + ≤2 tappable actions</text>
+      <text x="898" y="399">writes: coachNotes · coachThreads ·</text>
+      <text x="898" y="414">notebook rewrite (memory update)</text>
+      <text x="898" y="432">→ renders in dock, coach page, results</text>
+    </g>
+  </g>
+
+  <!-- ============ ARROWS ============ -->
+  <!-- surfaces to events -->
+  <path d="M 228 63 C 262 63 262 150 296 152" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <path d="M 228 119 C 260 119 262 148 296 150" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <path d="M 228 175 C 262 175 262 158 296 156" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <path d="M 228 231 C 264 231 264 166 296 162" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <!-- dashboard to profile -->
+  <path d="M 228 287 C 268 287 258 96 296 93" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <!-- coach UI to assembler (via API) -->
+  <path d="M 228 343 C 420 343 400 480 588 470" fill="none" stroke="#898781" stroke-width="1.4" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+  <text x="392" y="500" font-size="10" fill="#898781">chat / debrief / observe API calls</text>
+  <!-- all-results to events -->
+  <path d="M 228 399 C 262 399 262 186 297 178" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <!-- exam controller also writes practiceExams -->
+  <path d="M 228 128 C 268 132 250 560 296 570" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <!-- events fold into tier2 -->
+  <path d="M 412 182 L 412 190" fill="none" stroke="#2a78d6" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <text x="422" y="190" font-size="9.5" fill="#2a78d6">fold</text>
+  <!-- pipeline to assembler -->
+  <path d="M 538 93 C 566 93 562 120 588 128" fill="none" stroke="#2a78d6" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <path d="M 526 154 C 560 154 560 210 588 224" fill="none" stroke="#d03b3b" stroke-width="1.8" marker-end="url(#arrR)"/>
+  <text x="543" y="196" font-size="10" font-weight="700" fill="#d03b3b">⚠ F1–F4</text>
+  <path d="M 526 215 C 562 215 560 164 588 160" fill="none" stroke="#2a78d6" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <path d="M 526 271 C 566 271 560 122 588 118" fill="none" stroke="#2a78d6" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <path d="M 526 327 C 564 327 560 318 588 316" fill="none" stroke="#2a78d6" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <path d="M 526 383 C 564 383 560 330 588 330" fill="none" stroke="#2a78d6" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <path d="M 526 439 C 566 439 558 274 588 268" fill="none" stroke="#2a78d6" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <!-- practiceExams NOT read -->
+  <path d="M 538 576 C 640 576 660 500 700 380" fill="none" stroke="#d03b3b" stroke-width="1.8" stroke-dasharray="7 5" marker-end="url(#arrR)"/>
+  <text x="628" y="560" font-size="10.5" font-weight="700" fill="#d03b3b">✕ no read path exists</text>
+  <text x="628" y="574" font-size="10" fill="#d03b3b">(the scores live here)</text>
+  <!-- assembler to model -->
+  <path d="M 838 130 C 862 130 862 100 882 96" fill="none" stroke="#898781" stroke-width="1.6" marker-end="url(#arr)"/>
+  <path d="M 838 208 C 862 208 860 190 882 186" fill="none" stroke="#898781" stroke-width="1.6" marker-end="url(#arr)"/>
+  <path d="M 996 128 L 996 140" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <path d="M 996 230 L 996 242" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+  <path d="M 996 330 L 996 342" fill="none" stroke="#898781" stroke-width="1.4" marker-end="url(#arr)"/>
+</svg>
+<p class="figcap">Figure 1 — The complete information map. Blue-framed stores feed the coach; the red dashed group holds the app's authoritative records — including every saved practice exam with its scaled section scores — which the coach has no code path to read. The red arrow marks the one pipe exam data is supposed to travel through, broken at four points (§3).</p>
+</div>
+
+<h3>1.1 — Everything in the coach's context, with its exact limits</h3>
+<p class="dim">This table is the full inventory: if it is not on this list, the coach cannot know it, and the prompt instructs the model to say so.</p>
+<table>
+  <thead><tr><th>#</th><th>Input</th><th>Source (Firestore / code)</th><th>What the model actually receives</th><th>Hard limits</th></tr></thead>
+  <tbody>
+    <tr><td class="num">1</td><td><strong>Identity &amp; goal</strong></td><td><span class="mono">users/{uid}</span></td><td>Display name, target score, exam date — rendered as <em>"not set"</em> when absent (your case)</td><td>3 fields</td></tr>
+    <tr><td class="num">2</td><td><strong>Study habits</strong></td><td><span class="mono">users/{uid}/habits/summary</span> (Tier 2)</td><td>Streak days, active days in last 14, total tracked minutes</td><td>Summary only<span class="sub">streak moves only on completions — no session_start event is ever logged</span></td></tr>
+    <tr><td class="num">3</td><td><strong>Vocabulary</strong></td><td><span class="mono">users/{uid}/vocabState/summary</span> (Tier 2)</td><td>Words saved, flashcard session count</td><td>2 numbers</td></tr>
+    <tr><td class="num">4</td><td><strong>Skill state</strong></td><td><span class="mono">users/{uid}/skillState/*</span> (Tier 2)</td><td>Per subcategory: last-10 accuracy, lifetime accuracy, attempts, trend, days since practiced — sorted weakest first. This is where <em>"Linear Functions: 0% over 17 questions"</em> comes from</td><td>All practiced subcategories</td></tr>
+    <tr><td class="num">5</td><td><strong>Concept alerts</strong></td><td><span class="mono">users/{uid}/conceptState/*</span> (Tier 2)</td><td>Concepts with a regression flag or miss-streak ≥ 2, plus dominant error pattern</td><td>Max 10</td></tr>
+    <tr><td class="num">6</td><td><strong>Recent activity</strong> <span class="chip crit">BROKEN</span></td><td><span class="mono">activityEvents</span> (Tier 1)</td><td>Up to 8 completion lines (quiz / exam / drill / flashcards / lesson) taken from the 20 newest events. Exam lines render as <span class="mono">correct/total</span> + scaled total <em>only if</em> <span class="mono">scores.total</span> exists — it never does (§3)</td><td>20-event window; 60 over-fetch; 180-doc unordered fallback</td></tr>
+    <tr><td class="num">7</td><td><strong>Quiz detail</strong></td><td><span class="mono">smartQuizzes/{quizId}</span> + <span class="mono">questions/*</span></td><td>Score, level, pass state, and per-question correct/missed with a 140-char snippet — only when the surface passes a <span class="mono">quizId</span> (debrief, in-context chat)</td><td>≤ 30 questions</td></tr>
+    <tr><td class="num">8</td><td><strong>Notebook memory</strong></td><td><span class="mono">coachNotebook/{uid}</span> (Tier 3)</td><td>LLM-maintained markdown: goals, story so far, dated observations, commitments, preferences. Rewritten by the model itself on every debrief/observer call</td><td>≤ 7,000 chars</td></tr>
+    <tr><td class="num">9</td><td><strong>Conversation tail</strong></td><td><span class="mono">coachThreads/{uid}/messages</span></td><td>Recent chat turns (chat feature only)</td><td>Last 12</td></tr>
+    <tr><td class="num">10</td><td><strong>Situation</strong></td><td>Request body</td><td>Current route (chat) · trigger + mechanical significance reasons (observer) · the student's typed message</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h3>1.2 — The machinery around the model</h3>
+<div class="cols2">
+  <div class="card" style="margin:6px 0">
+    <p style="margin-top:0"><strong>Model &amp; prompt.</strong> All coach text is generated by <strong>OpenAI <span class="mono">gpt-5.6-luna</span></strong> (default in <span class="mono">config/aiModel.js</span>; no <span class="mono">COACH_PRIMARY_*</span> overrides are set in your <span class="mono">.env</span>), called through the provider-agnostic <span class="mono">modelAdapter.js</span> in JSON mode (your <span class="mono">.env</span> pins <span class="mono">AI_MODEL=gpt-5.6-luna</span>). Reasoning effort is <em>low</em> for chat, <em>medium</em> for debrief, observer and micro-lessons; routes request 1,200–2,200 output tokens but <span class="mono">config/aiModel.js</span> floors the budget at 25k for the reasoning model — brevity is enforced by the prompt's "2–4 sentences" rule instead. The system prompt fixes the persona and the grounding rule, and every reply must be a JSON object containing the message plus up to two actions.</p>
+    <p style="margin-bottom:0"><strong>Action sanitizer.</strong> Model-proposed buttons are validated server-side: quiz targets must resolve to canonical subcategory ids, links must be on a 9-route allow-list, lessons need a concept or subcategory. Anything else is silently dropped — the coach can never navigate on its own.</p>
+  </div>
+  <div class="card" style="margin:6px 0">
+    <p style="margin-top:0"><strong>Cost &amp; quota guardrails.</strong> Every call decrements a per-user daily counter in <span class="mono">coachUsage/{uid}</span> and logs token usage to <span class="mono">tokenLedger</span>. Daily caps by tier:</p>
+    <table style="margin-top:8px">
+      <thead><tr><th>Feature</th><th>Free</th><th>Plus</th><th>Max</th></tr></thead>
+      <tbody>
+        <tr><td>Chat</td><td class="num">3</td><td class="num">60</td><td class="num">100</td></tr>
+        <tr><td>Debrief</td><td class="num">5</td><td class="num">40</td><td class="num">60</td></tr>
+        <tr><td>Micro-lesson</td><td class="num">1</td><td class="num">12</td><td class="num">20</td></tr>
+        <tr><td>Observer</td><td class="num">2</td><td class="num">10</td><td class="num">15</td></tr>
+      </tbody>
+    </table>
+    <p class="small dim" style="margin-bottom:0">Insignificant observer pings are free (no model call). An exhausted quota returns HTTP 429 and a friendly upsell/notice in the UI.</p>
+  </div>
+</div>
+
+<h2><span class="secno">2</span>What the coach can never see — by design or by omission</h2>
+<p>The design doc (<span class="mono">AI_COACH_DESIGN.md</span> §3) is explicit that <em>"all numbers any UI shows should come from Tier 2 — dashboards and coach read the same state, so the coach never contradicts the page it's sitting on."</em> The current implementation hasn't reached that bar: the exam results pages read the authoritative <span class="mono">practiceExams</span> store directly, while the coach reads only its own event stream. The two views can — and in your case do — disagree.</p>
+<table>
+  <thead><tr><th>Invisible to the coach</th><th>Where it lives</th><th>Consequence</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Saved practice-exam results</strong> — scaled RW &amp; Math section scores, exam titles, dates, partial-sitting flags, per-question responses</td>
+      <td><span class="mono">users/{uid}/practiceExams/{id}</span> (+ <span class="mono">/responses</span>)</td>
+      <td>The single largest gap. The exact numbers the student sees on the results screen — <em>"your score"</em> — physically cannot appear in a coach message. The coach only ever gets the event-stream summary, which arrives broken (§3)</td>
+    </tr>
+    <tr>
+      <td>The design-doc's planned <span class="mono">examReadiness</span> tier — estimated score per section, gap-to-target, pacing</td>
+      <td>Not built; a UI-side estimate exists in <span class="mono">utils/scoring.js</span> (<span class="mono">estimatedSATFromSkillState</span>)</td>
+      <td>Coach cannot say "you're tracking ~1150 vs your 1300 target" even when target is set</td>
+    </tr>
+    <tr>
+      <td>Exam-progress (in-flight sittings), lesson progress, study plan, flashcard deck contents, rankings/percentiles, question stats</td>
+      <td><span class="mono">examProgress</span>, <span class="mono">lessonProgressServices</span>, <span class="mono">studyPlanServices</span>, <span class="mono">rankingServices</span>, <span class="mono">questionStats</span></td>
+      <td>Fine for now — mostly out of scope for coaching v1, but worth knowing they're absent</td>
+    </tr>
+    <tr>
+      <td>Results the student explicitly hid (<span class="chip ghost">Hidden from coach</span> toggle)</td>
+      <td><span class="mono">coachExcluded</span> flag on events; Tier 2 rebuilt without them</td>
+      <td>Intentional and working as designed — exclusion behaves like a delete for the coach, reversibly</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><span class="secno">3</span>Why exam information never arrives — the pipe, traced end to end</h2>
+<p>Here is the exact journey a finished practice exam takes toward the coach, with each failure point marked. Note the fork at step 2: the <em>same function</em> writes the authoritative result (which the results page shows perfectly) and emits the coach's copy (which breaks).</p>
+
+<div class="figure">
+<svg viewBox="0 0 1064 660" style="width:100%;height:auto;min-width:920px" role="img" aria-label="Six-step trace of exam data from submission to the coach model, with five failure points marked.">
+  <defs>
+    <marker id="arrD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#898781"/>
+    </marker>
+  </defs>
+  <!-- spine -->
+  <line x1="34" y1="30" x2="34" y2="596" stroke="#e1e0d9" stroke-width="2"/>
+
+  <!-- STEP 1 -->
+  <circle cx="34" cy="52" r="13" fill="#fcfcfb" stroke="#898781" stroke-width="1.5"/><text x="34" y="56.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0b0b0b">1</text>
+  <rect x="62" y="22" width="800" height="66" rx="9" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+  <text x="76" y="44" font-size="13" font-weight="700" fill="#0b0b0b">Student submits — controller scores the sitting <tspan font-weight="400" fill="#898781">(PracticeExamController.jsx)</tspan></text>
+  <text x="76" y="62" font-size="11.5" fill="#52514e">Computes correct/total and scaled section scores, then builds <tspan font-family="monospace">examSummary.scores = { readingWriting, math }</tspan> —</text>
+  <text x="76" y="78" font-size="11.5" fill="#52514e">the <tspan font-weight="700">total</tspan> the event contract expects is never set (the helper that computes it, <tspan font-family="monospace">examScores()</tspan>, is not used here).</text>
+  <rect x="878" y="36" width="172" height="38" rx="8" fill="#fdf4f4" stroke="#d03b3b"/>
+  <text x="892" y="52" font-size="11" font-weight="700" fill="#d03b3b">⚠ F4a — schema drift</text>
+  <text x="892" y="67" font-size="10" fill="#52514e">scores.total never written</text>
+
+  <!-- STEP 2 -->
+  <circle cx="34" cy="150" r="13" fill="#fcfcfb" stroke="#898781" stroke-width="1.5"/><text x="34" y="154.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0b0b0b">2</text>
+  <rect x="62" y="112" width="800" height="80" rx="9" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+  <text x="76" y="134" font-size="13" font-weight="700" fill="#0b0b0b">Save forks into two stores <tspan font-weight="400" fill="#898781">(userExamServices.saveComprehensiveExamResult)</tspan></text>
+  <text x="76" y="152" font-size="11.5" fill="#0b0b0b"><tspan font-weight="700" fill="#006300">✓ Authoritative:</tspan> <tspan font-family="monospace">users/{uid}/practiceExams</tspan> doc + per-question responses — awaited, reliable, what the results page shows.</text>
+  <text x="76" y="169" font-size="11.5" fill="#0b0b0b"><tspan font-weight="700" fill="#d03b3b">⚠ Coach copy:</tspan> fire-and-forget batch of ~98 question_attempt events + 1 exam_completed into <tspan font-family="monospace">activityEvents</tspan>,</text>
+  <text x="76" y="185" font-size="11.5" fill="#52514e">all stamped with the same-millisecond <tspan font-family="monospace">clientTs</tspan>. Nobody waits for it; failures only reach the browser console.</text>
+  <rect x="878" y="132" width="172" height="38" rx="8" fill="#fdf4f4" stroke="#d03b3b"/>
+  <text x="892" y="148" font-size="11" font-weight="700" fill="#d03b3b">⚠ F2/F3 seeded here</text>
+  <text x="892" y="163" font-size="10" fill="#52514e">flood + unawaited write</text>
+
+  <!-- STEP 3 -->
+  <circle cx="34" cy="252" r="13" fill="#fcfcfb" stroke="#898781" stroke-width="1.5"/><text x="34" y="256.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0b0b0b">3</text>
+  <rect x="62" y="216" width="800" height="72" rx="9" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+  <text x="76" y="238" font-size="13" font-weight="700" fill="#0b0b0b">Results page pings the coach immediately <tspan font-weight="400" fill="#898781">(ExamResults.jsx → POST /api/coach/observe)</tspan></text>
+  <text x="76" y="256" font-size="11.5" fill="#52514e">As soon as the exam renders, <tspan font-family="monospace">coach.observe('exam_completed', examId)</tspan> fires. The event batch from step 2 may still be</text>
+  <text x="76" y="272" font-size="11.5" fill="#52514e">committing, and the Tier-2 fold (~99 sequential transactions) is certainly unfinished — the observer can look before the data exists.</text>
+  <rect x="878" y="230" width="172" height="38" rx="8" fill="#fff8e8" stroke="#e8c14e"/>
+  <text x="892" y="246" font-size="11" font-weight="700" fill="#5c4300">⚠ F3 — race condition</text>
+  <text x="892" y="261" font-size="10" fill="#52514e">observe vs. event commit</text>
+
+  <!-- STEP 4 -->
+  <circle cx="34" cy="354" r="13" fill="#fcfcfb" stroke="#898781" stroke-width="1.5"/><text x="34" y="358.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0b0b0b">4</text>
+  <rect x="62" y="318" width="800" height="80" rx="9" fill="#fcfcfb" stroke="#d03b3b" stroke-width="1.4"/>
+  <text x="76" y="340" font-size="13" font-weight="700" fill="#0b0b0b">Assembler fetches "recent events" <tspan font-weight="400" fill="#898781">(contextAssembler.js)</tspan></text>
+  <text x="76" y="358" font-size="11.5" fill="#52514e">Primary query — <tspan font-family="monospace">where userId == · orderBy clientTs desc · limit 60</tspan> — needs a <tspan font-weight="700">composite index</tspan>. None is defined in</text>
+  <text x="76" y="374" font-size="11.5" fill="#52514e"><tspan font-family="monospace">firestore.indexes.json</tspan> (and the repo deliberately avoids composite indexes elsewhere). On failure it silently falls back to an</text>
+  <text x="76" y="390" font-size="11.5" fill="#52514e"><tspan font-weight="700">unordered</tspan> <tspan font-family="monospace">limit(180)</tspan> fetch = first 180 docs by random ID — a <tspan font-weight="700">frozen sample</tspan> once you have &gt;180 events (≈ two exams).</text>
+  <rect x="878" y="336" width="172" height="44" rx="8" fill="#fdf4f4" stroke="#d03b3b"/>
+  <text x="892" y="352" font-size="11" font-weight="700" fill="#d03b3b">⚠ F1 — likely root cause</text>
+  <text x="892" y="366" font-size="10" fill="#52514e">missing index → frozen,</text>
+  <text x="892" y="378" font-size="10" fill="#52514e">arbitrary 180-event sample</text>
+
+  <!-- STEP 5 -->
+  <circle cx="34" cy="462" r="13" fill="#fcfcfb" stroke="#898781" stroke-width="1.5"/><text x="34" y="466.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0b0b0b">5</text>
+  <rect x="62" y="426" width="800" height="80" rx="9" fill="#fcfcfb" stroke="rgba(11,11,11,0.18)"/>
+  <text x="76" y="448" font-size="13" font-weight="700" fill="#0b0b0b">"Recent activity" is rendered — and the exam line loses twice more</text>
+  <text x="76" y="466" font-size="11.5" fill="#52514e"><tspan font-weight="700">Flood:</tspan> only the top 20 of 60 fetched events are kept, then filtered to completions. After an exam, the newest ~99 events are its own</text>
+  <text x="76" y="482" font-size="11.5" fill="#52514e">question_attempts (same-ms ties broken by random doc ID) — <tspan font-family="monospace">exam_completed</tspan> can be crowded out even with the index in place.</text>
+  <text x="76" y="498" font-size="11.5" fill="#52514e"><tspan font-weight="700">Rendering:</tspan> a surviving line shows only <tspan font-family="monospace">correct/total</tspan> — scaled total needs the never-written <tspan font-family="monospace">scores.total</tspan>; sections never render.</text>
+  <rect x="878" y="444" width="172" height="44" rx="8" fill="#fdf4f4" stroke="#d03b3b"/>
+  <text x="892" y="460" font-size="11" font-weight="700" fill="#d03b3b">⚠ F2 + F4b</text>
+  <text x="892" y="474" font-size="10" fill="#52514e">attempts crowd completions;</text>
+  <text x="892" y="486" font-size="10" fill="#52514e">sections never rendered</text>
+
+  <!-- STEP 6 -->
+  <circle cx="34" cy="562" r="13" fill="#eef7ee" stroke="#0ca30c" stroke-width="1.5"/><text x="34" y="566.5" text-anchor="middle" font-size="12" font-weight="700" fill="#006300">6</text>
+  <rect x="62" y="534" width="800" height="62" rx="9" fill="#fcfcfb" stroke="#0ca30c" stroke-width="1.2"/>
+  <text x="76" y="556" font-size="13" font-weight="700" fill="#0b0b0b">The model answers truthfully about a blind spot</text>
+  <text x="76" y="574" font-size="11.5" fill="#52514e">It receives "TRIGGER: exam_completed" but a context with no usable exam result, and grounding forbids invention — so it writes:</text>
+  <text x="76" y="590" font-size="11.5" font-style="italic" fill="#0b0b0b">"You finished another full practice exam, but the score and section breakdown are not available here…" — your screenshots, verbatim.</text>
+
+  <!-- connecting arrows -->
+  <line x1="34" y1="65" x2="34" y2="135" stroke="#898781" stroke-width="1.4" marker-end="url(#arrD)"/>
+  <line x1="34" y1="163" x2="34" y2="237" stroke="#898781" stroke-width="1.4" marker-end="url(#arrD)"/>
+  <line x1="34" y1="265" x2="34" y2="339" stroke="#898781" stroke-width="1.4" marker-end="url(#arrD)"/>
+  <line x1="34" y1="367" x2="34" y2="447" stroke="#898781" stroke-width="1.4" marker-end="url(#arrD)"/>
+  <line x1="34" y1="475" x2="34" y2="547" stroke="#898781" stroke-width="1.4" marker-end="url(#arrD)"/>
+</svg>
+<p class="figcap">Figure 2 — The exam-to-coach pipeline. The authoritative branch (step 2, top line) works; every failure sits on the coach's copy. F1 alone is sufficient to produce your symptom; F2–F4 ensure the outcome even if F1 were fixed in isolation.</p>
+</div>
+
+<h3>3.1 — The five failures, with evidence</h3>
+<table>
+  <thead><tr><th></th><th>Failure</th><th>Evidence in code</th><th>Impact</th><th>Certainty</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><span class="flag f">F1</span></td>
+      <td><strong>Missing composite index → frozen fallback sample.</strong> The recent-events query (<span class="mono">userId ==</span> + <span class="mono">orderBy clientTs desc</span>) requires a composite index. The fallback fetches 180 docs <em>unordered</em> (i.e. by random document ID) and sorts client-side — once a user has &gt;180 events, new events rarely enter that fixed sample, so the coach's "recent activity" stops updating. Each full exam adds ~99 events, so you crossed 180 long ago.</td>
+      <td><span class="mono">contextAssembler.js:59–74</span>; <span class="mono">firestore.indexes.json</span> (only <span class="mono">questions</span> indexes; header says indexes are created by hand); <span class="mono">rebuildTier2.js:44–48</span> notes the repo avoids composite indexes</td>
+      <td>Recent quizzes <em>and</em> exams invisible; coach context goes stale</td>
+      <td><span class="chip warn">VERIFY IN CONSOLE</span><span class="sub">everything in code points here; confirm the index's absence in Firebase console (§4.3)</span></td>
+    </tr>
+    <tr>
+      <td><span class="flag f">F2</span></td>
+      <td><strong>Completion events drown in attempt events.</strong> The window keeps the 20 newest of 60 fetched events; an exam writes ~98 attempts + 1 completion in the same millisecond, with ties ordered by random doc ID. The one event the coach needs is the one most likely to be crowded out.</td>
+      <td><span class="mono">contextAssembler.js:55–77</span> (<span class="mono">RECENT_EVENT_WINDOW=20</span>, ×3 over-fetch); <span class="mono">events.js:99–140</span> (one batch, per-doc <span class="mono">Date.now()</span>)</td>
+      <td>Exam/quiz history thin or absent even with the index present</td>
+      <td><span class="chip crit">CONFIRMED IN CODE</span></td>
+    </tr>
+    <tr>
+      <td><span class="flag f">F3</span></td>
+      <td><strong>Observer races the event write.</strong> The results page pings <span class="mono">observe('exam_completed')</span> on load, while the event batch is fire-and-forget and the Tier-2 fold runs ~99 sequential transactions after it. First-look context can predate the exam entirely.</td>
+      <td><span class="mono">ExamResults.jsx:294–296</span>; <span class="mono">userExamServices.js:293–295</span> (<span class="mono">.catch</span> only); <span class="mono">events.js:133–138</span></td>
+      <td>The one note written <em>at the moment that matters most</em> is the least informed</td>
+      <td><span class="chip crit">CONFIRMED IN CODE</span></td>
+    </tr>
+    <tr>
+      <td><span class="flag f">F4</span></td>
+      <td><strong>Score fields lost between contract, writer and renderer.</strong> The event contract expects <span class="mono">scores: { readingWriting, math, total }</span>; the controller writes only <span class="mono">{ readingWriting, math }</span>; the assembler renders only <span class="mono">scores.total</span> — so a scaled score can never appear, and section scores exist in the payload but are never rendered. Best case the model sees "Practice exam — 56/98".</td>
+      <td><span class="mono">PracticeExamController.jsx:672–675</span>; <span class="mono">contextAssembler.js:162–166</span>; contract in <span class="mono">eventTypes.js:50–52</span>; unused helper <span class="mono">utils/scoring.js → examScores().total</span></td>
+      <td>Even a perfectly delivered event yields no score, no section breakdown</td>
+      <td><span class="chip crit">CONFIRMED IN CODE</span></td>
+    </tr>
+    <tr>
+      <td><span class="flag f">F5</span></td>
+      <td><strong>Target score &amp; exam date are genuinely unset.</strong> The assembler reads <span class="mono">users/{uid}.targetScore/.examDate</span>; the coach-page goal card reads the same fields and shows them empty. The writer exists (<span class="mono">ExamDateCard</span> on Dashboard/Planner) — it just hasn't been used on this account.</td>
+      <td><span class="mono">contextAssembler.js:100–104</span>; <span class="mono">CoachPage.jsx:187–193</span>; <span class="mono">ExamDateCard.jsx:99</span></td>
+      <td>"…or a target yet" and no exam-countdown coaching</td>
+      <td><span class="chip ok">USER-SIDE</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>3.2 — Your screenshots, decoded line by line</h3>
+<table>
+  <thead><tr><th>What the coach said</th><th>Why it said exactly that</th></tr></thead>
+  <tbody>
+    <tr><td><em>"You finished another full practice exam, but the score and section breakdown are not available here, so I can't compare this result with your history or a target yet."</em></td><td>The observer was told <span class="mono">TRIGGER: exam_completed</span> (so it knows an exam happened) but its assembled context contained no usable exam line — F1–F4. "…or a target" is F5. The phrase "not available <strong>here</strong>" is the model pointing at its own context, exactly as the grounding rule instructs.</td></tr>
+    <tr><td><em>"Linear Functions is still the clearest priority: 0% over 17 questions, with a stable trend."</em></td><td>Tier-2 <span class="mono">skillState</span> works fine — exam question_attempts fold into it. Deprived of exam scores, the coach reaches for the strongest signal it <em>does</em> have: the weakest-sorted skill list. That's why every exam note collapses into the same Linear Functions suggestion.</td></tr>
+    <tr><td><em>"This is a sharp short-term dip: you scored 40% on this Level 2 quiz, while Central Ideas and Details was 90% over your last 10 questions and 79% lifetime. Your misses covered main idea, supporting detail…"</em></td><td>Proof the model and prompt are fine: the quiz debrief surface passes a <span class="mono">quizId</span>, the assembler fetches the quiz + up to 30 question docs directly, and the coach is instantly rich and specific. Exams get no equivalent direct read — that's the asymmetry to fix.</td></tr>
+    <tr><td><em>"Target score / Exam date" card empty; "your target and test date are also still unset"</em></td><td>F5 — <span class="mono">users/{uid}.targetScore</span> and <span class="mono">.examDate</span> were never written for this account. Set them via the exam-date card on the Dashboard or Planner and the coach (and its exam-approaching trigger) picks them up immediately.</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="secno">4</span>The decisions in front of you</h2>
+
+<h3>4.1 — The architectural choice</h3>
+<p>There is one real decision here, and everything else is patching: <strong>should the coach's knowledge of exams come from the event stream, or from the authoritative record?</strong> The event stream is elegant for derived state (Tier 2 is rebuildable, exclusions work, deletes work), and it should stay the ground truth for <em>skills and habits</em>. But for the headline fact — "this student took an exam and scored X" — you already maintain a perfect, transactionally-saved record in <span class="mono">users/{uid}/practiceExams</span>, and the coach's server code (Admin SDK) can read it directly. Fetching the last handful of exam docs in the assembler is one query, immune to F1, F2 and F3 by construction, and it makes the coach agree with the results page by definition — which is exactly the invariant your own design doc demands. My recommendation: <strong>Option A + D now, B and C as the durable follow-up, E folded into A.</strong></p>
+
+<table>
+  <thead><tr><th></th><th>Option</th><th>What it involves</th><th>Fixes</th><th>Effort</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><span class="chip ok">A</span></td>
+      <td><strong>Read exams from the authoritative store</strong> <span class="chip info">RECOMMENDED</span></td>
+      <td>In <span class="mono">assembleStudentContext</span>, fetch the last ~5 <span class="mono">users/{uid}/practiceExams</span> docs (skip <span class="mono">excludedFromCoach</span>) and render an "## Exam history" section with scaled RW/Math/total, dates, partial flags. Have the observer's <span class="mono">exam_completed</span> path load the specific result via the <span class="mono">refId</span> it already receives.</td>
+      <td>F1–F4 for exams; F3 by construction (the doc is committed before the results page can render it)</td>
+      <td>~1 focused change in one file (+ observer refId use)</td>
+    </tr>
+    <tr>
+      <td><span class="chip ghost">B</span></td>
+      <td><strong>Create the composite index</strong></td>
+      <td>Add <span class="mono">activityEvents (userId ASC, clientTs DESC)</span> — console one-click or add to <span class="mono">firestore.indexes.json</span> and <span class="mono">firebase deploy --only firestore:indexes</span> (mind the file's warning about console-created indexes). Also add a <span class="mono">console.warn</span> in the fallback so this failure is ever visible again.</td>
+      <td>F1 — and restores recency for quizzes, drills, lessons too</td>
+      <td>Minutes, plus index build time</td>
+    </tr>
+    <tr>
+      <td><span class="chip ghost">C</span></td>
+      <td><strong>Stop the flood</strong></td>
+      <td>Query completion-type events separately (<span class="mono">where('type','in',[…completions])</span>, needs its own index) instead of filtering attempts out of a 20-event window; or bump the over-fetch and window substantially.</td>
+      <td>F2</td>
+      <td>Small</td>
+    </tr>
+    <tr>
+      <td><span class="chip ghost">D</span></td>
+      <td><strong>Honor the score contract</strong></td>
+      <td>Controller: set <span class="mono">scores.total</span> (or just reuse <span class="mono">examScores()</span>). Assembler: render <span class="mono">readingWriting</span>/<span class="mono">math</span> and the partial flag on exam lines. Two tiny diffs; also worth a unit test asserting the event payload matches <span class="mono">eventTypes.js</span>'s documented shape.</td>
+      <td>F4 — and makes the event stream trustworthy for any future consumer</td>
+      <td>Tiny</td>
+    </tr>
+    <tr>
+      <td><span class="chip ghost">E</span></td>
+      <td><strong>Close the race explicitly</strong></td>
+      <td>Only needed if you skip A: await the event batch before navigating, or have the results page delay/retry the observe ping, or move the observe trigger server-side after the save completes.</td>
+      <td>F3</td>
+      <td>Small, but A makes it moot</td>
+    </tr>
+    <tr>
+      <td><span class="chip ghost">F</span></td>
+      <td><strong>Capture the goal</strong></td>
+      <td>Set your own target score + exam date (Dashboard/Planner card) to clear F5 on this account; product-wise, consider asking during onboarding or letting the coach's "set a target" action deep-link to the card — today <span class="mono">/progress</span>-style links are the closest allow-listed route.</td>
+      <td>F5</td>
+      <td>User action now; small product change later</td>
+    </tr>
+    <tr>
+      <td><span class="chip ghost">G</span></td>
+      <td><strong>Hygiene while you're in there</strong></td>
+      <td>Log a <span class="mono">session_start</span> event when the app opens (the type exists; nothing emits it) so streaks/habits reflect reality; consider an admin-only "show me the exact assembled context" endpoint — this investigation would have taken minutes with one.</td>
+      <td>Data quality + future debuggability</td>
+      <td>Small</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>4.2 — What Option A's context section would give the model</h3>
+<div class="card">
+<p style="margin-top:0" class="small dim">Instead of today's best case (<span class="mono">- 2026-08-19: Practice exam — 56/98</span>), the coach would see something like:</p>
+<pre style="margin:0; font-family: ui-monospace, Menlo, Consolas, monospace; font-size:12.5px; line-height:1.7; background:#f6f5f2; border:1px solid var(--hairline); border-radius:8px; padding:14px 16px; overflow-x:auto;">## Exam history (authoritative, newest first)
+- 2026-08-19: Practice Test 5 — total 870 (RW 450 · Math 420), 56/98 correct
+- 2026-08-12: Practice Test 4 — total 830 (RW 440 · Math 390), 51/98 correct
+- 2026-08-03: Practice Test 3 — PARTIAL SITTING (2/4 modules) — treat as module practice
+- 2026-07-28: Diagnostic — total 780 (RW 410 · Math 370), 44/98 correct</pre>
+<p class="small dim" style="margin-bottom:0">With that plus a target score, every message in your screenshots becomes possible: score-over-time comparison, section-level diagnosis ("Math is your gap: 390→420 while RW holds"), and target-gap framing — all still fully grounded.</p>
+</div>
+
+<h3>4.3 — Verify before you build (15 minutes)</h3>
+<p>Four checks, in order of information value:</p>
+<ul class="tight">
+  <li><strong>Index:</strong> Firebase console → Firestore → Indexes. Look for a composite on <span class="mono">activityEvents (userId ASC, clientTs DESC)</span>. Absent → F1 confirmed as the active root cause. (The fallback is a silent <span class="mono">catch</span> — nothing logs today.)</li>
+  <li><strong>Event volume:</strong> count <span class="mono">activityEvents</span> where <span class="mono">userId ==</span> your test account. Over 180 → the fallback sample is frozen for you specifically.</li>
+  <li><strong>Payload:</strong> open the newest <span class="mono">exam_completed</span> event doc and check <span class="mono">payload.scores</span> — expect <span class="mono">{ readingWriting, math }</span> with no <span class="mono">total</span> (F4a) and confirm <span class="mono">correctCount/questionCount</span> are sane.</li>
+  <li><strong>Live trace:</strong> after fixes, finish one exam and confirm the observer note cites the scaled score; the coach-page "What I know about you" notebook panel (<span class="mono">GET /api/coach/notebook</span>) shows whether the result got folded into memory.</li>
+</ul>
+
+<footer class="doc">
+  <p><strong>Sources read for this report</strong> (all under <span class="mono">apps/</span> unless noted):
+  <span class="mono">api/coach/contextAssembler.js</span> · <span class="mono">api/coach/coachRoutes.js</span> · <span class="mono">api/coach/observer.js</span> · <span class="mono">api/coach/notebook.js</span> · <span class="mono">api/coach/modelAdapter.js</span> · <span class="mono">api/coach/rebuildTier2.js</span> · <span class="mono">api/config/aiModel.js</span> · <span class="mono">api/examResultRoutes.js</span> · <span class="mono">api/serverApp.js</span> · <span class="mono">web/src/coach/events.js</span> · <span class="mono">web/src/coach/eventTypes.js</span> · <span class="mono">web/src/coach/tier2.js</span> · <span class="mono">web/src/contexts/CoachContext.jsx</span> · <span class="mono">web/src/api/coachClient.js</span> · <span class="mono">web/src/firebase/userExamServices.js</span> · <span class="mono">web/src/pages/PracticeExamController.jsx</span> · <span class="mono">web/src/pages/ExamResults.jsx</span> · <span class="mono">web/src/pages/CoachPage.jsx</span> · <span class="mono">web/src/pages/AllExamResults.jsx</span> · <span class="mono">web/src/pages/SmartQuizResults.jsx</span> · <span class="mono">web/src/utils/smartQuizUtils.js</span> · <span class="mono">web/src/utils/scoring.js</span> · <span class="mono">web/src/components/ExamDateCard.jsx</span> · <span class="mono">firestore.indexes.json</span> · <span class="mono">firestore.rules</span> · <span class="mono">AI_COACH_DESIGN.md</span> · <span class="mono">.env</span> (key names only).</p>
+  <p>Line numbers refer to the files as of 2026-08-20. The one claim not fully provable from the repo alone is whether the composite index exists in the live Firebase project — verify per §4.3 before treating F1 as confirmed.</p>
+</footer>
+</div>
+</body>
+</html>

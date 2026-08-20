@@ -1,363 +1,466 @@
-# SAT Practice Test 10 — Math Module 2
+# SAT Practice Test 10 — Math Module 2 (moduleNumber 4)
 
-22 questions · 35 minutes · calculator allowed
+_22 questions · 35 minutes · calculator allowed_
 
-For student-produced response questions, enter a single numeric answer. Figures are drawn to scale unless otherwise indicated.
-
----
-### 1
-
-_easy · ratios-rates-proportions_
-
-A weather station records a wind speed of 2.4 meters per second. What is this speed, in centimeters per minute? (1 meter = 100 centimeters and 1 minute = 60 seconds)
-
-A. 240
-
-B. 14,400
-
-C. 144,000
-
-D. 864,000
 
 ---
 
-### 2
+### Question 1  
+*easy · linear-functions*
 
-_easy · area-volume_
 
-A rectangular electronic display is 12 feet wide and 8 feet high. It is assembled without gaps from square display panels that each have a side length of 2 feet. How many panels are used?
 
-A. 6
+The total cost C, in dollars, of Yusuf’s text-message plan for one month is given by
 
-B. 10
+C = 0.04m + 12
 
-C. 20
+where m is the number of text messages sent during that month.
 
-D. 24
 
----
+What is the total cost, in dollars, of Yusuf’s plan for a month in which 150 text messages are sent?
 
-### 3
 
-_easy · nonlinear-functions_
+A) 6
 
-f(x) = 3 + √(x + 7)
+B) 12
 
-What is the value of f(9)?
+C) 18
 
-A. 7
+D) 72
 
-B. 12
 
-C. 16
-
-D. 19
 
 ---
 
-### 4
+### Question 2  
+*easy · equivalent-expressions*
 
-_easy · equivalent-expressions_
 
-(18x^7y^3)/(6x^2y)
 
-Which expression is equivalent to the given expression?
+Which expression is equivalent to (32x^9)/(8x^3)?
 
-A. 3x⁵y³
 
-B. 12x⁵y²
+A) 4x⁶
 
-C. 3x⁵y²
+B) 4x¹²
 
-D. 3x⁹y⁴
+C) 4x²⁷
 
----
+D) 24x⁶
 
-### 5
 
-_easy · systems-linear-equations_
-
-2x + y = 17
-
-2x - y = 7
-
-The solution to the given system is (x, y). What is the value of y?
-
-_Student-produced response_
 
 ---
 
-### 6
+### Question 3  
+*easy · ratios-rates-proportions*
 
-_easy · percentages_
 
-An additive makes up 15% of the mass of a 250-gram material sample. What is the mass, in grams, of the additive?
 
-_Student-produced response_
+On a scale drawing of a floor plan, a length of 5 centimeters represents an actual length of 2 meters. A hallway is 30 centimeters long on this drawing. What is the actual length, in meters, of the hallway?
 
----
 
-### 7
+A) 6
 
-_easy · linear-functions_
+B) 12
 
-The graph shows the energy E, in watt-hours, stored in a backup battery t hours after charging begins.
+C) 60
 
-![A coordinate graph has a horizontal axis labeled Time (hours), t, from 0 to 5 and a vertical axis labeled Energy (watt-hours), E, from 0 to 55. A straight line passes through the marked points (0, 30) and (3, 45).](../scripts/data/practiceTest10Math-assets/PT10-M4-Q07.svg)
+D) 75
 
-How many watt-hours of energy were stored in the battery when charging began?
 
-A. 0
-
-B. 5
-
-C. 15
-
-D. 30
 
 ---
 
-### 8
+### Question 4  
+*easy · probability*
 
-_easy · nonlinear-functions_
 
-<p>The table shows values of a quadratic function f.</p><table style="border-collapse:collapse; margin:10px auto; text-align:center;"><caption style="padding:4px; font-weight:bold;">Values of f</caption><tr><th scope="row" style="border:1px solid #000; padding:6px 11px;">x</th><th scope="col" style="border:1px solid #000; padding:6px 11px;">-1</th><th scope="col" style="border:1px solid #000; padding:6px 11px;">0</th><th scope="col" style="border:1px solid #000; padding:6px 11px;">1</th><th scope="col" style="border:1px solid #000; padding:6px 11px;">2</th><th scope="col" style="border:1px solid #000; padding:6px 11px;">3</th></tr><tr><th scope="row" style="border:1px solid #000; padding:6px 11px;">f(x)</th><td style="border:1px solid #000; padding:6px 11px;">8</td><td style="border:1px solid #000; padding:6px 11px;">3</td><td style="border:1px solid #000; padding:6px 11px;">0</td><td style="border:1px solid #000; padding:6px 11px;">-1</td><td style="border:1px solid #000; padding:6px 11px;">0</td></tr></table>
 
-At which value of x shown in the table does f(x) have its minimum value?
+<p>The table shows the number of potted plants at a certain nursery, by plant type and pot size.</p><table style="border-collapse:collapse; margin:8px auto;"><thead><tr><th style="border:1px solid #333; padding:4px 8px;">Plant type</th><th style="border:1px solid #333; padding:4px 8px;">Small pot</th><th style="border:1px solid #333; padding:4px 8px;">Large pot</th><th style="border:1px solid #333; padding:4px 8px;">Total</th></tr></thead><tbody><tr><td style="border:1px solid #333; padding:4px 8px; text-align:center;">Fern</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">45</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">30</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">75</td></tr><tr><td style="border:1px solid #333; padding:4px 8px; text-align:center;">Succulent</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">36</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">14</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">50</td></tr><tr><td style="border:1px solid #333; padding:4px 8px; text-align:center;">Orchid</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">19</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">6</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">25</td></tr><tr><td style="border:1px solid #333; padding:4px 8px; text-align:center;">Total</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">100</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">50</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">150</td></tr></tbody></table>
 
-A. 1
 
-B. 2
+If one of these plants is selected at random, what is the probability of selecting a fern in a large pot?
 
-C. 3
 
-D. 4
+A) 1/5
 
----
+B) 2/5
 
-### 9
+C) 3/5
 
-_easy · linear-inequalities_
+D) 4/5
 
-An equipment rack can support at most 680 pounds. Equipment already on the rack has a total mass of 125 pounds, and each additional unit has a mass of 37 pounds. If n additional units are placed on the rack, which inequality represents this situation?
 
-A. 37 + 125n ≤ 680
-
-B. 125 + 37n ≥ 680
-
-C. 125 + 37n ≤ 680
-
-D. 37n ≤ 680
 
 ---
 
-### 10
+### Question 5  
+*easy · nonlinear-equations*
 
-_medium · nonlinear-functions_
 
-The intensity of a signal d meters from a transmitter is modeled by S(d) = 320(0.90)^d/5.
 
-According to the model, for each 10-meter increase in d, the signal intensity decreases by what percent?
+(x − 4)^2 = 121
 
-A. 81%
-
-B. 20%
-
-C. 19%
-
-D. 10%
-
----
-
-### 11
-
-_medium · linear-inequalities_
-
-ky > 171
-The solution set of the given inequality is graphed in the xy-plane, where k is a positive constant.
-
-![A coordinate plane shows a dashed horizontal line through y = 9. The half-plane above this line is shaded, and the half-plane below it is not shaded.](../scripts/data/practiceTest10Math-assets/PT10-M4-Q11.svg)
-
-What is the value of k?
-
-A. 9
-
-B. 19
-
-C. 171
-
-D. 180
-
----
-
-### 12
-
-_medium · nonlinear-equations_
-
-2x^2 - 3x - 14 = 0
 
 What is the positive solution to the given equation?
 
 _Student-produced response_
 
+
+
 ---
 
-### 13
+### Question 6  
+*easy · area-volume*
 
-_medium · linear-equations-two-variables_
 
-In the xy-plane, a line has slope -3/2 and passes through the point (4, 9). What is the x-coordinate of the x-intercept of the line?
+
+A block of foam in the shape of a right rectangular prism has a base with an area of 126 square inches and a height of 8 inches. What is the volume, in cubic inches, of the block?
 
 _Student-produced response_
 
----
 
-### 14
-
-_medium · right-triangles-trigonometry_
-
-Triangle ABC is a right triangle. The side lengths shown are in centimeters.
-
-![A right triangle ABC has a right angle at C. The hypotenuse AB is labeled 41, the leg BC is labeled 9, and the leg AC is unlabeled. Angle A is marked.](../scripts/data/practiceTest10Math-assets/PT10-M4-Q14.svg)
-
-What is the value of cos A?
-
-A. 40/41
-
-B. 9/40
-
-C. 9/41
-
-D. 1/41
 
 ---
 
-### 15
+### Question 7  
+*easy · systems-linear-equations*
 
-_medium · probability_
 
-A container holds 18 brass tokens and 12 steel tokens. Steel tokens are added, and no tokens are removed. How many steel tokens must be added so that the probability of selecting a brass token at random is 1/3?
 
-A. 6
+y = 2x − 10
 
-B. 12
+3x + y = 25
 
-C. 18
 
-D. 24
+The solution to the given system of equations is (x, y). What is the value of x?
 
----
 
-### 16
+A) 3
 
-_medium · linear-functions_
+B) 4
 
-The volume V, in milliliters, of solution in an ultrasonic cleaner changes linearly with time t, in minutes. At t = 6, the volume is 74 milliliters, and at t = 14, the volume is 46 milliliters.
+C) 7
 
-Which equation gives V in terms of t?
+D) 11
 
-A. V = 95 + 3.5t
 
-B. V = 74 - 3.5t
-
-C. V = 95 - 3.5t
-
-D. V = 74 - 28t
 
 ---
 
-### 17
+### Question 8  
+*medium · right-triangles-trigonometry*
 
-_hard · circles_
 
-Circle A has equation (x - 2)^2 + (y + 1)^2 = 25. Circle B has center (9, -1) and is externally tangent to circle A.
+> **[Figure: PT10-M4-Q08.svg]** Right triangle JKL has vertex J at the top, vertex K directly below J, and vertex L to the right of K, with a right angle marked at vertex K. The angle at vertex J is labeled 30 degrees, hypotenuse JL is labeled 18, and the lengths of sides JK and KL are not labeled.
 
-Which equation represents circle B?
 
-A. (x - 9)² + (y + 1)² = 2
+Right triangle JKL is shown.
 
-B. (x - 9)² + (y + 1)² = 4
 
-C. (x + 9)² + (y - 1)² = 4
+What is the length of side KL?
 
-D. (x - 9)² + (y + 1)² = 25
 
----
+A) 9√3
 
-### 18
+B) 9√2
 
-_hard · linear-equations-one-variable_
+C) 6√3
 
-a(2x - 3) + 4 = 10x + b
+D) 9
 
-In the given equation, a and b are constants. If the equation is true for all values of x, what is the value of a + b?
 
-A. -6
-
-B. 5
-
-C. 11
-
-D. 16
 
 ---
 
-### 19
+### Question 9  
+*medium · percentages*
 
-_hard · nonlinear-equations_
 
-4^x - 5(2^x) + 4 = 0
 
-What is the sum of all real solutions to the given equation?
+The price of a copper ingot at a certain foundry decreased by 20%. The reduced price then increased by 15%.
+
+
+The price of the ingot after the increase is what percent of the price before the decrease?
+
+
+A) 80%
+
+B) 92%
+
+C) 95%
+
+D) 102%
+
+
+
+---
+
+### Question 10  
+*easy · lines-angles-triangles*
+
+
+> **[Figure: PT10-M4-Q10.svg]** Segments AC and BD intersect at point E, forming triangle ABE to the left of point E and triangle CDE to the right of point E. In triangle ABE the angle at E is labeled 40 degrees, and in triangle CDE the angle at C is labeled 55 degrees and the angle at D is labeled x degrees.
+
+
+In the figure shown, segments AC and BD intersect at point E. What is the value of x?
+
+
+A) 40
+
+B) 85
+
+C) 125
+
+D) 140
+
+
+
+---
+
+### Question 11  
+*medium · linear-equations-two-variables*
+
+
+> **[Figure: PT10-M4-Q11.svg]** A line is graphed in the xy-plane. The line falls from left to right, crossing the y-axis at (0, 4) and the x-axis at (3, 0).
+
+
+Line p is shown in the xy-plane.
+
+
+Which equation represents line p?
+
+
+A) 3x + 4y = 12
+
+B) 4x - 3y = 12
+
+C) 4x + 3y = 4
+
+D) 4x + 3y = 12
+
+
+
+---
+
+### Question 12  
+*medium · linear-functions*
+
+
+
+The function f is linear. If f(0) = 8.2 and f(5) = 28.2, what is the value of f(2)?
 
 _Student-produced response_
 
----
 
-### 20
-
-_hard · two-variable-data_
-
-A scatterplot and its line of best fit, y = 2x + 5, are shown. Point P = (7, 20) is one of the data points. For a data point, the residual is the observed y-value minus the y-value predicted by the line of best fit.
-
-![A scatterplot has eight points: (0, 4), (1, 8), (2, 8), (3, 12), (4, 12), (5, 16), (6, 16), and P = (7, 20). A line of best fit labeled y = 2x + 5 is drawn through the scatterplot.](../scripts/data/practiceTest10Math-assets/PT10-M4-Q20.svg)
-
-Point Q has x-coordinate 7 and a residual equal to -2 times the residual of point P. What are the coordinates of point Q?
-
-A. (7, 17)
-
-B. (7, 18)
-
-C. (7, 19)
-
-D. (7, 21)
 
 ---
 
-### 21
+### Question 13  
+*medium · nonlinear-functions*
 
-_hard · lines-angles-triangles_
 
-For triangles ABC and DEF, AB/DE = BC/EF.
 
-Which additional statement is sufficient to prove that triangle ABC is similar to triangle DEF?
-
-A. Angle A is congruent to angle D.
-
-B. AC = DF.
-
-C. Angle C is congruent to angle F.
-
-D. Angle B is congruent to angle E.
-
----
-
-### 22
-
-_hard · nonlinear-functions_
-
-The quadratic function f has zeros -1 and 7, and f(2) = 30. What is the maximum value of f?
+The function f is defined by f(x) = x^2 − 10x + 34. What is the minimum value of f?
 
 _Student-produced response_
+
+
+
+---
+
+### Question 14  
+*medium · nonlinear-functions*
+
+
+
+f(x) = x^2 − 6x − 27
+
+
+The function f is defined by the given equation. Which of the following equivalent forms of f displays the x-intercepts of the graph of y = f(x) in the xy-plane as constants or coefficients?
+
+
+A) f(x) = x² - 6x - 27
+
+B) f(x) = x(x - 6) - 27
+
+C) f(x) = (x - 9)(x + 3)
+
+D) f(x) = (x - 3)² - 36
+
+
+
+---
+
+### Question 15  
+*medium · linear-inequalities*
+
+
+
+At a certain flour mill, sacks of flour weighing 24 kilograms each are stacked on a pallet that weighs 145 kilograms. The total weight of the pallet and the sacks can be at most 1,000 kilograms.
+
+
+What is the greatest number of sacks of flour that can be stacked on the pallet?
+
+
+A) 35
+
+B) 36
+
+C) 41
+
+D) 47
+
+
+
+---
+
+### Question 16  
+*medium · inference-statistics*
+
+
+
+At a certain county fair, 4,000 animals were registered. A random sample of 250 of these animals was selected, and 45 of the animals in the sample were sheep.
+
+
+Based on this sample, which of the following is the best estimate of the number of sheep among the 4,000 registered animals?
+
+
+A) 45
+
+B) 205
+
+C) 720
+
+D) 3,280
+
+
+
+---
+
+### Question 17  
+*hard · nonlinear-functions*
+
+
+
+f(x) = ax^2 + bx + c
+
+
+The function f is defined by the given equation, where a, b, and c are constants and a > 0. The graph of y = f(x) in the xy-plane has no x-intercepts. Which of the following must be true?
+
+
+A) b < 0
+
+B) c < 0
+
+C) 4ac < b²
+
+D) 4ac > b²
+
+
+
+---
+
+### Question 18  
+*hard · circles*
+
+
+
+(x − 3)^2 + (y + 7)^2 = 49
+
+
+A certain circle in the xy-plane is represented by the given equation. Which equation represents the circle that has the same center as this circle and a radius twice as long?
+
+
+A) (x - 3)² + (y + 7)² = 14
+
+B) (x - 3)² + (y + 7)² = 98
+
+C) (x - 3)² + (y + 7)² = 196
+
+D) (x - 3)² + (y + 7)² = 2,401
+
+
+
+---
+
+### Question 19  
+*hard · linear-equations-two-variables*
+
+
+
+15x + 4y = k
+
+
+In the given equation, k is a constant. The graph of this equation in the xy-plane passes through the point (2, 3). What is the x-coordinate of the x-intercept of this graph?
+
+_Student-produced response_
+
+
+
+---
+
+### Question 20  
+*hard · linear-equations-one-variable*
+
+
+
+A certain picture-framing workshop assembled 416 frames in one month. Each frame was small, medium, or large. The number of medium frames was 24 more than the number of large frames, and the number of small frames was 3 times the number of medium frames.
+
+
+How many of these frames were medium frames?
+
+
+A) 64
+
+B) 88
+
+C) 104
+
+D) 264
+
+
+
+---
+
+### Question 21  
+*hard · nonlinear-equations*
+
+
+
+T = (1/2)pq^2
+
+The given equation relates the positive quantities T, p, and q.
+
+
+Which equation gives q in terms of T and p?
+
+
+A) q = √(2T/p)
+
+B) q = √(T/(2p))
+
+C) q = √(T/p)
+
+D) q = 2T/p
+
+
+
+---
+
+### Question 22  
+*hard · equivalent-expressions*
+
+
+
+(x^3/4)^3/x^1/2 = x^k
+
+
+In the given equation, k is a constant and x > 0. What is the value of k?
+
+_Student-produced response_
+
+
 
 ---

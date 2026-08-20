@@ -79,3 +79,6 @@ build-analysis.json
 firebase-structure.json
 # Ignore all node_modules directories
 **/node_modules/
+
+# scratch bin for files Claude can't delete over the device bridge
+_to_delete/

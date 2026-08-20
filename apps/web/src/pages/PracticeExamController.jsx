@@ -671,7 +671,15 @@ const PracticeExamController = () => {
       overallScore: percentageScore,
       scores: {
         readingWriting: readingWritingScore,
-        math: mathScore
+        math: mathScore,
+        // Scaled composite — the field the coach's event contract
+        // (coach/eventTypes.js exam_completed) and context assembler read.
+        // null when either section has no attempted module: a partial sitting
+        // has no honest total, and every consumer treats it as module practice.
+        total:
+          readingWritingScore !== null && mathScore !== null
+            ? readingWritingScore + mathScore
+            : null,
       },
       totalQuestions,
       correctAnswers: totalCorrect,

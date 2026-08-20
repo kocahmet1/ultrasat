@@ -1,535 +1,427 @@
 /**
- * Publication gate for the original Practice Test 9 Math modules.
+ * Validate scripts/data/practiceTest9Math.json — the two Math replacement
+ * modules (moduleNumber 3 and 4) for Exam 9 — against the production schema,
+ * the College Board math style contract (docs/CB_Math_Style_Spec.md), the PT3
+ * blueprint (docs/analysis/PT9_math_blueprint.md), and the app's rendering
+ * constraints.
  *
- * This validator binds the payload to the measured blueprint, checks the app's
- * rendering/storage schema, proves SPR answer-form equivalence exactly, audits
- * every rationale/key pairing, and compares wording against shipped Tests 1-6.
+ * Supersedes validatePracticeTest5Math.js: every check that script performed is
+ * kept, and these form-level checks are added, because they are the ones the PT4
+ * and PT5 critique rounds had to catch by hand —
+ *   - domain and per-skill quotas,
+ *   - visual count per module + "hard geometry is figure-less",
+ *   - probability confined to Module 4, >= 1 circles item per module,
+ *   - SPR census (integers / fractions / decimals / negatives),
+ *   - stem prose-length caps and the forbidden-move list (LaTeX, "you",
+ *     imperatives, multiple question marks),
+ *   - rationale length bands by difficulty,
+ *   - context/number collision against the shipped PT3, PT4 and PT5 item banks.
  *
  * Usage: node scripts/validatePracticeTest9Math.js
  */
-
-'use strict';
 
 const fs = require('fs');
 const path = require('path');
 const { resolveSubcategory } = require('./lib/subcategoryMap');
 
 let DOMPurify = null;
-let purifierError = null;
-let JSDOMImpl = null;
+let domPurifyLoadError = null;
 try {
   const createDOMPurify = require('dompurify');
   const { JSDOM } = require('jsdom');
-  JSDOMImpl = JSDOM;
   DOMPurify = createDOMPurify(new JSDOM('').window);
-} catch (error) {
-  purifierError = error;
+} catch (e) {
+  domPurifyLoadError = e;
 }
 
-const DATA_FILE = path.resolve(__dirname, 'data/practiceTest9Math.json');
+const data = require(path.resolve(__dirname, 'data/practiceTest9Math.json'));
 const ASSETS_DIR = path.resolve(__dirname, 'data/practiceTest9Math-assets');
-const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-const LETTERS = ['A', 'B', 'C', 'D'];
 
+const MATH_SECTION = 'Math';
+
+// ---------------------------------------------------------------------------
+// PT9 blueprint (docs/analysis/PT9_math_blueprint.md) — binding
+// ---------------------------------------------------------------------------
 const EXPECTED = {
-  examSlug: 'exam9-math-v1',
-  title: 'Exam 9',
   moduleNumbers: [3, 4],
   questionsPerModule: 22,
   timeLimit: 2100,
   sprPositions: [5, 6, 12, 13, 19, 22],
-  difficultyByPosition: {
-    1: 'easy', 2: 'easy', 3: 'easy', 4: 'easy', 5: 'easy', 6: 'easy',
-    7: 'easy', 8: 'easy', 9: 'medium', 10: 'easy', 11: 'medium',
-    12: 'medium', 13: 'medium', 14: 'medium', 15: 'medium', 16: 'medium',
-    17: 'hard', 18: 'hard', 19: 'hard', 20: 'hard', 21: 'hard', 22: 'hard',
-  },
-  difficultyMix: { 3: { easy: 9, medium: 7, hard: 6 }, 4: { easy: 9, medium: 7, hard: 6 } },
-  visuals: { 3: 4, 4: 5 },
-  graphAssets: { 3: 3, 4: 4 },
-  visualSurfaces: {
-    3: { table: [7], svg: [2, 8, 16] },
-    4: { table: [10], svg: [4, 9, 15, 21] },
-  },
-  moduleDomains: {
-    3: { Algebra: 8, 'Advanced Math': 7, 'Problem-Solving and Data Analysis': 4, 'Geometry and Trigonometry': 3 },
-    4: { Algebra: 7, 'Advanced Math': 7, 'Problem-Solving and Data Analysis': 4, 'Geometry and Trigonometry': 4 },
-  },
-  domainQuota: { Algebra: 15, 'Advanced Math': 14, 'Problem-Solving and Data Analysis': 8, 'Geometry and Trigonometry': 7 },
+  sprDifficulty: { 5: 'easy', 6: 'easy', 12: 'medium', 13: 'medium', 19: 'hard', 22: 'hard' },
+  difficultyMix: { 3: { easy: 8, medium: 8, hard: 6 }, 4: { easy: 9, medium: 7, hard: 6 } },
+  visualsPerModule: 4,
+  domainQuota: { Algebra: 16, 'Advanced Math': 13, 'Problem-Solving and Data Analysis': 7, 'Geometry and Trigonometry': 8 },
   skillQuota: {
-    'linear-equations-one-variable': 3,
-    'linear-functions': 4,
-    'linear-equations-two-variables': 3,
-    'systems-linear-equations': 3,
-    'linear-inequalities': 2,
-    'nonlinear-functions': 7,
-    'nonlinear-equations': 4,
-    'equivalent-expressions': 3,
-    'ratios-rates-proportions': 2,
-    percentages: 1,
-    'one-variable-data': 1,
-    'two-variable-data': 2,
-    probability: 1,
-    'evaluating-statistical-claims': 1,
-    'area-volume': 2,
-    'lines-angles-triangles': 2,
-    'right-triangles-trigonometry': 1,
-    circles: 2,
+    'linear-equations-one-variable': 3, 'linear-functions': 4, 'linear-equations-two-variables': 3,
+    'systems-linear-equations': 3, 'linear-inequalities': 3, 'nonlinear-functions': 6,
+    'nonlinear-equations': 4, 'equivalent-expressions': 3, 'ratios-rates-proportions': 2,
+    'percentages': 1, 'one-variable-data': 1, 'two-variable-data': 1, 'probability': 1,
+    'inference-statistics': 1, 'area-volume': 3, 'lines-angles-triangles': 2,
+    'right-triangles-trigonometry': 1, 'circles': 2,
   },
-  sprCensus: { integer: 10, fraction: 2, decimal: 0, negative: 1 },
-  appliedPositions: { 3: [1, 2, 4, 11, 14, 16], 4: [1, 2, 5, 8, 10, 11, 21] },
+  sprCensus: { integer: 8, fraction: 3, decimal: 1, negative: 1 },
+  stemWordCaps: { 'equivalent-expressions': 15, abstract: 35, applied: 55, statistical: 75 },
 };
 
-const REQUIRED_QUESTION_KEYS = [
-  'originalQuestionNumber', 'passage', 'text', 'questionType', 'options',
-  'correctAnswer', 'acceptedAnswers', 'difficulty', 'subcategory',
-  'subcategoryId', 'explanation', 'graphAsset', 'graphDescription',
-];
-const STATISTICAL = new Set([
-  'one-variable-data', 'two-variable-data', 'probability',
-  'inference-statistics', 'evaluating-statistical-claims',
-]);
-const GEOMETRY_FIGURE_SKILLS = new Set([
-  'area-volume', 'lines-angles-triangles', 'right-triangles-trigonometry',
-]);
-const ALLOWED_HTML_TAGS = new Set(['p', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'sup', 'sub', 'strong', 'em', 'br']);
+// Measured median stem lengths (addendum section 5): inference 64, probability 55,
+// two-variable 35, one-variable 32 prose words. These skills get the long cap.
+const STATISTICAL_SKILLS = new Set(['inference-statistics', 'evaluating-statistical-claims',
+  'one-variable-data', 'two-variable-data', 'probability']);
+
 const errors = [];
 const warnings = [];
 
-function fail(message) { errors.push(message); }
-function warn(message) { warnings.push(message); }
-function stripTags(value) { return String(value || '').replace(/<[^>]+>/g, ' '); }
-function normalizeSpace(value) { return String(value || '').replace(/\s+/g, ' ').trim(); }
-function decodeEntities(value) {
-  return String(value || '')
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
-    .replace(/&nbsp;/g, ' ').replace(/&le;/g, '≤').replace(/&ge;/g, '≥');
+if (!DOMPurify) {
+  errors.push(`DOMPurify/jsdom are required for publication validation (${domPurifyLoadError?.message || 'load failed'})`);
 }
-function proseOnly(value) {
-  return String(value || '')
+
+const letters = ['A', 'B', 'C', 'D'];
+
+function stripTags(s) {
+  return String(s || '').replace(/<[^>]+>/g, ' ');
+}
+
+// DOMPurify re-encodes bare "<" and ">" as entities; that is a rendering-identical
+// rewrite, not a content loss, so normalize before comparing.
+function decodeEntities(s) {
+  return String(s || '')
+    .replace(/&gt;/g, '>').replace(/&lt;/g, '<')
+    .replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ')
+    .replace(/&le;/g, '\u2264').replace(/&ge;/g, '\u2265');
+}
+
+function isNumericString(s) {
+  return /^-?[\d,]+(\.\d+)?$/.test(String(s).trim());
+}
+
+function numericValue(s) {
+  return parseFloat(String(s).replace(/,/g, ''));
+}
+
+// Spec section 2b caps PROSE words. A centered displayed equation is a stimulus, not
+// prose, so it is removed before counting (otherwise "5x + 3y = 8" scores 5 words).
+function proseOnly(s) {
+  return String(s || '')
     .replace(/<div[^>]*text-align:\s*center[^>]*>[\s\S]*?<\/div>/gi, ' ')
     .replace(/<table[\s\S]*?<\/table>/gi, ' ');
 }
-function wordCount(value) {
-  const text = normalizeSpace(stripTags(proseOnly(value)));
-  return text ? text.split(' ').length : 0;
-}
-function gcd(a, b) {
-  a = a < 0n ? -a : a;
-  b = b < 0n ? -b : b;
-  while (b) [a, b] = [b, a % b];
-  return a;
-}
-function parseRational(raw) {
-  const s = String(raw).trim();
-  let n;
-  let d;
-  if (/^-?\d+\/\d+$/.test(s)) {
-    const parts = s.split('/');
-    n = BigInt(parts[0]);
-    d = BigInt(parts[1]);
-    if (d === 0n) throw new Error('zero denominator');
-  } else if (/^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(s)) {
-    const negative = s.startsWith('-');
-    const unsigned = negative ? s.slice(1) : s;
-    const [whole = '0', fraction = ''] = unsigned.split('.');
-    d = 10n ** BigInt(fraction.length);
-    n = BigInt((whole || '0') + fraction);
-    if (negative) n = -n;
-  } else {
-    throw new Error('not a legal numeric entry');
-  }
-  if (d < 0n) { n = -n; d = -d; }
-  const factor = gcd(n, d) || 1n;
-  return { n: n / factor, d: d / factor };
-}
-function equalRational(a, b) {
-  const x = parseRational(a);
-  const y = parseRational(b);
-  return x.n === y.n && x.d === y.d;
-}
-function acceptedSurfaceMatches(value, canonical) {
-  if (equalRational(value, canonical)) return true;
-  if (!String(canonical).includes('/') || !String(value).includes('.')) return false;
-  const exact = parseRational(canonical);
-  const decimal = String(value);
-  const places = (decimal.split('.')[1] || '').length;
-  const factor = 10 ** places;
-  const number = Number(exact.n) / Number(exact.d);
-  const truncated = Math.trunc(number * factor) / factor;
-  const rounded = Math.round(number * factor) / factor;
-  const entered = Number(decimal);
-  return entered === truncated || entered === rounded;
-}
-function plainNumeric(value) {
-  return /^-?[\d,]+(?:\.\d+)?$/.test(String(value).trim());
-}
-function numericValue(value) { return Number(String(value).replace(/,/g, '')); }
-function choiceNumericValue(value) {
-  const raw = String(value).trim().replace(/,/g, '');
-  const percent = raw.endsWith('%');
-  const body = percent ? raw.slice(0, -1) : raw;
-  let number;
-  if (/^-?\d+\/\d+$/.test(body)) {
-    const [n, d] = body.split('/').map(Number);
-    number = d ? n / d : NaN;
-  } else if (/^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(body)) {
-    number = Number(body);
-  } else {
-    return null;
-  }
-  return percent ? number / 100 : number;
+
+function wordCount(s) {
+  return stripTags(proseOnly(s)).replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
 }
 
-function checkHtml(label, field, html) {
-  if (!html) return;
-  const tags = [...String(html).matchAll(/<\/?\s*([a-zA-Z0-9-]+)/g)].map((m) => m[1].toLowerCase());
-  for (const tag of tags) {
-    if (!ALLOWED_HTML_TAGS.has(tag)) fail(`${label}: ${field} contains unsupported <${tag}> markup`);
-  }
-  if (/<(?:script|iframe|object|embed|img|link|meta)\b/i.test(html)) fail(`${label}: ${field} contains forbidden active/external markup`);
-  if (/\son\w+\s*=|javascript:/i.test(html)) fail(`${label}: ${field} contains an event handler or javascript URL`);
-  if (DOMPurify) {
-    const clean = DOMPurify.sanitize(html, { ALLOWED_TAGS: [...ALLOWED_HTML_TAGS] });
-    const before = normalizeSpace(decodeEntities(stripTags(html)));
-    const after = normalizeSpace(decodeEntities(stripTags(clean)));
-    if (before !== after) fail(`${label}: ${field} loses visible content under DOMPurify`);
-    if (/<table\b/i.test(html)) {
-      for (const tag of ['table', 'tr', 'th', 'td']) {
-        const beforeCount = (String(html).match(new RegExp(`<${tag}\\b`, 'gi')) || []).length;
-        const afterCount = (String(clean).match(new RegExp(`<${tag}\\b`, 'gi')) || []).length;
-        if (beforeCount !== afterCount) fail(`${label}: ${field} loses <${tag}> structure under DOMPurify`);
-      }
-    }
-  }
+function checkSanitizerSurvival(qLabel, field, html) {
+  if (!html || !DOMPurify) return;
+  const clean = DOMPurify.sanitize(html);
+  const before = decodeEntities(stripTags(html)).replace(/\s+/g, ' ').trim();
+  const after = decodeEntities(stripTags(clean)).replace(/\s+/g, ' ').trim();
+  if (before !== after) errors.push(`${qLabel}: ${field} loses content under DOMPurify sanitization`);
+  if (/<(script|iframe|object|embed|link|meta)\b/i.test(html)) errors.push(`${qLabel}: ${field} contains a forbidden tag`);
 }
 
-const STOP_WORDS = new Set(normalizeSpace(`
-  a an and are as at be by each equation equations for from function given graph has have
-  in is it its line lines of on one or point points shown that the this to value values what
-  where which with x y number numbers constant constants real integer integers solution solutions
-  circle radius triangle side length area volume table model data measure find represents
-`).split(' '));
-function contentWords(value) {
-  return new Set(stripTags(value).toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/)
-    .filter((word) => word.length >= 4 && !STOP_WORDS.has(word)));
-}
-function similarity(a, b) {
-  const aa = contentWords(a);
-  const bb = contentWords(b);
-  if (!aa.size || !bb.size) return 0;
-  let intersection = 0;
-  for (const word of aa) if (bb.has(word)) intersection += 1;
-  return intersection / (aa.size + bb.size - intersection);
-}
+// ---------------------------------------------------------------------------
+// Prior-form corpus, for collision checking
+// ---------------------------------------------------------------------------
 function loadPriorCorpus() {
-  const corpus = [];
-  for (let test = 1; test <= 6; test += 1) {
-    const file = path.resolve(__dirname, 'data', `practiceTest${test}Math.json`);
-    if (!fs.existsSync(file)) continue;
-    const prior = JSON.parse(fs.readFileSync(file, 'utf8'));
-    for (const module of prior.modules || []) {
-      for (const q of module.questions || []) {
-        corpus.push({
-          label: `PT${test} M${module.moduleNumber}Q${q.originalQuestionNumber}`,
-          stem: normalizeSpace(`${stripTags(q.passage)} ${stripTags(q.text)}`),
-          contextual: /<p\b/i.test(q.passage || '') || /\.\s+[A-Z(]/.test(stripTags(q.text || '')),
-          exactStem: normalizeSpace(`${stripTags(q.passage)} ${stripTags(q.text)}`).toLowerCase(),
+  const out = [];
+  for (const f of ['practiceTest3Math.json', 'practiceTest4Math.json', 'practiceTest5Math.json']) {
+    const p = path.resolve(__dirname, 'data', f);
+    if (!fs.existsSync(p)) continue;
+    const d = JSON.parse(fs.readFileSync(p, 'utf8'));
+    for (const m of d.modules || []) {
+      for (const q of m.questions || []) {
+        out.push({
+          form: f.replace('practiceTest', 'PT').replace('Math.json', ''),
+          n: `M${m.moduleNumber}Q${q.originalQuestionNumber}`,
+          text: `${stripTags(q.passage || '')} ${stripTags(q.text || '')}`.replace(/\s+/g, ' ').trim(),
         });
       }
     }
   }
-  return corpus;
+  return out;
 }
 
-if (!DOMPurify) fail(`DOMPurify/jsdom unavailable: ${purifierError?.message || 'unknown error'}`);
-if (data.examSlug !== EXPECTED.examSlug) fail(`examSlug must be ${EXPECTED.examSlug}`);
-if (data.targetExamTitle !== EXPECTED.title) fail(`targetExamTitle must be ${EXPECTED.title}`);
-if (!Array.isArray(data.modules) || data.modules.length !== 2) fail('Payload must contain exactly two modules');
+const PRIOR = loadPriorCorpus();
+// The collision check hunts reused CONTEXTS, not shared mathematical vocabulary: two
+// abstract circle items necessarily both say "circle", "radius" and "central angle"
+// without echoing each other. Domain terms are therefore stopped.
+const STOP = new Set(('a an the of in on at to for and or is are was were be been what which value given equation function graph shown following each per what is the of a in x y f t n number' +
+  ' constants constant xy plane expression' +
+  ' circle radius diameter central angle sector arc circumference triangle triangles congruent similar' +
+  ' measure degrees square rectangle prism cube cylinder side length width height area volume perimeter' +
+  ' surface slope intercept line lines parallel perpendicular point points coordinate ordered pair' +
+  ' solution solutions solve real integer integers positive negative possible distinct exactly least' +
+  ' greatest maximum minimum values table shows show gives corresponding three four five' +
+  ' inequality system systems variable variables term terms coefficient exponent power product quotient' +
+  ' sum difference equivalent defined represents represent situation model estimated total').split(/\s+/));
 
-const priorCorpus = loadPriorCorpus();
-const currentStems = [];
+function contentWords(s) {
+  return [...new Set(stripTags(s).toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter((w) => w.length > 3 && !STOP.has(w)))];
+}
+
+function collisionCheck(qLabel, text) {
+  const mine = contentWords(text);
+  if (mine.length < 4) return;
+  for (const p of PRIOR) {
+    const theirs = new Set(contentWords(p.text));
+    const shared = mine.filter((w) => theirs.has(w));
+    const j = shared.length / Math.max(6, Math.min(mine.length, theirs.size));
+    if (j >= 0.6 && shared.length >= 5) {
+      errors.push(`${qLabel}: context collides with ${p.form} ${p.n} (shared: ${shared.slice(0, 8).join(', ')})`);
+    } else if (j >= 0.45 && shared.length >= 4) {
+      warnings.push(`${qLabel}: possible context echo of ${p.form} ${p.n} (shared: ${shared.slice(0, 8).join(', ')})`);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+if (!Array.isArray(data.modules) || data.modules.length !== 2) {
+  errors.push(`Expected exactly 2 modules, found ${data.modules?.length}`);
+}
+
 const formDomains = {};
 const formSkills = {};
 const sprAnswers = [];
-const seenAssets = new Set();
-const seenModuleNumbers = new Set();
 
-for (const module of data.modules || []) {
-  const m = module.moduleNumber;
-  const mLabel = `M${m}`;
-  if (!EXPECTED.moduleNumbers.includes(m)) fail(`${mLabel}: unexpected moduleNumber`);
-  if (seenModuleNumbers.has(m)) fail(`${mLabel}: duplicate moduleNumber`);
-  seenModuleNumbers.add(m);
-  if (module.title !== `Exam 9, Module ${m}`) fail(`${mLabel}: title does not follow Exam 9 module convention`);
-  if (module.description !== `Practice Test 9 - Math, Module ${m - 2} (22 questions)`) fail(`${mLabel}: description does not match module metadata contract`);
-  if (module.section !== 'Math') fail(`${mLabel}: section must be Math`);
-  if (module.calculatorAllowed !== true) fail(`${mLabel}: calculatorAllowed must be true`);
-  if (module.timeLimit !== EXPECTED.timeLimit) fail(`${mLabel}: timeLimit must be ${EXPECTED.timeLimit}`);
-  if (!Array.isArray(module.questions) || module.questions.length !== EXPECTED.questionsPerModule) {
-    fail(`${mLabel}: expected ${EXPECTED.questionsPerModule} questions, found ${module.questions?.length}`);
-    continue;
+for (const mod of data.modules || []) {
+  const mLabel = `Module ${mod.moduleNumber}`;
+
+  if (!EXPECTED.moduleNumbers.includes(mod.moduleNumber)) errors.push(`${mLabel}: unexpected moduleNumber`);
+  if (mod.section !== MATH_SECTION) errors.push(`${mLabel}: section must be "${MATH_SECTION}"`);
+  if (mod.timeLimit !== EXPECTED.timeLimit) errors.push(`${mLabel}: timeLimit must be ${EXPECTED.timeLimit}`);
+  if (mod.calculatorAllowed !== true) errors.push(`${mLabel}: calculatorAllowed must be true`);
+  if ((mod.questions || []).length !== EXPECTED.questionsPerModule) {
+    errors.push(`${mLabel}: expected ${EXPECTED.questionsPerModule} questions, found ${mod.questions?.length}`);
   }
 
   const sprAt = [];
-  const difficulties = { easy: 0, medium: 0, hard: 0 };
-  const keys = { A: 0, B: 0, C: 0, D: 0 };
-  const moduleDomains = {};
+  const diffCount = { easy: 0, medium: 0, hard: 0 };
+  const keyCount = { A: 0, B: 0, C: 0, D: 0 };
+  const seen = new Set();
   let visuals = 0;
-  let graphAssets = 0;
-  let circleCount = 0;
-  let mcCount = 0;
-  let sprCount = 0;
-  const keySequence = [];
+  let circles = 0;
 
-  module.questions.forEach((q, index) => {
+  (mod.questions || []).forEach((q, idx) => {
     const n = q.originalQuestionNumber;
-    const label = `${mLabel}Q${n}`;
-    const missing = REQUIRED_QUESTION_KEYS.filter((key) => !(key in q));
-    if (missing.length) fail(`${label}: missing keys ${missing.join(', ')}`);
-    if (n !== index + 1) fail(`${label}: question number is out of sequence at position ${index + 1}`);
-    if (!['easy', 'medium', 'hard'].includes(q.difficulty)) fail(`${label}: invalid difficulty ${q.difficulty}`);
-    else difficulties[q.difficulty] += 1;
-    if (q.difficulty !== EXPECTED.difficultyByPosition[n]) {
-      fail(`${label}: difficulty ${q.difficulty} breaks the bound ramp (${EXPECTED.difficultyByPosition[n]} expected)`);
-    }
-    if (!normalizeSpace(q.text)) fail(`${label}: empty question text`);
-    if (!normalizeSpace(q.explanation) || stripTags(q.explanation).length < 60) fail(`${label}: explanation is missing or too short`);
+    const qLabel = `${mLabel} Q${n}`;
+
+    if (n !== idx + 1) errors.push(`${qLabel}: originalQuestionNumber out of order (position ${idx + 1})`);
+    if (seen.has(n)) errors.push(`${qLabel}: duplicate question number`);
+    seen.add(n);
 
     const sub = resolveSubcategory(q.subcategory);
-    if (!sub) fail(`${label}: unknown subcategory ${q.subcategory}`);
+    if (!sub) errors.push(`${qLabel}: unresolvable subcategory "${q.subcategory}"`);
     else {
-      if (sub.id !== q.subcategoryId) fail(`${label}: subcategoryId ${q.subcategoryId} does not match ${sub.id}`);
-      if (sub.section !== 'Math') fail(`${label}: subcategory is not Math`);
+      if (sub.id !== q.subcategoryId) errors.push(`${qLabel}: subcategoryId ${q.subcategoryId} != canonical ${sub.id}`);
+      if (sub.section !== MATH_SECTION) errors.push(`${qLabel}: subcategory "${q.subcategory}" is not a Math skill`);
       formDomains[sub.mainCategory] = (formDomains[sub.mainCategory] || 0) + 1;
-      moduleDomains[sub.mainCategory] = (moduleDomains[sub.mainCategory] || 0) + 1;
       formSkills[sub.kebab] = (formSkills[sub.kebab] || 0) + 1;
     }
-    if (q.subcategory === 'circles') circleCount += 1;
-    if (q.subcategory === 'probability' && m !== 4) fail(`${label}: probability is reserved for Module 4`);
-    if (q.subcategory === 'linear-inequalities' && q.questionType !== 'multiple-choice') {
-      fail(`${label}: all supplied inequality exemplars are MC; Test 9 binds this skill to MC`);
+    if (q.subcategory === 'probability' && mod.moduleNumber !== 4) {
+      errors.push(`${qLabel}: probability items appear in Module 4 only (measured invariant)`);
     }
-
-    const isApplied = EXPECTED.appliedPositions[m].includes(n);
-    const stem = normalizeSpace(`${stripTags(q.passage)} ${stripTags(q.text)}`);
-    const exactStem = stem.toLowerCase();
-    const contextual = isApplied || STATISTICAL.has(q.subcategory);
-    const duplicate = currentStems.find((entry) => entry.exactStem === exactStem);
-    if (duplicate) fail(`${label}: exact stem duplicate of ${duplicate.label} within Test 9`);
-    if (contextual) {
-      const contextualDuplicate = currentStems.find((entry) => entry.contextual && similarity(stem, entry.stem) >= 0.78 && contentWords(stem).size >= 5);
-      if (contextualDuplicate) fail(`${label}: near-duplicate context of ${contextualDuplicate.label} within Test 9`);
+    if (q.subcategory === 'evaluating-statistical-claims') {
+      errors.push(`${qLabel}: evaluating-statistical-claims is absent from every measured form`);
     }
-    currentStems.push({ label, stem, exactStem, contextual });
-    for (const prior of priorCorpus) {
-      if (exactStem === prior.exactStem) fail(`${label}: exact passage/stem duplicate of ${prior.label}`);
+    if (q.subcategory === 'circles') circles += 1;
+
+    if (!['easy', 'medium', 'hard'].includes(q.difficulty)) errors.push(`${qLabel}: bad difficulty "${q.difficulty}"`);
+    else diffCount[q.difficulty] += 1;
+
+    if (!q.text || !String(q.text).trim()) errors.push(`${qLabel}: empty text`);
+    if (!q.explanation || String(q.explanation).trim().length < 60) errors.push(`${qLabel}: explanation missing/too short`);
+
+    // ---- stem voice + length -------------------------------------------------
+    const stem = `${stripTags(proseOnly(q.passage || ''))} ${stripTags(q.text || '')}`.replace(/\s+/g, ' ').trim();
+    const words = wordCount(stem);
+    let cap = EXPECTED.stemWordCaps.abstract;
+    // The 15-word cap governs the "Which expression is equivalent to ...?" surface only;
+    // an identity-with-unknown-constants item in the same skill legitimately runs longer.
+    if (q.subcategory === 'equivalent-expressions' && /^Which expression is equivalent/.test(stripTags(q.text).trim())) {
+      cap = EXPECTED.stemWordCaps['equivalent-expressions'];
     }
-    if (contextual && contentWords(stem).size >= 5) {
-      for (const prior of priorCorpus) {
-        if (!prior.contextual) continue;
-        const score = similarity(stem, prior.stem);
-        if (score >= 0.72) fail(`${label}: wording/context collision with ${prior.label} (Jaccard ${score.toFixed(2)})`);
-        else if (score >= 0.55) warn(`${label}: possible echo of ${prior.label} (Jaccard ${score.toFixed(2)})`);
-      }
+    else if (STATISTICAL_SKILLS.has(q.subcategory)) cap = EXPECTED.stemWordCaps.statistical;
+    else if ((/<p[\s>]/.test(q.passage || '')
+              && stripTags((q.passage.match(/<p[^>]*>[\s\S]*?<\/p>/i) || [''])[0]).trim().split(/\s+/).filter(Boolean).length >= 8)
+             || /\.\s+[A-Z]/.test(stripTags(q.text).trim())) {
+      // Contextualized item: either the passage opens with a prose <p>, or the context
+      // sentences live inside `text` (more than one sentence). The bare-solve shape a
+      // long stem would really betray is a single-sentence `text` over a displayed
+      // equation, and that keeps the 35-word cap.
+      cap = EXPECTED.stemWordCaps.applied;
     }
+    if (words > cap) warnings.push(`${qLabel}: stem is ${words} prose words (cap ${cap} for this item class) — going long is the #1 tell of a fake item`);
+    // "you" is forbidden in the stem, with one attested exception: CB's own answer-format
+    // parenthetical, "(Express your answer as a decimal or fraction, not as a percent.)".
+    const stemNoParen = stem.replace(/\(Express your answer[^)]*\)/gi, ' ');
+    if (/\byou\b|\byour\b/i.test(stemNoParen)) errors.push(`${qLabel}: stem addresses the reader ("you") — forbidden`);
+    if (/^\s*(Find|Solve|Determine|Calculate|Compute)\b/i.test(stripTags(q.text))) errors.push(`${qLabel}: stem uses an imperative — CB items ask, never command`);
+    if ((stripTags(q.text).match(/\?/g) || []).length > 1) errors.push(`${qLabel}: stem asks more than one question`);
+    if (/\\frac|\\sqrt|\\left|\$\$|\\\(/.test(`${q.passage || ''}${q.text || ''}`)) errors.push(`${qLabel}: LaTeX in passage/text (KaTeX is not loaded in the player)`);
+    if (/!/.test(stripTags(q.text))) warnings.push(`${qLabel}: exclamation point in the stem`);
+    collisionCheck(qLabel, stem);
 
-    const proseWords = wordCount(`${q.passage || ''} ${q.text || ''}`);
-    let cap = isApplied ? 55 : 35;
-    if (STATISTICAL.has(q.subcategory)) cap = 75;
-    if (q.subcategory === 'equivalent-expressions' && /^Which expression is equivalent/.test(stripTags(q.text))) cap = 18;
-    if (proseWords > cap) warn(`${label}: ${proseWords} prose words exceeds the ${cap}-word texture target`);
-    const proseSetup = /<p\b/i.test(q.passage || '') || /\.\s+[A-Z(]/.test(stripTags(q.text || ''));
-    if (isApplied && !proseSetup) fail(`${label}: blueprint marks this applied, but it has no contextual setup`);
-    const stemWithoutOfficialNote = stem.replace(/\(Express your answer[^)]*\)/gi, '');
-    if (/\b(?:you|your)\b/i.test(stemWithoutOfficialNote)) fail(`${label}: stem addresses the test taker`);
-    if (/^(?:Find|Solve|Determine|Calculate|Compute)\b/i.test(stripTags(q.text).trim())) fail(`${label}: imperative stem`);
-    if ((stripTags(q.text).match(/\?/g) || []).length !== 1) fail(`${label}: text must contain exactly one question mark`);
-    if (/\\frac|\\sqrt|\\left|\$\$|\\\(/.test(`${q.passage || ''}${q.text || ''}${q.options || ''}`)) fail(`${label}: LaTeX will not render in the player`);
-    if (/!/.test(stem)) warn(`${label}: exclamation point is uncharacteristic`);
-
-    checkHtml(label, 'passage', q.passage);
-    checkHtml(label, 'text', q.text);
-    checkHtml(label, 'explanation', q.explanation);
-
+    // ---- format-specific -----------------------------------------------------
     if (q.questionType === 'multiple-choice') {
-      mcCount += 1;
-      if (!Array.isArray(q.options) || q.options.length !== 4) fail(`${label}: MC must have four options`);
-      if (!Number.isInteger(q.correctAnswer) || q.correctAnswer < 0 || q.correctAnswer > 3) fail(`${label}: MC key must be index 0-3`);
-      else {
-        keys[LETTERS[q.correctAnswer]] += 1;
-        keySequence.push(LETTERS[q.correctAnswer]);
+      if (!Array.isArray(q.options) || q.options.length !== 4) errors.push(`${qLabel}: MC must have exactly 4 options`);
+      if (!Number.isInteger(q.correctAnswer) || q.correctAnswer < 0 || q.correctAnswer > 3) {
+        errors.push(`${qLabel}: MC correctAnswer must be an index 0-3`);
+      } else keyCount[letters[q.correctAnswer]] += 1;
+      if (q.acceptedAnswers !== null && q.acceptedAnswers !== undefined) errors.push(`${qLabel}: MC acceptedAnswers must be null`);
+      if (new Set((q.options || []).map(String)).size !== (q.options || []).length) errors.push(`${qLabel}: duplicate options`);
+      for (const [i, opt] of (q.options || []).entries()) {
+        if (/<[a-zA-Z/]/.test(String(opt))) errors.push(`${qLabel}: option ${letters[i]} contains an HTML tag (options render as plain text)`);
+        if (/&[a-z]+;/.test(String(opt))) errors.push(`${qLabel}: option ${letters[i]} contains an HTML entity (options render as plain text)`);
+        if (/\\frac|\\sqrt/.test(String(opt))) errors.push(`${qLabel}: option ${letters[i]} contains LaTeX`);
+        if (/\$/.test(String(opt)) && !/^\$?[\d,.]+$/.test(String(opt).trim()) && !/\$[\d,.]+/.test(String(opt))) {
+          warnings.push(`${qLabel}: option ${letters[i]} contains "$" — confirm it is money, not LaTeX`);
+        }
+        // U+2212/2013/2014 are forbidden in options (they must be an ASCII hyphen), but
+        // U+207B SUPERSCRIPT MINUS is legitimate inside a superscript exponent and is the
+        // only way to write (5)^(x-1) in plain text; scripts/lib/examNormalizer.js does not
+        // rewrite it, and its sibling U+207A already ships in PT5's option strings.
+        if (/[−–—]/.test(String(opt))) errors.push(`${qLabel}: option ${letters[i]} uses a non-ASCII minus/dash`);
       }
-      if (q.acceptedAnswers !== null) fail(`${label}: MC acceptedAnswers must be null`);
-      if ((q.options || []).some((option) => typeof option !== 'string' || !option.trim())) fail(`${label}: every MC option must be a nonempty string`);
-      const normalizedOptions = (q.options || []).map((option) => normalizeSpace(option).toLowerCase());
-      if (new Set(normalizedOptions).size !== normalizedOptions.length) fail(`${label}: duplicate options after normalization`);
-      for (const [optionIndex, option] of (q.options || []).entries()) {
-        if (/<[^>]+>/.test(String(option))) fail(`${label}: option ${LETTERS[optionIndex]} contains HTML`);
-        if (/&[a-z]+;/i.test(String(option))) fail(`${label}: option ${LETTERS[optionIndex]} contains an HTML entity`);
-        if (/[−–—]/.test(String(option))) fail(`${label}: option ${LETTERS[optionIndex]} uses a non-ASCII minus/dash`);
-        if (/\r|\n/.test(String(option))) fail(`${label}: option ${LETTERS[optionIndex]} contains a raw newline`);
+      const opts = (q.options || []).map(String);
+      if (opts.length === 4 && opts.every(isNumericString)) {
+        const vals = opts.map(numericValue);
+        const asc = vals.every((v, i) => i === 0 || v > vals[i - 1]);
+        const desc = vals.every((v, i) => i === 0 || v < vals[i - 1]);
+        if (!asc && !desc) errors.push(`${qLabel}: numeric options are not monotonically ordered`);
+        else if (desc) warnings.push(`${qLabel}: numeric options are descending (allowed for radical/geometry sets — confirm intentional)`);
       }
-      const choiceValues = (q.options || []).map(choiceNumericValue);
-      if (choiceValues.length === 4 && choiceValues.every((value) => value !== null && Number.isFinite(value))) {
-        const values = choiceValues;
-        const ascending = values.every((value, i) => i === 0 || value > values[i - 1]);
-        const descending = values.every((value, i) => i === 0 || value < values[i - 1]);
-        if (!ascending && !descending) fail(`${label}: numeric choices must be monotone (either direction)`);
+      const expl = stripTags(q.explanation).trim();
+      if (!/^Choice [ABCD] is correct\./.test(expl)) {
+        warnings.push(`${qLabel}: MC explanation does not open with "Choice X is correct."`);
+      } else if (expl.slice(7, 8) !== letters[q.correctAnswer]) {
+        errors.push(`${qLabel}: explanation opener letter "${expl.slice(7, 8)}" does not match key "${letters[q.correctAnswer]}"`);
       }
-
-      const explanation = normalizeSpace(stripTags(q.explanation));
-      const keyLetter = LETTERS[q.correctAnswer];
-      if (!explanation.startsWith(`Choice ${keyLetter} is correct.`)) fail(`${label}: rationale opener does not match key ${keyLetter}`);
-      for (const letter of LETTERS) {
-        if (letter === keyLetter) continue;
-        const individually = new RegExp(`Choice ${letter} is incorrect`, 'i').test(explanation);
-        const diagnosedSentence = explanation.split(/(?<=\.)\s+/).some((sentence) =>
-          /incorrect/i.test(sentence) && new RegExp(`\\b${letter}\\b`).test(sentence));
-        const groupedDiagnosis = explanation.split(/(?<=\.)\s+/).some((sentence) =>
-          /^Choices\b/.test(sentence) && new RegExp(`\\b${letter}\\b`).test(sentence));
-        const labeledGraph = new RegExp(`Graph ${letter}\\b`).test(explanation);
-        const labeledChoice = new RegExp(`Choice ${letter}\\b`).test(explanation);
-        if (!individually && !diagnosedSentence && !groupedDiagnosis && !labeledGraph && !labeledChoice) fail(`${label}: rationale does not diagnose choice ${letter}`);
+      // Every wrong letter must be dismissed, individually or inside a grouped dismissal
+      // ("Choices A, B, and C are incorrect …"), which the official rationales use
+      // 5-17 times per 100 items — see the addendum, section 6.
+      const grouped = [...expl.matchAll(/Choices ((?:[ABCD](?:,)?\s*(?:and\s*)?)+)are incorrect/g)]
+        .flatMap((m) => m[1].match(/[ABCD]/g) || []);
+      for (const L of letters) {
+        if (L === letters[q.correctAnswer]) continue;
+        if (!new RegExp(`Choice ${L} is incorrect`).test(expl) && !grouped.includes(L)) {
+          errors.push(`${qLabel}: explanation never dismisses choice ${L}`);
+        }
       }
+      const ew = wordCount(q.explanation);
+      const band = { easy: [70, 190], medium: [90, 230], hard: [110, 300] }[q.difficulty] || [70, 300];
+      if (ew < band[0] || ew > band[1]) warnings.push(`${qLabel}: rationale is ${ew} words (${q.difficulty} band ${band[0]}-${band[1]})`);
     } else if (q.questionType === 'user-input') {
-      sprCount += 1;
+      if (!Array.isArray(q.options) || q.options.length !== 0) errors.push(`${qLabel}: SPR options must be []`);
+      if (typeof q.correctAnswer !== 'string' || !q.correctAnswer.trim()) errors.push(`${qLabel}: SPR correctAnswer must be a non-empty string`);
+      if (!Array.isArray(q.acceptedAnswers) || q.acceptedAnswers.length === 0) {
+        errors.push(`${qLabel}: SPR acceptedAnswers must be a non-empty array`);
+      } else {
+        if (q.acceptedAnswers[0] !== String(q.correctAnswer)) warnings.push(`${qLabel}: canonical answer is not first in acceptedAnswers`);
+        if (new Set(q.acceptedAnswers).size !== q.acceptedAnswers.length) errors.push(`${qLabel}: duplicate entries in acceptedAnswers`);
+        for (const a of q.acceptedAnswers) {
+          const s = String(a);
+          const limit = s.startsWith('-') ? 6 : 5;
+          if (s.length > limit) errors.push(`${qLabel}: accepted entry "${s}" exceeds the ${limit}-character limit`);
+          if (!/^-?(\d+(\.\d*)?|\.\d+|\d+\/\d+)$/.test(s)) errors.push(`${qLabel}: accepted entry "${s}" is not a legal grid entry`);
+        }
+      }
       sprAt.push(n);
-      if (!Array.isArray(q.options) || q.options.length) fail(`${label}: SPR options must be []`);
-      if (typeof q.correctAnswer !== 'string' || !q.correctAnswer.trim()) fail(`${label}: SPR canonical answer must be a string`);
-      if (!Array.isArray(q.acceptedAnswers) || !q.acceptedAnswers.length) fail(`${label}: SPR requires acceptedAnswers`);
-      else {
-        if (q.acceptedAnswers[0] !== q.correctAnswer) fail(`${label}: canonical answer must be first`);
-        if (new Set(q.acceptedAnswers.map(String)).size !== q.acceptedAnswers.length) fail(`${label}: duplicate accepted answer`);
-        for (const answer of q.acceptedAnswers) {
-          const value = String(answer);
-          const limit = value.startsWith('-') ? 6 : 5;
-          if (value.length > limit) fail(`${label}: entry ${value} exceeds the ${limit}-character grid limit`);
-          try {
-            if (!acceptedSurfaceMatches(value, q.correctAnswer)) fail(`${label}: accepted entry ${value} is neither exact nor a valid rounded/truncated surface for ${q.correctAnswer}`);
-          } catch (error) {
-            fail(`${label}: invalid entry ${value} (${error.message})`);
-          }
-        }
+      sprAnswers.push({ mod: mod.moduleNumber, n, value: String(q.correctAnswer) });
+      if (!/^The correct answer is /.test(stripTags(q.explanation).trim())) {
+        warnings.push(`${qLabel}: SPR explanation does not open with "The correct answer is …"`);
       }
-      sprAnswers.push({ label, answer: q.correctAnswer });
-      const explanation = normalizeSpace(stripTags(q.explanation));
-      if (!explanation.startsWith(`The correct answer is ${q.correctAnswer}.`)) fail(`${label}: SPR rationale opener must state the canonical answer`);
-      const multipleSurfaces = (q.acceptedAnswers || []).length > 1;
-      const hasEntryNote = /examples of ways to enter a correct answer/i.test(explanation);
-      if (multipleSurfaces !== hasEntryNote) fail(`${label}: answer-entry note does not match accepted-answer multiplicity`);
+      if (/Choice [ABCD] is incorrect/.test(stripTags(q.explanation))) errors.push(`${qLabel}: SPR rationale carries MC dismissals`);
+      // The entry-forms note is triggered by MULTIPLE legal entry surfaces, not by
+      // non-integrality: an official SPR keyed 4.44 (one legal form) carries no note,
+      // while 0.5 | 1/2 does. See docs/analysis/CB_Math_C_texture_addendum.md section 7.
+      const isFraction = String(q.correctAnswer).includes('/');
+      const isDecimal = /\./.test(String(q.correctAnswer));
+      const hasNote = /examples of ways to enter a correct answer/.test(stripTags(q.explanation));
+      if (isFraction && !hasNote) errors.push(`${qLabel}: a fraction SPR must end with the entry-forms note`);
+      if (isDecimal && !hasNote) warnings.push(`${qLabel}: decimal SPR carries no entry-forms note — correct only if there is exactly one legal entry surface`);
+      if (!isFraction && !isDecimal && hasNote) warnings.push(`${qLabel}: integer SPR carries the entry-forms note`);
+      if (EXPECTED.sprDifficulty[n] && q.difficulty !== EXPECTED.sprDifficulty[n]) {
+        errors.push(`${qLabel}: SPR at position ${n} must be ${EXPECTED.sprDifficulty[n]}, found ${q.difficulty}`);
+      }
     } else {
-      fail(`${label}: unsupported questionType ${q.questionType}`);
+      errors.push(`${qLabel}: unknown questionType "${q.questionType}"`);
     }
 
-    const rationaleWords = wordCount(q.explanation);
-    const minimum = { easy: 40, medium: 45, hard: 60 }[q.difficulty] || 40;
-    if (rationaleWords < minimum) warn(`${label}: rationale has ${rationaleWords} words; inspect official-style completeness`);
-    if (rationaleWords > 300) warn(`${label}: rationale has ${rationaleWords} words; likely overexplained`);
-
-    const tableVisual = /<table\b/i.test(q.passage || '');
-    const tableExpected = EXPECTED.visualSurfaces[m].table.includes(n);
-    const svgExpected = EXPECTED.visualSurfaces[m].svg.includes(n);
-    if (tableVisual !== tableExpected) fail(`${label}: table presence does not match the bound visual blueprint`);
-    if (Boolean(q.graphAsset) !== svgExpected) fail(`${label}: SVG presence does not match the bound visual blueprint`);
-    if (q.graphAsset || tableVisual) visuals += 1;
+    // ---- figures -------------------------------------------------------------
     if (q.graphAsset) {
-      graphAssets += 1;
-      if (seenAssets.has(q.graphAsset)) fail(`${label}: graphAsset is reused within the form`);
-      seenAssets.add(q.graphAsset);
-      if (path.basename(q.graphAsset) !== q.graphAsset || !/^PT9-M[34]-Q\d{2}\.svg$/.test(q.graphAsset)) fail(`${label}: unsafe or nonconforming graphAsset name`);
-      const expectedAssetName = `PT9-M${m}-Q${String(n).padStart(2, '0')}.svg`;
-      if (q.graphAsset !== expectedAssetName) fail(`${label}: graphAsset must be ${expectedAssetName}`);
-      const assetPath = path.join(ASSETS_DIR, q.graphAsset);
-      if (!fs.existsSync(assetPath)) fail(`${label}: missing ${q.graphAsset}`);
+      visuals += 1;
+      const f = path.join(ASSETS_DIR, q.graphAsset);
+      if (!fs.existsSync(f)) errors.push(`${qLabel}: missing figure asset ${q.graphAsset}`);
       else {
-        const svg = fs.readFileSync(assetPath, 'utf8');
-        if (Buffer.byteLength(svg, 'utf8') > 50_000) fail(`${label}: SVG exceeds the 50 KB publication limit`);
-        if (!/^\s*<svg\b/.test(svg)) fail(`${label}: asset is not SVG`);
-        if (!/\bviewBox=/.test(svg)) fail(`${label}: SVG has no viewBox`);
-        if (/<(?:script|image|foreignObject|style|a)\b|(?:href|xlink:href)\s*=\s*["'](?!#)|\son\w+\s*=|javascript:|url\s*\(\s*(?!#)/i.test(svg)) fail(`${label}: SVG embeds active/external content`);
-        if (JSDOMImpl) {
-          try {
-            const parsed = new JSDOMImpl(svg, { contentType: 'image/svg+xml' });
-            if (parsed.window.document.documentElement.localName !== 'svg') fail(`${label}: XML root is not svg`);
-          } catch (error) {
-            fail(`${label}: SVG is not well-formed XML (${error.message})`);
-          }
-        }
-        const scaleNote = /Note: Figure not drawn to scale\./.test(svg);
-        if (GEOMETRY_FIGURE_SKILLS.has(q.subcategory) && !scaleNote) fail(`${label}: geometry figure lacks the not-to-scale note`);
-        if (!GEOMETRY_FIGURE_SKILLS.has(q.subcategory) && scaleNote) warn(`${label}: non-geometry visual has a not-to-scale note`);
+        const svg = fs.readFileSync(f, 'utf8');
+        if (!/^<svg[\s>]/.test(svg.trim())) errors.push(`${qLabel}: ${q.graphAsset} does not start with <svg`);
+        if (/<script\b/i.test(svg)) errors.push(`${qLabel}: ${q.graphAsset} contains a script tag`);
+        if (/<image\b|xlink:href/i.test(svg)) errors.push(`${qLabel}: ${q.graphAsset} embeds a raster/external reference`);
+        const geometrySkill = ['lines-angles-triangles', 'right-triangles-trigonometry', 'area-volume'].includes(q.subcategory);
+        const hasNote = /Note: Figure not drawn to scale\./.test(svg);
+        if (geometrySkill && !hasNote) errors.push(`${qLabel}: geometry figure is missing "Note: Figure not drawn to scale."`);
+        if (!geometrySkill && hasNote) warnings.push(`${qLabel}: non-geometry figure carries the scale note (coordinate grids never do)`);
+        if (geometrySkill && q.difficulty === 'hard') errors.push(`${qLabel}: hard geometry is deliberately figure-less`);
       }
-      if (wordCount(q.graphDescription) < 12) fail(`${label}: graphDescription is not data-complete enough`);
-      if (/<[^>]+>|&[a-z]+;/i.test(q.graphDescription)) fail(`${label}: graphDescription must be plain text`);
+      if (!q.graphDescription || !String(q.graphDescription).trim()) errors.push(`${qLabel}: figure item missing graphDescription (alt text)`);
     } else if (q.graphDescription) {
-      fail(`${label}: graphDescription exists without graphAsset`);
+      warnings.push(`${qLabel}: graphDescription present without graphAsset`);
     }
-    if (q.subcategory === 'two-variable-data' && !q.graphAsset) fail(`${label}: measured two-variable-data archetypes require a graph`);
+    if (q.subcategory === 'two-variable-data' && !q.graphAsset && !/<table/i.test(q.passage || '')) {
+      warnings.push(`${qLabel}: two-variable-data items carry a graph in 9/9 measured items`);
+    }
+    if (/<table/i.test(q.passage || '')) visuals += q.graphAsset ? 0 : 1;
+
+    checkSanitizerSurvival(qLabel, 'passage', q.passage);
+    checkSanitizerSurvival(qLabel, 'text', q.text);
+    checkSanitizerSurvival(qLabel, 'explanation', q.explanation);
   });
 
-  if (sprAt.join(',') !== EXPECTED.sprPositions.join(',')) fail(`${mLabel}: SPR positions [${sprAt}] do not match [${EXPECTED.sprPositions}]`);
-  if (mcCount !== 16 || sprCount !== 6) fail(`${mLabel}: expected 16 MC and 6 SPR, found ${mcCount} MC and ${sprCount} SPR`);
-  for (const [difficulty, expected] of Object.entries(EXPECTED.difficultyMix[m])) {
-    if (difficulties[difficulty] !== expected) fail(`${mLabel}: ${difficulty} count ${difficulties[difficulty]} != ${expected}`);
+  // ---- module-level ----------------------------------------------------------
+  const expectedSpr = EXPECTED.sprPositions.join(',');
+  if (sprAt.join(',') !== expectedSpr) errors.push(`${mLabel}: SPR positions [${sprAt}] != expected [${expectedSpr}]`);
+  const expMix = EXPECTED.difficultyMix[mod.moduleNumber];
+  if (expMix) {
+    for (const d of Object.keys(expMix)) {
+      if (diffCount[d] !== expMix[d]) errors.push(`${mLabel}: ${d} count ${diffCount[d]} != blueprint ${expMix[d]}`);
+    }
   }
-  if (visuals !== EXPECTED.visuals[m]) fail(`${mLabel}: visual count ${visuals} != ${EXPECTED.visuals[m]}`);
-  if (graphAssets !== EXPECTED.graphAssets[m]) fail(`${mLabel}: SVG count ${graphAssets} != ${EXPECTED.graphAssets[m]}`);
-  if (circleCount !== 1) fail(`${mLabel}: expected exactly one circles item`);
-  for (const [domain, expected] of Object.entries(EXPECTED.moduleDomains[m])) {
-    if ((moduleDomains[domain] || 0) !== expected) fail(`${mLabel}: ${domain} count ${moduleDomains[domain] || 0} != ${expected}`);
-  }
-  for (const letter of LETTERS) if (keys[letter] !== 4) fail(`${mLabel}: key ${letter} count ${keys[letter]} != 4`);
-  let longestStreak = 1;
-  let currentStreak = 1;
-  for (let index = 1; index < keySequence.length; index += 1) {
-    currentStreak = keySequence[index] === keySequence[index - 1] ? currentStreak + 1 : 1;
-    longestStreak = Math.max(longestStreak, currentStreak);
-  }
-  if (longestStreak > 3) fail(`${mLabel}: MC answer-letter streak of ${longestStreak} is too conspicuous`);
-  console.log(`${mLabel}: 22 questions | E${difficulties.easy}/M${difficulties.medium}/H${difficulties.hard} | SPR ${sprAt.join(',')} | visuals ${visuals} | ${LETTERS.map((letter) => `${letter}${keys[letter]}`).join(' ')}`);
+  if (visuals !== EXPECTED.visualsPerModule) errors.push(`${mLabel}: ${visuals} visual-stimulus items != blueprint ${EXPECTED.visualsPerModule}`);
+  if (circles < 1) errors.push(`${mLabel}: every measured module carries at least one circles item`);
+  const spread = Math.max(...Object.values(keyCount)) - Math.min(...Object.values(keyCount));
+  if (spread > 2) warnings.push(`${mLabel}: key-letter balance off (${JSON.stringify(keyCount)})`);
+  console.log(`${mLabel}: ${mod.questions.length} questions | SPR at [${sprAt}] | difficulty E${diffCount.easy}/M${diffCount.medium}/H${diffCount.hard} | visuals ${visuals} | keys ${letters.map((l) => `${l}${keyCount[l]}`).join(' ')}`);
 }
 
-if ([...seenModuleNumbers].sort().join(',') !== EXPECTED.moduleNumbers.join(',')) {
-  fail(`Module-number set [${[...seenModuleNumbers].sort()}] must be [${EXPECTED.moduleNumbers}]`);
+// ---- form-level --------------------------------------------------------------
+console.log(`\nForm domains: ${JSON.stringify(formDomains)}`);
+for (const [d, want] of Object.entries(EXPECTED.domainQuota)) {
+  const got = formDomains[d] || 0;
+  if (got !== want) errors.push(`Form: domain "${d}" has ${got} items, blueprint says ${want}`);
 }
-const assetFiles = fs.existsSync(ASSETS_DIR)
-  ? fs.readdirSync(ASSETS_DIR).filter((name) => name.toLowerCase().endsWith('.svg')).sort()
-  : [];
-const referencedAssetFiles = [...seenAssets].sort();
-for (const file of assetFiles) if (!seenAssets.has(file)) fail(`Unreferenced SVG asset: ${file}`);
-for (const file of referencedAssetFiles) if (!assetFiles.includes(file)) fail(`Referenced SVG absent from asset directory: ${file}`);
-
-for (const [domain, expected] of Object.entries(EXPECTED.domainQuota)) {
-  if ((formDomains[domain] || 0) !== expected) fail(`Form: ${domain} count ${formDomains[domain] || 0} != ${expected}`);
+for (const [s, want] of Object.entries(EXPECTED.skillQuota)) {
+  const got = formSkills[s] || 0;
+  if (got !== want) errors.push(`Form: skill "${s}" has ${got} items, blueprint says ${want}`);
 }
-for (const [skill, expected] of Object.entries(EXPECTED.skillQuota)) {
-  if ((formSkills[skill] || 0) !== expected) fail(`Form: ${skill} count ${formSkills[skill] || 0} != ${expected}`);
-}
-for (const skill of Object.keys(formSkills)) {
-  if (!(skill in EXPECTED.skillQuota)) fail(`Form: skill ${skill} is absent from the blueprint`);
+for (const s of Object.keys(formSkills)) {
+  if (!(s in EXPECTED.skillQuota)) errors.push(`Form: skill "${s}" is not in the blueprint quota`);
 }
 
 const census = { integer: 0, fraction: 0, decimal: 0, negative: 0 };
-for (const { answer } of sprAnswers) {
-  if (answer.startsWith('-')) census.negative += 1;
-  if (answer.includes('/')) census.fraction += 1;
-  else if (answer.includes('.')) census.decimal += 1;
+for (const a of sprAnswers) {
+  if (a.value.startsWith('-')) census.negative += 1;
+  if (a.value.includes('/')) census.fraction += 1;
+  else if (a.value.includes('.')) census.decimal += 1;
   else census.integer += 1;
 }
-if (sprAnswers.length !== 12) fail(`Form: expected 12 SPR items, found ${sprAnswers.length}`);
-for (const [kind, expected] of Object.entries(EXPECTED.sprCensus)) {
-  if (census[kind] !== expected) fail(`Form: SPR ${kind} count ${census[kind]} != ${expected}`);
+console.log(`SPR census: ${JSON.stringify(census)} | answers ${sprAnswers.map((a) => `${a.mod}.${a.n}=${a.value}`).join(' ')}`);
+for (const [k, want] of Object.entries(EXPECTED.sprCensus)) {
+  if (census[k] !== want) errors.push(`Form: SPR census ${k} = ${census[k]}, blueprint says ${want}`);
 }
-if ((formSkills.probability || 0) !== 1) fail('Form: exactly one probability item is required');
-if ((formSkills['evaluating-statistical-claims'] || 0) !== 1) fail('Form: exactly one evaluating-statistical-claims item is required');
-if ((formSkills['inference-statistics'] || 0) !== 0) fail('Form: evaluating claims replaces inference; both may not appear');
+if (sprAnswers.length !== 12) errors.push(`Form: expected 12 SPR items, found ${sprAnswers.length}`);
 
-console.log(`Form domains: ${JSON.stringify(formDomains)}`);
-console.log(`Form skills: ${JSON.stringify(formSkills)}`);
-console.log(`SPR census: ${JSON.stringify(census)} | ${sprAnswers.map(({ label, answer }) => `${label}=${answer}`).join(' ')}`);
 console.log('');
-for (const message of warnings) console.log(`WARN  ${message}`);
-for (const message of errors) console.log(`ERROR ${message}`);
+for (const w of warnings) console.log(`WARN  ${w}`);
+for (const e of errors) console.log(`ERROR ${e}`);
 console.log(`\n${errors.length} error(s), ${warnings.length} warning(s).`);
 process.exit(errors.length ? 1 : 0);

@@ -1,20 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 350" width="430" height="350" font-family="Georgia, serif">
-  <rect x="55" y="35" width="330" height="95" fill="#d8d8d8"/>
-  <g stroke="#dddddd" stroke-width="1">
-    <line x1="55" y1="35" x2="55" y2="305"/><line x1="110" y1="35" x2="110" y2="305"/>
-    <line x1="165" y1="35" x2="165" y2="305"/><line x1="220" y1="35" x2="220" y2="305"/>
-    <line x1="275" y1="35" x2="275" y2="305"/><line x1="330" y1="35" x2="330" y2="305"/>
-    <line x1="385" y1="35" x2="385" y2="305"/>
-    <line x1="55" y1="35" x2="385" y2="35"/><line x1="55" y1="85" x2="385" y2="85"/>
-    <line x1="55" y1="130" x2="385" y2="130"/><line x1="55" y1="175" x2="385" y2="175"/>
-    <line x1="55" y1="220" x2="385" y2="220"/><line x1="55" y1="265" x2="385" y2="265"/>
-    <line x1="55" y1="305" x2="385" y2="305"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 362 348" width="362" height="348" font-family="Georgia, serif">
+  <defs>
+    <marker id="ah411" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+  </defs>
+  <g stroke="#cccccc" stroke-width="1">
+    <line x1="52.0" y1="26.0" x2="52.0" y2="314.0"/>
+    <line x1="76.0" y1="26.0" x2="76.0" y2="314.0"/>
+    <line x1="100.0" y1="26.0" x2="100.0" y2="314.0"/>
+    <line x1="124.0" y1="26.0" x2="124.0" y2="314.0"/>
+    <line x1="148.0" y1="26.0" x2="148.0" y2="314.0"/>
+    <line x1="172.0" y1="26.0" x2="172.0" y2="314.0"/>
+    <line x1="196.0" y1="26.0" x2="196.0" y2="314.0"/>
+    <line x1="220.0" y1="26.0" x2="220.0" y2="314.0"/>
+    <line x1="244.0" y1="26.0" x2="244.0" y2="314.0"/>
+    <line x1="268.0" y1="26.0" x2="268.0" y2="314.0"/>
+    <line x1="292.0" y1="26.0" x2="292.0" y2="314.0"/>
+    <line x1="316.0" y1="26.0" x2="316.0" y2="314.0"/>
+    <line x1="340.0" y1="26.0" x2="340.0" y2="314.0"/>
+    <line x1="52.0" y1="314.0" x2="340.0" y2="314.0"/>
+    <line x1="52.0" y1="290.0" x2="340.0" y2="290.0"/>
+    <line x1="52.0" y1="266.0" x2="340.0" y2="266.0"/>
+    <line x1="52.0" y1="242.0" x2="340.0" y2="242.0"/>
+    <line x1="52.0" y1="218.0" x2="340.0" y2="218.0"/>
+    <line x1="52.0" y1="194.0" x2="340.0" y2="194.0"/>
+    <line x1="52.0" y1="170.0" x2="340.0" y2="170.0"/>
+    <line x1="52.0" y1="146.0" x2="340.0" y2="146.0"/>
+    <line x1="52.0" y1="122.0" x2="340.0" y2="122.0"/>
+    <line x1="52.0" y1="98.0" x2="340.0" y2="98.0"/>
+    <line x1="52.0" y1="74.0" x2="340.0" y2="74.0"/>
+    <line x1="52.0" y1="50.0" x2="340.0" y2="50.0"/>
+    <line x1="52.0" y1="26.0" x2="340.0" y2="26.0"/>
   </g>
-  <line x1="45" y1="265" x2="400" y2="265" stroke="#000" stroke-width="1.6"/>
-  <line x1="220" y1="317" x2="220" y2="25" stroke="#000" stroke-width="1.6"/>
-  <line x1="55" y1="130" x2="385" y2="130" stroke="#000" stroke-width="2" stroke-dasharray="8 6"/>
-  <text x="395" y="255" font-size="14" font-style="italic">x</text>
-  <text x="229" y="30" font-size="14" font-style="italic">y</text>
-  <text x="210" y="135" text-anchor="end" font-size="12">9</text>
-  <text x="210" y="270" text-anchor="end" font-size="12">0</text>
+  <g stroke="#000000" stroke-width="1.4">
+    <line x1="42.0" y1="170.0" x2="350.0" y2="170.0" marker-start="url(#ah411)" marker-end="url(#ah411)"/>
+    <line x1="196.0" y1="324.0" x2="196.0" y2="16.0" marker-start="url(#ah411)" marker-end="url(#ah411)"/>
+  </g>
+  <g font-size="13" font-style="italic" fill="#000000">
+    <text x="356.0" y="174.0" text-anchor="middle">x</text>
+    <text x="183.0" y="13.0" text-anchor="middle">y</text>
+  </g>
+  <g font-size="11" fill="#000000">
+    <text x="187.0" y="184.0" text-anchor="middle" font-style="italic">O</text>
+    <text x="52.0" y="185.0" text-anchor="middle">-6</text>
+    <text x="100.0" y="185.0" text-anchor="middle">-4</text>
+    <text x="148.0" y="185.0" text-anchor="middle">-2</text>
+    <text x="244.0" y="185.0" text-anchor="middle">2</text>
+    <text x="292.0" y="185.0" text-anchor="middle">4</text>
+    <text x="340.0" y="185.0" text-anchor="middle">6</text>
+    <text x="188.0" y="318.0" text-anchor="end">-6</text>
+    <text x="188.0" y="270.0" text-anchor="end">-4</text>
+    <text x="188.0" y="222.0" text-anchor="end">-2</text>
+    <text x="188.0" y="126.0" text-anchor="end">2</text>
+    <text x="188.0" y="78.0" text-anchor="end">4</text>
+    <text x="188.0" y="30.0" text-anchor="end">6</text>
+  </g>
+  <polyline fill="none" stroke="#000000" stroke-width="2" points="160.0,26.0 340.0,266.0"/>
 </svg>

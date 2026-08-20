@@ -1,373 +1,448 @@
-# SAT Practice Test 10 — Math Module 1
+# SAT Practice Test 10 — Math Module 1 (moduleNumber 3)
 
-22 questions · 35 minutes · calculator allowed
+_22 questions · 35 minutes · calculator allowed_
 
-For student-produced response questions, enter a single numeric answer. Figures are drawn to scale unless otherwise indicated.
-
----
-### 1
-
-_easy · linear-equations-two-variables_
-
-The x-coordinate of each point on a line is 17 less than 4 times its y-coordinate. Which equation represents the line?
-
-A. x = 4y - 17
-
-B. x = 4y + 17
-
-C. y = 4x - 17
-
-D. y = 4x + 17
 
 ---
 
-### 2
+### Question 1  
+*easy · linear-equations-one-variable*
 
-_easy · equivalent-expressions_
 
-2x(x + 5) - x(x - 1)
 
-Which expression is equivalent to the given expression?
+(2/5)x + 11 = 25
 
-A. x² + 9x
 
-B. x² + 10x
+What value of x is the solution to the given equation?
 
-C. x² + 11x
 
-D. 3x² + 9x
+A) 11
 
----
+B) 35
 
-### 3
+C) 70
 
-_easy · one-variable-data_
+D) 90
 
-A technician recorded the number of recalibration attempts required for each of 20 pressure gauges. The results are shown.
 
-![A bar graph titled Recalibration Attempts has a horizontal axis labeled Number of attempts with values 1 through 6 and a vertical axis labeled Number of gauges. The bar heights for 1, 2, 3, 4, 5, and 6 attempts are 2, 5, 6, 4, 2, and 1, respectively.](../scripts/data/practiceTest10Math-assets/PT10-M3-Q03.svg)
-
-What is the range of the numbers of recalibration attempts?
-
-A. 1
-
-B. 5
-
-C. 6
-
-D. 20
 
 ---
 
-### 4
+### Question 2  
+*easy · ratios-rates-proportions*
 
-_easy · linear-equations-one-variable_
 
-7(x - 2) = 3x + 18
 
-What is the solution to the given equation?
+The anchor rode on a certain boat has a length of 24 fathoms. What is this length, in feet? (1 fathom = 6 feet)
 
-A. 2
 
-B. 4
+A) 4
 
-C. 6
+B) 18
 
-D. 8
+C) 30
+
+D) 144
+
+
 
 ---
 
-### 5
+### Question 3  
+*easy · equivalent-expressions*
 
-_easy · area-volume_
 
-A triangular acoustic panel has a base of 22 inches and a perpendicular height of 8 inches. What is the area, in square inches, of the panel?
+
+Which expression is equivalent to (6x^2 + 5x − 3) − (2x^2 − 4x + 8)?
+
+
+A) 4x² + x - 11
+
+B) 4x² + 9x - 11
+
+C) 4x² + 9x + 5
+
+D) 8x² + x + 5
+
+
+
+---
+
+### Question 4  
+*easy · area-volume*
+
+
+
+A sphere has a radius of 6 centimeters. What is the volume, in cubic centimeters, of the sphere?
+
+
+A) 48π
+
+B) 144π
+
+C) 216π
+
+D) 288π
+
+
+
+---
+
+### Question 5  
+*easy · linear-equations-one-variable*
+
+
+
+If 8x + 13 = 101, what is the value of x?
 
 _Student-produced response_
 
+
+
 ---
 
-### 6
+### Question 6  
+*easy · percentages*
 
-_easy · linear-equations-one-variable_
 
-(3/5)x + 7 = 19
 
-If x satisfies the given equation, what is the value of 3x?
+What number is 24% of 350?
 
 _Student-produced response_
 
+
+
 ---
 
-### 7
+### Question 7  
+*easy · nonlinear-functions*
 
-_easy · nonlinear-functions_
 
-The graph of the function f is shown.
 
-![A coordinate plane shows a smooth upward-opening parabola labeled f. Its vertex is at (0, 1), and it passes through (-2, 5), (-1, 2), (1, 2), and (2, 5).](../scripts/data/practiceTest10Math-assets/PT10-M3-Q07.svg)
+<p>The table gives the depth d, in feet, of the water in a certain reservoir t months after a drawdown began. The depth of the water decreases exponentially over time.</p><table style="border-collapse:collapse; margin:8px auto;"><thead><tr><th style="border:1px solid #333; padding:4px 8px;">Number of months, t</th><th style="border:1px solid #333; padding:4px 8px;">Depth (feet), d</th></tr></thead><tbody><tr><td style="border:1px solid #333; padding:4px 8px; text-align:center;">0</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">160</td></tr><tr><td style="border:1px solid #333; padding:4px 8px; text-align:center;">1</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">120</td></tr><tr><td style="border:1px solid #333; padding:4px 8px; text-align:center;">2</td><td style="border:1px solid #333; padding:4px 8px; text-align:center;">90</td></tr></tbody></table>
+
+
+Which equation represents this situation?
+
+
+A) d = 0.75(160)ᵗ
+
+B) d = 160(0.25)ᵗ
+
+C) d = 160(0.75)ᵗ
+
+D) d = 160(1.25)ᵗ
+
+
+
+---
+
+### Question 8  
+*easy · lines-angles-triangles*
+
+
+> **[Figure: PT10-M3-Q08.svg]** An isosceles triangle has vertex K at the top, vertex L at the lower left, and vertex M at the lower right, and sides KL and KM are each marked with a single tick mark. A segment is drawn from K to point N on side LM, a right angle is marked at N, the angle at L is labeled 62 degrees, and the angle at K between segment KN and side KL is labeled x degrees.
+
+
+In the figure shown, KL = KM. What is the value of x?
+
+
+A) 28
+
+B) 56
+
+C) 62
+
+D) 118
+
+
+
+---
+
+### Question 9  
+*medium · right-triangles-trigonometry*
+
+
+
+A rectangle has a perimeter of 98 centimeters and a width of 9 centimeters. What is the length, in centimeters, of a diagonal of the rectangle?
+
+
+A) 31
+
+B) 40
+
+C) 41
+
+D) 49
+
+
+
+---
+
+### Question 10  
+*easy · linear-inequalities*
+
+
+
+A caterer can spend at most $600 on fruit trays and sandwich trays for an event. Fruit trays cost $18 each, and sandwich trays cost $32 each.
+
+
+Which inequality represents this situation, where f is the number of fruit trays and s is the number of sandwich trays?
+
+
+A) 18f + 32s ≤ 600
+
+B) 18f + 32s ≥ 600
+
+C) 32f + 18s ≤ 600
+
+D) 32f + 18s ≥ 600
+
+
+
+---
+
+### Question 11  
+*medium · nonlinear-functions*
+
+
+> **[Figure: PT10-M3-Q11.svg]** A parabola is graphed in the xy-plane. The parabola opens upward, crosses the x-axis at (-2, 0) and (3, 0), and crosses the y-axis at (0, -6).
+
+
+The graph of y = f(x) is shown in the xy-plane, where f is a quadratic function.
+
 
 Which equation could define f?
 
-A. f(x) = x² - 1
 
-B. f(x) = x² + 1
+A) f(x) = (x - 3)(x - 2)
 
-C. f(x) = -x² + 1
+B) f(x) = (x - 3)(x + 2)
 
-D. f(x) = (x - 1)²
+C) f(x) = (x + 3)(x - 2)
 
----
+D) f(x) = (x + 3)(x + 2)
 
-### 8
 
-_easy · systems-linear-equations_
-
-x + 2y = 7
-
-3x - y = 7
-
-Which ordered pair (x, y) is the solution to the given system of equations?
-
-A. (3, 2)
-
-B. (2, 3)
-
-C. (1, 3)
-
-D. (2, -1)
 
 ---
 
-### 9
+### Question 12  
+*medium · nonlinear-equations*
 
-_easy · ratios-rates-proportions_
 
-A laser cutter completes 7 identical paths in 12.6 minutes at a constant rate. At this rate, how many minutes will it take the cutter to complete 15 paths?
 
-A. 1.8
+9x^2 + 3x − 20 = 0
 
-B. 12.6
 
-C. 25.2
-
-D. 27
-
----
-
-### 10
-
-_medium · nonlinear-equations_
-
-|3x - 5| = x + 7
-
-Which pair lists all solutions to the given equation?
-
-A. (-1/2, 11/2)
-
-B. (-3, 6)
-
-C. (-1/2, 6)
-
-D. (1/2, 6)
-
----
-
-### 11
-
-_medium · inference-statistics_
-
-A utility will estimate the proportion of its 18,000 streetlights that need a lens replacement. Plan A uses a simple random sample of 250 streetlights, and plan B uses a simple random sample of 1,000 streetlights. Which statement is most likely true?
-
-A. The estimate from plan B will have a smaller margin of error than the estimate from plan A.
-
-B. The estimate from plan A will have a smaller margin of error because fewer streetlights are inspected.
-
-C. The two estimates will have the same margin of error because they are taken from the same population.
-
-D. The estimate from plan B will equal the exact population proportion because its sample is larger.
-
----
-
-### 12
-
-_medium · equivalent-expressions_
-
-(2x^2 + kx + 15)/(2x + 5) = x + 3
-
-The given equation is true for all x ≠ -5/2, where k is a constant. What is the value of k?
+What is the positive solution to the given equation?
 
 _Student-produced response_
 
+
+
 ---
 
-### 13
+### Question 13  
+*medium · area-volume*
 
-_medium · two-variable-data_
 
-The scatterplot shows measurements from eight fan settings and a line of best fit.
 
-![A scatterplot has a horizontal axis labeled Fan setting from 0 to 9 and a vertical axis labeled Airflow from 0 to 26. The eight plotted points are (1, 6), (2, 9), (3, 10), (4, 14), (5, 15), (6, 19), (7, 20), and (8, 24). A line of best fit passes through the marked points (2, 8) and (8, 23).](../scripts/data/practiceTest10Math-assets/PT10-M3-Q13.svg)
+The volume of a right circular cylinder is 400π cubic centimeters, and the height of the cylinder is 16 centimeters.
 
-What is the slope of the line of best fit shown?
+
+What is the radius, in centimeters, of the cylinder?
 
 _Student-produced response_
 
----
 
-### 14
-
-_medium · linear-equations-two-variables_
-
-(k + 2)x - 3y = 18
-
-The line defined by the given equation passes through the point (3, -1). What is the value of k?
-
-A. -3
-
-B. -1
-
-C. 1
-
-D. 3
 
 ---
 
-### 15
+### Question 14  
+*medium · circles*
 
-_medium · lines-angles-triangles_
 
-In the figure, the angle labeled (7x - 5)° is an exterior angle of the triangle.
 
-![A triangle has its left interior angle labeled (3x + 5) degrees and its top interior angle labeled (2x + 10) degrees. At the right vertex, one side is extended to form an exterior angle labeled (7x - 5) degrees. The figure is not drawn to scale.](../scripts/data/practiceTest10Math-assets/PT10-M3-Q15.svg)
+In a circle with a radius of 12 inches, a central angle measures 150°. What is the area, in square inches, of the sector formed by this central angle?
 
-What is the measure, in degrees, of the exterior angle?
 
-A. 10
+A) 5π
 
-B. 60
+B) 10π
 
-C. 65
+C) 12π
 
-D. 115
+D) 60π
 
----
 
-### 16
-
-_medium · nonlinear-functions_
-
-The graph of a function f contains the point (2, -5). The function g is defined by g(x) = f(x - 4) + 3.
-
-Which point must lie on the graph of g?
-
-A. (-2, -2)
-
-B. (6, -2)
-
-C. (-2, -8)
-
-D. (6, -8)
 
 ---
 
-### 17
+### Question 15  
+*medium · two-variable-data*
 
-_hard · circles_
 
-x^2 + y^2 - 8x + 6y = 0
+> **[Figure: PT10-M3-Q15.svg]** A scatterplot shows the number of pups counted each year from 2013 through 2023, with the year on the horizontal axis and the number of pups on the vertical axis. A line of best fit rises from left to right through (2013, 10) and (2023, 35). The 2019 data point is plotted at 40 pups, well above the line.
 
-The graph of the given equation is a circle. A line tangent to the circle at (8, 0) crosses the y-axis at (0, b). What is the value of b?
 
-A. -4/3
+The scatterplot shows the number of pups of the seal species Phoca arenaria counted at a certain beach each year from 2013 through 2023. A line of best fit is also shown.
 
-B. 3/4
 
-C. 8
+For 2019, what is the difference between the number of pups counted and the number predicted by the line of best fit?
 
-D. 32/3
 
----
+A) 15
 
-### 18
+B) 25
 
-_hard · linear-functions_
+C) 40
 
-During a test, the temperature T(t), in degrees Celsius, of a thermal chamber changes linearly with time t. For a constant k, T(2) = 3k + 7, T(8) = k - 5, and T(14) = -2k + 13.
+D) 65
 
-What is the value of T(5)?
 
-A. 97
-
-B. 61
-
-C. 30
-
-D. -12
 
 ---
 
-### 19
+### Question 16  
+*medium · linear-functions*
 
-_hard · systems-linear-equations_
 
-3x + 2y = 8
 
-5x - 2y = 6
+The function f is defined by f(x) = mx + b, where m and b are constants. The graph of y = f(x) in the xy-plane passes through the points (−2, 7) and (3, −8). What is the value of f(0)?
 
-The solution to the given system is (x, y). What is the value of y - x?
+
+A) -17
+
+B) -3
+
+C) 1
+
+D) 13
+
+
+
+---
+
+### Question 17  
+*hard · systems-linear-equations*
+
+
+
+10x + 2y = 58
+
+5x + 7y = 83
+
+
+The solution to the given system of equations is (x, y). What is the value of x − y?
+
+
+A) -25
+
+B) -5
+
+C) 4
+
+D) 9
+
+
+
+---
+
+### Question 18  
+*hard · one-variable-data*
+
+
+
+Priya recorded the daily rainfall, in millimeters, on each of 40 days at site A and on each of 40 days at site B. The mean of the recorded amounts is 26 millimeters at both sites. The standard deviation of the recorded amounts is 4.5 millimeters at site A and 11.5 millimeters at site B.
+
+
+Which of the following statements must be true?
+
+
+A) The median recorded amount at site A is equal to that at site B.
+
+B) The recorded amounts at site B are more spread out from 26 millimeters than those at site A.
+
+C) The greatest recorded amount at site B is greater than that at site A.
+
+D) Each recorded amount at site B differs from 26 millimeters by at least 11.5 millimeters.
+
+
+
+---
+
+### Question 19  
+*hard · nonlinear-functions*
+
+
+
+f(x) = a(b)^x
+
+
+The function f is defined by the given equation, where a and b are positive constants. If f(0) = 7 and f(3) = 189, what is the value of f(2)?
 
 _Student-produced response_
 
----
 
-### 20
-
-_hard · one-variable-data_
-
-Data set A has mean 14 and standard deviation s. Data set B is formed by replacing every value a in data set A with 3a - 2.
-
-Which statement correctly gives the mean and standard deviation of data set B?
-
-A. The mean is 40, and the standard deviation is 3s.
-
-B. The mean is 40, and the standard deviation is 3s - 2.
-
-C. The mean is 42, and the standard deviation is 3s.
-
-D. The mean is 42, and the standard deviation is 3s - 2.
 
 ---
 
-### 21
+### Question 20  
+*hard · linear-functions*
 
-_hard · nonlinear-functions_
 
-The function f is quadratic and f(2) = f(14).
 
-I. The axis of symmetry of the graph of f is x = 8.
-II. f(5) = f(11).
+The function f is defined by f(x) = kx − 9, where k is a constant. If f(2) = −1, what is the value of f(x + 3) − f(x)?
 
-Which of the statements must be true?
 
-A. I only
+A) -6
 
-B. II only
+B) 3
 
-C. I and II
+C) 4
 
-D. Neither I nor II
+D) 12
+
+
 
 ---
 
-### 22
+### Question 21  
+*hard · nonlinear-equations*
 
-_hard · nonlinear-equations_
 
-√(x + 18) = x + a
 
-In the given equation, a is a positive integer. If the equation has exactly one real solution, what is the greatest possible value of a?
+2x^2 + 8x + 1 = x^2 + 6x − 8
+
+
+How many distinct real solutions does the given equation have?
+
+
+A) Zero
+
+B) Exactly one
+
+C) Exactly two
+
+D) Infinitely many
+
+
+
+---
+
+### Question 22  
+*hard · linear-equations-two-variables*
+
+
+
+2x + 5y = 30
+
+
+In the xy-plane, line j is perpendicular to the graph of the given equation and passes through the point (4, 1). What is the y-coordinate of the y-intercept of line j?
 
 _Student-produced response_
+
+
 
 ---

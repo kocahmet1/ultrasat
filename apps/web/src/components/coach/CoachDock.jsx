@@ -82,6 +82,44 @@ export const ActionButtons = ({ actions, onAction }) => {
   );
 };
 
+/**
+ * UI v2 — the peek ticker. When a proactive note lands with the panel closed,
+ * ONE line slides out with the note's actions, auto-retracts to the badge
+ * after a few seconds, and never opens the panel by itself.
+ */
+const PEEK_MS = 9000;
+
+const DockPeek = ({ peek, onAction, onOpen, onDismiss }) => {
+  useEffect(() => {
+    const t = setTimeout(onDismiss, PEEK_MS);
+    return () => clearTimeout(t);
+  }, [peek.id, onDismiss]);
+
+  // One line only — the full note lives in the panel/thread.
+  const line = String(peek.message || '').split(/(?<=[.!?])\s/)[0].slice(0, 160);
+
+  return (
+    <div className="cvp-peek" role="status">
+      <div style={{ minWidth: 0 }}>
+        <p>{line}</p>
+        <div className="cvp-acts">
+          {(peek.actions || []).slice(0, 1).map((a, i) => (
+            <button key={i} className="cvp-btn" onClick={() => onAction(a)}>
+              {a.label || 'Open'}
+            </button>
+          ))}
+          <button className="cvp-btn ghost" onClick={onOpen}>
+            {peek.actions && peek.actions.length ? 'More' : 'See why'}
+          </button>
+        </div>
+      </div>
+      <button className="cvp-close" onClick={onDismiss} aria-label="Dismiss">
+        ×
+      </button>
+    </div>
+  );
+};
+
 const CoachDock = () => {
   const { currentUser } = useAuth();
   const location = useLocation();
@@ -180,7 +218,21 @@ const CoachDock = () => {
         </div>
       )}
 
-      <div className="coach-dock">
+      <div className="coach-dock" style={{ flexDirection: 'column', alignItems: 'flex-end' }}>
+        {coach.peek && !coach.panelOpen && (
+          <DockPeek
+            peek={coach.peek}
+            onAction={(a) => {
+              coach.dismissPeek();
+              handleAction(a);
+            }}
+            onOpen={() => {
+              coach.dismissPeek();
+              coach.openPanel();
+            }}
+            onDismiss={coach.dismissPeek}
+          />
+        )}
         <button className="coach-dock-btn" onClick={coach.togglePanel} aria-label="Open Coach" title="Coach">
           <CoachGlyph />
           {coach.unread > 0 && <span className="coach-dock-badge">{coach.unread}</span>}

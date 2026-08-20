@@ -1,111 +1,145 @@
-/** Generate reviewable Markdown artifacts from the canonical PT10 Math JSON. */
-
-'use strict';
+/**
+ * Render the human-readable Practice Test 10 math documents from
+ * scripts/data/practiceTest10Math.json:
+ *
+ *   practice-test-10/SAT-Practice-Test-10-Math-Module-1.md        (moduleNumber 3)
+ *   practice-test-10/SAT-Practice-Test-10-Math-Module-2.md        (moduleNumber 4)
+ *   practice-test-10/SAT-Practice-Test-10-Math-Answer-Key-and-Rationales.md
+ *
+ * Output shape matches practice-test-4/ and practice-test-5/ exactly.
+ *
+ * Usage: node scripts/generatePracticeTest2MathDocs.js
+ */
 
 const fs = require('fs');
 const path = require('path');
 
 const data = require(path.resolve(__dirname, 'data/practiceTest10Math.json'));
-const OUTPUT_DIR = path.resolve(__dirname, '..', 'practice-test-10');
-const ASSET_PREFIX = '../scripts/data/practiceTest10Math-assets';
+const OUT_DIR = path.resolve(__dirname, '..', 'practice-test-10');
 const LETTERS = ['A', 'B', 'C', 'D'];
 
-function decodeEntities(value) {
-  return String(value || '')
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
-    .replace(/&le;/g, '≤').replace(/&ge;/g, '≥').replace(/&nbsp;/g, ' ');
+/**
+ * Passage HTML -> markdown-ish body. Displayed-equation divs become bare
+ * centered lines; tables are passed through as raw HTML (the .md files are
+ * read in editors and previewers that render inline HTML).
+ */
+/** Decode the entities the HTML fields legitimately carry (strict inequalities). */
+function decodeEntities(s) {
+  return String(s)
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
 }
 
-function renderInline(value) {
-  return decodeEntities(value)
-    .replace(/<sup>([^<]*)<\/sup>/gi, '^$1')
-    .replace(/<sub>([^<]*)<\/sub>/gi, '_$1')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n\n')
-    .replace(/<p[^>]*>/gi, '')
+function renderPassage(html) {
+  if (!html) return '';
+  if (/<table\b/i.test(html)) return html.trim();
+  return decodeEntities(html)
     .replace(/<div[^>]*>/gi, '\n')
     .replace(/<\/div>/gi, '\n')
-    .replace(/<\/?(?:strong|em)[^>]*>/gi, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n')
+    .replace(/<p[^>]*>/gi, '')
+    .replace(/<sup>([^<]*)<\/sup>/gi, '^$1')
+    .replace(/<sub>([^<]*)<\/sub>/gi, '_$1')
+    .replace(/<\/?[a-z][^>]*>/gi, '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .join('\n\n');
 }
 
-function renderPassage(value) {
-  if (!value) return '';
-  if (/<table\b/i.test(value)) return decodeEntities(value).trim();
-  return renderInline(value);
-}
+function renderQuestion(q) {
+  const lines = [];
+  lines.push(`### Question ${q.originalQuestionNumber}  `);
+  lines.push(`*${q.difficulty} · ${q.subcategory}*`);
+  lines.push('');
+  lines.push('');
 
-function renderQuestion(question) {
-  const lines = [
-    `### ${question.originalQuestionNumber}`,
-    '',
-    `_${question.difficulty} · ${question.subcategory}_`,
-    '',
-  ];
-  const passage = renderPassage(question.passage);
-  if (passage) lines.push(passage, '');
-  if (question.graphAsset) {
-    lines.push(`![${question.graphDescription}](${ASSET_PREFIX}/${question.graphAsset})`, '');
+  if (q.graphAsset) {
+    lines.push(`> **[Figure: ${q.graphAsset}]** ${q.graphDescription}`);
+    lines.push('');
   }
-  lines.push(renderInline(question.text), '');
-  if (question.questionType === 'multiple-choice') {
-    question.options.forEach((option, index) => lines.push(`${LETTERS[index]}. ${renderInline(option)}`, ''));
+
+  const body = renderPassage(q.passage);
+  if (body) {
+    lines.push('');
+    lines.push(body);
+    lines.push('');
+  }
+
+  lines.push('');
+  lines.push(decodeEntities(q.text).replace(/<sup>([^<]*)<\/sup>/gi, '^$1').replace(/<\/?[a-z][^>]*>/gi, ''));
+  lines.push('');
+
+  if (q.questionType === 'multiple-choice') {
+    lines.push('');
+    q.options.forEach((opt, i) => {
+      lines.push(`${LETTERS[i]}) ${opt}`);
+      lines.push('');
+    });
   } else {
-    lines.push('_Student-produced response_', '');
+    lines.push('_Student-produced response_');
+    lines.push('');
   }
-  lines.push('---', '');
+
+  lines.push('');
+  lines.push('');
+  lines.push('---');
+  lines.push('');
   return lines.join('\n');
 }
 
-function renderModule(module, displayNumber) {
-  const header = [
-    `# SAT Practice Test 10 — Math Module ${displayNumber}`,
+function renderModule(mod, moduleLabel) {
+  const head = [
+    `# SAT Practice Test 10 — Math Module ${moduleLabel} (moduleNumber ${mod.moduleNumber})`,
     '',
-    `${module.questions.length} questions · ${module.timeLimit / 60} minutes · calculator allowed`,
+    `_${mod.questions.length} questions · ${Math.round(mod.timeLimit / 60)} minutes · calculator allowed_`,
     '',
-    'For student-produced response questions, enter a single numeric answer. Figures are drawn to scale unless otherwise indicated.',
     '',
     '---',
     '',
-  ];
-  return header.join('\n') + module.questions.map(renderQuestion).join('\n');
+    '',
+  ].join('\n');
+  return head + mod.questions.map(renderQuestion).join('\n');
 }
 
-function renderAnswerKey() {
-  const lines = ['# SAT Practice Test 10 — Math Answer Key and Rationales', ''];
-  data.modules.forEach((module, index) => {
-    lines.push(`## Math Module ${index + 1}`, '');
-    for (const question of module.questions) {
-      const answer = question.questionType === 'multiple-choice'
-        ? LETTERS[question.correctAnswer]
-        : question.correctAnswer;
-      const alternatives = question.questionType === 'user-input' && question.acceptedAnswers.length > 1
-        ? `; accepted entries: ${question.acceptedAnswers.join(', ')}`
+function renderKey() {
+  const out = ['# SAT Practice Test 10 — Math: Answer Key and Rationales', '', ''];
+  data.modules.forEach((mod, mi) => {
+    out.push(`## Module ${mi + 1} (moduleNumber ${mod.moduleNumber})`);
+    out.push('');
+    out.push('');
+    for (const q of mod.questions) {
+      const key = q.questionType === 'multiple-choice'
+        ? LETTERS[q.correctAnswer]
+        : q.correctAnswer;
+      const accepts = q.questionType === 'user-input'
+        ? `, accepts: ${q.acceptedAnswers.join(', ')}`
         : '';
-      lines.push(
-        `### ${question.originalQuestionNumber}. ${answer}`,
-        '',
-        `_${question.difficulty} · ${question.subcategory}${alternatives}_`,
-        '',
-        renderInline(question.explanation),
-        '',
-      );
+      out.push(`**Q${q.originalQuestionNumber}.** \`${key}\`  (${q.difficulty}, ${q.subcategory}${accepts})`);
+      out.push('');
+      out.push(decodeEntities(q.explanation));
+      out.push('');
+      out.push('');
     }
   });
-  return lines.join('\n');
+  return out.join('\n');
 }
 
-fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-const module3 = data.modules.find((module) => module.moduleNumber === 3);
-const module4 = data.modules.find((module) => module.moduleNumber === 4);
-const outputs = [
-  ['SAT-Practice-Test-10-Math-Module-1.md', renderModule(module3, 1)],
-  ['SAT-Practice-Test-10-Math-Module-2.md', renderModule(module4, 2)],
-  ['SAT-Practice-Test-10-Math-Answer-Key-and-Rationales.md', renderAnswerKey()],
+fs.mkdirSync(OUT_DIR, { recursive: true });
+
+const m3 = data.modules.find((m) => m.moduleNumber === 3);
+const m4 = data.modules.find((m) => m.moduleNumber === 4);
+
+const files = [
+  ['SAT-Practice-Test-10-Math-Module-1.md', renderModule(m3, 1)],
+  ['SAT-Practice-Test-10-Math-Module-2.md', renderModule(m4, 2)],
+  ['SAT-Practice-Test-10-Math-Answer-Key-and-Rationales.md', renderKey()],
 ];
-for (const [filename, content] of outputs) {
-  const output = path.join(OUTPUT_DIR, filename);
-  fs.writeFileSync(output, content, 'utf8');
-  console.log(`wrote ${path.relative(path.resolve(__dirname, '..'), output)} (${content.length} bytes)`);
+
+for (const [name, body] of files) {
+  const p = path.join(OUT_DIR, name);
+  fs.writeFileSync(p, body, 'utf8');
+  console.log(`wrote ${path.relative(path.resolve(__dirname, '..'), p)} (${body.length} bytes)`);
 }

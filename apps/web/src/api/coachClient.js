@@ -51,3 +51,5 @@ export const observeCoach = (trigger, refId) =>
 export const requestMicroLessonApi = ({ conceptId, subcategoryId }) =>
   request('/micro-lesson', { method: 'POST', body: { conceptId, subcategoryId } });
 export const fetchNotebook = () => request('/notebook');
+/** Newest proactive note (briefing / exam-note) with its blocks — UI v2. */
+export const fetchLatestBriefing = () => request('/briefing');
