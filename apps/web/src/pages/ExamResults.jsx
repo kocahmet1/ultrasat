@@ -292,7 +292,12 @@ function ExamResults() {
           // here would only spend quota to write a note about a sitting the
           // student explicitly asked it to ignore.
           if (coach?.observe && !examData.excludedFromCoach) {
-            coach.observe('exam_completed', examId || null);
+            // refId must be the practiceExams RESULT doc id — on the fresh
+            // post-exam navigation there is no :examId route param, so fall
+            // back to the loaded document's own id. Without it the Observer's
+            // assembler can't attach "## The exam that just finished" and the
+            // note goes score-blind.
+            coach.observe('exam_completed', examId || location?.state?.examId || examData.id || null);
           }
         } else {
           setPageError('No exam data found to display.');

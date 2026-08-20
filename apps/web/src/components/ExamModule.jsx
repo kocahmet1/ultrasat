@@ -51,6 +51,10 @@ function ExamModule({
   const [currentQuestion, setCurrentQuestion] = useState(initialQuestionIndex || 0);
   const [selectedAnswer, setSelectedAnswer] = useState(Array.isArray(userAnswers) ? userAnswers[0] : (userAnswers[0] || ''));
   const [timeRemaining, setTimeRemaining] = useState(initialTimeRemaining || 32 * 60); // allow resume
+  // Seconds on the clock when THIS sitting of the module began (resume-aware).
+  // startSeconds − timeRemaining at submit = active time, which feeds the
+  // coach's signal-quality gate (a module "done" in 40s is not evidence).
+  const sessionStartSecondsRef = useRef(initialTimeRemaining || 32 * 60);
   const [isModalOpen, setIsModalOpen] = useState(shouldShowFullscreenPrompt);
   const [timerRunning, setTimerRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -484,7 +488,10 @@ function ExamModule({
         moduleNumber: moduleNum,
         answers: finalAnswers,
         crossedOut: localCrossedOut,
-        questions: enrichedQuestions
+        questions: enrichedQuestions,
+        // Active seconds this sitting (coach signal-quality gate). Clamped ≥ 0;
+        // timer-expiry submits report the full session naturally.
+        timeSpentSeconds: Math.max(0, sessionStartSecondsRef.current - timeRemainingRef.current)
       });
     }, 1000);
   };

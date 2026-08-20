@@ -64,7 +64,13 @@ function SubcategoryProgressCard({
           aria-valuemax={10}
           aria-label={`${subcategory.name}: ${answeredCount} of the last 10 questions covered`}
         >
-          <span className="ut-progress-fill" style={{ width: `${coveragePercent}%` }} />
+          {/* Fill color = the same accuracy tier as the chip (≥80 green,
+              50–79 amber, <50 red) so a wall of skills scans at a glance.
+              No attempts yet → neutral brand blue. */}
+          <span
+            className={`ut-progress-fill ${hasAttempts ? `pg-fill--${performanceClass}` : ''}`}
+            style={{ width: `${coveragePercent}%` }}
+          />
         </div>
         <span className="ut-label pg-skill-count">{answeredCount}/10</span>
       </div>

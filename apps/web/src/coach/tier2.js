@@ -78,6 +78,10 @@ export async function applyEventToDerivedState(uid, event) {
   const { type, payload = {}, clientTs } = event;
   const ts = clientTs || Date.now();
   try {
+    // Signal-quality insurance (coach/signalQuality.js): attempts from
+    // low-signal sittings are not emitted in the first place, but if one ever
+    // arrives flagged, it must not move skill/concept state.
+    if (type === EVENT_TYPES.QUESTION_ATTEMPT && payload.lowSignal === true) return;
     if (type === EVENT_TYPES.QUESTION_ATTEMPT) {
       const attempt = {
         correct: !!payload.correct,

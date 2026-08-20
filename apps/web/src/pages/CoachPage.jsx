@@ -26,6 +26,7 @@ import CoachBlocks, { ensureBlocks, Spark } from '../components/coach/CoachBlock
 import { fetchNotebook } from '../api/coachClient';
 import { estimatedSATFromSkillState } from '../utils/scoring';
 import { getDisplayName } from '../utils/subcategoryTaxonomy';
+import { describeSignalReasons } from '../coach/signalQuality';
 import '../components/coach/coach.css';
 
 const CoachGlyph = ({ size = 20 }) => (
@@ -305,11 +306,14 @@ const CoachPage = () => {
     ? profile.targetScore
     : parseInt(profile?.targetScore, 10) || null;
 
-  // Real sittings, the coach's view of them (excluded results stay excluded).
+  // Real sittings, the coach's view of them (excluded results stay excluded;
+  // low-signal sittings — blank/rushed, coachSignal.lowSignal — are evidence
+  // for nothing, so they stay off the trajectory and only appear in the
+  // journey as "logged, overlooked").
   const sittings = useMemo(
     () =>
       exams
-        .filter((e) => e.excludedFromCoach !== true && !e.isPartial)
+        .filter((e) => e.excludedFromCoach !== true && !e.isPartial && !e.coachSignal?.lowSignal)
         .map((e) => {
           const rw = Number.isFinite(e.scores?.readingWriting) ? e.scores.readingWriting : null;
           const math = Number.isFinite(e.scores?.math) ? e.scores.math : null;
@@ -491,11 +495,28 @@ const CoachPage = () => {
         ev.push({ ms: miss, cls: 'bad', node: <><b>{humanizeConcept(c.conceptId || c.id)}</b> regression flagged — was fixed, slipping again</> });
       }
     });
+    // Overlooked sittings: acknowledged, never analyzed.
+    exams
+      .filter((e) => e.excludedFromCoach !== true && e.coachSignal?.lowSignal)
+      .forEach((e) => {
+        const ms = toMs(e.completedAt);
+        if (!ms) return;
+        ev.push({
+          ms,
+          cls: '',
+          node: (
+            <>
+              <b>{e.isDiagnostic ? 'Diagnostic' : 'Practice exam'} sitting logged</b> — overlooked (
+              {describeSignalReasons(e.coachSignal.reasons)})
+            </>
+          ),
+        });
+      });
     return ev
       .filter((e) => e.ms)
       .sort((a, b) => b.ms - a.ms)
       .slice(0, 8);
-  }, [sittings, concepts]);
+  }, [sittings, concepts, exams]);
 
   const commitments = useMemo(() => {
     const list = notebook?.commitments || [];

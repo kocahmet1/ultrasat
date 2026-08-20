@@ -252,10 +252,16 @@ export const saveComprehensiveExamResult = async (userId, examSummary, responses
     // Subcategories are normalized at this boundary (numeric ids, names, kebab all
     // resolve through the canonical taxonomy). Fire-and-forget: never blocks saving.
     try {
+      // Signal-quality gate (coach/signalQuality.js, computed by the exam
+      // controller): questions from OVERLOOKED modules — blank, mostly blank,
+      // or mashed through in under two minutes — never become Tier-2 evidence.
+      // The completion event still records the sitting (with its verdict) so
+      // the coach can acknowledge it happened without reading anything into it.
+      const ignoredModuleIds = new Set(examSummary?.coachSignal?.ignoredModuleIds || []);
       const attemptEvents = safeResponses
         // Same rule as the attempts log above: omitted questions are not
         // attempts, so they must not drag down Tier-2 skill accuracy.
-        .filter((r) => !r.omitted)
+        .filter((r) => !r.omitted && !ignoredModuleIds.has(r.moduleId))
         .map((r) => ({
           source: ATTEMPT_SOURCES.EXAM,
           questionId: r.questionId || r.question?.id,
@@ -287,6 +293,15 @@ export const saveComprehensiveExamResult = async (userId, examSummary, responses
           isPartial: !!examSummary?.isPartial,
           attemptedModuleCount: examSummary?.attemptedModuleCount ?? null,
           totalModuleCount: examSummary?.totalModuleCount ?? null,
+          // Signal verdict for the whole sitting: lowSignal means "completed
+          // but overlooked — acknowledge, don't analyze". Mirrors the
+          // coachSignal field on the practiceExams doc.
+          lowSignal: !!examSummary?.coachSignal?.lowSignal,
+          lowSignalReasons: examSummary?.coachSignal?.reasons || [],
+          ignoredModuleCount: examSummary?.coachSignal?.ignoredModuleCount ?? 0,
+          validModuleCount:
+            examSummary?.coachSignal?.validModuleCount ??
+            (examSummary?.attemptedModuleCount ?? null),
         },
       };
 

@@ -79,6 +79,13 @@ function examCompletedMs(e) {
  * "scored X on a practice test" are different claims, and the model is told to
  * reason only from this text.
  */
+const SIGNAL_REASON_TEXT = {
+  blank: 'no questions answered',
+  mostly_blank: 'more than half left unanswered',
+  too_fast: 'finished too fast to be real work',
+};
+const signalReasons = (reasons = []) => reasons.map((r) => SIGNAL_REASON_TEXT[r] || r).join(', ');
+
 function describeExamResult(e) {
   const rw = Number.isFinite(e.scores?.readingWriting) ? e.scores.readingWriting : null;
   const math = Number.isFinite(e.scores?.math) ? e.scores.math : null;
@@ -86,6 +93,21 @@ function describeExamResult(e) {
 
   const label = e.isDiagnostic ? 'Diagnostic' : 'Practice exam';
   const title = e.examTitle ? ` "${String(e.examTitle).slice(0, 60)}"` : '';
+
+  // Signal-quality verdict, stamped at save time (coach/signalQuality.js).
+  // A low-signal sitting is COMPLETED BUT OVERLOOKED: acknowledge it, never
+  // cite its numbers — they measure clicking, not skill.
+  if (e.coachSignal?.lowSignal) {
+    return `${fmtDate(examCompletedMs(e))}: ${label}${title} — COMPLETED BUT OVERLOOKED (${signalReasons(
+      e.coachSignal.reasons
+    )}). Excluded from analysis: acknowledge the sitting if relevant, but NEVER cite its numbers or treat it as evidence of ability.`;
+  }
+  const partialSignal =
+    e.coachSignal && e.coachSignal.ignoredModuleCount > 0
+      ? ` — NOTE: ${e.coachSignal.ignoredModuleCount} of ${e.coachSignal.modules?.length ?? '?'} module(s) OVERLOOKED (${signalReasons(
+          e.coachSignal.reasons
+        )}); skill analysis uses only the valid modules, so treat the composite with caution`
+      : '';
 
   let scorePart;
   if (total !== null && !e.isPartial) {
@@ -109,7 +131,7 @@ function describeExamResult(e) {
       } modules were attempted; treat as module practice, not a full practice-test score`
     : '';
 
-  return `${fmtDate(examCompletedMs(e))}: ${label}${title} — ${scorePart}${counts}${partial}`;
+  return `${fmtDate(examCompletedMs(e))}: ${label}${title} — ${scorePart}${counts}${partial}${partialSignal}`;
 }
 
 /**
@@ -284,8 +306,26 @@ async function assembleStudentContext(db, uid, surface = {}) {
     lines.push(`\n## Recent activity (newest first)`);
     recentCompletions.slice(0, 8).forEach((e) => {
       const p = e.payload || {};
-      if (e.type === 'quiz_completed')
-        lines.push(`- ${fmtDate(e.clientTs)}: SmartQuiz (${(p.subcategoryIds || []).map((s) => getDisplayName(s) || s).join(', ')}) — ${p.correctCount}/${p.questionCount}${p.passed ? ', passed' : ''}`);
+      if (e.type === 'quiz_completed') {
+        if (p.lowSignal) {
+          // Overlooked sitting: the completion is real, the numbers are not.
+          const secs = Number.isFinite(p.durationMs) ? `${Math.round(p.durationMs / 1000)}s` : 'moments';
+          lines.push(
+            `- ${fmtDate(e.clientTs)}: SmartQuiz (${(p.subcategoryIds || []).map((s) => getDisplayName(s) || s).join(', ')}) — COMPLETED BUT OVERLOOKED (${p.questionCount} questions in ${secs}: ${signalReasons(
+              p.lowSignalReasons
+            )}). Acknowledge only; do not cite its score or count it as practice.`
+          );
+        } else {
+          lines.push(`- ${fmtDate(e.clientTs)}: SmartQuiz (${(p.subcategoryIds || []).map((s) => getDisplayName(s) || s).join(', ')}) — ${p.correctCount}/${p.questionCount}${p.passed ? ', passed' : ''}`);
+        }
+      }
+      else if (e.type === 'exam_completed' && p.lowSignal) {
+        lines.push(
+          `- ${fmtDate(e.clientTs)}: ${p.isDiagnostic ? 'Diagnostic' : 'Practice exam'} — COMPLETED BUT OVERLOOKED (${signalReasons(
+            p.lowSignalReasons
+          )}). Acknowledge only; never cite its numbers.`
+        );
+      }
       else if (e.type === 'exam_completed') {
         // A partial sitting is NOT a practice-test score. Say so explicitly:
         // the model is told to reason only from this text, so an unqualified

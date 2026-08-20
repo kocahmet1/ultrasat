@@ -14,6 +14,7 @@ import { getSubcategoryProgress, updateSubcategoryProgress } from '../utils/prog
 import { inferLevelFromAccuracy } from '../utils/smartQuizUtils';
 import { isPracticeExamAnswerCorrect } from '../utils/practiceExamScoring';
 import { scaledSectionScore } from '../utils/scoring';
+import { assessExamModule, summarizeExamSignal } from '../coach/signalQuality';
 import IntermissionScreen from '../components/IntermissionScreen';
 import ModuleLoadingScreen from '../components/ModuleLoadingScreen';
 
@@ -322,15 +323,44 @@ const PracticeExamController = () => {
     if (currentUser && currentUser.uid && moduleResults.questions && moduleResults.answers) {
       try {
         const { questions: moduleQuestions, answers: userAnswersFromModule } = moduleResults;
-        
+
+        // Signal-quality gate (coach/signalQuality.js): a module that fails the
+        // gates — blank, mostly blank, or mashed through in under two minutes —
+        // must not inflate the Progress page's per-skill "answered" counters
+        // either. It still shows on the results/review pages; it just isn't
+        // treated as practice anywhere that counts practice.
+        const answersList = Array.isArray(userAnswersFromModule)
+          ? userAnswersFromModule
+          : Object.values(userAnswersFromModule || {});
+        const moduleAnsweredCount = answersList.filter(
+          (a) => a !== undefined && a !== null && String(a).trim() !== ''
+        ).length;
+        const moduleVerdict = assessExamModule({
+          questionCount: moduleQuestions.length,
+          answeredCount: moduleAnsweredCount,
+          timeSpentMs:
+            typeof moduleResults.timeSpentSeconds === 'number'
+              ? Math.round(moduleResults.timeSpentSeconds * 1000)
+              : null,
+        });
+        if (moduleVerdict.ignored) {
+          console.log(
+            `PracticeExamController: module "${currentModule.title}" is low-signal (${moduleVerdict.reasons.join(', ')}) — skipping subcategory progress updates.`
+          );
+          throw { __skipProgress: true }; // caught below; exam flow continues
+        }
+
         console.log('PracticeExamController: Processing progress for', moduleQuestions.length, 'questions');
-        
+
         // Aggregate results by subcategory
         const subcategoryResultsMap = {};
 
         moduleQuestions.forEach((question, index) => {
           const userAnswer = Array.isArray(userAnswersFromModule) ? userAnswersFromModule[index] : userAnswersFromModule[index];
-          if (userAnswer === undefined || userAnswer === null) {
+          // Blank AND whitespace-only answers are omissions — legacy modules
+          // saved '' for untouched questions, and those were silently counted
+          // as wrong attempts here, inflating every "N answered" on Progress.
+          if (userAnswer === undefined || userAnswer === null || String(userAnswer).trim() === '') {
             console.log(`PracticeExamController: Question ${index} skipped - no answer provided`);
             return; // Skip unanswered or questions without subcategory
           }
@@ -408,7 +438,11 @@ const PracticeExamController = () => {
         }
 
       } catch (error) {
-        console.error('PracticeExamController: Error processing module results for subcategory progress update:', error);
+        if (error && error.__skipProgress) {
+          // Low-signal module — progress intentionally not recorded.
+        } else {
+          console.error('PracticeExamController: Error processing module results for subcategory progress update:', error);
+        }
         // Don't let progress tracking errors block the exam flow
       }
     }
@@ -539,6 +573,41 @@ const PracticeExamController = () => {
     // score the exam as it stands so a genuine all-blank sitting still records.
     const modulesToScore = attemptedModules.length > 0 ? attemptedModules : scorableModules;
     const isPartial = attemptedModules.length > 0 && skippedModules.length > 0;
+
+    // === Coach signal-quality gate (coach/signalQuality.js) =================
+    // Scoring above is the student-facing record and stays as-is. This block
+    // decides, per module, whether the sitting is EVIDENCE: blank modules,
+    // mostly-blank modules, and sub-2-minute mash-throughs are completed but
+    // OVERLOOKED — excluded from the coach's skill analysis (event emission in
+    // userExamServices filters on it) while the result doc keeps the verdict
+    // so every coach surface can acknowledge honestly.
+    const moduleSignals = scorableModules.map((m) => {
+      const md = responsesToProcess[m.id] || {};
+      const answeredCount = countAnswers(md);
+      const timeSpentMs =
+        typeof md.timeSpentSeconds === 'number' ? Math.round(md.timeSpentSeconds * 1000) : null;
+      const verdict = assessExamModule({
+        questionCount: (m.questions || []).length,
+        answeredCount,
+        timeSpentMs,
+      });
+      return {
+        id: m.id,
+        title: m.title || null,
+        questionCount: (m.questions || []).length,
+        answeredCount,
+        timeSpentMs,
+        ignored: verdict.ignored,
+        reasons: verdict.reasons,
+      };
+    });
+    const coachSignal = summarizeExamSignal(moduleSignals);
+    if (coachSignal.ignoredModuleCount > 0) {
+      console.log(
+        `PracticeExamController: coach signal gate — ${coachSignal.ignoredModuleCount}/${moduleSignals.length} module(s) overlooked:`,
+        coachSignal.modules.filter((m) => m.ignored).map((m) => `${m.title || m.id} (${m.reasons.join('+')})`)
+      );
+    }
 
     if (isPartial) {
       console.log(
@@ -691,6 +760,8 @@ const PracticeExamController = () => {
       totalModuleCount: scorableModules.length,
       attemptedModuleIds: modulesToScore.map((m) => m.id),
       skippedModuleIds: isPartial ? skippedModules.map((m) => m.id) : [],
+      // Per-module signal verdicts — the coach pipeline's evidence filter.
+      coachSignal,
       modules: modules.map(module => ({
         id: module.id,
         title: module.title,

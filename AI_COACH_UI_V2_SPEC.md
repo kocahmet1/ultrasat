@@ -93,6 +93,47 @@ Validation rules (extend `sanitizeActions` → `sanitizeBlocks` in `coachRoutes.
   coach learns what lands; `commit` blocks auto-created from notebook follow-ups; **fix the
   exam-score pipe** (`AI_COACH_DATA_FLOW_REPORT`) so the trajectory band is honest.
 
+## Signal-quality gates (added 2026-08-20)
+
+Not every completed sitting is evidence. Verdicts are computed ONCE, client-side, at write time
+(`apps/web/src/coach/signalQuality.js`) and stored on the result (`coachSignal` on
+`practiceExams` / `smartQuizzes` docs, `lowSignal` on events); the server only renders them.
+
+| Gate | Rule | Effect |
+|---|---|---|
+| Blank module | 0 questions answered | module excluded (already excluded from scoring too) |
+| Mostly-blank module | answered < half | module's attempts never become Tier-2 events |
+| Rushed module | active time < 2 min | same |
+| Rushed quiz | active time < 1 min | no attempt events; debrief endpoint returns a canned acknowledgment with **no model call and no quota spent** |
+
+A sitting with zero valid modules is `lowSignal` end-to-end: excluded from `stat` estimates,
+the HQ trajectory, and skill analysis — but still **acknowledged**: the assembler labels it
+`COMPLETED BUT OVERLOOKED (reasons)`, prompts forbid citing its numbers, and the HQ journey
+shows "sitting logged — overlooked". Module timing comes from `ExamModule`'s clock
+(`timeSpentSeconds` in the completion payload); quiz timing from summed per-question
+`timeSpent` with a `startedAt` wall-clock fallback; unknown timing never triggers a gate.
+Old results predate the flags — hide any junk ones from the coach via All Results → exclude.
+
+**Progress page + history scrub (same day).** The gates also protect the user-facing
+counters: the exam controller's per-module progress update now treats `''` answers as
+omissions and skips low-signal modules entirely, and a sub-minute quiz early-exits
+`recordSmartQuizResult` after the doc write — no level progression, no progress counters,
+no attempt history, no concept mastery, no peer stats (it still emits its flagged
+completion event so the coach acknowledges it). Progress bars are tiered by the same
+thresholds as the last-10 chip (≥80 green · 50–79 amber · <50 red; neutral blue until
+first attempts). Historical inflation is cleaned by `scripts/backfill-coach-events.js`
+**v2**: retro verdicts from stored responses (blank answers were backfilled as WRONG
+attempts by v1 — the "105 answered · 0%" bug), stale junk events deleted, live junk
+excluded at replay, retro `coachSignal` written to old docs, Tier-2 rebuilt, and
+`users/{uid}/progress` counters recomputed from the gated replay (level/askedQuestions/
+attemptHistory preserved). Dry-run first: `node scripts/backfill-coach-events.js --user <uid>`,
+then `--apply`.
+
+Candidate gates deliberately NOT yet implemented: straight-line answering (same option ≥90%
+of a module), sub-2s median per-question time on passage questions, retakes of the same exam
+(inflated by seen questions), lesson views with dwell < 15s, and level promotion earned by a
+low-signal quiz (promotion logic currently still honors it).
+
 ## Guardrails carried over
 
 - Every claim keeps evidence refs → rendered as chips linking to real questions/quizzes.

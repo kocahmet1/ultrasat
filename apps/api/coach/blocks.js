@@ -189,10 +189,13 @@ function toMs(v) {
 
 const dayStr = (ms) => (ms ? new Date(ms).toISOString().slice(0, 10) : null);
 
-/** Latest full (non-partial) exam total from the authoritative history. */
+/** Latest full (non-partial, non-overlooked) exam total from the authoritative
+    history. Low-signal sittings (blank/rushed — coachSignal.lowSignal) never
+    become the "estimate" a stat block shows. */
 function latestExamTotal(examHistory) {
   for (const e of examHistory || []) {
     if (e.isPartial) continue;
+    if (e.coachSignal && e.coachSignal.lowSignal) continue;
     const rw = Number.isFinite(e.scores?.readingWriting) ? e.scores.readingWriting : null;
     const math = Number.isFinite(e.scores?.math) ? e.scores.math : null;
     const total = Number.isFinite(e.scores?.total) ? e.scores.total : rw !== null && math !== null ? rw + math : null;

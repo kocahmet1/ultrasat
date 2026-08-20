@@ -97,7 +97,8 @@ async function runObserver(db, uid, trigger, refId, ledger, beforeModel) {
     // rewrites the durable notebook, so give it room to think.
     effort: process.env.COACH_OBSERVE_REASONING_EFFORT || 'medium',
     system:
-      `You are the student's SAT coach ("Coach") inside UltraSAT. Warm, direct, specific; second person; never invent facts — reference only the STUDENT CONTEXT and NOTEBOOK.\n\n${BLOCKS_GUIDE}\n\n${NOTEBOOK_CONTRACT}\n\n` +
+      `You are the student's SAT coach ("Coach") inside UltraSAT. Warm, direct, specific; second person; never invent facts — reference only the STUDENT CONTEXT and NOTEBOOK.\n` +
+      `Entries marked "COMPLETED BUT OVERLOOKED" were finished but excluded from analysis (blank, mostly blank, or implausibly fast). Acknowledge them at most in one clause ("logged your sitting, but it was mostly blank so I'm not reading it") — never cite their numbers, never treat them as evidence, and base all advice on the non-overlooked record.\n\n${BLOCKS_GUIDE}\n\n${NOTEBOOK_CONTRACT}\n\n` +
       `OUTPUT a single JSON object:\n{\n  "note": { "message": "...", "actions": [up to 2 of {"type":"quiz","subcategoryId":"<kebab>","level":1|2|3?,"label":"..."} | {"type":"link","route":"<allow-listed>","label":"..."} | {"type":"lesson","conceptId":"<id>","subcategoryId":"<kebab>?","label":"..."}], "blocks": [...] },\n  "commitments": [full current list of {"label":"...","dueDate":"YYYY-MM-DD","source":"..."} — add dated re-checks you promise, prune done/stale, ≤ 6],\n  "notebook": "<the FULL updated notebook markdown>"\n}`,
     messages: [
       {

@@ -36,6 +36,7 @@ import {
 } from '../firebase/predefinedConceptsServices';
 import { quizQueue, monitoredOperation } from './concurrencyUtils';
 import { logQuestionAttempts, EVENT_TYPES, ATTEMPT_SOURCES } from '../coach/events';
+import { assessQuizSitting } from '../coach/signalQuality';
 
 // COLLECTION CONSTANTS --------------------------------------------------------
 export const SMARTQUIZ_COLLECTION = 'smartQuizzes';
@@ -442,13 +443,74 @@ export const recordSmartQuizResult = async (quizId, answers) => {
   const scorePct = Math.round((correct / questionIds.length) * 100);
   const passed = scorePct >= 80;
 
+  // === Coach signal-quality gate (coach/signalQuality.js) ==================
+  // Active time: sum of per-question timeSpent (seconds) when the quiz UI
+  // recorded it, else wall clock from startedAt. A quiz "completed" in under
+  // a minute is an action, not evidence — it is recorded and acknowledged,
+  // but excluded from the coach's skill analysis (no attempt events, and the
+  // debrief route answers with an acknowledgment instead of an LLM read).
+  const summedSpentSec = questionIds.reduce(
+    (s, id) => s + (typeof answers[id]?.timeSpent === 'number' ? answers[id].timeSpent : 0),
+    0
+  );
+  const startedAtMs =
+    quiz.startedAt && typeof quiz.startedAt.toMillis === 'function' ? quiz.startedAt.toMillis() : null;
+  const durationMs =
+    summedSpentSec > 0
+      ? Math.round(summedSpentSec * 1000)
+      : startedAtMs
+        ? Math.max(0, Date.now() - startedAtMs)
+        : null;
+  const signalVerdict = assessQuizSitting({ durationMs });
+  const quizCoachSignal = {
+    v: 1,
+    durationMs,
+    lowSignal: signalVerdict.ignored,
+    reasons: signalVerdict.reasons,
+  };
+
   await updateDoc(quizRef, {
     completedAt: serverTimestamp(),
     userAnswers: answers,
     score: scorePct,
     passed,
     status: 'completed',
+    coachSignal: quizCoachSignal,
   });
+
+  // === Low-signal early exit ===============================================
+  // A sub-minute sitting is recorded (quiz doc above) and acknowledged (the
+  // completion event below feeds the coach, whose debrief answers "logged,
+  // not reading it") — but it must not touch ANYTHING that treats practice as
+  // evidence: no level progression, no progress-doc counters (the Progress
+  // page's "N answered"), no attempt history, no concept mastery, no peer
+  // stats, no attempt events.
+  if (quizCoachSignal.lowSignal) {
+    console.log(
+      `[recordSmartQuizResult] Low-signal sitting (${durationMs}ms for ${questionIds.length} questions) — recorded but overlooked.`
+    );
+    try {
+      logQuestionAttempts([], {
+        type: EVENT_TYPES.QUIZ_COMPLETED,
+        payload: {
+          quizId,
+          kind: isMetaQuiz ? 'meta' : 'single',
+          subcategoryIds: [quiz.subcategoryId].filter(Boolean),
+          questionCount: questionIds.length,
+          correctCount: correct,
+          scorePct,
+          level: quiz.level,
+          passed,
+          durationMs: durationMs ?? undefined,
+          lowSignal: true,
+          lowSignalReasons: quizCoachSignal.reasons,
+        },
+      }).catch((e) => console.error('[recordSmartQuizResult] low-signal completion event failed:', e));
+    } catch (e) {
+      console.error('[recordSmartQuizResult] low-signal event build failed:', e);
+    }
+    return { score: scorePct, correct, passed, lowSignal: true };
+  }
 
   // Implement special progression logic for level selection from SubjectQuizzes page
   let progressionLevel = quiz.level;
@@ -652,16 +714,21 @@ export const recordSmartQuizResult = async (quizId, answers) => {
   // === AI Coach event stream (Phase 0): canonical Tier-1 record of this quiz ===
   // Fire-and-forget by design — must never affect the quiz result the student sees.
   try {
-    const attemptEvents = questionIds.map((id) => ({
-      source: ATTEMPT_SOURCES.SMARTQUIZ,
-      questionId: id,
-      subcategoryId: isMetaQuiz ? (qSubcatMap[id] || quiz.subcategoryId || null) : quiz.subcategoryId,
-      conceptIds: conceptIdsByQuestion[id] || [],
-      difficulty: quiz.level,
-      correct: !!answers[id]?.isCorrect,
-      timeSpentMs: typeof answers[id]?.timeSpent === 'number' ? Math.round(answers[id].timeSpent * 1000) : undefined,
-      parentId: quizId,
-    })).filter((a) => !!a.subcategoryId);
+    // Low-signal sittings emit NO attempt events — a 40-second "quiz" must not
+    // move per-skill accuracy. The completion event still fires, stamped with
+    // the verdict, so chronology and acknowledgment survive.
+    const attemptEvents = quizCoachSignal.lowSignal
+      ? []
+      : questionIds.map((id) => ({
+          source: ATTEMPT_SOURCES.SMARTQUIZ,
+          questionId: id,
+          subcategoryId: isMetaQuiz ? (qSubcatMap[id] || quiz.subcategoryId || null) : quiz.subcategoryId,
+          conceptIds: conceptIdsByQuestion[id] || [],
+          difficulty: quiz.level,
+          correct: !!answers[id]?.isCorrect,
+          timeSpentMs: typeof answers[id]?.timeSpent === 'number' ? Math.round(answers[id].timeSpent * 1000) : undefined,
+          parentId: quizId,
+        })).filter((a) => !!a.subcategoryId);
 
     const completion = {
       type: EVENT_TYPES.QUIZ_COMPLETED,
@@ -676,6 +743,9 @@ export const recordSmartQuizResult = async (quizId, answers) => {
         scorePct,
         level: quiz.level,
         passed,
+        durationMs: durationMs ?? undefined,
+        lowSignal: quizCoachSignal.lowSignal || undefined,
+        lowSignalReasons: quizCoachSignal.lowSignal ? quizCoachSignal.reasons : undefined,
       },
     };
 

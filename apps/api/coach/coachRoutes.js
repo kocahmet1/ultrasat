@@ -81,6 +81,7 @@ GROUNDING (absolute):
 - When you make a claim about the student, tie it to the data ("your last 10 Boundaries questions are at 40%").
 - If the context lacks what you need, say so plainly and ask or suggest a way to find out (e.g. a short quiz).
 - If there is a Concept alert (especially a REGRESSION), it is usually the most valuable thing to address.
+- Entries marked "COMPLETED BUT OVERLOOKED" were finished but excluded from analysis (blank, mostly blank, or implausibly fast). You may acknowledge them in passing ("logged, but not reading anything into it") — NEVER cite their numbers, count them as practice, or let them shape advice. Base advice on the sittings and quizzes that are NOT overlooked.
 
 OUTPUT: respond with a single JSON object:
 {
@@ -241,6 +242,45 @@ router.post('/debrief', verifyAuth, async (req, res) => {
       .get();
     if (!existing.empty) {
       return res.json({ note: serializeNote(existing.docs[0].id, existing.docs[0].data()), cached: true });
+    }
+
+    // Signal-quality short-circuit (coach/signalQuality.js verdict, stamped on
+    // the quiz doc at completion): a low-signal sitting gets an ACKNOWLEDGMENT,
+    // not an analysis — no model call, no quota spent, no notebook rewrite.
+    // The note still persists so the surface renders and the moment isn't lost.
+    const quizSnap = await db.doc(`smartQuizzes/${quizId}`).get();
+    if (!quizSnap.exists || quizSnap.data().userId !== uid) {
+      return res.status(404).json({ error: 'Quiz not found for this user' });
+    }
+    const quizDoc = quizSnap.data();
+    if (quizDoc.coachSignal && quizDoc.coachSignal.lowSignal) {
+      const secs = Number.isFinite(quizDoc.coachSignal.durationMs)
+        ? Math.max(1, Math.round(quizDoc.coachSignal.durationMs / 1000))
+        : null;
+      const qCount = (quizDoc.questionIds || []).length || 5;
+      const message =
+        `Logged — but ${qCount} questions in ${secs ? `${secs} seconds` : 'under a minute'} isn't practice I can read anything into, ` +
+        `so this one doesn't count toward your skills (up or down). Run it again at a real pace and I'll give you a proper read.`;
+      const note = {
+        kind: 'debrief',
+        overlooked: true,
+        surfaceHint: 'smart-quiz-results',
+        quizId,
+        message,
+        actions: sanitizeActions([
+          quizDoc.subcategoryId
+            ? { type: 'quiz', subcategoryId: quizDoc.subcategoryId, level: quizDoc.level, label: 'Run it properly' }
+            : null,
+        ].filter(Boolean)),
+        blocks: wrapLegacyBlocks(message),
+        createdAt: new Date(),
+        read: false,
+      };
+      const ref = await db.collection(`coachNotes/${uid}/notes`).add(note);
+      await appendToThread(db, uid, [
+        { role: 'assistant', surface: 'smart-quiz-results', quizId, content: note.message, actions: note.actions },
+      ]);
+      return res.json({ note: serializeNote(ref.id, note) });
     }
 
     if (!(await checkAndBumpQuota(db, uid, 'debrief'))) {

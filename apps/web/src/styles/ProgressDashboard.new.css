@@ -276,3 +276,19 @@
     right: 16px;
   }
 }
+
+/* --- Accuracy-tiered bar fills (matches the last-10 chip tiers) ------------
+   strong ≥ 80% · moderate 50–79% · weak < 50%. The % chip beside the bar
+   carries the exact number, so color is never the only encoding. */
+
+.ut-progress .ut-progress-fill.pg-fill--strong {
+  background: linear-gradient(90deg, var(--ut-success-dark), var(--ut-success));
+}
+
+.ut-progress .ut-progress-fill.pg-fill--moderate {
+  background: linear-gradient(90deg, var(--ut-warn-dark), var(--ut-warn));
+}
+
+.ut-progress .ut-progress-fill.pg-fill--weak {
+  background: linear-gradient(90deg, var(--ut-danger-dark), var(--ut-danger));
+}
