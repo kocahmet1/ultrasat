@@ -23,7 +23,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useCoach } from '../contexts/CoachContext';
 import { LessonCard, ActionButtons } from '../components/coach/CoachDock';
 import CoachBlocks, { ensureBlocks, Spark } from '../components/coach/CoachBlocks';
-import { fetchNotebook } from '../api/coachClient';
+import { fetchNotebook, fetchStrategy } from '../api/coachClient';
 import { estimatedSATFromSkillState } from '../utils/scoring';
 import { getDisplayName } from '../utils/subcategoryTaxonomy';
 import { describeSignalReasons } from '../coach/signalQuality';
@@ -252,6 +252,7 @@ const CoachPage = () => {
   const [concepts, setConcepts] = useState([]);
   const [exams, setExams] = useState([]);
   const [notebook, setNotebook] = useState(null); // { text, commitments }
+  const [strategy, setStrategy] = useState(null); // { current, run } — the deep pass
   const [showNotebook, setShowNotebook] = useState(false);
   const [draft, setDraft] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -282,6 +283,12 @@ const CoachPage = () => {
         if (!cancelled) setNotebook(nb);
       } catch (e) {
         if (!cancelled) setNotebook(null);
+      }
+      try {
+        const st = await fetchStrategy();
+        if (!cancelled) setStrategy(st);
+      } catch (e) {
+        if (!cancelled) setStrategy(null);
       }
     };
     load();
@@ -690,6 +697,73 @@ const CoachPage = () => {
               </p>
             )}
           </div>
+
+          {(strategy?.current || strategy?.run) && (
+            <div className="coach-side-card">
+              <div className="cvq-sec-label">
+                <span className="cv2-label">The plan behind your plan</span>
+                {strategy?.run?.status === 'running' ? (
+                  <span className="cvq-strat-status running">deep analysis running…</span>
+                ) : strategy?.current?.generatedAt ? (
+                  <span className="cvq-strat-status">
+                    {new Date(strategy.current.generatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    {strategy.current.effort ? ` · ${strategy.current.effort}` : ''}
+                  </span>
+                ) : null}
+              </div>
+
+              {strategy?.current ? (
+                <>
+                  {strategy.current.headline && <p className="cvq-strat-headline">{strategy.current.headline}</p>}
+                  {strategy.current.assessment && <p className="cvq-strat-assess">{strategy.current.assessment}</p>}
+
+                  {(strategy.current.priorities || []).length > 0 && (
+                    <div className="cvq-strat-prios">
+                      {strategy.current.priorities.map((p, i) => (
+                        <div key={i} className="cvq-strat-prio">
+                          <span className="cvq-rank">{i + 1}</span>
+                          <div className="cvq-strat-prio-body">
+                            <span className="cvq-strat-prio-title">
+                              {p.title}
+                              {p.subcategoryName && <span className="cvq-strat-prio-sub"> · {p.subcategoryName}</span>}
+                              <span className={`cvq-strat-urgency ${p.urgency}`}>{p.urgency.replace('-', ' ')}</span>
+                            </span>
+                            {p.why && <span className="cvq-strat-prio-why">{p.why}</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {(strategy.current.stance?.tone ||
+                    (strategy.current.stance?.do || []).length > 0 ||
+                    (strategy.current.stance?.dont || []).length > 0) && (
+                    <div className="cvq-strat-stance">
+                      {strategy.current.stance.tone && <p className="cvq-strat-tone">{strategy.current.stance.tone}</p>}
+                      <div className="cvq-strat-dodont">
+                        {(strategy.current.stance.do || []).map((d, i) => (
+                          <span key={`d${i}`} className="cvq-strat-chip do">{d}</span>
+                        ))}
+                        {(strategy.current.stance.dont || []).map((d, i) => (
+                          <span key={`n${i}`} className="cvq-strat-chip dont">{d}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {strategy.current.pacing && (
+                    <p className="cvq-strat-pacing">
+                      <span className="cv2-label" style={{ fontSize: 9 }}>Pacing</span> {strategy.current.pacing}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="coach-side-empty">
+                  First deep analysis is running — it lands in a few minutes and every coach surface starts following it.
+                </p>
+              )}
+            </div>
+          )}
 
           {commitments.length > 0 && (
             <div className="coach-side-card">

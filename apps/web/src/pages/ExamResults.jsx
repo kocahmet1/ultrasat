@@ -36,6 +36,7 @@ import {
 } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { useCoach } from '../contexts/CoachContext';
+import { requestStrategyRefresh } from '../api/coachClient';
 import { examScores } from '../utils/scoring';
 import { processTextMarkup } from '../utils/textProcessing';
 import { resolveMultipleChoiceKey } from '../utils/practiceExamScoring';
@@ -298,6 +299,9 @@ function ExamResults() {
             // assembler can't attach "## The exam that just finished" and the
             // note goes score-blind.
             coach.observe('exam_completed', examId || location?.state?.examId || examData.id || null);
+            // A completed exam is the biggest data change there is — nudge the
+            // deep pass too (server-side staleness rules decide; never blocks).
+            requestStrategyRefresh('exam').catch(() => {});
           }
         } else {
           setPageError('No exam data found to display.');

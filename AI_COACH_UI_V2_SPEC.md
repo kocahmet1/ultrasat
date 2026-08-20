@@ -134,6 +134,32 @@ of a module), sub-2s median per-question time on passage questions, retakes of t
 (inflated by seen questions), lesson views with dwell < 15s, and level promotion earned by a
 low-signal quiz (promotion logic currently still honors it).
 
+## Two-tier coaching: the deep pass (added 2026-08-20)
+
+A slow strategist run (`apps/api/coach/strategy.js`) writes the playbook the fast coach
+executes. Transport is **OpenAI Background mode** (Responses API, `background: true`,
+request shape mirrored from questionGenerationService): submit returns instantly, we poll
+`GET /v1/responses/{id}` every 15s to a 15-min deadline, then cancel + run a detached
+foreground fallback at `COACH_STRATEGY_FALLBACK_EFFORT` (default `high`). Deep effort:
+`COACH_STRATEGY_REASONING_EFFORT` (default `max` — resolved locally; the global config
+still folds max→high for legacy callers).
+
+`coachStrategy/{uid}.current` = sanitized `{headline, assessment, priorities[] (canonical
+subcategory ids, whitelisted urgency), stance {tone, do[], dont[]}, pacing, watch[]}`;
+`run` = `{status, mode, responseId, startedAt, deadlineAt}`. A failed run never clobbers
+`current`. `strategyDirectives()` renders it as a ~500-token block injected into **chat**
+(which previously saw no memory at all), **debrief**, **micro-lesson**, and the
+**observer**, ending with the guardrail that grounding rules always beat the strategy.
+
+Triggers: fire-and-forget pings from session start (`CoachContext`) and exam completion
+(`ExamResults`); server-side staleness rules (20h TTL, 1h after an exam,
+`COACH_STRATEGY_TTL_HOURS`) + a `strategy` quota tier (free 1 / plus 3 / max 4 per day)
++ in-flight dedupe; restart-safe via `deadlineAt` (any directives read past the deadline
+restarts detached). Ledger feature: `coach_strategy`. HQ renders it as "The plan behind
+your plan" (headline, ranked priorities with urgency chips, stance do/don't, pacing,
+run-status chip). Requires a non-ZDR OpenAI project (background needs stored responses);
+non-OpenAI providers automatically use the fallback path.
+
 ## Guardrails carried over
 
 - Every claim keeps evidence refs → rendered as chips linking to real questions/quizzes.

@@ -19,6 +19,7 @@ import {
   observeCoach,
   requestMicroLessonApi,
   fetchLatestBriefing,
+  requestStrategyRefresh,
 } from '../api/coachClient';
 import { logEvent, EVENT_TYPES } from '../coach/events';
 
@@ -180,11 +181,15 @@ export const CoachProvider = ({ children }) => {
     [currentUser, available, receiveNote]
   );
 
-  // Session-start boundary: one Observer ping per app session.
+  // Session-start boundary: one Observer ping per app session, plus a
+  // fire-and-forget nudge to the DEEP PASS (two-tier coaching). The server
+  // decides whether the strategy is stale; when it runs, it runs in OpenAI
+  // background mode and the result surfaces on later calls — nothing waits.
   useEffect(() => {
     if (!currentUser || !available || sessionObservedRef.current) return;
     sessionObservedRef.current = true;
     observe('session_start');
+    requestStrategyRefresh('session').catch(() => {});
   }, [currentUser, available, observe]);
 
   /**

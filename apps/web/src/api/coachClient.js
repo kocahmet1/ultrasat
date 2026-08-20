@@ -53,3 +53,9 @@ export const requestMicroLessonApi = ({ conceptId, subcategoryId }) =>
 export const fetchNotebook = () => request('/notebook');
 /** Newest proactive note (briefing / exam-note) with its blocks — UI v2. */
 export const fetchLatestBriefing = () => request('/briefing');
+/** Two-tier coaching: kick the background DEEP PASS if the strategy is stale.
+    Fire-and-forget from surfaces — the server returns immediately. */
+export const requestStrategyRefresh = (reason = 'session') =>
+  request('/strategy/refresh', { method: 'POST', body: { reason } });
+/** The current strategy ("the plan behind your plan") + run state. */
+export const fetchStrategy = () => request('/strategy');

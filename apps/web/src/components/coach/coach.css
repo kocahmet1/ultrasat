@@ -1793,6 +1793,153 @@
   gap: 10px;
 }
 
+/* strategy card — "the plan behind your plan" (two-tier coaching, deep pass) */
+.cvq-strat-status {
+  font-family: var(--ut-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ut-mono-muted);
+  border: 1px solid var(--ut-rule);
+  border-radius: 999px;
+  padding: 2.5px 9px;
+  white-space: nowrap;
+}
+
+.cvq-strat-status.running {
+  color: var(--ut-accent-dark);
+  border-color: var(--ut-accent-rule);
+  background: var(--ut-accent-soft);
+  animation: coach-pulse 1.6s ease-in-out infinite;
+}
+
+.cvq-strat-headline {
+  font-family: var(--ut-font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ut-text);
+  line-height: 1.4;
+  margin: 0 0 7px;
+}
+
+.cvq-strat-assess {
+  font-size: 12.5px;
+  color: var(--ut-muted);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.cvq-strat-prios {
+  border-top: 1px solid var(--ut-rule);
+}
+
+.cvq-strat-prio {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--ut-rule);
+}
+
+.cvq-strat-prio-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cvq-strat-prio-title {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ut-text);
+  line-height: 1.4;
+}
+
+.cvq-strat-prio-sub {
+  color: var(--ut-mono-muted);
+  font-weight: 500;
+}
+
+.cvq-strat-urgency {
+  font-family: var(--ut-font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-radius: 5px;
+  padding: 2px 7px;
+  margin-left: 7px;
+  border: 1px solid var(--ut-rule-strong);
+  color: var(--ut-text-soft);
+  background: var(--ut-card-soft);
+  vertical-align: 1px;
+}
+
+.cvq-strat-urgency.now {
+  border-color: var(--ut-danger-rule);
+  background: var(--ut-danger-soft);
+  color: var(--ut-danger-dark);
+}
+
+.cvq-strat-urgency.this-week {
+  border-color: var(--ut-warn-rule);
+  background: var(--ut-warn-soft);
+  color: var(--ut-warn-dark);
+}
+
+.cvq-strat-prio-why {
+  display: block;
+  font-size: 12px;
+  color: var(--ut-muted);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.cvq-strat-stance {
+  margin-top: 11px;
+}
+
+.cvq-strat-tone {
+  font-size: 12.5px;
+  color: var(--ut-text-soft);
+  font-style: italic;
+  line-height: 1.55;
+  margin: 0 0 8px;
+}
+
+.cvq-strat-dodont {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cvq-strat-chip {
+  font-size: 11px;
+  border-radius: 999px;
+  padding: 3.5px 10px;
+  border: 1px solid var(--ut-success-rule);
+  background: var(--ut-success-soft);
+  color: var(--ut-success-dark);
+  line-height: 1.4;
+}
+
+.cvq-strat-chip.dont {
+  border-color: var(--ut-danger-rule);
+  background: var(--ut-danger-soft);
+  color: var(--ut-danger-dark);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(160, 52, 52, 0.45);
+}
+
+.cvq-strat-pacing {
+  margin: 11px 0 0;
+  font-size: 12.5px;
+  color: var(--ut-muted);
+  line-height: 1.55;
+  border-top: 1px dashed var(--ut-rule);
+  padding-top: 9px;
+}
+
 @media (max-width: 640px) {
   .cvq-askbar {
     bottom: 8px;

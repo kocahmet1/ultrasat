@@ -33,6 +33,7 @@ const {
   wrapLegacyBlocks,
 } = require('./blocks');
 const { toCanonicalSubcategoryId, getDisplayName } = require('../subcategoryTaxonomy');
+const { maybeStartStrategyRun, getStrategyDoc, getStrategyDirectives } = require('./strategy');
 
 const router = express.Router();
 router.use(
@@ -49,9 +50,9 @@ const verifyAuth = requireAuth();
 // Per-feature daily caps by membership tier (freemium shape, design §7).
 // Free users get a real taste; Plus/Max get the always-on coach.
 const TIER_LIMITS = {
-  free: { chat: 3, debrief: 5, micro_lesson: 1, observe: 2 },
-  plus: { chat: 60, debrief: 40, micro_lesson: 12, observe: 10 },
-  max: { chat: 100, debrief: 60, micro_lesson: 20, observe: 15 },
+  free: { chat: 3, debrief: 5, micro_lesson: 1, observe: 2, strategy: 1 },
+  plus: { chat: 60, debrief: 40, micro_lesson: 12, observe: 10, strategy: 3 },
+  max: { chat: 100, debrief: 60, micro_lesson: 20, observe: 15, strategy: 4 },
 };
 
 // Reasoning effort per coach feature.
@@ -223,6 +224,52 @@ router.get('/briefing', verifyAuth, async (req, res) => {
 });
 
 /**
+ * POST /strategy/refresh { reason?: 'session'|'exam'|'manual', force?: bool }
+ * Two-tier coaching: kick the DEEP PASS if the stored strategy is stale.
+ * Returns immediately (202) — the multi-minute run happens in OpenAI
+ * background mode (or the detached fallback); nothing here waits on it.
+ */
+router.post('/strategy/refresh', verifyAuth, async (req, res) => {
+  const db = requireDb(req, res);
+  if (!db) return;
+  const uid = req.userId;
+  const { reason, force } = req.body || {};
+  try {
+    const result = await maybeStartStrategyRun(db, uid, {
+      reason: ['session', 'exam', 'manual'].includes(reason) ? reason : 'session',
+      force: force === true,
+      quotaCheck: () => checkAndBumpQuota(db, uid, 'strategy'),
+    });
+    res.status(result.status === 'started' ? 202 : 200).json(result);
+  } catch (error) {
+    console.error('[coach/strategy/refresh] failed:', error);
+    res.status(500).json({ error: 'Failed to start strategy run' });
+  }
+});
+
+/**
+ * GET /strategy — the current playbook + run state, for the HQ transparency
+ * card ("the plan behind your plan"). Read-only; never triggers a model call.
+ */
+router.get('/strategy', verifyAuth, async (req, res) => {
+  const db = requireDb(req, res);
+  if (!db) return;
+  try {
+    const doc = await getStrategyDoc(db, req.userId);
+    const run = doc.run || null;
+    res.json({
+      current: doc.current || null,
+      run: run
+        ? { status: run.status, mode: run.mode || null, startedAt: run.startedAt || null, reason: run.reason || null }
+        : null,
+    });
+  } catch (error) {
+    console.error('[coach/strategy] failed:', error);
+    res.status(500).json({ error: 'Failed to load strategy' });
+  }
+});
+
+/**
  * POST /debrief { quizId }
  * Generates (once) the "Coach's read" for a completed SmartQuiz.
  */
@@ -287,9 +334,10 @@ router.post('/debrief', verifyAuth, async (req, res) => {
       return res.status(429).json({ error: 'Daily coach quota reached' });
     }
 
-    const [{ contextText, data }, notebook] = await Promise.all([
+    const [{ contextText, data }, notebook, strategyBlock] = await Promise.all([
       assembleStudentContext(db, uid, { quizId }),
       getNotebook(db, uid),
+      getStrategyDirectives(db, uid),
     ]);
     if (!data.quizDetail) return res.status(404).json({ error: 'Quiz not found for this user' });
 
@@ -299,7 +347,8 @@ router.post('/debrief', verifyAuth, async (req, res) => {
         COACH_SYSTEM_PROMPT +
         `\n\nAllow-listed link routes: ${ALLOWED_LINK_ROUTES.join(', ')}` +
         `\n\n${BLOCKS_GUIDE}` +
-        `\n\n${NOTEBOOK_CONTRACT}`,
+        `\n\n${NOTEBOOK_CONTRACT}` +
+        (strategyBlock ? `\n\n${strategyBlock}` : ''),
       messages: [
         {
           role: 'user',
@@ -366,9 +415,10 @@ router.post('/chat', verifyAuth, async (req, res) => {
       return res.status(429).json({ error: 'Daily coach quota reached' });
     }
 
-    const [{ contextText }, threadSnap] = await Promise.all([
+    const [{ contextText }, threadSnap, strategyBlock] = await Promise.all([
       assembleStudentContext(db, uid, { quizId: surface.quizId }),
       db.collection(`coachThreads/${uid}/messages`).orderBy('at', 'desc').limit(12).get(),
+      getStrategyDirectives(db, uid),
     ]);
     const history = threadSnap.docs
       .map((d) => d.data())
@@ -381,6 +431,7 @@ router.post('/chat', verifyAuth, async (req, res) => {
       system:
         COACH_SYSTEM_PROMPT +
         `\n\nAllow-listed link routes: ${ALLOWED_LINK_ROUTES.join(', ')}` +
+        (strategyBlock ? `\n\n${strategyBlock}` : '') +
         `\n\nSTUDENT CONTEXT (current, authoritative):\n${contextText}` +
         (surface.route ? `\n\nThe student is currently on: ${surface.route}` : ''),
       messages: [...history, { role: 'user', content: message }],
@@ -474,9 +525,10 @@ router.post('/micro-lesson', verifyAuth, async (req, res) => {
       return res.status(429).json({ error: 'Daily coach quota reached' });
     }
 
-    const [{ contextText }, notebook] = await Promise.all([
+    const [{ contextText }, notebook, strategyBlock] = await Promise.all([
       assembleStudentContext(db, uid, {}),
       getNotebook(db, uid),
+      getStrategyDirectives(db, uid),
     ]);
 
     const target = conceptId
@@ -486,6 +538,7 @@ router.post('/micro-lesson', verifyAuth, async (req, res) => {
     const result = await complete('primary', {
       effort: FEATURE_EFFORT.micro_lesson,
       system:
+        (strategyBlock ? `${strategyBlock}\n\n` : '') +
         `You are the student's SAT coach ("Coach") writing a MICRO-LESSON — the "ever-present tutor" moment. Ground every sentence in this student's real situation (context + notebook); never invent history.\n` +
         `Output JSON:\n{\n  "title": "short lesson title",\n  "hook": "1-2 sentences: why THIS student needs THIS now (cite their actual misses/trend)",\n  "explanation": "the core teaching, 1 short paragraph, with a concrete contrast pair or worked example",\n  "check": { "prompt": "one quick check question", "options": ["A ...", "B ..."], "correctIndex": 0 or 1, "feedbackCorrect": "...", "feedbackWrong": "..." },\n  "cta": { "type": "quiz", "subcategoryId": "<kebab>", "level": 1|2|3?, "label": "..." } or null\n}`,
       messages: [

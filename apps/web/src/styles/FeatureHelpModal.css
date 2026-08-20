@@ -1,131 +1,202 @@
-.feature-help-content {
-  padding: 0;
+/* FeatureHelpModal.css — "How this works" content, V3 design language.
+   Shell (backdrop / header / close) comes from Modal.css; this file styles
+   only the body: eyebrow + intro, tier legend, icon-tiled section cards with
+   square-marker lists, and the ink "Pro tip" footer. px units only. */
+
+.fh {
   font-family: var(--ut-font-body);
   color: var(--ut-text);
-  line-height: 1.6;
 }
 
-.help-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--ut-rule);
-}
-
-.help-main-icon {
-  font-size: 3rem;
+.fh-eyebrow {
+  font-family: var(--ut-font-mono);
+  font-size: var(--ut-label-size);
+  letter-spacing: var(--ut-label-tracking);
+  text-transform: uppercase;
   color: var(--ut-accent-dark);
-  margin-bottom: 1rem;
+  margin: 0 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.help-description {
-  font-size: 1.1rem;
+.fh-eyebrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--ut-accent);
+  display: inline-block;
+}
+
+.fh-intro {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.6;
   color: var(--ut-muted);
-  margin: 0;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 520px;
 }
 
-.help-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
+/* --- accuracy tier legend (Progress) ------------------------------------- */
 
-.help-section {
-  background: var(--ut-card-soft);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border-left: 4px solid var(--ut-accent);
-}
-
-.section-header {
+.fh-legend {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 16px;
+  flex-wrap: wrap;
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
+  background: var(--ut-card-soft);
+  padding: 10px 14px;
+  margin-bottom: 16px;
 }
 
-.section-icon {
-  font-size: 1.25rem;
+.fh-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--ut-muted);
+}
+
+.fh-legend-item b {
+  color: var(--ut-text);
+  font-weight: 700;
+}
+
+.fh-swatch {
+  width: 22px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.fh-swatch--strong {
+  background: linear-gradient(90deg, var(--ut-success-dark), var(--ut-success));
+}
+
+.fh-swatch--moderate {
+  background: linear-gradient(90deg, var(--ut-warn-dark), var(--ut-warn));
+}
+
+.fh-swatch--weak {
+  background: linear-gradient(90deg, var(--ut-danger-dark), var(--ut-danger));
+}
+
+/* --- sections ------------------------------------------------------------- */
+
+.fh-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fh-section {
+  border: 1px solid var(--ut-rule);
+  border-radius: var(--ut-radius);
+  background: var(--ut-card);
+  padding: 14px 16px;
+}
+
+.fh-section-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 10px;
+}
+
+.fh-tile {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ut-accent-soft);
   color: var(--ut-accent-dark);
+  font-size: 15px;
+  flex-shrink: 0;
 }
 
-.section-header h4 {
+.fh-section-head h4 {
   margin: 0;
   font-family: var(--ut-font-display);
-  font-size: 1.2rem;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--ut-text);
-  font-weight: 600;
 }
 
-.help-list {
+.fh-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.help-list li {
+.fh-list li {
   position: relative;
-  padding-left: 1.5rem;
-  margin-bottom: 0.75rem;
+  padding: 5px 0 5px 18px;
   color: var(--ut-text-soft);
-  font-size: 1rem;
+  font-size: 13px;
+  line-height: 1.55;
 }
 
-.help-list li::before {
-  content: "•";
+.fh-list li + li {
+  border-top: 1px dashed var(--ut-rule);
+}
+
+.fh-list li::before {
+  content: '';
   position: absolute;
-  left: 0;
-  color: var(--ut-accent-dark);
-  font-weight: bold;
-  font-size: 1.2rem;
+  left: 2px;
+  top: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--ut-accent-rule);
 }
 
-.help-list li:last-child {
-  margin-bottom: 0;
+/* --- pro tip -------------------------------------------------------------- */
+
+.fh-tip {
+  margin-top: 16px;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--ut-radius);
+  border: 1px solid rgba(43, 89, 216, 0.25);
+  background:
+    radial-gradient(ellipse 320px 140px at 100% -30%, rgba(43, 89, 216, 0.22), transparent 65%),
+    var(--ut-panel);
+  color: var(--ut-on-ink);
+  padding: 13px 16px;
 }
 
-.help-footer {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--ut-rule);
+.fh-tip-label {
+  display: inline-block;
+  font-family: var(--ut-font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ut-accent-bright);
+  margin-bottom: 5px;
 }
 
-.help-tip {
-  background: var(--ut-panel);
-  color: var(--ut-on-ink-bright);
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  text-align: center;
-  box-shadow: var(--ut-shadow);
+.fh-tip p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ut-on-ink);
 }
 
-.help-tip strong {
-  font-weight: 600;
-}
+/* --- responsive ------------------------------------------------------------ */
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .help-section {
-    padding: 1rem;
+@media (max-width: 560px) {
+  .fh-legend {
+    gap: 10px;
+    padding: 9px 12px;
   }
-  
-  .help-main-icon {
-    font-size: 2.5rem;
+
+  .fh-section {
+    padding: 12px 13px;
   }
-  
-  .help-description {
-    font-size: 1rem;
-  }
-  
-  .section-header h4 {
-    font-size: 1.1rem;
-  }
-  
-  .help-list li {
-    font-size: 0.9rem;
-  }
-} 
+}
