@@ -71,6 +71,7 @@ function ExamModule({
   const [markedForReview, setMarkedForReview] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   // Track whether we've already attempted an orientation lock for the current fullscreen session
   const orientationLockAttemptedRef = useRef(false);
@@ -89,6 +90,10 @@ function ExamModule({
 
   // Block navigation when exam is in progress
   const blocker = useBlocker(timerRunning);
+
+  // Keep the live blocker so handlers read its current state, not a stale closure
+  const blockerRef = useRef(blocker);
+  blockerRef.current = blocker;
 
   useEffect(() => {
     if (blocker.state === 'blocked') {
@@ -533,14 +538,21 @@ function ExamModule({
 
   const handleCloseExitModal = () => {
     setIsExitModalOpen(false);
-    if (blocker.state === 'blocked') {
-      blocker.reset();
+    if (blockerRef.current.state === 'blocked') {
+      blockerRef.current.reset();
     }
     // Resume timer if user cancels exit
     setTimerRunning(true);
   };
 
   const handleConfirmExit = async () => {
+    // Guard against a double-click while the progress save is in flight
+    if (isExiting) {
+      return;
+    }
+    setIsExiting(true);
+    // Close the modal before the save so a slow save cannot leave the student stuck
+    setIsExitModalOpen(false);
     // Exit fullscreen if currently in fullscreen mode
     if (document.fullscreenElement && document.exitFullscreen) {
       document.exitFullscreen();
@@ -582,12 +594,12 @@ function ExamModule({
     } catch (e) {
       console.error('Failed to save progress on exit:', e);
     }
-    if (blocker.state === 'blocked') {
-      blocker.proceed();
+    // Read the live blocker state at the moment of the call, not from the closure
+    if (blockerRef.current.state === 'blocked') {
+      blockerRef.current.proceed();
     } else {
       navigate('/practice-exams');
     }
-    setIsExitModalOpen(false);
   };
 
   // Report question handler
@@ -620,6 +632,7 @@ function ExamModule({
         onConfirm={handleConfirmExit}
         title="Exit Exam?"
         message="Are you sure you want to leave the exam? Your progress will be saved and you can resume later."
+        confirmDisabled={isExiting}
       />
 
       <ReportQuestionModal
